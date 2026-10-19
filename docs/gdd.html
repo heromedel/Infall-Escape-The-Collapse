@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Infall Design Document</title>
+<style>
+  :root {
+    --bg: #f7f7f5; --panel: #ffffff; --text: #1d1f23; --muted: #5d636e;
+    --rule: #dcdfe4; --accent: #3b5bdb;
+    --decided: #2b8a3e; --proposed: #b8860b; --open: #868e96;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0e1014; --panel: #161a20; --text: #e4e6ea; --muted: #9aa1ad;
+      --rule: #2a3039; --accent: #7c95ff;
+      --decided: #51cf66; --proposed: #fcc419; --open: #868e96;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0e1014; --panel: #161a20; --text: #e4e6ea; --muted: #9aa1ad;
+    --rule: #2a3039; --accent: #7c95ff;
+    --decided: #51cf66; --proposed: #fcc419; --open: #868e96;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text);
+    font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  main { max-width: 820px; margin: 0 auto; padding: 32px 16px 80px; }
+  h1 { font-size: 1.9em; margin: 0 0 4px; }
+  h2 { font-size: 1.3em; margin: 40px 0 8px; padding-top: 12px; border-top: 1px solid var(--rule); }
+  h3 { font-size: 1.05em; margin: 20px 0 6px; }
+  a { color: var(--accent); }
+  .sub { color: var(--muted); margin: 0 0 20px; }
+  .wip {
+    background: var(--panel); border: 1px solid var(--rule); border-left: 4px solid var(--proposed);
+    padding: 12px 14px; border-radius: 6px; margin-bottom: 24px;
+  }
+  nav { background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 12px 18px; }
+  nav ol { margin: 6px 0; padding-left: 20px; }
+  .legend { color: var(--muted); font-size: .9em; margin-top: 10px; }
+  .tag {
+    display: inline-block; font-size: .72em; font-weight: 600; letter-spacing: .04em;
+    text-transform: uppercase; padding: 1px 7px; border-radius: 10px; border: 1px solid currentColor;
+    vertical-align: middle; margin-right: 4px;
+  }
+  .decided { color: var(--decided); } .proposed { color: var(--proposed); } .open { color: var(--open); }
+  ul { padding-left: 22px; }
+  li { margin: 3px 0; }
+  table { width: 100%; border-collapse: collapse; font-size: .92em; }
+  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+</style>
+</head>
+<body>
+<main>
+
+<h1>Infall: Escape The Collapse</h1>
+<p class="sub">Game Design Document</p>
+
+<div class="wip">
+  <strong>Work in progress.</strong> This document records design decisions as they are made. Sections marked
+  <span class="tag open">Open</span> have not been discussed yet; nothing in them is final.
+</div>
+
+<nav>
+  <strong>Contents</strong>
+  <ol>
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#collapse">The Collapse &amp; Campaign Structure</a></li>
+    <li><a href="#combat">Squad Combat</a></li>
+    <li><a href="#multiplayer">Multiplayer</a></li>
+    <li><a href="#ships">Ships</a></li>
+    <li><a href="#jump">Jump Travel</a></li>
+    <li><a href="#races">Races</a></li>
+    <li><a href="#weapons">Weapons &amp; Systems</a></li>
+    <li><a href="#events">Events</a></li>
+    <li><a href="#art">Art Direction</a></li>
+    <li><a href="#modding">Modding &amp; Data Format</a></li>
+    <li><a href="#prototypes">Prototypes &amp; Mockups</a></li>
+    <li><a href="#inspiration">Inspirations</a></li>
+    <li><a href="#log">Decision Log</a></li>
+  </ol>
+  <div class="legend">
+    <span class="tag decided">Decided</span> agreed &nbsp;
+    <span class="tag proposed">Proposed</span> stated direction, details pending &nbsp;
+    <span class="tag open">Open</span> not yet discussed
+  </div>
+</nav>
+
+<h2 id="overview">1. Overview</h2>
+<p><span class="tag decided">Decided</span> A roguelike in the vein of FTL: ships made of rooms, tiles and systems;
+jumping from star system to star system; events and real-time combat.</p>
+<p><span class="tag decided">Decided</span> The galaxy core has collapsed into a super black hole. The player leads a
+small squad of scout ships toward the far rim of the galaxy and must find a way, possibly a technology, to jump to a
+new galaxy.</p>
+<h3>Key differences from FTL</h3>
+<ul>
+  <li>A squad of 1–6 player ships instead of a single ship.</li>
+  <li>Combat is squad against squad, with up to 6 enemy vessels.</li>
+  <li>An expanding collapse replaces the pursuing rebel fleet; escaping the galaxy replaces the flagship battle.</li>
+  <li>Built for multiplayer, up to one player per ship.</li>
+</ul>
+
+<h2 id="collapse">2. The Collapse &amp; Campaign Structure</h2>
+<p><span class="tag proposed">Proposed</span> The collapse horizon expands outward over the run.</p>
+<p><span class="tag proposed">Proposed</span> Event themes depend on distance from the horizon: close to it, events
+reflect the shock of the collapse and people scrambling to leave their planets; far from it, distant worlds may not
+yet believe the collapse is real.</p>
+<p><span class="tag open">Open</span> Map structure: sectors with wider, galaxy-shaped paths outward, or no sectors
+and large node maps.</p>
+
+<h2 id="combat">3. Squad Combat</h2>
+<p><span class="tag proposed">Proposed</span> Player squad on the bottom half of the screen, enemy squad on the top
+half.</p>
+<p><span class="tag proposed">Proposed</span> Selecting a ship shows its power levels and systems near that ship,
+rather than in fixed screen positions, since there are several ships on screen.</p>
+<p><span class="tag open">Open</span> Ship size and zoom needed to fit up to 12 ships on screen.</p>
+
+<h2 id="multiplayer">4. Multiplayer</h2>
+<p><span class="tag proposed">Proposed</span> Additional players join via a second controller or over LAN and issue
+orders to the ships assigned to them, up to 6 players, one per ship.</p>
+
+<h2 id="ships">5. Ships</h2>
+<p><span class="tag proposed">Proposed</span> Ships are built from art + floor art + room layout + blueprint, as in
+FTL.</p>
+<p><span class="tag proposed">Proposed</span> A room may hold more than one system.</p>
+<p><span class="tag proposed">Proposed</span> Hull breaches can occur in walls, not only floors.</p>
+
+<h2 id="jump">6. Jump Travel</h2>
+<p><span class="tag open">Open</span> How jumping works and what it is called: slipstream, system gates, hyperdrive,
+or something original. Possibly a different method per race.</p>
+
+<h2 id="races">7. Races</h2>
+<p><span class="tag open">Open</span></p>
+
+<h2 id="weapons">8. Weapons &amp; Systems</h2>
+<p><span class="tag open">Open</span></p>
+
+<h2 id="events">9. Events</h2>
+<p><span class="tag open">Open</span> New events will be needed; see section 2 for how distance from the collapse
+shapes them.</p>
+
+<h2 id="art">10. Art Direction</h2>
+<p><span class="tag proposed">Proposed</span> Art is made as scalable vector graphics (SVG).</p>
+<p><span class="tag open">Open</span> A visual identity that stands apart from FTL.</p>
+
+<h2 id="modding">11. Modding &amp; Data Format</h2>
+<p><span class="tag proposed">Proposed</span> Each ship is a self-contained folder (or zipped folder) holding every
+file it needs; adding a ship means dropping in its folder.</p>
+<p><span class="tag proposed">Proposed</span> Weapons, and possibly other content, follow the same pattern: e.g. a
+folder in <code>Weapons/</code> containing its icon art, ship-mounted art, and a data file labelled as a weapon.</p>
+
+<h2 id="prototypes">12. Prototypes &amp; Mockups</h2>
+<p><span class="tag proposed">Proposed</span> Small JavaScript demos built on art mockups to try ideas before
+committing to them, e.g. the per-ship power display.</p>
+
+<h2 id="inspiration">13. Inspirations</h2>
+<ul>
+  <li>FTL: Faster Than Light (core structure)</li>
+  <li>Star Trek</li>
+  <li>RimWorld</li>
+  <li>Firefly</li>
+</ul>
+
+<h2 id="log">14. Decision Log</h2>
+<table>
+  <tr><th>Date</th><th>Decision</th></tr>
+  <tr><td>2026-10-18</td><td>Working title changed from <em>Galactic Collapse</em> to <em>Infall: Escape The Collapse</em>.</td></tr>
+  <tr><td>2026-10-18</td><td>Art to be made as SVG.</td></tr>
+</table>
+
+</main>
+</body>
+</html>
