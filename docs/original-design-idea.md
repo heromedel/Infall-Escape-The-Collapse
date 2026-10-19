@@ -71,3 +71,13 @@ Galactic Collapse is generic and many games with similar names exist
 
 new name  
 Infall: Escape The Collapse.
+
+Voting System for events (idea)   
+Especially For lan games or online when:  
+While an event with options is up, each player could vote on their choice for the events with several options in the options menu,   
+Vote Determines Choice  
+Captain (Commadore?) Makes Final Decision   
+Captain has larger vote. 
+
+Then the decision is picked based on the chosen outcome.
+

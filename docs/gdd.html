@@ -47,7 +47,8 @@
   }
   .decided { color: var(--decided); } .likely { color: var(--likely); } .proposed { color: var(--proposed); } .open { color: var(--open); }
   .pt { margin: 8px 0; }
-  .pt b { margin-right: 4px; }
+  .pt table { margin-top: 6px; }
+  .pt > b:first-child { margin-right: 4px; }
   figure { margin: 16px 0; } figcaption { color: var(--muted); font-size: .9em; }
   ul { padding-left: 22px; }
   li { margin: 3px 0; }
@@ -82,6 +83,7 @@
     <li><a href="#modding">Modding &amp; Data Format</a></li>
     <li><a href="#prototypes">Prototypes &amp; Mockups</a></li>
     <li><a href="#inspiration">Inspirations</a></li>
+    <li><a href="#ui">User Interface</a></li>
     <li><a href="#log">Decision Log</a></li>
   </ol>
   <div class="legend">
@@ -94,8 +96,8 @@
 </nav>
 
 <h2 id="overview">1. Overview</h2>
-<p class="pt"><b>A:</b> <span class="tag decided">Decided</span> A roguelike in the vein of FTL: ships made of rooms, tiles and systems; jumping from star system to star system; events and real-time combat.</p>
-<p class="pt"><b>B:</b> <span class="tag decided">Decided</span> The galaxy core has collapsed into a super black hole. The player leads a small squad of scout ships toward the far rim of the galaxy and must find a way, possibly a technology, to jump to a new galaxy.</p>
+<div class="pt"><b>A:</b> <span class="tag decided">Decided</span> A roguelike in the vein of FTL: ships made of rooms, tiles and systems; jumping from star system to star system; events and real-time combat.</div>
+<div class="pt"><b>B:</b> <span class="tag decided">Decided</span> The galaxy core has collapsed into a super black hole. The player leads a small squad of scout ships toward the far rim of the galaxy and must find a way, possibly a technology, to jump to a new galaxy.</div>
 <h3>Key differences from FTL</h3>
 <ul>
   <li>A squad of 1–6 player ships instead of a single ship.</li>
@@ -105,50 +107,91 @@
 </ul>
 
 <h2 id="collapse">2. The Collapse &amp; Campaign Structure</h2>
-<p class="pt"><b>A:</b> <span class="tag decided">Decided</span> The collapse horizon expands outward over the run.</p>
-<p class="pt"><b>B:</b> <span class="tag proposed">Proposed</span> Event themes depend on distance from the horizon: close to it, events reflect the shock of the collapse and people scrambling to leave their planets; far from it, distant worlds may not yet believe the collapse is real.</p>
-<p class="pt"><b>C:</b> <span class="tag open">Open</span> Map structure: sectors with wider, galaxy-shaped paths outward, or no sectors and large node maps.</p>
+<div class="pt"><b>A:</b> <span class="tag decided">Decided</span> The collapse horizon expands outward over the run.</div>
+<div class="pt"><b>B:</b> <span class="tag proposed">Proposed</span> Event themes depend on distance from the horizon: close to it, events reflect the shock of the collapse and people scrambling to leave their planets; far from it, distant worlds may not yet believe the collapse is real.</div>
+<div class="pt"><b>C:</b> <span class="tag open">Open</span> Map structure: sectors with wider, galaxy-shaped paths outward, or no sectors and large node maps.</div>
 
 <h2 id="combat">3. Squad Combat</h2>
-<p class="pt"><b>A:</b> <span class="tag likely">Likely</span> Player squad on the bottom half of the screen, enemy squad on the top half.</p>
-<p class="pt"><b>B:</b> <span class="tag proposed">Proposed</span> Selecting a ship shows its power levels and systems near that ship, rather than in fixed screen positions, since there are several ships on screen.</p>
-<p class="pt"><b>C:</b> <span class="tag open">Open</span> Ship size and zoom needed to fit up to 12 ships on screen.</p>
+<div class="pt"><b>A:</b> <span class="tag likely">Likely</span> Player squad on the bottom half of the screen, enemy squad on the top half.</div>
+<div class="pt"><b>B:</b> <span class="tag proposed">Proposed</span> Selecting a ship shows its power levels and systems near that ship, rather than in fixed screen positions, since there are several ships on screen.</div>
+<div class="pt"><b>C:</b> <span class="tag open">Open</span> Ship size and zoom needed to fit up to 12 ships on screen.</div>
+<div class="pt"><b>D:</b> <span class="tag likely">Likely</span> Combat plays much like FTL. Ships have as many systems, rooms and tiles as FTL ships, or more, and are the same size or bigger.</div>
+<div class="pt"><b>E:</b> <span class="tag decided">Decided</span> Combat is designed as real time, running on fixed simulation ticks. Every action (charging, repairing, moving crew) takes a number of ticks.</div>
+<div class="pt"><b>F:</b> <span class="tag decided">Decided</span> Turn mode is only an automatic pause every N ticks (see 4I). No system or AI is aware that turns exist.</div>
+<div class="pt"><b>G:</b> <span class="tag proposed">Proposed</span> Balance assumes a certain squad size, weapon count and gear at each point in a run. Encounters grow stronger toward the rim: only the most powerful factions, and those who band together, are making it that far.</div>
 
 <h2 id="multiplayer">4. Multiplayer</h2>
-<p class="pt"><b>A:</b> <span class="tag likely">Likely</span> Additional players join via a second controller or over LAN and issue orders to the ships assigned to them, up to 6 players, one per ship.</p>
+<div class="pt"><b>A:</b> <span class="tag likely">Likely</span> Additional players join via a second controller or over LAN, up to 6 players.</div>
+<div class="pt"><b>B:</b> <span class="tag likely">Likely</span> The <b>Captain</b> is the host. In the standard mode the squad is the Captain's: they own and decide everything (ships, crew, resources, settings) at all times.</div>
+<div class="pt"><b>C:</b> <span class="tag likely">Likely</span> A joining player starts as a spectating <b>Commander</b> until the Captain assigns them ships and/or individual crew members, which they can then command.</div>
+<div class="pt"><b>D:</b> <span class="tag likely">Likely</span> All ships start assigned to the Captain until the Captain assigns them to someone else. A player whose ship is destroyed returns to being a Commander until reassigned.</div>
+<div class="pt"><b>E:</b> <span class="tag likely">Likely</span> Resources (scrap, fuel, missiles, drone parts) are one shared squad pool.</div>
+<div class="pt"><b>F:</b> <span class="tag likely">Likely</span> Players can drop in and out at any time. The game remembers each player's previous assignment so the Captain can quickly restore it.</div>
+<div class="pt"><b>G:</b> <span class="tag likely">Likely</span> Only the Captain changes multiplayer settings, before the run or while paused.</div>
+<div class="pt"><b>H:</b> <span class="tag likely">Likely</span> <b>Pause Control</b> setting (default first):
+<table>
+<tr><th>Option</th><th>Behaviour</th></tr>
+<tr><td>Captain (default)</td><td>Only the Captain can pause and unpause, at any time.</td></tr>
+<tr><td>All</td><td>Pausing sends a vote; the game pauses only when every player has voted. Unpausing works the same way.</td></tr>
+<tr><td>Majority</td><td>As All, but needs more than 50% of players.</td></tr>
+<tr><td>Any</td><td>Any player can pause or unpause for everyone at any time.</td></tr>
+</table></div>
+<div class="pt"><b>I:</b> <span class="tag likely">Likely</span> <b>Turn Mode</b> settings (default first):
+<table>
+<tr><th>Setting</th><th>Values</th></tr>
+<tr><td>Auto Pause</td><td>Off (default) / On</td></tr>
+<tr><td>Auto Pause Interval</td><td>Stored in ticks, shown to players in seconds</td></tr>
+<tr><td>Require "Send Commands"</td><td>Off (default) / On. Each player locks in their commands; play resumes until the next auto pause once <em>all</em> players are locked in. A player can cancel to un-lock.</td></tr>
+<tr><td>Allow pausing between auto pauses</td><td>On (default) / Off</td></tr>
+</table></div>
+<div class="pt"><b>J:</b> <span class="tag likely">Likely</span> Disconnected players drop out of vote and lock-in counts, and the Captain can override a stalled vote.</div>
+<div class="pt"><b>K:</b> <span class="tag likely">Likely</span> Events auto-pause the game by default; each event type's auto pause can be toggled off.</div>
+<div class="pt"><b>L:</b> <span class="tag likely">Likely</span> An indicator shows who paused, and in vote or lock-in modes who has voted or locked in so far. Its placement is part of the GUI discussion (section 14).</div>
+<div class="pt"><b>M:</b> <span class="tag likely">Likely</span> <b>Event Choices</b> setting, for events with options:
+<table>
+<tr><th>Option</th><th>Behaviour</th></tr>
+<tr><td>Captain Makes Final Decision (default)</td><td>The Captain chooses; players may vote and the Captain sees their votes.</td></tr>
+<tr><td>Vote Determines Choice</td><td>The players' vote picks the outcome.</td></tr>
+<tr><td>Captain Has Larger Vote</td><td>Weighted vote, with the Captain's vote counting for more.</td></tr>
+</table></div>
+<div class="pt"><b>N:</b> <span class="tag likely">Likely</span> <b>Allow Captain Transfer on Disconnect</b> setting, chosen by the Captain. Off: the game pauses and saves until the Captain returns. On: the captaincy passes to another player.</div>
+<div class="pt"><b>O:</b> <span class="tag open">Open</span> Who receives the captaincy on transfer (e.g. longest-connected player, or someone the Captain names in advance).</div>
+<div class="pt"><b>P:</b> <span class="tag likely">Likely</span> In solo play the Pause Control and Event Choices settings make no difference (one player is 100% of the vote); the Turn Mode settings still apply.</div>
+<div class="pt"><b>Q:</b> <span class="tag proposed">Proposed</span> Future <b>Joint Squad</b> mode: each player owns their own ships and crew and brings them into another Captain's game (e.g. 3 ships each).</div>
+<div class="pt"><b>R:</b> <span class="tag open">Open</span> The title of the squad leader: "Captain" for now; "Commodore" is the accurate rank for a commander of several ships.</div>
 
 <h2 id="ships">5. Ships</h2>
-<p class="pt"><b>A:</b> <span class="tag proposed">Proposed</span> Ships are built from art + floor art + room layout + blueprint, as in FTL.</p>
-<p class="pt"><b>B:</b> <span class="tag proposed">Proposed</span> A room may hold more than one system.</p>
-<p class="pt"><b>C:</b> <span class="tag proposed">Proposed</span> Hull breaches can occur in walls, not only floors.</p>
+<div class="pt"><b>A:</b> <span class="tag proposed">Proposed</span> Ships are built from art + floor art + room layout + blueprint, as in FTL.</div>
+<div class="pt"><b>B:</b> <span class="tag proposed">Proposed</span> A room may hold more than one system.</div>
+<div class="pt"><b>C:</b> <span class="tag proposed">Proposed</span> Hull breaches can occur in walls, not only floors.</div>
 
 <h2 id="jump">6. Jump Travel</h2>
-<p class="pt"><b>A:</b> <span class="tag open">Open</span> How jumping works and what it is called: slipstream, system gates, hyperdrive, or something original. Possibly a different method per race.</p>
+<div class="pt"><b>A:</b> <span class="tag open">Open</span> How jumping works and what it is called: slipstream, system gates, hyperdrive, or something original. Possibly a different method per race.</div>
 
 <h2 id="races">7. Races</h2>
-<p class="pt"><b>A:</b> <span class="tag open">Open</span> </p>
+<div class="pt"><b>A:</b> <span class="tag open">Open</span> </div>
 
 <h2 id="weapons">8. Weapons &amp; Systems</h2>
-<p class="pt"><b>A:</b> <span class="tag open">Open</span> </p>
+<div class="pt"><b>A:</b> <span class="tag open">Open</span> </div>
 
 <h2 id="events">9. Events</h2>
-<p class="pt"><b>A:</b> <span class="tag open">Open</span> New events will be needed; see 2B for how distance from the collapse shapes them.</p>
+<div class="pt"><b>A:</b> <span class="tag open">Open</span> New events will be needed; see 2B for how distance from the collapse shapes them.</div>
 
 <h2 id="art">10. Art Direction</h2>
-<p class="pt"><b>A:</b> <span class="tag decided">Decided</span> Art is made as scalable vector graphics (SVG). Chosen over raster PNG after <a href="art-tests/01-ship-png-vs-svg/README.md">Art Test 01</a>: equal quality at normal size, sharp at any zoom, small text files, and named parts the game can recolour, hide or animate.</p>
-<p class="pt"><b>B:</b> <span class="tag open">Open</span> A visual identity that stands apart from FTL.</p>
+<div class="pt"><b>A:</b> <span class="tag decided">Decided</span> Art is made as scalable vector graphics (SVG). Chosen over raster PNG after <a href="art-tests/01-ship-png-vs-svg/README.md">Art Test 01</a>: equal quality at normal size, sharp at any zoom, small text files, and named parts the game can recolour, hide or animate.</div>
+<div class="pt"><b>B:</b> <span class="tag open">Open</span> A visual identity that stands apart from FTL.</div>
 <figure>
   <img src="art-tests/01-ship-png-vs-svg/final.svg" alt="Art Test 01 ship rendered as SVG" style="max-width:100%;height:auto">
   <figcaption>Art Test 01: the SVG version of the test scout.</figcaption>
 </figure>
 
 <h2 id="modding">11. Modding &amp; Data Format</h2>
-<p class="pt"><b>A:</b> <span class="tag proposed">Proposed</span> Each ship is a self-contained folder (or zipped folder) holding every file it needs; adding a ship means dropping in its folder.</p>
-<p class="pt"><b>B:</b> <span class="tag proposed">Proposed</span> Weapons, and possibly other content, follow the same pattern: e.g. a folder in <code>Weapons/</code> containing its icon art, ship-mounted art, and a data file labelled as a weapon.</p>
+<div class="pt"><b>A:</b> <span class="tag proposed">Proposed</span> Each ship is a self-contained folder (or zipped folder) holding every file it needs; adding a ship means dropping in its folder.</div>
+<div class="pt"><b>B:</b> <span class="tag proposed">Proposed</span> Weapons, and possibly other content, follow the same pattern: e.g. a folder in <code>Weapons/</code> containing its icon art, ship-mounted art, and a data file labelled as a weapon.</div>
 
 <h2 id="prototypes">12. Prototypes &amp; Mockups</h2>
-<p class="pt"><b>A:</b> <span class="tag proposed">Proposed</span> Small JavaScript demos built on art mockups to try ideas before committing to them, e.g. the per-ship power display.</p>
-<p class="pt"><b>B:</b> <span class="tag decided">Decided</span> Art tests live in <code>docs/art-tests/</code>, one folder per test with a README recording what was done and the decision.</p>
+<div class="pt"><b>A:</b> <span class="tag proposed">Proposed</span> Small JavaScript demos built on art mockups to try ideas before committing to them, e.g. the per-ship power display.</div>
+<div class="pt"><b>B:</b> <span class="tag decided">Decided</span> Art tests live in <code>docs/art-tests/</code>, one folder per test with a README recording what was done and the decision.</div>
 
 <h2 id="inspiration">13. Inspirations</h2>
 <ul>
@@ -158,13 +201,18 @@
   <li>Firefly</li>
 </ul>
 
-<h2 id="log">14. Decision Log</h2>
+<h2 id="ui">14. User Interface</h2>
+<div class="pt"><b>A:</b> <span class="tag open">Open</span> A full GUI discussion with mockups: per-ship panels (3B), fitting the squads on screen (3C), and pause, vote and lock-in indicators (4L).</div>
+
+<h2 id="log">15. Decision Log</h2>
 <table>
   <tr><th>Date</th><th>Decision</th></tr>
   <tr><td>2026-10-18</td><td>Working title changed from <em>Galactic Collapse</em> to <em>Infall: Escape The Collapse</em>.</td></tr>
   <tr><td>2026-10-19</td><td>Art format is SVG, confirmed by Art Test 01 (10A).</td></tr>
   <tr><td>2026-10-19</td><td>The collapse horizon expands outward over the run (2A).</td></tr>
   <tr><td>2026-10-19</td><td>Added the <em>Likely</em> status. Player squad bottom / enemy squad top (3A) and up to 6 players, one per ship (4A) moved to Likely.</td></tr>
+  <tr><td>2026-10-19</td><td>Combat is real time on fixed ticks; turn mode is only an auto pause (3E, 3F).</td></tr>
+  <tr><td>2026-10-19</td><td>Multiplayer model: Captain-owned squad, Commanders, shared resources, Pause Control, Turn Mode, Event Choices and Captain Transfer settings (4B–4N).</td></tr>
 </table>
 
 </main>
