@@ -8,19 +8,19 @@
   :root {
     --bg: #f7f7f5; --panel: #ffffff; --text: #1d1f23; --muted: #5d636e;
     --rule: #dcdfe4; --accent: #3b5bdb;
-    --decided: #2b8a3e; --proposed: #b8860b; --open: #868e96;
+    --decided: #2b8a3e; --likely: #1971c2; --proposed: #b8860b; --open: #868e96;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       --bg: #0e1014; --panel: #161a20; --text: #e4e6ea; --muted: #9aa1ad;
       --rule: #2a3039; --accent: #7c95ff;
-      --decided: #51cf66; --proposed: #fcc419; --open: #868e96;
+      --decided: #51cf66; --likely: #4dabf7; --proposed: #fcc419; --open: #868e96;
     }
   }
   :root[data-theme="dark"] {
     --bg: #0e1014; --panel: #161a20; --text: #e4e6ea; --muted: #9aa1ad;
     --rule: #2a3039; --accent: #7c95ff;
-    --decided: #51cf66; --proposed: #fcc419; --open: #868e96;
+    --decided: #51cf66; --likely: #4dabf7; --proposed: #fcc419; --open: #868e96;
   }
   * { box-sizing: border-box; }
   body {
@@ -45,7 +45,7 @@
     text-transform: uppercase; padding: 1px 7px; border-radius: 10px; border: 1px solid currentColor;
     vertical-align: middle; margin-right: 4px;
   }
-  .decided { color: var(--decided); } .proposed { color: var(--proposed); } .open { color: var(--open); }
+  .decided { color: var(--decided); } .likely { color: var(--likely); } .proposed { color: var(--proposed); } .open { color: var(--open); }
   .pt { margin: 8px 0; }
   .pt b { margin-right: 4px; }
   figure { margin: 16px 0; } figcaption { color: var(--muted); font-size: .9em; }
@@ -86,6 +86,7 @@
   </ol>
   <div class="legend">
     <span class="tag decided">Decided</span> agreed &nbsp;
+    <span class="tag likely">Likely</span> the plan unless a problem is found &nbsp;
     <span class="tag proposed">Proposed</span> stated direction, details pending &nbsp;
     <span class="tag open">Open</span> not yet discussed
     <br>Points are lettered within each section, so they can be referenced as e.g. 2A.
@@ -109,12 +110,12 @@
 <p class="pt"><b>C:</b> <span class="tag open">Open</span> Map structure: sectors with wider, galaxy-shaped paths outward, or no sectors and large node maps.</p>
 
 <h2 id="combat">3. Squad Combat</h2>
-<p class="pt"><b>A:</b> <span class="tag proposed">Proposed</span> Player squad on the bottom half of the screen, enemy squad on the top half.</p>
+<p class="pt"><b>A:</b> <span class="tag likely">Likely</span> Player squad on the bottom half of the screen, enemy squad on the top half.</p>
 <p class="pt"><b>B:</b> <span class="tag proposed">Proposed</span> Selecting a ship shows its power levels and systems near that ship, rather than in fixed screen positions, since there are several ships on screen.</p>
 <p class="pt"><b>C:</b> <span class="tag open">Open</span> Ship size and zoom needed to fit up to 12 ships on screen.</p>
 
 <h2 id="multiplayer">4. Multiplayer</h2>
-<p class="pt"><b>A:</b> <span class="tag proposed">Proposed</span> Additional players join via a second controller or over LAN and issue orders to the ships assigned to them, up to 6 players, one per ship.</p>
+<p class="pt"><b>A:</b> <span class="tag likely">Likely</span> Additional players join via a second controller or over LAN and issue orders to the ships assigned to them, up to 6 players, one per ship.</p>
 
 <h2 id="ships">5. Ships</h2>
 <p class="pt"><b>A:</b> <span class="tag proposed">Proposed</span> Ships are built from art + floor art + room layout + blueprint, as in FTL.</p>
@@ -163,6 +164,7 @@
   <tr><td>2026-10-18</td><td>Working title changed from <em>Galactic Collapse</em> to <em>Infall: Escape The Collapse</em>.</td></tr>
   <tr><td>2026-10-19</td><td>Art format is SVG, confirmed by Art Test 01 (10A).</td></tr>
   <tr><td>2026-10-19</td><td>The collapse horizon expands outward over the run (2A).</td></tr>
+  <tr><td>2026-10-19</td><td>Added the <em>Likely</em> status. Player squad bottom / enemy squad top (3A) and up to 6 players, one per ship (4A) moved to Likely.</td></tr>
 </table>
 
 </main>
