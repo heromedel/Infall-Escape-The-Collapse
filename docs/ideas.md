@@ -58,3 +58,4 @@ Multi-shot lasers (like FTL's dual laser) that can aim each shot at a different 
 shot from one weapon goes to the same target room.
 
 - Possibly targeting rooms on different ships in the enemy squad too, to decide.
+- Could be an optional setting: `Multi Target Lasers: On > Off` (default first), so players can keep FTL's behaviour.
