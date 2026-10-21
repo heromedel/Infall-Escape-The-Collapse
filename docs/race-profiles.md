@@ -84,6 +84,8 @@ clone.
 
 ## The Mecha (draft, 2026-10-21)
 
+"The Mecha" is a working name that may become final.
+
 1. **Tone:** an aggressive destruction race that guts ships; highly organized and tactical.
 2. **Doing fine:** territorial and aggressive. If outmatched, they may insist the interloper leave their
    territory. If they have the advantage they are likely to attack, only accepting surrender if they profit
@@ -95,9 +97,10 @@ clone.
 5. **Relations:** not likely to become refugees unless absolutely desperate, and even then more likely to
    become raiders or pirates.
 6. **Technology:** weapons tend to be high damage and destructive to hulls, lacking the finesse other races
-   might prefer. Instead of an EVA Dock they have an **EVB Dock** (Extra Vehicular Battle Dock), which equips
-   them with one-piece equipment, much like an FTL drone bay, so they fly out to ships themselves to attack (or
-   do other things) repeatedly.
+   might prefer. Instead of an EVA Dock they have an **EVB Dock** (Extra Vehicular Battle Dock): a variant of
+   the EVA Dock, basically battle EVA suits. It needs a battlesuit type, the way a drone bay needs a drone type,
+   and likely costs material to launch. Crew fly out to ships themselves to attack (or do other things)
+   repeatedly. Other races can use it if they acquire one.
 7. **Near and inside their territory:** in their core territory they help their own kind build, upgrade and
    repair. In their inner territories they may battle each other if one side appears weak or suspicious. Their
    border territories are typically in constant battle with whoever they border, and with criminals and pirates
@@ -107,6 +110,7 @@ clone.
    preferring previously populated areas over empty regions where they would have to build infrastructure
    themselves. This gives criminals another place to hide, but to the Mecha, criminals developing empty
    clusters just makes them better to take later.
-9. **Crew traits:** integrate with any ship system, taking a moment longer to begin using a system and to
-   disengage, and even longer with biomechanical systems. Slow movement, high melee damage.
+9. **Crew traits:** integrate with any ship system and are better at running it than other crew, for most if
+   not all systems (maybe not specifically peaceful ones). Integrating takes a moment longer to begin using a
+   system and to disengage, and even longer with biomechanical systems. Slow movement, high melee damage.
 10. **Ship tiers:** to define.

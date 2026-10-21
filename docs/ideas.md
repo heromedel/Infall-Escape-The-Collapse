@@ -97,6 +97,9 @@ enemies or reaching squad-mates.
 - **Out of air:** to decide. Leaning toward damage over time until they reach a ship, like FTL suffocation,
   rather than instant death.
 - A race that survives outside without a suit would be a stronger version of the same mechanic.
+- Variant: the **EVB Dock** (Extra Vehicular Battle Dock, from the Mecha): battle EVA suits that need a
+  battlesuit type, like a drone bay needs a drone type, and likely cost material to launch. Any race can use one
+  if acquired.
 
 ## Weapons
 
