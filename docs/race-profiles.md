@@ -36,10 +36,12 @@ clone.
     - Doing well: likely to take in refugees of any race; helpful and diplomatic.
     - Struggling: less tolerant of aggressive races, less likely to take them in; more likely to resort to combat.
     - Doomed: refugees are among the things blamed; very unlikely to willingly take more in.
-6. **Technology:** much like FTL's Federation. Terrans are the power baseline: power runs through the hull
-   plating, so as long as the ship is intact they move power freely between systems, as all FTL ships do. More
-   power available than other races, with a heavily armoured power core. Other races differ from this baseline,
-   e.g. power conduits that can be cut, rerouted or repaired could belong to another race.
+6. **Technology:** much like FTL's Federation. Two separate ideas for Terran power, undecided:
+    1. **Plain FTL power:** power runs through the hull plating, so as long as the ship is intact they move power
+       freely between systems, as all FTL ships do. Terrans are the baseline other races differ from.
+    2. **Power conduits:** a conduit overlay; power must be routed, or rerouted through undamaged conduits or
+       rooms, and cut conduits repaired. In exchange, a heavily armoured power core and more power available than
+       other races. If Terrans use idea 1, conduits could go to another race.
 7. **Near and inside their territory:** to define.
 8. **Where and how they live:** both: tight-knit core areas plus arms/branches of colonies. Probably the most
    common race in the galaxy.
