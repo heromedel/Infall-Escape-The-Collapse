@@ -49,3 +49,12 @@ enemies or reaching squad-mates.
 - **Out of air:** to decide. Leaning toward damage over time until they reach a ship, like FTL suffocation,
   rather than instant death.
 - A race that survives outside without a suit would be a stronger version of the same mechanic.
+
+## Weapons
+
+### Multi-room targeting lasers (2026-10-21)
+
+Multi-shot lasers (like FTL's dual laser) that can aim each shot at a different room, unlike FTL, where every
+shot from one weapon goes to the same target room.
+
+- Possibly targeting rooms on different ships in the enemy squad too, to decide.
