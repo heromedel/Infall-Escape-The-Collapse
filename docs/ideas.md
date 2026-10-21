@@ -80,6 +80,11 @@ Both describe faction behaviour more than crew traits, so they would need adapti
    people. "Tech needs multiple people" could become a crew trait (a bonus when several share a room, or
    systems that need two or more of them to operate).
 
+### Crew skills (2026-10-21)
+
+Better normalize skill gain requirements and increments than FTL does (in FTL, the experience needed and the
+bonus per level vary between skills).
+
 ## Ships
 
 ### EVA Dock and EVA suits (2026-10-21)

@@ -52,7 +52,7 @@ clone.
 7. **Near and inside their territory:** to define.
 8. **Where and how they live:** both: tight-knit core areas plus arms/branches of colonies. Probably the most
    common race in the galaxy.
-9. **Crew traits:** as FTL's humans.
+9. **Crew traits:** as FTL's humans: they gain skills faster.
 10. **Ship tiers:** as FTL.
 
 ## Azurethea (draft, 2026-10-21)
