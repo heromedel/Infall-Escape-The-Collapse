@@ -17,3 +17,4 @@ A design-stage project: we are writing a game design document, not building the 
 - Mechanics should feel like FTL (treated as a genre) unless a decision says otherwise (GDD 1C).
 - Loves optional settings. A feature that departs from FTL can be a toggle so players can make the game more
   like FTL. Settings are written with the default first, e.g. `Multi Target Lasers: On > Off`.
+- Number discussion points (1, 2, 3…) so they can be answered by number.
