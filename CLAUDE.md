@@ -21,3 +21,5 @@ A design-stage project: we are writing a game design document, not building the 
 - Work one major, high-level question at a time: the one that must be answered before deeper questions can be.
   If you could list more than ~6 separate questions, you are not at that level. Don't go into tactics or details
   that depend on things not yet defined.
+- When describing races or other designed content, state only what the docs say. Clearly label anything
+  extrapolated as a suggestion; never present it as part of the design.
