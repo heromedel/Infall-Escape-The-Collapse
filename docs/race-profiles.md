@@ -143,6 +143,15 @@ Octopus-like race (earlier working label "Octopods").
 9. **Crew traits:** can run multiple systems at the same time, maybe up to four.
 10. **Ship tiers:** to define.
 
+## Holograms (unnamed; partial draft, 2026-10-21)
+
+- **Technology:** very similar to the Terrans', with advanced beam weapons and sensors. Besides an armoured core
+  (possible name: **AZC**, Armoured ZeroPoint Core), they have an **Armoured Array Bank** (working name) that
+  stores and broadcasts their holographic AI avatars. If it is damaged, fewer avatars can be broadcast, so the
+  ship has fewer holographic crew until it is repaired; they don't die from this unless the ship is destroyed.
+- **Crew traits:** half HP individually.
+- More detail to come.
+
 ## Whispwraith (partial draft, 2026-10-21)
 
 Possibly the mysterious race of the ??? victory (see `ideas.md`); probably not a core race either way. Other
