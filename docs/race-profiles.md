@@ -16,3 +16,5 @@ Each race is defined with the profile below. No races are defined yet; race idea
 8. **Where and how they live:** whether they sprawl or hold a small, tight territory.
 9. **Crew traits:** what one crew member of this race does on your ship, FTL-style (e.g. fights well,
    repairs fast). Ideally connected to the race's character.
+10. **Ship designs across tiers:** basic to advanced, since a race can be placed anywhere from the core to the
+    rim and its strength comes from its placement (GDD 2N).

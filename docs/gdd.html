@@ -106,6 +106,7 @@
 <div class="pt"><b>G:</b> <span class="tag likely">Likely</span> The colony ship is a layer on top of the FTL-like game and isn't a focus yet. The first build has almost no interaction with it, so the basics can be made to work first. Whether it exists in play at all is undecided.</div>
 <div class="pt"><b>H:</b> <span class="tag decided">Decided</span> The core loop is the same as FTL's. More ships are an extension of FTL's loop of gaining systems and weapons.</div>
 <div class="pt"><b>I:</b> <span class="tag open">Open</span> Ship loss. In FTL you can always recover fully (hull, systems, breaches, missiles, drone parts) until you lose the game. Losing one ship of a squad is a major setback FTL has no equivalent of.</div>
+<div class="pt"><b>J:</b> <span class="tag likely">Likely</span> Tone varies by race, region, cluster, situation and proximity to the collapse; e.g. one race or region grim and dark, another optimistic until it becomes impossible, another strange and bizarre. Event tone, and to a degree art, follows. The overall tone is a mix of despair, confusion and hope.</div>
 <div class="pt"><b>C:</b> <span class="tag decided">Decided</span> FTL is treated as a genre: mechanics work exactly as in FTL unless a decision here says otherwise (e.g. firing, then checking for a miss against engines/evasion or a block by shields). Content differs: weapons, systems and races get their own names and may get new behaviour (e.g. a dual laser that can target two different rooms) when we decide so.</div>
 <h3>Key differences from FTL</h3>
 <ul>
@@ -137,6 +138,8 @@
 <div class="pt"><b>J:</b> <span class="tag decided">Decided</span> Map terms: each node, and each jump, is a <b>star cluster</b>. Which of its stars are inhabited is abstracted; on the map a node is drawn as a group of dots rather than one. Several related clusters form a <b>region</b>, e.g. a civilization's territory. "System" is kept for ship systems only.</div>
 <div class="pt"><b>K:</b> <span class="tag decided">Decided</span> Each region has deep, inner and border clusters (deep &lt; inner &lt; border), with possible unclaimed or neutral clusters between regions.</div>
 <div class="pt"><b>L:</b> <span class="tag likely">Likely</span> Clusters are not static. A cluster can change state during a run, e.g. Border, Refugee, Occupied, Abandoned, Swallowed. These are potential states, not a fixed sequence: which ones happen depends on the races involved, the situation, proximity to the collapse and other factors. More states can be added.</div>
+<div class="pt"><b>M:</b> <span class="tag likely">Likely</span> Procedural generation places region types and races in different parts of the galaxy each run.</div>
+<div class="pt"><b>N:</b> <span class="tag likely">Likely</span> A race's behaviour is the same every run; its strength comes from where it is placed. Near the core it fields small, lightly armed squads and reaches its doom stage quickly; far out it fields larger squads with more weapons and more advanced designs, and a player well ahead of the collapse can meet it at its peak.</div>
 
 <h2 id="combat">3. Squad Combat</h2>
 <div class="pt"><b>A:</b> <span class="tag likely">Likely</span> Player squad on the bottom half of the screen, enemy squad on the top half.</div>
@@ -205,6 +208,8 @@
 <h2 id="races">7. Races &amp; Crew</h2>
 <div class="pt"><b>A:</b> <span class="tag open">Open</span> Which races exist (ideas in the ideas document).</div>
 <div class="pt"><b>B:</b> <span class="tag decided">Decided</span> Crew work as in FTL: they man systems and gain skills in them.</div>
+<div class="pt"><b>C:</b> <span class="tag likely">Likely</span> The first starting ship is Terran. Other races are unlocked later as starting options.</div>
+<div class="pt"><b>D:</b> <span class="tag likely">Likely</span> Each race is defined with a race profile (<code>docs/race-profiles.md</code>).</div>
 
 <h2 id="weapons">8. Weapons &amp; Systems</h2>
 <div class="pt"><b>A:</b> <span class="tag likely">Likely</span> The systems are FTL's plus more. Most FTL systems are hard to remove; the clone bay is the one possible exception.</div>
@@ -268,6 +273,7 @@
   <tr><td>2026-10-21</td><td>Any ship can target any enemy ship; no positioning in combat (3L, 3M).</td></tr>
   <tr><td>2026-10-21</td><td>Core loop same as FTL (1H); crew work as in FTL (7B); systems are FTL's plus more (8A).</td></tr>
   <tr><td>2026-10-21</td><td>Map terms: node = star cluster, clusters form regions (2J); deep, inner and border clusters (2K); clusters can change state (2L).</td></tr>
+  <tr><td>2026-10-21</td><td>Tone varies by race, region and proximity to the collapse (1J); random race placement with strength from placement (2M, 2N); Terran first start, other races unlockable (7C).</td></tr>
 </table>
 
 </main>
