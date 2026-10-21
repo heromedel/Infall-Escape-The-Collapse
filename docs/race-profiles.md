@@ -143,15 +143,28 @@ Octopus-like race (earlier working label "Octopods").
 9. **Crew traits:** can run multiple systems at the same time, maybe up to four.
 10. **Ship tiers:** to define.
 
-## Holograms (unnamed; partial draft, 2026-10-21)
+## Senti-GPH (Sentient Generative Pre-trained Holograms) (draft, 2026-10-21)
 
-- **Technology:** very similar to the Terrans', with advanced beam weapons and sensors. Besides an armoured core
-  (the **AZC**, Armoured ZeroPoint Core, as on Terran ships), they have an **Armoured Avatar Array** (the
-  **AAA** system) that
-  stores and broadcasts their holographic AI avatars. If it is damaged, fewer avatars can be broadcast, so the
-  ship has fewer holographic crew until it is repaired; they don't die from this unless the ship is destroyed.
-- **Crew traits:** half HP individually.
-- More detail to come.
+1. **Tone and description:** holographic AI avatars, originally made by Terrans, who became their own people.
+2. **Doing fine:** curious and logical; collect and preserve knowledge from every culture they meet.
+3. **Struggling:** preserving data comes first; they trade for records, archives and storage, and also for things
+   necessary for survival, such as defensive equipment as needed.
+4. **Doomed:** no qualms about killing living people, while still willing to store their information and
+   biological data.
+5. **Relations:** to define.
+6. **Technology:** very similar to the Terrans', with advanced beam weapons and sensors. Besides an armoured core
+   (the **AZC**, Armoured ZeroPoint Core, as on Terran ships), they have an **Armoured Avatar Array** (the
+   **AAA** system) that stores and broadcasts their holographic avatars. If it is damaged, fewer avatars can be
+   broadcast, so the ship has fewer holographic crew until it is repaired; they don't die from this unless the
+   ship is destroyed. They don't usually use ion weapons themselves.
+7. **Near and inside their territory:** small, dense clusters built around relay and broadcast stations.
+8. **Where and how they live:** see 7; they stay close together, since their avatars depend on arrays.
+9. **Crew traits:** half HP individually; don't need oxygen; immune to fire. Bound to their ship's AAA, but a
+   highly upgraded AAA can broadcast them directly onto another ship, with a cooldown. Ion disrupts them.
+10. **Ship tiers:**
+    - Low: beams, good sensors, a small AAA.
+    - Mid: hacking, a larger AAA.
+    - High: more hacking, an upgraded AAA, shield-penetrating technologies or weapons; not likely missiles.
 
 ## Whispwraith (partial draft, 2026-10-21)
 
