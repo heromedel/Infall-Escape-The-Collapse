@@ -122,6 +122,24 @@ clone.
    move to repair it.
 10. **Ship tiers:** to define.
 
+## Octopods (working description, unnamed; draft, 2026-10-21)
+
+1. **Tone and ship style:** octopus-like beings in small groups. Small crews and ships, perhaps two crew
+   members on a standard ship, possibly mates. Their ships have few rooms with many systems in them.
+2. **Doing fine:** quiet and diplomatic, but if they want to go into a system they are willing to force their way
+   in; not looking to destroy others, simply to get where they want to go, for whatever reason.
+3. **Struggling:** willing to ally, usually in joint operations more than trade, e.g. having a ship join a fleet
+   rather than gifting a ship.
+4. **Doomed:** highly cooperative, possibly even allying with aggressive races.
+5. **Relations:** to define.
+6. **Technology:** most likely biomechanical, with the same power system as the Azurethea; they specialise in
+   shields and defence. Weapons tend to be standard lasers, beams or missiles as needed; they don't mind adapting.
+7. **Near and inside their territory:** to define.
+8. **Where and how they live:** explorers who spread by starting small regions further apart from each other
+   than most races.
+9. **Crew traits:** can run multiple systems at the same time, maybe up to four.
+10. **Ship tiers:** to define.
+
 ## Whispwraith (partial draft, 2026-10-21)
 
 Possibly the mysterious race of the ??? victory (see `ideas.md`); probably not a core race either way. Other
