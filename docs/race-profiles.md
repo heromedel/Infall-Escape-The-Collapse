@@ -175,7 +175,8 @@ Octopus-like race (earlier working label "Octopods").
 
 ## Wolf race (unnamed; draft, 2026-10-21)
 
-1. **Description:** evolved independently, but similar to Terran canines.
+1. **Description and ship style:** evolved independently, but similar to Terran canines. Ships are a mix of
+   stolen parts, but efficient when doing well.
 2. **Doing fine:** raid and attack others, seemingly for fun; willing to join up with others for a joint hunt.
 3. **Struggling:** tend to be in denial, insisting things are fine and just wanting to continue the hunt, but
    even more willing to trade or join up.
@@ -183,12 +184,12 @@ Octopus-like race (earlier working label "Octopods").
    as they just keep going.
 5. **Relations:** to define.
 6. **Technology:** a mix of non-biomechanical tech stolen from others; basic weapons and technology; crew
-   teleporters. Quick attacks.
-7. **Near and inside their territory:** to define.
-8. **Where and how they live:** to define.
-9. **Crew traits:** senses: either psychic, or described as a sort of animal senses (preferred over scent-based
-   sensors).
-10. **Ship tiers:** to define.
+   teleporters.
+7. **Near and inside their territory:** see 8.
+8. **Where and how they live:** small, localized, independent clusters that even attack each other.
+9. **Crew traits:** quick attacks, reduced HP, psychic.
+10. **Ship tiers:** even their best ship designs are not that amazing, aside from larger or multiple crew
+    teleporter rooms.
 
 ## Whispwraith (partial draft, 2026-10-21)
 
