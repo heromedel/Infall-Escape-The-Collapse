@@ -134,3 +134,5 @@ profile points are left until that is decided.
   an oxygen environment, converting it into their own, taking damage from the oxygen meanwhile. Once in their
   own environment they heal over time, without needing a medbay. They can charge for a second and then teleport
   themselves to another room or ship, with a cooldown.
+- Their atmosphere is harmful to other races.
+- Probably recruitable by the player.
