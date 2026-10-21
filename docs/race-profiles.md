@@ -113,4 +113,6 @@ clone.
 9. **Crew traits:** integrate with any ship system and are better at running it than other crew, for most if
    not all systems (maybe not specifically peaceful ones). Integrating takes a moment longer to begin using a
    system and to disengage, and even longer with biomechanical systems. Slow movement, high melee damage.
+   Alternative being considered: instead of being better at a system, a Mecha crew member powers the system they
+   integrate with, similar to FTL's Zoltan.
 10. **Ship tiers:** to define.
