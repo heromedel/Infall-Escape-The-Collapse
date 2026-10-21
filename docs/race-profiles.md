@@ -122,7 +122,9 @@ clone.
    move to repair it.
 10. **Ship tiers:** to define.
 
-## Octopods (working description, unnamed; draft, 2026-10-21)
+## Tentauri (draft, 2026-10-21)
+
+Octopus-like race (earlier working label "Octopods").
 
 1. **Tone and ship style:** octopus-like beings in small groups. Small crews and ships, perhaps two crew
    members on a standard ship, possibly mates. Their ships have few rooms with many systems in them.
