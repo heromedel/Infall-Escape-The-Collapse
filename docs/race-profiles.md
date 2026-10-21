@@ -47,3 +47,30 @@ clone.
    common race in the galaxy.
 9. **Crew traits:** as FTL's humans.
 10. **Ship tiers:** as FTL.
+
+## Azurethea (draft, 2026-10-21)
+
+1. **Tone and ship style:** a butterfly-like race of peaceful creatures using a mix of biomechanical technology.
+   Ships shaped much like moths or butterflies, partly organic.
+2. **Doing fine:** nearly pacifist and docile; highly likely to accept or offer surrender; primarily interested
+   in exploration. Slightly isolationist about sharing technology or letting others on their ships.
+3. **Struggling:** more willing to cooperate and more interested in trade.
+4. **Doomed:** optimistic but aggressively defensive; cooperate with peaceful races, become vengeful against
+   violent enemies.
+5. **Relations:** will willingly become refugees when needed, but less inclined to accept refugees, especially
+   violent ones. Try to avoid war, but are decisive once in one.
+6. **Technology:** part-organic ships. They produce their own Terran-friendly atmosphere in whatever room they
+   stand in. Weapons often disable systems with spores, or fire damaging shots at single rooms. Originally
+   imagined as the race with no power core or conduits: biological energy flows through the whole ship and can
+   power any system on board.
+7. **Near and inside their territory:** to define.
+8. **Where and how they live:** sprawl in thin, almost veiny regions, reaching out for exploration or needed
+   resources, and willingly leave unclaimed or neutral clusters near them.
+9. **Crew traits:** half HP; produce breathable atmosphere; survive briefly outside a ship without an EVA suit,
+   but cannot use EVA suits; repair biomechanical technology faster (most races struggle to repair it).
+10. **Ship tiers:**
+    - Low tech: single-system targeting shots (stinger missiles or single-shot energy beams).
+    - Mid tech: spore systems or weapons that disable systems (cleared like a repair) and stun crew, with no breach
+      or fire. Possibly boarding crews, especially when they outnumber the other ship's crew. Higher evasion.
+    - High tech: many weapon systems, missiles, a high-hull carapace, spore systems and weapons, good sensors,
+      high evasion, medium shields at most.
