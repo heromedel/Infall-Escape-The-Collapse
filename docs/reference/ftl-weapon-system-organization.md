@@ -37,7 +37,8 @@ Hull destruction, high damage, little finesse; crew-powered ships; EVB Dock.
   Beam, Glaive Beam, Heavy Laser II
 - **Systems:** EVB Dock (replaces the Drone Control system)
 - **Drone-like, as EVB battlesuits:** Combat Drone I / II, Anti-Ship Beam Drone I / II, Anti-Ship Missile Drone,
-  Anti-Personnel Drone, Boarding Drone
+  Boarding Drone. (Not the Anti-Personnel Drone: a battlesuit fighting boarders would just be boarding its own
+  ship; Mecha crew already fill that role.)
 
 ## Tentauri
 
