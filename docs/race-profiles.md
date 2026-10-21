@@ -135,7 +135,8 @@ Octopus-like race (earlier working label "Octopods").
 4. **Doomed:** highly cooperative, possibly even allying with aggressive races.
 5. **Relations:** to define.
 6. **Technology:** most likely biomechanical, with the same power system as the Azurethea; they specialise in
-   shields and defence. Weapons tend to be standard lasers, beams or missiles as needed; they don't mind adapting.
+   shields and defence. If there is a Zoltan-like shield (an extra energy shield layer), it would
+   probably go to the Tentauri. Weapons tend to be standard lasers, beams or missiles as needed; they don't mind adapting.
 7. **Near and inside their territory:** to define.
 8. **Where and how they live:** explorers who spread by starting small regions further apart from each other
    than most races.
