@@ -146,6 +146,8 @@ Octopus-like race (earlier working label "Octopods").
 ## Senti-GPH (Sentient Generative Pre-trained Holograms) (draft, 2026-10-21)
 
 1. **Tone and description:** holographic AI avatars, originally made by Terrans, who became their own people.
+   They build, grow and multiply like other races; they archive information because they are made of
+   information themselves.
 2. **Doing fine:** curious and logical; collect and preserve knowledge from every culture they meet.
 3. **Struggling:** preserving data comes first; they trade for records, archives and storage, and also for things
    necessary for survival, such as defensive equipment as needed.
@@ -163,6 +165,9 @@ Octopus-like race (earlier working label "Octopods").
 8. **Where and how they live:** see 7; they stay close together, since their avatars depend on arrays.
 9. **Crew traits:** half HP individually; don't need oxygen; immune to fire. Bound to their ship's AAA, but a
    highly upgraded AAA can broadcast them directly onto another ship, with a cooldown. Ion disrupts them.
+   Idea: their skill training is chosen in advance, when recruited or acquired; they cost more to recruit or
+   acquire, especially since a ship needs an AAA of a minimum level to host even one; and they learn very poorly
+   on their own (massively reduced skill gain).
 10. **Ship tiers:**
     - Low: beams, good sensors, a small AAA.
     - Mid: hacking, a larger AAA.
