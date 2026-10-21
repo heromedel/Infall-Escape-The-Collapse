@@ -60,9 +60,9 @@ clone.
 5. **Relations:** will willingly become refugees when needed, but less inclined to accept refugees, especially
    violent ones. Try to avoid war, but are decisive once in one.
 6. **Technology:** part-organic ships. They produce their own Terran-friendly atmosphere in whatever room they
-   stand in. Weapons often disable systems with spores, or fire damaging shots at single rooms. Originally
-   imagined as the race with no power core or conduits: biological energy flows through the whole ship and can
-   power any system on board.
+   stand in. Weapons often disable systems with spores, or fire damaging shots at single rooms. Power works
+   as FTL's default (a limited pool of power that can be moved to any system), flavoured as biological energy
+   flowing through the whole ship rather than a power core or conduits.
 7. **Near and inside their territory:** to define.
 8. **Where and how they live:** sprawl in thin, almost veiny regions, reaching out for exploration or needed
    resources, and willingly leave unclaimed or neutral clusters near them.
