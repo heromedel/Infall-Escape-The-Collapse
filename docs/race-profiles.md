@@ -43,8 +43,12 @@ clone.
    later. (The alternative was plain FTL power; that default now belongs to the Azurethea.)
    Idea being discussed: the Terran power core has no theoretical limit. If a system is connected, it has
    power, period: no power balancing and no maximum power, simpler than FTL. Instead, rooms can have these
-   issues: atmosphere, fire, deck breaches, wall breaches, and damaged conduits. Open: whether ion and other
-   power effects act on conduits, and whether connected systems can be switched off on purpose.
+   issues: atmosphere, fire, deck breaches, wall breaches, and damaged conduits. Ion weapons can still disrupt
+   Terran systems, and systems can be switched off on purpose.
+   Balance idea, starting from FTL's default weapon numbers: a weapon with a high hull-breach chance gets a lower
+   chance of conduit damage; one with a low or no breach chance gets a conduit-damage chance, or a higher one.
+   Synergy: a power-giving crew race (like FTL's Zoltan) would be very strong on Terran ships, powering a room
+   whose conduit was severed elsewhere in the ship.
 7. **Near and inside their territory:** to define.
 8. **Where and how they live:** both: tight-knit core areas plus arms/branches of colonies. Probably the most
    common race in the galaxy.
