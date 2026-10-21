@@ -74,7 +74,7 @@ Infection that spreads; fleshy missiles and flak to get through shields; high HP
   like infection), Anti-Bio Beam
 - **Systems:** Clone Bay; a mutation system (idea) that lets Malphen crew swap their specialty, e.g.
   anti-personnel, repair, fire
-- **Drone-like, as mutations/spawn:** Boarding Drone (Malphen launching themselves, one-way), Anti-Ship Fire
+- **Drone-like, as mutations/spawn:** Boarding Drone (Malphen launching themselves through an airlock or launching bay, via a launch mutation), Anti-Ship Fire
   Drone (infection spreader), Hull Repair Drone (regrowth)
 
 ## Whispwraith (non-core)

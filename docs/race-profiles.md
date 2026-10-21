@@ -206,7 +206,8 @@ Basically a core race.
 - Maybe they have the equivalent of the clone bay.
 - Should probably have high HP and clone themselves.
 - Idea: a mutation system that lets Malphen crew swap their specialty, e.g. anti-personnel, repair, fire.
-- Idea: they launch themselves at another ship like a missile (how they would return is unsolved). Concern: there
+- Idea: launching is a mutation. A Malphen mutates to survive the launch, then goes to an airlock or a launching
+  bay and is fired into another ship. If it is just an airlock, that explains how they get back. Concern: there
   may already be too many ways to board a ship.
 - To define: how they behave when doing fine, struggling and doomed.
 
