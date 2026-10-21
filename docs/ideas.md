@@ -16,6 +16,24 @@ ship (GDD 1D) to escape.
 | Collection | Amass enough wealth and upgrades to prepare the colony ship to slingshot around the collapse, which distorts space and time and flings it to another galaxy. |
 | ??? (secret) | Fly into the collapse. Ships take significant damage or are destroyed. Once 3 beacons deep, escape becomes impossible, but they can meet a mysterious hostile alien race that seems to live in the collapse. About 8 or more jumps deep, they may find out this race is the cause of the collapse and destroy its command ship. Where the race comes from is probably never explained. The colony ship is not taken into the collapse. |
 
+### ??? victory, alternate version (2026-10-21)
+
+Getting powerful enough to survive inside the collapse requires getting nearly to the rim, then becoming powerful
+enough to enter the collapse and travel back to the core.
+
+Problem: what are you jumping between if all the star systems have collapsed? Options (can be combined, e.g.
+remnants near the edge, alien structures deeper in):
+
+1. **Frozen remnants:** near a black hole time slows dramatically, so things falling in appear frozen at the
+   moment they fell. Swallowed star systems remain as distorted, frozen echoes: wrecks, stalled fleets,
+   half-crushed planets.
+2. **The aliens' own structures:** the hostile race lives in the collapse, so its stations, gates and waypoints
+   are the nodes. Following its infrastructure leads to its command ship.
+3. **Pockets of stable space:** bubbles or eddies where space hasn't fully collapsed yet.
+
+Run length: rim and back would be very long. If space inside the collapse is compressed, each jump covers a huge
+distance, so the way back is short, but every jump does damage (attrition).
+
 ## Races
 
 When races are discussed, separate two layers:
