@@ -173,6 +173,11 @@ Octopus-like race (earlier working label "Octopods").
     - Mid: hacking, a larger AAA.
     - High: more hacking, an upgraded AAA, shield-penetrating technologies or weapons; not likely missiles.
 
+## Wolf race (unnamed; idea, 2026-10-21)
+
+- Quick attacks; basic weapons and technology; crew teleporters; raiders.
+- Senses: either psychic, or described as a sort of animal senses (preferred over scent-based sensors).
+
 ## Whispwraith (partial draft, 2026-10-21)
 
 Possibly the mysterious race of the ??? victory (see `ideas.md`); probably not a core race either way. Other
