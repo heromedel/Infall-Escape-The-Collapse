@@ -41,6 +41,10 @@ clone.
    undamaged conduits or rooms, and cut conduits repaired. Introduced slowly: the initial scout ship is easy to
    reroute, with routing mattering more on larger, higher-tier ships. If it becomes a problem, it can be changed
    later. (The alternative was plain FTL power; that default now belongs to the Azurethea.)
+   Idea being discussed: the Terran power core has no theoretical limit. If a system is connected, it has
+   power, period: no power balancing and no maximum power, simpler than FTL. Instead, rooms can have these
+   issues: atmosphere, fire, deck breaches, wall breaches, and damaged conduits. Open: whether ion and other
+   power effects act on conduits, and whether connected systems can be switched off on purpose.
 7. **Near and inside their territory:** to define.
 8. **Where and how they live:** both: tight-knit core areas plus arms/branches of colonies. Probably the most
    common race in the galaxy.
