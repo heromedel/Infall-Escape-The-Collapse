@@ -153,7 +153,8 @@ Octopus-like race (earlier working label "Octopods").
    biological data.
 5. **Relations:** taking in refugees costs them life support they don't otherwise need, so they would rather
    preserve a refugee race's records than house its people.
-6. **Technology:** very similar to the Terrans', with advanced beam weapons and sensors. Besides an armoured core
+6. **Technology:** very similar to the Terrans', including the same power conduits, with advanced beam weapons
+   and sensors. Besides an armoured core
    (the **AZC**, Armoured ZeroPoint Core, as on Terran ships), they have an **Armoured Avatar Array** (the
    **AAA** system) that stores and broadcasts their holographic avatars. If it is damaged, fewer avatars can be
    broadcast, so the ship has fewer holographic crew until it is repaired; they don't die from this unless the
