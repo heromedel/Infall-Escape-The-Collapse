@@ -42,9 +42,9 @@ and (idea) mind control, with no breach or fire; high evasion.
 
 - **Weapons:** Ion Blast I / II, Heavy Ion, Ion Charger (disable without damage, closest to spores), Ion Stunner and
   Stun Bomb (stun crew), Ion Bomb, Crystal Lockdown Bomb (traps crew without harming them), Leto / Artemis Missiles
-  (single-room "stinger" shots), Healing Burst and Repair Burst (support, can target their own ship)
-- **Gap:** their profile mentions "single-shot energy beams", but every FTL beam sweeps several rooms. A single-room
-  energy shot would be a new Infall weapon.
+  (single-room "stinger" shots), Defense Laser Mark I (a single-shot laser; fits their "single-shot energy" weapon
+  because it fires one shot at one room, not because of its name), Healing Burst and Repair Burst (support, can
+  target their own ship)
 - **Systems:** Mind Control (via spores, idea)
 - **Drone-like:** System Repair Drone
 
