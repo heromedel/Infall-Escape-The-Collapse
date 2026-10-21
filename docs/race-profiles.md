@@ -193,6 +193,13 @@ Wolf-like race (earlier working label "wolf race").
 10. **Ship tiers:** even their best ship designs are not that amazing, aside from larger or multiple crew
     teleporter rooms.
 
+## Tumor race (unnamed; idea, 2026-10-21)
+
+- Biomechanical weapons that infect a ship's systems and spread.
+- Either the race is basically mutants, or it is a living ship with no crew.
+- Weapons tend to be fired like fleshy missiles or like flak guns, to get through shields.
+- Maybe they have the equivalent of the clone bay.
+
 ## Whispwraith (partial draft, 2026-10-21)
 
 Possibly the mysterious race of the ??? victory (see `ideas.md`); probably not a core race either way. Other
