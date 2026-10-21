@@ -195,6 +195,8 @@ Wolf-like race (earlier working label "wolf race").
 
 ## Tumor race (unnamed; idea, 2026-10-21)
 
+Basically a core race.
+
 - Biomechanical weapons that infect a ship's systems and spread.
 - Either the race is basically mutants, or it is a living ship with no crew.
 - Weapons tend to be fired like fleshy missiles or like flak guns, to get through shields.
