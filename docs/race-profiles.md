@@ -173,10 +173,22 @@ Octopus-like race (earlier working label "Octopods").
     - Mid: hacking, a larger AAA.
     - High: more hacking, an upgraded AAA, shield-penetrating technologies or weapons; not likely missiles.
 
-## Wolf race (unnamed; idea, 2026-10-21)
+## Wolf race (unnamed; draft, 2026-10-21)
 
-- Quick attacks; basic weapons and technology; crew teleporters; raiders.
-- Senses: either psychic, or described as a sort of animal senses (preferred over scent-based sensors).
+1. **Description:** evolved independently, but similar to Terran canines.
+2. **Doing fine:** raid and attack others, seemingly for fun; willing to join up with others for a joint hunt.
+3. **Struggling:** tend to be in denial, insisting things are fine and just wanting to continue the hunt, but
+   even more willing to trade or join up.
+4. **Doomed:** oddly vicious but optimistic and highly willing to team up, convinced they will be fine as long
+   as they just keep going.
+5. **Relations:** to define.
+6. **Technology:** a mix of non-biomechanical tech stolen from others; basic weapons and technology; crew
+   teleporters. Quick attacks.
+7. **Near and inside their territory:** to define.
+8. **Where and how they live:** to define.
+9. **Crew traits:** senses: either psychic, or described as a sort of animal senses (preferred over scent-based
+   sensors).
+10. **Ship tiers:** to define.
 
 ## Whispwraith (partial draft, 2026-10-21)
 
