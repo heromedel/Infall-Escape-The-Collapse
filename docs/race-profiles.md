@@ -117,5 +117,7 @@ clone.
    integrate with by one bar, similar to FTL's Zoltan; Mecha could perhaps be upgraded to power two bars. Then a
    single weapon system is hard for them to power, so their ships would need multiple weapon systems or, more
    likely, rely on EVB suits. Mecha ships have no reactor; if subsystems need power, the system has its own
-   independent power rather than a reactor. Whether Mecha breathe is undecided; assumed yes for now.
+   independent power rather than a reactor. Whether Mecha breathe is undecided; assumed yes for now. Being physically tough, good with systems and armed with powerful
+   weapons, suffocation is their key weakness: take out their life support and one of them has to disengage and
+   move to repair it.
 10. **Ship tiers:** to define.
