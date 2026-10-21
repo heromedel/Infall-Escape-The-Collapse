@@ -16,7 +16,7 @@ Federation-like, balanced, clean tech; unlimited-power AZC with conduits.
 
 - **Weapons:** Dual Shot Laser, Burst Laser I / II / III, Heavy Laser I / II, Laser Charger I / II, Leto
   Missiles, Artemis Missiles, Hermes Missile, Pegasus Missile, Small Bomb
-- **Systems:** Artillery (Federation-style; Flak Artillery, Artillery Beam), Crew Teleporter
+- **Systems:** Crew Teleporter
 - **Drone-like:** System Repair Drone
 
 ## Azurethea
@@ -63,8 +63,7 @@ Quick-attack raiders; basic, stolen non-biomechanical tech; large or multiple cr
 
 - **Weapons:** Dual Shot Laser, Burst Laser I, Chain Burst Laser, Chain Vulcan, Flak Gun I, Ion Blast (to disable
   before boarding), Stun Bomb, Small Bomb
-- **Systems:** Crew Teleporter (large or multiple), Cloaking (ambush hunters; suggestion, since cloaking has no
-  race yet)
+- **Systems:** Crew Teleporter (large or multiple), Cloaking
 - **Drone-like:** Anti-Personnel Drone, Boarding Drone (from stolen tech)
 
 ## Malphen
@@ -73,7 +72,8 @@ Infection that spreads; fleshy missiles and flak to get through shields; high HP
 
 - **Weapons:** Flak Gun I / II, Adv. Flak Gun, Swarm Missiles, Breach Missiles, Fire Bomb and Fire Beam (spread
   like infection), Anti-Bio Beam
-- **Systems:** Clone Bay
+- **Systems:** Clone Bay; a mutation system (idea) that lets Malphen crew swap their specialty, e.g.
+  anti-personnel, repair, fire
 - **Drone-like, as mutations/spawn:** Boarding Drone (Malphen launching themselves, one-way), Anti-Ship Fire
   Drone (infection spreader), Hull Repair Drone (regrowth)
 
@@ -85,6 +85,9 @@ Ion weapons; 2 bars of power per Whispwraith; self-teleporting crew.
 - **Drone-like:** Ion Intruder Drone, Anti-Ship Ion Drone
 
 ## Not yet placed
+
+- **Artillery:** if used, either a specialized weapon different for each race, maybe on their highest-tier ships,
+  or given to the Mecha.
 
 - **Drone Control** as a standard system: drones may be removed; their roles are spread above as EVB
   battlesuits (Mecha), mutations/spawn (Malphen) and defence drones (Tentauri).

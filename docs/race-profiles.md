@@ -185,7 +185,7 @@ Wolf-like race (earlier working label "wolf race").
    as they just keep going.
 5. **Relations:** to define.
 6. **Technology:** a mix of non-biomechanical tech stolen from others; basic weapons and technology; crew
-   teleporters. Their power model is whatever the ship they stole uses. They tend to use an autopilot while
+   teleporters; cloaking. Their power model is whatever the ship they stole uses. They tend to use an autopilot while
    boarding others.
 7. **Near and inside their territory:** see 8.
 8. **Where and how they live:** small, localized, independent clusters that even attack each other.
@@ -205,6 +205,7 @@ Basically a core race.
 - Weapons tend to be fired like fleshy missiles or like flak guns, to get through shields.
 - Maybe they have the equivalent of the clone bay.
 - Should probably have high HP and clone themselves.
+- Idea: a mutation system that lets Malphen crew swap their specialty, e.g. anti-personnel, repair, fire.
 - Idea: they launch themselves at another ship like a missile (how they would return is unsolved). Concern: there
   may already be too many ways to board a ship.
 - To define: how they behave when doing fine, struggling and doomed.
