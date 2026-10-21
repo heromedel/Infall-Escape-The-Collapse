@@ -1,6 +1,8 @@
 # Infall: Race Profiles
 
-Each race is defined with the profile below. No races are defined yet; race ideas so far are in `ideas.md`.
+Each race is defined with the profile below. Other race ideas are in `ideas.md`.
+
+Still to define across races: clearer rivalry and potential-friend lines between each pair of races.
 
 ## Profile template
 
@@ -36,19 +38,17 @@ clone.
     - Doing well: likely to take in refugees of any race; helpful and diplomatic.
     - Struggling: less tolerant of aggressive races, less likely to take them in; more likely to resort to combat.
     - Doomed: refugees are among the things blamed; very unlikely to willingly take more in.
-6. **Technology:** much like FTL's Federation, with **power conduits** (leaning this way): a heavily armoured
-   power core (the **AZC**, Armoured ZeroPoint Core) and more power available than other races, but power must be routed, or rerouted through
-   undamaged conduits or rooms, and cut conduits repaired. Introduced slowly: the initial scout ship is easy to
-   reroute, with routing mattering more on larger, higher-tier ships. If it becomes a problem, it can be changed
-   later. (The alternative was plain FTL power; that default now belongs to the Azurethea.)
-   Idea being discussed: the Terran power core has no theoretical limit. If a system is connected, it has
-   power, period: no power balancing and no maximum power, simpler than FTL. Instead, rooms can have these
-   issues: atmosphere, fire, deck breaches, wall breaches, and damaged conduits. Ion weapons can still disrupt
-   Terran systems, and systems can be switched off on purpose.
+6. **Technology:** much like FTL's Federation, with **power conduits** and a heavily armoured power core (the
+   **AZC**, Armoured ZeroPoint Core). The core has no power limit: if a system is connected, it has power, period;
+   no power balancing and no maximum power. Instead, rooms can have these issues: atmosphere, fire, deck breaches,
+   wall breaches and damaged conduits. Power must be rerouted through undamaged conduits or rooms, and cut
+   conduits repaired. Ion weapons can still disrupt Terran systems, and systems can be switched off on purpose.
+   Introduced slowly: the initial scout ship is easy to reroute, with routing mattering more on larger,
+   higher-tier ships; it can be changed later if it becomes a problem.
    Balance idea, starting from FTL's default weapon numbers: a weapon with a high hull-breach chance gets a lower
    chance of conduit damage; one with a low or no breach chance gets a conduit-damage chance, or a higher one.
-   Synergy: a power-giving crew race (like FTL's Zoltan) would be very strong on Terran ships, powering a room
-   whose conduit was severed elsewhere in the ship.
+   Synergy: a power-giving crew race would be very strong on Terran ships, powering a room whose conduit was
+   severed elsewhere in the ship.
 7. **Near and inside their territory:** to define.
 8. **Where and how they live:** both: tight-knit core areas plus arms/branches of colonies. Probably the most
    common race in the galaxy.
@@ -110,16 +110,13 @@ clone.
    preferring previously populated areas over empty regions where they would have to build infrastructure
    themselves. This gives criminals another place to hide, but to the Mecha, criminals developing empty
    clusters just makes them better to take later.
-9. **Crew traits:** integrate with any ship system and are better at running it than other crew, for most if
-   not all systems (maybe not specifically peaceful ones). Integrating takes a moment longer to begin using a
-   system and to disengage, and even longer with biomechanical systems. Slow movement, high melee damage.
-   Alternative being considered: instead of being better at a system, a Mecha crew member powers the system they
-   integrate with by one bar, similar to FTL's Zoltan; Mecha could perhaps be upgraded to power two bars. Then a
-   single weapon system is hard for them to power, so their ships would need multiple weapon systems or, more
-   likely, rely on EVB suits. Mecha ships have no reactor; if subsystems need power, the system has its own
-   independent power rather than a reactor. Whether Mecha breathe is undecided; assumed yes for now. Being physically tough, good with systems and armed with powerful
-   weapons, suffocation is their key weakness: take out their life support and one of them has to disengage and
-   move to repair it.
+9. **Crew traits:** integrate with any ship system, powering it by one bar, similar to FTL's Zoltan; Mecha could
+   perhaps be upgraded to power two bars. Integrating takes a moment longer to begin using a system and to
+   disengage, and even longer with biomechanical systems. Slow movement, high melee damage, physically tough.
+   Mecha ships have no reactor; if subsystems need power, the system has its own independent power. A single
+   weapon system is hard for them to power, so their ships need multiple weapon systems or, more likely, rely on
+   EVB suits. Whether Mecha breathe is undecided; assumed yes for now. Suffocation is their key weakness: take out
+   their life support and one of them has to disengage and move to repair it.
 10. **Ship tiers:** to define.
 
 ## Tentauri (draft, 2026-10-21)
@@ -186,7 +183,7 @@ Wolf-like race (earlier working label "wolf race").
    as they just keep going.
 5. **Relations:** to define.
 6. **Technology:** a mix of non-biomechanical tech stolen from others; basic weapons and technology; crew
-   teleporters.
+   teleporters. Their power model is whatever the ship they stole uses.
 7. **Near and inside their territory:** see 8.
 8. **Where and how they live:** small, localized, independent clusters that even attack each other.
 9. **Crew traits:** quick attacks, reduced HP, psychic.
@@ -201,6 +198,10 @@ Basically a core race.
 - Either the race is basically mutants, or it is a living ship with no crew.
 - Weapons tend to be fired like fleshy missiles or like flak guns, to get through shields.
 - Maybe they have the equivalent of the clone bay.
+- Should probably have high HP and clone themselves.
+- Idea: they launch themselves at another ship like a missile (how they would return is unsolved). Concern: there
+  may already be too many ways to board a ship.
+- To define: name, and how they behave when doing fine, struggling and doomed.
 
 ## Whispwraith (partial draft, 2026-10-21)
 
