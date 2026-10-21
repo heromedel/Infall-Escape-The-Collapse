@@ -173,7 +173,9 @@ Octopus-like race (earlier working label "Octopods").
     - Mid: hacking, a larger AAA.
     - High: more hacking, an upgraded AAA, shield-penetrating technologies or weapons; not likely missiles.
 
-## Wolf race (unnamed; draft, 2026-10-21)
+## Lykario (draft, 2026-10-21)
+
+Wolf-like race (earlier working label "wolf race").
 
 1. **Description and ship style:** evolved independently, but similar to Terran canines. Ships are a mix of
    stolen parts, but efficient when doing well.
