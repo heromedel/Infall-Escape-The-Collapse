@@ -192,7 +192,10 @@ Wolf-like race (earlier working label "wolf race").
 10. **Ship tiers:** even their best ship designs are not that amazing, aside from larger or multiple crew
     teleporter rooms.
 
-## Tumor race (unnamed; idea, 2026-10-21)
+## Malphen (formally Malphagius) (idea, 2026-10-21)
+
+Tumor race. "Malphagius" (roughly "the malignant devourer") is the formal or scientific name, used in lore and
+events; "Malphen" is the everyday name.
 
 Basically a core race.
 
@@ -203,7 +206,7 @@ Basically a core race.
 - Should probably have high HP and clone themselves.
 - Idea: they launch themselves at another ship like a missile (how they would return is unsolved). Concern: there
   may already be too many ways to board a ship.
-- To define: name, and how they behave when doing fine, struggling and doomed.
+- To define: how they behave when doing fine, struggling and doomed.
 
 ## Whispwraith (partial draft, 2026-10-21)
 
