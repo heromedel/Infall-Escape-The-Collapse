@@ -37,7 +37,7 @@ clone.
     - Struggling: less tolerant of aggressive races, less likely to take them in; more likely to resort to combat.
     - Doomed: refugees are among the things blamed; very unlikely to willingly take more in.
 6. **Technology:** much like FTL's Federation, with **power conduits** (leaning this way): a heavily armoured
-   power core and more power available than other races, but power must be routed, or rerouted through
+   power core (the **AZC**, Armoured ZeroPoint Core) and more power available than other races, but power must be routed, or rerouted through
    undamaged conduits or rooms, and cut conduits repaired. Introduced slowly: the initial scout ship is easy to
    reroute, with routing mattering more on larger, higher-tier ships. If it becomes a problem, it can be changed
    later. (The alternative was plain FTL power; that default now belongs to the Azurethea.)
@@ -146,7 +146,8 @@ Octopus-like race (earlier working label "Octopods").
 ## Holograms (unnamed; partial draft, 2026-10-21)
 
 - **Technology:** very similar to the Terrans', with advanced beam weapons and sensors. Besides an armoured core
-  (possible name: **AZC**, Armoured ZeroPoint Core), they have an **Armoured Array Bank** (working name) that
+  (the **AZC**, Armoured ZeroPoint Core, as on Terran ships), they have an **Armoured Avatar Array** (the
+  **AAA** system) that
   stores and broadcasts their holographic AI avatars. If it is damaged, fewer avatars can be broadcast, so the
   ship has fewer holographic crew until it is repaired; they don't die from this unless the ship is destroyed.
 - **Crew traits:** half HP individually.
