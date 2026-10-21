@@ -78,7 +78,9 @@ clone.
 10. **Ship tiers:**
     - Low tech: single-system targeting shots (stinger missiles or single-shot energy beams).
     - Mid tech: spore systems or weapons that disable systems (cleared like a repair) and stun crew, with no breach
-      or fire. Possibly boarding crews, especially when they outnumber the other ship's crew. Higher evasion.
+      or fire.
+      Idea: their spores also mind control someone in the room, pacifying the enemy and making them fight each
+      other. This would give mind control to the Azurethea. Possibly boarding crews, especially when they outnumber the other ship's crew. Higher evasion.
     - High tech: many weapon systems, missiles, a high-hull carapace, spore systems and weapons, good sensors,
       high evasion, medium shields at most.
 
