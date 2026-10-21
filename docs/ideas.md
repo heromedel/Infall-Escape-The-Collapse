@@ -5,15 +5,16 @@ once it has been discussed.
 
 ## Victory paths (2026-10-21)
 
-Multiple ways to escape, like the win conditions in Sid Meier's Civilization.
+Multiple ways to escape, like the win conditions in Sid Meier's Civilization. Not every path needs the whole colony
+ship (GDD 1D) to escape.
 
 | Path | Idea |
 |---|---|
-| Tech | Requires multiple best-possible systems from multiple races to shield, reinforce, power and then drive the ship so it can make the jump. |
+| Tech | Requires multiple best-possible systems from multiple races to shield, reinforce, power and then drive the ship so it can make the jump. Victory as long as one ship makes the jump carrying at least one male and one female crew member of the same race, or some kind of Mass Genetic Storage bank. This is what sets it apart from Collection. |
 | Alliance | Get enough races to cooperate to build a colony ark that multiple colony ships can migrate their people onto, for the multi-generational voyage to another galaxy through hyperspace. |
 | Exploration | Assemble the mysterious pieces of an ancient artifact known as the Orb of Chullack, which opens a giant space gate sending the ship to another dimension where the collapse never happened. |
 | Collection | Amass enough wealth and upgrades to prepare the colony ship to slingshot around the collapse, which distorts space and time and flings it to another galaxy. |
-| ??? (secret) | Fly into the collapse. Ships take significant damage or are destroyed. Once 3 beacons deep, escape becomes impossible, but they can meet a mysterious hostile alien race that seems to live in the collapse. About 8 or more jumps deep, they may find out this race is the cause of the collapse and destroy its command ship. Where the race comes from is probably never explained. |
+| ??? (secret) | Fly into the collapse. Ships take significant damage or are destroyed. Once 3 beacons deep, escape becomes impossible, but they can meet a mysterious hostile alien race that seems to live in the collapse. About 8 or more jumps deep, they may find out this race is the cause of the collapse and destroy its command ship. Where the race comes from is probably never explained. The colony ship is not taken into the collapse. |
 
 ## Races
 
