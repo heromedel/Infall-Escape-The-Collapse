@@ -151,7 +151,8 @@ Octopus-like race (earlier working label "Octopods").
    necessary for survival, such as defensive equipment as needed.
 4. **Doomed:** no qualms about killing living people, while still willing to store their information and
    biological data.
-5. **Relations:** to define.
+5. **Relations:** taking in refugees costs them life support they don't otherwise need, so they would rather
+   preserve a refugee race's records than house its people.
 6. **Technology:** very similar to the Terrans', with advanced beam weapons and sensors. Besides an armoured core
    (the **AZC**, Armoured ZeroPoint Core, as on Terran ships), they have an **Armoured Avatar Array** (the
    **AAA** system) that stores and broadcasts their holographic avatars. If it is damaged, fewer avatars can be
