@@ -185,7 +185,8 @@ Wolf-like race (earlier working label "wolf race").
    as they just keep going.
 5. **Relations:** to define.
 6. **Technology:** a mix of non-biomechanical tech stolen from others; basic weapons and technology; crew
-   teleporters. Their power model is whatever the ship they stole uses.
+   teleporters. Their power model is whatever the ship they stole uses. They tend to use an autopilot while
+   boarding others.
 7. **Near and inside their territory:** see 8.
 8. **Where and how they live:** small, localized, independent clusters that even attack each other.
 9. **Crew traits:** quick attacks, reduced HP, psychic.
