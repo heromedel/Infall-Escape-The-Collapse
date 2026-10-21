@@ -34,6 +34,14 @@ remnants near the edge, alien structures deeper in):
 Run length: rim and back would be very long. If space inside the collapse is compressed, each jump covers a huge
 distance, so the way back is short, but every jump does damage (attrition).
 
+## Resources
+
+### Material and Energy (2026-10-21)
+
+Instead of FTL's scrap, missiles and drone parts, two resources: **Material** and **Energy**. Basic systems
+consume little to no energy beyond whatever energy they gain; powerful energy weapons consume energy; missiles
+consume material. (Keeping scrap is also acceptable.)
+
 ## Races
 
 When races are discussed, separate two layers:

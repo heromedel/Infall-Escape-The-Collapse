@@ -18,3 +18,6 @@ A design-stage project: we are writing a game design document, not building the 
 - Loves optional settings. A feature that departs from FTL can be a toggle so players can make the game more
   like FTL. Settings are written with the default first, e.g. `Multi Target Lasers: On > Off`.
 - Number discussion points (1, 2, 3…) so they can be answered by number.
+- Work one major, high-level question at a time: the one that must be answered before deeper questions can be.
+  If you could list more than ~6 separate questions, you are not at that level. Don't go into tactics or details
+  that depend on things not yet defined.
