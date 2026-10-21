@@ -114,5 +114,8 @@ clone.
    not all systems (maybe not specifically peaceful ones). Integrating takes a moment longer to begin using a
    system and to disengage, and even longer with biomechanical systems. Slow movement, high melee damage.
    Alternative being considered: instead of being better at a system, a Mecha crew member powers the system they
-   integrate with, similar to FTL's Zoltan.
+   integrate with by one bar, similar to FTL's Zoltan; Mecha could perhaps be upgraded to power two bars. Then a
+   single weapon system is hard for them to power, so their ships would need multiple weapon systems or, more
+   likely, rely on EVB suits. Either their subsystems (e.g. life support) have their own power, or they would
+   need crew in every room.
 10. **Ship tiers:** to define.
