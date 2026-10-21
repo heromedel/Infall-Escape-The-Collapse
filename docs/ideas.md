@@ -23,6 +23,11 @@ When races are discussed, separate two layers:
 - **Crew traits:** what one crew member can do, as in FTL (Mantis fight well, Engi repair fast).
 - **Faction behaviour:** how that race's ships and factions act in events and encounters.
 
+### Crew sex (2026-10-21)
+
+The Tech victory (one male and one female crew member of the same race) would make crew sex a real gameplay
+attribute, which FTL mostly lacks.
+
 ### Crew abilities taken from FTL ship mechanics (2026-10-21)
 
 Abilities that exist in FTL as ship or system mechanics, but that no race has:
