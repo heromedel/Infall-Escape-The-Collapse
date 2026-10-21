@@ -34,13 +34,18 @@ Both describe faction behaviour more than crew traits, so they would need adapti
 
 ## Ships
 
-### Space suits and airlock exits (2026-10-21)
+### EVA Dock and EVA suits (2026-10-21)
 
-Any crew member suits up at the airlock and leaves the ship: a slower, riskier alternative to the teleporter,
-for boarding enemies or reaching squad-mates.
+In real life a spacewalk is an EVA (extravehicular activity). Working names: **EVA Dock** for the system,
+**EVA suit** for the suit.
 
+Crew suit up at the EVA Dock and leave the ship: a slower, riskier alternative to the teleporter, for boarding
+enemies or reaching squad-mates.
+
+- **System levels:** only add suit time/oxygen. More time means reaching farther ships.
 - **Distance matters:** crossing time depends on the gap between ships, so formation depth and spacing
   (GDD 3H) become tactical.
-- **Risk in transit:** crew outside can be hit by defence drones or anti-personnel fire; suit air limits range.
-- **Cost:** suits could be equipment the ship carries (e.g. one per airlock, or bought at stores).
+- **Risk in transit:** crew outside can be hit by defence drones or anti-personnel fire.
+- **Out of air:** to decide. Leaning toward damage over time until they reach a ship, like FTL suffocation,
+  rather than instant death.
 - A race that survives outside without a suit would be a stronger version of the same mechanic.
