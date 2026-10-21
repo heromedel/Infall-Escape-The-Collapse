@@ -2,7 +2,8 @@
 
 A design-stage project: we are writing a game design document, not building the game yet.
 
-- Follow `docs/rules.md` (workflow, labelling of plans/steps/questions, branch rules).
+- Follow `docs/game-project-standards.md`: standard rules (workflow, labelling of plans/steps/questions,
+  branch rules), elegant code principles, and the designer's game design philosophy.
 - `docs/gdd.html` is the game design document. Points are lettered per section (e.g. 2A) and tagged
   Decided / Likely / Proposed / Open. Undiscussed ideas go in `docs/ideas.md`.
 - A shared, co-editable copy of the GDD exists at https://claude.ai/artifact/DNRJEFZkzS4zBL1nPHoLmX. Don't keep
