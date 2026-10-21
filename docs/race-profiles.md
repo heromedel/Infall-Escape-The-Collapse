@@ -121,3 +121,16 @@ clone.
    weapons, suffocation is their key weakness: take out their life support and one of them has to disengage and
    move to repair it.
 10. **Ship tiers:** to define.
+
+## Whipwraith (partial draft, 2026-10-21)
+
+Possibly the mysterious race of the ??? victory (see `ideas.md`); probably not a core race either way. Other
+profile points are left until that is decided.
+
+- **Description:** beings that seem to be made of a cloud of particles and energy.
+- **Technology:** their ships use FTL-style power levels, but instead of a reactor they get 2 bars per
+  Whipwraith, allocatable anywhere in the ship. Their weapons tend to be ion weapons.
+- **Crew traits:** survive in a different kind of atmosphere; oxygen atmospheres are toxic to them. They drain
+  an oxygen environment, converting it into their own, taking damage from the oxygen meanwhile. Once in their
+  own environment they heal over time, without needing a medbay. They can charge for a second and then teleport
+  themselves to another room or ship, with a cooldown.
