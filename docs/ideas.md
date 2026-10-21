@@ -115,3 +115,8 @@ shot from one weapon goes to the same target room.
 
 - Possibly targeting rooms on different ships in the enemy squad too, to decide.
 - Could be an optional setting: `Multi Target Lasers: On > Off` (default first), so players can keep FTL's behaviour.
+
+### Point-defense laser (2026-10-21)
+
+An actual defence laser system that shoots down incoming missiles, like a defence drone but without needing to be
+a drone. Would suit the Tentauri.
