@@ -118,7 +118,7 @@
 <h2 id="collapse">2. The Collapse &amp; Campaign Structure</h2>
 <div class="pt"><b>A:</b> <span class="tag decided">Decided</span> The collapse horizon expands outward over the run.</div>
 <div class="pt"><b>B:</b> <span class="tag proposed">Proposed</span> Event themes depend on distance from the horizon: close to it, events reflect the shock of the collapse and people scrambling to leave their planets; far from it, distant worlds may not yet believe the collapse is real.</div>
-<div class="pt"><b>C:</b> <span class="tag likely">Likely</span> The map is one open, galaxy-shaped node map rather than FTL-style sectors. It is built from zones: clusters with their own generation rules, e.g. a race's territory that sprawls, or a field of dead stars or other anomalies. Difficulty rises with distance from the core. Fallback: themed sectors with a wide star map between them.</div>
+<div class="pt"><b>C:</b> <span class="tag likely">Likely</span> The map is one open, galaxy-shaped node map rather than FTL-style sectors. It is built from regions (see 2J), each with its own generation rules, e.g. a race's territory that sprawls, or a field of dead stars or other anomalies. Difficulty rises with distance from the core. Fallback: themed sectors with a wide star map between them.</div>
 <div class="pt"><b>D:</b> <span class="tag likely">Likely</span> Map zoom is clamped fairly tight by default so players aren't overwhelmed; a setting unclamps it (e.g. <code>Map Zoom: Clamped &gt; Free</code>).</div>
 <div class="pt"><b>E:</b> <span class="tag proposed">Proposed</span> Sensor level sets how far away beacons are visible, as unlabeled beacons like FTL's, so upgraded sensors allow longer-range planning.</div>
 <div class="pt"><b>F:</b> <span class="tag decided">Decided</span> No area is ever a dead end: every node links to at least one node farther from the core.</div>
@@ -134,6 +134,9 @@
 </ol></div>
 <div class="pt"><b>H:</b> <span class="tag likely">Likely</span> Stages are somewhat flexible bands of difficulty by distance from the core, hidden from the player.</div>
 <div class="pt"><b>I:</b> <span class="tag proposed">Proposed</span> Multiple victory paths, like Civilization's win conditions (see the ideas document).</div>
+<div class="pt"><b>J:</b> <span class="tag decided">Decided</span> Map terms: each node, and each jump, is a <b>star cluster</b>. Which of its stars are inhabited is abstracted; on the map a node is drawn as a group of dots rather than one. Several related clusters form a <b>region</b>, e.g. a civilization's territory. "System" is kept for ship systems only.</div>
+<div class="pt"><b>K:</b> <span class="tag decided">Decided</span> Each region has deep, inner and border clusters (deep &lt; inner &lt; border), with possible unclaimed or neutral clusters between regions.</div>
+<div class="pt"><b>L:</b> <span class="tag likely">Likely</span> Clusters are not static. A cluster can change state during a run, e.g. Border, Refugee, Occupied, Abandoned, Swallowed. These are potential states, not a fixed sequence: which ones happen depends on the races involved, the situation, proximity to the collapse and other factors. More states can be added.</div>
 
 <h2 id="combat">3. Squad Combat</h2>
 <div class="pt"><b>A:</b> <span class="tag likely">Likely</span> Player squad on the bottom half of the screen, enemy squad on the top half.</div>
@@ -264,6 +267,7 @@
   <tr><td>2026-10-21</td><td>A run is lost when all scouts are gone (1F); the colony ship stays out of the first build (1G).</td></tr>
   <tr><td>2026-10-21</td><td>Any ship can target any enemy ship; no positioning in combat (3L, 3M).</td></tr>
   <tr><td>2026-10-21</td><td>Core loop same as FTL (1H); crew work as in FTL (7B); systems are FTL's plus more (8A).</td></tr>
+  <tr><td>2026-10-21</td><td>Map terms: node = star cluster, clusters form regions (2J); deep, inner and border clusters (2K); clusters can change state (2L).</td></tr>
 </table>
 
 </main>

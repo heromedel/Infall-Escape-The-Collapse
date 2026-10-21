@@ -9,7 +9,8 @@ Each race is defined with the profile below. No races are defined yet; race idea
 2. **Base characteristics when doing fine.**
 3. **Characteristics that emerge when struggling.**
 4. **Characteristics when near the collapse and/or doomed.**
-5. **How they interact with each other race.**
+5. **How they interact with each other race.** This also drives how clusters change state (GDD 2L), e.g.
+   whether they take in refugees or invade weakened neighbours.
 6. **How their technology works or differs.**
 7. **What it's like near and inside their territory.**
 8. **Where and how they live:** whether they sprawl or hold a small, tight territory.
