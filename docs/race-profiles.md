@@ -12,12 +12,12 @@ Each race is defined with the profile below. No races are defined yet; race idea
 5. **How they interact with each other race.** This also drives how clusters change state (GDD 2L), e.g.
    whether they take in refugees or invade weakened neighbours.
 6. **How their technology works or differs.**
-7. **What it's like near and inside their territory:** where and how they live, e.g. whether they sprawl or
-   hold a small, tight territory.
-8. **Crew traits:** what one crew member of this race does on your ship, FTL-style (e.g. fights well,
+7. **What it's like near and inside their territory.**
+8. **Where and how they live:** whether they sprawl or hold a small, tight territory.
+9. **Crew traits:** what one crew member of this race does on your ship, FTL-style (e.g. fights well,
    repairs fast). Ideally connected to the race's character.
-9. **Ship designs across tiers:** basic to advanced, since a race can be placed anywhere from the core to the
-   rim and its strength comes from its placement (GDD 2N).
+10. **Ship designs across tiers:** basic to advanced, since a race can be placed anywhere from the core to the
+    rim and its strength comes from its placement (GDD 2N).
 
 ## Terrans: The Galactic Alliance of Terran Occupied Systems ("the Gatos") (draft, 2026-10-21)
 
@@ -42,7 +42,8 @@ clone.
     2. **Power conduits:** a conduit overlay; power must be routed, or rerouted through undamaged conduits or
        rooms, and cut conduits repaired. In exchange, a heavily armoured power core and more power available than
        other races. If Terrans use idea 1, conduits could go to another race.
-7. **Territory:** both tight-knit core areas and arms/branches of colonies. Probably the most common race in
-   the galaxy.
-8. **Crew traits:** as FTL's humans.
-9. **Ship tiers:** as FTL.
+7. **Near and inside their territory:** to define.
+8. **Where and how they live:** both: tight-knit core areas plus arms/branches of colonies. Probably the most
+   common race in the galaxy.
+9. **Crew traits:** as FTL's humans.
+10. **Ship tiers:** as FTL.
