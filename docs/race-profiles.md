@@ -18,3 +18,30 @@ Each race is defined with the profile below. No races are defined yet; race idea
    repairs fast). Ideally connected to the race's character.
 10. **Ship designs across tiers:** basic to advanced, since a race can be placed anywhere from the core to the
     rim and its strength comes from its placement (GDD 2N).
+
+## Terrans: The Galactic Alliance of Terran Occupied Systems ("the Gatos") (draft, 2026-10-21)
+
+The starting race (GDD 7C). The name and its pun (*gatos*, "cats") are deliberate, to avoid a plain Federation
+clone.
+
+1. **Tone and ship style:** when doing well, clean, soft Federation-like ships. When desperate, a grim,
+   survivalist look built from seemingly borrowed or stolen technology.
+2. **Doing fine:** accepted by others, interested in trade and other cultures. Technology is clean, easy to use
+   and humane.
+3. **Struggling:** hopeful, somewhat optimistic, with the occasional pessimistic individual. They believe in
+   coming together.
+4. **Doomed:** aggressive and xenophobic; they blame their problems on others and resort to nearly any crime:
+   theft, hijacking, using other races' technology, even piracy. Willing to do anything to survive.
+5. **Relations:**
+    - Doing well: likely to take in refugees of any race; helpful and diplomatic.
+    - Struggling: less tolerant of aggressive races, less likely to take them in; more likely to resort to combat.
+    - Doomed: refugees are among the things blamed; very unlikely to willingly take more in.
+6. **Technology:** much like FTL's Federation. Being considered: power runs through the hull plating, so as long
+   as the ship is intact they can move power to other systems; more power available than other races, with a
+   heavily armoured power core. Power conduits (power routed through conduits that can be cut, rerouted or
+   repaired) might go to another race instead.
+7. **Near and inside their territory:** to define.
+8. **Where and how they live:** both: tight-knit core areas plus arms/branches of colonies. Probably the most
+   common race in the galaxy.
+9. **Crew traits:** as FTL's humans.
+10. **Ship tiers:** as FTL.

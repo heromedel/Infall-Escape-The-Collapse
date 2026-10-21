@@ -34,6 +34,10 @@ remnants near the edge, alien structures deeper in):
 Run length: rim and back would be very long. If space inside the collapse is compressed, each jump covers a huge
 distance, so the way back is short, but every jump does damage (attrition).
 
+### Default final enemy (2026-10-21)
+
+The stage 7 rival who wants your escape route could by default be a band of doomed, criminal Terrans (Gatos).
+
 ## Resources
 
 ### Material and Energy (2026-10-21)
