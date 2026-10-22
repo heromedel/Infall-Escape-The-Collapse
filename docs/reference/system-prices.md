@@ -41,7 +41,7 @@ guess. The point-defense laser does the job of a drone bay plus a defence drone,
 | Mutation system | Drone Control × 0.75 | 10.89 | 1.82, 3.63, 5.45, 8.17, 10.89, 14.52, 18.15 | 62.62 |
 | EVA Dock | Teleporter × 0.75 | 16.34 | 5.45, 10.89 | 16.34 |
 | Point-defense laser | Drone Control + Defense Drone I | 26.62 | 2.42, 4.84, 7.26, 10.89, 14.52, 19.36, 24.21 | 83.49 |
-| AAA | Clone Bay | 12.11 | 8.47, 10.89 | 19.36 |
+| AAA | Clone Bay + Backup DNA Bank augment (40 scrap) | 21.78 | 8.47, 10.89 | 19.36 |
 
 The number of levels follows the analog until each system's levels are designed.
 
