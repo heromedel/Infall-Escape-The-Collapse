@@ -32,15 +32,13 @@ Drone Control and Artillery are listed for reference; both are unplaced (see `ft
 ## New Infall systems (suggested, from FTL analogs)
 
 Each is priced from the closest FTL system. A weaker analog ("sucks more") takes × 0.75 of its price, a first
-guess. The point-defense laser does the job of a drone bay plus a defence drone, so it adds Defense Drone I's
-50 scrap to the Drone Control buy price.
+guess.
 
 | System | Analog | Buy (Mawjig) | Upgrades, per level (Mawjig) | All upgrades (Mawjig) |
 |---|---|---|---|---|
 | EVB Dock | Drone Control | 14.52 | 2.42, 4.84, 7.26, 10.89, 14.52, 19.36, 24.21 | 83.49 |
 | Mutation system | Drone Control × 0.75 | 10.89 | 1.82, 3.63, 5.45, 8.17, 10.89, 14.52, 18.15 | 62.62 |
 | EVA Dock | Teleporter × 0.75 | 16.34 | 5.45, 10.89 | 16.34 |
-| Point-defense laser | Drone Control + Defense Drone I | 26.62 | 2.42, 4.84, 7.26, 10.89, 14.52, 19.36, 24.21 | 83.49 |
 | AAA | Clone Bay + Backup DNA Bank augment (40 scrap) | 21.78 | 8.47, 10.89 | 19.36 |
 
 The number of levels follows the analog until each system's levels are designed.
