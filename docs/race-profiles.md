@@ -250,6 +250,12 @@ Basically a core race.
 - Idea: launching is a mutation. A Malphen mutates to survive the launch, then goes to an airlock or a launching
   bay and is fired into another ship. If it is just an airlock, that explains how they get back. Concern: there
   may already be too many ways to board a ship.
+- Diplomacy through matter (2026-10-22): if they can't infect a ship and survive, or escape, they launch valuable
+  debris into space for the other side to take and try to escape: their version of FTL's surrender offer, with
+  no words. Otherwise they likely only pick off vulnerable ships, or use hit-and-run infection tactics.
+  - Suggestion (Ai Generated): the debris might carry infection, making it a gamble to take. Only if the risk is
+    visible to the player (e.g. sensors show infected debris), so accepting a surrender is never an unseen
+    punishment.
 - How they behave when doing fine, struggling and doomed: see the profile below.
 
 Profile (Ai Generated):
@@ -262,8 +268,9 @@ Profile (Ai Generated):
    rarely attack ships that keep their distance. They can't be talked to, but they can be paid in matter: a Hail
    (GDD 3O) offering Mawjig can buy passage.
 3. **Struggling:** hungry. They hunt ships to absorb them, and accept surrender only as matter (Mawjig).
-4. **Doomed:** frenzied. They throw everything at anything, launch crew at every ship, and absorb their own weaker
-   ships to keep the strongest going.
+4. **Doomed:** they pick off vulnerable ships and use hit-and-run infection tactics (above), launch crew at
+   ships they can take, and absorb their own weaker ships to keep the strongest going. When cornered they
+   jettison debris to buy their escape.
 5. **Relations:** everyone's rival, and they never become refugees in the usual sense: a doomed Malphen region
    spreads into its neighbours instead. No race takes Malphen in. The biomechanical races (Azurethea, Tentauri)
    fear them most, since infection spreads faster into biomechanical systems (GDD 8G).
@@ -335,6 +342,7 @@ tendencies; combine the two sides for the situation.
 | Azurethea ~ bordering Lykario | The Lykario hunt the Azurethea, as they do anyone bordering them. The Azurethea try diplomacy, but the more they struggle the more vindictive they become; it can easily turn into all-out war. | Designer |
 | Tentauri ~ doomed Mecha ship | The Tentauri are defensive; the doomed Mecha may want to trade or join up, for their own advantage. | Designer |
 | Doing-fine Malphen ~ doomed distant Mecha | The Malphen would likely attack on sight; knowing this, the Mecha would likely prepare a battle plan to attack first or escape. | Designer |
+| Doomed Malphen ~ doing-fine Mecha | If the Malphen can't infect the Mecha ship and survive, or escape, they launch valuable debris for the Mecha to take and try to escape; otherwise they likely only pick off vulnerable ships, or hit and run with infection. | Designer |
 | Doing-fine Terrans ~ bordering struggling Azurethea | The Terrans offer trade and take in refugees; the Azurethea, now more interested in trade, accept. One of the friendliest pairings. | Ai Generated |
 | Doomed Terrans ~ bordering doing-fine Senti-GPH | The Terrans blame outsiders and steal technology, so they raid the Senti; the Senti, preserving data first, trade for defensive equipment. | Ai Generated |
 | Struggling Tentauri ~ bordering doing-fine Mecha | The Tentauri force their way through; the Mecha insist they leave, or attack if they have the advantage. A likely forced-passage fight. | Ai Generated |
