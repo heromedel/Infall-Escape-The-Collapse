@@ -23,6 +23,7 @@ gap between laser and missile prices, so the two are set equal and lasers are th
 | Ion | +2.5 per point per shot | |
 | Fire | +3.0 per shot at 100% chance | scale by chance |
 | Breach | +1.0 per shot at 100% chance | FTL adds ~0; small value by judgment |
+| Conduit damage | +1.0 per shot at 100% chance | as breach (Terran conduits; race profile) |
 | Pierce | +1.4 per shield layer | |
 | Beam | +5.0 | |
 | Bomb | +5.0 | |
@@ -44,7 +45,7 @@ fit; the half-step damage rule in the cost table applies to per-shot cost only.
 | Power | +4.09 per bar | the largest term in FTL's prices |
 | Damage rate | +1.16 per (damage per volley × 10 ÷ cooldown) | |
 | Ion rate | +0.54 per (ion per volley × 10 ÷ cooldown) | |
-| Breach or fire rate | +1.15 per (full-chance shots × 10 ÷ cooldown) | fire by judgment; FTL prices it at zero |
+| Breach, fire or conduit rate | +1.15 per (full-chance shots × 10 ÷ cooldown) | fire by judgment; FTL prices it at zero; conduit damage as breach |
 | Pierce | +0.75 per shield layer | |
 | Bomb | +5.54 | |
 | Flak | +1.38 | |

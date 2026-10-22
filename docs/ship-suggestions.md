@@ -80,3 +80,109 @@ Ship designs made with `ship-design-process.md`. Nothing here is decided. Prices
 Flags for review:
 
 - The Defensive special isn't in the cost tables yet; its price here is the rule above.
+
+## Terran Starting Scout (2026-10-22)
+
+1. **Race:** Terrans (the Gatos).
+2. **Band:** 1 (low tier).
+3. **State:** doing fine.
+4. **Race info used:** clean, soft Federation-like ships; silhouette of classic spaceship shapes (shuttles,
+   cruisers, rockets); AZC power core with conduits instead of power bars; rooms can suffer atmosphere loss, fire,
+   deck and wall breaches and damaged conduits, and power is rerouted around cut conduits; "the initial scout ship
+   is easy to reroute"; crew as FTL's humans; ship tiers as FTL. The player's first ship is a Terran scout
+   (GDD 1D, 3K, 7C).
+5. **Function:** the player's starting scout, the first ship of a run. Ideas considered: a Terran patrol scout met
+   as an enemy, a survey ship, a courier, the colony ship's pathfinder, the player's starting scout. The starting
+   scout was picked: it is the ship every run begins with, so it sets the baseline other ships are balanced
+   against (GDD 3G), and the race profile already gives a rule for it (easy to reroute).
+6. **Kinds of systems and crew:** an FTL Kestrel-level all-rounder with one scouting strength: Sensors 2, since
+   sensor level sets how far beacons are visible (GDD 2E). 3 crew, like the Kestrel.
+7. **Variation:** standard for the race (the Terran starting ship).
+8. **Layout and systems:** a shuttle-shaped cruiser in white and pale grey with blue trim. Hull 30, as every FTL
+   player ship. About as many rooms as the Kestrel (GDD 3D), with spare rooms reserved for systems bought later.
+
+   **AZC level 2:** powers 4 systems at full. The ship has 5 systems that draw power (Shields, Engines, Life
+   Support, Weapons, Medbay), so one must be off at any time, usually the Medbay or Life Support. This keeps FTL's
+   Kestrel tension: the Kestrel's 8 bars can't run its Medbay with everything else on either. Piloting, Sensors and
+   Doors take no core capacity, as FTL's subsystems take no reactor power.
+
+   | System | Bars | Draws on the AZC |
+   |---|---|---|
+   | Piloting | 1 | no |
+   | Sensors | 2 | no |
+   | Doors | 1 | no |
+   | Shields | 2 (1 layer) | yes |
+   | Engines | 2 | yes |
+   | Life Support | 1 | yes |
+   | Weapons | 3 | yes |
+   | Medbay | 1 | yes |
+
+   **Conduits: one ring.** The AZC room sits in the middle of the ship, armoured, with two conduit exits. One
+   conduit loop runs from it through every system room and back: AZC → Shields → Weapons → Cockpit (Piloting) →
+   Sensors → Doors → Medbay → Life Support → Engines → AZC. Every system has two paths to the core, so a single cut
+   conduit never cuts a system off; the player only has to reroute when two cuts land on both sides of a system.
+   That is the "easy to reroute" starting ship. Higher-tier Terran ships can use branching conduits, where one cut
+   matters more.
+
+   Passes made:
+   - Pass 1: a Kestrel copy at AZC level 3 (6 systems). Too strong: everything runs at once, so no power choices.
+   - Pass 2: AZC level 2, restoring FTL's power tension; one system off at a time.
+   - Pass 3: gave the scout Sensors 2 for longer map range (GDD 2E), paid for with a weaker missile than the
+     Kestrel's (1 damage instead of 2).
+   - Pass 4: conduit ring so a single cut never isolates a system; checked every system room has two paths.
+   - Pass 5: weapons follow the Terran breach/conduit rule (below).
+   - Pass 6: checked against band 1 enemies (FTL's scout templates: hull 7–10, 1 shield layer): see 9.
+9. **Weapons:** no Terran weapons exist yet. The Stinger fits the missile role but is Azurethea and biomechanical,
+   so on a Terran (mechanical) system it would charge 20% slower; a Terran missile is designed with the same parts
+   instead. Names are working names.
+
+   **Terran 3-Shot Laser:** Laser, Damage, Mechanical, Terran · Shots 3 · Damage 1 · Power 2 · Breach 0% ·
+   Conduit damage 10%.
+   - Charge: 13.3 s (7.0 + 6.0 damage + 0.3 conduit).
+   - Cost per volley: 0.07 Mawjig (3 × (0.02 + 0.003)).
+   - Price: 12.47 (1.41 + 8.18 power + 2.62 damage rate + 0.26 conduit rate).
+
+   **Terran Light Missile:** Missile, Damage, Mechanical, Terran · Shots 1 · Damage 1 · Power 1 · Breach 10% ·
+   Conduit damage 0%.
+   - Charge: 9.1 s (7.0 + 2.0 damage + 0.1 breach).
+   - Cost per shot: 0.05 Mawjig.
+   - Price: 6.91 (6.90 by the table, no trailing zero).
+
+   The laser has no breach chance, so it gets a conduit-damage chance; the missile has a breach chance and no
+   conduit chance (race profile 6).
+
+   **Shield check:** against one layer, the laser's first shot takes the layer and the other two land: 2 damage
+   per volley, plus 1 from the missile, which ignores shields. A band 1 enemy (hull 7–10) falls in about three
+   volleys, roughly 40 s. The missile also gives the player a way through the two-layer shields of later bands.
+
+   **Economy check:** a fight of about 8 volleys costs 0.56 in laser shots and 0.40 in missiles, about 0.96, plus the
+   1.21 jump: about 2.17 per node against a 3.42 reward, leaving 1.25. That is a little tighter than the cost
+   table's example fight (1.57 left), mostly from firing the missile every volley; holding it back saves Mawjig.
+10. **Price:**
+
+    | Part | Mawjig |
+    |---|---|
+    | Shields (buy, 2 bars) | 30.25 |
+    | Engines, Piloting, Life Support | starts installed |
+    | Weapon Control (buy) | 4.84 |
+    | Medbay | 12.11 |
+    | Sensors (buy 9.68 + level 2 6.05) | 15.73 |
+    | Doors | 14.52 |
+    | AZC level 2 | 42.36 |
+    | Terran 3-Shot Laser | 12.47 |
+    | Terran Light Missile | 6.91 |
+    | **Total** | **139.19** |
+
+    Crew are extra: 3 Terrans at 10.89 each, 32.67.
+11. **New rules recorded:** conduit damage priced like breach (+0.03 per shot at 100% in `mawjig-cost-table.md`;
+    +1.0 s cooldown and the breach price rate in `weapon-budget-table.md`).
+
+Judgment calls for review:
+
+- Picking the player's starting ship as this scout's function.
+- AZC level 2, and Piloting, Sensors and Doors taking no core capacity.
+- Sensors 2 as the scout's strength, traded for a 1-damage missile.
+- The ring conduit layout as what "easy to reroute" means.
+- Conduit damage 10% on the laser; conduit damage priced the same as breach.
+- Weapon Control at FTL's buy price, though FTL's starts at 4 bars and this at 3.
+- Working weapon names.
