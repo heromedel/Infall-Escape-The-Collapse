@@ -23,3 +23,4 @@ A design-stage project: we are writing a game design document, not building the 
   that depend on things not yet defined.
 - When describing races or other designed content, state only what the docs say. Clearly label anything
   extrapolated as a suggestion; never present it as part of the design.
+- Ask a question once. If it goes unanswered, drop it; don't carry it forward or repeat it in later replies.
