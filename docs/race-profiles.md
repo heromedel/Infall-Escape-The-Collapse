@@ -2,7 +2,18 @@
 
 Each race is defined with the profile below. Other race ideas are in `ideas.md`.
 
-Still to define across races: clearer rivalry and potential-friend lines between each pair of races.
+## Default relations (2026-10-22)
+
+A simple guiding point for who generally gets along. Confirmed by the designer.
+
+- **Azurethea:** get along with peaceful races; clash with the violent ones (Mecha, Lykario, Malphen).
+- **Senti-GPH:** friendly with the Gatos (Terrans made them).
+- **Mecha:** poor relations with their neighbours generally (constant border fighting).
+- **Lykario:** poor relations with most, worst with whoever they steal from.
+- **Malphen:** bad relations with everyone. They probably cannot be negotiated with at all.
+- **Tentauri, Gatos:** no lean beyond the above.
+
+Still to define across races: the rest of the pairs, if needed.
 
 ## Profile template
 
