@@ -48,6 +48,21 @@ Supershield Generator (Tentauri): FTL's Zoltan Shield as a ship system that rech
 Overcharger without a drone system. 2 bars (the Overcharger's player power). Capacity 5, as FTL's Zoltan Shield
 (from memory of FTL, not in the extracted data); recharge rate left for the simulation.
 
+## Crew (Ai Generated)
+
+FTL's crew price × 0.242 (`ftl-baseline.md`), each race priced from its closest FTL crew by what it does.
+
+| Race | FTL analog (scrap) | Why | Mawjig |
+|---|---|---|---|
+| Terrans | Human (45) | "as FTL's humans" | 10.89 |
+| Azurethea | Lanius (50) | the oxygen mirror: they make air where Lanius drain it | 12.11 |
+| Mecha | Zoltan (60) | power a system by integrating | 14.52 |
+| Tentauri | Zoltan (60) | running up to four systems is a top-tier ability | 14.52 |
+| Senti-GPH | Crystal (60) + 5 | the profile says they cost more to recruit | 15.73 |
+| Lykario | Mantis (55) | quick attackers | 13.31 |
+| Malphen | Rockman (55) | high HP | 13.31 |
+| Whispwraith | Lanius (50) | atmosphere-changing crew | 12.11 |
+
 ## Standard reactor (per bar)
 
 FTL's reactor price rises every 5 bars. The FTL wiki table is garbled, so these use the designer's recollection:

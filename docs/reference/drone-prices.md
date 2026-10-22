@@ -44,6 +44,21 @@ swap specialty, e.g. anti-personnel, repair, fire). Nothing decided.
 2. **Support abilities have no shot cost.** System Repair, Hull Repair, Shield Overcharger, Anti-Combat and Hacking
    would need their own per-use rule. This is the open question that stops EVB suits and mutations from being
    fully priced.
+
+   **Per-use rule (Ai Generated):** each use is priced by the effect it delivers, from the Effect table in
+   `mawjig-cost-table.md`, without a shot base, since nothing is fired. A use that copies something the store
+   sells costs the store price, so the ability is a convenience, never a discount.
+
+   | Ability | One use | Cost per use |
+   |---|---|---|
+   | System Repair | one system bar repaired | 0.11 (Repair) |
+   | Hull Repair | one hull point | the band's store price, 0.48 / 0.73 / 0.97 |
+   | Shield Overcharger | one Supershield layer | 0.02 (it stops what one laser shot does) |
+   | Anti-Combat | one stun on a drone or suit | 0.02 (Stun) |
+   | Hacking | one hack activation | 0.04 (Lockdown) |
+   | Anti-Personnel | one deployment | 0.21 (a 10-shot laser sortie, as the EVB laser suit) |
+   | Boarding | one launch | 0.08 (missile 0.05 + breach 0.03) |
+   | Ion Intruder | one launch | 0.11 (missile 0.05 + breach 0.03 + ion 0.02 = 0.10, no trailing zero) |
 3. **Mutations use the same rows, limited to on-ship types.** A mutation has no EVA, so it cannot take an
    external combat type. It takes drone abilities that work aboard the ship, such as Anti-Personnel and System
    Repair, and possibly a boarding type (designer's words: "maybe a boarding mutation"). No separate mutation price

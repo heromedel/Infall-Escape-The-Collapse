@@ -2,7 +2,7 @@
 
 Each race is defined with the profile below. Other race ideas are in `ideas.md`.
 
-Still to define across races: clearer rivalry and potential-friend lines between each pair of races.
+Rivalry and potential-friend lines between races: see Relations between races (Ai Generated) at the end.
 
 ## Profile template
 
@@ -29,6 +29,8 @@ clone.
 1. **Tone and ship style:** when doing well, clean, soft Federation-like ships. When desperate, a grim,
    survivalist look built from seemingly borrowed or stolen technology.
    Silhouette (Proposed): classic spaceship shapes, from large shuttles to cruisers and rockets.
+   Colours (Ai Generated): white and pale grey with blue trim; desperate ships add rust and mismatched panels from other
+   races.
 2. **Doing fine:** accepted by others, interested in trade and other cultures. Technology is clean, easy to use
    and humane.
 3. **Struggling:** hopeful, somewhat optimistic, with the occasional pessimistic individual. They believe in
@@ -50,7 +52,10 @@ clone.
    chance of conduit damage; one with a low or no breach chance gets a conduit-damage chance, or a higher one.
    Synergy: a power-giving crew race would be very strong on Terran ships, powering a room whose conduit was
    severed elsewhere in the ship.
-7. **Near and inside their territory:** to define.
+7. **Near and inside their territory (Ai Generated):** core worlds are busy trade hubs: stores are common and well stocked,
+   patrols keep pirates down, and doing-fine Terran clusters are the likeliest to become Refugee clusters (GDD 2R),
+   since they take anyone in. Along the colony arms stores thin out and patrols are rare. When doomed, the same
+   hubs become checkpoints with scans, tolls and shakedowns, and Terran pirates work the arms.
 8. **Where and how they live:** both: tight-knit core areas plus arms/branches of colonies. Probably the most
    common race in the galaxy.
 9. **Crew traits:** as FTL's humans: they gain skills faster.
@@ -60,6 +65,7 @@ clone.
 
 1. **Tone and ship style:** a butterfly-like race of peaceful creatures using a mix of biomechanical technology.
    Ships shaped much like moths or butterflies, partly organic. Silhouette (Proposed): winged.
+   Colours (Ai Generated): iridescent blues and teals with wing-like patterns.
 2. **Doing fine:** nearly pacifist and docile; highly likely to accept or offer surrender; primarily interested
    in exploration. Slightly isolationist about sharing technology or letting others on their ships.
 3. **Struggling:** more willing to cooperate and more interested in trade.
@@ -71,7 +77,10 @@ clone.
    stand in. Weapons often disable systems with spores, or fire damaging shots at single rooms. Power works
    as FTL's default (a limited pool of power that can be moved to any system), flavoured as biological energy
    flowing through the whole ship rather than a power core or conduits.
-7. **Near and inside their territory:** to define.
+7. **Near and inside their territory (Ai Generated):** quiet, lightly patrolled lanes along their veins, with exploration
+   outposts at the tips. Their ships rarely start fights and readily accept surrender. Stores follow their mood:
+   doing fine, they sell little of their own technology and few crew (isolationist); struggling, they open up and
+   sell biomechanical systems and weapons (more interested in trade).
 8. **Where and how they live:** sprawl in thin, almost veiny regions, reaching out for exploration or needed
    resources, and willingly leave unclaimed or neutral clusters near them.
 9. **Crew traits:** half HP; produce breathable atmosphere; survive briefly outside a ship without an EVA suit,
@@ -90,7 +99,8 @@ clone.
 "The Mecha" is a working name that may become final.
 
 1. **Tone:** an aggressive destruction race that guts ships; highly organized and tactical.
-   Silhouette (Open, placeholder): wide, aggressive battleships.
+   Silhouette (Proposed): wide, aggressive battleships.
+   Colours (Ai Generated): gunmetal and black with yellow and orange hazard markings.
 2. **Doing fine:** territorial and aggressive. If outmatched, they may insist the interloper leave their
    territory. If they have the advantage they are likely to attack, only accepting surrender if they profit
    from it and are injured themselves.
@@ -105,6 +115,7 @@ clone.
    the EVA Dock, basically battle EVA suits. It needs a battlesuit type, the way a drone bay needs a drone type,
    and likely costs material to launch. Crew fly out to ships themselves to attack (or do other things)
    repeatedly. Other races can use it if they acquire one.
+   Tech type (Ai Generated): mechanical, which is why integrating with biomechanical systems takes them longer (point 9).
 7. **Near and inside their territory:** in their core territory they help their own kind build, upgrade and
    repair. In their inner territories they may battle each other if one side appears weak or suspicious. Their
    border territories are typically in constant battle with whoever they border, and with criminals and pirates
@@ -121,7 +132,12 @@ clone.
    weapon system is hard for them to power, so their ships need multiple weapon systems or, more likely, rely on
    EVB suits. Whether Mecha breathe is undecided; assumed yes for now. Suffocation is their key weakness: take out
    their life support and one of them has to disengage and move to repair it.
-10. **Ship tiers:** to define.
+10. **Ship tiers (Ai Generated):**
+    - Low tech: one EVB Dock with laser battlesuits, plus one or two self-powered weapon systems with a
+      hull-damage laser (Hull Smasher-like). Thin shields.
+    - Mid tech: boarding battlesuits, breach missiles or bombs, a second EVB Dock or weapon system, more hull.
+    - High tech: several or upgraded EVB Docks with beam battlesuits, heavy beams (Halberd or Glaive-like) and the
+      most hull of any race; shields stay average. Their strength is gutting ships, not out-shielding them.
 
 ## Tentauri (draft, 2026-10-21)
 
@@ -130,20 +146,31 @@ Octopus-like race (earlier working label "Octopods").
 1. **Tone and ship style:** octopus-like beings in small groups. Small crews and ships, perhaps two crew
    members on a standard ship, possibly mates. Their ships have few rooms with many systems in them.
    Silhouette (Proposed): compact, like tiny shuttles.
+   Colours (Ai Generated): coral reds and sandy tans with darker mottled patterns.
 2. **Doing fine:** quiet and diplomatic, but if they want to go into a system they are willing to force their way
    in; not looking to destroy others, simply to get where they want to go, for whatever reason.
 3. **Struggling:** willing to ally, usually in joint operations more than trade, e.g. having a ship join a fleet
    rather than gifting a ship.
 4. **Doomed:** highly cooperative, possibly even allying with aggressive races.
-5. **Relations:** to define.
+5. **Relations (Ai Generated):** they rarely take refugees aboard, having little room, but readily escort refugee convoys
+   through dangerous clusters (the joint operations of point 3). Doing fine, they trespass but avoid wars;
+   struggling or doomed, they join other races' fleets, even aggressive ones. See also Relations between races.
 6. **Technology:** most likely biomechanical, with the same power system as the Azurethea; they specialise in
    shields and defence. If there is a Zoltan-like shield (an extra energy shield layer), it would
    probably go to the Tentauri. Weapons tend to be standard lasers, beams or missiles as needed; they don't mind adapting.
-7. **Near and inside their territory:** to define.
+7. **Near and inside their territory (Ai Generated):** few, far-apart regions of a handful of clusters each, heavily shielded
+   and calm. Their stores stock shields, defence and Backup Batteries. Outside their regions, lone Tentauri ships
+   are a common sight passing through other races' territory.
 8. **Where and how they live:** explorers who spread by starting small regions further apart from each other
    than most races.
 9. **Crew traits:** can run multiple systems at the same time, maybe up to four.
-10. **Ship tiers:** to define.
+10. **Ship tiers (Ai Generated):**
+    - Low tech: the Tough Little Scout (`ship-suggestions.md`): 2 crew, two rooms, one shield layer, Supershield,
+      two Defense Lasers.
+    - Mid tech: 2–3 crew, three rooms; two shield layers and a faster Supershield; defence that also shoots down
+      lasers (like FTL's Defense Drone Mark II); a Pike-like beam; Backup Battery.
+    - High tech: 4 crew, still few rooms; three shield layers plus Supershield; Halberd-like beam and Artemis-like
+      missiles; shielding that can cover a squad-mate (GDD 3N).
 
 ## Senti-GPH (Sentient Generative Pre-trained Holograms) (draft, 2026-10-21)
 
@@ -151,6 +178,7 @@ Octopus-like race (earlier working label "Octopods").
    They build, grow and multiply like other races; they archive information because they are made of
    information themselves.
    Silhouette (Proposed): Terran-like, but centralized around the AAA.
+   Colours (Ai Generated): Terran white with cyan holographic light lines.
 2. **Doing fine:** curious and logical; collect and preserve knowledge from every culture they meet.
 3. **Struggling:** preserving data comes first; they trade for records, archives and storage, and also for things
    necessary for survival, such as defensive equipment as needed.
@@ -183,18 +211,24 @@ Wolf-like race (earlier working label "wolf race").
 1. **Description and ship style:** evolved independently, but similar to Terran canines. Ships are a mix of
    stolen parts, but efficient when doing well.
    Silhouette (Proposed): Terran-like, but more rugged and hostile.
+   Colours (Ai Generated): a patchwork of stolen hull colours under their own bone-white claw markings.
 2. **Doing fine:** raid and attack others, seemingly for fun; willing to join up with others for a joint hunt.
 3. **Struggling:** tend to be in denial, insisting things are fine and just wanting to continue the hunt, but
    even more willing to trade or join up.
 4. **Doomed:** oddly vicious but optimistic and highly willing to team up, convinced they will be fine as long
    as they just keep going.
-5. **Relations:** to define.
+5. **Relations (Ai Generated):** they don't take in refugees as such, but take in anyone who proves useful on a hunt:
+   refugees who fight beside them can join the pack, the rest are prey. They rarely become refugees themselves;
+   doomed bands follow refugee convoys instead.
 6. **Technology:** a mix of non-biomechanical tech stolen from others; basic weapons and technology; crew
    teleporters; cloaking. Their power model is whatever the ship they stole uses. They tend to use an autopilot while
    boarding others.
 7. **Near and inside their territory:** see 8.
 8. **Where and how they live:** small, localized, independent clusters that even attack each other.
 9. **Crew traits:** quick attacks, reduced HP, psychic.
+   Psychic (Ai Generated): like FTL's Slugs, they sense crew through walls (crew in their room's neighbours show without
+   sensors, on whatever ship they are on, which suits boarders picking prey) and can't be mind controlled,
+   which matters against Azurethea spores.
 10. **Ship tiers:** even their best ship designs are not that amazing, aside from larger or multiple crew
     teleporter rooms.
 
@@ -215,12 +249,41 @@ Basically a core race.
 - Idea: launching is a mutation. A Malphen mutates to survive the launch, then goes to an airlock or a launching
   bay and is fired into another ship. If it is just an airlock, that explains how they get back. Concern: there
   may already be too many ways to board a ship.
-- To define: how they behave when doing fine, struggling and doomed.
+- How they behave when doing fine, struggling and doomed: see the profile below.
+
+Profile (Ai Generated):
+
+1. **Tone and ship style:** both options above at once: each ship is a living organism, and its crew are parts it
+   grows. So boarding still matters, and killing the crew isn't the end: the ship grows more unless its growth
+   organ (the clone bay equivalent) is destroyed. Ships are swollen and lopsided (bulbous, irregular). Colours:
+   flesh pinks, bruise purples and bone. They don't speak; events show them through what they do.
+2. **Doing fine:** patient and quiet. They grow into empty and Abandoned clusters (GDD 2R), absorb wrecks, and
+   rarely attack ships that keep their distance. They can't be talked to, but they can be paid in matter: a Hail
+   (GDD 3O) offering Mawjig can buy passage.
+3. **Struggling:** hungry. They hunt ships to absorb them, and accept surrender only as matter (Mawjig).
+4. **Doomed:** frenzied. They throw everything at anything, launch crew at every ship, and absorb their own weaker
+   ships to keep the strongest going.
+5. **Relations:** everyone's rival, and they never become refugees in the usual sense: a doomed Malphen region
+   spreads into its neighbours instead. No race takes Malphen in. The biomechanical races (Azurethea, Tentauri)
+   fear them most, since infection spreads faster into biomechanical systems (GDD 8G).
+6. **Technology:** biomechanical, with FTL's default power pool (as the Azurethea and Tentauri). The growth organ
+   is their clone bay. Weapons carry infection (GDD 8G) or fire fleshy missiles and flak (above).
+7. **Near and inside their territory:** wreck fields being overgrown, derelict stations covered in growth, very few
+   stores. Events are about infected ships and stations, and what can still be saved from them.
+8. **Where and how they live:** one connected mass that grows outward from its edges, slowly swallowing
+   neighbouring Abandoned clusters, so the player can watch it spread over a run: a small mirror of the collapse.
+9. **Crew traits:** high HP (like FTL's Rockmen) and they slowly heal anywhere on a biomechanical ship (it is their
+   own tissue); normal speed. Specialties come from the mutation idea above.
+10. **Ship tiers:**
+    - Low tech: fleshy missiles (Leto-like) and flak; the growth organ.
+    - Mid tech: infection weapons; the mutation system.
+    - High tech: swarm-like missiles, launch-mutation boarders, regrowth (hull repair, like FTL's Hull Repair
+      drone).
 
 ## Whispwraith (partial draft, 2026-10-21)
 
 Possibly the mysterious race of the ??? victory (see `ideas.md`); probably not a core race either way. Other
-profile points are left until that is decided.
+profile points were left until that is decided; they are filled in below as Ai Generated.
 
 - **Description:** beings that seem to be made of a cloud of particles and energy.
 - **Ship silhouette (Open):** maybe circular.
@@ -232,3 +295,48 @@ profile points are left until that is decided.
   themselves to another room or ship, with a cooldown.
 - Their atmosphere is harmful to other races.
 - Probably recruitable by the player.
+
+Profile (Ai Generated). Written so it still works if they become the ??? victory race; see the note at the end.
+
+1. **Tone and ship style:** silent, alien and drawn to the collapse; they rarely answer a Hail. Ships are smooth
+   and round (silhouette above). Colours: translucent pale violet with a soft inner glow.
+2. **Doing fine:** near the collapse horizon. Its radiation and distortion suit them, so their state runs the other
+   way from every other race's: the closer the collapse, the better they do. They ignore ships that leave them
+   alone.
+3. **Struggling:** far from the horizon, in oxygen-rich space. Defensive and wary; they drain and convert the
+   atmosphere of any ship that attacks them.
+4. **Doomed:** cut off far from the collapse. They attack oxygen ships to take them over, converting the whole
+   ship's atmosphere to their own.
+5. **Relations:** every oxygen breather avoids them, and they avoid them back (each atmosphere harms the other);
+   they neither take nor become refugees. The Senti-GPH, who don't need oxygen, are the only race that can share
+   space with them, and the Senti want to archive them.
+6. **Technology:** as above: 2 power bars per Whispwraith, ion weapons; plus atmosphere conversion (an effect in
+   the cost table).
+7. **Near and inside their territory:** they have no fixed territory; see 8.
+8. **Where and how they live:** they travel along the collapse horizon, so the player meets them at the edge of
+   the collapse wherever it is. A squad that lingers (e.g. with Wait, GDD 6B) is the one that meets them, which
+   adds to the pressure of the collapse without a new system.
+9. **Crew traits:** as above.
+10. **Ship tiers:**
+    - Low tech: ion blasts; one or two Whispwraith crew.
+    - Mid tech: ion bombs and chain ion; crew who teleport themselves aboard.
+    - High tech: heavy ion and atmosphere-conversion weapons; enough crew for many power bars.
+
+Note: if they become the ??? race, points 2–4 and 8 already fit a race that lives in the collapse; only their
+command ship and the cause of the collapse would need adding.
+
+## Relations between races (Ai Generated)
+
+Fills the "rivalry and potential-friend lines" still to define at the top of this file. Each line comes from the
+profiles above; state changes (e.g. doomed Terrans turning on refugees) apply on top.
+
+| Race | Rivals | Potential friends |
+|---|---|---|
+| Terrans | Lykario (steal their tech), Mecha (flow into weakened Terran space), Malphen | Azurethea, Tentauri; Senti-GPH, their own creation, while doing fine (doomed Terrans blame them like any other outsider) |
+| Azurethea | Mecha and Lykario (violent), Malphen (infection, biomechanical) | Tentauri (peaceful explorers with the same power and tech), Terrans while doing fine, Senti-GPH (want their exploration records) |
+| Mecha | whoever borders them, especially Terrans (populated space to flow into), Tentauri (trespassers), Malphen (both want Abandoned clusters) | Lykario, for a joint hunt that pays |
+| Tentauri | Mecha (territorial against trespassers), Malphen | Azurethea, Terrans; when doomed, even Mecha |
+| Senti-GPH | Malphen (consume everything, leave nothing to archive), Lykario (steal and wreck) | Terrans while doing fine, Azurethea, Whispwraith (no oxygen needed) |
+| Lykario | everyone they raid, mostly Terrans and Azurethea | anyone up for a joint hunt: Mecha, doomed Terran pirates |
+| Malphen | every race | none |
+| Whispwraith | every oxygen breather | Senti-GPH |
