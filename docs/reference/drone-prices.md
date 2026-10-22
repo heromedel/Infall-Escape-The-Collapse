@@ -11,32 +11,30 @@ swap specialty, e.g. anti-personnel, repair, fire). Nothing decided.
 - **Use cost:** FTL charges one drone part per deployment. Infall has one resource, so the cost of using an ability
   is its shots, priced from `mawjig-cost-table.md` (laser 0.02, beam 0.03 per room, missile 0.05, ion +0.02,
   fire +0.03 scaled by chance). Drones with no weapon have no shot cost; how they pay per use is open.
-- **Mutation column (suggestion):** the same ability as a mutation takes × 0.75 of the drone price, the same "a
-  worse analog" factor used for the mutation system itself. First guess, not design.
 - Weapon stats come from FTL's blueprint data. Drone fire and breach chances in that data are small (10%) and are
   left out of the shot costs, except the Fire Drone's 90%.
 
 ## Drones and their abilities
 
-| Drone | FTL buy (scrap) | Buy (Mawjig) | As a mutation (suggested) | What it does | Use cost |
-|---|---|---|---|---|---|
-| System Repair Drone | 30 | 7.26 | 5.45 | Seeks out damaged systems and repairs them automatically. | Repairs systems |
-| Anti-Personnel Drone | 35 | 8.47 | 6.35 | Seeks out and attacks intruders on board your ship. | Fights boarders |
-| Anti-Combat Drone | 35 | 8.47 | 6.35 | Stuns enemy combat drones attacking your ship. | Counters enemy drones |
-| Anti-Ship Ion Drone I | 50 | 12.11 | 9.08 | Combat drone with a 1-ion shot. | Ion shots: 0.04 per shot |
-| Anti-Ship Missile Drone I | 50 | 12.11 | 9.08 | Combat drone with a missile (1 damage). | Missile: 0.05 per shot |
-| Combat Drone Mark I | 50 | 12.11 | 9.08 | Attacks the enemy ship continually (1-damage laser). | Laser: 0.02 per shot |
-| Anti-Ship Beam Drone I | 50 | 12.11 | 9.08 | Attacks with a small beam (1 damage). | Beam: 0.03 per room swept |
-| Defense Drone Mark I | 50 | 12.11 | 9.08 | Shoots down incoming missiles, asteroids and flak debris. | Laser: 0.02 per shot |
-| Anti-Ship Fire Drone | 50 | 12.11 | 9.08 | Small beam that lights rooms on fire (no hull damage). | Beam 0.03 + fire at 90% 0.03 = 0.06 per room |
-| Anti-Ship Beam Drone II | 60 | 14.52 | 10.89 | Combat drone with a larger beam. | Beam: 0.03 per room swept |
-| Shield Overcharger | 60 | 14.52 | 10.89 | Creates a single Supershield barrier periodically. | No weapon |
-| Ion Intruder Drone | 65 | 15.73 | 11.81 | Breaches the enemy hull and randomly ionizes systems. | No weapon |
-| Defense Drone Mark II | 70 | 16.94 | 12.71 | Fires faster than Mark I and also shoots down incoming lasers. | Laser: 0.02 per shot |
-| Boarding Drone | 70 | 16.94 | 12.71 | Breaches the enemy hull and wreaks havoc inside. | No weapon |
-| Hacking Drone | 70 | 16.94 | 12.71 | Hacking drone; FTL's description text not checked. | No weapon |
-| Combat Drone Mark II | 75 | 18.15 | 13.61 | Like Mark I but moves and shoots faster. | Laser: 0.02 per shot |
-| Hull Repair | 85 | 20.57 | 15.43 | Repairs 3-5 hull damage per drone part. | No weapon |
+| Drone | FTL buy (scrap) | Buy (Mawjig) | What it does | Use cost |
+|---|---|---|---|---|
+| System Repair Drone | 30 | 7.26 | Seeks out damaged systems and repairs them automatically. | Repairs systems |
+| Anti-Personnel Drone | 35 | 8.47 | Seeks out and attacks intruders on board your ship. | Fights boarders |
+| Anti-Combat Drone | 35 | 8.47 | Stuns enemy combat drones attacking your ship. | Counters enemy drones |
+| Anti-Ship Ion Drone I | 50 | 12.11 | Combat drone with a 1-ion shot. | Ion shots: 0.04 per shot |
+| Anti-Ship Missile Drone I | 50 | 12.11 | Combat drone with a missile (1 damage). | Missile: 0.05 per shot |
+| Combat Drone Mark I | 50 | 12.11 | Attacks the enemy ship continually (1-damage laser). | Laser: 0.02 per shot |
+| Anti-Ship Beam Drone I | 50 | 12.11 | Attacks with a small beam (1 damage). | Beam: 0.03 per room swept |
+| Defense Drone Mark I | 50 | 12.11 | Shoots down incoming missiles, asteroids and flak debris. | Laser: 0.02 per shot |
+| Anti-Ship Fire Drone | 50 | 12.11 | Small beam that lights rooms on fire (no hull damage). | Beam 0.03 + fire at 90% 0.03 = 0.06 per room |
+| Anti-Ship Beam Drone II | 60 | 14.52 | Combat drone with a larger beam. | Beam: 0.03 per room swept |
+| Shield Overcharger | 60 | 14.52 | Creates a single Supershield barrier periodically. | No weapon |
+| Ion Intruder Drone | 65 | 15.73 | Breaches the enemy hull and randomly ionizes systems. | No weapon |
+| Defense Drone Mark II | 70 | 16.94 | Fires faster than Mark I and also shoots down incoming lasers. | Laser: 0.02 per shot |
+| Boarding Drone | 70 | 16.94 | Breaches the enemy hull and wreaks havoc inside. | No weapon |
+| Hacking Drone | 70 | 16.94 | Hacking drone; FTL's description text not checked. | No weapon |
+| Combat Drone Mark II | 75 | 18.15 | Like Mark I but moves and shoots faster. | Laser: 0.02 per shot |
+| Hull Repair | 85 | 20.57 | Repairs 3-5 hull damage per drone part. | No weapon |
 
 ## Notes for building EVB suits and mutations
 
@@ -46,7 +44,9 @@ swap specialty, e.g. anti-personnel, repair, fire). Nothing decided.
 2. **Support abilities have no shot cost.** System Repair, Hull Repair, Shield Overcharger, Anti-Combat and Hacking
    would need their own per-use rule. This is the open question that stops EVB suits and mutations from being
    fully priced.
-3. **Malphen mutations** line up with the Anti-Personnel, System Repair, Fire and Boarding rows, which matches
-   the specialties in the race profile.
+3. **Mutations use the same rows, limited to on-ship types.** A mutation has no EVA, so it cannot take an
+   external combat type. It takes drone abilities that work aboard the ship, such as Anti-Personnel and System
+   Repair, and possibly a boarding type (designer's words: "maybe a boarding mutation"). No separate mutation price
+   is needed, because the prices are built from FTL's base costs.
 
 Sources: drone prices and stats from `ftl-baseline.md` and FTL's blueprint data; descriptions from FTL's game text.
