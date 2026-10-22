@@ -61,7 +61,15 @@ At 100% chance; scale by chance (a 30% breach chance adds 0.01).
 | Breach bomb | 0.05 + 0.03 | 0.08 | 15 |
 | Spore stun missile, 1 dmg | 0.05 + 0.04 + 0.02 | 0.11 | 11 |
 
+## Hull repair
+
+About 3 scrap per hull point on average (the data's REPAIR_STATION event is exactly 2 per point: 40 scrap for 20
+hull, 20 for 10; shop prices are hard-coded and rise by sector). At 1 scrap = 0.242 Mawjig that is about **0.73
+Mawjig per hull point**. Weapon purchase prices from `weapon-budget-table.md` are the store prices; systems, crew
+and augments carry over from FTL's prices at the same 0.242 conversion.
+
 ## Rough economy check
 
 A typical early fight (about 20 laser shots, 0.40, and 3 two-damage missiles, 0.24) plus the 1.21 jump is 1.85 per
-node. A 3.42 reward leaves 1.57 for repairs and upgrades. Hull repair and store prices are not costed yet.
+node. A 3.42 reward leaves 1.57, which pays for about 2 hull points of repair (0.73 each). A fight that costs 5 hull
+points needs a reward of about 5.50 to break even.
