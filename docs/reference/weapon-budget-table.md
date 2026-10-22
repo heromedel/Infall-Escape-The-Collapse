@@ -57,6 +57,12 @@ fit; the half-step damage rule in the cost table applies to per-shot cost only.
 
 Final prices follow the no-trailing-zero rule (x.x0 adds or subtracts 0.01).
 
+**Off-price weapons.** A weapon may be priced below its parts, or be better than its price (including cheaper to
+fire), only for a very good reason: a starting weapon, a ship design that needs a small break, or a rare special
+reward. It is then shown as an enhanced model or version (e.g. Gat 3.1 Mod2, EGat 3.1), which explains the price
+and tells the player it is a good deal. FTL does the same: the Kestrel's starting Artemis (MISSILES_2_PLAYER) needs
+1 power where the store version needs 2, at the same price.
+
 ## Worked examples
 
 | Weapon | Cooldown | Price | FTL comparison (× 0.242) |

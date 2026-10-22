@@ -56,7 +56,9 @@ clone.
    biomechanical ships, with a limited pool of bars. Conversion (Ai Generated): each AZC level becomes 5 bars, the
    same equivalence `system-prices.md` already prices the AZC by; conduit damage then does nothing.
    Weapon names: an official designation plus a fun nickname, like real weapons (AK-47, "Ma Deuce"); e.g.
-   Gat 3.1 "Triblast" (3 shots, 1 target), ".22" as a nickname for a light weapon.
+   Gat 3.1 "Triblast" (3 shots, 1 target), ".22" as a nickname for a light weapon. In Gatos codes M means
+   missile (Gat M1), so enhanced models use another marker, e.g. Gat 3.1 Mod2, V2, Model S, or EGat 3.1 (energy
+   efficient).
 7. **Near and inside their territory (Ai Generated):** core worlds are busy trade hubs: stores are common and well stocked,
    patrols keep pirates down, and doing-fine Terran clusters are the likeliest to become Refugee clusters (GDD 2R),
    since they take anyone in. Along the colony arms stores thin out and patrols are rare. When doomed, the same
@@ -166,7 +168,8 @@ Octopus-like race (earlier working label "Octopods").
 6. **Technology:** most likely biomechanical, with the same power system as the Azurethea; they specialise in
    shields and defence. If there is a Zoltan-like shield (an extra energy shield layer), it would
    probably go to the Tentauri. Weapons tend to be standard lasers, beams or missiles as needed; they don't mind adapting.
-   Weapon names (Ai Generated): sea and shell words, fitting a defensive race, e.g. Reef, Carapace, Inkshot.
+   Weapon names (Ai Generated): from their own anatomy, as an evolved cephalopod-like invertebrate race would name
+   things, not ocean themes: e.g. Coil, Grasp, Siphon, Tendril Beam.
 7. **Near and inside their territory (Ai Generated):** few, far-apart regions of a handful of clusters each, heavily shielded
    and calm. Their stores stock shields, defence and Backup Batteries. Outside their regions, lone Tentauri ships
    are a common sight passing through other races' territory.
@@ -202,7 +205,8 @@ Octopus-like race (earlier working label "Octopods").
    **AAA** system) that stores and broadcasts their holographic avatars. If it is damaged, fewer avatars can be
    broadcast, so the ship has fewer holographic crew until it is repaired; they don't die from this unless the
    ship is destroyed. They don't usually use ion weapons themselves.
-   Weapon names (Ai Generated): version numbers, like software, e.g. Pike Beam v2.1.
+   Weapon names: number codes. Beams give rooms swept, type, damage and version, e.g. 3B 01 V2 (3-room beam,
+   1 damage, version 2).
 7. **Near and inside their territory:** small, dense clusters built around relay and broadcast stations.
 8. **Where and how they live:** see 7; they stay close together, since their avatars depend on arrays.
 9. **Crew traits:** half HP individually; don't need oxygen; immune to fire. Bound to their ship's AAA, but a
@@ -234,8 +238,8 @@ Wolf-like race (earlier working label "wolf race").
 6. **Technology:** a mix of non-biomechanical tech stolen from others; basic weapons and technology; crew
    teleporters; cloaking. Their power model is whatever the ship they stole uses. They tend to use an autopilot while
    boarding others.
-   Weapon names (Ai Generated): stolen weapons keep their maker's name, often with a hunting nickname on top
-   (e.g. a Gatos Triblast called "Fang").
+   Weapon names: most of their weapons are stolen and unmodified, so they keep their maker's name. Only the few
+   they edit or build themselves get Lykario names (Ai Generated: hunting words, e.g. "Fang").
 7. **Near and inside their territory:** see 8.
 8. **Where and how they live:** small, localized, independent clusters that even attack each other.
 9. **Crew traits:** quick attacks, reduced HP, psychic.
