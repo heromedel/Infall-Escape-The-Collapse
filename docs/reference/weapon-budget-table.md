@@ -8,6 +8,10 @@ are fairly formulaic in FTL (fit explains about 60% of the variation); prices ar
 rate, with designer judgment on top (about 78%). Scrap converts at 1 scrap = 0.242 Mawjig, so a Leto-class
 weapon (20 scrap) is 4.84, about 4 jumps. Values marked (judgment) had no usable FTL signal.
 
+There is no ammo discount: every shot costs Mawjig (see `mawjig-cost-table.md`), so a weapon that is better and
+costs more to fire also costs more to buy. FTL's fit carried a discount for ammo weapons (lasers are free to fire
+there); removing it, the whole price column is scaled by 0.71 so the Stinger lands near the Leto.
+
 ## Cooldown (seconds)
 
 | Part | Seconds | Notes |
@@ -29,20 +33,20 @@ weapon (20 scrap) is 4.84, about 4 jumps. Values marked (judgment) had no usable
 
 ## Price (Mawjig)
 
-Rates are per 10 seconds of cooldown, so a faster weapon is worth more.
+Rates are per 10 seconds of cooldown, so a faster weapon is worth more. The damage-rate term keeps FTL's linear
+fit; the half-step damage rule in the cost table applies to per-shot cost only.
 
 | Part | Mawjig | Notes |
 |---|---|---|
-| Base | 1.40 | |
-| Power | +4.09 per bar | the largest term in FTL's prices |
-| Damage rate | +1.16 per (damage per volley × 10 ÷ cooldown) | |
-| Ion rate | +0.54 per (ion per volley × 10 ÷ cooldown) | |
-| Breach or fire rate | +1.15 per (full-chance shots × 10 ÷ cooldown) | fire by judgment; FTL prices it at zero |
-| Pierce | +0.75 per shield layer | |
-| Per-shot cost above a laser's | −(per-volley cost − laser-equivalent cost) × 60 volleys | missile −1.80, bomb −1.80, 4-room beam −2.40, flak +1.80 (its shots are cheaper than a laser's); from `mawjig-cost-table.md`. Replaces FTL's flat ammo discount, since in Infall every shot costs Mawjig |
-| Bomb | +5.54 | |
-| Flak | +1.38 | |
-| Beam | +0.24 | |
+| Base | 0.99 | |
+| Power | +2.91 per bar | the largest term in FTL's prices |
+| Damage rate | +0.82 per (damage per volley × 10 ÷ cooldown) | |
+| Ion rate | +0.38 per (ion per volley × 10 ÷ cooldown) | |
+| Breach or fire rate | +0.82 per (full-chance shots × 10 ÷ cooldown) | fire by judgment; FTL prices it at zero |
+| Pierce | +0.53 per shield layer | |
+| Bomb | +3.93 | |
+| Flak | +0.98 | |
+| Beam | +0.17 | |
 | Multi-target | × 1.25 | judgment |
 | Phase | × 1.5 | judgment |
 
@@ -52,16 +56,18 @@ Final prices follow the no-trailing-zero rule (x.x0 adds or subtracts 0.01).
 
 | Weapon | Cooldown | Price | FTL comparison (× 0.242) |
 |---|---|---|---|
-| Stinger: 1 dmg missile, no effects, 1 power | 9.0 s | 4.98 | Leto 4.84 |
-| 2-shot laser, 1 power | 11.0 s | 7.61 | Dual Shot 6.05 |
-| 3-shot laser, 2 power | 13.0 s | 12.27 | Burst II 19.36 (FTL prices it above its stats) |
-| Heavy laser: 2 dmg, 30% fire, 30% breach, 1 power | 12.2 s | 7.97 | Heavy I 12.10 |
-| Pike-type beam: 1 dmg × 4 rooms, 2 power | 20.0 s | 9.75 | Pike 13.31 |
-| Glaive-type beam: 3 dmg × 2 rooms, 4 power | 24.0 s | 19.71 | Glaive 22.99 |
-| Flak, 3 projectiles, 2 power | 10.0 s | 16.25 | Flak I 15.73 |
-| Ion blast, 1 ion, 1 power | 9.5 s | 6.06 | Ion Blast 7.26 |
-| Breach bomb, 1 power | 13.0 s | 10.12 | Breach Bomb I 12.10 |
-| 3-shot multi-target breach laser, 2 power | 17.0 s | 17.08 | new |
-| 1-room phase beam, 2 dmg, 2 power | 19.0 s | 15.98 | new |
+| Stinger: 1 dmg missile, no effects, 1 power | 9.0 s | 4.82 | Leto 4.84 |
+| 2-shot laser, 1 power | 11.0 s | 5.41 | Dual Shot 6.05 |
+| 3-shot laser, 2 power | 13.0 s | 8.71 | Burst II 19.36 (FTL prices it above its stats) |
+| Heavy laser: 2 dmg, 30% fire, 30% breach, 1 power | 12.2 s | 5.66 | Heavy I 12.10 |
+| Pike-type beam: 1 dmg × 4 rooms, 2 power | 20.0 s | 8.63 | Pike 13.31 |
+| Glaive-type beam: 3 dmg × 2 rooms, 4 power | 24.0 s | 14.85 | Glaive 22.99 |
+| Flak, 3 projectiles, 2 power | 10.0 s | 10.26 | Flak I 15.73 |
+| Ion blast, 1 ion, 1 power | 9.5 s | 4.31 | Ion Blast 7.26 |
+| Breach bomb, 1 power | 13.0 s | 8.46 | Breach Bomb I 12.10 |
+| 3-shot multi-target breach laser, 2 power | 17.0 s | 12.13 | new |
+| 1-room phase beam, 2 dmg, 2 power | 19.0 s | 11.77 | new |
 
-Most examples land within about 30% of FTL's hand-set prices, which is the size of FTL's own designer adjustments.
+Side effect of the rescale: apart from the Stinger, the examples now land about 10–55% below FTL's hand-set prices.
+The alternative is to keep the original scale, which puts the Stinger near 6.78 (about 5.6 jumps) and the rest close
+to FTL; a shield-ignoring missile priced above the Leto would match "better weapon costs more".
