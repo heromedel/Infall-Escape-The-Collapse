@@ -73,8 +73,7 @@ FTL's store charges per hull point by sector: 2 scrap in sectors 1–3, 3 in sec
 | 4–6 | 3 | 0.73 |
 | 7–8 | 4 | 0.97 |
 
-(A base of 2 rising by 1 every 2 bands would average 3.5 and top out at 5 scrap, 1.21 Mawjig, one full jump per hull
-point; easy to switch to if wanted.) Weapon purchase prices from `weapon-budget-table.md` are the store prices;
+Weapon purchase prices from `weapon-budget-table.md` are the store prices;
 systems, crew and augments carry over from FTL's prices at the same 0.242 conversion.
 
 ## Fight rewards
