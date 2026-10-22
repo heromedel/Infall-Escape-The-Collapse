@@ -78,6 +78,22 @@ That averages 3.5 scrap across a run (+1 every 3 bands would average about 2.9, 
 prices from `weapon-budget-table.md` are the store prices; systems, crew and augments carry over from FTL's prices
 at the same 0.242 conversion.
 
+## Fight rewards
+
+Rewards rise with progress, like repair prices. Draft curve, scaled to match the repair price rise (×1, ×1.5, ×2,
+×2.5 across the four band pairs), starting from the 3.42 example:
+
+| Bands | Reward for a basic won fight | Hull points it repairs |
+|---|---|---|
+| 1–2 | 3.42 | about 7 |
+| 3–4 | 5.13 | about 7 |
+| 5–6 | 6.84 | about 7 |
+| 7–8 | 8.55 | about 7 |
+
+With both scaling together, a reward is worth about 7 hull points of repair in every band. The jump stays 1.21, so
+later fights leave more after the jump. Making rewards grow more slowly than repair prices would make late damage
+bite harder; this ratio is the knob to tune in the simulation.
+
 ## Rough economy check
 
 A typical early fight (about 20 laser shots, 0.40, and 3 two-damage missiles, 0.24) plus the 1.21 jump is 1.85 per
