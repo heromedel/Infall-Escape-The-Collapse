@@ -170,7 +170,8 @@ Octopus-like race (earlier working label "Octopods").
     - Mid tech: 2–3 crew, three rooms; two shield layers and a faster Supershield; defence that also shoots down
       lasers (like FTL's Defense Drone Mark II); a Pike-like beam; Backup Battery.
     - High tech: 4 crew, still few rooms; three shield layers plus Supershield; Halberd-like beam and Artemis-like
-      missiles; shielding that can cover a squad-mate (GDD 3N).
+      missiles; a way to protect a squad-mate (GDD 3N), either a shield beam projected onto another ship or a
+      Supershield missile that gives a squad-mate a Supershield layer.
 
 ## Senti-GPH (Sentient Generative Pre-trained Holograms) (draft, 2026-10-21)
 
@@ -226,9 +227,9 @@ Wolf-like race (earlier working label "wolf race").
 7. **Near and inside their territory:** see 8.
 8. **Where and how they live:** small, localized, independent clusters that even attack each other.
 9. **Crew traits:** quick attacks, reduced HP, psychic.
-   Psychic (Ai Generated): like FTL's Slugs, they sense crew through walls (crew in their room's neighbours show without
-   sensors, on whatever ship they are on, which suits boarders picking prey) and can't be mind controlled,
-   which matters against Azurethea spores.
+   Psychic (Ai Generated): in game these are animal senses (smell and hearing), not real psychic powers, and
+   player-facing text never calls them psychic. Like FTL's Slugs, they sense crew through walls: crew in
+   neighbouring rooms show without sensors, on whatever ship they are on, which suits boarders picking prey.
 10. **Ship tiers:** even their best ship designs are not that amazing, aside from larger or multiple crew
     teleporter rooms.
 
@@ -298,32 +299,29 @@ profile points were left until that is decided; they are filled in below as Ai G
 
 Profile (Ai Generated). Written so it still works if they become the ??? victory race; see the note at the end.
 
-1. **Tone and ship style:** silent, alien and drawn to the collapse; they rarely answer a Hail. Ships are smooth
-   and round (silhouette above). Colours: translucent pale violet with a soft inner glow.
-2. **Doing fine:** near the collapse horizon. Its radiation and distortion suit them, so their state runs the other
-   way from every other race's: the closer the collapse, the better they do. They ignore ships that leave them
-   alone.
-3. **Struggling:** far from the horizon, in oxygen-rich space. Defensive and wary; they drain and convert the
+1. **Tone and ship style:** silent and alien; they rarely answer a Hail. Ships are smooth and round (silhouette
+   above). Colours: translucent pale violet with a soft inner glow.
+2. **Doing fine:** deep inside the collapse. Its radiation and distortion suit them, so their state runs the
+   other way from every other race's: the deeper into the collapse, the better they do.
+3. **Struggling:** near the collapse's edge, where it thins out. Defensive and wary; they drain and convert the
    atmosphere of any ship that attacks them.
-4. **Doomed:** cut off far from the collapse. They attack oxygen ships to take them over, converting the whole
-   ship's atmosphere to their own.
-5. **Relations:** every oxygen breather avoids them, and they avoid them back (each atmosphere harms the other);
-   they neither take nor become refugees. The Senti-GPH, who don't need oxygen, are the only race that can share
-   space with them, and the Senti want to archive them.
+4. **Doomed:** at the very edge. They attack any ship that crosses in, trying to take it over by converting its
+   whole atmosphere to their own.
+5. **Relations:** they neither take nor become refugees; the other races barely know they exist. The Senti-GPH,
+   who don't need oxygen, are the only race that could share space with them.
 6. **Technology:** as above: 2 power bars per Whispwraith, ion weapons; plus atmosphere conversion (an effect in
    the cost table).
-7. **Near and inside their territory:** they have no fixed territory; see 8.
-8. **Where and how they live:** they travel along the collapse horizon, so the player meets them at the edge of
-   the collapse wherever it is. A squad that lingers (e.g. with Wait, GDD 6B) is the one that meets them, which
-   adds to the pressure of the collapse without a new system.
+7. **Near and inside their territory:** their territory is the collapse itself (Swallowed clusters, GDD 2R).
+8. **Where and how they live:** only inside the collapse; they don't exist outside it. The player meets them only
+   on the ??? victory path, or through a secret way to recruit one, if one is added.
 9. **Crew traits:** as above.
 10. **Ship tiers:**
     - Low tech: ion blasts; one or two Whispwraith crew.
     - Mid tech: ion bombs and chain ion; crew who teleport themselves aboard.
     - High tech: heavy ion and atmosphere-conversion weapons; enough crew for many power bars.
 
-Note: if they become the ??? race, points 2–4 and 8 already fit a race that lives in the collapse; only their
-command ship and the cause of the collapse would need adding.
+Note: this fits them being the ??? race; only their command ship and the cause of the collapse would need
+adding.
 
 ## Relations between races (Ai Generated)
 

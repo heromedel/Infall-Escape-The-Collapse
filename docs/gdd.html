@@ -108,11 +108,10 @@
 <div class="pt"><b>H:</b> <span class="tag decided">Decided</span> The core loop is the same as FTL's. More ships are an extension of FTL's loop of gaining systems and weapons.</div>
 <div class="pt"><b>I:</b> <span class="tag ai">Ai Generated</span> Ship loss. In FTL you can always recover fully (hull, systems, breaches, missiles, drone parts) until you lose the game. Losing one ship of a squad is a major setback FTL has no equivalent of. A destroyed ship is gone, with its systems and weapons, but the loss is softened so it stays attrition rather than an instant run-ender:
 <ol>
-  <li><b>Escape pods:</b> when a ship's hull reaches 0, its surviving crew escape to squad-mates with free crew space; crew who don't fit are lost. Crew already on board an enemy ship stay there and can be teleported or walked home as usual.</li>
+  <li><b>Escape pods, only if an Escape Pods ship system is added:</b> when a ship with the system reaches 0 hull, its surviving crew escape to squad-mates with free crew space; crew who don't fit are lost. Without the system, the crew are lost with the ship, as in FTL. Crew already on board an enemy ship stay there and can be teleported or walked home as usual.</li>
   <li><b>Salvage your own wreck:</b> if the squad wins the battle, the lost ship's wreck is converted like any other wreckage (8C), giving about a quarter of its value in Mawjig, enough to help buy or repair, never enough to replace it.</li>
   <li><b>Replacements</b> come the same way as extra ships (1H): events, stores and races that will sell or give a ship.</li>
-</ol>
-Setting (default first): <code>Escape Pods: On &gt; Off</code>; Off is closer to FTL, where a destroyed ship takes its crew with it.</div>
+</ol></div>
 <div class="pt"><b>J:</b> <span class="tag likely">Likely</span> Tone varies by race, region, cluster, situation and proximity to the collapse; e.g. one race or region grim and dark, another optimistic until it becomes impossible, another strange and bizarre. Event tone, and to a degree art, follows. The overall tone is a mix of despair, confusion and hope.</div>
 <div class="pt"><b>C:</b> <span class="tag decided">Decided</span> FTL is treated as a genre: mechanics work exactly as in FTL unless a decision here says otherwise (e.g. firing, then checking for a miss against engines/evasion or a block by shields). Content differs: weapons, systems and races get their own names and may get new behaviour (e.g. a dual laser that can target two different rooms) when we decide so.</div>
 <h3>Key differences from FTL</h3>
@@ -285,6 +284,7 @@ Setting (default first): <code>Escape Pods: On &gt; Off</code>; Off is closer to
 <div class="pt"><b>A:</b> <span class="tag open">Open</span> A full GUI discussion with mockups: per-ship panels (3B), fitting the squads on screen (3C), and pause, vote and lock-in indicators (4L).</div>
 
 <h2 id="ranks">15. Ranks &amp; Titles</h2>
+<p><strong>Do not implement 15A–15C: heromedel will almost certainly override all of it.</strong></p>
 <div class="pt"><b>A:</b> <span class="tag ai">Ai Generated</span> Rank titles: each race uses its own words, shown in events and on crew; Terrans use a naval ladder (Ensign, Lieutenant, Commander, Captain, Commodore, Admiral). Other races get theirs as their profiles are refined, e.g. the Lykario by place in the pack, the Senti-GPH by version number.</div>
 <div class="pt"><b>B:</b> <span class="tag ai">Ai Generated</span> Player titles: the squad leader is the <b>Commodore</b>; a player given a ship is that ship's <b>Captain</b>; a player with no ship, or only crew, is a <b>Commander</b>. This keeps today's working terms in the same places while giving the squad leader the accurate rank (4R).</div>
 <div class="pt"><b>C:</b> <span class="tag ai">Ai Generated</span> Crew ranks: no separate rank stat. A crew member's rank title (15A) is shown from their total skill, so it is a label for experience the player already tracks, not another number to manage.</div>
