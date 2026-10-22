@@ -105,6 +105,10 @@ enemies or reaching squad-mates.
 - Variant: the **EVB Dock** (Extra Vehicular Battle Dock, from the Mecha): battle EVA suits that need a
   battlesuit type, like a drone bay needs a drone type, and likely cost material to launch. Any race can use one
   if acquired.
+  - **EVB cost (2026-10-22):** a suit has an oxygen timer. The timer and the suit's weapon type set the maximum
+    shots per sortie (travel there, shots, travel back), and the Mawjig cost per suit follows from that, e.g. a
+    laser suit with 10 shots ≈ 10 × 0.02 = 0.21. Farther targets leave fewer shots; a higher dock level means more
+    oxygen, so more shots and a pricier launch. Possibly paid up front per launch, like loading a magazine.
 
 ## Weapons
 
