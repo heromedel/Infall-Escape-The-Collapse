@@ -64,8 +64,9 @@ Ship designs made with `ship-design-process.md`. Nothing here is decided. Prices
 
     | Part | Mawjig |
     |---|---|
-    | Shields (buy, 2 bars) | 30.25 |
-    | Engines, Piloting, Life Support | starts installed |
+    | Shields (buy 30.25 + level 2 24.21) | 54.46 |
+    | Piloting, Life Support | starts installed |
+    | Engines (installed; level 2 2.42) | 2.42 |
     | Medbay | 12.11 |
     | Sensors | 9.68 |
     | Doors | 14.52 |
@@ -73,9 +74,9 @@ Ship designs made with `ship-design-process.md`. Nothing here is decided. Prices
     | Supershield Generator (as FTL's Zoltan Shield, 80 scrap) | 19.36 |
     | Reactor, 10 bars (18.15 + 24.21) | 42.36 |
     | 2 × Tentauri Defense Laser | 24.22 |
-    | **Total** | **162.18** |
+    | **Total** | **188.81** |
 
-    Weapon systems use FTL's Weapon Control buy price each, though FTL's starts at 4 bars and these at 1.
+    Each weapon system is at level 1, so it costs only Weapon Control's buy price.
 
 Flags for review:
 
@@ -164,16 +165,17 @@ Flags for review:
 
     | Part | Mawjig |
     |---|---|
-    | Shields (buy, 2 bars) | 30.25 |
-    | Engines, Piloting, Life Support | starts installed |
-    | Weapon Control (buy) | 4.84 |
+    | Shields (buy 30.25 + level 2 24.21) | 54.46 |
+    | Piloting, Life Support | starts installed |
+    | Engines (installed; level 2 2.42) | 2.42 |
+    | Weapon Control (buy 4.84 + levels 2–3: 9.68 + 6.05) | 20.57 |
     | Medbay | 12.11 |
     | Sensors (buy 9.68 + level 2 6.05) | 15.73 |
     | Doors | 14.52 |
     | AZC level 2 | 42.36 |
     | Gat 3.1 "Triblast" | 12.34 |
     | Gat M1 "Pathfinder" | 6.91 |
-    | **Total** | **139.06** |
+    | **Total** | **181.42** |
 
     Crew are extra: 3 Terrans at 10.89 each, 32.67.
 11. **New rules recorded:** conduit damage at a third of breach (+0.01 per shot at 100% in `mawjig-cost-table.md`;
@@ -187,7 +189,6 @@ Judgment calls for review:
 - Sensors 2 as the scout's strength, traded for a 1-damage missile.
 - The ring conduit layout as what "easy to reroute" means.
 - Conduit damage 10% on the laser (any chance is fine as long as it is priced).
-- Weapon Control at FTL's buy price, though FTL's starts at 4 bars and this at 3.
 
 ## Terran Pirate Hijacker (2026-10-22)
 
@@ -263,11 +264,11 @@ Judgment calls for review:
 
     | Part | Mawjig |
     |---|---|
-    | Shields (buy 30.25 + levels 3–4: 4.84 + 7.26) | 42.35 |
-    | Engines level 3 | 3.63 |
+    | Shields (buy 30.25 + levels 2–4: 24.21 + 4.84 + 7.26) | 66.56 |
+    | Engines (installed; levels 2–3: 2.42 + 3.63) | 6.05 |
     | Piloting level 2 | 4.84 |
     | Life Support | starts installed |
-    | Weapon Control (buy) | 4.84 |
+    | Weapon Control (buy 4.84 + levels 2–3: 9.68 + 6.05) | 20.57 |
     | Medbay (buy + level 2) | 20.58 |
     | Doors (buy + level 2) | 22.99 |
     | Sensors (buy) | 9.68 |
@@ -275,7 +276,7 @@ Judgment calls for review:
     | AZC level 3 | 72.61 |
     | Sporewing | 7.02 |
     | Gat 2.1 "Twinshot" | 7.67 |
-    | **Total** | **225.25** |
+    | **Total** | **267.61** |
 
     Crew are extra: 5 Terrans at 10.89 each, 54.45.
 11. **New rules recorded:** spores and stun cooldown and price rates in `weapon-budget-table.md`.
