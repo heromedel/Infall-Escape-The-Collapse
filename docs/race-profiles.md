@@ -28,6 +28,7 @@ clone.
 
 1. **Tone and ship style:** when doing well, clean, soft Federation-like ships. When desperate, a grim,
    survivalist look built from seemingly borrowed or stolen technology.
+   Silhouette (Proposed): classic spaceship shapes, from large shuttles to cruisers and rockets.
 2. **Doing fine:** accepted by others, interested in trade and other cultures. Technology is clean, easy to use
    and humane.
 3. **Struggling:** hopeful, somewhat optimistic, with the occasional pessimistic individual. They believe in
@@ -58,7 +59,7 @@ clone.
 ## Azurethea (draft, 2026-10-21)
 
 1. **Tone and ship style:** a butterfly-like race of peaceful creatures using a mix of biomechanical technology.
-   Ships shaped much like moths or butterflies, partly organic.
+   Ships shaped much like moths or butterflies, partly organic. Silhouette (Proposed): winged.
 2. **Doing fine:** nearly pacifist and docile; highly likely to accept or offer surrender; primarily interested
    in exploration. Slightly isolationist about sharing technology or letting others on their ships.
 3. **Struggling:** more willing to cooperate and more interested in trade.
@@ -89,6 +90,7 @@ clone.
 "The Mecha" is a working name that may become final.
 
 1. **Tone:** an aggressive destruction race that guts ships; highly organized and tactical.
+   Silhouette (Open, placeholder): wide, aggressive battleships.
 2. **Doing fine:** territorial and aggressive. If outmatched, they may insist the interloper leave their
    territory. If they have the advantage they are likely to attack, only accepting surrender if they profit
    from it and are injured themselves.
@@ -127,6 +129,7 @@ Octopus-like race (earlier working label "Octopods").
 
 1. **Tone and ship style:** octopus-like beings in small groups. Small crews and ships, perhaps two crew
    members on a standard ship, possibly mates. Their ships have few rooms with many systems in them.
+   Silhouette (Proposed): compact, like tiny shuttles.
 2. **Doing fine:** quiet and diplomatic, but if they want to go into a system they are willing to force their way
    in; not looking to destroy others, simply to get where they want to go, for whatever reason.
 3. **Struggling:** willing to ally, usually in joint operations more than trade, e.g. having a ship join a fleet
@@ -147,6 +150,7 @@ Octopus-like race (earlier working label "Octopods").
 1. **Tone and description:** holographic AI avatars, originally made by Terrans, who became their own people.
    They build, grow and multiply like other races; they archive information because they are made of
    information themselves.
+   Silhouette (Proposed): Terran-like, but centralized around the AAA.
 2. **Doing fine:** curious and logical; collect and preserve knowledge from every culture they meet.
 3. **Struggling:** preserving data comes first; they trade for records, archives and storage, and also for things
    necessary for survival, such as defensive equipment as needed.
@@ -178,6 +182,7 @@ Wolf-like race (earlier working label "wolf race").
 
 1. **Description and ship style:** evolved independently, but similar to Terran canines. Ships are a mix of
    stolen parts, but efficient when doing well.
+   Silhouette (Proposed): Terran-like, but more rugged and hostile.
 2. **Doing fine:** raid and attack others, seemingly for fun; willing to join up with others for a joint hunt.
 3. **Struggling:** tend to be in denial, insisting things are fine and just wanting to continue the hunt, but
    even more willing to trade or join up.
@@ -200,6 +205,7 @@ events; "Malphen" is the everyday name.
 
 Basically a core race.
 
+- Silhouette (Proposed): bulbous, irregular shapes.
 - Biomechanical weapons that infect a ship's systems and spread.
 - Either the race is basically mutants, or it is a living ship with no crew.
 - Weapons tend to be fired like fleshy missiles or like flak guns, to get through shields.
@@ -217,6 +223,7 @@ Possibly the mysterious race of the ??? victory (see `ideas.md`); probably not a
 profile points are left until that is decided.
 
 - **Description:** beings that seem to be made of a cloud of particles and energy.
+- **Ship silhouette (Open):** maybe circular.
 - **Technology:** their ships use FTL-style power levels, but instead of a reactor they get 2 bars per
   Whispwraith, allocatable anywhere in the ship. Their weapons tend to be ion weapons.
 - **Crew traits:** survive in a different kind of atmosphere; oxygen atmospheres are toxic to them. They drain
