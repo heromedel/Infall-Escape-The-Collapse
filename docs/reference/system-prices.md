@@ -10,22 +10,22 @@ FTL lists Piloting and Engines at 1 scrap because every ship starts with them; L
 
 | System | FTL buy (scrap) | Buy (Mawjig) | Upgrades, per level (Mawjig) | All upgrades (Mawjig) |
 |---|---|---|---|---|
-| Life Support (FTL Oxygen) | 0 | starts installed | 6.05, 12.11 | 18.15 |
-| Piloting | 1 | starts installed | 4.84, 12.11 | 16.94 |
+| Life Support (FTL Oxygen) | 0 | starts installed | 6.05, 12.11 | 18.16 |
+| Piloting | 1 | starts installed | 4.84, 12.11 | 16.95 |
 | Engines | 1 | starts installed | 2.42, 3.63, 7.26, 9.68, 14.52, 19.36, 29.04 | 85.91 |
-| Shields | 125 | 30.25 | 24.21, 4.84, 7.26, 9.68, 14.52, 19.36, 24.21 | 104.06 |
-| Weapon Control | 20 | 4.84 | 9.68, 6.05, 8.47, 12.11, 18.15, 21.78, 24.21 | 100.43 |
+| Shields | 125 | 30.25 | 24.21, 4.84, 7.26, 9.68, 14.52, 19.36, 24.21 | 104.08 |
+| Weapon Control | 20 | 4.84 | 9.68, 6.05, 8.47, 12.11, 18.15, 21.78, 24.21 | 100.45 |
 | Medbay | 50 | 12.11 | 8.47, 10.89 | 19.36 |
 | Clone Bay | 50 | 12.11 | 8.47, 10.89 | 19.36 |
 | Sensors | 40 | 9.68 | 6.05, 9.68 | 15.73 |
-| Doors | 60 | 14.52 | 8.47, 12.11 | 20.57 |
+| Doors | 60 | 14.52 | 8.47, 12.11 | 20.58 |
 | Teleporter | 90 | 21.78 | 7.26, 14.52 | 21.78 |
-| Cloaking | 150 | 36.31 | 7.26, 12.11 | 19.36 |
+| Cloaking | 150 | 36.31 | 7.26, 12.11 | 19.37 |
 | Hacking | 80 | 19.36 | 8.47, 14.52 | 22.99 |
 | Mind Control | 75 | 18.15 | 7.26, 14.52 | 21.78 |
 | Backup Battery | 35 | 8.47 | 12.11 | 12.11 |
-| Drone Control | 60 | 14.52 | 2.42, 4.84, 7.26, 10.89, 14.52, 19.36, 24.21 | 83.49 |
-| Artillery | 150 | 36.31 | 7.26, 12.11, 19.36 | 38.72 |
+| Drone Control | 60 | 14.52 | 2.42, 4.84, 7.26, 10.89, 14.52, 19.36, 24.21 | 83.51 |
+| Artillery | 150 | 36.31 | 7.26, 12.11, 19.36 | 38.73 |
 
 Drone Control and Artillery are listed for reference; both are unplaced (see `ftl-weapon-system-organization.md`).
 
@@ -36,8 +36,8 @@ guess.
 
 | System | Analog | Buy (Mawjig) | Upgrades, per level (Mawjig) | All upgrades (Mawjig) |
 |---|---|---|---|---|
-| EVB Dock | Drone Control | 14.52 | 2.42, 4.84, 7.26, 10.89, 14.52, 19.36, 24.21 | 83.49 |
-| Mutation system | Drone Control × 0.75 | 10.89 | 1.82, 3.63, 5.45, 8.17, 10.89, 14.52, 18.15 | 62.62 |
+| EVB Dock | Drone Control | 14.52 | 2.42, 4.84, 7.26, 10.89, 14.52, 19.36, 24.21 | 83.51 |
+| Mutation system | Drone Control × 0.75 | 10.89 | 1.82, 3.63, 5.45, 8.17, 10.89, 14.52, 18.15 | 62.63 |
 | EVA Dock | Teleporter × 0.75 | 16.34 | 5.45, 10.89 | 16.34 |
 | AAA | Clone Bay + Backup DNA Bank augment (40 scrap) | 21.78 | 8.47, 10.89 | 19.36 |
 
@@ -64,10 +64,10 @@ band price, so the AZC costs the same as buying the standard reactor in bands of
 | Level | Systems at max bars | Step (scrap) | Total (scrap) | Step (Mawjig) | Total (Mawjig) |
 |---|---|---|---|---|---|
 | 1 | 2 | 75 | 75 | 18.15 | 18.15 |
-| 2 | 4 | 100 | 175 | 24.21 | 42.35 |
+| 2 | 4 | 100 | 175 | 24.21 | 42.36 |
 | 3 | 6 | 125 | 300 | 30.25 | 72.61 |
-| 4 | 8 | 150 | 450 | 36.31 | 108.91 |
-| 5 | 10 | 175 | 625 | 42.35 | 151.25 |
+| 4 | 8 | 150 | 450 | 36.31 | 108.92 |
+| 5 | 10 | 175 | 625 | 42.35 | 151.27 |
 
 Level 5 can only be installed by a Terran station event or on a genuine Terran ship (not a stolen or copied AZC).
 
