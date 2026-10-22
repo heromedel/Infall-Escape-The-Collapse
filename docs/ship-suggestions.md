@@ -188,3 +188,105 @@ Judgment calls for review:
 - The ring conduit layout as what "easy to reroute" means.
 - Conduit damage 10% on the laser (any chance is fine as long as it is priced).
 - Weapon Control at FTL's buy price, though FTL's starts at 4 bars and this at 3.
+
+## Terran Pirate Hijacker (2026-10-22)
+
+1. **Race:** Terrans (the Gatos).
+2. **Band:** 5 (mid tier).
+3. **State:** doomed. That doesn't make the ship poor or damaged: it is well armed. Doomed Terrans are aggressive
+   and xenophobic, blame others and resort to nearly any crime: theft, hijacking, other races' technology, piracy.
+4. **Race info used:** desperate ships look grim and survivalist, built from borrowed or stolen technology;
+   classic spaceship silhouette; AZC with conduits; ion still disrupts Terran systems; crew as FTL's humans. A
+   system installed on a Terran ship is powered like a Terran system, and a weapon on another tech type's system
+   charges 20% slower (GDD 8D, `weapon-budget-table.md`). Pirates and criminals hide in Mecha border clusters.
+5. **Function:** a hijacker: it takes ships instead of destroying them. Pirate here means criminals and
+   survivalist mercenaries, not a sea-pirate theme. Ideas considered: a boarding raider, a hijacker, a toll ship
+   at a doomed Terran checkpoint, a wreck scavenger, a hunter of refugee convoys, a mercenary escort. The hijacker
+   was picked: hijacking is named in the race profile, and it plays differently from a plain warship. It wants
+   your ship intact, so it goes for your engines, piloting and crew, not your hull.
+6. **Kinds of systems and crew:** disabling weapons, a crew teleporter, strong doors and a medbay for its
+   boarders; light hull damage. 5 crew, all Terran: doomed Terrans are xenophobic, unlike FTL's mixed pirate crews.
+7. **Variation:** a variation: the doomed Terran pirate.
+8. **Layout and systems:** a classic Terran cruiser hull with rust and mismatched panels, and a visibly bolted-on
+   organic Azurethea launcher, so the stolen weapon shows on the ship. Hull 14 (FTL's elite Rebel template; mid
+   band). AZC level 3 (6 systems): Shields, Engines, Life Support, Weapons, Medbay and Teleporter all run at once.
+
+   | System | Bars | Draws on the AZC |
+   |---|---|---|
+   | Piloting | 2 | no |
+   | Sensors | 1 | no |
+   | Doors | 2 | no |
+   | Shields | 4 (2 layers) | yes |
+   | Engines | 3 | yes |
+   | Life Support | 1 | yes |
+   | Weapons | 3 | yes |
+   | Medbay | 2 | yes |
+   | Crew Teleporter | 2 | yes |
+
+   **Conduits:** a ring like the starting scout's, plus one spur out to the bolted-on launcher. Cut the spur and
+   the stolen weapon goes dark: a weak point the player can read from the ship's art and aim for.
+
+   Passes made:
+   - Pass 1: an FTL pirate copy: mixed crew, burst lasers, teleporter. Generic.
+   - Pass 2: made hijacking the identity: disable and board, little hull damage.
+   - Pass 3: a stolen Azurethea spore missile as the disabler, paying the 20% foreign-tech charge penalty, the
+     cost of using stolen tech; shown by the bolted-on launcher.
+   - Pass 4: conduit spur to the launcher, a readable weak point.
+   - Pass 5: all-Terran crew (xenophobic when doomed).
+   - Pass 6: checked counters and rewards (see 9).
+9. **Weapons:** no Terran or Azurethea weapon fits (the Stinger damages hull), so two are designed.
+
+   **Sporewing** (stolen Azurethea, keeps its maker's name): Missile, Spores + Stun, Biomechanical, Azurethea ·
+   Shots 1 · Damage 0 · Power 1.
+   - Disables the system in the room hit until cleared like a repair, and stuns crew there; no breach or fire
+     (Azurethea mid tech).
+   - Charge: 11.5 s native; 13.8 s on this Terran ship (+20%).
+   - Cost per shot: 0.11 Mawjig (0.05 missile + 0.04 spores + 0.02 stun).
+   - Price: 7.02 (1.41 + 4.09 power + 0.47 spores rate + 1.05 stun rate).
+
+   **Gat 2.1 "Twinshot"** (2-shot laser): Laser, Damage, Mechanical, Terran · Shots 2 · Damage 1 · Power 1 ·
+   Conduit damage 10%.
+   - Charge: 11.1 s. Cost per volley: 0.04. Price: 7.67.
+   - For shooting down drones and keeping pressure on shields, not for killing hulls.
+
+   **How it wins:** missiles ignore shields and teleporting ignores normal shields, so it spores your piloting and
+   engines (no evasion, no escape), then sends boarders. Against one shield layer the Twinshot lands 1 damage per
+   volley, but hull kills aren't its plan.
+
+   **Counters and rewards:** missiles can be shot down (Tentauri defence lasers), and a Supershield blocks
+   teleporting, as FTL's Zoltan Shield does; doors, venting and repel-boarder crew work as in FTL. Beating it can
+   drop the stolen Sporewing: alien tech as loot.
+
+   **Behaviour (doomed):** on a Hail they demand Mawjig or a ship; when losing, they offer stolen technology to be
+   let go.
+10. **Price:**
+
+    | Part | Mawjig |
+    |---|---|
+    | Shields (buy 30.25 + levels 3–4: 4.84 + 7.26) | 42.35 |
+    | Engines level 3 | 3.63 |
+    | Piloting level 2 | 4.84 |
+    | Life Support | starts installed |
+    | Weapon Control (buy) | 4.84 |
+    | Medbay (buy + level 2) | 20.58 |
+    | Doors (buy + level 2) | 22.99 |
+    | Sensors (buy) | 9.68 |
+    | Crew Teleporter (buy + level 2) | 29.04 |
+    | AZC level 3 | 72.61 |
+    | Sporewing | 7.02 |
+    | Gat 2.1 "Twinshot" | 7.67 |
+    | **Total** | **225.25** |
+
+    Crew are extra: 5 Terrans at 10.89 each, 54.45.
+11. **New rules recorded:** spores and stun cooldown and price rates in `weapon-budget-table.md`.
+
+Judgment calls for review:
+
+- Doomed state, band 5, and the hijacker function.
+- Hull 14 and AZC level 3.
+- All-Terran crew.
+- The Sporewing: missile type (can be shot down) rather than bomb, 1 power, spores priced as ion, stun from FTL's
+  Ion Stunner.
+- Reading `system-prices.md` upgrade lists as starting at level 2 (so Shields levels 3–4 are 4.84 and 7.26); the
+  FTL source order should be checked.
+- Hail behaviour and the Sporewing as loot.

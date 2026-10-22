@@ -21,6 +21,8 @@ gap between laser and missile prices, so the two are set equal and lasers are th
 | Base | 7.0 | |
 | Damage per volley | +2.0 per point | damage × shots (beams: damage × rooms swept) |
 | Ion | +2.5 per point per shot | |
+| Spores | +2.5 per shot | as ion: disables a system until cleared like a repair (judgment) |
+| Stun | +2.0 per shot | FTL's Ion Stunner over the Ion Blast |
 | Fire | +3.0 per shot at 100% chance | scale by chance |
 | Breach | +1.0 per shot at 100% chance | FTL adds ~0; small value by judgment |
 | Conduit damage | +0.3 per shot at 100% chance | a third of breach: only conduit ships, no oxygen loss, rarely lethal |
@@ -45,6 +47,8 @@ fit; the half-step damage rule in the cost table applies to per-shot cost only.
 | Power | +4.09 per bar | the largest term in FTL's prices |
 | Damage rate | +1.16 per (damage per volley × 10 ÷ cooldown) | |
 | Ion rate | +0.54 per (ion per volley × 10 ÷ cooldown) | |
+| Spores rate | +0.54 per (spore shots × 10 ÷ cooldown) | as ion (judgment) |
+| Stun rate | +1.21 per (stun shots × 10 ÷ cooldown) | FTL's Ion Stunner over the Ion Blast (5 scrap) |
 | Breach or fire rate | +1.15 per (full-chance shots × 10 ÷ cooldown) | fire by judgment; FTL prices it at zero |
 | Conduit damage rate | +0.38 per (full-chance shots × 10 ÷ cooldown) | a third of breach |
 | Pierce | +0.75 per shield layer | |
