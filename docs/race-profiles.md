@@ -57,8 +57,8 @@ clone.
    same equivalence `system-prices.md` already prices the AZC by; conduit damage then does nothing.
    Weapon names: an official designation plus a fun nickname, like real weapons (AK-47, "Ma Deuce"); e.g.
    Gat 3.1 "Triblast" (3 shots, 1 target), ".22" as a nickname for a light weapon. In Gatos codes M means
-   missile (Gat M1), so enhanced models use another marker, e.g. Gat 3.1 Mod2, V2, Model S, or EGat 3.1 (energy
-   efficient).
+   missile (Gat M1), so enhanced models can use another marker, such as Gat 3.1 Mod2, V2, Model S, or EGat 3.1
+   (energy efficient); these are examples, not a fixed list.
 7. **Near and inside their territory (Ai Generated):** core worlds are busy trade hubs: stores are common and well stocked,
    patrols keep pirates down, and doing-fine Terran clusters are the likeliest to become Refugee clusters (GDD 2R),
    since they take anyone in. Along the colony arms stores thin out and patrols are rare. When doomed, the same
@@ -156,7 +156,8 @@ Octopus-like race (earlier working label "Octopods").
 1. **Tone and ship style:** octopus-like beings in small groups. Small crews and ships, perhaps two crew
    members on a standard ship, possibly mates. Their ships have few rooms with many systems in them.
    Silhouette (Proposed): compact, like tiny shuttles.
-   Colours (Ai Generated): aqua and teal with coral white or coral pink, in mottled patterns.
+   Colours: prismatic, multicoloured ships, close to a chameleon or mother of pearl; aqua, teal and coral white
+   or coral pink among them, in mottled patterns.
 2. **Doing fine:** quiet and diplomatic, but if they want to go into a system they are willing to force their way
    in; not looking to destroy others, simply to get where they want to go, for whatever reason.
 3. **Struggling:** willing to ally, usually in joint operations more than trade, e.g. having a ship join a fleet
@@ -206,7 +207,8 @@ Octopus-like race (earlier working label "Octopods").
    broadcast, so the ship has fewer holographic crew until it is repaired; they don't die from this unless the
    ship is destroyed. They don't usually use ion weapons themselves.
    Weapon names: number codes. Beams give rooms swept, type, damage and version, e.g. 3B 01 V2 (3-room beam,
-   1 damage, version 2).
+   1 damage, version 2). Other weapons can start with the shot count instead (e.g. 2L 02 V1, a 2-shot laser with
+   2 damage); a guideline, not an absolute rule.
 7. **Near and inside their territory:** small, dense clusters built around relay and broadcast stations.
 8. **Where and how they live:** see 7; they stay close together, since their avatars depend on arrays.
 9. **Crew traits:** half HP individually; don't need oxygen; immune to fire. Bound to their ship's AAA, but a
