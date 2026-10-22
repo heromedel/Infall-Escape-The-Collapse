@@ -11,7 +11,11 @@ A simple guiding point for who generally gets along. Confirmed by the designer.
 - **Mecha:** poor relations with their neighbours generally (constant border fighting).
 - **Lykario:** poor relations with most, worst with whoever they steal from.
 - **Malphen:** bad relations with everyone. They probably cannot be negotiated with at all.
-- **Tentauri, Gatos:** no lean beyond the above.
+- **Gatos:** diplomatic when doing well, but poor relations with the Malphen (cannot be negotiated with) and the
+  Mecha (aggressive toward them).
+- **Tentauri:** no lean beyond the above.
+
+Relations are mutual: if one race is aggressive toward another, the other has poor relations with it too.
 
 Still to define across races: the rest of the pairs, if needed.
 
