@@ -10,9 +10,9 @@ weapon (20 scrap) is 4.84, about 4 jumps. Values marked (judgment) had no usable
 
 There is no ammo discount. FTL discounts missiles because lasers there are infinite and missiles are scarce
 (you fire missiles, not scrap). In Infall every shot costs Mawjig, so both are finite and lasers are the base;
-missiles land undiscounted. A weapon that is better and costs more to fire also costs more to buy. One caveat: the fit's
-constants come from FTL's lasers, whose prices include a premium for being free to fire, so Infall laser prices may
-end up lower than FTL's; the simulation should tell.
+missiles land undiscounted. A weapon that is better and costs more to fire also costs more to buy. FTL only tells us the
+gap between laser and missile prices, so the two are set equal and lasers are the neutral level; the overall scale
+(about 4 jumps for a basic weapon) is our choice, anchored on the Leto and open to tuning in the simulation.
 
 ## Cooldown (seconds)
 
