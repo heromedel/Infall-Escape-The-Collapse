@@ -146,7 +146,7 @@ Octopus-like race (earlier working label "Octopods").
 1. **Tone and ship style:** octopus-like beings in small groups. Small crews and ships, perhaps two crew
    members on a standard ship, possibly mates. Their ships have few rooms with many systems in them.
    Silhouette (Proposed): compact, like tiny shuttles.
-   Colours (Ai Generated): coral reds and sandy tans with darker mottled patterns.
+   Colours (Ai Generated): aqua and teal with coral white or coral pink, in mottled patterns.
 2. **Doing fine:** quiet and diplomatic, but if they want to go into a system they are willing to force their way
    in; not looking to destroy others, simply to get where they want to go, for whatever reason.
 3. **Struggling:** willing to ally, usually in joint operations more than trade, e.g. having a ship join a fleet
@@ -179,7 +179,7 @@ Octopus-like race (earlier working label "Octopods").
    They build, grow and multiply like other races; they archive information because they are made of
    information themselves.
    Silhouette (Proposed): Terran-like, but centralized around the AAA.
-   Colours (Ai Generated): Terran white with cyan holographic light lines.
+   Colours (Ai Generated): Terran white with cyan or cyan-green holographic light lines.
 2. **Doing fine:** curious and logical; collect and preserve knowledge from every culture they meet.
 3. **Struggling:** preserving data comes first; they trade for records, archives and storage, and also for things
    necessary for survival, such as defensive equipment as needed.
