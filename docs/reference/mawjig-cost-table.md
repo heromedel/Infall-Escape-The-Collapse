@@ -6,15 +6,18 @@ categories (Type, Effect, Shots, Targets, Special).
 
 Convention: Mawjig amounts never end in a zero (0.21, not 0.20; 0.11, not 0.10).
 
-## Base cost per shot, by Type
+## Base cost per shot, per point of damage, by Type
 
-| Type | Per shot | Why |
+| Type | Base | Why |
 |---|---|---|
-| Laser | 0.02 | Energy only; the cheap default |
-| Flak | 0.03 per projectile | Cheap matter, but 3–7 projectiles per volley |
-| Beam | 0.12 per firing | One big discharge; a rapid beam's pulses count as shots at 0.04 each |
-| Missile | 0.25 | Matter plus guidance; ignores shields |
-| Bomb | 0.31 | Matter plus teleport; ignores shields, can't be shot down |
+| Flak | 0.01 per projectile | Debris; scatters |
+| Laser | 0.02 | The cheap default; can miss, blocked by shields |
+| Beam | 0.03 per room swept (or per pulse) | Can't miss, can't be shot down |
+| Missile | 0.05 | Ignores shields; 2.5× a laser per damage |
+| Bomb | 0.05 per bomb, plus effect | Ignores shields, can't be shot down; mostly an effect carrier |
+
+Damage per shot multiplies the base (a 2-damage laser shot is 0.04). The no-trailing-zero convention applies to
+the final price (0.10 becomes 0.11).
 
 ## Effect, added per shot
 
@@ -43,17 +46,19 @@ At 100% chance; scale by chance (a 30% breach chance adds 0.01).
 
 ## Worked examples (per volley)
 
-| Weapon | Math | Cost | Volleys per jump |
+| Weapon | Math | Cost | Per jump |
 |---|---|---|---|
-| 2-shot laser | 2 × 0.02 | 0.04 | 30 |
+| 2-shot laser, 1 dmg | 2 × 0.02 | 0.04 | 30 |
+| Heavy laser, 1 shot, 2 dmg | 0.02 × 2 | 0.04 | 30 |
+| Flak, 3 projectiles | 3 × 0.01 | 0.03 | 40 |
+| Missile, 2 dmg | 0.05 × 2 | 0.11 | 11 |
+| Pike-type beam, 1 dmg, 4 rooms | 4 × 0.03 | 0.12 | 10 |
+| Glaive-type beam, 3 dmg, 3 rooms | 3 × 0.03 × 3 | 0.27 | 4 |
 | 3-shot multi-target breach laser | 3 × (0.02 + 0.03) × 1.25 | 0.19 | 6 |
-| Single missile | 0.25 | 0.25 | 5 |
-| 2-shot fire beam (rapid) | 2 × (0.04 + 0.03) | 0.14 | 9 |
-| Flak, 3 projectiles | 3 × 0.03 | 0.09 | 13 |
-| 1-shot phase beam | 0.12 × 1.5 | 0.18 | 7 |
-| Spore stun missile (Azurethea) | 0.25 + 0.04 + 0.02 | 0.31 | 4 |
+| Breach bomb | 0.05 + 0.03 | 0.08 | 15 |
+| Spore stun missile, 1 dmg | 0.05 + 0.04 + 0.02 | 0.11 | 11 |
 
 ## Rough economy check
 
-A typical early fight (about 20 laser shots and 3 missiles) costs about 1.15, plus the 1.21 jump: 2.36 per
-node. A 3.42 reward leaves 1.06 for repairs and upgrades. Hull repair and store prices are not costed yet.
+A typical early fight (about 20 laser shots, 0.40, and 3 missiles, 0.33) plus the 1.21 jump is 1.94 per node. A
+3.42 reward leaves 1.48 for repairs and upgrades. Hull repair and store prices are not costed yet.
