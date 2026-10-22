@@ -15,5 +15,8 @@ lists. Finished designs go in `ship-suggestions.md`.
 | 8 | Decide the layout, rooms, systems and their power levels, hull and reactor, so the weapons fit. | GDD 5A–5D, 8A; `ftl-baseline.md` (FTL ship and enemy template numbers) |
 | 9 | Weapons: first check the race's existing weapons for one that fits the role and tier. Only if none fits, design one from parts (type, effect, shots, targets, special), price it, and check the ship has a chance to beat a ship with level 1 shields. | GDD 8E; `weapon-budget-table.md`; `mawjig-cost-table.md`; `drone-prices.md` |
 | 10 | Price the ship from the reference tables and save it to `ship-suggestions.md`. | `system-prices.md`; the tables above |
+| 11 | Record any new rule the design created (a new special's price, a new system's stats) in the matching reference table, so later designs reuse it instead of reinventing it. | `docs/reference/` |
+
+Finish each design without stopping; list every judgment call at the end for review.
 
 Art is not part of this process.
