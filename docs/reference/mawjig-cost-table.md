@@ -63,32 +63,30 @@ At 100% chance; scale by chance (a 30% breach chance adds 0.01).
 
 ## Hull repair
 
-FTL's hull repair price depends on the sector (the data's REPAIR_STATION event is exactly 2 scrap per point: 40
-scrap for 20 hull; shop prices are hard-coded and average about 3). Infall scales it by difficulty band: a base of
-2 scrap per hull point, rising by 1 every 2 bands (draft). At 1 scrap = 0.242 Mawjig:
+FTL's store charges per hull point by sector: 2 scrap in sectors 1–3, 3 in sectors 4–6, 4 in sectors 7–8 (FTL wiki,
+"Stores and resources"), an average of about 2.9. Infall maps its 8 difficulty bands onto the same steps. At
+1 scrap = 0.242 Mawjig:
 
 | Bands | Scrap per point | Mawjig per hull point |
 |---|---|---|
-| 1–2 | 2 | 0.48 |
-| 3–4 | 3 | 0.73 |
-| 5–6 | 4 | 0.97 |
-| 7–8 | 5 | 1.21 |
+| 1–3 | 2 | 0.48 |
+| 4–6 | 3 | 0.73 |
+| 7–8 | 4 | 0.97 |
 
-That averages 3.5 scrap across a run (+1 every 3 bands would average about 2.9, nearer FTL's 3). Weapon purchase
-prices from `weapon-budget-table.md` are the store prices; systems, crew and augments carry over from FTL's prices
-at the same 0.242 conversion.
+(A base of 2 rising by 1 every 2 bands would average 3.5 and top out at 5 scrap, 1.21 Mawjig, one full jump per hull
+point; easy to switch to if wanted.) Weapon purchase prices from `weapon-budget-table.md` are the store prices;
+systems, crew and augments carry over from FTL's prices at the same 0.242 conversion.
 
 ## Fight rewards
 
-Rewards rise with progress, like repair prices. Draft curve, scaled to match the repair price rise (×1, ×1.5, ×2,
-×2.5 across the four band pairs), starting from the 3.42 example:
+Rewards rise with progress. No per-sector scrap reward table turned up in the FTL sources checked, so this is a
+draft: scaled to match the repair price rise (×1, ×1.5, ×2), starting from the 3.42 example.
 
 | Bands | Reward for a basic won fight | Hull points it repairs |
 |---|---|---|
-| 1–2 | 3.42 | about 7 |
-| 3–4 | 5.13 | about 7 |
-| 5–6 | 6.84 | about 7 |
-| 7–8 | 8.55 | about 7 |
+| 1–3 | 3.42 | about 7 |
+| 4–6 | 5.13 | about 7 |
+| 7–8 | 6.84 | about 7 |
 
 With both scaling together, a reward is worth about 7 hull points of repair in every band. The jump stays 1.21, so
 later fights leave more after the jump. Making rewards grow more slowly than repair prices would make late damage
@@ -97,5 +95,5 @@ bite harder; this ratio is the knob to tune in the simulation.
 ## Rough economy check
 
 A typical early fight (about 20 laser shots, 0.40, and 3 two-damage missiles, 0.24) plus the 1.21 jump is 1.85 per
-node. A 3.42 reward leaves 1.57, which pays for about 3 hull points of repair at the band 1–2 price. A fight that
-costs 5 hull points needs a reward of about 4.25 to break even in bands 1–2.
+node. A 3.42 reward leaves 1.57, which pays for about 3 hull points of repair at the band 1–3 price. A fight that
+costs 5 hull points needs a reward of about 4.25 to break even in bands 1–3.
