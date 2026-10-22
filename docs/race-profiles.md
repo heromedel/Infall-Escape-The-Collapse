@@ -52,6 +52,11 @@ clone.
    chance of conduit damage; one with a low or no breach chance gets a conduit-damage chance, or a higher one.
    Synergy: a power-giving crew race would be very strong on Terran ships, powering a room whose conduit was
    severed elsewhere in the ship.
+   Setting (default first): `Terran Ship Conduits: On > Off`. Off is FTL-like: Terran ships manage power like the
+   biomechanical ships, with a limited pool of bars. Conversion (Ai Generated): each AZC level becomes 5 bars, the
+   same equivalence `system-prices.md` already prices the AZC by; conduit damage then does nothing.
+   Weapon names: an official designation plus a fun nickname, like real weapons (AK-47, "Ma Deuce"); e.g.
+   Gat 3.1 "Triblast" (3 shots, 1 target), ".22" as a nickname for a light weapon.
 7. **Near and inside their territory (Ai Generated):** core worlds are busy trade hubs: stores are common and well stocked,
    patrols keep pirates down, and doing-fine Terran clusters are the likeliest to become Refugee clusters (GDD 2R),
    since they take anyone in. Along the colony arms stores thin out and patrols are rare. When doomed, the same
@@ -77,6 +82,7 @@ clone.
    stand in. Weapons often disable systems with spores, or fire damaging shots at single rooms. Power works
    as FTL's default (a limited pool of power that can be moved to any system), flavoured as biological energy
    flowing through the whole ship rather than a power core or conduits.
+   Weapon names (Ai Generated): biological, after creatures and natural things, like the Stinger.
 7. **Near and inside their territory (Ai Generated):** quiet, lightly patrolled lanes along their veins, with exploration
    outposts at the tips. Their ships rarely start fights and readily accept surrender. Stores follow their mood:
    doing fine, they sell little of their own technology and few crew (isolationist); struggling, they open up and
@@ -116,6 +122,8 @@ clone.
    and likely costs material to launch. Crew fly out to ships themselves to attack (or do other things)
    repeatedly. Other races can use it if they acquire one.
    Tech type (Ai Generated): mechanical, which is why integrating with biomechanical systems takes them longer (point 9).
+   Weapon names: descriptive and functional, e.g. Triple Shot - Single Target - Light Laser. On the weapon card a
+   short code (Ai Generated), e.g. TS-ST Light Laser, with the full name as the official designation.
 7. **Near and inside their territory:** in their core territory they help their own kind build, upgrade and
    repair. In their inner territories they may battle each other if one side appears weak or suspicious. Their
    border territories are typically in constant battle with whoever they border, and with criminals and pirates
@@ -158,6 +166,7 @@ Octopus-like race (earlier working label "Octopods").
 6. **Technology:** most likely biomechanical, with the same power system as the Azurethea; they specialise in
    shields and defence. If there is a Zoltan-like shield (an extra energy shield layer), it would
    probably go to the Tentauri. Weapons tend to be standard lasers, beams or missiles as needed; they don't mind adapting.
+   Weapon names (Ai Generated): sea and shell words, fitting a defensive race, e.g. Reef, Carapace, Inkshot.
 7. **Near and inside their territory (Ai Generated):** few, far-apart regions of a handful of clusters each, heavily shielded
    and calm. Their stores stock shields, defence and Backup Batteries. Outside their regions, lone Tentauri ships
    are a common sight passing through other races' territory.
@@ -193,6 +202,7 @@ Octopus-like race (earlier working label "Octopods").
    **AAA** system) that stores and broadcasts their holographic avatars. If it is damaged, fewer avatars can be
    broadcast, so the ship has fewer holographic crew until it is repaired; they don't die from this unless the
    ship is destroyed. They don't usually use ion weapons themselves.
+   Weapon names (Ai Generated): version numbers, like software, e.g. Pike Beam v2.1.
 7. **Near and inside their territory:** small, dense clusters built around relay and broadcast stations.
 8. **Where and how they live:** see 7; they stay close together, since their avatars depend on arrays.
 9. **Crew traits:** half HP individually; don't need oxygen; immune to fire. Bound to their ship's AAA, but a
@@ -224,6 +234,8 @@ Wolf-like race (earlier working label "wolf race").
 6. **Technology:** a mix of non-biomechanical tech stolen from others; basic weapons and technology; crew
    teleporters; cloaking. Their power model is whatever the ship they stole uses. They tend to use an autopilot while
    boarding others.
+   Weapon names (Ai Generated): stolen weapons keep their maker's name, often with a hunting nickname on top
+   (e.g. a Gatos Triblast called "Fang").
 7. **Near and inside their territory:** see 8.
 8. **Where and how they live:** small, localized, independent clusters that even attack each other.
 9. **Crew traits:** quick attacks, reduced HP, psychic.
@@ -276,6 +288,8 @@ Profile (Ai Generated):
    fear them most, since infection spreads faster into biomechanical systems (GDD 8G).
 6. **Technology:** biomechanical, with FTL's default power pool (as the Azurethea and Tentauri). The growth organ
    is their clone bay. Weapons carry infection (GDD 8G) or fire fleshy missiles and flak (above).
+   Weapon names: they don't speak, so their weapons are named by the races who face them, grim and descriptive
+   (e.g. Flesh Mortar).
 7. **Near and inside their territory:** wreck fields being overgrown, derelict stations covered in growth, very few
    stores. Events are about infected ships and stations, and what can still be saved from them.
 8. **Where and how they live:** one connected mass that grows outward from its edges, slowly swallowing
@@ -317,7 +331,7 @@ Profile (Ai Generated). Written so it still works if they become the ??? victory
 5. **Relations:** they neither take nor become refugees; the other races barely know they exist. The Senti-GPH,
    who don't need oxygen, are the only race that could share space with them.
 6. **Technology:** as above: 2 power bars per Whispwraith, ion weapons; plus atmosphere conversion (an effect in
-   the cost table).
+   the cost table). Weapon names: named by others, as the Malphen's are, mostly in Senti-GPH archive records.
 7. **Near and inside their territory:** their territory is the collapse itself (Swallowed clusters, GDD 2R).
 8. **Where and how they live:** only inside the collapse; they don't exist outside it. The player meets them only
    on the ??? victory path, or through a secret way to recruit one, if one is added.

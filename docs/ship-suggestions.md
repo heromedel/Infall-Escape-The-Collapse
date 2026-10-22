@@ -134,16 +134,16 @@ Flags for review:
    - Pass 6: checked against band 1 enemies (FTL's scout templates: hull 7–10, 1 shield layer): see 9.
 9. **Weapons:** no Terran weapons exist yet. The Stinger fits the missile role but is Azurethea and biomechanical,
    so on a Terran (mechanical) system it would charge 20% slower; a Terran missile is designed with the same parts
-   instead. Names are working names.
+   instead. Names follow the Gatos style (race profile 6).
 
-   **Terran 3-Shot Laser:** Laser, Damage, Mechanical, Terran · Shots 3 · Damage 1 · Power 2 · Breach 0% ·
+   **Gat 3.1 "Triblast"** (3-shot laser): Laser, Damage, Mechanical, Terran · Shots 3 · Damage 1 · Power 2 · Breach 0% ·
    Conduit damage 10%.
    - Charge: 13.1 s (7.0 + 6.0 damage + 0.09 conduit).
    - Cost per volley: 0.06 Mawjig (3 × (0.02 + 0.001)).
    - Price: 12.34 (1.41 + 8.18 power + 2.66 damage rate + 0.09 conduit rate).
    - Description idea: conduit damage comes from the weapon's ability to overload power systems.
 
-   **Terran Light Missile:** Missile, Damage, Mechanical, Terran · Shots 1 · Damage 1 · Power 1 · Breach 10% ·
+   **Gat M1 "Pathfinder"** (light missile): Missile, Damage, Mechanical, Terran · Shots 1 · Damage 1 · Power 1 · Breach 10% ·
    Conduit damage 0%.
    - Charge: 9.1 s (7.0 + 2.0 damage + 0.1 breach).
    - Cost per shot: 0.05 Mawjig.
@@ -171,8 +171,8 @@ Flags for review:
     | Sensors (buy 9.68 + level 2 6.05) | 15.73 |
     | Doors | 14.52 |
     | AZC level 2 | 42.36 |
-    | Terran 3-Shot Laser | 12.34 |
-    | Terran Light Missile | 6.91 |
+    | Gat 3.1 "Triblast" | 12.34 |
+    | Gat M1 "Pathfinder" | 6.91 |
     | **Total** | **139.06** |
 
     Crew are extra: 3 Terrans at 10.89 each, 32.67.
@@ -188,4 +188,3 @@ Judgment calls for review:
 - The ring conduit layout as what "easy to reroute" means.
 - Conduit damage 10% on the laser (any chance is fine as long as it is priced).
 - Weapon Control at FTL's buy price, though FTL's starts at 4 bars and this at 3.
-- Working weapon names.
