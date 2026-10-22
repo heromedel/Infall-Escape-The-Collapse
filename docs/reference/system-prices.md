@@ -33,6 +33,17 @@ FTL lists Piloting and Engines at 1 scrap because every ship starts with them; L
 
 Drone Control and Artillery are listed for reference; both are unplaced (see `ftl-weapon-system-organization.md`).
 
+## Shields under the shield test (GDD 8H)
+
+One level per layer; each level takes 2 power and 2 damage to lose, and is priced as FTL's two bars together.
+
+| Level | Layers | FTL bars it replaces | Scrap | Mawjig |
+|---|---|---|---|---|
+| 1 | 1 | buy + level 2 | 225 | 54.46 |
+| 2 | 2 | levels 3–4 | 50 | 12.11 |
+| 3 | 3 | levels 5–6 | 100 | 24.21 |
+| 4 | 4 | levels 7–8 | 180 | 43.56 |
+
 ## New Infall systems (suggested, from FTL analogs)
 
 Each is priced from the closest FTL system. A weaker analog ("sucks more") takes × 0.75 of its price, a first
