@@ -63,13 +63,23 @@ At 100% chance; scale by chance (a 30% breach chance adds 0.01).
 
 ## Hull repair
 
-About 3 scrap per hull point on average (the data's REPAIR_STATION event is exactly 2 per point: 40 scrap for 20
-hull, 20 for 10; shop prices are hard-coded and rise by sector). At 1 scrap = 0.242 Mawjig that is about **0.73
-Mawjig per hull point**. Weapon purchase prices from `weapon-budget-table.md` are the store prices; systems, crew
-and augments carry over from FTL's prices at the same 0.242 conversion.
+FTL's hull repair price depends on the sector (the data's REPAIR_STATION event is exactly 2 scrap per point: 40
+scrap for 20 hull; shop prices are hard-coded and average about 3). Infall scales it by difficulty band: a base of
+2 scrap per hull point, rising by 1 every 2 bands (draft). At 1 scrap = 0.242 Mawjig:
+
+| Bands | Scrap per point | Mawjig per hull point |
+|---|---|---|
+| 1–2 | 2 | 0.48 |
+| 3–4 | 3 | 0.73 |
+| 5–6 | 4 | 0.97 |
+| 7–8 | 5 | 1.21 |
+
+That averages 3.5 scrap across a run (+1 every 3 bands would average about 2.9, nearer FTL's 3). Weapon purchase
+prices from `weapon-budget-table.md` are the store prices; systems, crew and augments carry over from FTL's prices
+at the same 0.242 conversion.
 
 ## Rough economy check
 
 A typical early fight (about 20 laser shots, 0.40, and 3 two-damage missiles, 0.24) plus the 1.21 jump is 1.85 per
-node. A 3.42 reward leaves 1.57, which pays for about 2 hull points of repair (0.73 each). A fight that costs 5 hull
-points needs a reward of about 5.50 to break even.
+node. A 3.42 reward leaves 1.57, which pays for about 3 hull points of repair at the band 1–2 price. A fight that
+costs 5 hull points needs a reward of about 4.25 to break even in bands 1–2.
