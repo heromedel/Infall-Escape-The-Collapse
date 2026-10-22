@@ -4,7 +4,8 @@ First-pass costs for the simulation to tune. Nothing decided. Anchors: a jump co
 won fight yields roughly **3–4** Mawjig; Wait gathers about **0.21** (GDD 6B). Weapon parts follow the generator
 categories (Type, Effect, Shots, Targets, Special).
 
-Convention: Mawjig amounts never end in a zero (0.21, not 0.20; 0.11, not 0.10).
+Convention: Mawjig amounts never end in a zero (0.21, not 0.20; 0.11, not 0.10). If the weapon generator ever
+lands on an x.x0 value, it must add or subtract 0.01.
 
 ## Base cost per shot, per point of damage, by Type
 
@@ -17,7 +18,7 @@ Convention: Mawjig amounts never end in a zero (0.21, not 0.20; 0.11, not 0.10).
 | Bomb | 0.05 per bomb, plus effect | Ignores shields, can't be shot down; mostly an effect carrier |
 
 Damage per shot multiplies the base (a 2-damage laser shot is 0.04). The no-trailing-zero convention applies to
-the final price (0.10 becomes 0.11).
+the final price: an x.x0 result must add or subtract 0.01 (0.10 becomes 0.11 or 0.09).
 
 ## Effect, added per shot
 
