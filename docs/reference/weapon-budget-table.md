@@ -39,7 +39,7 @@ Rates are per 10 seconds of cooldown, so a faster weapon is worth more.
 | Ion rate | +0.54 per (ion per volley × 10 ÷ cooldown) | |
 | Breach or fire rate | +1.15 per (full-chance shots × 10 ÷ cooldown) | fire by judgment; FTL prices it at zero |
 | Pierce | +0.75 per shield layer | |
-| Ammo weapon (missile, bomb, flak) | −2.20 | cheaper to buy because each shot costs Mawjig |
+| Per-shot cost above a laser's | −(per-volley cost − laser-equivalent cost) × 60 volleys | missile −1.80, bomb −1.80, 4-room beam −2.40, flak +1.80 (its shots are cheaper than a laser's); from `mawjig-cost-table.md`. Replaces FTL's flat ammo discount, since in Infall every shot costs Mawjig |
 | Bomb | +5.54 | |
 | Flak | +1.38 | |
 | Beam | +0.24 | |
@@ -52,16 +52,16 @@ Final prices follow the no-trailing-zero rule (x.x0 adds or subtracts 0.01).
 
 | Weapon | Cooldown | Price | FTL comparison (× 0.242) |
 |---|---|---|---|
-| Stinger: 1 dmg missile, no effects, 1 power | 9.0 s | 4.58 | Leto 4.84 |
+| Stinger: 1 dmg missile, no effects, 1 power | 9.0 s | 4.98 | Leto 4.84 |
 | 2-shot laser, 1 power | 11.0 s | 7.61 | Dual Shot 6.05 |
 | 3-shot laser, 2 power | 13.0 s | 12.27 | Burst II 19.36 (FTL prices it above its stats) |
 | Heavy laser: 2 dmg, 30% fire, 30% breach, 1 power | 12.2 s | 7.97 | Heavy I 12.10 |
-| Pike-type beam: 1 dmg × 4 rooms, 2 power | 20.0 s | 12.15 | Pike 13.31 |
-| Glaive-type beam: 3 dmg × 2 rooms, 4 power | 24.0 s | 20.91 | Glaive 22.99 |
-| Flak, 3 projectiles, 2 power | 10.0 s | 12.25 | Flak I 15.73 |
+| Pike-type beam: 1 dmg × 4 rooms, 2 power | 20.0 s | 9.75 | Pike 13.31 |
+| Glaive-type beam: 3 dmg × 2 rooms, 4 power | 24.0 s | 19.71 | Glaive 22.99 |
+| Flak, 3 projectiles, 2 power | 10.0 s | 16.25 | Flak I 15.73 |
 | Ion blast, 1 ion, 1 power | 9.5 s | 6.06 | Ion Blast 7.26 |
-| Breach bomb, 1 power | 13.0 s | 9.72 | Breach Bomb I 12.10 |
+| Breach bomb, 1 power | 13.0 s | 10.12 | Breach Bomb I 12.10 |
 | 3-shot multi-target breach laser, 2 power | 17.0 s | 17.08 | new |
-| 1-room phase beam, 2 dmg, 2 power | 19.0 s | 16.58 | new |
+| 1-room phase beam, 2 dmg, 2 power | 19.0 s | 15.98 | new |
 
 Most examples land within about 30% of FTL's hand-set prices, which is the size of FTL's own designer adjustments.
