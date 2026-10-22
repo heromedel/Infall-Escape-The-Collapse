@@ -64,7 +64,7 @@ Hull destruction, high damage, little finesse; crew-powered ships; EVB Dock.
 Shields and defence specialists; weapons are standard lasers, beams or missiles as needed.
 
 - **Weapons:** standard choices: Burst Laser I / II, Pike / Halberd Beam, Artemis Missiles
-- **Systems:** Zoltan-like shield (extra shield layer), Backup Battery, point-defense laser (new idea, see below)
+- **Systems:** Zoltan-like shield (extra shield layer), Backup Battery
 - **Drone-like:** Defense Drone I / II (shoot down missiles and drones), Anti-Combat Drone, Shield Overcharger
 
 ## Senti-GPH
@@ -105,11 +105,6 @@ Ion weapons; 2 bars of power per Whispwraith; self-teleporting crew.
 
 - **Weapons:** Ion Blast I / II, Heavy Ion, Ion Charger, Chain Ion, Ion Stunner, Ion Bomb
 - **Drone-like:** Ion Intruder Drone, Anti-Ship Ion Drone
-
-## New ideas
-
-- **Point-defense laser:** an actual defence laser system that shoots down incoming missiles, like a defence drone
-  but without needing to be a drone. Suits the Tentauri.
 
 ## Not yet placed
 
