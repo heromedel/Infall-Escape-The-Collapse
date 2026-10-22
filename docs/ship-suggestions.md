@@ -138,9 +138,10 @@ Flags for review:
 
    **Terran 3-Shot Laser:** Laser, Damage, Mechanical, Terran · Shots 3 · Damage 1 · Power 2 · Breach 0% ·
    Conduit damage 10%.
-   - Charge: 13.3 s (7.0 + 6.0 damage + 0.3 conduit).
-   - Cost per volley: 0.07 Mawjig (3 × (0.02 + 0.003)).
-   - Price: 12.47 (1.41 + 8.18 power + 2.62 damage rate + 0.26 conduit rate).
+   - Charge: 13.1 s (7.0 + 6.0 damage + 0.09 conduit).
+   - Cost per volley: 0.06 Mawjig (3 × (0.02 + 0.001)).
+   - Price: 12.34 (1.41 + 8.18 power + 2.66 damage rate + 0.09 conduit rate).
+   - Description idea: conduit damage comes from the weapon's ability to overload power systems.
 
    **Terran Light Missile:** Missile, Damage, Mechanical, Terran · Shots 1 · Damage 1 · Power 1 · Breach 10% ·
    Conduit damage 0%.
@@ -155,9 +156,10 @@ Flags for review:
    per volley, plus 1 from the missile, which ignores shields. A band 1 enemy (hull 7–10) falls in about three
    volleys, roughly 40 s. The missile also gives the player a way through the two-layer shields of later bands.
 
-   **Economy check:** a fight of about 8 volleys costs 0.56 in laser shots and 0.40 in missiles, about 0.96, plus the
-   1.21 jump: about 2.17 per node against a 3.42 reward, leaving 1.25. That is a little tighter than the cost
-   table's example fight (1.57 left), mostly from firing the missile every volley; holding it back saves Mawjig.
+   **Economy check:** a fight of about 8 volleys (allowing for misses: in FTL a 3-shot volley often has one shot
+   blocked, one miss and one hit) costs 0.48 in laser shots and 0.40 in missiles, plus the 1.21 jump: about 2.09
+   per node against a 3.42 reward, leaving 1.33. A little tighter than the cost table's example fight (1.57 left),
+   mostly from firing the missile every volley; holding it back saves Mawjig.
 10. **Price:**
 
     | Part | Mawjig |
@@ -169,13 +171,14 @@ Flags for review:
     | Sensors (buy 9.68 + level 2 6.05) | 15.73 |
     | Doors | 14.52 |
     | AZC level 2 | 42.36 |
-    | Terran 3-Shot Laser | 12.47 |
+    | Terran 3-Shot Laser | 12.34 |
     | Terran Light Missile | 6.91 |
-    | **Total** | **139.19** |
+    | **Total** | **139.06** |
 
     Crew are extra: 3 Terrans at 10.89 each, 32.67.
-11. **New rules recorded:** conduit damage priced like breach (+0.03 per shot at 100% in `mawjig-cost-table.md`;
-    +1.0 s cooldown and the breach price rate in `weapon-budget-table.md`).
+11. **New rules recorded:** conduit damage at a third of breach (+0.01 per shot at 100% in `mawjig-cost-table.md`;
+    +0.3 s cooldown and a +0.38 price rate in `weapon-budget-table.md`), since it only affects conduit ships, drains
+    no oxygen and is rarely lethal.
 
 Judgment calls for review:
 
@@ -183,6 +186,6 @@ Judgment calls for review:
 - AZC level 2, and Piloting, Sensors and Doors taking no core capacity.
 - Sensors 2 as the scout's strength, traded for a 1-damage missile.
 - The ring conduit layout as what "easy to reroute" means.
-- Conduit damage 10% on the laser; conduit damage priced the same as breach.
+- Conduit damage 10% on the laser (any chance is fine as long as it is priced).
 - Weapon Control at FTL's buy price, though FTL's starts at 4 bars and this at 3.
 - Working weapon names.

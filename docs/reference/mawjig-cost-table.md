@@ -36,7 +36,7 @@ At 100% chance; scale by chance (a 30% breach chance adds 0.01).
 | Ion | +0.02 | Atmosphere conversion | +0.04 |
 | Spores | +0.04 | Pierce | +0.04 |
 | Heal | +0.05 | Repair | +0.11 |
-| Conduit damage | +0.03 | | |
+| Conduit damage | +0.01 | | |
 
 ## Shots, Targets, Specials
 
