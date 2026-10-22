@@ -40,7 +40,7 @@ The stage 7 rival who wants your escape route could by default be a band of doom
 
 ## Resources
 
-### Material and Energy (2026-10-21)
+### Material and Energy (2026-10-21) — superseded by Mawjig (GDD 8C)
 
 Instead of FTL's scrap, missiles and drone parts, two resources: **Material** and **Energy**. Basic systems
 consume little to no energy beyond whatever energy they gain; powerful energy weapons consume energy; missiles
