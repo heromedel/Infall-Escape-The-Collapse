@@ -2,7 +2,7 @@
 
 Each race is defined with the profile below. Other race ideas are in `ideas.md`.
 
-Rivalry and potential-friend lines between races: see Relations between races (Ai Generated) at the end.
+How races treat each other: see Relations between races at the end.
 
 ## Profile template
 
@@ -65,7 +65,7 @@ clone.
 
 1. **Tone and ship style:** a butterfly-like race of peaceful creatures using a mix of biomechanical technology.
    Ships shaped much like moths or butterflies, partly organic. Silhouette (Proposed): winged.
-   Colours (Ai Generated): iridescent blues and teals with wing-like patterns.
+   Colours (Ai Generated): iridescent blues and royal blues with wing-like patterns.
 2. **Doing fine:** nearly pacifist and docile; highly likely to accept or offer surrender; primarily interested
    in exploration. Slightly isolationist about sharing technology or letting others on their ships.
 3. **Struggling:** more willing to cooperate and more interested in trade.
@@ -323,18 +323,18 @@ Profile (Ai Generated). Written so it still works if they become the ??? victory
 Note: this fits them being the ??? race; only their command ship and the cause of the collapse would need
 adding.
 
-## Relations between races (Ai Generated)
+## Relations between races
 
-Fills the "rivalry and potential-friend lines" still to define at the top of this file. Each line comes from the
-profiles above; state changes (e.g. doomed Terrans turning on refugees) apply on top.
+There is no fixed table of rivals and friends: how two races treat each other depends on proximity (bordering or
+distant) and on each side's state (doing fine, struggling, doomed). Each profile's point 5 gives the race's
+tendencies; combine the two sides for the situation.
 
-| Race | Rivals | Potential friends |
+| Situation | What happens | Source |
 |---|---|---|
-| Terrans | Lykario (steal their tech), Mecha (flow into weakened Terran space), Malphen | Azurethea, Tentauri; Senti-GPH, their own creation, while doing fine (doomed Terrans blame them like any other outsider) |
-| Azurethea | Mecha and Lykario (violent), Malphen (infection, biomechanical) | Tentauri (peaceful explorers with the same power and tech), Terrans while doing fine, Senti-GPH (want their exploration records) |
-| Mecha | whoever borders them, especially Terrans (populated space to flow into), Tentauri (trespassers), Malphen (both want Abandoned clusters) | Lykario, for a joint hunt that pays |
-| Tentauri | Mecha (territorial against trespassers), Malphen | Azurethea, Terrans; when doomed, even Mecha |
-| Senti-GPH | Malphen (consume everything, leave nothing to archive), Lykario (steal and wreck) | Terrans while doing fine, Azurethea, Whispwraith (no oxygen needed) |
-| Lykario | everyone they raid, mostly Terrans and Azurethea | anyone up for a joint hunt: Mecha, doomed Terran pirates |
-| Malphen | every race | none |
-| Whispwraith | every oxygen breather | Senti-GPH |
+| Azurethea ~ doomed distant Lykario | The Azurethea are peaceful toward them; if the Lykario want to team up, the Azurethea have little issue with it. | Designer |
+| Azurethea ~ bordering Lykario | The Lykario hunt the Azurethea, as they do anyone bordering them. The Azurethea try diplomacy, but the more they struggle the more vindictive they become; it can easily turn into all-out war. | Designer |
+| Tentauri ~ doomed Mecha ship | The Tentauri are defensive; the doomed Mecha may want to trade or join up, for their own advantage. | Designer |
+| Doing-fine Malphen ~ doomed distant Mecha | The Malphen would likely attack on sight; knowing this, the Mecha would likely prepare a battle plan to attack first or escape. | Designer |
+| Doing-fine Terrans ~ bordering struggling Azurethea | The Terrans offer trade and take in refugees; the Azurethea, now more interested in trade, accept. One of the friendliest pairings. | Ai Generated |
+| Doomed Terrans ~ bordering doing-fine Senti-GPH | The Terrans blame outsiders and steal technology, so they raid the Senti; the Senti, preserving data first, trade for defensive equipment. | Ai Generated |
+| Struggling Tentauri ~ bordering doing-fine Mecha | The Tentauri force their way through; the Mecha insist they leave, or attack if they have the advantage. A likely forced-passage fight. | Ai Generated |
