@@ -120,3 +120,18 @@ shot from one weapon goes to the same target room.
 
 An actual defence laser system that shoots down incoming missiles, like a defence drone but without needing to be
 a drone. Would suit the Tentauri.
+
+### Weapon direction (2026-10-22)
+
+FTL's weapons have no real problems; the plan is to scrap drones, customize per race, theme weapons around each
+race, and expand rather than replace. Crystal weapons need to change. Weapon costs likely use Material and Energy
+(both may need better names). Don't keep FTL's names; some weapons could have biological names.
+
+New weapon ideas:
+
+- **Multi-target lasers** (above).
+- **Rapid single-room beam:** hits a single room multiple times with a slight delay; similar to a laser but
+  without pausing between hits.
+- **Ship-to-ship sweeping beam:** sweeps from one enemy ship to another.
+- **Frequency-shifting lasers:** alternate their frequency for a percentage chance to bypass a shield, at the cost
+  of charging slower or taking more power.
