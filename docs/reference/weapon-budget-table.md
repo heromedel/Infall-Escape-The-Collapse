@@ -51,6 +51,7 @@ fit; the half-step damage rule in the cost table applies to per-shot cost only.
 | Beam | +0.24 | |
 | Multi-target | × 1.25 | judgment |
 | Phase | × 1.5 | judgment |
+| Defensive | +5.32 | shoots down incoming missiles when not aimed, like FTL's Defense Drone Mark I; its 12.11 less the 1-damage laser it carries (6.79). No cooldown or per-shot change |
 
 Final prices follow the no-trailing-zero rule (x.x0 adds or subtracts 0.01).
 
@@ -69,6 +70,7 @@ Final prices follow the no-trailing-zero rule (x.x0 adds or subtracts 0.01).
 | Breach bomb, 1 power | 13.0 s | 11.92 | Breach Bomb I 12.10 |
 | 3-shot multi-target breach laser, 2 power | 17.0 s | 17.08 | new |
 | 1-room phase beam, 2 dmg, 2 power | 19.0 s | 16.58 | new |
+| Tentauri Defense Laser: 1 dmg, Defensive, 1 power | 9.0 s | 12.11 | Defense Drone Mark I 12.11 |
 
 The Stinger lands above the Leto because FTL's missile prices carry the scarcity discount that Infall drops: a
 shield-ignoring missile costs more to buy and more to fire than a laser.

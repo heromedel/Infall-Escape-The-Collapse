@@ -40,8 +40,13 @@ guess.
 | Mutation system | Drone Control × 0.75 | 10.89 | 1.82, 3.63, 5.45, 8.17, 10.89, 14.52, 18.15 | 62.63 |
 | EVA Dock | Teleporter × 0.75 | 16.34 | 5.45, 10.89 | 16.34 |
 | AAA | Clone Bay + Backup DNA Bank augment (40 scrap) | 21.78 | 8.47, 10.89 | 19.36 |
+| Supershield Generator | Zoltan Shield augment (80 scrap) | 19.36 | none yet | — |
 
 The number of levels follows the analog until each system's levels are designed.
+
+Supershield Generator (Tentauri): FTL's Zoltan Shield as a ship system that recharges periodically, like the Shield
+Overcharger without a drone system. 2 bars (the Overcharger's player power). Capacity 5, as FTL's Zoltan Shield
+(from memory of FTL, not in the extracted data); recharge rate left for the simulation.
 
 ## Standard reactor (per bar)
 
