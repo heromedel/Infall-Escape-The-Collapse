@@ -79,6 +79,4 @@ Ship designs made with `ship-design-process.md`. Nothing here is decided. Prices
 
 Flags for review:
 
-- GDD 8E gives the Stinger 9 s native and 7 s on biomechanical; `weapon-budget-table.md` makes 9 s native and
-  slower (+20%) on another tech type. This uses the budget table.
 - The Defensive special isn't in the cost tables yet; its price here is the rule above.
