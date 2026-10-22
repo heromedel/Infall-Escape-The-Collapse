@@ -9,6 +9,7 @@ no-trailing-zero rule. Nothing decided; the simulation tunes these.
 level 3…), as FTL's blueprint data labels them. A system at a level costs its buy price plus every step up to that
 level (e.g. Shields at 2 bars: 30.25 + 24.21 = 54.46), the same way Federation Home Planet prices systems
 (`Pricing.system`).
+
 FTL lists Piloting and Engines at 1 scrap because every ship starts with them; Life Support starts installed too.
 
 | System | FTL buy (scrap) | Buy (Mawjig) | Upgrades, per level (Mawjig) | All upgrades (Mawjig) |
