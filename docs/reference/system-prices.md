@@ -5,7 +5,10 @@ no-trailing-zero rule. Nothing decided; the simulation tunes these.
 
 ## Systems
 
-"Buy" is the price to install the system. "Upgrades" lists each level's step price in order (level 2, level 3…).
+"Buy" is the price to install the system. "Upgrades" lists each level's step price in order (level 2, level 3…),
+as FTL's blueprint data labels them. A system that starts above level 1 skips the early steps: Shields and Engines
+start at 2, so their first step paid is level 3 (Shields 4.84); Weapon Control starts at 4. "All upgrades" sums
+every step from level 2, so for those systems it is more than a ship actually pays.
 FTL lists Piloting and Engines at 1 scrap because every ship starts with them; Life Support starts installed too.
 
 | System | FTL buy (scrap) | Buy (Mawjig) | Upgrades, per level (Mawjig) | All upgrades (Mawjig) |

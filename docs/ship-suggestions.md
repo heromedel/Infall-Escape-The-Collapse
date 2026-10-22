@@ -287,6 +287,4 @@ Judgment calls for review:
 - All-Terran crew.
 - The Sporewing: missile type (can be shot down) rather than bomb, 1 power, spores priced as ion, stun from FTL's
   Ion Stunner.
-- Reading `system-prices.md` upgrade lists as starting at level 2 (so Shields levels 3–4 are 4.84 and 7.26); the
-  FTL source order should be checked.
 - Hail behaviour and the Sporewing as loot.
