@@ -128,7 +128,8 @@ Decided in GDD 7H (2026-10-23).
   - **Proposed (2026-10-23):** the symbol's colour shows whose system it is and its state: a powered player system
     is green, a powered pirate (enemy) system is orange, and a damaged system on either side is a distinct red. This
     replaces the ship-colour symbol above. It sits beside GDD 14B (power systems coloured like FTL's, Proposed), which
-    would need to fit with it.
+    would need to fit with it. Mocked up in `docs/art/mockups/system-symbol-colours/`; heromedel: it works, because
+    orange makes enemy ships read as a caution or enemy colour.
 
 ### EVA Dock and EVA suits (2026-10-21)
 
