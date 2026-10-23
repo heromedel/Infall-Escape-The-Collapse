@@ -30,6 +30,9 @@ clone.
 1. **Tone and ship style — Proposed (2026-10-21):** when doing well, clean, soft Federation-like ships. When
    desperate, a grim, survivalist look built from seemingly borrowed or stolen technology.
    - **Silhouette — Proposed (2026-10-22):** classic spaceship shapes, from large shuttles to cruisers and rockets.
+   - **Armoured core hatch — Proposed (2026-10-23):** a visible armoured housing over the AZC, like the Outrider's,
+     is common on Terran vessels but not mandatory. Its variants can show the ship's state: clean and plated when
+     doing well, worn when struggling, dark and scorched on doomed or pirate ships.
    - **No rockets for a while — Likely (2026-10-23):** these are spaceships, not Earth-to-orbit rockets. After the
      Outrider and the pirate hull, no more rocket-like Terran designs for a while.
    - **Colours — Ai-Generated-Proposal (2026-10-22):** white and pale grey with blue trim; desperate ships add rust
