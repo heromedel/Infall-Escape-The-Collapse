@@ -127,7 +127,8 @@ source doc carries the tag heromedel's words give it.
 - Tentauri weapon names come from their own anatomy, such as Coil, Grasp, Siphon and Tendril Beam. (Race profiles, Tentauri 6; Ai-Generated-Proposal)
 - The Tentauri are explorers who found small regions far apart from each other. (Race profiles, Tentauri 8; Proposed)
 - Lone Tentauri ships are a common sight passing through other races' territory. (Race profiles, Tentauri 7; Ai-Generated-Proposal)
-- A Tentauri can work several systems at once. (Race profiles, Tentauri 9; Proposed)
+- A Tentauri can work multiple systems at once. (Race profiles, Tentauri 9; Proposed)
+- The Tentauri learn each skill slowly, but they can learn multiple skills at once. (GDD 7H; Decided)
 
 ## Senti-GPH
 
