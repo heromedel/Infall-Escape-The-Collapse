@@ -112,9 +112,25 @@ clone.
     - High tech: many weapon systems, missiles, a high-hull carapace, spore systems and weapons, good sensors,
       high evasion, medium shields at most.
 
-## The Mecha (draft, 2026-10-21)
+## The Mecha (HalfMechs) (draft, 2026-10-21)
 
 "The Mecha" is a working name that may become final.
+
+- **Names — Proposed (2026-10-23):** they call themselves **HalfMechs**. Other races will still probably call them
+  **The Mecha**.
+- **What they are — Proposed (2026-10-23):** not robots. A small race of adults who live inside semi-cybernetic mech
+  suits, childlike in size and attitude: immature, adorable adult cyborgs, genetically modified and/or grown.
+  Outside their suits they are rather attractive, like diminutive genetically engineered humans, and oddly
+  adorable for their viciousness.
+- **Origin — Proposed (2026-10-23):** lost to time and somewhat of a mystery, but genetic evidence suggests they
+  were Terran, bred to better fit inside semi-cybernetic mech suits. An accidental by-product of their creation,
+  and possibly their personal power inside the mechs, made them immature, violent and greedy, like cruel children.
+- **Out of their suits — Proposed (2026-10-23):** incredibly bashful if not violent. Not truly shy, though: their
+  overconfidence tends to override it.
+- **What others know — Proposed (2026-10-23):** most races are likely not fully aware of any of this. Some rumors
+  claim they are hideous and evil, others that they are adorable and just greedy or immature.
+- **Organized and tactical — Proposed (2026-10-23):** because they want power and wealth, and they will work together
+  to get it.
 
 1. **Tone — Proposed (2026-10-21):** an aggressive destruction race that guts ships; highly organized and
    tactical.
