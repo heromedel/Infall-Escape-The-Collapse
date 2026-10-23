@@ -244,9 +244,8 @@ Wolf-like race (earlier working label "wolf race").
    they edit or build themselves get Lykario names (Ai Generated: hunting words, e.g. "Fang").
 7. **Near and inside their territory:** see 8.
 8. **Where and how they live:** small, localized, independent clusters that even attack each other.
-9. **Crew traits:** quick attacks, reduced HP, psychic.
-   Psychic (Ai Generated): in game these are animal senses (smell and hearing), not real psychic powers, and
-   player-facing text never calls them psychic. Like FTL's Slugs, they sense crew through walls: crew in
+9. **Crew traits:** quick attacks, reduced HP, Animal Sense.
+   Animal Sense (Decided, designer, 2026-10-23): smell and hearing, not psychic powers. Like FTL's Slugs, they sense crew through walls: crew in
    neighbouring rooms show without sensors, on whatever ship they are on, which suits boarders picking prey.
 10. **Ship tiers:** even their best ship designs are not that amazing, aside from larger or multiple crew
     teleporter rooms.

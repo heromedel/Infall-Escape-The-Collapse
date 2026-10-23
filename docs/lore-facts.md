@@ -135,8 +135,7 @@ draft becomes **approved by heromedel**.
 - The Lykario take in anyone who proves useful on a hunt. Those who don't are prey. (Race profiles, Lykario 5; AI draft)
 - Most Lykario weapons are stolen and keep their maker's name. (Race profiles, Lykario 6; heromedel)
 - The Lykario live in small, independent clusters that even attack each other. (Race profiles, Lykario 8; heromedel)
-- The Lykario are psychic. (Race profiles, Lykario 9; heromedel)
-- In the game, Lykario "psychic" senses are smell and hearing, which let them sense people through walls. (Race profiles, Lykario 9; AI draft)
+- The Lykario have Animal Sense: their smell and hearing are keen enough to sense people through walls. (Race profiles, Lykario 9; heromedel)
 
 ## Malphen (Malphagius)
 
