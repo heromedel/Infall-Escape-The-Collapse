@@ -22,7 +22,8 @@ each with its SVG, PNG exports, review sheets, build tools and a notes README.
 | 2026-10-23 | The Gatos are human; the cat pun is only in their name. No cat motifs on their ships. |
 | 2026-10-23 | Stolen or foreign weapons look properly fitted on a real hardpoint, refitted into the hull, not clamped on. |
 | 2026-10-23 | Weapons are separate art, but ship previews and squad views show them mounted. Loadouts of one hull must look visibly different. |
-| 2026-10-23 | Conduit check, run before sending any conduit ship: every installed system's room is on the network and traces back to the AZC, and every single point of failure is listed in the piece's README (only intended weak points, such as a single spur, may remain). The floor plan tools fail the build otherwise. Whether conduits must also reach each weapon mount on the hull, or only the Weapons room, is **Open** (race profiles, Terrans 6); add a mount check once it is decided. |
+| 2026-10-23 | Conduit check, run before sending any conduit ship: every installed system's room is on the network and traces back to the AZC, and every single point of failure is listed in the piece's README (only intended weak points, such as a single spur, may remain). The floor plan tools fail the build otherwise. Every weapon hardpoint has a run back to the AZC too: whether mounts need power is **Open** (race profiles, Terrans 6), but heromedel asked to work as if they do. |
+| 2026-10-23 | Floor plans show the ship intact and powered. Damage (cuts, the GDD 14C red flash) goes in a separate, clearly labelled demo file. Console symbols are not red, since red means a cut-off system. |
 | 2026-10-23 | No rocket-like Terran designs for a while: no pointed nose cone, tail fins and engine-bell silhouette. Terran ships look built for deep space, not for launching from a planet (race profiles, Terrans 1, Likely). |
 
 ## Pieces

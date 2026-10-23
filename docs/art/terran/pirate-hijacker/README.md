@@ -73,11 +73,28 @@ Terran designs for a while (race profiles, Terrans 1, Likely). See `docs/art/REA
   - an engine room (Engines, Life Support)
 - **Rooms by loadout:** systems go into rooms of the player's choice (GDD 5E). The Cutpurse has no Sensors, Doors or
   Medbay, so its Doors and Medbay rooms stand empty and stripped (darker, bare floor).
-- **Conduits:** a plain ring from the AZC through the system rooms, plus one spur from the weapons room to the
-  Sporewing hardpoint, the readable weak point. The Hijacker plan shows the spur cut, with the GDD 14C red flash; the
-  cut-off hardpoint turns red.
-- **Rules:** no console sits on a door tile. Consoles are wall desks with the system symbol in the ship's oxblood
-  accent.
+- **Conduits:** a plain ring from the AZC through the system rooms. Every weapon hardpoint is wired:
+  - **Twinshot (Hijacker):** fed twice, by a run from the weapons room across to the port hardpoint and a tap off the
+    ring, so no single cut drops it. It is Terran-built and wired properly.
+  - **Sporewing (both):** one spur from the weapons room out to the starboard hardpoint: the readable weak point,
+    a crude refit of stolen tech.
+  - The plans show everything intact and powered. A separate, labelled file, `damage-demo-14c`, shows the
+    Sporewing spur cut with the GDD 14C red flash and the cut-off hardpoint turned red.
+- **Weapon mounts:** whether conduits must reach each weapon mount on the hull, or only the Weapons room, is
+  **Open** (race profiles, Terrans 6). heromedel asked to work as if mounts need power, so they are wired here.
+- **Conduit check** (`floorplan.py` runs it before drawing):
+
+  | Loadout | Systems on the network | Hardpoints wired | Single points of failure |
+  |---|---|---|---|
+  | Hijacker | 9 of 9 | 2 of 2 | the Sporewing spur (intended) |
+  | Cutpurse | 6 of 6 | 1 of 1 | the Sporewing spur (intended) |
+
+  The ring has two AZC exits, so two cuts beside the core would unpower the ship: accepted for a mid-tier pirate,
+  tougher than a spine and weaker than the Outrider's wheel.
+- **Fix (2026-10-23):** the first accepted plans left the Twinshot hardpoint unwired, and the Sporewing spur began on a
+  tile the ring didn't reach. heromedel spotted the first; the new check caught the second.
+- **Rules:** no console sits on a door tile. Consoles are wall desks with the system symbol in the hull's light
+  steel; not red, since red means a cut-off system (GDD 14C).
 - **Files:** each loadout has a floor layer (`floor-*.svg`), a conduit layer (`conduits-*.svg`, its own file as the
   art rules ask) and a combined plan (`plan-*.svg`).
 - **Dark core hatch** (race profiles, Proposed): left off for now, at Ship Designs' call.

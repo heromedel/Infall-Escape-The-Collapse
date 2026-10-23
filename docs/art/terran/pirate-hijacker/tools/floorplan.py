@@ -34,7 +34,7 @@ AIRLOCK = "#e07a3a"
 TERMINAL = "#d9dde3"
 TERMINAL_EDGE = "#6d7581"
 SCREEN = "#1c2028"
-SYMBOL = "#e0645a"           # the ship's oxblood accent, lifted to read on a dark screen
+SYMBOL = "#c9d1db"           # the hull's light steel: not red, since red means a cut-off system (GDD 14C)
 ON = "#5dffa8"
 CUT = "#ff4a3a"
 
@@ -89,9 +89,15 @@ CORE_TILES = [(1, 5), (2, 5), (1, 6), (2, 6)]
 RING = [(2, 5), (2, 4), (2, 3), (2, 2), (2, 1), (2, 0), (1, 0), (1, 1), (1, 2), (1, 3), (0, 3), (0, 4), (0, 5),
         (0, 6), (0, 7), (0, 8), (0, 9), (0, 10), (0, 11), (1, 11), (1, 12), (2, 12), (2, 11), (3, 11), (3, 10),
         (3, 9), (3, 8), (3, 7), (3, 6), (2, 6)]
-# the spur: from the weapons room out through the starboard wall to the Sporewing hardpoint
-SPUR_FROM = (3, 4)
-SPUR_TO = (345.2, 296)
+# weapon hardpoints and their conduit feeds. Each feed is a run of tiles from the network out to the hull wall,
+# then on to the hardpoint. The Sporewing, a crude refit of stolen tech, has one spur: the readable weak point. The
+# Twinshot, Terran-built, is fed twice: a run from the weapons room and a tap off the ring, so no single cut drops it.
+HARDPOINTS = {
+    "Sporewing": {"at": (345.2, 296), "loadouts": {"hijacker", "cutpurse"}, "feeds": [[(2, 4), (3, 4)]],
+                  "intended_weak_point": True},
+    "Twinshot": {"at": (134.8, 296), "loadouts": {"hijacker"}, "feeds": [[(2, 4), (1, 4), (0, 4)], [(0, 3)]],
+                 "intended_weak_point": False},
+}
 
 
 def door_tiles():
@@ -193,8 +199,66 @@ def terminal(name, c, r, kind):
     return f'<g class="system" data-name="{name}"><g transform="rotate({angle} {cx} {cy})">{desk}</g>{sym}</g>'
 
 
+def network_edges(loadout):
+    """Every conduit segment for a loadout: the ring, plus each fitted hardpoint's feeds."""
+    edges = set()
+    for a, b in zip(RING, RING[1:] + RING[:1]):
+        edges.add(frozenset((a, b)))
+    for name, hp in HARDPOINTS.items():
+        if loadout not in hp["loadouts"]:
+            continue
+        for feed in hp["feeds"]:
+            path = feed + [("hardpoint", name)]
+            for a, b in zip(path, path[1:]):
+                edges.add(frozenset((a, b)))
+    return edges
+
+
+def reachable(edges):
+    """Everything the AZC still powers through the given segments."""
+    seen, todo = set(CORE_TILES), list(CORE_TILES)
+    while todo:
+        n = todo.pop()
+        for e in edges:
+            if n in e:
+                (other,) = e - {n}
+                if other not in seen:
+                    seen.add(other)
+                    todo.append(other)
+    return seen
+
+
+def check_network(loadout):
+    """The conduit check, run before anything is sent: every installed system's room is on the network, every
+    fitted hardpoint has a run, each traces back to the AZC, and every single point of failure is listed."""
+    edges = network_edges(loadout)
+    live = reachable(edges)
+    room_tiles = {rid: {(cc, rr) for cc in range(c, c + w) for rr in range(r, r + h)} for rid, c, r, w, h in ROOMS}
+    targets = {}
+    for name, c, r, _, loadouts in CONSOLES:
+        if loadout in loadouts:
+            targets[name] = room_tiles[room_of(c, r)]
+    for name, hp in HARDPOINTS.items():
+        if loadout in hp["loadouts"]:
+            targets[f"{name} hardpoint"] = {("hardpoint", name)}
+    unpowered = [t for t, tiles in targets.items() if not tiles & live]
+    assert not unpowered, f"{loadout}: not connected to the AZC: {unpowered}"
+    weak = {}
+    for e in edges:
+        after = reachable(edges - {e})
+        lost = [t for t, tiles in targets.items() if not tiles & after]
+        if lost:
+            weak.setdefault(tuple(sorted(lost)), []).append(e)
+    intended = {f"{n} hardpoint" for n, hp in HARDPOINTS.items() if hp["intended_weak_point"]}
+    unexpected = [lost for lost in weak if not set(lost) <= intended]
+    assert not unexpected, f"{loadout}: unintended single points of failure: {unexpected}"
+    return {"systems": sorted(t for t in targets if "hardpoint" not in t),
+            "hardpoints": sorted(t for t in targets if "hardpoint" in t),
+            "weak points": {", ".join(lost): len(segs) for lost, segs in weak.items()}}
+
+
 def conduit_layer(loadout, cut_spur):
-    """The conduit layer on its own: the ring, and the spur to the Sporewing hardpoint."""
+    """The conduit layer on its own: the ring, and the feeds to each fitted weapon hardpoint."""
     def wire(d):
         return (f'<path d="{d}" fill="none" stroke="#0c1018" stroke-width="6" stroke-linejoin="round" '
                 f'stroke-linecap="round"/><path d="{d}" fill="none" stroke="{ON}" stroke-width="2.2" '
@@ -202,25 +266,37 @@ def conduit_layer(loadout, cut_spur):
                 f'stroke-width=".8" stroke-linejoin="round"/>')
     ring = "M" + " L".join(f"{centre(c, r)[0]:.1f},{centre(c, r)[1]:.1f}" for c, r in RING) + " Z"
     out = [wire(ring)]
-    sx, sy = centre(*SPUR_FROM)
-    tx, ty = SPUR_TO
-    if cut_spur:
-        # GDD 14C: a broken conduit flashes red, and the cut-off part may turn red too
-        mx = (sx + 22 + tx) / 2
-        out.append(wire(f"M{sx},{sy} L{sx + 22},{sy} L{mx - 6},{sy}"))
-        out.append(f'<path d="M{mx + 6},{sy} L{tx - 6},{sy} L{tx},{ty}" fill="none" stroke="#0c1018" stroke-width="6"/>'
-                   f'<path d="M{mx + 6},{sy} L{tx - 6},{sy} L{tx},{ty}" fill="none" stroke="{CUT}" stroke-width="2" '
-                   f'opacity=".8"/>'
-                   f'<circle cx="{mx}" cy="{sy}" r="14" fill="{CUT}" opacity=".35" filter="url(#cglow)"/>'
-                   f'<circle cx="{mx}" cy="{sy}" r="6" fill="{CUT}"/><circle cx="{mx}" cy="{sy}" r="2.5" fill="#fff1ec"/>'
-                   f'<circle cx="{tx}" cy="{ty}" r="9" fill="none" stroke="{CUT}" stroke-width="2"/>')
-    else:
-        out.append(wire(f"M{sx},{sy} L{sx + 22},{sy} L{tx - 6},{sy} L{tx},{ty}"))
-        out.append(f'<circle cx="{tx}" cy="{ty}" r="4" fill="#0c1018"/><circle cx="{tx}" cy="{ty}" r="2.2" fill="{ON}"/>')
+    for name, hp in HARDPOINTS.items():
+        if loadout not in hp["loadouts"]:
+            continue
+        tx, ty = hp["at"]
+        side = 1 if tx > CX else -1
+        for feed in hp["feeds"]:
+            pts = [centre(*t) for t in feed]
+            lx, ly = pts[-1]
+            # out through the hull wall, then into the hardpoint
+            pts += [(tx - side * 6, ly), (tx, ty)]
+            if cut_spur and hp["intended_weak_point"]:
+                # GDD 14C: a broken conduit flashes red, and the cut-off part may turn red too
+                mx = (lx + tx) / 2
+                head = pts[:-2] + [(mx - side * 6, ly)]
+                out.append(wire("M" + " L".join(f"{x:.1f},{y:.1f}" for x, y in head)))
+                tail = f"M{mx + side * 6},{ly} L{tx - side * 6},{ly} L{tx},{ty}"
+                out.append(f'<path d="{tail}" fill="none" stroke="#0c1018" stroke-width="6"/>'
+                           f'<path d="{tail}" fill="none" stroke="{CUT}" stroke-width="2" opacity=".8"/>'
+                           f'<circle cx="{mx}" cy="{ly}" r="14" fill="{CUT}" opacity=".35" filter="url(#cglow)"/>'
+                           f'<circle cx="{mx}" cy="{ly}" r="6" fill="{CUT}"/><circle cx="{mx}" cy="{ly}" r="2.5" '
+                           f'fill="#fff1ec"/><circle cx="{tx}" cy="{ty}" r="9" fill="none" stroke="{CUT}" '
+                           f'stroke-width="2"/>')
+            else:
+                out.append(wire("M" + " L".join(f"{x:.1f},{y:.1f}" for x, y in pts)))
+        if not (cut_spur and hp["intended_weak_point"]):
+            out.append(f'<circle cx="{tx}" cy="{ty}" r="4" fill="#0c1018"/><circle cx="{tx}" cy="{ty}" r="2.2" '
+                       f'fill="{ON}"/>')
     return "".join(out)
 
 
-DEFS = ('<defs><filter id="cglow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="1.6" '
+DEFS = ('<defs><filter id="cglow" filterUnits="userSpaceOnUse" x="0" y="0" width="1300" height="800"><feGaussianBlur stdDeviation="1.6" '
         'result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>')
 
 
@@ -242,10 +318,9 @@ def legend(x0):
         "Hijacker: Piloting and Sensors share the bridge; Doors, Shields, Weapons, Medbay and the Crew Teleporter "
         "each have a room; Engines and Life Support share the engine room.",
         "Cutpurse: Piloting, Shields, Weapons, Crew Teleporter, Engines and Life Support.",
-        "Conduits: a plain ring from the AZC through the system rooms. One spur runs from the weapons room out to the "
-        "Sporewing hardpoint: the readable weak point.",
-        "Shown on the Hijacker: the spur cut. The break flashes red (GDD 14C), and the cut-off Sporewing hardpoint "
-        "turns red.",
+        "Conduits: a plain ring from the AZC through the system rooms. The Twinshot hardpoint is fed twice (a run "
+        "from the weapons room and a tap off the ring). The Sporewing has one spur: the readable weak point.",
+        "Everything is shown intact and powered. A cut is shown separately, in damage-demo-14c.",
         "Airlocks: doors to space, two on each side of the aft hall. No console sits on a door tile.",
     ]
     out = [f'<text x="{x0}" y="48" font-size="17" font-family="sans-serif" font-weight="600" fill="#e3e8f1">'
@@ -271,7 +346,9 @@ if __name__ == "__main__":
     hij, cut, out_dir = sys.argv[1:4]
     os.makedirs(out_dir, exist_ok=True)
     check()
-    for loadout, hull, cut_spur in (("hijacker", hij, True), ("cutpurse", cut, False)):
+    for loadout in ("hijacker", "cutpurse"):
+        print("conduit check,", loadout, check_network(loadout))
+    for loadout, hull, cut_spur in (("hijacker", hij, False), ("cutpurse", cut, False)):
         open(os.path.join(out_dir, f"floor-{loadout}.svg"), "w").write(
             svg(floor_layer(loadout), title=f"Pirate dagger floor, {loadout}"))
         open(os.path.join(out_dir, f"conduits-{loadout}.svg"), "w").write(
@@ -279,7 +356,7 @@ if __name__ == "__main__":
         open(os.path.join(out_dir, f"plan-{loadout}.svg"), "w").write(
             svg(plan(hull, loadout, cut_spur), title=f"Pirate dagger plan, {loadout}"))
     body = []
-    for i, (loadout, hull, cut_spur, label) in enumerate((("hijacker", hij, True, "Hijacker (bands 4–6)"),
+    for i, (loadout, hull, cut_spur, label) in enumerate((("hijacker", hij, False, "Hijacker (bands 4–6)"),
                                                           ("cutpurse", cut, False, "Cutpurse (bands 1–3)"))):
         body.append(f'<g transform="translate({i * SHIP_W},0)">{plan(hull, loadout, cut_spur)}'
                     f'<text x="{SHIP_W / 2}" y="22" font-size="14" font-family="sans-serif" fill="#e3e8f1" '
@@ -288,4 +365,11 @@ if __name__ == "__main__":
     open(os.path.join(out_dir, "floorplans.svg"), "w").write(
         svg('<rect width="100%" height="100%" fill="#0d1220"/>' + "".join(body), 2 * SHIP_W + 300, SHIP_H,
             "Pirate dagger floor plans"))
+    # a separate, clearly labelled damage demo (GDD 14C): not part of the floor plans
+    demo = (f'<rect width="100%" height="100%" fill="#0d1220"/>{plan(hij, "hijacker", True)}'
+            f'<rect x="0" y="0" width="{SHIP_W}" height="30" fill="#0d1220" opacity=".85"/>'
+            f'<text x="{SHIP_W / 2}" y="21" font-size="14" font-family="sans-serif" fill="#ff8a7a" '
+            f'text-anchor="middle">Damage demo, not the floor plan: Sporewing spur cut (GDD 14C)</text>')
+    open(os.path.join(out_dir, "damage-demo-14c.svg"), "w").write(
+        svg(demo, title="Damage demo: Sporewing spur cut (GDD 14C)"))
     print("saved floor plans to", out_dir)
