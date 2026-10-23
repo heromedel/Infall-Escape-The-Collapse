@@ -24,8 +24,8 @@ How races treat each other: see Relations between races at the end.
 
 ## Terrans: The Galactic Alliance of Terran Occupied Systems (G.A.T.O.S., "the GATOS") (draft, 2026-10-21)
 
-The starting race (GDD 7C). The name and its pun (*gatos*, "cats") are deliberate, to avoid a plain Federation
-clone.
+The starting race (GDD 7C). The name is deliberate, to avoid a plain Federation clone. The fact that it sounds like
+a Spanish pun is beside the point. They are a loose alliance of humans, not cats.
 
 1. **Tone and ship style — Proposed (2026-10-21):** when doing well, clean, soft Federation-like ships. When
    desperate, a grim, survivalist look built from seemingly borrowed or stolen technology.
