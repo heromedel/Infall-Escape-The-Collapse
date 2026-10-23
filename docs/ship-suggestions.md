@@ -85,7 +85,11 @@ Flags for review:
 
 - The Defensive special isn't in the cost tables yet; its price here is the rule above.
 
-## Terran Starting Scout (2026-10-22)
+## SC-1 "Outrider": Terran starting scout (2026-10-22)
+
+**Name — Likely (2026-10-23):** Outrider, a scout that rides out ahead of a convoy, as this ship does for the
+colony ship. **Designation — Ai-Generated-Proposal (2026-10-23):** SC-1 (scout cruiser, model 1), in the Gatos
+style of designation plus name.
 
 Default tag: **Ai-Generated-Proposal (2026-10-22)**. heromedel liked the ship and called the test a success, which agrees to the next
 step, not to every line; points he agreed to are tagged.
@@ -236,7 +240,7 @@ Default tag: **Ai-Generated-Proposal (2026-10-22)**; not reviewed yet.
    | Medbay | 2 | yes |
    | Crew Teleporter | 2 | yes |
 
-   **Conduits:** a ring like the starting scout's, plus one spur out to the bolted-on launcher. Cut the spur and
+   **Conduits:** a ring like the Outrider's, plus one spur out to the bolted-on launcher. Cut the spur and
    the stolen weapon goes dark: a weak point the player can read from the ship's art and aim for.
 
    Passes made:
