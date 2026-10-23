@@ -90,6 +90,13 @@ bonus per level vary between skills).
 **Unlikely (2026-10-23):** a setting for how the Mecha (HalfMechs) are described outside their suits:
 `HalfMechs: Enhanced Underdeveloped but Attractive Adult Bodies > Disgusting little Snot Nosed Twerps`.
 
+### Gatos colours and emblems by region and role (2026-10-23)
+
+- **Proposed (2026-10-23):** Gatos regions have slightly different colour schemes and emblems. This fits there
+  being no standard Gatos emblem (race profiles, Terrans 1).
+- **Proposed (2026-10-23):** the Outrider's blue-and-white chevron roundel is used by some doing-well Gatos
+  vessels: perhaps light vessels, scouts, ships not at war, or forward vessels.
+
 ## Ships
 
 ### EVA Dock and EVA suits (2026-10-21)
