@@ -125,6 +125,10 @@ Decided in GDD 7H (2026-10-23).
   computers, terminals or small machines (like the power core). A system is two things: a nice blended graphic,
   and a small symbol on that graphic in one of the ship's colours. Tried in floor layout test 4 as a pale wall desk
   with the symbol on its screen in the ship's blue.
+  - **Proposed (2026-10-23):** the symbol's colour shows whose system it is and its state: a powered player system
+    is green, a powered pirate (enemy) system is orange, and a damaged system on either side is a distinct red. This
+    replaces the ship-colour symbol above. It sits beside GDD 14B (power systems coloured like FTL's, Proposed), which
+    would need to fit with it.
 
 ### EVA Dock and EVA suits (2026-10-21)
 
