@@ -44,7 +44,7 @@ Ideas:
   Either they work at once but can't pass through a broken conduit or a breach, or the crew quickly builds them:
   routing a drawn conduit is at least twice as fast as repairing a broken one, and can route around rooms that are on
   fire or breached. Breaches and broken systems then become what power has to be routed around.
-- **Ai-Generated-Proposal (2026-10-23):** drop rerouting as a player action. A system has power if an unbroken conduit
+- **Proposed (2026-10-23):** drop rerouting as a player action. A system has power if an unbroken conduit
   path leads from it to the AZC; the ship finds the path itself. A damaged conduit (and possibly a breached room)
   doesn't carry power, so a system goes dark only when every path to it is cut. The decisions become which conduit
   to repair first, ship layouts with loops (tough) or a single spine (fragile), and enemies targeting conduit hubs.
