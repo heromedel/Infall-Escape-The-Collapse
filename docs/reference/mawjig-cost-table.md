@@ -1,6 +1,7 @@
 # Mawjig Cost Table (draft numbers)
 
-First-pass costs for the simulation to tune. Nothing decided. Anchors: a jump costs **1.21** Mawjig (GDD 6A); a
+First-pass costs for the simulation to tune. Anchors: a jump costs a fixed **1.21** Mawjig for the whole squad
+(GDD 6C, Decided); a
 won fight yields roughly **3–4** Mawjig; Wait gathers about **0.21** (GDD 6B). Weapon parts follow the generator
 categories (Type, Effect, Shots, Targets, Special).
 
@@ -79,18 +80,34 @@ systems, crew and augments carry over from FTL's prices at the same 0.242 conver
 
 ## Fight rewards
 
-Rewards rise with progress. No per-sector scrap reward table turned up in the FTL sources checked, so this is a
-draft: scaled to match the repair price rise (×1, ×1.5, ×2), starting from the 3.42 example.
+- **Proposed (2026-10-23):** Rewards follow FTL's per-sector curve, one step per band, starting from the 3.42 of
+  GDD 8C. FTL's scrap per reward level and sector (Normal difficulty, from Hexagon's disassembly of the game, tabled
+  at [MikeHopley/ftl-scrap](https://github.com/MikeHopley/ftl-scrap)) is weighted by how often FTL's fights pay
+  each level, counted from vanilla `ftl.dat`. Details in `docs/economy-findings.md` (F1).
+- **Decided (2026-10-23):** Killing the crew pays more than destroying the ship, about 30% more, as in FTL. An intact
+  ship leaves more matter to convert into Mawjig.
+- **Likely (2026-10-23):** Band 1 starts near FTL, but later bands may need rewards to rise faster than FTL's to pay
+  for a bigger squad's costs, unless the run allows, or ends up with, more time for grinding.
+- **Likely (2026-10-23):** Rewards are paid per enemy ship destroyed or left without crew, not once per fight. The
+  size of enemy squads compared with the player's is then the economy's main dial: smaller enemy squads mean a
+  poorer run (GDD 8I; `docs/economy-findings.md`, F4).
 
-| Bands | Reward for a basic won fight | Hull points it repairs |
-|---|---|---|
-| 1–3 | 3.42 | about 7 |
-| 4–6 | 5.13 | about 7 |
-| 7–8 | 6.84 | about 7 |
+These are averages. Each fight pays a varying amount around them, as in FTL, where a reward level's range runs
+about a quarter either side of its middle and the level itself varies (Low, Medium, High).
 
-With both scaling together, a reward is worth about 7 hull points of repair in every band. The jump stays 1.21, so
-later fights leave more after the jump. Making rewards grow more slowly than repair prices would make late damage
-bite harder; this ratio is the knob to tune in the simulation.
+| Band | Per ship destroyed | Per ship left without crew | Hull points a destroyed-ship reward repairs |
+|:-:|:-:|:-:|:-:|
+| 1 | 3.42 | 4.36 | about 7 |
+| 2 | 4.77 | 6.09 | about 10 |
+| 3 | 6.21 | 7.88 | about 13 |
+| 4 | 7.57 | 9.62 | about 10 |
+| 5 | 9.01 | 11.41 | about 12 |
+| 6 | 10.42 | 13.21 | about 14 |
+| 7 | 11.78 | 14.99 | about 12 |
+| 8 | 13.21 | 16.79 | about 14 |
+
+Rewards rise every band while repair prices rise in three steps, so a reward buys about 7 hull points in band 1 and
+about 12–14 late, as in FTL. The jump stays 1.21, so later fights leave more after the jump.
 
 ## Rough economy check
 
