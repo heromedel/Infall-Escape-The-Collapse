@@ -24,7 +24,7 @@ Points this list stands on: Decided 3C, 3E, 4B–4N, 10A, 12B; Likely 2D, 3A, 3H
 | Store | A | FTL-style sections (systems, weapons, crew, repair, Mawjig can't be bought: it is the currency), stock by cluster state, race-themed texts | |
 | Ship upgrade and crew screens | A | Upgrade systems and AZC or reactor, move crew, assign ships and crew to players (4C) | |
 | Results and run end | A | Run lost (1F) or band 3 reached; later the escape (B) | |
-| Settings | A | Multiplayer settings, map zoom, conduits toggle, controls, sound; defaults shown first | |
+| Settings | A | Multiplayer settings, map zoom, conduits toggle, controls, sound; defaults shown first; a Classic group for settings that bring play closer to the genre's default (GDD 1K, Likely), never naming FTL | |
 | Save and load | B | Resume a run; the host saves (4N) | |
 | Rim and escape | B | The last clusters, the final battle, the escape sequence | Arty |
 | Victory and unlocks | C | Tech victory flow, race and ship unlocks (7C) | |

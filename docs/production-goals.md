@@ -50,6 +50,9 @@ every cell were authored. The plan keeps authoring near FTL's size by layering:
 1. **Band** is handled by scaling, not authoring: as in FTL, one enemy ship design scales its hull, system levels,
    crew count and loadout with the band (GDD 1C, 2N); rewards and repair prices follow the band tables. Bands only
    add authoring where a tier changes what exists: each race's low, mid and high tier designs (race profile point 10).
+   **Update (2026-10-23):** Eco's F6 sets a squad value budget per band (137 in band 1 up to 1,243 in band 8), and a
+   wreck pays 2.5% of the ship's value × a band adjustment (GDD 8I, Proposed), so a squad is sized by the value of its
+   ships, not their count (heromedel: the count of ships is not the measure).
 2. **Race** is the main author axis, as sector type is in FTL: each race gets its own event lists, ships, squads,
    weapons, store texts and stock weights.
 3. **Cluster state** layers onto the race: the state adds and removes event lists and changes who is met (GDD 2R). The
@@ -68,7 +71,7 @@ counts and how Lori writes events. See the decisions list at the end.
 | Content | Per race | FTL equivalent |
 |---|---|---|
 | Ship designs | 6 hulls: 2 low tier (bands 1–3), 2 mid (4–6), 2 high (7–8); each scales within its tier by band; doomed or pirate versions are loadout and crew variants of the same hull, as FTL's pirate ships are | 3 templates per race, scaled by sector |
-| Squad templates | about 15: Doing Fine 3 (patrol, convoy with escort, lone ship), Struggling 2, Doomed 3 (raiders, hijackers, fleeing band), Border 2 (warship group, mixed with the neighbour), Refugee 2 (convoy, convoy under attack), Occupied 2 (occupier's patrol, resistance), Abandoned 1 (scavengers). Squad size scales by band: 1 ship in band 1 up to 6 in band 7–8, following the player's expected growth (economy findings F4) | 137 behaviour entries over 25 templates, about 5 per template |
+| Squad templates | about 15: Doing Fine 3 (patrol, convoy with escort, lone ship), Struggling 2, Doomed 3 (raiders, hijackers, fleeing band), Border 2 (warship group, mixed with the neighbour), Refugee 2 (convoy, convoy under attack), Occupied 2 (occupier's patrol, resistance), Abandoned 1 (scavengers). A squad is a named list of ship designs with counts per tier (`rough-example-squad-layout.md`, Proposed), filled to the band's value budget (economy findings F6) | 137 behaviour entries over 25 templates, about 5 per template |
 | Squad conduct | per squad template: surrender chance and hull threshold, escape chance and timer, hail answers, what a win pays (GDD 8I) | surrender/escape/destroyed/deadCrew per `<ship>` |
 | Events, Doing Fine | about 45: hostile 8, neutral 12, distress 8, items 6, quests 3, boarders 2, store texts 4, nothing texts 3, plus 3 blue options tied to the race's crew or tech | a race's own sector lists |
 | Events, other states | Struggling 10, Doomed 12, Border 6 (per race; a border between two races draws both), Refugee 8, Occupied 8 (as occupier 4, as occupied 4), Abandoned 4 (what this race left behind) = about 48 | none; FTL has no states |
@@ -176,13 +179,13 @@ One playable race, a short run, every core loop present once.
 Each is Open or Proposed in the docs. Any session can fill one in as an Ai-Generated-Proposal; heromedel decides.
 
 1. **Content model for cluster states** (section 2): extra lists layered on the race's base, or something else.
-2. **Enemy ship scaling by band**: FTL scales one template by sector (hull, system caps, loadout from a weapon list). Infall assumed to do the same within a tier, with 2 hulls per tier per race.
+2. **Enemy ship scaling by band**: FTL scales one template by sector (hull, system caps, loadout from a weapon list). Infall assumed to do the same within a tier, with 2 hulls per tier per race. Since 2026-10-23 the band's squad value budget (F6) bounds what a squad carries; how one hull scales within a tier is still open.
 3. **Squads as data**: heromedel (2026-10-23, Proposed): a squad is a named list of ship designs with counts per tier (`rough-example-squad-layout.md`); conduct lines (surrender, escape, hail, pay) are an optional extra, first drafted in the Light Attack Pair.
 4. **Map generation rules**: clusters per band (about 10, 2O), clusters per region, region shapes per race (profiles point 8), link density, where neutral clusters go, how the 5-jump opening is laid out.
 5. **Store stock by state**: 2R gives the direction (short stock, barren, either side when occupied); the weights and slot counts are not set. FTL: 2–4 sections of 3 items, systems forced in some cases.
 6. **Goal B's end**: what an outer rim cluster is on the map, and what the final battle is (the doomed Terran band is an idea, not a decision).
 7. **Which biomechanical race is Goal B's third race**: Tentauri (scout designed, Supershield) or Azurethea (Stinger designed, spores, default FTL power).
-8. **Mecha system integration in Goal A**: the integration timing, two-bar upgrade, and whether EVB suits are in A or only Mecha weapons.
+8. **Mecha system integration in Goal A**: engage and disengage timing is still open. Settled 2026-10-23: integration never powers a system above its level (Decided); extra bars are mech upgrades at the Cybernetic Servicing Core (Likely); suits carry their own oxygen and every launch uses a new suit (Likely); a hit suit's rules (Proposed). EVB suits are in A through the Light Attack Pair.
 9. **Terran conduit rules**: what a cut conduit does per tick, reroute as a player action, repair time; the setting's Off conversion.
 10. **Ship loss (1I)**: escape pods, own-wreck salvage, replacements are still Ai-Generated-Proposal.
 11. **Network model**: what the host owns, what clients send (orders only), tick rate, and how a drop-out is held (4F); needed before any code (heromedel).
