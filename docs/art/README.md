@@ -35,5 +35,6 @@ each with its SVG, PNG exports, review sheets, build tools and a notes README.
 | [`terran/outrider/`](terran/outrider/) | SC-1 Outrider hull: accepted by Ship Designs. Floor layout tests 1–4 in `floor-layout-tests/`. |
 | [`terran/pirate-hijacker/`](terran/pirate-hijacker/) | Terran Pirate Hijacker hull, Hijacker and Cutpurse loadouts, squad view and floor plans: accepted by Ship Designs. |
 | [`tentauri/scout/`](tentauri/scout/) | Tentauri scout hull, armed preview and floor plan with organic consoles: accepted by Ship Designs. |
-| [`weapons/`](weapons/) | Sporewing, Gat 2.1 "Twinshot" and Tentauri Defense Laser weapon art. |
+| [`mecha/light-attack-frame/`](mecha/light-attack-frame/) | Mecha Light Attack Frame hull, Hull Laser and Suit Dock loadouts, armed preview and floor plans: accepted by Ship Designs. |
+| [`weapons/`](weapons/) | Sporewing, Gat 2.1 "Twinshot", Tentauri Defense Laser, DS-ST Hull Laser and laser battlesuit art. |
 | [`mockups/`](mockups/) | Labelled mockups of ideas, not finished art: system symbol colours. |
