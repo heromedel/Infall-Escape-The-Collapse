@@ -87,8 +87,8 @@ Flags for review:
 
 ## SC-1 "Outrider": Terran starting scout (2026-10-22)
 
-**Name — Likely (2026-10-23):** Outrider, a scout that rides out ahead of a convoy, as this ship does for the
-colony ship. **Designation — Ai-Generated-Proposal (2026-10-23):** SC-1 (scout cruiser, model 1), in the Gatos
+**Name — Decided (2026-10-23):** Outrider, a scout that rides out ahead of a convoy, as this ship does for the
+colony ship. **Designation — Decided (2026-10-23):** SC-1 (scout cruiser, model 1), in the Gatos
 style of designation plus name.
 
 Default tag: **Ai-Generated-Proposal (2026-10-22)**. heromedel liked the ship and called the test a success, which agrees to the next
