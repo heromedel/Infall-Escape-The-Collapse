@@ -21,10 +21,15 @@ ordinary event: the message box comes first, and "Continue..." leads into the cl
 
 ```
 COLLAPSE_OPENING_1: "Behind You" (the first cluster)
-Behind you, the colony ship's engines light up as it begins its long journey. A message comes through from its
+Your homeworld is in a panic. Something is wrong with the Galactic Core, the region at the center of the galaxy.
+Scientists are in a frenzy of arguments and debates, but they all agree that something cataclysmic could be coming.
+Many refuse to believe it, but others have sponsored a colony ship to travel farther from the core. Your job, as
+Captain of the forward scouts, is to explore ahead and find a path for The Colony Ship to survive.
+
+Behind you, The Colony Ship's engines light up as it begins its long journey. A message comes through from its
 bridge.
 
-"Our astronomers still can't say what is wrong with the galactic core. They can only say it is getting worse. We
+"Our astronomers still can't say what is wrong with the Galactic Core. They can only say it is getting worse. We
 won't wait to find out. Everyone we could bring is aboard. Scout the way ahead, find us safe clusters to jump to,
 and keep in touch. We'll be right behind you."
 
@@ -35,7 +40,7 @@ THEN: the cluster's own event.
 
 ```
 COLLAPSE_OPENING_2: "Radiation" (the second cluster)
-A transmission from the colony ship is waiting for you when you arrive.
+A transmission from The Colony Ship is waiting for you when you arrive.
 
 "Our sensors are picking up unusual radiation from the core. Nobody aboard has seen readings like these before.
 Keep moving. We'll send word as soon as we understand it."
@@ -47,10 +52,10 @@ THEN: the cluster's own event.
 
 ```
 COLLAPSE_OPENING_3: "Brighter" (the third cluster)
-The galactic core is brighter than anyone has ever seen it. Even from here, its glare washes out the stars around
+The Galactic Core is brighter than anyone has ever seen it. Even from here, its glare washes out the stars around
 it on your viewscreens.
 
-The colony ship's signal comes through weaker than before. "Our messages to the inner regions aren't getting
+The Colony Ship's signal comes through weaker than before. "Our messages to the inner regions aren't getting
 through. Their relays have gone quiet, all of them at once. Whatever is happening, it is reaching them first."
 
 1. Continue...
@@ -62,7 +67,7 @@ THEN: the cluster's own event.
 COLLAPSE_OPENING_4: "Dark" (the fourth cluster)
 The core has gone dark. Where the glare was, there is only black.
 
-"Our long-range sensors are tracking jumps heading away from the core," the colony ship reports. "Ten times as
+"Our long-range sensors are tracking jumps heading away from the core," The Colony Ship reports. "Ten times as
 many as before it went dark. Everyone out there saw what we saw, and they are all running."
 
 1. Continue...
@@ -72,17 +77,19 @@ THEN: the cluster's own event.
 
 ```
 COLLAPSE_OPENING_5: "Swallowed" (the fifth cluster)
-Your sensors show it before the colony ship's message arrives. The galactic core has collapsed into a super black
+Your sensors show it before The Colony Ship's message arrives. The Galactic Core has collapsed into a super black
 hole, and its edge is moving outward. Clusters that looked like an easy few jumps inward are gone, swallowed all at
 once.
 
-"It's real. It's coming our way," the colony ship says. "We'll follow your path as fast as our Jigawatt Drives
+"It's real. It's coming our way," The Colony Ship says. "We'll follow your path as fast as our Jigawatt Drives
 allow. Find us a way out."
 
 1. Continue...
 
 THEN: the collapse appears on the map. The cluster's own event follows.
 ```
+
+Opening 1's first paragraph is heromedel's text (2026-10-23), with spelling and grammar fixed.
 
 **Other races:**
 

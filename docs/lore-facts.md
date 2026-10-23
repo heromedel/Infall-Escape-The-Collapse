@@ -13,7 +13,7 @@ source doc carries the tag heromedel's words give it.
 
 ## The galaxy and the collapse
 
-- The galaxy's core has collapsed into a super black hole. (GDD 1B; Decided)
+- The Galactic Core has collapsed into a super black hole. (GDD 1B; Decided)
 - The collapse horizon expands outward from the core, swallowing star clusters as it goes. (GDD 2A, 2P; Likely)
 - Before the collapse, some races sensed it coming, and astronomers detected something wrong in the core. (GDD 2P; Likely)
 - Unusual radiation emanated from the core before it collapsed. (GDD 2P; Likely)
@@ -41,8 +41,8 @@ source doc carries the tag heromedel's words give it.
 ## The player's people
 
 - A giant colony ship carries the last survivors of the player's home planet toward the rim. (GDD 1D; Decided)
-- Scout ships fly ahead of the colony ship, scouting and mapping the way, and stay in communication with it. (GDD 1D; Decided)
-- The player's race sensed the collapse coming, or its astronomers detected something wrong in the core, and sent out its colony ship with the scouts ahead of it. (GDD 2P; Likely)
+- Scout ships fly ahead of The Colony Ship, scouting and mapping the way, and stay in communication with it. (GDD 1D; Decided)
+- The player's race sensed the collapse coming, or its astronomers detected something wrong in the core, and sent out The Colony Ship with the scouts ahead of it. (GDD 2P; Likely)
 
 ## Mawjig and jump travel
 
