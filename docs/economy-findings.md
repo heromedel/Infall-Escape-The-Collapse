@@ -180,6 +180,11 @@ Ship Designs sent 13 questions through heromedel. His answers are tagged from hi
    registers, so 0.01 a point is suggested. heromedel's placeholder of about 0.25 is the same size as one skill level
    here. **heromedel (2026-10-23):** to be recalculated once skill gain is normalized.
 
+   **Superseded by GDD 7H (skills normalized: 100 XP to level 1, 150 more to level 2; Mecha earn XP at 2×).**
+   **Mech upgrade price — Proposed (heromedel, 2026-10-23):** per individual skill, **0.25** for level 1 and
+   **0.37** for level 2, i.e. 0.005 Mawjig per XP point a Mecha saves (50 and 75 points). Mastering one skill costs
+   0.62; all six, 3.72.
+
    **Second power bar — heromedel (2026-10-23):** it isn't buying a whole Zoltan, it is a reactor bar's worth of
    portable energy, so a one-time upgrade worth 30–35 scrap.
 
