@@ -99,6 +99,17 @@ bonus per level vary between skills).
 
 ## Ships
 
+### Ship interior art (2026-10-23)
+
+- **Proposed (2026-10-23):** Terran power conduits, when not broken, either vanish when the ship isn't selected, or
+  are drawn as metal conduits that blend into the floor unless broken. Mocked up in the Outrider's floor layout
+  test 4 (`docs/art/terran/outrider/floor-layout-tests/test-4/`): glowing when selected, metal when not.
+  - **Proposed (2026-10-23):** the glowing green power flow appears when the player selects the power core itself.
+- **Proposed (2026-10-23):** the system symbols are fine for now, but final art may make systems look more like
+  computers, terminals or small machines (like the power core). A system is two things: a nice blended graphic,
+  and a small symbol on that graphic in one of the ship's colours. Tried in floor layout test 4 as a pale wall desk
+  with the symbol on its screen in the ship's blue.
+
 ### EVA Dock and EVA suits (2026-10-21)
 
 In real life a spacewalk is an EVA (extravehicular activity). Working names: **EVA Dock** for the system,
