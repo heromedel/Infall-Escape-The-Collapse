@@ -10,7 +10,7 @@ ship (GDD 1D) to escape.
 
 | Path | Idea |
 |---|---|
-| Tech | Requires multiple best-possible systems from multiple races to shield, reinforce, power and then drive the ship so it can make the jump. Victory as long as one ship makes the jump carrying at least one male and one female crew member of the same race, or some kind of Mass Genetic Storage bank. This is what sets it apart from Collection. Components, one from each core race: Gatos power core, Azurethea engine (most agile), Mecha ship reinforcements, Tentauri shield, Senti-GPH information archive, Lykario autopilot, Malphen clone bay. Requirement idea: one from each pair: power core or clone bay (without the power, you store your genetic data in the clone bay for the periods when the ship loses power); engine or autopilot; shield or reinforcements; archive or genetic diversity (maybe 3 males and 3 females of your core race). Each component must be that race's own version (e.g. the clone bay must be a Malphen clone bay; the power core must be a Terran AZC); any single one of that version counts. Near-Terran races, such as the Senti-GPH, may have slightly worse cores. |
+| Tech | Requires multiple best-possible systems from multiple races to shield, reinforce, power and then drive the ship so it can make the jump. Victory as long as one ship makes the jump carrying at least one male and one female crew member of your core race, or some kind of Mass Genetic Storage bank. This is what sets it apart from Collection. Components, one from each core race: Gatos power core, Azurethea engine (most agile), Mecha ship reinforcements, Tentauri shield, Senti-GPH information archive, Lykario autopilot, Malphen clone bay. Requirement idea: one from each pair: power core or clone bay (without the power, you store your genetic data in the clone bay for the periods when the ship loses power); engine or autopilot; shield or reinforcements; archive or genetic diversity (maybe 3 males and 3 females of your core race). Each component must be that race's own version (e.g. the clone bay must be a Malphen clone bay; the power core must be a Terran AZC); any single one of that version counts. Near-Terran races, such as the Senti-GPH, may have slightly worse cores. |
 | Alliance | Get enough races to cooperate to build a colony ark that multiple colony ships can migrate their people onto, for the multi-generational voyage to another galaxy through hyperspace. |
 | Exploration | Assemble the mysterious pieces of an ancient artifact known as the Orb of Chullack, which opens a giant space gate sending the ship to another dimension where the collapse never happened. |
 | Collection | Amass enough wealth and upgrades to prepare the colony ship to slingshot around the collapse, which distorts space and time and flings it to another galaxy. |
@@ -55,7 +55,7 @@ When races are discussed, separate two layers:
 
 ### Crew sex (2026-10-21)
 
-The Tech victory (one male and one female crew member of the same race) would make crew sex a real gameplay
+The Tech victory (one male and one female crew member of your core race) would make crew sex a real gameplay
 attribute, which FTL mostly lacks.
 
 ### Crew abilities taken from FTL ship mechanics (2026-10-21)
@@ -128,8 +128,8 @@ a drone. Unlikely to be added: the Tentauri Defense Laser (`ship-suggestions.md`
 ### Weapon direction (2026-10-22)
 
 FTL's weapons have no real problems; the plan is to scrap drones, customize per race, theme weapons around each
-race, and expand rather than replace. Crystal weapons need to change. Weapon costs likely use Material and Energy
-(both may need better names). Don't keep FTL's names; some weapons could have biological names.
+race, and expand rather than replace. Crystal weapons need to change. Weapon costs use Mawjig (GDD 8C), which
+replaced Material and Energy. Don't keep FTL's names; some weapons could have biological names.
 
 New weapon ideas:
 
