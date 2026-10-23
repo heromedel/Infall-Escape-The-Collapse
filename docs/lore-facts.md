@@ -22,7 +22,8 @@ source doc carries the tag heromedel's words give it.
 - Near the collapse, people are in shock and scrambling to leave their planets. (GDD 2B; Proposed)
 - Worlds far from the collapse may not believe it is real. (GDD 2B; Proposed)
 - Stars are grouped into star clusters, and related clusters form regions, such as a civilization's territory. (GDD 2J; Decided)
-- A region has deep, inner and border clusters, and unclaimed or neutral clusters can lie between regions. (GDD 2K; Decided)
+- A region has deep (or core), inner and border clusters, and unclaimed or neutral clusters can lie between regions. (GDD 2K; Decided)
+- In occupied clusters, the original race's stores are nearly barren, and beggars of that race may be met. (GDD 2R, Occupied; Proposed)
 - Only the most powerful factions, and those who band together, are making it far toward the rim. (GDD 3G; Proposed)
 
 ## The player's people
@@ -148,7 +149,8 @@ source doc carries the tag heromedel's words give it.
 - When the Malphen can't win or escape, they launch valuable debris for the other side to take and try to flee, which is their way of surrendering. (Race profiles, Malphen; Proposed)
 - Each Malphen ship is a living organism, and its crew are parts it grows. (Race profiles, Malphen 1; Ai-Generated-Proposal)
 - The Malphen don't speak. (Race profiles, Malphen 1; Ai-Generated-Proposal)
-- The Malphen grow into empty and abandoned clusters and absorb wrecks. (Race profiles, Malphen 2; Ai-Generated-Proposal)
+- The Malphen move into abandoned clusters. (GDD 2R, Abandoned; Decided)
+- The Malphen grow into empty clusters and absorb wrecks. (Race profiles, Malphen 2; Ai-Generated-Proposal)
 - The Malphen can be paid in matter to let a ship pass. (Race profiles, Malphen 2; Ai-Generated-Proposal)
 - No race takes the Malphen in. The Azurethea and Tentauri fear them most. (Race profiles, Malphen 5; Ai-Generated-Proposal)
 - Malphen weapons are named by the races who face them, such as the Flesh Mortar. (Race profiles, Malphen 6; Ai-Generated-Proposal)
