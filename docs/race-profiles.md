@@ -30,6 +30,11 @@ a Spanish pun is beside the point. They are a loose alliance of humans, not cats
 1. **Tone and ship style — Proposed (2026-10-21):** when doing well, clean, soft Federation-like ships. When
    desperate, a grim, survivalist look built from seemingly borrowed or stolen technology.
    - **Silhouette — Proposed (2026-10-22):** classic spaceship shapes, from large shuttles to cruisers and rockets.
+   - **Armoured core hatch — Proposed (2026-10-23):** a visible armoured housing over the AZC, like the Outrider's,
+     is common on Terran vessels but not mandatory. Its variants can show the ship's state: clean and plated when
+     doing well, worn when struggling, dark and scorched on doomed or pirate ships.
+   - **No rockets for a while — Likely (2026-10-23):** these are spaceships, not Earth-to-orbit rockets. After the
+     Outrider and the pirate hull, no more rocket-like Terran designs for a while.
    - **Colours — Ai-Generated-Proposal (2026-10-22):** white and pale grey with blue trim; desperate ships add rust
      and mismatched panels from other races.
    - **Darker colours and scarier emblems — Decided (2026-10-23):** as the GATOS fall from struggling toward doomed,
@@ -54,6 +59,9 @@ a Spanish pun is beside the point. They are a loose alliance of humans, not cats
    conduits or rooms, and cut conduits repaired. Ion weapons can still disrupt Terran systems, and systems can be
    switched off on purpose. Introduced slowly: the initial scout ship is easy to reroute, with routing mattering
    more on larger, higher-tier ships; it can be changed later if it becomes a problem.
+   - **Conduits to weapons — Open (2026-10-23):** does a conduit only need to reach the Weapons system's room, or
+     also each weapon mount on the hull?
+     For now, designs and art work as if each mount does need a conduit.
    - **Balance idea — Proposed (2026-10-21):** starting from FTL's default weapon numbers, a weapon with a high
      hull-breach chance gets a lower chance of conduit damage; one with a low or no breach chance gets a
      conduit-damage chance, or a higher one.
