@@ -7,7 +7,7 @@
 | To | Infall: Ship Designs (`Cloud-C-ShipDesign`) |
 | Asked by | heromedel, 2026-10-23 |
 | Serves | `production-goals.md`, Goal A: Mecha low-tier hulls (2 of 4 hulls), Mecha squads, Mecha weapons |
-| Status | **sent** |
+| Status | **sent back, round 1** |
 
 ## The task
 
@@ -59,3 +59,5 @@ with numbered points. Questions for heromedel go through Production, numbered.
 ## Log
 
 - 2026-10-23 14:17 UTC: sent.
+- 2026-10-23 18:00 UTC: received, commit d29002d on `Cloud-C-ShipDesign` (one hull in two loadouts, DS-ST Hull Laser, laser battlesuit, Light Attack Pair squad section, hull bonus and self-power pricing rules; heromedel's `rough-example-squad-layout.md`).
+- 2026-10-23 18:05 UTC: sent back, round 1: the weapon pod is level 1 but powers a 2-power weapon (FTL rule: power never exceeds system level). Prices and charge times recomputed and correct; hull counted as one.
