@@ -320,7 +320,7 @@ def legend(x0):
         "Cutpurse: Piloting, Shields, Weapons, Crew Teleporter, Engines and Life Support.",
         "Conduits: a plain ring from the AZC through the system rooms. The Twinshot hardpoint is fed twice (a run "
         "from the weapons room and a tap off the ring). The Sporewing has one spur: the readable weak point.",
-        "Everything is shown intact and powered. A cut is shown separately, in damage-demo-14c.",
+        "Everything is shown intact and powered. A cut is shown separately, in mockup-damage-14c.",
         "Airlocks: doors to space, two on each side of the aft hall. No console sits on a door tile.",
     ]
     out = [f'<text x="{x0}" y="48" font-size="17" font-family="sans-serif" font-weight="600" fill="#e3e8f1">'
@@ -365,11 +365,11 @@ if __name__ == "__main__":
     open(os.path.join(out_dir, "floorplans.svg"), "w").write(
         svg('<rect width="100%" height="100%" fill="#0d1220"/>' + "".join(body), 2 * SHIP_W + 300, SHIP_H,
             "Pirate dagger floor plans"))
-    # a separate, clearly labelled damage demo (GDD 14C): not part of the floor plans
+    # a separate mockup, clearly labelled, of damage (GDD 14C): not part of the floor plans
     demo = (f'<rect width="100%" height="100%" fill="#0d1220"/>{plan(hij, "hijacker", True)}'
             f'<rect x="0" y="0" width="{SHIP_W}" height="30" fill="#0d1220" opacity=".85"/>'
             f'<text x="{SHIP_W / 2}" y="21" font-size="14" font-family="sans-serif" fill="#ff8a7a" '
-            f'text-anchor="middle">Damage demo, not the floor plan: Sporewing spur cut (GDD 14C)</text>')
-    open(os.path.join(out_dir, "damage-demo-14c.svg"), "w").write(
-        svg(demo, title="Damage demo: Sporewing spur cut (GDD 14C)"))
+            f'text-anchor="middle">MOCKUP, not the floor plan: Sporewing spur cut (GDD 14C)</text>')
+    open(os.path.join(out_dir, "mockup-damage-14c.svg"), "w").write(
+        svg(demo, title="Mockup: Sporewing spur cut (GDD 14C)"))
     print("saved floor plans to", out_dir)

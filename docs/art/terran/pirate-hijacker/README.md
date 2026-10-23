@@ -78,7 +78,7 @@ Terran designs for a while (race profiles, Terrans 1, Likely). See `docs/art/REA
     ring, so no single cut drops it. It is Terran-built and wired properly.
   - **Sporewing (both):** one spur from the weapons room out to the starboard hardpoint: the readable weak point,
     a crude refit of stolen tech.
-  - The plans show everything intact and powered. A separate, labelled file, `damage-demo-14c`, shows the
+  - The plans show everything intact and powered. A separate mockup, `mockup-damage-14c`, clearly labelled, shows the
     Sporewing spur cut with the GDD 14C red flash and the cut-off hardpoint turned red.
 - **Weapon mounts:** whether conduits must reach each weapon mount on the hull, or only the Weapons room, is
   **Open** (race profiles, Terrans 6). heromedel asked to work as if mounts need power, so they are wired here.
