@@ -69,7 +69,7 @@ BOX: {crew} injured
 
 ```
 2
-You make trip after trip between the transport and a station that still has room. When the last refugees are
+You make several trips between the transport and a station that still has room. When the last refugees are
 across, one of them, a former ship's engineer, asks to stay aboard and serve with your crew.
 
 BOX: +1 crew (Terran)
