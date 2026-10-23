@@ -45,8 +45,9 @@ Notes, not rules: taken from FTL's own event files and from screenshots of the g
 - **Choices:** short and in the imperative, from the player's side ("Prepare to board and investigate."). Most
   events offer a way out ("Ignore the ship.", "Leave."). Some choices are spoken by the crew ("Too dangerous.
   We'll just wait for the FTL to charge.").
-- **Blue choices:** shown in blue, with the requirement in brackets first: "(Rock Crew) Send your Rock crew-member
-  to prevent a riot." The outcome says why the trait works ("It's unlikely the Rock's impressive immune system is
+- **Blue choices:** shown in blue after the ordinary choices, with the requirement in brackets first: "3. (Engi
+  Crew) Send your Engi to calm down the infected." A blue choice whose requirement the player doesn't meet isn't
+  shown at all: with only an Engi aboard, that event's Rock and Advanced Medbay choices never appeared. The outcome says why the trait works ("It's unlikely the Rock's impressive immune system is
   susceptible to a human virus..."). They are usually safer or better, but not always: in one FTL event sending
   your Engi to negotiate gets it killed.
 - **Numbers stay out of the prose:** the text says "you are able to scavenge some supplies from the cargo hold",
