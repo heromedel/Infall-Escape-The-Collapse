@@ -9,6 +9,7 @@ drawn over the accepted hull (`../outrider-hull.svg`). Nothing here is decided. 
 | [test-1](test-1/) | 2026-10-23 | First mockup: 30 px tiles, 17 rooms, spare rooms marked, a bridge with three systems, conduit style comparison. |
 | [test-2](test-2/) | 2026-10-23 | Simpler and closer to real FTL layouts: 35 px tiles, 10 rooms, blank empty rooms, merged rooms, airlock doors. |
 | [test-3](test-3/) | 2026-10-23 | Test 2's rooms with a conduit wheel (rim plus four spokes from the core), so no two cuts can unpower every system. |
+| [test-4](test-4/) | 2026-10-23 | Shields forward; conduits glowing when selected and blended metal when not; systems drawn as terminals. |
 
 ## Research: FTL's real player ship layouts (2026-10-23)
 
@@ -46,8 +47,8 @@ Edition copy was not used). The game files are not copied into this repo, only t
 
 ## Tools
 
-`tools/floor.py` builds test 1, `tools/floor2.py` builds test 2, and `tools/floor3.py` builds test 3, testing every
-cut first. Both take the hull SVG and an output path:
+`tools/floor.py` builds test 1, `tools/floor2.py` builds test 2, `tools/floor3.py` builds test 3, testing every
+cut first, and `tools/floor4.py` builds test 4. Both take the hull SVG and an output path:
 
     python3 tools/floor2.py ../outrider-hull.svg test-2/floor-layout-test-2.svg
 
