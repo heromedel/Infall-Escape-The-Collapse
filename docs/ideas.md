@@ -130,6 +130,11 @@ Decided in GDD 7H (2026-10-23).
     replaces the ship-colour symbol above. It sits beside GDD 14B (power systems coloured like FTL's, Proposed), which
     would need to fit with it. Mocked up in `docs/art/mockups/system-symbol-colours/`; heromedel: it works, because
     orange makes enemy ships read as a caution or enemy colour.
+- **Proposed (2026-10-23):** each race can have its own system look instead of computer monitors, as long as every
+  system carries the standard system symbol, legible at ship view without distracting from the art. The form can
+  differ per system. Tentauri (heromedel's sketch): small organic forms rising from a soft pad, with the symbol lit in
+  a bulb. First used on the Tentauri scout: a grasp for Weapons and Doors, a tendril for Piloting and Sensors, a
+  siphon for Shields, Engines, Life Support, Medbay and the Supershield Generator.
 
 ### EVA Dock and EVA suits (2026-10-21)
 
