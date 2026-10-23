@@ -274,12 +274,10 @@ Wolf-like race (earlier working label "wolf race").
 7. **Near and inside their territory — Proposed (2026-10-21):** see 8.
 8. **Where and how they live — Proposed (2026-10-21):** small, localized, independent clusters that even attack
    each other.
-9. **Crew traits — Proposed (2026-10-21):** quick attacks, reduced HP, psychic.
-   - **Psychic, in game — Proposed (2026-10-22):** animal senses (smell and hearing), not real psychic powers;
-     player-facing text never calls them psychic.
-   - **What the senses do — Ai-Generated-Proposal (2026-10-22):** like FTL's Slugs, they sense crew through walls:
-     crew in neighbouring rooms show without sensors, on whatever ship they are on, which suits boarders picking
-     prey.
+9. **Crew traits — Proposed (2026-10-21):** quick attacks, reduced HP, Animal Senses.
+   - **Animal Senses — Decided (2026-10-23):** as if they are psychic, but player-facing text never calls it
+     psychic. It is always "Animal Senses", and the senses are never explained. They sense Life Signs, without
+     using ship sensors and even on other ships and in hazards.
 10. **Ship tiers — Proposed (2026-10-21):** even their best ship designs are not that amazing, aside from larger or
     multiple crew teleporter rooms.
 
@@ -372,10 +370,12 @@ victory race.
    - Where it thins out; defensive and wary, they drain and convert the atmosphere of any ship that attacks them.
 4. **Doomed:** at the very edge. They attack any ship that crosses in, trying to take it over by converting its
    whole atmosphere to their own.
-5. **Relations:** they neither take nor become refugees; the other races barely know they exist. The Senti-GPH,
-   who don't need oxygen, are the only race that could share space with them.
+5. **Relations:** they neither take nor become refugees. The Senti-GPH, who don't need oxygen, are the only race
+   that could share space with them.
+   - **Proposed (2026-10-23):** no other race knows they exist; they likely live undiscovered inside the collapse.
 6. **Technology:** as above: 2 power bars per Whispwraith, ion weapons; plus atmosphere conversion (an effect in
-   the cost table). Weapon names: named by others, as the Malphen's are, mostly in Senti-GPH archive records.
+   the cost table).
+   - **Weapon names — Proposed (2026-10-23):** their own style, highly strange and alien.
 7. **Near and inside their territory:** their territory is the collapse itself (Swallowed clusters, GDD 2R).
 8. **Where and how they live — Proposed (2026-10-22):** only inside the collapse; they don't exist outside it,
    unless a secret way to recruit one is added. The player meets them only on the ??? victory path, or that way.
