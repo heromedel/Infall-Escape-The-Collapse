@@ -22,9 +22,12 @@ each with its SVG, PNG exports, review sheets, build tools and a notes README.
 | 2026-10-23 | The Gatos are human; the cat pun is only in their name. No cat motifs on their ships. |
 | 2026-10-23 | Stolen or foreign weapons look properly fitted on a real hardpoint, refitted into the hull, not clamped on. |
 | 2026-10-23 | Weapons are separate art, but ship previews and squad views show them mounted. Loadouts of one hull must look visibly different. |
+| 2026-10-23 | No rocket-like Terran designs for a while: no pointed nose cone, tail fins and engine-bell silhouette. Terran ships look built for deep space, not for launching from a planet (race profiles, Terrans 1, Likely). |
 
 ## Pieces
 
 | Piece | Status |
 |---|---|
 | [`terran/outrider/`](terran/outrider/) | SC-1 Outrider hull: accepted by Ship Designs. Floor layout tests 1–4 in `floor-layout-tests/`. |
+| [`terran/pirate-hijacker/`](terran/pirate-hijacker/) | Terran Pirate Hijacker hull, Hijacker and Cutpurse loadouts, squad view: accepted by Ship Designs. |
+| [`weapons/`](weapons/) | Sporewing and Gat 2.1 "Twinshot" weapon art. |

@@ -1,0 +1,65 @@
+# Terran Pirate Hijacker hull (Hijacker and Cutpurse loadouts)
+
+**Date:** 2026-10-23
+**Status:** accepted by Ship Designs (version 3 of the review, the dagger cruiser). Ship design: `docs/ship-suggestions.md`,
+"Terran Pirate Hijacker" and "Pirate Hijacker loadouts".
+
+![Loadouts](loadouts.png)
+
+## What it is
+
+A doomed-Terran pirate cruiser: clean and restrained, in dark gunmetal with a single oxblood accent. One hull, two
+loadouts. The side weapon bays are modules that come with the loadout (**Ai-Generated-Proposal**, accepted by Ship
+Designs):
+
+| Loadout | Bands | Bay modules | Weapons | Look |
+|---|---|---|---|---|
+| Hijacker | 4–6 | both bays | Twinshot (port), Sporewing (starboard) | oxblood nose stripes |
+| Cutpurse | 1–3 | starboard only; port bay faired over flush | Sporewing | plainer, no stripes, leaner and lopsided |
+
+- **Hull only** in `pirate-*-hull.svg`: top-down, nose up, 480 × 760. Weapon mounts are hidden points in the
+  `weapon-mounts` group. The weapons are separate art in `docs/art/weapons/` (`sporewing/`, `twinshot/`).
+- **Previews** in `pirate-*-armed-preview.*` place the weapon files at the mounts, at 1.35× their file size, as
+  the game would.
+- **Wear,** kept sparing: soft scorching behind the engines and weapon ports, faded paint, a little pitting, and two
+  replaced plates in a slightly different shade. Nothing drips.
+- **Fittings:** a narrow swept canopy, a dorsal teleporter emitter, a port airlock and two engines.
+- **No emblem.** There is no standard Gatos emblem (Decided), and heromedel's review asked for none or a small one.
+
+## History
+
+The first design (rejected by heromedel, 2026-10-23) was cluttered: rust streaks, a cat-skull emblem, a fanged nose
+maw, and the stolen launcher clamped on as a moth with roots. Its loadouts looked the same. heromedel: "that ship
+is hideous, cluttered, the rust seems to drip but things don't drip in space, gatos are not cats, the weapon looks
+bolted in place and weird, it's almost dumb and cheesy compared to FTL and it looks like the same hull and weapons."
+That design was not kept. Its lessons are in `docs/art/README.md`.
+
+This design started fresh. Concepts considered:
+
+- **Chined dagger cruiser with side bays:** picked; a classic, predatory cruiser shape, unlike the Outrider.
+- **Twin-boom:** busy at squad zoom.
+- **Hammerhead boarding prow:** read as alien.
+- **Pincer ship:** cheesy.
+- **Retrofitted box freighter:** no threat.
+
+Versions: the dagger (picked), the dagger with canards, and a stepped hull (`versions.png`, `alternates/`).
+
+| Pass | Changes |
+|---|---|
+| 1 | Hull widened 30% to hold a mid-tier ship's rooms; stronger oxblood accents on the nose chines and fins. |
+| 2 | Weapons drawn, Sporewing style picked, previews composed from the separate weapon files. |
+| 3 | Larger pods and weapons; the Cutpurse's empty bay became a neat flush plate. |
+| 4 | A faint rim light so the dark hull holds its outline against space; squad and zoom check (`pirate-squad-view.png`). |
+
+**Note for later (heromedel, 2026-10-23):** this hull is accepted as is, but there will be no more rocket-like
+Terran designs for a while (race profiles, Terrans 1, Likely). See `docs/art/README.md`.
+
+## Tools
+
+| File | What it does |
+|---|---|
+| `tools/pirate.py` | Builds the hulls: `python3 pirate.py OUT_DIR hijacker cutpurse` (or `v1 v2 v3` for the versions) |
+| `tools/weapons.py` | Builds the weapon files and the Sporewing options sheet |
+| `tools/compose.py` | Places weapons at a hull's mounts: `python3 compose.py HULL.svg OUT.svg` |
+| `tools/squad.py` | Builds the squad view against the Outrider |
+| `tools/art_kit.py`, `render.js`, `sheet.js` | Shared drawing kit, SVG-to-PNG, review sheets |
