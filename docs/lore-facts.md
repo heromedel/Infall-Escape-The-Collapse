@@ -115,7 +115,7 @@ source doc carries the tag heromedel's words give it.
 - The Senti-GPH (Sentient Generative Pre-trained Holograms) are holographic AI avatars originally made by Terrans, who became their own people. (Race profiles, Senti-GPH 1; Proposed)
 - The Senti-GPH build, grow and multiply like other races. (Race profiles, Senti-GPH 1; Proposed)
 - The Senti-GPH archive information because they are made of information themselves. (Race profiles, Senti-GPH 1; Proposed)
-- The Senti-GPH have no genetics. They preserve their knowledge and sentience in the Senti Archive. (heromedel, 2026-10-23; Proposed)
+- The Senti-GPH have no genetics. They preserve their knowledge and sentience in the Senti Archive. (heromedel, 2026-10-23; Decided)
 - Senti-GPH ships carry cyan or cyan-green holographic light lines. (Race profiles, Senti-GPH 1; Proposed)
 - The light lines run over a Terran white hull. (Race profiles, Senti-GPH 1; Ai-Generated-Proposal)
 - In good times the Senti-GPH are curious and logical, collecting and preserving knowledge from every culture they meet. (Race profiles, Senti-GPH 2; Proposed)
