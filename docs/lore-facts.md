@@ -100,6 +100,16 @@ source doc carries the tag heromedel's words give it.
 - The Mecha flow like water into the regions of least resistance, preferring previously populated areas to empty ones. (Race profiles, Mecha 8; Proposed)
 - A Mecha can integrate with a ship system and power it. (Race profiles, Mecha 9; Proposed)
 - The Mecha are slow-moving, physically tough and dangerous in melee. (Race profiles, Mecha 9; Proposed)
+- Other races call them the Mecha. (Race profiles, Mecha names; Proposed)
+- Some rumors claim the Mecha are hideous and evil inside their suits, others that they are adorable and just greedy or immature. (Race profiles, Mecha what others know; Proposed)
+- The Mecha are organized and tactical because they want power and wealth, and they will work together to get it. (Race profiles, Mecha organized and tactical; Proposed)
+
+### Unknown to most other races
+
+- The Mecha call themselves HalfMechs. They are not robots, but a small race of adults living inside semi-cybernetic mech suits. (Race profiles, Mecha names, what they are; Proposed)
+- HalfMechs are childlike in size and attitude: immature, adorable adult cyborgs, genetically modified or grown, and oddly adorable for their viciousness. (Race profiles, Mecha what they are; Proposed)
+- The HalfMechs' origin is lost to time, but genetic evidence suggests they were Terran, bred to fit inside mech suits. Their creation, and possibly the power the suits give them, made them immature, violent and greedy, like cruel children. (Race profiles, Mecha origin; Proposed)
+- Outside their suits, HalfMechs are incredibly bashful if not violent, but their overconfidence keeps them from being truly shy. (Race profiles, Mecha out of their suits; Proposed)
 
 ## Tentauri
 
