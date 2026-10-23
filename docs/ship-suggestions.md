@@ -347,7 +347,7 @@ there. Asked by heromedel through Infall: Production (handoff 2026-10-23 14:17).
    | Shields (shield test level 1, one layer) | 1 | 1 | 2 |
    | Engines | 1 | 1 | 1 |
    | Life Support | 1 | 1 | 1 |
-   | Medbay | 1 | 1 | 1 |
+   | Cybernetic Servicing Core (the Mecha Medbay) | 1 | 1 | 1 |
    | Weapon pod | 2 | — | 1, +1 from an integrated crew member |
    | EVB Dock | — | 2 | 2 |
    | **Own power in all** | | | **6 / 7** |
@@ -387,8 +387,9 @@ there. Asked by heromedel through Infall: Production (handoff 2026-10-23 14:17).
    **Economy check:** a simulation of 2,000 fights of the Outrider against this pair. The Outrider fires at the
    Hull Laser first. Assumptions: 15% Outrider evasion, 5% Mecha evasion, the suit firing every 3 s, out 30 s and
    back 15 s, half the Outrider's rooms empty. Result: the fight lasts about 62 s, and the Outrider loses about 5
-   hull (4.9) and spends 0.59 Mawjig on shots. In band 1 the pair pays 6.84 (3.42 per ship destroyed); after the
-   1.21 jump, the shots and repairing 4.9 hull at 0.48, about 2.69 is left. Each loadout alone pays 0.80 (Hull Laser) or
+   hull (4.9) and spends 0.59 Mawjig on shots. Under GDD 8I a wreck pays 2.5% of the ship's value × the band adjustment, so in band 1 the pair would
+   pay 6.74 (3.29 + 3.45); after the 1.21 jump, the shots and repairing 4.9 hull at 0.48, about 2.59 is left. Band
+   1's squad value budget (137) fits only one frame, though, so the pair belongs in band 3 (see the squad). Each loadout alone pays 0.80 (Hull Laser) or
    1.92 (Suit Dock, which can't hurt a shielded ship by itself).
 10. **Price:**
 
@@ -397,7 +398,7 @@ there. Asked by heromedel through Infall: Production (handoff 2026-10-23 14:17).
     | Shields (shield test level 1) | 54.46 | 54.46 |
     | Piloting, Engines, Life Support | installed | installed |
     | Doors | 14.52 | 14.52 |
-    | Medbay | 12.11 | 12.11 |
+    | Cybernetic Servicing Core (priced as a Medbay for now) | 12.11 | 12.11 |
     | Weapon pod (Weapon Control level 2: 4.84 + 9.68) | 14.52 | — |
     | EVB Dock level 2 | — | 16.94 |
     | Own power (6 / 7 bars, priced as reactor bars) | 22.99 | 27.83 |
@@ -415,8 +416,9 @@ that a squad is mainly a list of ships with counts per tier (`rough-example-squa
 below are the extra this brief asked for.
 
 - **Ships:** 1 × Light Attack Frame, Hull Laser loadout; 1 × Light Attack Frame, Suit Dock loadout.
-- **Shows up in:** Border clusters of a doing-fine Mecha region, bands 1–3.
-- **Size by band:** bands 1–2, the pair; band 3, the pair or 2 Hull Laser + 1 Suit Dock.
+- **Shows up in:** Border clusters of a doing-fine Mecha region, band 3 (bands 1–2 field a single frame).
+- **Size by band:** set by the squad value budgets in `mawjig-cost-table.md`. Bands 1–2 (budgets 137 and 173): one
+  frame, either loadout, alone. Band 3 (414): the pair (269.69), or 2 Hull Laser + 1 Suit Dock (401.41).
 - **How the two fight together:** the Suit Dock launches its suit at once, at the target's shield room, to keep the
   layer down. The Hull Laser fires at rooms without systems, for double damage, to gut the hull. Both pick the
   weakest ship in the player's squad.
@@ -427,8 +429,10 @@ below are the extra this brief asked for.
   pay about half a ship's reward and let the player pass.
 - **Escape:** a ship down to 2–3 hull tries to jump away 50% of the time, charging for about 20 s. The Suit Dock
   recalls its suit first.
-- **A win pays (per ship, GDD 8I):** band 1: 3.42 destroyed, 4.36 crew killed; band 2: 4.77 / 6.09; band 3:
-  6.21 / 7.88. The crew are tough and dangerous in melee, so killing them is the harder road.
+- **A win pays (per ship, GDD 8I):** 2.5% of the ship's value × the band adjustment; crew killed pays about 30%
+  more. Hull Laser (131.72): 3.29 / 3.62 / 3.95 in bands 1 / 2 / 3, crew killed 4.28 / 4.71 / 5.14. Suit Dock
+  (137.97): 3.45 / 3.79 / 4.14, crew killed 4.48 / 4.93 / 5.38. The crew are tough and dangerous in melee, so
+  killing them is the harder road.
 
 ### Judgment calls and open decisions
 
