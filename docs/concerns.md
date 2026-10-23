@@ -27,3 +27,24 @@ Ideas:
   scale, so races are told apart at a glance in a zoomed-out battle.
 - **Ai-Generated-Proposal (2026-10-23):** check the GUI with 12 ships on screen, so panels and indicators don't bury
   the ships in a screenshot.
+
+## 3. Terran conduits: why would you ever reroute power? (2026-10-23)
+
+Terran ships have unlimited power through conduits (race profiles, Terrans 6), and power is rerouted through
+undamaged conduits when some are cut. But if every route can stay powered all the time, there is never a reason to
+reroute: power just flows wherever a path exists, and rerouting does nothing for the player.
+
+Ideas:
+
+- **Proposed (2026-10-23):** give conduits a limit, or lose power over a split or a distance.
+- **Proposed (2026-10-23):** power leaks when sent through broken conduits (it barely changes anything on its own).
+- **Proposed (2026-10-23):** broken conduits start fires 75% of the time while powered, so leaving every route
+  powered is dangerous.
+- **Proposed (2026-10-23):** the captain can draw or place new conduits at any time after selecting the power core.
+  Either they work at once but can't pass through a broken conduit or a breach, or the crew quickly builds them:
+  routing a drawn conduit is at least twice as fast as repairing a broken one, and can route around rooms that are on
+  fire or breached. Breaches and broken systems then become what power has to be routed around.
+- **Ai-Generated-Proposal (2026-10-23):** drop rerouting as a player action. A system has power if an unbroken conduit
+  path leads from it to the AZC; the ship finds the path itself. A damaged conduit (and possibly a breached room)
+  doesn't carry power, so a system goes dark only when every path to it is cut. The decisions become which conduit
+  to repair first, ship layouts with loops (tough) or a single spine (fragile), and enemies targeting conduit hubs.
