@@ -59,6 +59,8 @@ clone.
    conduits or rooms, and cut conduits repaired. Ion weapons can still disrupt Terran systems, and systems can be
    switched off on purpose. Introduced slowly: the initial scout ship is easy to reroute, with routing mattering
    more on larger, higher-tier ships; it can be changed later if it becomes a problem.
+   - **Conduits to weapons — Open (2026-10-23):** does a conduit only need to reach the Weapons system's room, or
+     also each weapon mount on the hull?
    - **Balance idea — Proposed (2026-10-21):** starting from FTL's default weapon numbers, a weapon with a high
      hull-breach chance gets a lower chance of conduit damage; one with a low or no breach chance gets a
      conduit-damage chance, or a higher one.
