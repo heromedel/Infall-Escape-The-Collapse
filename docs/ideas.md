@@ -106,6 +106,13 @@ Decided in GDD 7H (2026-10-23).
 - **Proposed (2026-10-23):** idea, maybe: different power cores and levels provide it faster. Risky for game balance;
   it can only be gained on Wait, and never more than about 1.25 Jigawatts per Wait.
 
+### Mecha mech upgrades away from a Cybernetic Servicing Bay (2026-10-23)
+
+- **Proposed (2026-10-23):** some stations or stores could upgrade a Mecha's mech for squads that have no Cybernetic
+  Servicing Bay, so Mecha crew stay useful in other races' squads.
+- **Ai-Generated-Proposal (2026-10-23):** a small markup there, e.g. × 1.5 (0.37 for level 1 and 0.56 for level 2,
+  per skill, against the Bay's 0.25 and 0.37; `economy-findings.md` F5), so owning the Bay still pays off.
+
 ## Ships
 
 ### Ship interior art (2026-10-23)
