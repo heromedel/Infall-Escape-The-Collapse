@@ -37,9 +37,9 @@ source doc carries the tag heromedel's words give it.
 
 ## Mawjig and jump travel
 
-- Mawjig is matter converted into stored energy. It fuels jump drives and weapons and is used as currency. (GDD 8C; Proposed)
-- The word Mawjig began as a Terran acronym: Materials Worth of Jigawatts. (GDD 8C; Proposed)
-- Wreckage and other matter can be converted into Mawjig. (GDD 8C; Proposed)
+- Mawjig is matter converted into stored energy. It fuels jump drives and weapons and is used as currency. (GDD 8C; Decided)
+- The word Mawjig began as a Terran acronym: Materials Worth of Jigawatts. (GDD 8C; Decided)
+- Wreckage and other matter can be converted into Mawjig. (GDD 8C; Decided)
 - The Mawjig Drive is the common jump drive. Some races have their own variants, but all of them burn Mawjig. (GDD 6A; Proposed)
 
 ## Technology
