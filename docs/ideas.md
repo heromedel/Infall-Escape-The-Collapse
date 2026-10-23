@@ -85,6 +85,8 @@ Both describe faction behaviour more than crew traits, so they would need adapti
 Better normalize skill gain requirements and increments than FTL does (in FTL, the experience needed and the
 bonus per level vary between skills).
 
+Decided in GDD 7H (2026-10-23).
+
 ### HalfMechs description setting (2026-10-23)
 
 **Unlikely (2026-10-23):** a setting for how the Mecha (HalfMechs) are described outside their suits:
