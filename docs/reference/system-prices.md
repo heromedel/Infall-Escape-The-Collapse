@@ -78,6 +78,12 @@ FTL's crew price × 0.242 (`ftl-baseline.md`), each race priced from its closest
 | Malphen | Rockman (55) | high HP | 13.31 |
 | Whispwraith | Lanius (50) | atmosphere-changing crew | 12.11 |
 
+## Mecha self-powered systems
+
+**Ai-Generated-Proposal (2026-10-23):** Mecha ships have no reactor; each system carries its own power. Those
+bars are priced as reactor bars, counted across the whole ship as one reactor would be (bars 1–5 at 3.63, 6–10 at
+4.84, …). A bar added by an integrated crew member costs nothing extra.
+
 ## Standard reactor (per bar)
 
 FTL's reactor price rises every 5 bars. The FTL wiki table is garbled, so these use the designer's recollection:

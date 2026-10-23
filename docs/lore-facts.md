@@ -41,7 +41,7 @@ source doc carries the tag heromedel's words give it.
 - The word Mawjig began as a Terran acronym: Materials Worth of Jigawatts. (GDD 8C; Decided)
 - Wreckage and other matter can be converted into Mawjig. (GDD 8C; Decided)
 - The Jigawatt Drive is the common jump drive, and it burns Mawjig. (GDD 6A; Proposed)
-- The jump drive's technical name is the Material to Energy, Space-Time JigaWatt Powered, Jump Drive. Its full name is the Mawjig Powered Jigawatt Drive, it is called the Jigawatt Drive, and its nickname is the Jig Drive. (GDD 6D; Decided)
+- The jump drive's technical name is the Material to Energy, Space-Time JigaWatt Powered, Jump Drive. Its full name is the Mawjig Powered Jigawatt Drive, it is called the Jigawatt Drive, and its nickname is the Jig Drive. Some people call it the MawJig Drive. (GDD 6D; Decided)
 
 ## Technology
 
@@ -100,14 +100,17 @@ source doc carries the tag heromedel's words give it.
 - The Mecha flow like water into the regions of least resistance, preferring previously populated areas to empty ones. (Race profiles, Mecha 8; Proposed)
 - A Mecha can integrate with a ship system and power it. (Race profiles, Mecha 9; Proposed)
 - The Mecha are slow-moving, physically tough and dangerous in melee. (Race profiles, Mecha 9; Proposed)
+- Mecha battlesuits are not repaired. A suit that is taken off is recycled into minimal energy, and a new one is bought at an EVB Dock. (Race profiles, Mecha 6; Likely)
+- Mecha ships have no strong power core. Instead they have a Mech Repair Bay, which heals Mecha crew and upgrades their suits to give more power. (Race profiles, Mecha 9; Likely)
+- The Mecha learn fast, since they are genetically and cybernetically enhanced, but they are hampered by their mechs until the mechs are upgraded. (Race profiles, Mecha 9; Likely)
 - Other races call them the Mecha. (Race profiles, Mecha names; Proposed)
 - Some rumors claim the Mecha are hideous and evil inside their suits, others that they are adorable and just greedy or immature. (Race profiles, Mecha what others know; Proposed)
 - The Mecha are organized and tactical because they want power and wealth, and they will work together to get it. (Race profiles, Mecha organized and tactical; Proposed)
 
 ### Unknown to most other races
 
-- The Mecha call themselves HalfMechs. They are not robots, but a small race of adults living inside semi-cybernetic mech suits. (Race profiles, Mecha names, what they are; Proposed)
-- HalfMechs are childlike in size and attitude: immature, adorable adult cyborgs, genetically modified or grown, and oddly adorable for their viciousness. (Race profiles, Mecha what they are; Proposed)
+- The Mecha call themselves HalfMechs. They are not robots, but a small race of childlike, genetically modified cyborgs who live inside semi-cybernetic mech suits. (Race profiles, Mecha names, what they are; Proposed)
+- HalfMechs are childlike in size and attitude, and oddly adorable for their viciousness. (Race profiles, Mecha what they are; Proposed)
 - The HalfMechs' origin is lost to time, but genetic evidence suggests they were Terran, bred to fit inside mech suits. Their creation, and possibly the power the suits give them, made them immature, violent and greedy, like cruel children. (Race profiles, Mecha origin; Proposed)
 - Outside their suits, HalfMechs are incredibly bashful if not violent, but their overconfidence keeps them from being truly shy. (Race profiles, Mecha out of their suits; Proposed)
 

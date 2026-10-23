@@ -154,6 +154,23 @@ clone.
    Dock): a variant of the EVA Dock, basically battle EVA suits. It needs a battlesuit type, the way a drone bay
    needs a drone type, and likely costs material to launch. Crew fly out to ships themselves to attack (or do
    other things) repeatedly. Other races can use it if they acquire one.
+   - **Suit oxygen — Likely (2026-10-23):** a battlesuit has a limited supply of its own oxygen. It starts going
+     down as soon as the suit leaves the ship and keeps going down on the way back; if it runs out, the occupant
+     slowly dies of asphyxiation.
+   - **A hit suit — Proposed (2026-10-23):** a suit that is shot probably survives the first hit, damaged and
+     unusable. A damaged suit cannot fire. After a brief stun it can return to a ship in its squad. A suit can be
+     taken off on any ship; if that ship has no way to send its occupant back, that is the player's problem.
+   - **A second hit — Likely (2026-10-23):** destroys the suit and its occupant.
+   - **Boarding suits — Proposed (2026-10-23):** a boarding suit can be worn aboard another ship, fill up with
+     oxygen there, and come back from any airlock.
+   - **No repairs — Likely (2026-10-23):** suits are not normally repaired. A suit vanishes when it is taken off
+     (lore: it is recycled into a little energy), and a new one is paid for at an EVB Dock.
+   - **A new suit every launch — Likely (2026-10-23):** every launch takes a new suit, the way FTL uses a drone part
+     every time a drone is deployed.
+   - **Recycling refund — Proposed (2026-10-23):** most likely none. If there is one, it is about 0.01 Mawjig, and
+     the suit's cost goes up by the same amount.
+   - **Skills and power vs suits — Decided (2026-10-23):** everything about flying around in battle is the EVB
+     suit; skills and extra power belong to the Mecha themselves.
    - **Tech type — Ai-Generated-Proposal (2026-10-22):** mechanical, which is why integrating with biomechanical
      systems takes them longer (point 9).
    - **Weapon names — Proposed (2026-10-22):** descriptive and functional, e.g. Triple Shot - Single Target -
@@ -177,6 +194,15 @@ clone.
    likely, rely on EVB suits.
    - **Breathing — Likely (2026-10-23):** Mecha breathe. Suffocation is their key weakness: taking out their life
      support is a legitimate tactic, and one of them has to disengage and move to repair it.
+   - **No overpowering — Decided (2026-10-23):** integration never powers a system above its level.
+   - **Cybernetic Servicing Bay — Likely (2026-10-23):** Mecha ships have no strong power core, but they have a
+     Cybernetic Servicing Bay (earlier working name: Mech Repair Bay). It is the Mecha's Medbay, and also works as
+     a Medbay for other races. It is where Mecha upgrade their own mechs to provide more power, so a Mecha crew
+     member can be upgraded to power a second bar.
+   - **Skills capped by their mech — Likely (2026-10-23):** Mecha learn skills, possibly faster than other races,
+     but can only use a skill up to the level their own mech is upgraded to. They pay Mawjig at the Cybernetic
+     Servicing Bay to upgrade their mech to match their abilities. Replaces the earlier proposal that they pay Mawjig for the
+     skills themselves and otherwise learn very slowly like the Senti-GPH.
 10. **Ship tiers — Ai-Generated-Proposal (2026-10-22):**
     - Low tech: one EVB Dock with laser battlesuits, plus one or two self-powered weapon systems with a
       hull-damage laser (Hull Smasher-like). Thin shields.
