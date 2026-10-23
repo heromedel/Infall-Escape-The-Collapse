@@ -113,7 +113,7 @@ One playable race, a short run, every core loop present once.
 |---|---|---|
 | Network and players | Host and join flow designed before any other code (heromedel: step 0): Captain hosts, Commanders join by LAN direct IP (4A), assignment of ships and crew (4C, 4D), shared pool (4E), drop in and out (4F), Pause Control and Turn Mode settings (4H, 4I), event choice voting (4M), pause and vote indicators (4L) | Decided in the GDD; the host flow and what the network carries each tick are not written |
 | Player race | Terrans (7C): the Terran Starting Scout, AZC with conduits (7E), conduit setting | Scout designed; conduit rules and routing need a worked ruleset |
-| Enemy races | Gatos (doing fine patrols, doomed pirates) and the Mecha (border, EVB suits, system integration) | Mecha have no designed ship or weapon; Terran Pirate Hijacker exists (mid tier, band 5: needs a low-tier pirate) |
+| Enemy races | Gatos (doing fine patrols, doomed pirates) and the Mecha (border, EVB suits, system integration) | Mecha low-tier light attack squad (2 ships) handed to Ship Designs, 2026-10-23 14:17 (`handoffs/2026-10-23-1417-ship-designs-mecha-light-attack-squad.md`); Terran Pirate Hijacker exists (mid tier, band 5: needs a low-tier pirate) |
 | Bands | 1–3 (low tier); the run ends at the band 3 edge with a results screen | |
 | Map | Open cluster map (2C) with Terran and Mecha regions, neutral clusters between, deep/inner/border ranks (2K), no dead ends (2F), the 5-jump opening (2P), the collapse ring (2Q); states in play: Doing Fine, Doomed, Border | Generation rules (region shapes, how many clusters, link rules) are not written |
 | Ships | Terran: starting scout + 1 more low hull (patrol); Mecha: 2 low hulls = 4 hulls | 1 of 4 |
