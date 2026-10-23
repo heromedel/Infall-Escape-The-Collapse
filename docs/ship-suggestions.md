@@ -348,11 +348,12 @@ there. Asked by heromedel through Infall: Production (handoff 2026-10-23 14:17).
    | Engines | 1 | 1 | 1 |
    | Life Support | 1 | 1 | 1 |
    | Medbay | 1 | 1 | 1 |
-   | Weapon pod | 1 | — | 1, +1 from an integrated crew member |
+   | Weapon pod | 2 | — | 1, +1 from an integrated crew member |
    | EVB Dock | — | 2 | 2 |
    | **Own power in all** | | | **6 / 7** |
 
-   - **Hull Laser:** the pod's own bar is not enough for its 2-power laser, so one crew member integrates with it.
+   - **Hull Laser:** the pod is level 2, since a system never holds more power than its level (GDD 1C), but it
+     has only one bar of its own, so one crew member integrates with it to power its 2-power laser.
      That is the profile's "a single weapon system is hard to power" in play: stun, kill or pull that crew member
      away and the laser goes quiet.
    - **Suit Dock:** one crew member flies the laser battlesuit; the other pilots. The suit carries its own air for a
@@ -386,8 +387,8 @@ there. Asked by heromedel through Infall: Production (handoff 2026-10-23 14:17).
    **Economy check:** a simulation of 2,000 fights of the Outrider against this pair. The Outrider fires at the
    Hull Laser first. Assumptions: 15% Outrider evasion, 5% Mecha evasion, the suit firing every 3 s, out 30 s and
    back 15 s, half the Outrider's rooms empty. Result: the fight lasts about 62 s, and the Outrider loses about 5
-   hull and spends 0.59 Mawjig on shots. In band 1 the pair pays 6.84 (3.42 per ship destroyed); after the 1.21
-   jump, the shots and repairing 5 hull at 0.48, about 2.69 is left. Each loadout alone pays 0.80 (Hull Laser) or
+   hull (4.9) and spends 0.59 Mawjig on shots. In band 1 the pair pays 6.84 (3.42 per ship destroyed); after the
+   1.21 jump, the shots and repairing 4.9 hull at 0.48, about 2.69 is left. Each loadout alone pays 0.80 (Hull Laser) or
    1.92 (Suit Dock, which can't hurt a shielded ship by itself).
 10. **Price:**
 
@@ -397,11 +398,11 @@ there. Asked by heromedel through Infall: Production (handoff 2026-10-23 14:17).
     | Piloting, Engines, Life Support | installed | installed |
     | Doors | 14.52 | 14.52 |
     | Medbay | 12.11 | 12.11 |
-    | Weapon pod (Weapon Control level 1) | 4.84 | — |
+    | Weapon pod (Weapon Control level 2: 4.84 + 9.68) | 14.52 | — |
     | EVB Dock level 2 | — | 16.94 |
     | Own power (6 / 7 bars, priced as reactor bars) | 22.99 | 27.83 |
     | DS-ST Hull Laser / laser battlesuit | 13.12 | 12.11 |
-    | **Total** | **122.04** | **137.97** |
+    | **Total** | **131.72** | **137.97** |
 
     Crew are extra: 2 Mecha each at 14.52, 29.04.
 11. **New rules recorded:** the Hull bonus effect's charge time and price in `weapon-budget-table.md`; Mecha
@@ -438,7 +439,8 @@ below are the extra this brief asked for.
 - A suit's sortie: 10 shots, out 30 s, back 15 s.
 - Surrender 25% and escape 50% at 2–3 hull, and a 20 s escape charge.
 - **Open:** how crew integration works in play: how long engaging and disengaging takes, and whether it is always
-  one bar. Assumed here: one bar, a few seconds each way.
+  one bar. Assumed here: one bar, a few seconds each way, and never above the system's level (so the Hull Laser's
+  pod is level 2). Whether integration could raise a system past its level is a separate open question.
 - **Open:** whether suits need the ship's air. Assumed here: a suit carries its own air for a sortie (the oxygen
   timer of the EVB cost idea), so a suit can launch while Life Support is down, but its pilot needs air back aboard.
 - **Open:** what happens to a suit's pilot when the suit is destroyed.
