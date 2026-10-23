@@ -21,6 +21,11 @@ ordinary event: the message box comes first, and "Continue..." leads into the cl
 
 ```
 COLLAPSE_OPENING_1: "Behind You" (the first cluster)
+Your homeworld is in a panic. Something is wrong with the galactic core, the region at the center of the galaxy.
+Scientists are in a frenzy of arguments and debates, but they all agree that something cataclysmic could be coming.
+Many refuse to believe it, but others have sponsored a colony ship to travel farther from the core. Your job, as
+Captain of the forward scouts, is to explore ahead and find a path for the colony ship to survive.
+
 Behind you, the colony ship's engines light up as it begins its long journey. A message comes through from its
 bridge.
 
@@ -83,6 +88,8 @@ allow. Find us a way out."
 
 THEN: the collapse appears on the map. The cluster's own event follows.
 ```
+
+Opening 1's first paragraph is heromedel's text (2026-10-23), with spelling and grammar fixed.
 
 **Other races:**
 
