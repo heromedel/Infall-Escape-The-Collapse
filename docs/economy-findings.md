@@ -155,8 +155,9 @@ Ship Designs sent 13 questions through heromedel. His answers are tagged from hi
 2. **Battlesuit launch — heromedel:** priced by its shots, since that is what it is worth as a weapon or drone. A
    launch costs its sortie's shots (0.21 for the 10-shot laser suit); the "new suit every launch" is lore inside
    that price. **Recycling refund — Proposed (heromedel, 2026-10-23): keep it.** It nets to nothing, but getting
-   something back feels good. A launch costs 0.22 and a suit that comes home and is taken off gives 0.01 back; a suit
-   destroyed in battle gives nothing back, so bringing suits home pays a little. Drones likewise pay per shot and stay out until the battle ends; interior drones last.
+   something back feels good. **Raised to 0.02 (heromedel, 2026-10-23):** rounder, a small payoff, and it makes up
+   for lost suits and the hassle. A launch costs 0.23 and a suit that comes home gives 0.02 back; a suit destroyed in
+   battle gives nothing back. Drones likewise pay per shot and stay out until the battle ends; interior drones last.
 3. **Mecha learning and the Cybernetic Servicing Bay** (heromedel's rule: half the XP to learn, the XP saved is
    paid at 0.01 Mawjig a point). FTL's XP per skill level (FTL wiki, from memory, not in the data files): Piloting
    15, Engines 15, Shields 55, Weapons 65, Repair 18, Combat 8; mastery is twice that.
@@ -176,8 +177,11 @@ Ship Designs sent 13 questions through heromedel. His answers are tagged from hi
    here. **heromedel (2026-10-23):** to be recalculated once skill gain is normalized.
 
    **Second power bar — heromedel (2026-10-23):** it isn't buying a whole Zoltan, it is a reactor bar's worth of
-   portable energy, so a one-time upgrade worth 30–35 scrap: **8.47** suggested (Ai-Generated-Proposal), 35 scrap,
-   the dearest reactor bar, since this one goes wherever the crew member goes.
+   portable energy, so a one-time upgrade worth 30–35 scrap.
+
+   **Mecha power cap — Proposed (heromedel, 2026-10-23):** raise the cap from 1–2 bars to 3 or 4, so a highly
+   upgraded Mecha can power a mixed weapon bay alone. Bar 1 comes with hiring (probably more than a Zoltan); bars 2,
+   3 and 4 are one-time upgrades of 25, 30 and 35 scrap: **6.05, 7.26, 8.47** (21.78 for all three).
 4. **Volley cost rounding** (Ai-Generated-Proposal): a weapon's per-shot cost is rounded to hundredths when the
    weapon is built (half up, at least 0.01), then the no-trailing-zero rule. A volley is per-shot × shots; a volley
    landing on x.x0 adds 0.01. The squad's running total can show any amount. So 3 × 0.021 is 3 × 0.02 = 0.06; the
@@ -227,6 +231,16 @@ Ship Designs sent 13 questions through heromedel. His answers are tagged from hi
 
       **heromedel (2026-10-23):** it depends on ship strength: enemy loadouts can be deliberately weaker than the
       player's, to leave room in encounter and squad design. So the count of ships is not the measure.
+
+**Rewards from ship value (heromedel, 2026-10-23)**
+
+- A wreck pays **2.5% of the ship's value × a band multiplier**, plus any story or event rewards. Ship value makes
+  more sense than a flat amount per band. A Light Attack Frame (131.72) pays 3.29 in band 1, close to the old 3.42.
+- Your own lost ship, if salvage is allowed and the event or encounter lets you: **2.5% of its value, no multiplier**,
+  as it isn't a reward. (GDD 1I said about a quarter; 2.5% replaces it, if agreed.)
+- Infall has no drones (ideas: drones are scrapped). An on-board anti-personnel suit, and any repair or
+  anti-personnel mutation, could pay for its maximum shots at launch and get the unused shots back when it returns
+  (heromedel, 2026-10-23, an idea).
     - Yes, band 1 can field a light pair, as an occasional richer fight (about 1 in 3 band 1 fights at most), not the
       norm; otherwise band 1 income rises by up to 70%.
     - For heromedel, not settled: a wreck's reward could scale with the ship's size (hull 7 against a band standard of
