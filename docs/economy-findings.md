@@ -141,3 +141,107 @@ An estimate, not a simulation: there are no Infall ships yet, so FTL's numbers s
 **Likely (2026-10-23):** fight rewards are paid per enemy ship destroyed or left without crew, using the band
 table. The size of enemy squads compared with the player's then becomes the economy's main dial: smaller enemy
 squads mean a poorer run.
+
+## F5. Answers to Ship Designs' pricing questions (2026-10-23)
+
+Ship Designs sent 13 questions through heromedel. His answers are tagged from his words; the rest are mine
+(Ai-Generated-Proposal), checked against FTL's data where it has the number.
+
+**Rules to settle**
+
+1. **Wait gain — Likely (heromedel, 2026-10-23):** about five Waits buy one jump (1.21). Mawjig shows two decimals
+   and never ends in a zero, so 0.242 can't be shown: **0.25 per Wait** (five give 1.25); 0.24 would need six (1.20
+   is short). GDD 6B and the cost table updated.
+2. **Battlesuit launch — heromedel:** priced by its shots, since that is what it is worth as a weapon or drone. A
+   launch costs its sortie's shots (0.21 for the 10-shot laser suit); the "new suit every launch" is lore inside
+   that price. **Recycling refund — Proposed (heromedel, 2026-10-23): keep it.** It nets to nothing, but getting
+   something back feels good. **Raised to 0.02 (heromedel, 2026-10-23):** rounder, a small payoff, and it makes up
+   for lost suits and the hassle. A launch costs 0.23 and a suit that comes home gives 0.02 back; a suit destroyed in
+   battle gives nothing back. Drones likewise pay per shot and stay out until the battle ends; interior drones last.
+3. **Mecha learning and the Cybernetic Servicing Bay** (heromedel's rule: half the XP to learn, the XP saved is
+   paid at 0.01 Mawjig a point). FTL's XP per skill level (FTL wiki, from memory, not in the data files): Piloting
+   15, Engines 15, Shields 55, Weapons 65, Repair 18, Combat 8; mastery is twice that.
+
+   | Skill | Mecha XP per level | Paid per level |
+   |---|:-:|:-:|
+   | Piloting | 7.5 | 0.08 |
+   | Engines | 7.5 | 0.08 |
+   | Shields | 27.5 | 0.28 |
+   | Weapons | 32.5 | 0.33 |
+   | Repair | 9 | 0.09 |
+   | Combat | 4 | 0.04 |
+
+   If a mech upgrade level opens one skill level for every skill at once (Ai-Generated-Proposal): **0.88 per mech
+   level** (1.76 for both). Under a jump, as heromedel wanted. At 0.01 per two points it would be 0.44, which hardly
+   registers, so 0.01 a point is suggested. heromedel's placeholder of about 0.25 is the same size as one skill level
+   here. **heromedel (2026-10-23):** to be recalculated once skill gain is normalized.
+
+   **Second power bar — heromedel (2026-10-23):** it isn't buying a whole Zoltan, it is a reactor bar's worth of
+   portable energy, so a one-time upgrade worth 30–35 scrap.
+
+   **Mecha power cap — Proposed (heromedel, 2026-10-23):** raise the cap from 1–2 bars to 3 or 4, so a highly
+   upgraded Mecha can power a mixed weapon bay alone. Bar 1 comes with hiring (probably more than a Zoltan); bars 2,
+   3 and 4 are one-time upgrades of 25, 30 and 35 scrap: **6.05, 7.26, 8.47** (21.78 for all three).
+4. **Volley cost rounding** (Ai-Generated-Proposal): a weapon's per-shot cost is rounded to hundredths when the
+   weapon is built (half up, at least 0.01), then the no-trailing-zero rule. A volley is per-shot × shots; a volley
+   landing on x.x0 adds 0.01. The squad's running total can show any amount. So 3 × 0.021 is 3 × 0.02 = 0.06; the
+   DS-ST Hull Laser's 0.036 per shot becomes 0.04, and its volley 0.08 (not 0.07).
+
+**Pricing rules to check**
+
+5. **Hull bonus — checks out.** The model without a hull part misses FTL's Hull Smasher I by +1.30 s and II by
+   +0.07 s per shot (average 0.7), and their prices by 1.05 and 0.53 of the damage-rate term (average about 0.8).
+   +0.7 s and 0.75 are the averages; the two lasers disagree, so it stays a judgment.
+6. **Mecha self-power — checks out.** Bars priced as reactor bars across the ship; integrated-crew bars are free
+   because the Mecha crew price (FTL's Zoltan) already pays for them. Totals 22.99 / 27.83 recomputed and correct.
+7. **Spores and stun — checks out.** Ion Stunner over Ion Blast: +5 scrap (1.21) and +2 s, as in the tables.
+8. **Defensive +5.32 — checks out.** Defense Drone Mark I (50, 12.11) less a 1-damage 9 s laser (6.79). Each missile
+   it shoots down costs a shot (0.02).
+9. **Conduit damage — no change** (Proposed).
+10. **Supershield Generator — change suggested.** In FTL's data the Zoltan Shield only recharges when the ship jumps
+    ("Only the energy outburst from an FTL engine is powerful enough to recharge it"). A generator that recharges in
+    battle is FTL's Shield Overcharger drone: 60 scrap, 2 power, one Supershield layer every **15 s**. **heromedel
+    (2026-10-23):** price it from the Zoltan Shield augment plus the Shield Overcharger drone, and maybe a third of a
+    Drone Control system, since it can't launch other drones. Suggested (Ai-Generated-Proposal): it does both,
+    starting each fight full like the Zoltan Shield and recharging one layer every 15 s like the Overcharger;
+    80 + 60 + 20 (a third of Drone Control's 60) = 160 scrap = **38.72** (now 19.36; 33.88 without the Drone
+    Control share).
+    Capacity 5 is still unverified: the data's only number for the Zoltan Shield is a `value` of 2.
+11. **Crew prices and drone per-use — reviewed.** Crew prices hold, except **Tentauri**: running up to four systems
+    is the manning bonus of up to four crew in one body, more than a Zoltan's one bar; suggested 75 scrap,
+    **18.15**. Drone per-use: under heromedel's "drones pay per shot", **Anti-Personnel** pays per hit (0.02) rather
+    than 0.21 per deployment; the rest stand.
+
+**Balance checks**
+
+12. **Fight assumptions — plausible.** The Outrider's 15% is FTL-like (engines 2, manned pilot). The Mecha frames
+    have a manned pilot, so 10% rather than 5% (engines 1 plus piloting). The Outrider's 1.56 left against one band 1
+    enemy matches the cost table's 1.57.
+13. **Squad sizes per band.** Rewards are paid per enemy ship (8I), so two light ships pay twice what one standard
+    ship pays: the Outrider keeps 2.69 against the pair but 1.56 against a single ship, about 70% more for a fight
+    that is harder but not twice as hard. Suggested (Ai-Generated-Proposal):
+    - Enemy squads track the player's expected squad (F4: 1, 1, 2, 2, 3, 3, 4, 4), one ship larger late, where
+      "only the most powerful, and those who band together" get that far (3G):
+
+      | Band | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 |
+      |---|---|---|---|---|---|---|---|---|
+      | Enemy ships | 1 | 1–2 | 2 | 2–3 | 3 | 3–4 | 4–5 | 4–6 |
+
+      One more enemy ship in bands 7–8 also pays the roughly 20% that F4 found missing there.
+
+      **heromedel (2026-10-23):** it depends on ship strength: enemy loadouts can be deliberately weaker than the
+      player's, to leave room in encounter and squad design. So the count of ships is not the measure.
+
+**Rewards from ship value (heromedel, 2026-10-23)**
+
+- A wreck pays **2.5% of the ship's value × a band multiplier**, plus any story or event rewards. Ship value makes
+  more sense than a flat amount per band. A Light Attack Frame (131.72) pays 3.29 in band 1, close to the old 3.42.
+- Your own lost ship, if salvage is allowed and the event or encounter lets you: **2.5% of its value, no multiplier**,
+  as it isn't a reward. (GDD 1I said about a quarter; 2.5% replaces it, if agreed.)
+- Infall has no drones (ideas: drones are scrapped). An on-board anti-personnel suit, and any repair or
+  anti-personnel mutation, could pay for its maximum shots at launch and get the unused shots back when it returns
+  (heromedel, 2026-10-23, an idea).
+    - Yes, band 1 can field a light pair, as an occasional richer fight (about 1 in 3 band 1 fights at most), not the
+      norm; otherwise band 1 income rises by up to 70%.
+    - For heromedel, not settled: a wreck's reward could scale with the ship's size (hull 7 against a band standard of
+      about 10 pays 0.7×), which makes light pairs pay like one ship. That would change 8I, so it is his call.
