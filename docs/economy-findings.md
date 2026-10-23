@@ -96,3 +96,48 @@ same is true of drones: an FTL drone part is about 8 scrap per deployment.
 
 **heromedel (2026-10-23):** fine for now. Squads fire a lot more: 6 ships with 2–4 weapons each adds up. Whether
 shot costs are felt is not a question for now; recheck once squad-sized fights can be simulated.
+
+## F4. Squad growth: the economy holds only if rewards are paid per enemy ship
+
+An estimate, not a simulation: there are no Infall ships yet, so FTL's numbers stand in for them. No losses.
+
+**Assumptions** (heromedel's: the squad grows by one ship every two bands, no losses; the rest are mine):
+
+| | Value | Why |
+|---|---|---|
+| Squad size by band | 1, 1, 2, 2, 3, 3, 4, 4 | heromedel |
+| Jumps per band | 10 | GDD 2O |
+| Fights per band | 7 | Calibrated: with 3 events, FTL's income is about 300 scrap by the end of sector 2, as players report |
+| Other events per band | 3, each paying FTL's Low reward | Same calibration |
+| Reward | Ship destroyed, from the cost table | Crew kills would pay more |
+| Hull lost per ship per fight | 2 (bands 1–3), 3 (4–6), 4 (7–8) | Judgment |
+| Ammo per ship per fight | 0.64 (bands 1–2), 0.96 (3–5), 1.28 (6–8) | The cost table's typical fight, × 1.5 and × 2 as ships gain weapons |
+| FTL ship for comparison | Same fights; fuel 3 scrap a jump, 1 missile a fight at 6 scrap | `ftl-baseline.md` |
+
+**Result:** Mawjig left over for upgrades in each band, per ship, compared with an FTL ship:
+
+| Band | Ships | Reward per fight: per ship | ÷ FTL | Reward per enemy ship: per ship | ÷ FTL | FTL one ship |
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+| 1 | 1 | 6.81 | 1.14 | 6.81 | 1.14 | 5.97 |
+| 2 | 1 | 18.80 | 1.05 | 18.80 | 1.05 | 17.96 |
+| 3 | 2 | 7.87 | 0.26 | 29.61 | 0.97 | 30.58 |
+| 4 | 2 | 5.47 | 0.16 | 31.97 | 0.93 | 34.39 |
+| 5 | 3 | 0.51 | 0.01 | 42.55 | 0.91 | 47.01 |
+| 6 | 3 | 2.40 | 0.04 | 51.03 | 0.86 | 59.43 |
+| 7 | 4 | −13.09 | −0.22 | 48.76 | 0.82 | 59.66 |
+| 8 | 4 | −9.95 | −0.14 | 59.41 | 0.82 | 72.21 |
+
+"Per enemy ship" assumes the enemy squad is as big as the player's.
+
+1. **If a fight pays one reward however many ships it has,** a squad starves from band 3. Repairs and ammo grow with
+   every ship, but income doesn't; by band 7 the squad loses Mawjig on every fight.
+2. **If each destroyed enemy ship pays its own reward** (each wreck is matter to convert, GDD 8C), each ship gets
+   about 80–100% of an FTL ship's upgrade money. The shared jump (6C) helps a bigger squad; the extra ammo hurts.
+3. **This fits the Likely point in the cost table:** the gap opens late (82% in bands 7–8) and is mild, so rewards
+   rising about 20% faster than FTL's in bands 7–8 would close it.
+4. **Not counted:** the price of gaining a ship (free from events, or bought?) and bringing it up to the squad's
+   level. Each bought ship would cost on top of the upgrade money above.
+
+**Suggestion (Ai-Generated-Proposal):** fight rewards are paid per enemy ship destroyed or crewless, using the band
+table. The size of enemy squads compared with the player's then becomes the economy's main dial: smaller enemy
+squads mean a poorer run.
