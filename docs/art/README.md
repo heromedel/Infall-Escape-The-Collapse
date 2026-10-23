@@ -17,6 +17,11 @@ each with its SVG, PNG exports, review sheets, build tools and a notes README.
 | 2026-10-23 | Floor layouts follow FTL's layouts, except that a room can hold more than one system and rooms can be bigger than 2×2 or as small as 1×1. No marked spare areas: leave blank rooms. No storage rooms. Every ship has airlocks (doors to space). |
 | 2026-10-23 | No system console on a door tile, unless it is a small room with a passable system (such as a backup battery), not a controlled system. |
 | 2026-10-23 | Power conduit paths are kept on their own layer and exported as a separate file from the floor layout. |
+| 2026-10-23 | FTL is the bar for tone: clean, restrained and readable, never cheesy or cluttered. Show character through colours and shapes, at the Outrider's level of polish. |
+| 2026-10-23 | Nothing drips in space: no rust streaks or drips. Show wear sparingly, as scorching, pitting, faded or patchy paint, and a few replaced plates of a different shade. |
+| 2026-10-23 | The Gatos are human; the cat pun is only in their name. No cat motifs on their ships. |
+| 2026-10-23 | Stolen or foreign weapons look properly fitted on a real hardpoint, refitted into the hull, not clamped on. |
+| 2026-10-23 | Weapons are separate art, but ship previews and squad views show them mounted. Loadouts of one hull must look visibly different. |
 
 ## Pieces
 
