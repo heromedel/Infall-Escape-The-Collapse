@@ -357,6 +357,8 @@ since the Outrider can't board back; (5) simulated, found the stun-lock below an
 - **What it lacks:** no gun that hurts the hull, no Medbay (hurt boarders stay hurt), no Doors or Sensors, a
   level 1 teleporter (slow to recharge), and only 4 of its 5 power-drawing systems at once: it usually runs Life
   Support off during a fight and turns it back on after.
+- **Its big weakness:** with no Doors system it can't vent a fire, and with no Medbay its burnt crew stay hurt. A
+  fire, or fire weapons, can wreck it (heromedel: fine as is).
 - **What it goes for first:** the Sporewing hits the Outrider's **Weapons**, so the Outrider can't gut it while
   the boarders work. Then the 2 boarders go in, and one Terran stays to pilot.
 - **When the Outrider's shield holds:** it doesn't matter. The Sporewing is a missile and teleporting ignores a
