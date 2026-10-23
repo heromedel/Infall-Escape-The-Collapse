@@ -156,8 +156,12 @@ Ship Designs sent 13 questions through heromedel. His answers are tagged from hi
    launch costs its sortie's shots (0.21 for the 10-shot laser suit); the "new suit every launch" is lore inside
    that price. **Recycling refund — Proposed (heromedel, 2026-10-23): keep it.** It nets to nothing, but getting
    something back feels good. **Raised to 0.02 (heromedel, 2026-10-23):** rounder, a small payoff, and it makes up
-   for lost suits and the hassle. A launch costs 0.23 and a suit that comes home gives 0.02 back; a suit destroyed in
-   battle gives nothing back. Drones likewise pay per shot and stay out until the battle ends; interior drones last.
+   for lost suits and the hassle. A launch stays **0.22**; a suit that comes home gives **0.02** back, so a returned
+   suit costs 0.20 and has a slight chance of being worth it, and a suit destroyed in battle gives nothing back.
+
+   **Note — heromedel (2026-10-23):** battlesuits come out much cheaper than FTL's drones (about 8 scrap, 1.94 Mawjig,
+   per deployment). The risk of losing the crew member inside probably more than makes up for it; if suits still
+   look too cheap in play, their price is the thing to change. Drones likewise pay per shot and stay out until the battle ends; interior drones last.
 3. **Mecha learning and the Cybernetic Servicing Bay** (heromedel's rule: half the XP to learn, the XP saved is
    paid at 0.01 Mawjig a point). FTL's XP per skill level (FTL wiki, from memory, not in the data files): Piloting
    15, Engines 15, Shields 55, Weapons 65, Repair 18, Combat 8; mastery is twice that.
