@@ -246,8 +246,8 @@ Wolf-like race (earlier working label "wolf race").
 8. **Where and how they live:** small, localized, independent clusters that even attack each other.
 9. **Crew traits:** quick attacks, reduced HP, Animal Senses.
    Animal Senses (Decided, designer, 2026-10-23): as if they are psychic, but player-facing text never calls it
-   psychic. It is always "Animal Senses", and the senses are never explained. Like FTL's Slugs, they sense crew through walls: crew in
-   neighbouring rooms show without sensors, on whatever ship they are on, which suits boarders picking prey.
+   psychic. It is always "Animal Senses", and the senses are never explained. They sense Life Signs, without using ship sensors and even on
+   other ships and in hazards.
 10. **Ship tiers:** even their best ship designs are not that amazing, aside from larger or multiple crew
     teleporter rooms.
 

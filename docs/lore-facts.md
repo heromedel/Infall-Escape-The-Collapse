@@ -114,6 +114,7 @@ draft becomes **approved by heromedel**.
 - The Senti-GPH (Sentient Generative Pre-trained Holograms) are holographic AI avatars originally made by Terrans, who became their own people. (Race profiles, Senti-GPH 1; heromedel)
 - The Senti-GPH build, grow and multiply like other races. (Race profiles, Senti-GPH 1; heromedel)
 - The Senti-GPH archive information because they are made of information themselves. (Race profiles, Senti-GPH 1; heromedel)
+- The Senti-GPH have no genetics. They preserve their knowledge and sentience in the Senti Archive. (heromedel, 2026-10-23)
 - Senti-GPH ships are Terran white with cyan or cyan-green holographic light lines. (Race profiles, Senti-GPH 1; AI draft)
 - In good times the Senti-GPH are curious and logical, collecting and preserving knowledge from every culture they meet. (Race profiles, Senti-GPH 2; heromedel)
 - Struggling Senti-GPH put preserving data first, trading for records, archives and storage. (Race profiles, Senti-GPH 3; heromedel)
@@ -135,7 +136,8 @@ draft becomes **approved by heromedel**.
 - The Lykario take in anyone who proves useful on a hunt. Those who don't are prey. (Race profiles, Lykario 5; AI draft)
 - Most Lykario weapons are stolen and keep their maker's name. (Race profiles, Lykario 6; heromedel)
 - The Lykario live in small, independent clusters that even attack each other. (Race profiles, Lykario 8; heromedel)
-- The Lykario have Animal Senses that let them sense people through walls, as if they were psychic. The senses are never explained, and they are never called psychic. (Race profiles, Lykario 9; heromedel)
+- The Lykario have Animal Senses, as if they were psychic. The senses are never explained, and they are never called psychic. (Race profiles, Lykario 9; heromedel)
+- The Lykario sense Life Signs without ship sensors, even on other ships and in hazards. (Race profiles, Lykario 9; heromedel)
 
 ## Malphen (Malphagius)
 
