@@ -159,7 +159,7 @@
   <li>Entire regions are being swallowed: the galaxy core has collapsed into a super black hole. The collapse is now visible on the map, and clusters that looked reachable a few jumps inward are swallowed all at once.</li>
 </ol></div>
 <div class="pt"><b>Q:</b> <span class="tag likely">Likely</span> From then on, the collapse expands about one jump's distance each time the player jumps, like FTL's rebel fleet; on the open map it is a ring growing outward from the core.</div>
-<div class="pt"><b>R:</b> <span class="tag ai">Ai-Generated-Proposal</span> What each cluster state (2L) changes. A state changes who you meet, what the store has and which events appear; the map shows it, so the player can plan around it.
+<div class="pt"><b>R:</b> <span class="tag decided">Decided</span> What each cluster state (2L) changes. A state changes who you meet, what the store has and which events appear; the map shows it, so the player can plan around it.
 <table>
 <tr><th>State</th><th>Means</th><th>In play</th></tr>
 <tr><td>Normal</td><td>The owning race at its current state (doing fine, struggling, doomed).</td><td>The race's usual ships, store and events.</td></tr>
@@ -169,7 +169,9 @@
 <tr><td>Abandoned</td><td>Left empty.</td><td>No store; derelicts and wreckage to salvage for Mawjig; scavengers, pirates and Malphen move in.</td></tr>
 <tr><td>Swallowed</td><td>Inside the collapse horizon.</td><td>Unreachable, except for the ??? victory path (ideas).</td></tr>
 </table>
-Border clusters (2K) are a region's front lines. When a front moves, the state and the rank change together: e.g. an inner cluster becomes a Border once the clusters beyond it fall.</div>
+Border clusters (2K) are a region's front lines. When a front moves, the state and the rank change together: e.g. an inner cluster becomes a Border once the clusters beyond it fall.
+<br><span class="tag proposed">Proposed</span> A Border cluster can be "At War" with another Border cluster.
+<br>(Note) A region's core clusters may need states of their own.</div>
 
 <h2 id="combat">3. Squad Combat</h2>
 <div class="pt"><b>A:</b> <span class="tag likely">Likely</span> Player squad on the bottom half of the screen, enemy squad on the top half.</div>
@@ -223,7 +225,7 @@ Border clusters (2K) are a region's front lines. When a front moves, the state a
 <tr><td>Captain Has Larger Vote</td><td>Weighted vote, with the Captain's vote counting for more.</td></tr>
 </table></div>
 <div class="pt"><b>N:</b> <span class="tag decided">Decided</span> <b>Allow Captain Transfer on Disconnect</b> setting, chosen by the Captain. Off: the game pauses and saves until the Captain returns. On: the captaincy passes to another player.</div>
-<div class="pt"><b>O:</b> <span class="tag ai">Ai-Generated-Proposal</span> Who receives the captaincy on transfer: the player the Captain names in advance as their <b>Second</b> (set before the run or while paused); if none is named or they are also gone, the longest-connected player. The original Captain gets the captaincy back on reconnecting, unless they choose to leave it.</div>
+<div class="pt"><b>O:</b> <span class="tag likely">Likely</span> Who receives the captaincy on transfer: the player the Captain names in advance as their <b>Commander</b> (set before the run or while paused); if none is named or they are also gone, the longest-connected player. The original Captain gets the captaincy back on reconnecting, unless they choose to leave it.</div>
 <div class="pt"><b>P:</b> <span class="tag decided">Decided</span> In solo play the Pause Control and Event Choices settings make no difference (one player is 100% of the vote); the Turn Mode settings still apply.</div>
 <div class="pt"><b>Q:</b> <span class="tag proposed">Proposed</span> Future <b>Joint Squad</b> mode: each player owns their own ships and crew and brings them into another Captain's game (e.g. 3 ships each).</div>
 <div class="pt"><b>R:</b> <span class="tag open">Open</span> The title of the squad leader: "Captain" for now; "Commodore" is the accurate rank for a commander of several ships. To be settled in the Ranks &amp; Titles discussion (section 15).</div>
@@ -245,7 +247,8 @@ Border clusters (2K) are a region's front lines. When a front moves, the state a
 <div class="pt"><b>D:</b> <span class="tag likely">Likely</span> Each race is defined with a race profile (<code>docs/race-profiles.md</code>).</div>
 <div class="pt"><b>E:</b> <span class="tag likely">Likely</span> Races can differ in how ship power works. The Azurethea use FTL's default power (a limited pool that can go to any system). Terrans use power conduits: a core with no power limit, where any connected system has power, but conduits can be damaged and must be rerouted or repaired. Introduced slowly on an easy-to-reroute starting scout ship; can be changed later if it becomes a problem.</div>
 <div class="pt"><b>F:</b> (Note) A power-giving crew race, like FTL's Zoltan, would be especially strong on Terran ships when severed from their power core.</div>
-<div class="pt"><b>G:</b> <span class="tag ai">Ai-Generated-Proposal</span> <b>Mercenaries.</b> Ships of any race that will fight for pay. A mercenary ship joins a squad on a contract for a few jumps, paid in Mawjig up front and per jump from the shared pool (4E); it leaves when the contract ends or the pay stops. It counts toward the 6-ship squad but is not a scout, so it doesn't keep a run alive (1F). Enemies hire them too, which is why enemy squads can mix races. Who works as a mercenary follows the race profiles:
+<div class="pt"><b>G:</b> <span class="tag likely">Likely</span> Mercenaries first work like FTL's, possibly fighting the player or making an offer. Since there is no rebel fleet as in FTL, mercenaries cannot slow down the collapse.
+<br><span class="tag ai">Ai-Generated-Proposal</span> <b>Mercenaries.</b> Ships of any race that will fight for pay. A mercenary ship joins a squad on a contract for a few jumps, paid in Mawjig up front and per jump from the shared pool (4E); it leaves when the contract ends or the pay stops. It counts toward the 6-ship squad but is not a scout, so it doesn't keep a run alive (1F). Enemies hire them too, which is why enemy squads can mix races. Who works as a mercenary follows the race profiles:
 <table>
 <tr><th>Race</th><th>As mercenaries</th></tr>
 <tr><td>Terrans</td><td>Doomed Terrans: survivalist mercenaries, often the same crews as pirates.</td></tr>
@@ -334,6 +337,7 @@ Border clusters (2K) are a region's front lines. When a front moves, the state a
   <tr><td>2026-10-21</td><td>All ships have an airlock (5D).</td></tr>
   <tr><td>2026-10-22</td><td>Mawjig proposed as the single fuel/ammo/currency and the Mawjig Drive as the base jump drive (6A, 6B, 8C).</td></tr>
   <tr><td>2026-10-22</td><td>Weapons built from generator parts with custom names and art; weapon card and XML folder format proposed (8E, 8F).</td></tr>
+  <tr><td>2026-10-23</td><td>What each cluster state changes is Decided (2R); the captaincy goes to the named Commander, Likely (4O); mercenaries first work like FTL's but cannot slow the collapse, Likely (7G).</td></tr>
 </table>
 
 </main>
