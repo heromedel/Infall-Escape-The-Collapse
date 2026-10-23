@@ -195,12 +195,13 @@ clone.
    - **Breathing — Likely (2026-10-23):** Mecha breathe. Suffocation is their key weakness: taking out their life
      support is a legitimate tactic, and one of them has to disengage and move to repair it.
    - **No overpowering — Decided (2026-10-23):** integration never powers a system above its level.
-   - **Mech Repair Bay (working name; needs a better one) — Likely (2026-10-23):** Mecha ships have no strong
-     power core, but they have a Mech Repair Bay. It is both the Mecha's Medbay and where they upgrade their suits
-     to provide more power, so a Mecha crew member can be upgraded to power a second bar.
+   - **Cybernetic Servicing Bay — Likely (2026-10-23):** Mecha ships have no strong power core, but they have a
+     Cybernetic Servicing Bay (earlier working name: Mech Repair Bay). It is the Mecha's Medbay, and also works as
+     a Medbay for other races. It is where Mecha upgrade their own mechs to provide more power, so a Mecha crew
+     member can be upgraded to power a second bar.
    - **Skills capped by their mech — Likely (2026-10-23):** Mecha learn skills, possibly faster than other races,
-     but can only use a skill up to the level their own mech is upgraded to. They pay Mawjig at the Mech Repair Bay
-     to upgrade their mech to match their abilities. Replaces the earlier proposal that they pay Mawjig for the
+     but can only use a skill up to the level their own mech is upgraded to. They pay Mawjig at the Cybernetic
+     Servicing Bay to upgrade their mech to match their abilities. Replaces the earlier proposal that they pay Mawjig for the
      skills themselves and otherwise learn very slowly like the Senti-GPH.
 10. **Ship tiers — Ai-Generated-Proposal (2026-10-22):**
     - Low tech: one EVB Dock with laser battlesuits, plus one or two self-powered weapon systems with a
