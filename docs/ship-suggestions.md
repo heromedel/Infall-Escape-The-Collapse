@@ -440,9 +440,10 @@ below are the extra this brief asked for.
 - Surrender 25% and escape 50% at 2–3 hull, and a 20 s escape charge.
 - **Open:** how crew integration works in play: how long engaging and disengaging takes, and whether it is always
   one bar. Assumed here: one bar, a few seconds each way, and never above the system's level (so the Hull Laser's
-  pod is level 2). Whether integration could raise a system past its level is a separate open question.
-- **Open:** whether suits need the ship's air. Assumed here: a suit carries its own air for a sortie (the oxygen
-  timer of the EVB cost idea), so a suit can launch while Life Support is down, but its pilot needs air back aboard.
-- **Open:** what happens to a suit's pilot when the suit is destroyed.
+  pod is level 2). Integration never raises a system past its level (Decided; race profile, Mecha 9).
+- **Answered (race profile, Mecha 6):** a suit has its own oxygen, draining from launch until it is back aboard;
+  running out means slow asphyxiation.
+- **Answered (race profile, Mecha 6):** the first hit leaves a suit damaged, unable to fire and briefly stunned,
+  and it can return to a squad ship; a second hit destroys the suit and its occupant.
 - **Shared between the two ships:** nothing at system level. The pair shares only tactics: the suit pops the shield
   for the Hull Laser.
