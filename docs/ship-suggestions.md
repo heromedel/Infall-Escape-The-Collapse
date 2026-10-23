@@ -418,7 +418,8 @@ below are the extra this brief asked for.
 - **Ships:** 1 × Light Attack Frame, Hull Laser loadout; 1 × Light Attack Frame, Suit Dock loadout.
 - **Shows up in:** Border clusters of a doing-fine Mecha region, band 3 (bands 1–2 field a single frame).
 - **Size by band:** set by the squad value budgets in `mawjig-cost-table.md`. Bands 1–2 (budgets 137 and 173): one
-  frame, either loadout, alone. Band 3 (414): the pair (269.69), or 2 Hull Laser + 1 Suit Dock (401.41).
+  frame, either loadout, alone, or the pair in much weaker band 1 loadouts that fit the budget (not designed yet).
+  Band 3 (414): the pair (269.69), or 2 Hull Laser + 1 Suit Dock (401.41).
 - **How the two fight together:** the Suit Dock launches its suit at once, at the target's shield room, to keep the
   layer down. The Hull Laser fires at rooms without systems, for double damage, to gut the hull. Both pick the
   weakest ship in the player's squad.
