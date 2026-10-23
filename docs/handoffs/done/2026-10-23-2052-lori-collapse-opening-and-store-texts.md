@@ -7,7 +7,7 @@
 | To | Infall: Lori (`Cloud-C-Lori`) |
 | Asked by | heromedel, 2026-10-23 |
 | Serves | `production-goals.md`, Goal A: shared pool (collapse opening 5, store texts); Terran doing fine store texts |
-| Status | **sent** |
+| Status | **done** |
 
 ## The task
 
@@ -44,3 +44,5 @@ through Production, numbered.
 ## Log
 
 - 2026-10-23 20:52 UTC: sent.
+- 2026-10-23 20:55 UTC: received, commit 2f8f951 on `Cloud-C-Lori`, `docs/events-collapse-opening-and-terran-stores.md`.
+- 2026-10-23 21:05 UTC: checked (format, the five 2P beats, lore facts, names) and merged. Five new lore facts passed to heromedel. Done.
