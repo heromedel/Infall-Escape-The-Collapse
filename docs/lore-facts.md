@@ -101,7 +101,7 @@ source doc carries the tag heromedel's words give it.
 - A Mecha can integrate with a ship system and power it. (Race profiles, Mecha 9; Proposed)
 - The Mecha are slow-moving, physically tough and dangerous in melee. (Race profiles, Mecha 9; Proposed)
 - Mecha battlesuits are not repaired. A suit that is taken off is recycled into minimal energy, and a new one is bought at an EVB Dock. (Race profiles, Mecha 6; Likely)
-- Mecha ships have no strong power core. Instead they have a Mech Repair Bay, which heals Mecha crew and upgrades their suits to give more power. (Race profiles, Mecha 9; Likely)
+- Mecha ships have no strong power core. Their Cybernetic Servicing Core gives the ship its minimal power, heals Mecha crew, also works as a Medbay for other races, and is where the Mecha upgrade their own mechs to give more power. (Race profiles, Mecha 9; Likely)
 - The Mecha learn fast, since they are genetically and cybernetically enhanced, but they are hampered by their mechs until the mechs are upgraded. (Race profiles, Mecha 9; Likely)
 - Other races call them the Mecha. (Race profiles, Mecha names; Proposed)
 - Some rumors claim the Mecha are hideous and evil inside their suits, others that they are adorable and just greedy or immature. (Race profiles, Mecha what others know; Proposed)
