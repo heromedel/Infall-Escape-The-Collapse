@@ -34,3 +34,4 @@ each with its SVG, PNG exports, review sheets, build tools and a notes README.
 | [`terran/outrider/`](terran/outrider/) | SC-1 Outrider hull: accepted by Ship Designs. Floor layout tests 1–4 in `floor-layout-tests/`. |
 | [`terran/pirate-hijacker/`](terran/pirate-hijacker/) | Terran Pirate Hijacker hull, Hijacker and Cutpurse loadouts, squad view and floor plans: accepted by Ship Designs. |
 | [`weapons/`](weapons/) | Sporewing and Gat 2.1 "Twinshot" weapon art. |
+| [`mockups/`](mockups/) | Labelled mockups of ideas, not finished art: system symbol colours. |
