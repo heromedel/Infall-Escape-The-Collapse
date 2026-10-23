@@ -1,5 +1,10 @@
 # Infall: Escape The Collapse
 
+## Hard rule for code
+
+- **Hard Rule (2026-10-23):** Once we begin coding, FTL must not be mentioned anywhere in the code. No code, and no
+  direct copies of anything, may be taken from FTL. This is an inspired work and will not plagiarize FTL directly.
+
 A design-stage project: we are writing a game design document, not building the game yet.
 
 - Follow `docs/game-project-standards.md`: standard rules (workflow, labelling of plans/steps/questions,
