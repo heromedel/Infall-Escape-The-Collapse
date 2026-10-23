@@ -62,9 +62,13 @@ with one ship and wins with about 3–4 very strong or 6 good ones (GDD 3K).
 
 ## FTL data and how to get it
 
-- `ftl.dat` (vanilla) and `ftl (1).dat` (Captain's Edition) are in heromedel's public Google Drive folder:
-  https://drive.google.com/drive/folders/1ErJKGVjsM6dVHPHsuGRjVTBigyjHamSl. The Drive connector couldn't see it, but
-  the public link downloads with curl (file id `1nMOmpnVpKntfrD4khDh84ylxpVPYmhPi` is `ftl.dat`).
+- heromedel's FTL folder on Google Drive: https://drive.google.com/drive/folders/1ErJKGVjsM6dVHPHsuGRjVTBigyjHamSl
+  - `ftl.dat`: vanilla FTL's data, the baseline. File id `1nMOmpnVpKntfrD4khDh84ylxpVPYmhPi`.
+  - `ftl (1).dat`: FTL **Captain's Edition** (a mod), not vanilla. File id `1iCcfHFQgRlduegJt4r5LjA2Gg_xwLf64`.
+    Use it only to see how that mod changed things, never as the baseline.
+  - The Drive connector couldn't see the folder, but it is public, so curl downloads it:
+    `curl -L "https://drive.usercontent.google.com/download?id=<file id>&export=download&confirm=t" -o ftl.dat`
+    (about 280 MB; save it in a new, empty folder).
 - `ftl.dat` is FTL 1.6's PKG format: magic `PKG\n`, then big-endian u16 header size, u16 entry size (20), u32 entry
   count, u32 paths-region size. Each entry is u32 path hash, u32 path offset (top byte = flags, bit 1 = deflated),
   u32 data offset, u32 data size, u32 unpacked size. The paths region follows the entries. Extract `data/*.xml` and
