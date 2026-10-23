@@ -24,3 +24,11 @@ A design-stage project: we are writing a game design document, not building the 
   that depend on things not yet defined.
 - When describing races or other designed content, state only what the docs say. Clearly label anything
   extrapolated as a suggestion; never present it as part of the design.
+
+## The Creative 3-6 Rule
+
+When doing creative work, make 3-6 ideas and pick the best one. See if it matches the rest of the game design and
+content, allowing the normal amount of creative variation. Then create it in 3-6 ways and pick the best, then look at
+it and improve it 3-6 times. These are minimums. When done, compare it again to the goal, lore, game systems and
+design, allowing a normal amount of alteration and creativity: does it fit? If not, try again 3-6 times. Then give
+the final best result or results.
