@@ -8,19 +8,19 @@
   :root {
     --bg: #f7f7f5; --panel: #ffffff; --text: #1d1f23; --muted: #5d636e;
     --rule: #dcdfe4; --accent: #3b5bdb;
-    --decided: #2b8a3e; --likely: #1971c2; --proposed: #b8860b; --open: #868e96; --ai: #9c36b5;
+    --decided: #2b8a3e; --likely: #1971c2; --proposed: #b8860b; --open: #868e96; --ai: #9c36b5; --hard: #c92a2a; --unlikely: #a0785a; --rejected: #7a5a52;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       --bg: #0e1014; --panel: #161a20; --text: #e4e6ea; --muted: #9aa1ad;
       --rule: #2a3039; --accent: #7c95ff;
-      --decided: #51cf66; --likely: #4dabf7; --proposed: #fcc419; --open: #868e96; --ai: #da77f2;
+      --decided: #51cf66; --likely: #4dabf7; --proposed: #fcc419; --open: #868e96; --ai: #da77f2; --hard: #ff8787; --unlikely: #d2a679; --rejected: #c49e94;
     }
   }
   :root[data-theme="dark"] {
     --bg: #0e1014; --panel: #161a20; --text: #e4e6ea; --muted: #9aa1ad;
     --rule: #2a3039; --accent: #7c95ff;
-    --decided: #51cf66; --likely: #4dabf7; --proposed: #fcc419; --open: #868e96; --ai: #da77f2;
+    --decided: #51cf66; --likely: #4dabf7; --proposed: #fcc419; --open: #868e96; --ai: #da77f2; --hard: #ff8787; --unlikely: #d2a679; --rejected: #c49e94;
   }
   * { box-sizing: border-box; }
   body {
@@ -45,7 +45,7 @@
     text-transform: uppercase; padding: 1px 7px; border-radius: 10px; border: 1px solid currentColor;
     vertical-align: middle; margin-right: 4px;
   }
-  .decided { color: var(--decided); } .likely { color: var(--likely); } .proposed { color: var(--proposed); } .open { color: var(--open); } .ai { color: var(--ai); }
+  .decided { color: var(--decided); } .likely { color: var(--likely); } .proposed { color: var(--proposed); } .open { color: var(--open); } .ai { color: var(--ai); } .hard { color: var(--hard); } .unlikely { color: var(--unlikely); } .rejected { color: var(--rejected); }
   .pt { margin: 8px 0; }
   .pt table { margin-top: 6px; }
   .pt > b:first-child { margin-right: 4px; }
@@ -89,12 +89,15 @@
     <li><a href="#log">Decision Log</a></li>
   </ol>
   <div class="legend">
-    <span class="tag decided">Decided</span> agreed &nbsp;
-    <span class="tag likely">Likely</span> the plan unless a problem is found &nbsp;
-    <span class="tag proposed">Proposed</span> stated direction, details pending &nbsp;
-    <span class="tag open">Open</span> not yet discussed &nbsp;
-    <span class="tag ai">Ai Generated</span> filled in by Claude to close a gap; not the designer's idea until reviewed
-    <br>Points are lettered within each section, so they can be referenced as e.g. 2A.
+    <span class="tag hard">Hard Rule</span>
+    <span class="tag decided">Decided</span>
+    <span class="tag likely">Likely</span>
+    <span class="tag proposed">Proposed</span>
+    <span class="tag ai">Ai-Generated-Proposal</span>
+    <span class="tag open">Open</span>
+    <span class="tag unlikely">Unlikely</span>
+    <span class="tag rejected">Rejected</span>
+    <br>Tags are explained in <a href="tag-styles.md">tag-styles.md</a>. Points are lettered within each section, so they can be referenced as e.g. 2A.
   </div>
 </nav>
 
@@ -106,7 +109,7 @@
 <div class="pt"><b>F:</b> <span class="tag decided">Decided</span> A run is lost when all scout ships are gone.</div>
 <div class="pt"><b>G:</b> <span class="tag likely">Likely</span> The colony ship is a layer on top of the FTL-like game and isn't a focus yet. The first build has almost no interaction with it, so the basics can be made to work first. Whether it exists in play at all is undecided.</div>
 <div class="pt"><b>H:</b> <span class="tag decided">Decided</span> The core loop is the same as FTL's. More ships are an extension of FTL's loop of gaining systems and weapons.</div>
-<div class="pt"><b>I:</b> <span class="tag ai">Ai Generated</span> Ship loss. In FTL you can always recover fully (hull, systems, breaches, missiles, drone parts) until you lose the game. Losing one ship of a squad is a major setback FTL has no equivalent of. A destroyed ship is gone, with its systems and weapons, but the loss is softened so it stays attrition rather than an instant run-ender:
+<div class="pt"><b>I:</b> <span class="tag ai">Ai-Generated-Proposal</span> Ship loss. In FTL you can always recover fully (hull, systems, breaches, missiles, drone parts) until you lose the game. Losing one ship of a squad is a major setback FTL has no equivalent of. A destroyed ship is gone, with its systems and weapons, but the loss is softened so it stays attrition rather than an instant run-ender:
 <ol>
   <li><b>Escape pods, only if an Escape Pods ship system is added:</b> when a ship with the system reaches 0 hull, its surviving crew escape to squad-mates with free crew space; crew who don't fit are lost. Without the system, the crew are lost with the ship, as in FTL. Crew already on board an enemy ship stay there and can be teleported or walked home as usual.</li>
   <li><b>Salvage your own wreck:</b> if the squad wins the battle, the lost ship's wreck is converted like any other wreckage (8C), giving about a quarter of its value in Mawjig, enough to help buy or repair, never enough to replace it.</li>
@@ -156,7 +159,7 @@
   <li>Entire regions are being swallowed: the galaxy core has collapsed into a super black hole. The collapse is now visible on the map, and clusters that looked reachable a few jumps inward are swallowed all at once.</li>
 </ol></div>
 <div class="pt"><b>Q:</b> <span class="tag likely">Likely</span> From then on, the collapse expands about one jump's distance each time the player jumps, like FTL's rebel fleet; on the open map it is a ring growing outward from the core.</div>
-<div class="pt"><b>R:</b> <span class="tag ai">Ai Generated</span> What each cluster state (2L) changes. A state changes who you meet, what the store has and which events appear; the map shows it, so the player can plan around it.
+<div class="pt"><b>R:</b> <span class="tag ai">Ai-Generated-Proposal</span> What each cluster state (2L) changes. A state changes who you meet, what the store has and which events appear; the map shows it, so the player can plan around it.
 <table>
 <tr><th>State</th><th>Means</th><th>In play</th></tr>
 <tr><td>Normal</td><td>The owning race at its current state (doing fine, struggling, doomed).</td><td>The race's usual ships, store and events.</td></tr>
@@ -220,7 +223,7 @@ Border clusters (2K) are a region's front lines. When a front moves, the state a
 <tr><td>Captain Has Larger Vote</td><td>Weighted vote, with the Captain's vote counting for more.</td></tr>
 </table></div>
 <div class="pt"><b>N:</b> <span class="tag decided">Decided</span> <b>Allow Captain Transfer on Disconnect</b> setting, chosen by the Captain. Off: the game pauses and saves until the Captain returns. On: the captaincy passes to another player.</div>
-<div class="pt"><b>O:</b> <span class="tag ai">Ai Generated</span> Who receives the captaincy on transfer: the player the Captain names in advance as their <b>Second</b> (set before the run or while paused); if none is named or they are also gone, the longest-connected player. The original Captain gets the captaincy back on reconnecting, unless they choose to leave it.</div>
+<div class="pt"><b>O:</b> <span class="tag ai">Ai-Generated-Proposal</span> Who receives the captaincy on transfer: the player the Captain names in advance as their <b>Second</b> (set before the run or while paused); if none is named or they are also gone, the longest-connected player. The original Captain gets the captaincy back on reconnecting, unless they choose to leave it.</div>
 <div class="pt"><b>P:</b> <span class="tag decided">Decided</span> In solo play the Pause Control and Event Choices settings make no difference (one player is 100% of the vote); the Turn Mode settings still apply.</div>
 <div class="pt"><b>Q:</b> <span class="tag proposed">Proposed</span> Future <b>Joint Squad</b> mode: each player owns their own ships and crew and brings them into another Captain's game (e.g. 3 ships each).</div>
 <div class="pt"><b>R:</b> <span class="tag open">Open</span> The title of the squad leader: "Captain" for now; "Commodore" is the accurate rank for a commander of several ships. To be settled in the Ranks &amp; Titles discussion (section 15).</div>
@@ -242,7 +245,7 @@ Border clusters (2K) are a region's front lines. When a front moves, the state a
 <div class="pt"><b>D:</b> <span class="tag likely">Likely</span> Each race is defined with a race profile (<code>docs/race-profiles.md</code>).</div>
 <div class="pt"><b>E:</b> <span class="tag likely">Likely</span> Races can differ in how ship power works. The Azurethea use FTL's default power (a limited pool that can go to any system). Terrans use power conduits: a core with no power limit, where any connected system has power, but conduits can be damaged and must be rerouted or repaired. Introduced slowly on an easy-to-reroute starting scout ship; can be changed later if it becomes a problem.</div>
 <div class="pt"><b>F:</b> (Note) A power-giving crew race, like FTL's Zoltan, would be especially strong on Terran ships when severed from their power core.</div>
-<div class="pt"><b>G:</b> <span class="tag ai">Ai Generated</span> <b>Mercenaries.</b> Ships of any race that will fight for pay. A mercenary ship joins a squad on a contract for a few jumps, paid in Mawjig up front and per jump from the shared pool (4E); it leaves when the contract ends or the pay stops. It counts toward the 6-ship squad but is not a scout, so it doesn't keep a run alive (1F). Enemies hire them too, which is why enemy squads can mix races. Who works as a mercenary follows the race profiles:
+<div class="pt"><b>G:</b> <span class="tag ai">Ai-Generated-Proposal</span> <b>Mercenaries.</b> Ships of any race that will fight for pay. A mercenary ship joins a squad on a contract for a few jumps, paid in Mawjig up front and per jump from the shared pool (4E); it leaves when the contract ends or the pay stops. It counts toward the 6-ship squad but is not a scout, so it doesn't keep a run alive (1F). Enemies hire them too, which is why enemy squads can mix races. Who works as a mercenary follows the race profiles:
 <table>
 <tr><th>Race</th><th>As mercenaries</th></tr>
 <tr><td>Terrans</td><td>Doomed Terrans: survivalist mercenaries, often the same crews as pirates.</td></tr>
@@ -260,7 +263,7 @@ Border clusters (2K) are a region's front lines. When a front moves, the state a
 <div class="pt"><b>D:</b> <span class="tag decided">Decided</span> Tech types: e.g. mechanical and biomechanical (more may be added); races repair the types at different speeds. Most races struggle to repair biomechanical tech; the Azurethea repair it quickly. Biomechanical ships are a mix of organic and mechanical, and the types are to some degree compatible with each other. Typically it is the ship that matters: a system installed on a biomechanical ship is biomechanical, and one installed on a Terran ship is powered like a Terran system.</div>
 <div class="pt"><b>E:</b> <span class="tag proposed">Proposed</span> Weapons are built from parts rather than generated at random: Type (laser, beam, missile, flak, bomb), Effect (damage, breach, fire, ion, spores, stun, kill…), Shots, Targets (single/multi), Special (charge, chain, phase), plus native tech type and race. Names, art and descriptions are fully custom per race; the tag line and stats explain the function. A weapon works on any ship and best on a matching tech system (e.g. a longer charge time on a system of another tech type). Costs come from the Mawjig cost table. Example: <b>Stinger</b> — Weapon, Missile, Normal, Biomechanical, Azurethea · Shots 1 · Damage 1 · 0.05 Mawjig per shot · about 6.79 to buy and install (about 5–6 jumps; <code>weapon-budget-table.md</code>) · charge 9 s on a biomechanical system, about 11 s on another tech type (the base is FTL's Leto, the matching 1-shot 1-damage missile; the penalty is a first guess of about 20%) · "A simple biomechanical warhead design." The art would not look like a missile.</div>
 <div class="pt"><b>F:</b> <span class="tag proposed">Proposed</span> Each weapon is a folder (11B) holding an XML data file with the card's fields and its art, so it is easy to mod. Likely extra tags when built: power bars, tier (low/mid/high), rarity, effect chance.</div>
-<div class="pt"><b>G:</b> <span class="tag ai">Ai Generated</span> <b>Infection</b> (the Infection effect in the cost table; Malphen weapons). It works like FTL's fire, so players already know how to read it, with two differences: it doesn't hurt crew or use up oxygen, and venting doesn't clear it. It damages the system in its room over time and spreads to neighbouring rooms. Crew clear it the way they put out fires; fire burns it out. A biomechanical system is the ship's own tissue, so infection spreads into it faster.</div>
+<div class="pt"><b>G:</b> <span class="tag ai">Ai-Generated-Proposal</span> <b>Infection</b> (the Infection effect in the cost table; Malphen weapons). It works like FTL's fire, so players already know how to read it, with two differences: it doesn't hurt crew or use up oxygen, and venting doesn't clear it. It damages the system in its room over time and spreads to neighbouring rooms. Crew clear it the way they put out fires; fire burns it out. A biomechanical system is the ship's own tissue, so infection spreads into it faster.</div>
 <div class="pt"><b>H:</b> <span class="tag proposed">Proposed</span> <b>Shield test:</b> shields go 1 for 1, one level per shield layer, with no odd bars. Each level costs two power and takes two damage (or two ion) to lose, so FTL's balance is kept. Each level is priced as FTL's two bars together (<code>system-prices.md</code>).</div>
 
 <h2 id="events">9. Events</h2>
@@ -296,9 +299,9 @@ Border clusters (2K) are a region's front lines. When a front moves, the state a
 
 <h2 id="ranks">15. Ranks &amp; Titles</h2>
 <p><strong>Do not implement 15A–15C: heromedel will almost certainly override all of it.</strong></p>
-<div class="pt"><b>A:</b> <span class="tag ai">Ai Generated</span> Rank titles: each race uses its own words, shown in events and on crew; Terrans use a naval ladder (Ensign, Lieutenant, Commander, Captain, Commodore, Admiral). Other races get theirs as their profiles are refined, e.g. the Lykario by place in the pack, the Senti-GPH by version number.</div>
-<div class="pt"><b>B:</b> <span class="tag ai">Ai Generated</span> Player titles: the squad leader is the <b>Commodore</b>; a player given a ship is that ship's <b>Captain</b>; a player with no ship, or only crew, is a <b>Commander</b>. This keeps today's working terms in the same places while giving the squad leader the accurate rank (4R).</div>
-<div class="pt"><b>C:</b> <span class="tag ai">Ai Generated</span> Crew ranks: no separate rank stat. A crew member's rank title (15A) is shown from their total skill, so it is a label for experience the player already tracks, not another number to manage.</div>
+<div class="pt"><b>A:</b> <span class="tag ai">Ai-Generated-Proposal</span> Rank titles: each race uses its own words, shown in events and on crew; Terrans use a naval ladder (Ensign, Lieutenant, Commander, Captain, Commodore, Admiral). Other races get theirs as their profiles are refined, e.g. the Lykario by place in the pack, the Senti-GPH by version number.</div>
+<div class="pt"><b>B:</b> <span class="tag ai">Ai-Generated-Proposal</span> Player titles: the squad leader is the <b>Commodore</b>; a player given a ship is that ship's <b>Captain</b>; a player with no ship, or only crew, is a <b>Commander</b>. This keeps today's working terms in the same places while giving the squad leader the accurate rank (4R).</div>
+<div class="pt"><b>C:</b> <span class="tag ai">Ai-Generated-Proposal</span> Crew ranks: no separate rank stat. A crew member's rank title (15A) is shown from their total skill, so it is a label for experience the player already tracks, not another number to manage.</div>
 
 <h2 id="log">16. Decision Log</h2>
 <table>
