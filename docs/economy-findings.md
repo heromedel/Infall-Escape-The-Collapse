@@ -162,7 +162,7 @@ Ship Designs sent 13 questions through heromedel. His answers are tagged from hi
    **Note — heromedel (2026-10-23):** battlesuits come out much cheaper than FTL's drones (about 8 scrap, 1.94 Mawjig,
    per deployment). The risk of losing the crew member inside probably more than makes up for it; if suits still
    look too cheap in play, their price is the thing to change. Drones likewise pay per shot and stay out until the battle ends; interior drones last.
-3. **Mecha learning and the Cybernetic Servicing Bay** (heromedel's rule: half the XP to learn, the XP saved is
+3. **Mecha learning and the Cybernetic Servicing Core** (heromedel's rule: half the XP to learn, the XP saved is
    paid at 0.01 Mawjig a point). FTL's XP per skill level (FTL wiki, from memory, not in the data files): Piloting
    15, Engines 15, Shields 55, Weapons 65, Repair 18, Combat 8; mastery is twice that.
 
