@@ -23,7 +23,8 @@ Designs):
   the game would.
 - **Wear,** kept sparing: soft scorching behind the engines and weapon ports, faded paint, a little pitting, and two
   replaced plates in a slightly different shade. Nothing drips.
-- **Fittings:** a narrow swept canopy, a dorsal teleporter emitter, a port airlock and two engines.
+- **Fittings:** a narrow swept canopy, a dorsal teleporter emitter, an airlock hatch on each flank (level with the
+  floor plan's aft-hall airlocks, moved there at Ship Designs' request) and two engines.
 - **No emblem.** There is no standard Gatos emblem (Decided), and heromedel's review asked for none or a small one.
 
 ## History
@@ -54,6 +55,33 @@ Versions: the dagger (picked), the dagger with canards, and a stepped hull (`ver
 **Note for later (heromedel, 2026-10-23):** this hull is accepted as is, but there will be no more rocket-like
 Terran designs for a while (race profiles, Terrans 1, Likely). See `docs/art/README.md`.
 
+## Floor plans
+
+**Accepted by Ship Designs (2026-10-23).** `floor-plans/floorplans.png` shows both loadouts side by side.
+
+![Floor plans](floor-plans/floorplans.png)
+
+- **Layout:** one layout of 11 rooms on 35 px tiles, four columns wide:
+  - bridge (Piloting, Sensors)
+  - Doors room
+  - Shields
+  - Weapons, beside the starboard Sporewing pod
+  - the 2×2 AZC core room, with empty 1×2 flank rooms
+  - Medbay
+  - Crew Teleporter
+  - an aft hall with four airlock doors to space
+  - an engine room (Engines, Life Support)
+- **Rooms by loadout:** systems go into rooms of the player's choice (GDD 5E). The Cutpurse has no Sensors, Doors or
+  Medbay, so its Doors and Medbay rooms stand empty and stripped (darker, bare floor).
+- **Conduits:** a plain ring from the AZC through the system rooms, plus one spur from the weapons room to the
+  Sporewing hardpoint, the readable weak point. The Hijacker plan shows the spur cut, with the GDD 14C red flash; the
+  cut-off hardpoint turns red.
+- **Rules:** no console sits on a door tile. Consoles are wall desks with the system symbol in the ship's oxblood
+  accent.
+- **Files:** each loadout has a floor layer (`floor-*.svg`), a conduit layer (`conduits-*.svg`, its own file as the
+  art rules ask) and a combined plan (`plan-*.svg`).
+- **Dark core hatch** (race profiles, Proposed): left off for now, at Ship Designs' call.
+
 ## Tools
 
 | File | What it does |
@@ -62,4 +90,5 @@ Terran designs for a while (race profiles, Terrans 1, Likely). See `docs/art/REA
 | `tools/weapons.py` | Builds the weapon files and the Sporewing options sheet |
 | `tools/compose.py` | Places weapons at a hull's mounts: `python3 compose.py HULL.svg OUT.svg` |
 | `tools/squad.py` | Builds the squad view against the Outrider |
+| `tools/floorplan.py` | Builds the floor plans: `python3 floorplan.py HIJACKER_ARMED.svg CUTPURSE_ARMED.svg OUT_DIR` |
 | `tools/art_kit.py`, `render.js`, `sheet.js` | Shared drawing kit, SVG-to-PNG, review sheets |

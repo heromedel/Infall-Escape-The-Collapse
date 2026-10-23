@@ -257,7 +257,9 @@ def dagger():
         "mounts": [],
     }
     s = widen(s, 1.3)
-    s["raw"][-1] = ("airlock", airlock(CX - (CX - 176) * 1.3 + 3, 420))
+    # airlock hatches on both flanks, level with the floor plan's aft-hall airlock doors
+    ax = CX - (CX - 176) * 1.3 + 3
+    s["raw"][-1] = ("airlocks", airlock(ax, 475) + airlock(2 * CX - ax, 475))
     px = 154 - s["pod_dx"]
     s["mounts"] = [("mount-sporewing", 2 * CX - px, 296, "Sporewing", "right"),
                    ("mount-twinshot", px, 296, "Gat 2.1 Twinshot", "left")]

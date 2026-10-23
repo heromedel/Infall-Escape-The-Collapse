@@ -81,8 +81,8 @@
 <g id="hatches">
 <rect x="229" y="400" width="22" height="26" rx="2" fill="none" stroke="#282b30" stroke-width="1"/><line x1="231.0" y1="426.8" x2="249.0" y2="426.8" stroke="#8e9196" stroke-width="0.8" opacity="1.0" stroke-linecap="round"/><rect x="229" y="500" width="22" height="30" rx="2" fill="none" stroke="#282b30" stroke-width="1"/><line x1="231.0" y1="530.8" x2="249.0" y2="530.8" stroke="#8e9196" stroke-width="0.8" opacity="1.0" stroke-linecap="round"/>
 </g>
-<g id="airlock">
-<g id="airlock"><rect x="154.8" y="410" width="10" height="20" rx="2" fill="#434951" stroke="#1b2230" stroke-width="1.1"/><line x1="156.8" y1="420.0" x2="162.8" y2="420.0" stroke="#2b3037" stroke-width="1" opacity="1.0" stroke-linecap="round"/></g>
+<g id="airlocks">
+<g id="airlock"><rect x="154.8" y="465" width="10" height="20" rx="2" fill="#434951" stroke="#1b2230" stroke-width="1.1"/><line x1="156.8" y1="475.0" x2="162.8" y2="475.0" stroke="#2b3037" stroke-width="1" opacity="1.0" stroke-linecap="round"/></g><g id="airlock"><rect x="315.2" y="465" width="10" height="20" rx="2" fill="#434951" stroke="#1b2230" stroke-width="1.1"/><line x1="317.2" y1="475.0" x2="323.2" y2="475.0" stroke="#2b3037" stroke-width="1" opacity="1.0" stroke-linecap="round"/></g>
 </g>
 </g>
 <g id="weapon-mounts" display="none"><circle id="mount-sporewing" cx="345.2" cy="296" r="3" data-weapon="Sporewing" data-slide="right"/></g>
