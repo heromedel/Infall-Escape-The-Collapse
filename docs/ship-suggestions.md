@@ -1,21 +1,24 @@
 # Ship Suggestions
 
 Ship designs made with `ship-design-process.md`. Nothing here is decided. Prices use the reference tables in
-`docs/reference/` and leave out crew.
+`docs/reference/` and leave out crew. Tags are as in `tag-styles.md`: each design states its default tag, and
+points that differ are tagged where they appear.
 
 ## Tentauri Tough Little Scout (2026-10-22)
+
+Default tag: **Proposed (2026-10-22)**, from heromedel's worked example; Claude's additions are tagged.
 
 1. **Race:** Tentauri.
 2. **Band:** 1 (easy, near the start of a run).
 3. **State:** doing fine.
-4. **Race info used:** small ships of about two crew, possibly mates; few rooms with many systems (GDD 5B); go
+4. **Race info used — Ai-Generated-Proposal (2026-10-22):** small ships of about two crew, possibly mates; few rooms with many systems (GDD 5B); go
    where they want, even unwelcome, without looking to destroy; shields and defence specialists; Zoltan-like
    Supershield; biomechanical tech with FTL's default power pool (as the Azurethea); standard weapons; crew run up
    to four systems at once. Silhouette: compact, like tiny shuttles.
 5. **Function:** tough little scout. Gets in, survives, gets out.
 6. **Kinds of systems and crew:** good shields, minimal weapons, 2 crew.
 7. **Variation:** standard for the race; no band or state variation.
-8. **Layout and systems:** small scout shuttle shape, wide like a slug's ship, two rooms. Hull 8, one more than
+8. **Layout and systems:** small scout shuttle shape, wide like a slug's ship, two rooms. **Ai-Generated-Proposal (2026-10-22):** hull 8, one more than
    FTL's enemy scout templates (7), since it is the tough one. Reactor 10 bars, as FTL's Federation and Mantis
    scout templates. Piloting, sensors and doors take no reactor power, as in FTL.
 
@@ -34,33 +37,33 @@ Ship designs made with `ship-design-process.md`. Nothing here is decided. Prices
    | | Supershield Generator | 2 | 2 |
    | | **Total** | | **10** |
 
-   - Two weapon systems, one per laser, so each crew member mans a laser. Their skill, stuns and charge times are
+   - **Two weapon systems — Likely (2026-10-22):** one per laser, so each crew member mans a laser. Their skill, stuns and charge times are
      separate, and it gives each crew member a reason to run several systems.
-   - The forward room has 7 controlled systems. Two crew running up to 4 each can man 8, so there is room for one
+   - **Ai-Generated-Proposal (2026-10-22):** the forward room has 7 controlled systems. Two crew running up to 4 each can man 8, so there is room for one
      more controlled system later.
    - **Supershield Generator:** FTL's Zoltan Shield as a ship system. It recharges periodically, like having FTL's
-     Shield Overcharger without a drone system. Power is the Overcharger's player version (2 bars). Capacity: 5,
+     Shield Overcharger without a drone system. **Ai-Generated-Proposal (2026-10-22):** power is the Overcharger's player version (2 bars). Capacity: 5,
      as FTL's Zoltan Shield (from memory of FTL, not in the reference data). Recharge rate is left for the
      simulation.
-   - Weakness: every controlled system is in the forward room, so one fire, breach or boarder there hits them
+   - **Weakness — Ai-Generated-Proposal (2026-10-22):** every controlled system is in the forward room, so one fire, breach or boarder there hits them
      all.
 9. **Weapons:** the Tentauri have no weapons yet, so one is designed.
 
    **Tentauri Defense Laser** (×2): Laser, Damage, Biomechanical, Tentauri · Shots 1 · Damage 1 · Power 1 ·
    Special: Defensive.
-   - **Defensive:** when charged but not aimed (or set to defensive mode), it shoots down incoming shots tagged as
+   - **Defensive — Likely (2026-10-22):** when charged but not aimed (or set to defensive mode), it shoots down incoming shots tagged as
      missiles, like FTL's Defense Drone Mark I (missiles, asteroids and flak debris).
-   - **Charge:** 9.0 s (7.0 base + 2.0 damage), about 10.8 s on a non-biomechanical system (+20%).
-   - **Cost per shot:** 0.02 Mawjig, attacking or defending.
-   - **Price:** 12.11. A plain 1-shot laser is 6.79 (1.41 base + 4.09 for one bar + 1.16 × 10 ÷ 9). The
+   - **Charge — Ai-Generated-Proposal (2026-10-22):** 9.0 s (7.0 base + 2.0 damage), about 10.8 s on a non-biomechanical system (+20%).
+   - **Cost per shot — Ai-Generated-Proposal (2026-10-22):** 0.02 Mawjig, attacking or defending.
+   - **Price — priced from the Defense Drone Mark I (Proposed (2026-10-22)); numbers Ai-Generated-Proposal (2026-10-22):** 12.11. A plain 1-shot laser is 6.79 (1.41 base + 4.09 for one bar + 1.16 × 10 ÷ 9). The
      Defensive special adds 5.32: the Defense Drone Mark I (12.11) less the 1-damage laser it carries. So the
      Defense Laser costs the same as the drone it replaces.
-   - **Shield check:** both lasers fired together beat a level 1 shield (one layer): the first shot takes the
+   - **Shield check — Ai-Generated-Proposal (2026-10-22):** both lasers fired together beat a level 1 shield (one layer): the first shot takes the
      layer and the second lands, so 1 damage per volley against the most basic ship.
    - **Offense or defence:** both lasers are needed to get through one layer, so the ship can't attack and defend
      at once. It fights with both while the Supershield is up, then switches them to defence once the Supershield
      is down, or while the jump drive charges.
-10. **Price:**
+10. **Price — Ai-Generated-Proposal (2026-10-22):**
 
     | Part | Mawjig |
     |---|---|
@@ -84,6 +87,9 @@ Flags for review:
 
 ## Terran Starting Scout (2026-10-22)
 
+Default tag: **Ai-Generated-Proposal (2026-10-22)**. heromedel liked the ship and called the test a success, which agrees to the next
+step, not to every line; points he agreed to are tagged.
+
 1. **Race:** Terrans (the Gatos).
 2. **Band:** 1 (low tier).
 3. **State:** doing fine.
@@ -96,7 +102,8 @@ Flags for review:
    as an enemy, a survey ship, a courier, the colony ship's pathfinder, the player's starting scout. The starting
    scout was picked: it is the ship every run begins with, so it sets the baseline other ships are balanced
    against (GDD 3G), and the race profile already gives a rule for it (easy to reroute).
-6. **Kinds of systems and crew:** an FTL Kestrel-level all-rounder with one scouting strength: Sensors 2, since
+6. **Kinds of systems and crew:** **Proposed (2026-10-22):** fine as a well-equipped light battle scout of a doing-well Gatos,
+   even if the 3-shot laser with good sensors is a bit powerful. An FTL Kestrel-level all-rounder with one scouting strength: Sensors 2, since
    sensor level sets how far beacons are visible (GDD 2E). 3 crew, like the Kestrel.
 7. **Variation:** standard for the race (the Terran starting ship).
 8. **Layout and systems:** a shuttle-shaped cruiser in white and pale grey with blue trim. Hull 30, as every FTL
@@ -135,14 +142,14 @@ Flags for review:
    - Pass 6: checked against band 1 enemies (FTL's scout templates: hull 7–10, 1 shield layer): see 9.
 9. **Weapons:** no Terran weapons exist yet. The Stinger fits the missile role but is Azurethea and biomechanical,
    so on a Terran (mechanical) system it would charge 20% slower; a Terran missile is designed with the same parts
-   instead. Names follow the Gatos style (race profile 6).
+   instead. **Names — Likely (2026-10-22):** they follow the Gatos style (race profile 6).
 
    **Gat 3.1 "Triblast"** (3-shot laser): Laser, Damage, Mechanical, Terran · Shots 3 · Damage 1 · Power 2 · Breach 0% ·
    Conduit damage 10%.
    - Charge: 13.1 s (7.0 + 6.0 damage + 0.09 conduit).
    - Cost per volley: 0.06 Mawjig (3 × (0.02 + 0.001)).
    - Price: 12.34 (1.41 + 8.18 power + 2.66 damage rate + 0.09 conduit rate).
-   - Description idea: conduit damage comes from the weapon's ability to overload power systems.
+   - **Description — Proposed (2026-10-22):** conduit damage comes from the weapon's ability to overload power systems.
 
    **Gat M1 "Pathfinder"** (light missile): Missile, Damage, Mechanical, Terran · Shots 1 · Damage 1 · Power 1 · Breach 10% ·
    Conduit damage 0%.
@@ -150,7 +157,8 @@ Flags for review:
    - Cost per shot: 0.05 Mawjig.
    - Price: 6.91 (6.90 by the table, no trailing zero).
 
-   The laser has no breach chance, so it gets a conduit-damage chance; the missile has a breach chance and no
+   **Conduit chance — Proposed (2026-10-22):** any chance is fine as long as it is priced, below breach. The laser has no breach
+   chance, so it gets a conduit-damage chance; the missile has a breach chance and no
    conduit chance (race profile 6).
 
    **Shield check:** against one layer, the laser's first shot takes the layer and the other two land: 2 damage
@@ -178,7 +186,7 @@ Flags for review:
     | **Total** | **181.42** |
 
     Crew are extra: 3 Terrans at 10.89 each, 32.67.
-11. **New rules recorded:** conduit damage at a third of breach (+0.01 per shot at 100% in `mawjig-cost-table.md`;
+11. **New rules recorded:** **Proposed (2026-10-22):** conduit damage at a third of breach (+0.01 per shot at 100% in `mawjig-cost-table.md`;
     +0.3 s cooldown and a +0.38 price rate in `weapon-budget-table.md`), since it only affects conduit ships, drains
     no oxygen and is rarely lethal.
 
@@ -192,16 +200,18 @@ Judgment calls for review:
 
 ## Terran Pirate Hijacker (2026-10-22)
 
+Default tag: **Ai-Generated-Proposal (2026-10-22)**; not reviewed yet.
+
 1. **Race:** Terrans (the Gatos).
 2. **Band:** 5 (mid tier).
-3. **State:** doomed. That doesn't make the ship poor or damaged: it is well armed. Doomed Terrans are aggressive
+3. **State:** doomed. **Proposed (2026-10-22):** that doesn't make the ship poor or damaged: it is well armed. Doomed Terrans are aggressive
    and xenophobic, blame others and resort to nearly any crime: theft, hijacking, other races' technology, piracy.
 4. **Race info used:** desperate ships look grim and survivalist, built from borrowed or stolen technology;
    classic spaceship silhouette; AZC with conduits; ion still disrupts Terran systems; crew as FTL's humans. A
    system installed on a Terran ship is powered like a Terran system, and a weapon on another tech type's system
    charges 20% slower (GDD 8D, `weapon-budget-table.md`). Pirates and criminals hide in Mecha border clusters.
 5. **Function:** a hijacker: it takes ships instead of destroying them. Pirate here means criminals and
-   survivalist mercenaries, not a sea-pirate theme. Ideas considered: a boarding raider, a hijacker, a toll ship
+   survivalist mercenaries, not a sea-pirate theme (Proposed (2026-10-22)). Ideas considered: a boarding raider, a hijacker, a toll ship
    at a doomed Terran checkpoint, a wreck scavenger, a hunter of refugee convoys, a mercenary escort. The hijacker
    was picked: hijacking is named in the race profile, and it plays differently from a plain warship. It wants
    your ship intact, so it goes for your engines, piloting and crew, not your hull.
