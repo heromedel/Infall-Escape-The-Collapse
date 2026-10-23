@@ -165,10 +165,12 @@ step, not to every line; points he agreed to are tagged.
    per volley, plus 1 from the missile, which ignores shields. A band 1 enemy (hull 7–10) falls in about three
    volleys, roughly 40 s. The missile also gives the player a way through the two-layer shields of later bands.
 
-   **Economy check:** a fight of about 8 volleys (allowing for misses: in FTL a 3-shot volley often has one shot
-   blocked, one miss and one hit) costs 0.48 in laser shots and 0.40 in missiles, plus the 1.21 jump: about 2.09
-   per node against a 3.42 reward, leaving 1.33. A little tighter than the cost table's example fight (1.57 left),
-   mostly from firing the missile every volley; holding it back saves Mawjig.
+   **Economy check — Ai-Generated-Proposal (2026-10-23):** against one band 1 enemy ship (hull 7–10, about 8.5),
+   allowing for misses (of a 3-shot volley, one blocked by the shield, one missed, one hit; the missile hitting
+   about 70% of the time), the fight takes about 55 s: 5 laser volleys (0.30) and 7 missiles (0.35), 0.65 in all.
+   With the squad's 1.21 jump (GDD 6C) that is 1.86 per node. Rewards are paid per enemy ship (GDD 8I): 3.42 for
+   destroying it leaves 1.56, about the cost table's example (1.57); 4.36 for killing its crew leaves 2.50. More
+   enemy ships per fight pay more per jump, since the jump is paid once.
 10. **Price:**
 
     | Part | Mawjig |
