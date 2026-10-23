@@ -2,13 +2,13 @@
 
 | | |
 |---|---|
-| Prepared | 2026-10-23 21:30 UTC |
-| Sent | not yet |
+| Prepared | 2026-10-23 20:30 UTC |
+| Sent | 2026-10-23 20:52 UTC |
 | From | Infall: Production (`Cloud-C-Production-Flow`) |
 | To | Infall: Ship Designs (`Cloud-C-ShipDesign`) |
 | Asked by | heromedel, 2026-10-23 (loadouts by band range: "a Terran pirate with a loadout for band 1–3, another for 4–6") |
 | Serves | `production-goals.md`, Goal A: Terran doomed pirates (enemy race), the second Terran hull, Terran doomed squads |
-| Status | **prepared** |
+| Status | **sent** |
 
 ## The task
 
@@ -58,4 +58,5 @@ back numbered points. Questions for heromedel go through Production, numbered.
 
 ## Log
 
-- 2026-10-23 21:30 UTC: prepared, not sent.
+- 2026-10-23 20:30 UTC: prepared.
+- 2026-10-23 20:52 UTC: sent.
