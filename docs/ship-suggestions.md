@@ -401,11 +401,6 @@ Conduct, only where it differs from the Hijacker:
 - The fight assumptions: 8 s to clear a spore-disabled system; 15% Outrider evasion, 5% pirate evasion.
 - **Can a bands 1–3 pirate afford a crew teleporter?** Yes, at level 1 (21.78), by dropping the gun, Medbay, Doors
   and Sensors.
-- **Decision needed: what a hijacker does to a lone Outrider in band 1 if it wins.** A boarded, taken ship is a
-  lost scout, so alone it is the run lost (1F), as losing all crew is in FTL. Options: (a) the run is lost; (b) the
-  pirates hold the ship for ransom, an event where the player pays Mawjig to get it back (fits their demands for
-  Mawjig or a ship); (c) they strip it and leave it adrift with its systems damaged. Band 1 boarders are only 2
-  Terrans against 3 crew, so a win for them should be rare either way.
 - The stun-lock targeting rule is needed for any squad with more than one Sporewing.
 
 ## Mecha Light Attack Frame, two loadouts (2026-10-23)
