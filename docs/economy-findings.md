@@ -62,7 +62,13 @@ no-trailing-zero rule. Killing the crew pays more than destroying the ship, as i
 matter to convert into Mawjig, which fits the wreckage fiction (GDD 8C).
 
 **heromedel (2026-10-23), Proposed:** following FTL more closely is smarter for now. Eventually the game may need
-more chances for rewards, or more reward in general.
+more chances for rewards, or more reward in general. The per-band rewards are averages; single fights vary.
+
+- **Decided (2026-10-23):** killing the crew pays more than destroying the ship, as in FTL.
+- **Likely (2026-10-23):** band 1 starts near FTL, but later bands may need rewards to rise faster than FTL's to pay
+  for a bigger squad's costs, unless the run allows, or ends up with, more time for grinding.
+
+Applied to `docs/reference/mawjig-cost-table.md` (Fight rewards), anchored on 3.42 for band 1.
 
 ## F2. A jump takes a larger share of a reward than FTL's fuel
 
