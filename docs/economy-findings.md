@@ -149,13 +149,14 @@ Ship Designs sent 13 questions through heromedel. His answers are tagged from hi
 
 **Rules to settle**
 
-1. **Wait gain — Likely (heromedel):** about five Waits buy one jump (1.21). Mawjig shows two decimals and never
-   ends in a zero, so 0.242 can't be shown: **0.25 per Wait** (five give 1.25); 0.24 would need six (1.20 is short).
-   GDD 6B still says about 0.21 and needs updating.
+1. **Wait gain — Likely (heromedel, 2026-10-23):** about five Waits buy one jump (1.21). Mawjig shows two decimals
+   and never ends in a zero, so 0.242 can't be shown: **0.25 per Wait** (five give 1.25); 0.24 would need six (1.20
+   is short). GDD 6B and the cost table updated.
 2. **Battlesuit launch — heromedel:** priced by its shots, since that is what it is worth as a weapon or drone. A
    launch costs its sortie's shots (0.21 for the 10-shot laser suit); the "new suit every launch" is lore inside
-   that price. **Recycling refund: none** (Ai-Generated-Proposal): +0.01 back with +0.01 on the price nets to
-   nothing. Drones likewise pay per shot and stay out until the battle ends; interior drones last.
+   that price. **Recycling refund — Proposed (heromedel, 2026-10-23): keep it.** It nets to nothing, but getting
+   something back feels good. A launch costs 0.22 and a suit that comes home and is taken off gives 0.01 back; a suit
+   destroyed in battle gives nothing back, so bringing suits home pays a little. Drones likewise pay per shot and stay out until the battle ends; interior drones last.
 3. **Mecha learning and the Cybernetic Servicing Bay** (heromedel's rule: half the XP to learn, the XP saved is
    paid at 0.01 Mawjig a point). FTL's XP per skill level (FTL wiki, from memory, not in the data files): Piloting
    15, Engines 15, Shields 55, Weapons 65, Repair 18, Combat 8; mastery is twice that.
@@ -172,11 +173,11 @@ Ship Designs sent 13 questions through heromedel. His answers are tagged from hi
    If a mech upgrade level opens one skill level for every skill at once (Ai-Generated-Proposal): **0.88 per mech
    level** (1.76 for both). Under a jump, as heromedel wanted. At 0.01 per two points it would be 0.44, which hardly
    registers, so 0.01 a point is suggested. heromedel's placeholder of about 0.25 is the same size as one skill level
-   here.
+   here. **heromedel (2026-10-23):** to be recalculated once skill gain is normalized.
 
-   **Second power bar** (Ai-Generated-Proposal): **3.63**, the price of one reactor bar (15 scrap), which is exactly
-   what FTL's Zoltan costs over a Human for its one bar. A crew member moves between ships, so a fixed price rather
-   than the ship's next reactor bar.
+   **Second power bar — heromedel (2026-10-23):** it isn't buying a whole Zoltan, it is a reactor bar's worth of
+   portable energy, so a one-time upgrade worth 30–35 scrap: **8.47** suggested (Ai-Generated-Proposal), 35 scrap,
+   the dearest reactor bar, since this one goes wherever the crew member goes.
 4. **Volley cost rounding** (Ai-Generated-Proposal): a weapon's per-shot cost is rounded to hundredths when the
    weapon is built (half up, at least 0.01), then the no-trailing-zero rule. A volley is per-shot × shots; a volley
    landing on x.x0 adds 0.01. The squad's running total can show any amount. So 3 × 0.021 is 3 × 0.02 = 0.06; the
@@ -195,9 +196,12 @@ Ship Designs sent 13 questions through heromedel. His answers are tagged from hi
 9. **Conduit damage — no change** (Proposed).
 10. **Supershield Generator — change suggested.** In FTL's data the Zoltan Shield only recharges when the ship jumps
     ("Only the energy outburst from an FTL engine is powerful enough to recharge it"). A generator that recharges in
-    battle is FTL's Shield Overcharger drone: 60 scrap, 2 power, one Supershield layer every **15 s**. Suggested
-    (Ai-Generated-Proposal): recharge one layer every 15 s, starting empty each fight; price as what FTL charges for
-    that effect from scratch, the Overcharger plus a Drone Control system, 120 scrap = **29.04** (now 19.36).
+    battle is FTL's Shield Overcharger drone: 60 scrap, 2 power, one Supershield layer every **15 s**. **heromedel
+    (2026-10-23):** price it from the Zoltan Shield augment plus the Shield Overcharger drone, and maybe a third of a
+    Drone Control system, since it can't launch other drones. Suggested (Ai-Generated-Proposal): it does both,
+    starting each fight full like the Zoltan Shield and recharging one layer every 15 s like the Overcharger;
+    80 + 60 + 20 (a third of Drone Control's 60) = 160 scrap = **38.72** (now 19.36; 33.88 without the Drone
+    Control share).
     Capacity 5 is still unverified: the data's only number for the Zoltan Shield is a `value` of 2.
 11. **Crew prices and drone per-use — reviewed.** Crew prices hold, except **Tentauri**: running up to four systems
     is the manning bonus of up to four crew in one body, more than a Zoltan's one bar; suggested 75 scrap,
@@ -220,6 +224,9 @@ Ship Designs sent 13 questions through heromedel. His answers are tagged from hi
       | Enemy ships | 1 | 1–2 | 2 | 2–3 | 3 | 3–4 | 4–5 | 4–6 |
 
       One more enemy ship in bands 7–8 also pays the roughly 20% that F4 found missing there.
+
+      **heromedel (2026-10-23):** it depends on ship strength: enemy loadouts can be deliberately weaker than the
+      player's, to leave room in encounter and squad design. So the count of ships is not the measure.
     - Yes, band 1 can field a light pair, as an occasional richer fight (about 1 in 3 band 1 fights at most), not the
       norm; otherwise band 1 income rises by up to 70%.
     - For heromedel, not settled: a wreck's reward could scale with the ship's size (hull 7 against a band standard of
