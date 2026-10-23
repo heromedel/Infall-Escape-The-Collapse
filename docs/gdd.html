@@ -163,18 +163,20 @@
 <div class="pt"><b>R:</b> <span class="tag decided">Decided</span> What each cluster state (2L) changes. A state changes who you meet, what the store has and which events appear; the map shows it, so the player can plan around it.
 <table>
 <tr><th>State</th><th>Means</th><th>In play</th></tr>
-<tr><td>Normal</td><td>The owning race at its current state (doing fine, struggling, doomed).</td><td>The race's usual ships, store and events.</td></tr>
+<tr><td>Doing Fine</td><td>The owning race at this cluster is far from the collapse and not losing a war.</td><td>The race's usual ships, store and events; the race profile's Doing fine point.</td></tr>
+<tr><td>Struggling <span class="tag likely">Likely</span></td><td>Probably within the same band as the collapse; more likely as the collapse gets closer, especially when hit by war, occupation or refugees. Some races would rather flee the collapse and occupy as they go than become refugees.</td><td>The race profile's Struggling point.</td></tr>
+<tr><td>Doomed <span class="tag likely">Likely</span></td><td>One jump from the collapse, maybe up to 2–3. Everyone here knows that if they don't leave now they will die, and everyone who could leave probably already has.</td><td>The race profile's Doomed point.</td></tr>
+<tr><td>Core <span class="tag proposed">Proposed</span></td><td>A cluster deep in a race's region (deep/core, 2K), such as a homeworld or major colony. It stays Core even if it becomes a Border.</td><td><span class="tag open">Open</span></td></tr>
 <tr><td>Border</td><td>A front line between two regions, or a region and pirates.</td><td>More fights, ships of both sides, fewer stores; hiding criminals (e.g. in Mecha borders).</td></tr>
+<tr><td>At War <span class="tag proposed">Proposed</span></td><td>A Border cluster at war with another Border cluster.</td><td><span class="tag open">Open</span></td></tr>
 <tr><td>Refugee</td><td>Fleeing people have gathered or are passing through.</td><td>Recruitable crew and ships of the fleeing race; stores short of stock; events asking for help, fuel or escort.</td></tr>
 <tr><td>Occupied</td><td>Taken by another race.</td><td>The occupier's ships and store; the original race appears as resistance, prisoners or refugees.</td></tr>
 <tr><td>Abandoned</td><td>Left empty.</td><td>No store; derelicts and wreckage to salvage for Mawjig; scavengers, pirates and Malphen move in.</td></tr>
 <tr><td>Swallowed</td><td>Inside the collapse horizon.</td><td>Unreachable, except for the ??? victory path (ideas).</td></tr>
 </table>
-Border clusters (2K) are a region's front lines. When a front moves, the state and the rank change together (except core clusters, 2K): e.g. an inner cluster becomes a Border once the clusters beyond it fall.
+Doing Fine, Struggling and Doomed are the owning race's state at this cluster, not across its whole region: e.g. the Tentauri can be Doomed at a small cluster next to the collapse and Doing Fine at another 2 bands away. Border clusters (2K) are a region's front lines. When a front moves, the state and the rank change together (except core clusters, 2K): e.g. an inner cluster becomes a Border once the clusters beyond it fall.
 <br><span class="tag likely">Likely</span> A cluster can have more than one state at once, e.g. Core, Border, At War, Refugee, Doomed, Occupied: Mecha.
-<br><span class="tag proposed">Proposed</span> A Border cluster can be "At War" with another Border cluster.
-<br><span class="tag proposed">Proposed</span> Some states may cancel others, e.g. a non-core Occupied cluster that is no longer a Border probably loses At War; more generally, any cluster that is not a Border probably loses At War.
-<br><span class="tag proposed">Proposed</span> "Core" could be a state for clusters deep in a race's region (2K).</div>
+<br><span class="tag proposed">Proposed</span> Some states may cancel others, e.g. a non-core Occupied cluster that is no longer a Border probably loses At War; more generally, any cluster that is not a Border probably loses At War.</div>
 
 <h2 id="combat">3. Squad Combat</h2>
 <div class="pt"><b>A:</b> <span class="tag likely">Likely</span> Player squad on the bottom half of the screen, enemy squad on the top half.</div>
