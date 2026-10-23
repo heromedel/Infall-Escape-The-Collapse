@@ -23,7 +23,11 @@ source doc carries the tag heromedel's words give it.
 - Worlds far from the collapse may not believe it is real. (GDD 2B; Proposed)
 - Stars are grouped into star clusters, and related clusters form regions, such as a civilization's territory. (GDD 2J; Decided)
 - A region has deep (or core), inner and border clusters, and unclaimed or neutral clusters can lie between regions. (GDD 2K; Decided)
+- A race's homeworlds and major colonies lie in the core of its region. (GDD 2R, Core; Proposed)
+- In a doomed cluster, everyone knows that if they don't leave now they will die, and everyone who could leave probably already has. (GDD 2R, Doomed; Likely)
+- Some races would rather flee the collapse and occupy clusters as they go than become refugees. (GDD 2R, Struggling; Likely)
 - In occupied clusters, the original race's stores are nearly barren, and beggars of that race may be met. (GDD 2R, Occupied; Proposed)
+- Scavengers, pirates and Malphen move into abandoned clusters to salvage the derelicts and wreckage. (GDD 2R, Abandoned; Decided)
 - Only the most powerful factions, and those who band together, are making it far toward the rim. (GDD 3G; Proposed)
 
 ## The player's people
