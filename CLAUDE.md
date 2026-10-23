@@ -29,3 +29,11 @@ A design-stage project: we are writing a game design document, not building the 
 
 - **Hard Rule (2026-10-23):** Once we begin coding, FTL must not be mentioned anywhere in the code. No code, and no
   direct copies of anything, may be taken from FTL. This is an inspired work and will not plagiarize FTL directly.
+
+## The Creative 3-6 Rule
+
+When doing creative work, make 3-6 ideas and pick the best one. See if it matches the rest of the game design and
+content, allowing the normal amount of creative variation. Then create it in 3-6 ways and pick the best, then look at
+it and improve it 3-6 times. These are minimums. When done, compare it again to the goal, lore, game systems and
+design, allowing a normal amount of alteration and creativity: does it fit? If not, try again 3-6 times. Then give
+the final best result or results.

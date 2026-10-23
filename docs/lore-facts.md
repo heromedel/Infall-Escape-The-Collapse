@@ -100,6 +100,16 @@ source doc carries the tag heromedel's words give it.
 - The Mecha flow like water into the regions of least resistance, preferring previously populated areas to empty ones. (Race profiles, Mecha 8; Proposed)
 - A Mecha can integrate with a ship system and power it. (Race profiles, Mecha 9; Proposed)
 - The Mecha are slow-moving, physically tough and dangerous in melee. (Race profiles, Mecha 9; Proposed)
+- Other races call them the Mecha. (Race profiles, Mecha names; Proposed)
+- Some rumors claim the Mecha are hideous and evil inside their suits, others that they are adorable and just greedy or immature. (Race profiles, Mecha what others know; Proposed)
+- The Mecha are organized and tactical because they want power and wealth, and they will work together to get it. (Race profiles, Mecha organized and tactical; Proposed)
+
+### Unknown to most other races
+
+- The Mecha call themselves HalfMechs. They are not robots, but a small race of adults living inside semi-cybernetic mech suits. (Race profiles, Mecha names, what they are; Proposed)
+- HalfMechs are childlike in size and attitude: immature, adorable adult cyborgs, genetically modified or grown, and oddly adorable for their viciousness. (Race profiles, Mecha what they are; Proposed)
+- The HalfMechs' origin is lost to time, but genetic evidence suggests they were Terran, bred to fit inside mech suits. Their creation, and possibly the power the suits give them, made them immature, violent and greedy, like cruel children. (Race profiles, Mecha origin; Proposed)
+- Outside their suits, HalfMechs are incredibly bashful if not violent, but their overconfidence keeps them from being truly shy. (Race profiles, Mecha out of their suits; Proposed)
 
 ## Tentauri
 
@@ -118,7 +128,9 @@ source doc carries the tag heromedel's words give it.
 
 ## Senti-GPH
 
-- The Senti-GPH (Sentient Generative Pre-trained Holograms) are holographic AI avatars originally made by Terrans, who became their own people. (Race profiles, Senti-GPH 1; Proposed)
+- The Senti-GPH (Sentient Generative Pretrained Holograms) are holographic AI avatars originally made by Terrans, who became their own people. (Race profiles, Senti-GPH 1; Proposed)
+- The Senti-GPH's technical name is Sentient Generative Pretrained Holograms. Their full name, Senti-GPH, is not usually used by people actually speaking. They are called Senti, The Senti, or The Senti-. (Race profiles, Senti-GPH names; Decided)
+- A single Senti speaks in the first person and uses words like I and me, but in negotiations the Senti have a habit of saying "We, The Senti-", as in "We, The Senti-, welcome you to look around our storage facilities if you would like to trade." (Race profiles, Senti-GPH names; Decided)
 - The Senti-GPH build, grow and multiply like other races. (Race profiles, Senti-GPH 1; Proposed)
 - The Senti-GPH archive information because they are made of information themselves. (Race profiles, Senti-GPH 1; Proposed)
 - The Senti-GPH have no genetics. They preserve their knowledge and sentience in the Senti Archive. (heromedel, 2026-10-23; Decided)
