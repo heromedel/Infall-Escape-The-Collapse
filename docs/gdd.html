@@ -197,7 +197,8 @@ Doing Fine, Struggling and Doomed are the owning race's state at this cluster, n
 <div class="pt"><b>O:</b> <span class="tag likely">Likely</span> Battles have a <b>Hail</b> button, so the player can ask for or offer surrender early, or use other such options.</div>
 
 <h2 id="multiplayer">4. Multiplayer</h2>
-<div class="pt"><b>A:</b> <span class="tag likely">Likely</span> Additional players join via a second controller or over LAN, up to 6 players.</div>
+<div class="pt"><b>A:</b> <span class="tag likely">Likely</span> Additional players join via a second controller or over LAN, up to 6 players.
+<br><span class="tag proposed">Proposed</span> LAN with direct IP connect is enough for now; Steam joining may be added later.</div>
 <div class="pt"><b>B:</b> <span class="tag decided">Decided</span> The <b>Captain</b> is the host. In the standard mode the squad is the Captain's: they own and decide everything (ships, crew, resources, settings) at all times.</div>
 <div class="pt"><b>C:</b> <span class="tag decided">Decided</span> A joining player starts as a spectating <b>Commander</b> until the Captain assigns them ships and/or individual crew members, which they can then command.</div>
 <div class="pt"><b>D:</b> <span class="tag decided">Decided</span> All ships start assigned to the Captain until the Captain assigns them to someone else. A player whose ship is destroyed returns to being a Commander until reassigned.</div>
@@ -243,9 +244,11 @@ Doing Fine, Struggling and Doomed are the owning race's state at this cluster, n
 <div class="pt"><b>D:</b> <span class="tag decided">Decided</span> All ships have an airlock.</div>
 
 <h2 id="jump">6. Jump Travel</h2>
-<div class="pt"><b>A:</b> <span class="tag proposed">Proposed</span> The base jump drive is the <b>Mawjig Drive</b>, powered by Mawjig (see 8C). Races may have their own drive variants, but all use the same fuel (cost in 6C).</div>
-<div class="pt"><b>B:</b> <span class="tag proposed">Proposed</span> <b>Wait</b> action: staying at a cluster gathers a little Mawjig (about 0.21) while the collapse advances, so a squad is never permanently stranded, only slowed.</div>
+<div class="pt"><b>A:</b> <span class="tag proposed">Proposed</span> The base jump drive is the <b>Jigawatt Drive</b> (named in 6D), powered by Mawjig (see 8C). Races may have their own drive variants, but all use the same fuel (cost in 6C).</div>
+<div class="pt"><b>B:</b> <span class="tag likely">Likely</span> <b>Wait</b> action: staying at a cluster gathers a little Mawjig (about 0.21) while the collapse advances, so a squad is never permanently stranded, only slowed.</div>
 <div class="pt"><b>C:</b> <span class="tag decided">Decided</span> A jump costs 1.21 Mawjig for the whole squad, fixed (the DeLorean's 1.21 jigawatts). Charging per ship would only make big squads more expensive; FTL's balance is built for one ship.</div>
+<div class="pt"><b>D:</b> <span class="tag decided">Decided</span> <b>Jump drive names.</b> Technical name: <i>Material to Energy, Space-Time JigaWatt Powered, Jump Drive</i>. Real full name: <i>Mawjig Powered Jigawatt Drive</i>. Name: <b>Jigawatt Drive</b>. Nickname: <b>Jig Drive</b>. The long technical name says what it does (a jump), so the short names don't have to; &ldquo;Jump Drive&rdquo; is kept inside the long name so it doesn't read as a USB stick. &ldquo;Jigawatt&rdquo; is the deliberate Back to the Future callback to the 1.21 jump cost (6C), used where it fits most naturally.</div>
+<div class="pt"><b>E:</b> <span class="tag proposed">Proposed</span> The drive needs power; it does not supply it. Lore text that says the ship&rsquo;s &ldquo;power core&rdquo; produces the Mawjig for a jump either uses different flavor text for races without a visible dedicated core, or assumes every ship has some form of power core (not yet chosen).</div>
 
 <h2 id="races">7. Races &amp; Crew</h2>
 <div class="pt"><b>A:</b> <span class="tag open">Open</span> Which races exist. Drafted so far in <code>docs/race-profiles.md</code>: Terrans (the Gatos), the Azurethea, the Mecha, the Tentauri, the Senti-GPH, the Lykario, the Malphen (a tumor race) and, likely non-core, the Whispwraith. Other ideas are in the ideas document.</div>
@@ -269,7 +272,7 @@ Doing Fine, Struggling and Doomed are the owning race's state at this cluster, n
 <h2 id="weapons">8. Weapons &amp; Systems</h2>
 <div class="pt"><b>A:</b> <span class="tag likely">Likely</span> The systems are FTL's plus more. Most FTL systems are hard to remove; the clone bay is the one possible exception.</div>
 <div class="pt"><b>B:</b> <span class="tag proposed">Proposed</span> Rename the Oxygen system to Life Support or Environmental.</div>
-<div class="pt"><b>C:</b> <span class="tag proposed">Proposed</span> One resource, <b>Mawjig</b> (originally a Terran acronym, Materials Worth of Jigawatts), is fuel, ammunition and currency at once. Matter such as wreckage is converted to energy and stored as Mawjig ("...converting enough of the matter into energy to gain 3.42 Mawjig"). Displayed to two decimals (x.xx); amounts never end in a zero (0.21, not 0.20); anything that lands on x.x0 must add or subtract 0.01. Jumps cost the most (6C); missiles and other ammo weapons cost more per shot than energy weapons; laser shots are cheap. The squad shares one pool (4E): ships draw Mawjig from each other. The Terran AZC keeps systems powered without limit, but shots are discharges from stored Mawjig, so Terrans pay for shots and jumps like everyone. Supersedes the Material and Energy idea.</div>
+<div class="pt"><b>C:</b> <span class="tag decided">Decided</span> One resource, <b>Mawjig</b> (originally a Terran acronym, Materials Worth of Jigawatts), is fuel, ammunition and currency at once. Matter such as wreckage is converted to energy and stored as Mawjig ("...converting enough of the matter into energy to gain 3.42 Mawjig"). Displayed to two decimals (x.xx); amounts never end in a zero (0.21, not 0.20); anything that lands on x.x0 must add or subtract 0.01. Jumps cost the most (6C); missiles and other ammo weapons cost more per shot than energy weapons; laser shots are cheap. The squad shares one pool (4E): ships draw Mawjig from each other. The Terran AZC keeps systems powered without limit, but shots are discharges from stored Mawjig, so Terrans pay for shots and jumps like everyone. Supersedes the Material and Energy idea.</div>
 <div class="pt"><b>D:</b> <span class="tag decided">Decided</span> Tech types: e.g. mechanical and biomechanical (more may be added); races repair the types at different speeds. Most races struggle to repair biomechanical tech; the Azurethea repair it quickly. Biomechanical ships are a mix of organic and mechanical, and the types are to some degree compatible with each other. Typically it is the ship that matters: a system installed on a biomechanical ship is biomechanical, and one installed on a Terran ship is powered like a Terran system.</div>
 <div class="pt"><b>E:</b> <span class="tag proposed">Proposed</span> Weapons are built from parts rather than generated at random: Type (laser, beam, missile, flak, bomb), Effect (damage, breach, fire, ion, spores, stun, kill…), Shots, Targets (single/multi), Special (charge, chain, phase), plus native tech type and race. Names, art and descriptions are fully custom per race; the tag line and stats explain the function. A weapon works on any ship and best on a matching tech system (e.g. a longer charge time on a system of another tech type). Costs come from the Mawjig cost table. Example: <b>Stinger</b> — Weapon, Missile, Normal, Biomechanical, Azurethea · Shots 1 · Damage 1 · 0.05 Mawjig per shot · about 6.79 to buy and install (about 5–6 jumps; <code>weapon-budget-table.md</code>) · charge 9 s on a biomechanical system, about 11 s on another tech type (the base is FTL's Leto, the matching 1-shot 1-damage missile; the penalty is a first guess of about 20%) · "A simple biomechanical warhead design." The art would not look like a missile.</div>
 <div class="pt"><b>F:</b> <span class="tag proposed">Proposed</span> Each weapon is a folder (11B) holding an XML data file with the card's fields and its art, so it is easy to mod. Likely extra tags when built: power bars, tier (low/mid/high), rarity, effect chance.</div>
@@ -279,6 +282,13 @@ Doing Fine, Struggling and Doomed are the owning race's state at this cluster, n
 
 <h2 id="events">9. Events</h2>
 <div class="pt"><b>A:</b> <span class="tag open">Open</span> New events will be needed; see 2B for how distance from the collapse shapes them.</div>
+<div class="pt"><b>B:</b> <span class="tag proposed">Proposed</span> Example event text, a squad stranded without enough Mawjig to jump (see 6B): &ldquo;Your squad has become stranded due to not enough Mawjig to jump: Checking the manual it says the &lsquo;Material to Energy, Space-Time JigaWatt Powered, Jump Drive&rsquo;, needs at least 1.21 Jigawatts to power a jump. Luckily the Power Cores on a ship can produce enough &lsquo;Materials Worth of Jigawatts&rsquo; to eventually power a jump, if we wait long enough.&rdquo;</div>
+<div class="pt"><b>C:</b> <span class="tag proposed">Proposed</span> Example lines showing the drive names in use (6D):
+<ul>
+  <li>Full name, in a trade: &ldquo;If you agree to this trade, then we the Senti-GPH will upgrade your Mawjig Powered Jigawatt Drive.&rdquo;</li>
+  <li>Name, in a fight: &ldquo;The pirates focus their weapons on you but luckily your crews were able to activate their Jigawatt Drives before their unified volley had a chance to strike.&rdquo;</li>
+  <li>Nickname, from a Lykario asking to join: &ldquo;The scrappy Lykario begs to be allowed to join your pack and be taken with you, and away from this doomed star cluster, claiming &lsquo;I can man your Jig Drive and together we can hunt for any supplies we need to outrun whatever is happening.&rsquo;&rdquo;</li>
+</ul></div>
 
 <h2 id="art">10. Art Direction</h2>
 <div class="pt"><b>A:</b> <span class="tag decided">Decided</span> Art is made as scalable vector graphics (SVG). Chosen over raster PNG after <a href="art-tests/01-ship-png-vs-svg/README.md">Art Test 01</a>: equal quality at normal size, sharp at any zoom, small text files, and named parts the game can recolour, hide or animate.</div>
@@ -347,7 +357,10 @@ Doing Fine, Struggling and Doomed are the owning race's state at this cluster, n
   <tr><td>2026-10-22</td><td>Weapons built from generator parts with custom names and art; weapon card and XML folder format proposed (8E, 8F).</td></tr>
   <tr><td>2026-10-23</td><td>What each cluster state changes is Decided (2R); the captaincy goes to the named Commander, Likely (4O); mercenaries first work like FTL's but cannot slow the collapse, Likely (7G).</td></tr>
   <tr><td>2026-10-23</td><td>A jump costs a fixed 1.21 Mawjig for the whole squad (6C).</td></tr>
+  <tr><td>2026-10-23</td><td>Wait gathering a little Mawjig is Likely (6B); Mawjig as the single fuel, ammunition and currency is Decided (8C).</td></tr>
+  <tr><td>2026-10-23</td><td>Jump drive names decided: Jigawatt Drive, nickname Jig Drive, with a long technical name and a full name (6D); example event text and lines added (9B, 9C).</td></tr>
   <tr><td>2026-10-23</td><td>Fight rewards are paid per enemy ship, from its wreckage; surrender and negotiation pay on their own terms (8I).</td></tr>
+  <tr><td>2026-10-23</td><td>LAN with direct IP connect is enough for now, with Steam joining possibly later, Proposed (4A).</td></tr>
 </table>
 
 </main>
