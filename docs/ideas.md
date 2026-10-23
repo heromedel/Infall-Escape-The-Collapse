@@ -115,6 +115,12 @@ enemies or reaching squad-mates.
     laser suit with 10 shots ≈ 10 × 0.02 = 0.21. Farther targets leave fewer shots; a higher dock level means more
     oxygen, so more shots and a pricier launch. Possibly paid up front per launch, like loading a magazine.
 
+### Stations as enemies (2026-10-23)
+
+**Open (2026-10-23):** stations that can fight like a ship, e.g. the doomed Senti relay station in
+`events-sample.md` that attacks when refused. It depends on whether stations are made at all. Without them, a Senti
+ship guarding the station does the fighting.
+
 ## Weapons
 
 ### Multi-room targeting lasers (2026-10-21)

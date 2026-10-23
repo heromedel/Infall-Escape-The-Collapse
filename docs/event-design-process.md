@@ -15,7 +15,8 @@ against `lore-facts.md`.
 | 8 | Decide how the voice should come across, and how any in-game quotes, such as someone speaking, should come across. The informative narrator is generally one voice, and a race speaking is a different one. | Race profiles; `lore-facts.md` (e.g. how the Senti speak) |
 | 9 | Write the message lines, questions, choices, outcomes and outcome lines. | The notes below |
 
-Creative steps follow the Creative 3-6 Rule (`CLAUDE.md`).
+Creative steps follow the Creative 3-6 Rule (`CLAUDE.md`). How an event is written down, with examples:
+`events-sample.md`.
 
 ## Placeholder tags
 
