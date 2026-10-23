@@ -154,9 +154,9 @@ clone.
    using a system and to disengage, and even longer with biomechanical systems. Slow movement, high melee damage,
    physically tough. Mecha ships have no reactor; if subsystems need power, the system has its own independent
    power. A single weapon system is hard for them to power, so their ships need multiple weapon systems or, more
-   likely, rely on EVB suits. Suffocation is their key weakness: take out their life support and one of them has
-   to disengage and move to repair it.
-   - **Breathing — Open:** whether Mecha breathe is undecided; assumed yes for now.
+   likely, rely on EVB suits.
+   - **Breathing — Likely (2026-10-23):** Mecha breathe. Suffocation is their key weakness: taking out their life
+     support is a legitimate tactic, and one of them has to disengage and move to repair it.
 10. **Ship tiers — Ai-Generated-Proposal (2026-10-22):**
     - Low tech: one EVB Dock with laser battlesuits, plus one or two self-powered weapon systems with a
       hull-damage laser (Hull Smasher-like). Thin shields.
