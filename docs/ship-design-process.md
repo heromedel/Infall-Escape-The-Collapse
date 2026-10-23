@@ -23,9 +23,15 @@ At the creative steps (5, 8, 9), come up with several ideas and pick the best. T
 3–6 times, improving or changing it, and finish with a check that the result makes sense against the data and as
 gameplay.
 
-**Proposed (2026-10-23):** a squad's size isn't fixed by its full ships. For band 1 especially, much weaker ships
-(smaller hulls, fewer systems, lighter weapons), not just weaker loadouts of bigger ships, let a squad of two or more
-fit the band's squad value budget (`mawjig-cost-table.md`). The Malphen in particular can field many small, weak
-ships early.
+**Proposed (2026-10-23):** a squad's size isn't fixed by its full ships. For band 1 especially, weaker ships or
+loadouts let a squad of two or more fit the band's squad value budget (`mawjig-cost-table.md`). The Malphen in
+particular can field many small, weak ships early.
+
+**Proposed (2026-10-23):** a design can have several loadouts on purpose:
+
+- **By band range**, overlaps allowed: e.g. a Terran pirate with one loadout for bands 1–3, another for 4–6 and a
+  stronger one for 6–8.
+- **Alternate loadouts** for the same ship and band: e.g. a Mecha ship with boarding suits or laser suits; pirates
+  with a crew teleporter or anti-crew (bio) lasers.
 
 Art is not part of this process.
