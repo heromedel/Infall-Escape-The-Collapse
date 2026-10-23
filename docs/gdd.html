@@ -145,7 +145,7 @@
 <div class="pt"><b>H:</b> <span class="tag likely">Likely</span> Stages are somewhat flexible bands of difficulty by distance from the core, hidden from the player.</div>
 <div class="pt"><b>I:</b> <span class="tag proposed">Proposed</span> Multiple victory paths, like Civilization's win conditions (see the ideas document).</div>
 <div class="pt"><b>J:</b> <span class="tag decided">Decided</span> Map terms: each node, and each jump, is a <b>star cluster</b>. Which of its stars are inhabited is abstracted; on the map a node is drawn as a group of dots rather than one. Several related clusters form a <b>region</b>, e.g. a civilization's territory. "System" is kept for ship systems only.</div>
-<div class="pt"><b>K:</b> <span class="tag decided">Decided</span> Each region has deep, inner and border clusters (deep &lt; inner &lt; border), with possible unclaimed or neutral clusters between regions.</div>
+<div class="pt"><b>K:</b> <span class="tag decided">Decided</span> Each region has deep/core, inner and border clusters (deep/core &lt; inner &lt; border), with possible unclaimed or neutral clusters between regions.</div>
 <div class="pt"><b>L:</b> <span class="tag likely">Likely</span> Clusters are not static. A cluster can change state during a run, e.g. Border, Refugee, Occupied, Abandoned, Swallowed. These are potential states, not a fixed sequence: which ones happen depends on the races involved, the situation, proximity to the collapse and other factors. More states can be added.</div>
 <div class="pt"><b>M:</b> <span class="tag likely">Likely</span> Procedural generation places region types and races in different parts of the galaxy each run.</div>
 <div class="pt"><b>N:</b> <span class="tag likely">Likely</span> A race's behaviour is the same every run; its strength comes from where it is placed. Near the core it fields small, lightly armed squads and reaches its doom stage quickly; far out it fields larger squads with more weapons and more advanced designs, and a player well ahead of the collapse can meet it at its peak.</div>
@@ -171,7 +171,7 @@
 </table>
 Border clusters (2K) are a region's front lines. When a front moves, the state and the rank change together: e.g. an inner cluster becomes a Border once the clusters beyond it fall.
 <br><span class="tag proposed">Proposed</span> A Border cluster can be "At War" with another Border cluster.
-<br>(Note) Core clusters, the deep clusters at the heart of a race's region (2K), may need states specific to them.</div>
+<br>(Note) A region's deep/core clusters (2K) may need states specific to them.</div>
 
 <h2 id="combat">3. Squad Combat</h2>
 <div class="pt"><b>A:</b> <span class="tag likely">Likely</span> Player squad on the bottom half of the screen, enemy squad on the top half.</div>
