@@ -133,8 +133,9 @@ Decided in GDD 7H (2026-10-23).
 - **Proposed (2026-10-23):** each race can have its own system look instead of computer monitors, as long as every
   system carries the standard system symbol, legible at ship view without distracting from the art. The form can
   differ per system. Tentauri (heromedel's sketch): small organic forms rising from a soft pad, with the symbol lit in
-  a bulb. First used on the Tentauri scout: a grasp for Weapons and Doors, a tendril for Piloting and Sensors, a
-  siphon for Shields, Engines, Life Support, Medbay and the Supershield Generator.
+  a bulb. First used on the Tentauri scout (`docs/art/tentauri/scout/`), one base per system, shaped by what it does:
+  a grasp for Sensors, a hood for Piloting, a carapace on a stand for Shields, a trigger grip for Weapons, pipes for
+  Engines, an iris for Doors, air sacs for Life Support, a bud for Medbay and a halo for the Supershield Generator.
 
 ### EVA Dock and EVA suits (2026-10-21)
 

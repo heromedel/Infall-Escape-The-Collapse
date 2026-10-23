@@ -7,11 +7,14 @@ game places them at a hull's mount; ship previews do the same with `compose.py`.
 |---|---|---|---|
 | Sporewing | Azurethea, biomechanical (stolen by Terran pirates) | [`sporewing/`](sporewing/) | Terran Pirate Hijacker and Cutpurse |
 | Gat 2.1 "Twinshot" | Terran, mechanical | [`twinshot/`](twinshot/) | Terran Pirate Hijacker |
+| Defense Laser | Tentauri, biomechanical | [`defense-laser/`](defense-laser/) | Tentauri scout (×2) |
 
 - **Sporewing (2026-10-23):** two folded wing plates close into a launcher housing that opens to fire, in
   iridescent Azurethea blues with small eye-spots. It is seated neatly in a Terran hardpoint base, the refit that
   lets it run on a Terran ship. Three styles were tried (`sporewing/sporewing-options.png`): a chitin pod with vanes, a
   segmented tube, and the folded wings (picked).
 - **Twinshot (2026-10-23):** a compact Terran turret block with two parallel laser barrels.
+- **Defense Laser (2026-10-23):** a siphon emitter, a tapered nacre tube with a glowing lens. Built by
+  `docs/art/tentauri/scout/tools/tentauri_weapons.py`.
 
-The builder is `docs/art/terran/pirate-hijacker/tools/weapons.py`.
+The Sporewing and Twinshot builder is `docs/art/terran/pirate-hijacker/tools/weapons.py`.
