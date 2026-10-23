@@ -364,7 +364,8 @@ there. Asked by heromedel through Infall: Production (handoff 2026-10-23 14:17).
    - Pass 1: two full ships, each with a dock and two pods. Too strong for bands 1–3 against a lone starting ship.
    - Pass 2: split the jobs, one loadout each, on one frame.
    - Pass 3: the Hull Laser's pod needs an integrated crew member, making the crew a target.
-   - Pass 4: hull 7 rather than 10; a 10-hull pair took the Outrider too long to kill.
+   - Pass 4: hull 7 rather than 10, as light ships. Simulated at hull 10, the fight runs about 86 s and leaves
+     1.82 instead of 2.69: workable, but heavier than a light pair should be.
    - Pass 5: the suit can't get through a shield layer alone (its shots come about 3 s apart and the layer comes back
      in 2 s), so its job is popping the layer for the Hull Laser.
    - Pass 6: checked against the Outrider in a simulation (see 9).
