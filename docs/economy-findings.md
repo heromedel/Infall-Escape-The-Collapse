@@ -249,3 +249,31 @@ Ship Designs sent 13 questions through heromedel. His answers are tagged from hi
       norm; otherwise band 1 income rises by up to 70%.
     - For heromedel, not settled: a wreck's reward could scale with the ship's size (hull 7 against a band standard of
       about 10 pays 0.7×), which makes light pairs pay like one ship. That would change 8I, so it is his call.
+
+## F6. Enemy squads stocked from a value budget (2026-10-23)
+
+- **Proposed (heromedel, 2026-10-23):** a wreck pays from the ship's value, with only a small band adjustment on
+  top, e.g. up to about ×1.3, so the value does the main work and late rewards don't balloon.
+- **Ai-Generated-Proposal:** each band has a squad value budget, worked backwards from the reward a fight should
+  pay: one band reward (cost table) per ship the player is expected to have (F4), ÷ (2.5% × band adjustment).
+  Adjustment here: ×1 in bands 1–3, ×1.15 in 4–6, ×1.3 in 7–8.
+
+| Band | Player ships | Fight pays | Player's costs | Left over | Squad value budget | Per player ship |
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+| 1 | 1 | 3.42 | 1.60 | 1.82 | 137 | 137 |
+| 2 | 1 | 4.77 | 1.60 | 3.17 | 191 | 191 |
+| 3 | 2 | 12.42 | 3.84 | 8.58 | 497 | 248 |
+| 4 | 2 | 15.14 | 6.30 | 8.84 | 527 | 263 |
+| 5 | 3 | 27.03 | 9.45 | 17.58 | 940 | 313 |
+| 6 | 3 | 31.26 | 10.41 | 20.85 | 1,087 | 362 |
+| 7 | 4 | 47.12 | 20.64 | 26.48 | 1,450 | 362 |
+| 8 | 4 | 52.84 | 20.64 | 32.20 | 1,626 | 406 |
+
+Costs (ammo and repairs) and "left over" use F4's assumptions; left over is what each fight adds for upgrades,
+about FTL's per ship (F4).
+
+- **Check:** band 1's budget (137) is almost exactly one Light Attack Frame (131.72), so the band 1 stand-in ship
+  and the budget agree. The Light Attack Pair (269.69) is two band 1 budgets, which is why it paid about 70% more
+  (F5, 13): as a squad it belongs in band 2–3, or as a rare, richer band 1 fight.
+- Enemy value per player ship rises about 3× over the run (137 to 406), so a band 8 enemy ship is worth about three
+  band 1 frames.
