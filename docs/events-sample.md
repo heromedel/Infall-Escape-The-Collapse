@@ -102,8 +102,10 @@ BOX: Mawjig +(low)   +1 crew (Terran)
 - Lore used: the Azurethea produce breathable air wherever they stand (Proposed). Struggling Terrans stay hopeful
   (Proposed). Refugee clusters have recruitable crew and events asking for help, fuel or escort (GDD 2R, Decided).
   Mawjig is fuel (GDD 8C, Decided), and a jump costs 1.21 (GDD 6C, Decided).
-- Needs: the captain says they "fled the collapse", so this event shouldn't appear before the collapse opening
-  ends (GDD 2P). Choice 2 assumes a nearby station; if a cluster may have none, choice 2 needs other wording.
+- **Likely (2026-10-23):** the event doesn't appear before the collapse opening ends (GDD 2P), since the captain
+  says they "fled the collapse". The exception is refugees from a war, who could appear earlier with their own
+  opening (e.g. in At War clusters).
+- Needs: choice 2 assumes a nearby station. If a cluster may have none, choice 2 needs other wording.
 - Outcome 5 is fixed, like most FTL blue choices. Choice 1 rolls between 1a and 1b.
 
 ## SENTI_ARCHIVE_REQUEST: "The Archive Asks"
@@ -193,5 +195,6 @@ THEN: the station attacks.
   (Proposed). They live around relay and broadcast stations (Proposed). "We, The Senti-" in negotiation, and "I"
   for a single Senti (Decided). Doomed Senti kill living people while still storing their information and biological
   data (Proposed). The player's scouts fly ahead of the last survivors of their home planet (GDD 1D, Decided).
-- Needs: whether a relay station can fight like a ship. If not, the doomed variant's enemy is a Senti ship guarding
-  the station. Whether giving away the records should matter later (the Senti Archive, the Tech victory) is open.
+- **Open (2026-10-23):** whether a relay station can fight like a ship (`ideas.md`, Stations as enemies). If not,
+  the doomed variant's enemy is a Senti ship guarding the station.
+- **Unlikely (2026-10-23):** giving away the records mattering later (the Senti Archive, the Tech victory).
