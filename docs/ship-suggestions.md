@@ -111,7 +111,11 @@ step, not to every line; points he agreed to are tagged.
    sensor level sets how far beacons are visible (GDD 2E). 3 crew, like the Kestrel.
 7. **Variation:** standard for the race (the Terran starting ship).
 8. **Layout and systems:** a shuttle-shaped cruiser in white and pale grey with blue trim. Hull 30, as every FTL
-   player ship. About as many rooms as the Kestrel (GDD 3D), with spare rooms reserved for systems bought later.
+   player ship. **Rooms — Likely (2026-10-23):** 10 bigger rooms rather than
+   the Kestrel's many small ones, from Arty's floor layout test 3: the bridge holds Piloting, Weapons and Shields;
+   one room holds Sensors and Doors; the engine room holds Engines and Life Support; Medbay and the AZC core room
+   have their own; 5 rooms are empty, for systems bought later. The ship's floor area is about the Kestrel's
+   (GDD 3D).
 
    **AZC level 2:** powers 4 systems at full. The ship has 5 systems that draw power (Shields, Engines, Life
    Support, Weapons, Medbay), so one must be off at any time, usually the Medbay or Life Support. This keeps FTL's
