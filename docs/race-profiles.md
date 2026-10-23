@@ -207,7 +207,18 @@ Octopus-like race (earlier working label "Octopods").
     - **Protecting a squad-mate — Proposed (2026-10-22):** at high tech, either a shield beam projected onto
       another ship or a Supershield missile that gives a squad-mate a Supershield layer (GDD 3N).
 
-## Senti-GPH (Sentient Generative Pre-trained Holograms) (draft, 2026-10-21)
+## Senti-GPH (Sentient Generative Pretrained Holograms) (draft, 2026-10-21)
+
+**Names — Decided (2026-10-23):**
+
+- **Technical name:** Sentient Generative Pretrained Holograms.
+- **Full name:** Senti-GPH. Not usually used by people actually speaking.
+- **Short name:** Senti, The Senti, or The Senti-.
+- A single Senti speaks in the first person and uses words like I and me, but in negotiations they have a habit of
+  saying "We, The Senti-". For example, a store's opening line: "We, The Senti-, welcome you to look around our
+  storage facilities if you would like to trade."
+- The dash in "The Senti-" is intentional and stays: it stands for the letters after the dash, partly so players
+  don't have GPH shoved in their faces constantly.
 
 1. **Tone and description — Proposed (2026-10-21):** holographic AI avatars, originally made by Terrans, who
    became their own people. They build, grow and multiply like other races; they archive information because

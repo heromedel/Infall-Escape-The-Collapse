@@ -118,7 +118,9 @@ source doc carries the tag heromedel's words give it.
 
 ## Senti-GPH
 
-- The Senti-GPH (Sentient Generative Pre-trained Holograms) are holographic AI avatars originally made by Terrans, who became their own people. (Race profiles, Senti-GPH 1; Proposed)
+- The Senti-GPH (Sentient Generative Pretrained Holograms) are holographic AI avatars originally made by Terrans, who became their own people. (Race profiles, Senti-GPH 1; Proposed)
+- The Senti-GPH's technical name is Sentient Generative Pretrained Holograms. Their full name, Senti-GPH, is not usually used by people actually speaking. They are called Senti, The Senti, or The Senti-. (Race profiles, Senti-GPH names; Decided)
+- A single Senti speaks in the first person and uses words like I and me, but in negotiations the Senti have a habit of saying "We, The Senti-", as in "We, The Senti-, welcome you to look around our storage facilities if you would like to trade." (Race profiles, Senti-GPH names; Decided)
 - The Senti-GPH build, grow and multiply like other races. (Race profiles, Senti-GPH 1; Proposed)
 - The Senti-GPH archive information because they are made of information themselves. (Race profiles, Senti-GPH 1; Proposed)
 - The Senti-GPH have no genetics. They preserve their knowledge and sentience in the Senti Archive. (heromedel, 2026-10-23; Decided)
