@@ -203,6 +203,9 @@ clone.
    - **Breathing — Likely (2026-10-23):** Mecha breathe. Suffocation is their key weakness: taking out their life
      support is a legitimate tactic, and one of them has to disengage and move to repair it.
    - **No overpowering — Decided (2026-10-23):** integration never powers a system above its level.
+   - **Mecha consoles — Proposed (2026-10-23):** every Mecha system works both ways. Each is a tall unit with a
+     computer panel that any crew member can use, plus arm and leg slots a mech plugs into at low, mid and high-mid
+     points, so none is out of reach. Integration is animated on every system.
    - **Cybernetic Servicing Core — Likely (2026-10-23):** Mecha ships have no strong power core. Their Cybernetic
      Servicing Core (earlier working names: Mech Repair Bay, Cybernetic Servicing Bay) gives the ship its minimal
      power. It is the Mecha's Medbay, and also works as a Medbay for other races. It is where Mecha upgrade their
