@@ -63,7 +63,7 @@ draft becomes **approved by heromedel**.
 
 - The Azurethea are a peaceful, butterfly-like race. (Race profiles, Azurethea 1; heromedel)
 - Azurethea ships are partly organic and shaped like moths or butterflies. (Race profiles, Azurethea 1; heromedel)
-- Azurethea ships are iridescent blue and royal blue, with wing-like patterns. (Race profiles, Azurethea 1; AI draft)
+- Azurethea ships are iridescent blue and royal blue, with wing-like patterns. (Race profiles, Azurethea 1; heromedel)
 - In good times the Azurethea are nearly pacifist explorers who readily accept or offer surrender. (Race profiles, Azurethea 2; heromedel)
 - The Azurethea are slow to share their technology or let others aboard their ships. (Race profiles, Azurethea 2; heromedel)
 - Struggling Azurethea become more willing to cooperate and trade. (Race profiles, Azurethea 3; heromedel)
@@ -115,7 +115,8 @@ draft becomes **approved by heromedel**.
 - The Senti-GPH build, grow and multiply like other races. (Race profiles, Senti-GPH 1; heromedel)
 - The Senti-GPH archive information because they are made of information themselves. (Race profiles, Senti-GPH 1; heromedel)
 - The Senti-GPH have no genetics. They preserve their knowledge and sentience in the Senti Archive. (heromedel, 2026-10-23)
-- Senti-GPH ships are Terran white with cyan or cyan-green holographic light lines. (Race profiles, Senti-GPH 1; AI draft)
+- Senti-GPH ships carry cyan or cyan-green holographic light lines. (Race profiles, Senti-GPH 1; heromedel)
+- The light lines run over a Terran white hull. (Race profiles, Senti-GPH 1; AI draft)
 - In good times the Senti-GPH are curious and logical, collecting and preserving knowledge from every culture they meet. (Race profiles, Senti-GPH 2; heromedel)
 - Struggling Senti-GPH put preserving data first, trading for records, archives and storage. (Race profiles, Senti-GPH 3; heromedel)
 - Doomed Senti-GPH have no qualms about killing living people, while still storing their information and biological data. (Race profiles, Senti-GPH 4; heromedel)
