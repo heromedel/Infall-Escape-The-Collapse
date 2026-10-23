@@ -41,7 +41,7 @@ source doc carries the tag heromedel's words give it.
 - The word Mawjig began as a Terran acronym: Materials Worth of Jigawatts. (GDD 8C; Decided)
 - Wreckage and other matter can be converted into Mawjig. (GDD 8C; Decided)
 - The Jigawatt Drive is the common jump drive, and it burns Mawjig. (GDD 6A; Proposed)
-- The jump drive's technical name is the Material to Energy, Space-Time JigaWatt Powered, Jump Drive. Its full name is the Mawjig Powered Jigawatt Drive, it is called the Jigawatt Drive, and its nickname is the Jig Drive. (GDD 6D; Decided)
+- The jump drive's technical name is the Material to Energy, Space-Time JigaWatt Powered, Jump Drive. Its full name is the Mawjig Powered Jigawatt Drive, it is called the Jigawatt Drive, and its nickname is the Jig Drive. Some people call it the MawJig Drive. (GDD 6D; Decided)
 
 ## Technology
 
@@ -106,8 +106,8 @@ source doc carries the tag heromedel's words give it.
 
 ### Unknown to most other races
 
-- The Mecha call themselves HalfMechs. They are not robots, but a small race of adults living inside semi-cybernetic mech suits. (Race profiles, Mecha names, what they are; Proposed)
-- HalfMechs are childlike in size and attitude: immature, adorable adult cyborgs, genetically modified or grown, and oddly adorable for their viciousness. (Race profiles, Mecha what they are; Proposed)
+- The Mecha call themselves HalfMechs. They are not robots, but a small race of childlike, genetically modified cyborgs who live inside semi-cybernetic mech suits. (Race profiles, Mecha names, what they are; Proposed)
+- HalfMechs are childlike in size and attitude, and oddly adorable for their viciousness. (Race profiles, Mecha what they are; Proposed)
 - The HalfMechs' origin is lost to time, but genetic evidence suggests they were Terran, bred to fit inside mech suits. Their creation, and possibly the power the suits give them, made them immature, violent and greedy, like cruel children. (Race profiles, Mecha origin; Proposed)
 - Outside their suits, HalfMechs are incredibly bashful if not violent, but their overconfidence keeps them from being truly shy. (Race profiles, Mecha out of their suits; Proposed)
 
