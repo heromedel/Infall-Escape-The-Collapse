@@ -88,13 +88,13 @@ Flags for review:
 ## SC-1 "Outrider": Terran starting scout (2026-10-22)
 
 **Name — Decided (2026-10-23):** Outrider, a scout that rides out ahead of a convoy, as this ship does for the
-colony ship. **Designation — Decided (2026-10-23):** SC-1 (scout cruiser, model 1), in the Gatos
+colony ship. **Designation — Decided (2026-10-23):** SC-1 (scout cruiser, model 1), in the GATOS
 style of designation plus name.
 
 Default tag: **Ai-Generated-Proposal (2026-10-22)**. heromedel liked the ship and called the test a success, which agrees to the next
 step, not to every line; points he agreed to are tagged.
 
-1. **Race:** Terrans (the Gatos).
+1. **Race:** Terrans (the GATOS).
 2. **Band:** 1 (low tier).
 3. **State:** doing fine.
 4. **Race info used:** clean, soft Federation-like ships; silhouette of classic spaceship shapes (shuttles,
@@ -106,7 +106,7 @@ step, not to every line; points he agreed to are tagged.
    as an enemy, a survey ship, a courier, the colony ship's pathfinder, the player's starting scout. The starting
    scout was picked: it is the ship every run begins with, so it sets the baseline other ships are balanced
    against (GDD 3G), and the race profile already gives a rule for it (easy to reroute).
-6. **Kinds of systems and crew:** **Proposed (2026-10-22):** fine as a well-equipped light battle scout of a doing-well Gatos,
+6. **Kinds of systems and crew:** **Proposed (2026-10-22):** fine as a well-equipped light battle scout of a doing-well GATOS,
    even if the 3-shot laser with good sensors is a bit powerful. An FTL Kestrel-level all-rounder with one scouting strength: Sensors 2, since
    sensor level sets how far beacons are visible (GDD 2E). 3 crew, like the Kestrel.
 7. **Variation:** standard for the race (the Terran starting ship).
@@ -153,7 +153,7 @@ step, not to every line; points he agreed to are tagged.
    - Pass 6: checked against band 1 enemies (FTL's scout templates: hull 7–10, 1 shield layer): see 9.
 9. **Weapons:** no Terran weapons exist yet. The Stinger fits the missile role but is Azurethea and biomechanical,
    so on a Terran (mechanical) system it would charge 20% slower; a Terran missile is designed with the same parts
-   instead. **Names — Likely (2026-10-22):** they follow the Gatos style (race profile 6).
+   instead. **Names — Likely (2026-10-22):** they follow the GATOS style (race profile 6).
 
    **Gat 3.1 "Triblast"** (3-shot laser): Laser, Damage, Mechanical, Terran · Shots 3 · Damage 1 · Power 2 · Breach 0% ·
    Conduit damage 10%.
@@ -215,7 +215,7 @@ Judgment calls for review:
 
 Default tag: **Ai-Generated-Proposal (2026-10-22)**; not reviewed yet.
 
-1. **Race:** Terrans (the Gatos).
+1. **Race:** Terrans (the GATOS).
 2. **Band:** 5 (mid tier).
 3. **State:** doomed. **Proposed (2026-10-22):** that doesn't make the ship poor or damaged: it is well armed. Doomed Terrans are aggressive
    and xenophobic, blame others and resort to nearly any crime: theft, hijacking, other races' technology, piracy.
@@ -317,7 +317,7 @@ Judgment calls for review:
 
 **Ai-Generated-Proposal (2026-10-23)**, except where tagged. Asked by heromedel through Infall: Production (handoff
 2026-10-23 20:52): one hull with a loadout per band range (**Proposed**, `ship-design-process.md`). The new bands
-1–3 loadout is nicknamed **"Cutpurse"**: a small-time thief, in the Gatos style of a nickname on the ship.
+1–3 loadout is nicknamed **"Cutpurse"**: a small-time thief, in the GATOS style of a nickname on the ship.
 
 | | Cutpurse (new) | Hijacker (existing, unchanged) |
 |---|---|---|
@@ -337,7 +337,7 @@ Judgment calls for review:
 | Crew | 3 Terrans | 5 Terrans |
 | Price | **130.46** | 267.61 |
 
-Same hull and silhouette: the classic Terran cruiser with rust, mismatched panels, darker paint (falling Gatos,
+Same hull and silhouette: the classic Terran cruiser with rust, mismatched panels, darker paint (falling GATOS,
 Decided) and the bolted-on Azurethea launcher.
 
 **Cutpurse price:** Shields 54.46 · Weapon Control level 1 4.84 · Crew Teleporter level 1 21.78 · AZC level 2 42.36 ·

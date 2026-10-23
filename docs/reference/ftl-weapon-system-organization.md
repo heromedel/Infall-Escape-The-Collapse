@@ -26,7 +26,7 @@ out.
 Systems every race is expected to have in some form: Shields, Engines, Oxygen (Life Support), Weapons, Piloting,
 Sensors, Doors, Medbay. General-purpose basic lasers and basic missiles also suit any race.
 
-## Terrans (Gatos)
+## Terrans (GATOS)
 
 Federation-like, balanced, clean tech; unlimited-power AZC with conduits.
 

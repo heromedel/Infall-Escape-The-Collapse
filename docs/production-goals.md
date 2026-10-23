@@ -10,7 +10,7 @@ Nothing here is a design decision; the design lives in `gdd.html` and the race p
 Points this plan stands on, by tag: Decided 1A, 1C, 1D, 1F, 1H, 2A, 2F, 2J, 2K, 2R, 3C, 3E, 3F, 4B–4N, 5D, 6C, 6D,
 7B, 8C, 8D, 10A; Likely 2C, 2G, 2H, 2L–2Q, 3A, 3D, 3H, 3K, 3L, 3M, 3O, 4A, 4O, 7C–7E, 7G, 8A, 8I; Proposed 2B, 2E, 2I,
 3B, 3G, 5A–5C, 6A, 6E, 8B, 8E, 8F, 8H, 11A, 11B, 12A; Ai-Generated-Proposal 1I, 7G (mercenaries), 8G. Heromedel's
-answers of 2026-10-23: LAN preparation is step 0 of any code; Goal A's enemies are the Gatos and the Mecha (or a
+answers of 2026-10-23: LAN preparation is step 0 of any code; Goal A's enemies are the GATOS and the Mecha (or a
 biomechanical race if system integration is avoided); the Tech victory is the first victory path, but until at
 least 3 races and their parts exist, reaching an outer rim cluster and a final battle is enough; all core races by
 alpha, probably; FTL is the measuring stick.
@@ -116,7 +116,7 @@ One playable race, a short run, every core loop present once.
 |---|---|---|
 | Network and players | Host and join flow designed before any other code (heromedel: step 0): Captain hosts, Commanders join by LAN direct IP (4A), assignment of ships and crew (4C, 4D), shared pool (4E), drop in and out (4F), Pause Control and Turn Mode settings (4H, 4I), event choice voting (4M), pause and vote indicators (4L) | Decided in the GDD; the host flow and what the network carries each tick are not written |
 | Player race | Terrans (7C): the Terran Starting Scout, AZC with conduits (7E), conduit setting | Scout designed; conduit rules and routing need a worked ruleset |
-| Enemy races | Gatos (doing fine patrols, doomed pirates) and the Mecha (border, EVB suits, system integration) | Mecha Light Attack Frame (1 hull, 2 loadouts) and the Light Attack Pair squad done and merged 2026-10-23 (`handoffs/done/2026-10-23-1417-ship-designs-mecha-light-attack-squad.md`); 1 more Mecha low hull still needed; Terran Pirate Hijacker exists (mid tier, band 5: needs a low-tier pirate) |
+| Enemy races | GATOS (doing fine patrols, doomed pirates) and the Mecha (border, EVB suits, system integration) | Mecha Light Attack Frame (1 hull, 2 loadouts) and the Light Attack Pair squad done and merged 2026-10-23 (`handoffs/done/2026-10-23-1417-ship-designs-mecha-light-attack-squad.md`); 1 more Mecha low hull still needed; Terran Pirate Hijacker exists (mid tier, band 5: needs a low-tier pirate) |
 | Bands | 1–3 (low tier); the run ends at the band 3 edge with a results screen | |
 | Map | Open cluster map (2C) with Terran and Mecha regions, neutral clusters between, deep/inner/border ranks (2K), no dead ends (2F), the 5-jump opening (2P), the collapse ring (2Q); states in play: Doing Fine, Doomed, Border | Generation rules (region shapes, how many clusters, link rules) are not written |
 | Ships | Terran: Outrider + 1 more hull (patrol or pirate) with bands 1–3 loadouts; Mecha: Light Attack Frame loadouts for bands 1–3, including one weak enough for a band 1 budget (F6: 137), + 1 more hull if needed = 3–4 hulls | 3 hulls (Outrider; Pirate Hijacker hull with the Cutpurse bands 1–3 loadout, done 2026-10-23, `handoffs/done/2026-10-23-2130-ship-designs-terran-pirate-low-loadout.md`; Light Attack Frame, whose pair is a band 2–3 squad, band 1 loadout still needed) |
@@ -134,7 +134,7 @@ One playable race, a short run, every core loop present once.
 | Area | Needed on top of A |
 |---|---|
 | Bands | 1–8, with mid and high tier ships for every race in play, enemy squads up to 6 ships, rewards and prices for all bands, grinding allowed (2O; concern 1) |
-| Races | 3: Gatos, Mecha, and one biomechanical race (Tentauri, whose scout exists, or Azurethea, whose Stinger exists), so the Tech victory's parts can later come from 3 races |
+| Races | 3: GATOS, Mecha, and one biomechanical race (Tentauri, whose scout exists, or Azurethea, whose Stinger exists), so the Tech victory's parts can later come from 3 races |
 | States | all seven in play: Doing Fine, Struggling, Doomed, Border, Refugee, Occupied, Abandoned; Swallowed as the map edge; Core and At War stay Open unless decided |
 | Map | full galaxy: random region placement (2M), race strength from placement (2N), 8 hidden bands (2H), the rim; ring expands one jump per jump |
 | Ships | 3–4 hulls per race × 3 = about 10, each with its band-range loadouts (about 30–36 loadouts) |
@@ -151,7 +151,7 @@ One playable race, a short run, every core loop present once.
 
 | Area | Needed on top of B |
 |---|---|
-| Races | all 7 core races: Gatos, Azurethea, Mecha, Tentauri, Senti-GPH, Lykario, Malphen; starting race unlocks (7C) for at least 2 more |
+| Races | all 7 core races: GATOS, Azurethea, Mecha, Tentauri, Senti-GPH, Lykario, Malphen; starting race unlocks (7C) for at least 2 more |
 | Ships | about 25 hulls, about 80 loadouts; squads about 105; relations between races in border and occupied squads (race profiles, Relations) |
 | Events | about 650 race events + 120 shared = FTL's size; blue options for every race's crew and tech (FTL has 219) |
 | Weapons | 56 race weapons + 8 neutral; every effect in the cost table used by at least one weapon |

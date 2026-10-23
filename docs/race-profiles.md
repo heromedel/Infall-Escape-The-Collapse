@@ -22,7 +22,7 @@ How races treat each other: see Relations between races at the end.
 10. **Ship designs across tiers:** basic to advanced, since a race can be placed anywhere from the core to the
     rim and its strength comes from its placement (GDD 2N).
 
-## Terrans: The Galactic Alliance of Terran Occupied Systems ("the Gatos") (draft, 2026-10-21)
+## Terrans: The Galactic Alliance of Terran Occupied Systems (G.A.T.O.S., "the GATOS") (draft, 2026-10-21)
 
 The starting race (GDD 7C). The name and its pun (*gatos*, "cats") are deliberate, to avoid a plain Federation
 clone.
@@ -32,9 +32,9 @@ clone.
    - **Silhouette — Proposed (2026-10-22):** classic spaceship shapes, from large shuttles to cruisers and rockets.
    - **Colours — Ai-Generated-Proposal (2026-10-22):** white and pale grey with blue trim; desperate ships add rust
      and mismatched panels from other races.
-   - **Darker colours and scarier emblems — Decided (2026-10-23):** as the Gatos fall from struggling toward doomed,
+   - **Darker colours and scarier emblems — Decided (2026-10-23):** as the GATOS fall from struggling toward doomed,
      they use darker or black colours and scarier emblems.
-   - **No standard emblem — Decided (2026-10-23):** there is no standard Gatos emblem, because they are an alliance,
+   - **No standard emblem — Decided (2026-10-23):** there is no standard GATOS emblem, because they are an alliance,
      not a federation.
 2. **Doing fine — Proposed (2026-10-21):** accepted by others, interested in trade and other cultures. Technology
    is clean, easy to use and humane.
@@ -65,7 +65,7 @@ clone.
      same equivalence `system-prices.md` already prices the AZC by; conduit damage then does nothing.
    - **Weapon names — Likely (2026-10-22):** an official designation plus a fun nickname, like real weapons
      (AK-47, "Ma Deuce"); e.g. Gat 3.1 "Triblast" (3 shots, 1 target), ".22" as a nickname for a light weapon.
-     In Gatos codes M means missile (Gat M1), so enhanced models can use another marker, such as Gat 3.1 Mod2,
+     In GATOS codes M means missile (Gat M1), so enhanced models can use another marker, such as Gat 3.1 Mod2,
      V2, Model S, or EGat 3.1 (energy efficient); these are examples, not a fixed list.
 7. **Near and inside their territory — Ai-Generated-Proposal (2026-10-22):** core worlds are busy trade hubs:
    stores are common and well stocked, patrols keep pirates down, and doing-fine Terran clusters are the likeliest

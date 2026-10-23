@@ -1,4 +1,4 @@
-"""Builds the Gatos light battle scout hull: four versions of one shuttle-cruiser concept.
+"""Builds the GATOS light battle scout hull: four versions of one shuttle-cruiser concept.
 
 Usage: python3 build.py OUT_DIR
 Writes, for each version: vN.svg (final), vN-mounts.svg (review copy showing weapon mount spots) and
@@ -14,7 +14,7 @@ from art_kit import Hull, rounded_path, symmetric, mirror_x, shade, INK
 
 W, H, CX = 460, 740, 230
 
-# Gatos palette: white and pale grey with blue trim (race profile, Terrans 1)
+# GATOS palette: white and pale grey with blue trim (race profile, Terrans 1)
 WHITE = "#eceff3"
 PALE = "#cdd3db"
 STEEL = "#8d96a3"
@@ -324,7 +324,7 @@ def build_ship(spec):
 
 # version 1: swept delta wings and three engines
 V1 = {
-    "title": "Gatos light battle scout, version 1",
+    "title": "GATOS light battle scout, version 1",
     "body_half": [(CX, 34), (204, 44), (182, 68), (166, 108), (152, 170), (142, 250), (136, 330), (134, 450),
                   (136, 560), (146, 612), (168, 636), (CX, 642)],
     "body_radii": [30, 16, 16, 14, 10, 8, 6, 6, 6, 10, 14, 8],
@@ -355,7 +355,7 @@ V1 = {
 
 # version 2: wider cruiser body, engines in pods at the wing roots, small forward canards
 V2 = {
-    "title": "Gatos light battle scout, version 2",
+    "title": "GATOS light battle scout, version 2",
     "body_half": [(CX, 40), (200, 50), (176, 80), (160, 130), (148, 200), (140, 300), (138, 420), (140, 540),
                   (150, 600), (172, 628), (CX, 634)],
     "body_radii": [34, 18, 18, 14, 10, 8, 6, 8, 12, 14, 8],
@@ -388,7 +388,7 @@ V2 = {
 
 # version 3: broad shuttle, a rounded wide body with short fins and a four-bell engine block
 V3 = {
-    "title": "Gatos light battle scout, version 3",
+    "title": "GATOS light battle scout, version 3",
     "body_half": [(CX, 50), (190, 58), (150, 90), (124, 150), (114, 240), (112, 400), (114, 540), (124, 596),
                   (150, 618), (CX, 622)],
     "body_radii": [40, 30, 30, 24, 10, 8, 14, 18, 14, 8],
@@ -416,7 +416,7 @@ V3 = {
 
 # version 4: rocket cruiser, a slim nose flaring to a wide stern with big swept fins and one main engine
 V4 = {
-    "title": "Gatos light battle scout, version 4",
+    "title": "GATOS light battle scout, version 4",
     "body_half": [(CX, 28), (212, 40), (196, 70), (184, 120), (174, 200), (164, 300), (152, 400), (140, 500),
                   (132, 580), (142, 622), (170, 640), (CX, 644)],
     "body_radii": [22, 14, 16, 14, 10, 8, 8, 8, 10, 14, 14, 8],
@@ -460,7 +460,7 @@ def pass_1(spec):
     """Engines out of hiding, longer swept wings with control surfaces, armour shoulders at the core,
     a dorsal centre strip and hatches on the spine."""
     s = copy.deepcopy(spec)
-    s["title"] = "Gatos light battle scout, version 1, pass 1"
+    s["title"] = "GATOS light battle scout, version 1, pass 1"
     s["wings"] = [{"id": "wing", "points": [(140, 286), (60, 480), (34, 560), (42, 600), (140, 600)],
                    "radii": [4, 12, 10, 8, 4], "trim": [(140, 286), (60, 480), (34, 560), (42, 562), (68, 486), (140, 306)],
                    "seams": [((116, 400), (60, 520)), ((128, 470), (54, 580)), ((60, 582), (124, 582))],
@@ -506,7 +506,7 @@ def pass_2(spec):
     """Stern tucked under the body, chunkier armour shoulders, a larger framed cockpit, wingtip trim and a
     pair of sensor masts."""
     s = copy.deepcopy(spec)
-    s["title"] = "Gatos light battle scout, version 1, pass 2"
+    s["title"] = "GATOS light battle scout, version 1, pass 2"
     stern = [(CX - 80, 580), (CX + 80, 580), (CX + 84, 636), (CX + 70, 654), (CX - 70, 654), (CX - 84, 636)]
     sdet = (trim_band("", "", [(CX - 84, 640), (CX + 84, 640), (CX + 80, 646), (CX - 80, 646)]) +
             rivets([(x, 630) for x in range(CX - 72, CX + 73, 12)], PALE))
@@ -544,7 +544,7 @@ def roundel(x, y, r):
 def pass_3(spec):
     """Trailing-edge flaps and a roundel on each wing, and aft portholes on the body."""
     s = copy.deepcopy(spec)
-    s["title"] = "Gatos light battle scout, version 1, pass 3"
+    s["title"] = "GATOS light battle scout, version 1, pass 3"
     wing = s["wings"][0]
     flap = [(44, 572), (138, 572), (138, 598), (44, 598)]
     wing["seams"] = [((116, 400), (60, 520)), ((128, 470), (54, 572)), ((90, 572), (90, 598)),
@@ -562,7 +562,7 @@ P3 = pass_3(P2)
 def pass_4(spec):
     """A rounded-fuselage light sweep, and bigger engine bells for a cruiser-sized stern."""
     s = copy.deepcopy(spec)
-    s["title"] = "Gatos light battle scout, version 1, pass 4"
+    s["title"] = "GATOS light battle scout, version 1, pass 4"
     s["rounded_body"] = True
     s["engines"] = [{"id": "engine-centre", "at": (CX, 648, 50, 68, 44)},
                     {"id": "engine-port", "at": (CX - 56, 642, 36, 50, 38), "mirror": True}]
@@ -580,7 +580,7 @@ P4 = pass_4(P3)
 def pass_5(spec):
     """A smooth rear edge, portholes moved inside the hull, and metal shading inside the engine bells."""
     s = copy.deepcopy(spec)
-    s["title"] = "Gatos light battle scout, version 1, pass 5"
+    s["title"] = "GATOS light battle scout, version 1, pass 5"
     s["body_half"] = [(CX, 34), (204, 44), (182, 68), (166, 108), (152, 170), (142, 250), (136, 330), (134, 450),
                       (136, 570), (148, 618), (186, 640), (CX, 642)]
     s["body_radii"] = [30, 16, 16, 14, 10, 8, 6, 6, 18, 24, 20, 8]

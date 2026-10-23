@@ -62,9 +62,9 @@ source doc carries the tag heromedel's words give it.
 - A weapon works on any ship, but works best on a system of its own tech type. (GDD 8E; Proposed)
 - Infection damages the system in its room and spreads to neighbouring rooms. Crew can clear it, fire burns it out, and it spreads faster into biomechanical systems. (GDD 8G; Ai-Generated-Proposal)
 
-## Terrans (the Gatos)
+## Terrans (the GATOS)
 
-- The Terrans' formal name is the Galactic Alliance of Terran Occupied Systems, known as the Gatos. (Race profiles, Terrans; Proposed)
+- The Terrans' formal name is the Galactic Alliance of Terran Occupied Systems, written G.A.T.O.S. and known as the GATOS. (Race profiles, Terrans; Proposed)
 - Terrans are believed to be the most common race in the galaxy. (Race profiles, Terrans 8; Proposed)
 - Terrans live in tight-knit core areas, with arms of colonies reaching out from them. (Race profiles, Terrans 8; Proposed)
 - In good times Terrans are accepted by others and are interested in trade and other cultures. (Race profiles, Terrans 2; Proposed)
@@ -75,12 +75,12 @@ source doc carries the tag heromedel's words give it.
 - Terran ships are powered by an Armoured ZeroPoint Core (AZC) through power conduits. (Race profiles, Terrans 6; Proposed)
 - Terran ships are clean and soft in good times. Desperate Terran ships look grim, built from borrowed or stolen technology. (Race profiles, Terrans 1; Proposed)
 - Terran ships are white and pale grey with blue trim. Desperate ones add rust and mismatched panels from other races. (Race profiles, Terrans 1; Ai-Generated-Proposal)
-- Terran weapons carry an official designation and a nickname, such as Gat 3.1 "Triblast". In Gatos codes, M means missile. (Race profiles, Terrans 6; Likely)
+- Terran weapons carry an official designation and a nickname, such as Gat 3.1 "Triblast". In GATOS codes, M means missile. (Race profiles, Terrans 6; Likely)
 - Terran core worlds are busy trade hubs with patrols that keep pirates down, while the colony arms are thinly patrolled. (Race profiles, Terrans 7; Ai-Generated-Proposal)
 - When the Terrans are doomed, their trade hubs become checkpoints with scans, tolls and shakedowns. (Race profiles, Terrans 7; Ai-Generated-Proposal)
 - Terrans are quick learners. (Race profiles, Terrans 9; GDD 7H; Decided)
-- As the Gatos fall from struggling toward doomed, their ships take on darker or black colours and scarier emblems. (Race profiles, Terrans 1; Decided)
-- The Gatos have no standard emblem, because they are an alliance, not a federation. (Race profiles, Terrans 1; Decided)
+- As the GATOS fall from struggling toward doomed, their ships take on darker or black colours and scarier emblems. (Race profiles, Terrans 1; Decided)
+- The GATOS have no standard emblem, because they are an alliance, not a federation. (Race profiles, Terrans 1; Decided)
 - Struggling Terrans are less tolerant of aggressive races and quicker to fight. (Race profiles, Terrans 5; Proposed)
 
 ## Azurethea

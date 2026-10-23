@@ -10,7 +10,7 @@ ship (GDD 1D) to escape.
 
 | Path | Idea |
 |---|---|
-| Tech | Requires multiple best-possible systems from multiple races to shield, reinforce, power and then drive the ship so it can make the jump. Victory as long as one ship makes the jump carrying at least one male and one female crew member of your core race, or some kind of Mass Genetic Storage bank. This is what sets it apart from Collection. Components, one from each core race: Gatos power core, Azurethea engine (most agile), Mecha ship reinforcements, Tentauri shield, Senti-GPH information archive, Lykario autopilot, Malphen clone bay. Requirement idea: one from each pair: power core or clone bay (without the power, you store your genetic data in the clone bay for the periods when the ship loses power); engine or autopilot; shield or reinforcements; archive or genetic diversity (maybe 3 males and 3 females of your core race). Each component must be that race's own version (e.g. the clone bay must be a Malphen clone bay; the power core must be a Terran AZC); any single one of that version counts. Near-Terran races, such as the Senti-GPH, may have slightly worse cores. |
+| Tech | Requires multiple best-possible systems from multiple races to shield, reinforce, power and then drive the ship so it can make the jump. Victory as long as one ship makes the jump carrying at least one male and one female crew member of your core race, or some kind of Mass Genetic Storage bank. This is what sets it apart from Collection. Components, one from each core race: GATOS power core, Azurethea engine (most agile), Mecha ship reinforcements, Tentauri shield, Senti-GPH information archive, Lykario autopilot, Malphen clone bay. Requirement idea: one from each pair: power core or clone bay (without the power, you store your genetic data in the clone bay for the periods when the ship loses power); engine or autopilot; shield or reinforcements; archive or genetic diversity (maybe 3 males and 3 females of your core race). Each component must be that race's own version (e.g. the clone bay must be a Malphen clone bay; the power core must be a Terran AZC); any single one of that version counts. Near-Terran races, such as the Senti-GPH, may have slightly worse cores. |
 | Alliance | Get enough races to cooperate to build a colony ark that multiple colony ships can migrate their people onto, for the multi-generational voyage to another galaxy through hyperspace. |
 | Exploration | Assemble the mysterious pieces of an ancient artifact known as the Orb of Chullack, which opens a giant space gate sending the ship to another dimension where the collapse never happened. |
 | Collection | Amass enough wealth and upgrades to prepare the colony ship to slingshot around the collapse, which distorts space and time and flings it to another galaxy. |
@@ -36,7 +36,7 @@ distance, so the way back is short, but every jump does damage (attrition).
 
 ### Default final enemy (2026-10-21)
 
-The stage 7 rival who wants your escape route could by default be a band of doomed, criminal Terrans (Gatos).
+The stage 7 rival who wants your escape route could by default be a band of doomed, criminal Terrans (GATOS).
 
 ## Resources
 
@@ -92,11 +92,11 @@ Decided in GDD 7H (2026-10-23).
 **Unlikely (2026-10-23):** a setting for how the Mecha (HalfMechs) are described outside their suits:
 `HalfMechs: Enhanced Underdeveloped but Attractive Adult Bodies > Disgusting little Snot Nosed Twerps`.
 
-### Gatos colours and emblems by region and role (2026-10-23)
+### GATOS colours and emblems by region and role (2026-10-23)
 
-- **Proposed (2026-10-23):** Gatos regions have slightly different colour schemes and emblems. This fits there
-  being no standard Gatos emblem (race profiles, Terrans 1).
-- **Proposed (2026-10-23):** the Outrider's blue-and-white chevron roundel is used by some doing-well Gatos
+- **Proposed (2026-10-23):** GATOS regions have slightly different colour schemes and emblems. This fits there
+  being no standard GATOS emblem (race profiles, Terrans 1).
+- **Proposed (2026-10-23):** the Outrider's blue-and-white chevron roundel is used by some doing-well GATOS
   vessels: perhaps light vessels, scouts, ships not at war, or forward vessels.
 
 ### Power cores and Wait (2026-10-23)
