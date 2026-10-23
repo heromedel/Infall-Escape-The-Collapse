@@ -138,6 +138,6 @@ An estimate, not a simulation: there are no Infall ships yet, so FTL's numbers s
 4. **Not counted:** the price of gaining a ship (free from events, or bought?) and bringing it up to the squad's
    level. Each bought ship would cost on top of the upgrade money above.
 
-**Suggestion (Ai-Generated-Proposal):** fight rewards are paid per enemy ship destroyed or crewless, using the band
+**Likely (2026-10-23):** fight rewards are paid per enemy ship destroyed or left without crew, using the band
 table. The size of enemy squads compared with the player's then becomes the economy's main dial: smaller enemy
 squads mean a poorer run.

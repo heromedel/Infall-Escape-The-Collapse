@@ -88,11 +88,14 @@ systems, crew and augments carry over from FTL's prices at the same 0.242 conver
   ship leaves more matter to convert into Mawjig.
 - **Likely (2026-10-23):** Band 1 starts near FTL, but later bands may need rewards to rise faster than FTL's to pay
   for a bigger squad's costs, unless the run allows, or ends up with, more time for grinding.
+- **Likely (2026-10-23):** Rewards are paid per enemy ship destroyed or left without crew, not once per fight. The
+  size of enemy squads compared with the player's is then the economy's main dial: smaller enemy squads mean a
+  poorer run (`docs/economy-findings.md`, F4).
 
 These are averages. Each fight pays a varying amount around them, as in FTL, where a reward level's range runs
 about a quarter either side of its middle and the level itself varies (Low, Medium, High).
 
-| Band | Ship destroyed | Crew killed | Hull points a destroyed-ship reward repairs |
+| Band | Per ship destroyed | Per ship left without crew | Hull points a destroyed-ship reward repairs |
 |:-:|:-:|:-:|:-:|
 | 1 | 3.42 | 4.36 | about 7 |
 | 2 | 4.77 | 6.09 | about 10 |
