@@ -22,6 +22,7 @@ each with its SVG, PNG exports, review sheets, build tools and a notes README.
 | 2026-10-23 | The Gatos are human; the cat pun is only in their name. No cat motifs on their ships. |
 | 2026-10-23 | Stolen or foreign weapons look properly fitted on a real hardpoint, refitted into the hull, not clamped on. |
 | 2026-10-23 | Weapons are separate art, but ship previews and squad views show them mounted. Loadouts of one hull must look visibly different. |
+| 2026-10-23 | Conduit check, run before sending any conduit ship: every installed system's room is on the network, every weapon hardpoint has a run, each traces back to the AZC, and every single point of failure is listed in the piece's README (only intended weak points, such as a single spur, may remain). The floor plan tools fail the build otherwise. |
 | 2026-10-23 | No rocket-like Terran designs for a while: no pointed nose cone, tail fins and engine-bell silhouette. Terran ships look built for deep space, not for launching from a planet (race profiles, Terrans 1, Likely). |
 
 ## Pieces
