@@ -29,6 +29,8 @@ A design-stage project: we are writing a game design document, not building the 
   that depend on things not yet defined.
 - When describing races or other designed content, state only what the docs say. Clearly label anything
   extrapolated as a suggestion; never present it as part of the design.
+- "Minimal" means unnoticeable, default or trivial. E.g. a ship's minimal power is not enough to power a
+  system.
 
 ## The Creative 3-6 Rule
 
