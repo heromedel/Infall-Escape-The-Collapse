@@ -113,13 +113,13 @@ One playable race, a short run, every core loop present once.
 |---|---|---|
 | Network and players | Host and join flow designed before any other code (heromedel: step 0): Captain hosts, Commanders join by LAN direct IP (4A), assignment of ships and crew (4C, 4D), shared pool (4E), drop in and out (4F), Pause Control and Turn Mode settings (4H, 4I), event choice voting (4M), pause and vote indicators (4L) | Decided in the GDD; the host flow and what the network carries each tick are not written |
 | Player race | Terrans (7C): the Terran Starting Scout, AZC with conduits (7E), conduit setting | Scout designed; conduit rules and routing need a worked ruleset |
-| Enemy races | Gatos (doing fine patrols, doomed pirates) and the Mecha (border, EVB suits, system integration) | Mecha have no designed ship or weapon; Terran Pirate Hijacker exists (mid tier, band 5: needs a low-tier pirate) |
+| Enemy races | Gatos (doing fine patrols, doomed pirates) and the Mecha (border, EVB suits, system integration) | Mecha Light Attack Frame (1 hull, 2 loadouts) and the Light Attack Pair squad done and merged 2026-10-23 (`handoffs/done/2026-10-23-1417-ship-designs-mecha-light-attack-squad.md`); 1 more Mecha low hull still needed; Terran Pirate Hijacker exists (mid tier, band 5: needs a low-tier pirate) |
 | Bands | 1–3 (low tier); the run ends at the band 3 edge with a results screen | |
 | Map | Open cluster map (2C) with Terran and Mecha regions, neutral clusters between, deep/inner/border ranks (2K), no dead ends (2F), the 5-jump opening (2P), the collapse ring (2Q); states in play: Doing Fine, Doomed, Border | Generation rules (region shapes, how many clusters, link rules) are not written |
-| Ships | Terran: starting scout + 1 more low hull (patrol); Mecha: 2 low hulls = 4 hulls | 1 of 4 |
-| Squads | Terran doing fine 2, Terran doomed 2, Mecha border 2, Mecha doing fine 1, mixed border 1 = 8 templates, sizes 1–3 | 0 of 8 |
+| Ships | Terran: starting scout + 1 more low hull (patrol); Mecha: 2 low hulls = 4 hulls | 2 of 4 (Outrider, Mecha Light Attack Frame) |
+| Squads | Terran doing fine 2, Terran doomed 2, Mecha border 2, Mecha doing fine 1, mixed border 1 = 8 templates, sizes 1–3 | 1 of 8 (Light Attack Pair); squad format: heromedel's `rough-example-squad-layout.md` (Proposed), conduct lines optional |
 | Events | shared: collapse opening 5, nothing 1 (3 texts), store 1 (3 texts), hazards 3 of 6 (nebula, asteroids, sun) with 6 events, distress 6, items 6, neutral 8; Terran doing fine 15, Terran doomed 8; Mecha doing fine 10, border 5 = about 70 events | 0; the 9B stranded text and 9C lines exist as samples |
-| Weapons | Terran 4 (2 exist), Mecha 3, stolen or found 2 = 9 | 3 of 9 (Gat 3.1, Gat M1, Gat 2.1; the Sporewing is Azurethea) |
+| Weapons | Terran 4 (2 exist), Mecha 3, stolen or found 2 = 9 | 5 of 9 (Gat 3.1, Gat M1, Gat 2.1, DS-ST Hull Laser, laser battlesuit; the Sporewing is Azurethea) |
 | Systems | FTL's core set renamed as decided (Life Support 8B), conduits and AZC, EVB Dock with 1 suit type, Supershield only if the Tentauri replace the Mecha | Prices exist for all; behaviour of EVB and conduits needs a ruleset |
 | Crew | Terran, Mecha traits (integration timing, slow, tough); Terran name list | Traits proposed in profiles; no name lists |
 | Economy | Mawjig display, jump 1.21, wait 0.21, rewards bands 1–3, repair prices, store prices | Tables exist |
@@ -177,7 +177,7 @@ Each is Open or Proposed in the docs. Any session can fill one in as an Ai-Gener
 
 1. **Content model for cluster states** (section 2): extra lists layered on the race's base, or something else.
 2. **Enemy ship scaling by band**: FTL scales one template by sector (hull, system caps, loadout from a weapon list). Infall assumed to do the same within a tier, with 2 hulls per tier per race.
-3. **Squads as data**: a squad template = ships, sizes by band, formation, conduct (surrender, escape, hail), reward rule. No doc defines this yet; it is the unit Ship Designs would deliver.
+3. **Squads as data**: heromedel (2026-10-23, Proposed): a squad is a named list of ship designs with counts per tier (`rough-example-squad-layout.md`); conduct lines (surrender, escape, hail, pay) are an optional extra, first drafted in the Light Attack Pair.
 4. **Map generation rules**: clusters per band (about 10, 2O), clusters per region, region shapes per race (profiles point 8), link density, where neutral clusters go, how the 5-jump opening is laid out.
 5. **Store stock by state**: 2R gives the direction (short stock, barren, either side when occupied); the weights and slot counts are not set. FTL: 2–4 sections of 3 items, systems forced in some cases.
 6. **Goal B's end**: what an outer rim cluster is on the map, and what the final battle is (the doomed Terran band is an idea, not a decision).
