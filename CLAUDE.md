@@ -6,6 +6,7 @@ A design-stage project: we are writing a game design document, not building the 
   branch rules), elegant code principles, and the designer's game design philosophy.
 - `docs/gdd.html` is the game design document. Points are lettered per section (e.g. 2A). Points in the design
   docs are tagged as in `docs/tag-styles.md`; follow it when adding or editing points. Undiscussed ideas go in `docs/ideas.md`.
+- Concerns to save for later, if heromedel agrees, go in `docs/concerns.md`.
 - A shared, co-editable copy of the GDD exists at https://claude.ai/artifact/DNRJEFZkzS4zBL1nPHoLmX. Don't keep
   it in sync automatically; when the user asks to see the GDD, ask whether they want the git version or the
   editable one, and update the editable one only then.

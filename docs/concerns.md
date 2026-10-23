@@ -1,6 +1,6 @@
 # Infall: Concerns
 
-Design concerns raised by heromedel that are not yet resolved, each with the ideas offered for it. A concern is
+Design concerns saved for later with heromedel's agreement, each with the ideas offered for it. A concern is
 closed by a decision in `gdd.html`, then removed or marked resolved here.
 
 ## 1. Grinding when the collapse can't be slowed (2026-10-23)
