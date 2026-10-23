@@ -8,7 +8,8 @@ Ai-Generated-Proposal until heromedel reviews it; decisions he gives are recorde
 ## Decisions heard
 
 - **Decided (2026-10-23):** A jump costs 1.21 Mawjig for the whole squad, not per ship. Charging per ship would only
-  make big squads more expensive, and FTL's balance is built for one ship.
+  make big squads more expensive, and FTL's balance is built for one ship. 1.21 is fixed, not open to tuning: it
+  comes from the 1.21 jigawatts.
 - **Proposed (2026-10-23):** The economy's target is FTL's buying power per sector, with Infall's differences
   (squad growth, the shared pool) set against it. The long-term aim: a squad playing smart can, through fights and
   events, survive and upgrade or gain ships enough to have a chance of winning, and that chance is something to tune.
@@ -60,6 +61,9 @@ two-thirds of FTL's. Repair prices
 no-trailing-zero rule. Killing the crew pays more than destroying the ship, as in FTL; a ship left intact has more
 matter to convert into Mawjig, which fits the wreckage fiction (GDD 8C).
 
+**heromedel (2026-10-23), Proposed:** following FTL more closely is smarter for now. Eventually the game may need
+more chances for rewards, or more reward in general.
+
 ## F2. A jump takes a larger share of a reward than FTL's fuel
 
 A jump is 1.21 Mawjig, about 5 scrap. FTL's fuel costs about 3 scrap in a store (approximate, `ftl-baseline.md`).
@@ -69,6 +73,10 @@ If F1 is taken, the share falls each band (about 9% by band 8), as it does in FT
 
 No change suggested yet: tighter travel may be wanted, since the collapse is chasing the squad. Worth checking in
 the simulation once fights per band are known.
+
+**heromedel (2026-10-23), Proposed:** the fix is the one in F1: rewards need to be higher eventually. Losing FTL's
+fuel, missile and drone-part rewards did lose some reward flavour, but Infall may offer whole ships and systems more
+often, and a lot more crew, eventually.
 
 ## F3. Missiles are about 29× cheaper to fire than in FTL
 
@@ -80,5 +88,5 @@ disappears: a shield-ignoring missile costs barely more to fire than a laser, an
 FTL's ammo discount (`weapon-budget-table.md`), so missile weapons are dearer to buy but nearly free to use. The
 same is true of drones: an FTL drone part is about 8 scrap per deployment.
 
-**Open question for heromedel:** should the cost of firing be felt in a fight (a choice the player makes), or stay
-small background upkeep? The per-shot table, missile weapon prices and drone per-use costs all depend on the answer.
+**heromedel (2026-10-23):** fine for now. Squads fire a lot more: 6 ships with 2–4 weapons each adds up. Whether
+shot costs are felt is not a question for now; recheck once squad-sized fights can be simulated.
