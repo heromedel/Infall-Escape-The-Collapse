@@ -129,19 +129,22 @@ step, not to every line; points he agreed to are tagged.
    | Weapons | 3 | yes |
    | Medbay | 1 | yes |
 
-   **Conduits: one ring.** The AZC room sits in the middle of the ship, armoured, with two conduit exits. One
-   conduit loop runs from it through every system room and back: AZC → Shields → Weapons → Cockpit (Piloting) →
-   Sensors → Doors → Medbay → Life Support → Engines → AZC. Every system has two paths to the core, so a single cut
-   conduit never cuts a system off; the player only has to reroute when two cuts land on both sides of a system.
-   That is the "easy to reroute" starting ship. Higher-tier Terran ships can use branching conduits, where one cut
-   matters more.
+   **Conduits: a wheel — Ai-Generated-Proposal (2026-10-23).** The AZC room sits in the middle of the ship,
+   armoured. A rim loop runs through every system room, so every system has two paths to power. Four spokes run
+   from the AZC (forward, port, starboard, aft) and join the rim at spread-out points. No single cut unpowers
+   anything; two cuts only cut off the systems between them; losing everything takes four cuts. That is the "easy
+   to reroute" starting ship, a ring around the core at full ship size (heromedel's wording). Higher-tier Terran
+   ships can use a plain ring, a figure-eight or branching conduits, where cuts matter more.
+   - Earlier version: one loop leaving the AZC by only two exits. Two cuts at those exits killed every system;
+     heromedel spotted it in Arty's floor layout test 2.
 
    Passes made:
    - Pass 1: a Kestrel copy at AZC level 3 (6 systems). Too strong: everything runs at once, so no power choices.
    - Pass 2: AZC level 2, restoring FTL's power tension; one system off at a time.
    - Pass 3: gave the scout Sensors 2 for longer map range (GDD 2E), paid for with a weaker missile than the
      Kestrel's (1 damage instead of 2).
-   - Pass 4: conduit ring so a single cut never isolates a system; checked every system room has two paths.
+   - Pass 4: conduit ring so a single cut never isolates a system; checked every system room has two paths
+     (later found to miss the core's two exits; replaced by the wheel).
    - Pass 5: weapons follow the Terran breach/conduit rule (below).
    - Pass 6: checked against band 1 enemies (FTL's scout templates: hull 7–10, 1 shield layer): see 9.
 9. **Weapons:** no Terran weapons exist yet. The Stinger fits the missile role but is Azurethea and biomechanical,
@@ -201,7 +204,7 @@ Judgment calls for review:
 - Picking the player's starting ship as this scout's function.
 - AZC level 2, and Piloting, Sensors and Doors taking no core capacity.
 - Sensors 2 as the scout's strength, traded for a 1-damage missile.
-- The ring conduit layout as what "easy to reroute" means.
+- The wheel conduit layout as what "easy to reroute" means.
 - Conduit damage 10% on the laser (any chance is fine as long as it is priced).
 
 ## Terran Pirate Hijacker (2026-10-22)
