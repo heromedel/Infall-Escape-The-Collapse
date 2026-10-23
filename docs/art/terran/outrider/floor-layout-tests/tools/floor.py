@@ -92,18 +92,18 @@ def glyph(kind, x, y, colour):
                     f'<path d="M{x - s},{y} H{x + s} M{x},{y - s} V{y + s}" stroke="{colour}" stroke-width="1.6"/>'),
         "shields": f'<path d="M{x - s},{y + s * .3} Q{x},{y - s * 1.3} {x + s},{y + s * .3}" fill="none" stroke="{colour}" stroke-width="2.2"/>'
                    f'<path d="M{x - s * .55},{y + s * .7} Q{x},{y - s * .4} {x + s * .55},{y + s * .7}" fill="none" stroke="{colour}" stroke-width="1.8"/>',
-        "sensors": (f'<path d="M{x - s},{y - 3} Q{x - 1},{y + 6} {x + 4},{y - 7} Z" fill="{colour}"/>'   # a dish
-                    f'<path d="M{x - 1},{y + 1} L{x - 2},{y + s} M{x - 5},{y + s} h6" stroke="{colour}" stroke-width="1.8"/>'
-                    f'<path d="M{x + 3},{y - 2} q3,0 3,-3 M{x + 3},{y + 2} q7,0 7,-7" fill="none" stroke="{colour}" '
-                    f'stroke-width="1.4"/>'),
-        "doors": (f'<rect x="{x - s * .7}" y="{y - s}" width="{s * 1.4}" height="{s * 2}" rx="1" fill="none" stroke="{colour}" stroke-width="1.8"/>'
-                  f'<path d="M{x},{y - s} V{y + s}" stroke="{colour}" stroke-width="1.4"/>'),
+        "sensors": (f'<circle cx="{x}" cy="{y}" r="{s * .9}" fill="none" stroke="{colour}" stroke-width="1.6"/>'   # a radar scope
+                    f'<path d="M{x},{y} L{x},{y - s * .9} A{s * .9},{s * .9} 0 0 1 {x + s * .78},{y - s * .45} Z" fill="{colour}"/>'
+                    f'<circle cx="{x - 2.4}" cy="{y + 2.2}" r="1.3" fill="{colour}"/>'),
+        "doors": "".join(f'<path d="M{x + dx},{y - s} h5.6 v{s * 2} h-5.6 Z M{x + dx + g},{y - 1.5} h1.4 v3 h-1.4 Z" '   # two door slabs
+                         f'fill="{colour}" fill-rule="evenodd"/>' for dx, g in ((-6.4, 3.4), (.8, .8))),
         "medbay": f'<path d="M{x - 2.5},{y - s} h5 v{s - 2.5} h{s - 2.5} v5 h-{s - 2.5} v{s - 2.5} h-5 v-{s - 2.5} h-{s - 2.5} v-5 h{s - 2.5} Z" fill="{colour}"/>',
         "life": (f'<circle cx="{x}" cy="{y}" r="{s * .9}" fill="none" stroke="{colour}" stroke-width="1.6"/>'
                  + "".join(f'<path d="M{x},{y} q{dx * 4},{dy * 4} {dx * 6},{dy * 1}" fill="none" stroke="{colour}" stroke-width="2"/>'
                            for dx, dy in ((1, -1), (-1, 1), (1, 1), (-1, -1)))),
-        "engines": (f'<path d="M{x - s * .7},{y - s} h{s * 1.4} l{s * .5},{s * 1.2} h-{s * 2.4} Z" fill="{colour}"/>'
-                    f'<path d="M{x - s * .4},{y + s * .5} L{x},{y + s * 1.1} L{x + s * .4},{y + s * .5}" fill="none" stroke="{colour}" stroke-width="1.6"/>'),
+        "engines": "".join(f'<rect x="{x - 6}" y="{y + y0}" width="5" height="{y1 - y0}" fill="{colour}"/>'   # a side-view jet
+                           for y0, y1 in ((-5.5, -3.45), (-2.55, -1.45), (-.55, .55), (1.45, 2.55), (3.45, 5.5)))
+                   + f'<path d="M{x - 1},{y - 4.5} L{x + 5.5},{y - 2.2} V{y + 2.2} L{x - 1},{y + 4.5} Z" fill="{colour}"/>',
     }
     return g[kind]
 
