@@ -263,7 +263,7 @@ Ship Designs sent 13 questions through heromedel. His answers are tagged from hi
   pay: one band reward (cost table) per ship the player is expected to have (F4), ÷ (2.5% × band adjustment).
 - **Band adjustment — Proposed (heromedel, 2026-10-23):** smooth, ×1.(band − 1): ×1.0 in band 1 up to ×1.7 in band 8.
   It multiplies the reward only; a ship's value never changes. Band 1 stays as calibrated (×1.0), and a Light Attack
-  Frame met in band 8 still pays 5.60, about 6 hull points of repair: worth fighting, not worth farming.
+  Frame met in band 8 still pays 5.61, about 6 hull points of repair: worth fighting, not worth farming.
 
 | Band | Player ships | Fight pays | Player's costs | Left over | Squad value budget | Per player ship |
 |:-:|:-:|:-:|:-:|:-:|:-:|:-:|

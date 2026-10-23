@@ -80,34 +80,54 @@ systems, crew and augments carry over from FTL's prices at the same 0.242 conver
 
 ## Fight rewards
 
-- **Proposed (2026-10-23):** Rewards follow FTL's per-sector curve, one step per band, starting from the 3.42 of
-  GDD 8C. FTL's scrap per reward level and sector (Normal difficulty, from Hexagon's disassembly of the game, tabled
-  at [MikeHopley/ftl-scrap](https://github.com/MikeHopley/ftl-scrap)) is weighted by how often FTL's fights pay
-  each level, counted from vanilla `ftl.dat`. Details in `docs/economy-findings.md` (F1).
+- **Proposed (2026-10-23):** A wreck pays **2.5% of the ship's value × a band adjustment** (GDD 8I), plus any
+  event or story reward. The adjustment is 1.(band − 1): ×1.0 in band 1 up to ×1.7 in band 8. A ship's value never
+  changes; the adjustment multiplies only the reward, so a weak ship met late still covers late repair prices
+  without late rewards ballooning.
 - **Decided (2026-10-23):** Killing the crew pays more than destroying the ship, about 30% more, as in FTL. An intact
   ship leaves more matter to convert into Mawjig.
+- **Likely (2026-10-23):** Rewards are paid per enemy ship destroyed or left without crew, not once per fight (GDD 8I).
+- **Proposed (2026-10-23):** Salvaging your own lost ship, only when the encounter allows: 2.5% of its value, no band
+  adjustment, since it isn't a reward (GDD 1I).
 - **Likely (2026-10-23):** Band 1 starts near FTL, but later bands may need rewards to rise faster than FTL's to pay
   for a bigger squad's costs, unless the run allows, or ends up with, more time for grinding.
-- **Likely (2026-10-23):** Rewards are paid per enemy ship destroyed or left without crew, not once per fight. The
-  size of enemy squads compared with the player's is then the economy's main dial: smaller enemy squads mean a
-  poorer run (GDD 8I; `docs/economy-findings.md`, F4).
 
-These are averages. Each fight pays a varying amount around them, as in FTL, where a reward level's range runs
-about a quarter either side of its middle and the level itself varies (Low, Medium, High).
-
-| Band | Per ship destroyed | Per ship left without crew | Hull points a destroyed-ship reward repairs |
+| Band | Adjustment | Light Attack Frame (131.72) pays | Same, crew killed |
 |:-:|:-:|:-:|:-:|
-| 1 | 3.42 | 4.36 | about 7 |
-| 2 | 4.77 | 6.09 | about 10 |
-| 3 | 6.21 | 7.88 | about 13 |
-| 4 | 7.57 | 9.62 | about 10 |
-| 5 | 9.01 | 11.41 | about 12 |
-| 6 | 10.42 | 13.21 | about 14 |
-| 7 | 11.78 | 14.99 | about 12 |
-| 8 | 13.21 | 16.79 | about 14 |
+| 1 | ×1.0 | 3.29 | 4.21 |
+| 2 | ×1.1 | 3.62 | 4.63 |
+| 3 | ×1.2 | 3.95 | 5.06 |
+| 4 | ×1.3 | 4.28 | 5.48 |
+| 5 | ×1.4 | 4.61 | 5.91 |
+| 6 | ×1.5 | 4.94 | 6.32 |
+| 7 | ×1.6 | 5.27 | 6.75 |
+| 8 | ×1.7 | 5.61 | 7.17 |
 
-Rewards rise every band while repair prices rise in three steps, so a reward buys about 7 hull points in band 1 and
-about 12–14 late, as in FTL. The jump stays 1.21, so later fights leave more after the jump.
+Final amounts follow the no-trailing-zero rule. Each fight's total varies with the ships in it, as in FTL, where
+rewards vary around an average.
+
+### Target averages and squad value budgets (Ai-Generated-Proposal)
+
+The target a fight should pay per player ship comes from FTL's per-sector rewards (Normal difficulty, from Hexagon's
+disassembly of the game, tabled at [MikeHopley/ftl-scrap](https://github.com/MikeHopley/ftl-scrap)), weighted by
+how often FTL's fights pay each level (counted from vanilla `ftl.dat`) and anchored on the 3.42 of GDD 8C
+(`docs/economy-findings.md`, F1). An enemy squad is stocked by spending a value budget: one target per ship the
+player is expected to have (F4), ÷ (2.5% × the band adjustment) (F6).
+
+| Band | Target per player ship | Crew killed | Hull points it repairs | Player ships (F4) | Squad value budget |
+|:-:|:-:|:-:|:-:|:-:|:-:|
+| 1 | 3.42 | 4.36 | about 7 | 1 | 137 |
+| 2 | 4.77 | 6.09 | about 10 | 1 | 173 |
+| 3 | 6.21 | 7.88 | about 13 | 2 | 414 |
+| 4 | 7.57 | 9.62 | about 10 | 2 | 466 |
+| 5 | 9.01 | 11.41 | about 12 | 3 | 772 |
+| 6 | 10.42 | 13.21 | about 14 | 3 | 834 |
+| 7 | 11.78 | 14.99 | about 12 | 4 | 1,178 |
+| 8 | 13.21 | 16.79 | about 14 | 4 | 1,243 |
+
+Targets rise every band while repair prices rise in three steps, so a target reward buys about 7 hull points in band
+1 and about 12–14 late, as in FTL. The jump stays 1.21, so later fights leave more after the jump. Band 1's budget
+(137) is about one Light Attack Frame.
 
 ## Rough economy check
 
