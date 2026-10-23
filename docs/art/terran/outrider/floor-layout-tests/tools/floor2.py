@@ -180,10 +180,14 @@ def core():
             f'<circle cx="{cx}" cy="{cy}" r="4" fill="#e8fff2"/></g>')
 
 
-def legend():
+RING_NOTE = "Conduit ring: one loop from the core through every system and back."
+CUT_NOTE = "A cut conduit. Power still reaches every system the other way round."
+
+
+def legend(title="Floor layout test 2", ring_note=RING_NOTE, cut_note=CUT_NOTE):
     x0, y = 500, 46
     out = [f'<text x="{x0}" y="{y}" font-size="17" font-family="sans-serif" font-weight="600" fill="#e3e8f1">'
-           f'Floor layout test 2</text>',
+           f'{title}</text>',
            f'<text x="{x0}" y="{y + 18}" font-size="11.5" font-family="sans-serif" fill="#97a3b8">'
            f'SC-1 Outrider · 35 px tiles · {len(ROOMS)} rooms</text>']
     yy = y + 52
@@ -207,10 +211,10 @@ def legend():
          "Airlock: a door to space. Two on each mid-ship flank room."),
         (lambda y: f'<path d="M{x0},{y - 6} h24" stroke="#0c1018" stroke-width="6"/><path d="M{x0},{y - 6} h24" '
                    f'stroke="{ON}" stroke-width="2.2" filter="url(#cglow)"/>',
-         "Conduit ring: one loop from the core through every system and back."),
+         ring_note),
         (lambda y: f'<path d="M{x0},{y - 6} h9 M{x0 + 15},{y - 6} h9" stroke="#0c1018" stroke-width="6"/>'
                    f'<path d="M{x0 + 10},{y - 9} l3,3 l-2,2 l3,1" stroke="{CUT}" stroke-width="1.5" fill="none"/>',
-         "A cut conduit. Power still reaches every system the other way round."),
+         cut_note),
         (None, "Rooms with no console are empty."),
         (None, "Shared rooms: the bridge holds Piloting, Weapons and Shields; one room holds Sensors and Doors; "
                "the engine room holds Engines and Life Support."),
