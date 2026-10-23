@@ -1,4 +1,4 @@
-"""Raster FTL-style ship test. Draws in stages: 1 outline, 2 fill, 3 shade, 4 highlight, 5 details."""
+"""Raster ship style test. Draws in stages: 1 outline, 2 fill, 3 shade, 4 highlight, 5 details."""
 import math, sys, random
 from PIL import Image, ImageDraw, ImageChops, ImageFilter
 
@@ -7,7 +7,7 @@ W, H = 580, 330
 STAGE = int(sys.argv[1]) if __name__ == "__main__" and len(sys.argv) > 1 else 5
 OUT = sys.argv[2] if __name__ == "__main__" and len(sys.argv) > 2 else f"stage{STAGE}.png"
 
-LIGHT = (0.35, 0.94)       # FTL convention: lower edges catch the light, upper edges fall in shadow
+LIGHT = (0.35, 0.94)       # Lighting convention: lower edges catch the light, upper edges fall in shadow
 OUTLINE = (30, 32, 36)
 HULL = (176, 178, 172)
 HULL_LIGHT = (196, 198, 191)
