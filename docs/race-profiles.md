@@ -32,9 +32,9 @@ clone.
    - **Silhouette — Proposed (2026-10-22):** classic spaceship shapes, from large shuttles to cruisers and rockets.
    - **Colours — Ai-Generated-Proposal (2026-10-22):** white and pale grey with blue trim; desperate ships add rust
      and mismatched panels from other races.
-   - **Darker colours and scarier emblems — Likely (2026-10-23):** as the Gatos fall from struggling toward doomed,
+   - **Darker colours and scarier emblems — Decided (2026-10-23):** as the Gatos fall from struggling toward doomed,
      they use darker or black colours and scarier emblems.
-   - **No standard emblem — Likely (2026-10-23):** there is no standard Gatos emblem, because they are an alliance,
+   - **No standard emblem — Decided (2026-10-23):** there is no standard Gatos emblem, because they are an alliance,
      not a federation.
 2. **Doing fine — Proposed (2026-10-21):** accepted by others, interested in trade and other cultures. Technology
    is clean, easy to use and humane.
