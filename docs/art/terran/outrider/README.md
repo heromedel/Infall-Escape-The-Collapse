@@ -28,8 +28,17 @@ Hull art only: no floor art and no weapons. Top-down with the nose up, light fro
 | Concerns, 2 | Silhouette must read at squad scale | Ai-Generated-Proposal |
 | heromedel, 2026-10-23 | Hull only, top-down facing up, mounts are invisible spots | agreed in chat |
 
-Filled in by me (**Ai-Generated-Proposal**): the armour shoulders on both flanks at the core, and a blue-and-white
-chevron roundel on each wing (no Gatos marking exists in the docs yet; Ship Designs kept it for now).
+Filled in by me (**Ai-Generated-Proposal**): the armour shoulders on both flanks at the core.
+
+**Wing roundel:** a blue-and-white chevron roundel on each wing. I added it, and heromedel kept it (2026-10-23).
+
+- It is not a standard Gatos emblem. There is none, because the Gatos are an alliance, not a federation (race
+  profiles, Terrans 1; Decided).
+- **Proposed (2026-10-23):** the roundel is used by some doing-well Gatos vessels: perhaps light vessels, scouts,
+  ships not at war, or forward vessels (`docs/ideas.md`).
+- **Proposed (2026-10-23):** Gatos regions have slightly different colour schemes and emblems (`docs/ideas.md`).
+- As the Gatos fall from struggling toward doomed, their ships use darker or black colours and scarier emblems
+  (race profiles, Terrans 1; Decided), so a falling Gatos ship would not carry this roundel.
 
 ## How it was made
 
