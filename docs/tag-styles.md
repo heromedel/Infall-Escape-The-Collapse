@@ -46,7 +46,7 @@ are Ai-Generated-Proposal.
 
 The tag in bold at the start of the point, with the date it was given, so old points can be seen at a glance:
 
-    - **Hard Rule (2026-10-22):** Mechanics work as in FTL unless a decision says otherwise.
+    - **Decided (2026-10-21):** A run is lost when all scout ships are gone.
     - **Unlikely (2026-10-22):** A point-defense laser system; the Tentauri Defense Laser does this as a weapon.
 
 When a point's tag changes, its date changes with it. In `gdd.html` the tag is the coloured chip after the point's
