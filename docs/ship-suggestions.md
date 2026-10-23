@@ -313,6 +313,101 @@ Judgment calls for review:
   Ion Stunner.
 - Hail behaviour and the Sporewing as loot.
 
+### Pirate Hijacker loadouts (2026-10-23)
+
+**Ai-Generated-Proposal (2026-10-23)**, except where tagged. Asked by heromedel through Infall: Production (handoff
+2026-10-23 20:52): one hull with a loadout per band range (**Proposed**, `ship-design-process.md`). The new bands
+1–3 loadout is nicknamed **"Cutpurse"**: a small-time thief, in the Gatos style of a nickname on the ship.
+
+| | Cutpurse (new) | Hijacker (existing, unchanged) |
+|---|---|---|
+| Bands | 1–3 | 4–6 |
+| Hull | 9 | 14 |
+| AZC level | 2 (4 systems at once) | 3 (6 systems at once) |
+| Piloting | 1 | 2 |
+| Sensors | — | 1 |
+| Doors | — | 2 |
+| Shields | 1 layer (shield test level 1) | 2 layers |
+| Engines | 1 | 3 |
+| Life Support | 1 | 1 |
+| Weapons | 1 | 3 |
+| Medbay | — | 2 |
+| Crew Teleporter | 1 | 2 |
+| Weapons carried | Sporewing | Sporewing, Gat 2.1 "Twinshot" |
+| Crew | 3 Terrans | 5 Terrans |
+| Price | **130.46** | 267.61 |
+
+Same hull and silhouette: the classic Terran cruiser with rust, mismatched panels, darker paint (falling Gatos,
+Decided) and the bolted-on Azurethea launcher.
+
+**Cutpurse price:** Shields 54.46 · Weapon Control level 1 4.84 · Crew Teleporter level 1 21.78 · AZC level 2 42.36 ·
+Sporewing 7.02 · Piloting, Engines and Life Support installed = **130.46**, under band 1's squad value budget (137).
+Crew are extra: 3 Terrans at 10.89, 32.67.
+
+**Ideas considered:** keep the teleporter and drop the guns (picked); keep the Twinshot and drop the teleporter, so
+the "hijack" becomes a shakedown by Hail; keep both and drop the shields; a two-ship pirate pair, one disabler and one
+boarder; a smaller hull. Picked because it keeps what makes it a hijacker, a disabler and boarders, at the lowest
+price. Passes: (1) scaled-down copy, 174 (over budget); (2) dropped the Medbay, so boarders don't heal; (3) dropped
+the Twinshot, since it can't hurt a shielded ship much and a hijacker doesn't want hull damage; (4) dropped Doors,
+since the Outrider can't board back; (5) simulated, found the stun-lock below and set the squad's targeting rule;
+(6) checked the result against the hijacker identity and the Outrider.
+
+#### How it hijacks with less
+
+- **What it lacks:** no gun that hurts the hull, no Medbay (hurt boarders stay hurt), no Doors or Sensors, a
+  level 1 teleporter (slow to recharge), and only 4 of its 5 power-drawing systems at once: it usually runs Life
+  Support off during a fight and turns it back on after.
+- **What it goes for first:** the Sporewing hits the Outrider's **Weapons**, so the Outrider can't gut it while
+  the boarders work. Then the 2 boarders go in, and one Terran stays to pilot.
+- **When the Outrider's shield holds:** it doesn't matter. The Sporewing is a missile and teleporting ignores a
+  normal shield, so its plan never needs the shield down.
+- **Shield check:** it can't hurt a shielded ship's hull at all; it beats a ship by boarding, which a shield doesn't
+  stop.
+
+#### Economy checks against the Outrider
+
+Simulated, 2,000 fights each; same assumptions as the Mecha pair, plus a Sporewing hit disabling the Outrider's
+Weapons for about 8 s of repair. Boarding isn't simulated: it costs crew health, not Mawjig.
+
+| | Fight | Outrider shots | Pays (destroyed / crew killed) | Left after jump and shots |
+|---|---|---|---|---|
+| Band 1, one Cutpurse | about 72 s | 0.39 | 3.26 / 4.24 | 1.66 (no hull damage) |
+| Band 3, two Cutpurses | about 150 s | 0.77 | 7.82 / 10.18 | 5.84 (no hull damage) |
+
+**Stun-lock found:** two Cutpurses both aiming at the Outrider's Weapons keep them disabled almost the whole time
+(about 680 s; a Sporewing every 6.9 s against an 8 s repair). The squad rule below fixes it: only one aims at
+Weapons, the other at Piloting.
+
+#### Squad: Terran Pirates (rough squad format)
+
+**Shows up in:** doomed Terran clusters, and borders (including Mecha borders, where criminals hide).
+
+| Tier | Ships |
+|---|---|
+| Low (bands 1–3) | Bands 1–2: 1 × Cutpurse. Band 3: 1–2 × Cutpurse (2 = 260.92, under 414) |
+| Mid (bands 4–6) | 1–2 × Hijacker |
+| High (bands 7–8) | [heavy pirate ship] · [Hijacker high-band loadout] (placeholders) |
+
+Conduct, only where it differs from the Hijacker:
+- **Targeting:** with two or more Cutpurses, only one aims its Sporewing at Weapons; the others aim at Piloting, to
+  stop the target escaping.
+- **When losing:** a Cutpurse has no stolen tech to spare beyond its one launcher, so it offers Mawjig to be let go
+  rather than technology.
+
+#### Judgment calls and decisions needed
+
+- The Cutpurse nickname; hull 9; AZC level 2 with Life Support off in a fight.
+- Dropping the Twinshot, Medbay, Doors and Sensors.
+- The fight assumptions: 8 s to clear a spore-disabled system; 15% Outrider evasion, 5% pirate evasion.
+- **Can a bands 1–3 pirate afford a crew teleporter?** Yes, at level 1 (21.78), by dropping the gun, Medbay, Doors
+  and Sensors.
+- **Decision needed: what a hijacker does to a lone Outrider in band 1 if it wins.** A boarded, taken ship is a
+  lost scout, so alone it is the run lost (1F), as losing all crew is in FTL. Options: (a) the run is lost; (b) the
+  pirates hold the ship for ransom, an event where the player pays Mawjig to get it back (fits their demands for
+  Mawjig or a ship); (c) they strip it and leave it adrift with its systems damaged. Band 1 boarders are only 2
+  Terrans against 3 crew, so a win for them should be rare either way.
+- The stun-lock targeting rule is needed for any squad with more than one Sporewing.
+
 ## Mecha Light Attack Frame, two loadouts (2026-10-23)
 
 Default tag: **Ai-Generated-Proposal (2026-10-23)**; points taken from the race profile are tagged as they are
@@ -347,7 +442,7 @@ there. Asked by heromedel through Infall: Production (handoff 2026-10-23 14:17).
    | Shields (shield test level 1, one layer) | 1 | 1 | 2 |
    | Engines | 1 | 1 | 1 |
    | Life Support | 1 | 1 | 1 |
-   | Medbay | 1 | 1 | 1 |
+   | Cybernetic Servicing Core (the Mecha Medbay) | 1 | 1 | 1 |
    | Weapon pod | 2 | — | 1, +1 from an integrated crew member |
    | EVB Dock | — | 2 | 2 |
    | **Own power in all** | | | **6 / 7** |
@@ -387,8 +482,9 @@ there. Asked by heromedel through Infall: Production (handoff 2026-10-23 14:17).
    **Economy check:** a simulation of 2,000 fights of the Outrider against this pair. The Outrider fires at the
    Hull Laser first. Assumptions: 15% Outrider evasion, 5% Mecha evasion, the suit firing every 3 s, out 30 s and
    back 15 s, half the Outrider's rooms empty. Result: the fight lasts about 62 s, and the Outrider loses about 5
-   hull (4.9) and spends 0.59 Mawjig on shots. In band 1 the pair pays 6.84 (3.42 per ship destroyed); after the
-   1.21 jump, the shots and repairing 4.9 hull at 0.48, about 2.69 is left. Each loadout alone pays 0.80 (Hull Laser) or
+   hull (4.9) and spends 0.59 Mawjig on shots. Under GDD 8I a wreck pays 2.5% of the ship's value × the band adjustment, so in band 1 the pair would
+   pay 6.74 (3.29 + 3.45); after the 1.21 jump, the shots and repairing 4.9 hull at 0.48, about 2.59 is left. Band
+   1's squad value budget (137) fits only one frame, though, so the pair belongs in band 3 (see the squad). Each loadout alone pays 0.80 (Hull Laser) or
    1.92 (Suit Dock, which can't hurt a shielded ship by itself).
 10. **Price:**
 
@@ -397,7 +493,7 @@ there. Asked by heromedel through Infall: Production (handoff 2026-10-23 14:17).
     | Shields (shield test level 1) | 54.46 | 54.46 |
     | Piloting, Engines, Life Support | installed | installed |
     | Doors | 14.52 | 14.52 |
-    | Medbay | 12.11 | 12.11 |
+    | Cybernetic Servicing Core (priced as a Medbay for now) | 12.11 | 12.11 |
     | Weapon pod (Weapon Control level 2: 4.84 + 9.68) | 14.52 | — |
     | EVB Dock level 2 | — | 16.94 |
     | Own power (6 / 7 bars, priced as reactor bars) | 22.99 | 27.83 |
@@ -415,8 +511,10 @@ that a squad is mainly a list of ships with counts per tier (`rough-example-squa
 below are the extra this brief asked for.
 
 - **Ships:** 1 × Light Attack Frame, Hull Laser loadout; 1 × Light Attack Frame, Suit Dock loadout.
-- **Shows up in:** Border clusters of a doing-fine Mecha region, bands 1–3.
-- **Size by band:** bands 1–2, the pair; band 3, the pair or 2 Hull Laser + 1 Suit Dock.
+- **Shows up in:** Border clusters of a doing-fine Mecha region, band 3 (bands 1–2 field a single frame).
+- **Size by band:** set by the squad value budgets in `mawjig-cost-table.md`. Bands 1–2 (budgets 137 and 173): one
+  frame, either loadout, alone, or a pair of weaker ships or loadouts that fits the budget (not designed yet).
+  Band 3 (414): the pair (269.69), or 2 Hull Laser + 1 Suit Dock (401.41).
 - **How the two fight together:** the Suit Dock launches its suit at once, at the target's shield room, to keep the
   layer down. The Hull Laser fires at rooms without systems, for double damage, to gut the hull. Both pick the
   weakest ship in the player's squad.
@@ -427,8 +525,10 @@ below are the extra this brief asked for.
   pay about half a ship's reward and let the player pass.
 - **Escape:** a ship down to 2–3 hull tries to jump away 50% of the time, charging for about 20 s. The Suit Dock
   recalls its suit first.
-- **A win pays (per ship, GDD 8I):** band 1: 3.42 destroyed, 4.36 crew killed; band 2: 4.77 / 6.09; band 3:
-  6.21 / 7.88. The crew are tough and dangerous in melee, so killing them is the harder road.
+- **A win pays (per ship, GDD 8I):** 2.5% of the ship's value × the band adjustment; crew killed pays about 30%
+  more. Hull Laser (131.72): 3.29 / 3.62 / 3.95 in bands 1 / 2 / 3, crew killed 4.28 / 4.71 / 5.14. Suit Dock
+  (137.97): 3.45 / 3.79 / 4.14, crew killed 4.48 / 4.93 / 5.38. The crew are tough and dangerous in melee, so
+  killing them is the harder road.
 
 ### Judgment calls and open decisions
 
