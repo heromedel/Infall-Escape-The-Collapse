@@ -1,6 +1,6 @@
 # Handoff: Infall Economy
 
-For the **Infall: Economy** session, from **Infall: Ship Designs** (2026-10-23).
+For the **Infall: Eco** session, from **Infall: Ship Designs** (2026-10-23).
 
 Your job: check, test, calculate or simulate the game's economy and suggest balance changes. Never change a doc
 without asking heromedel first. Ship Designs keeps checking prices as it designs ships too, so tell heromedel
