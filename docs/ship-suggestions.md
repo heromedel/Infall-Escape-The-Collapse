@@ -312,3 +312,137 @@ Judgment calls for review:
 - The Sporewing: missile type (can be shot down) rather than bomb, 1 power, spores priced as ion, stun from FTL's
   Ion Stunner.
 - Hail behaviour and the Sporewing as loot.
+
+## Mecha Light Attack Frame, two loadouts (2026-10-23)
+
+Default tag: **Ai-Generated-Proposal (2026-10-23)**; points taken from the race profile are tagged as they are
+there. Asked by heromedel through Infall: Production (handoff 2026-10-23 14:17).
+
+1. **Race:** the Mecha (HalfMechs).
+2. **Band:** 1–3 (low tier).
+3. **State:** a doing-fine Mecha region, met at its Border clusters. The profile says Mecha borders are in
+   constant battle with their neighbours and with criminals (Proposed), which is where a light attack pair patrols.
+4. **Race info used (Proposed unless noted):** aggressive, organized and tactical; guts ships; wide, aggressive
+   battleships; gunmetal and black with hazard markings (Ai-Generated-Proposal); weapons high damage and hull
+   destructive; EVB Dock with battlesuits, crew flying out in them; no reactor, each system self-powered, and a
+   Mecha crew member integrating with a system adds one bar; a single weapon system is hard for them to power;
+   Mecha breathe (Likely); low tier (Ai-Generated-Proposal): one EVB Dock with laser suits plus one or two
+   self-powered weapon systems with a hull-damage laser, thin shields.
+5. **Function:** a light attack squad of two. Ideas considered: two hulls (a gunship and a dock carrier); one hull
+   in two loadouts; two identical gunships; a pair of suit carriers; a spotter with a gunship. **Picked: one hull
+   in two loadouts.** An organized, tactical race fields a standard frame, the pair reads as one unit in a
+   screenshot (concern 2), and each loadout still has a clear job. Note for Production: this is one hull, not two,
+   towards Goal A's hull count.
+6. **Kinds of systems and crew:** one standard frame, thin shields, little evasion. The **Hull Laser** loadout
+   guts hulls; the **Suit Dock** loadout launches a laser battlesuit that strips shields. 2 crew each.
+7. **Variation:** standard for the race at low tier.
+8. **Layout and systems:** the **Light Attack Frame**: wide and squat, with the weapon pod or dock on the flank,
+   in gunmetal and black with hazard markings. Hull 7 (the low end of the band 1–3 stand-ins, since these are light
+   ships). No reactor: every system carries its own power, and an integrated crew member adds one bar.
+
+   | System | Hull Laser loadout | Suit Dock loadout | Own power (bars) |
+   |---|---|---|---|
+   | Piloting | 1 | 1 | — |
+   | Doors | 1 | 1 | — |
+   | Shields (shield test level 1, one layer) | 1 | 1 | 2 |
+   | Engines | 1 | 1 | 1 |
+   | Life Support | 1 | 1 | 1 |
+   | Medbay | 1 | 1 | 1 |
+   | Weapon pod | 2 | — | 1, +1 from an integrated crew member |
+   | EVB Dock | — | 2 | 2 |
+   | **Own power in all** | | | **6 / 7** |
+
+   - **Hull Laser:** the pod is level 2, since a system never holds more power than its level (GDD 1C), but it
+     has only one bar of its own, so one crew member integrates with it to power its 2-power laser.
+     That is the profile's "a single weapon system is hard to power" in play: stun, kill or pull that crew member
+     away and the laser goes quiet.
+   - **Suit Dock:** one crew member flies the laser battlesuit; the other pilots. The suit carries its own air for a
+     sortie.
+   - **Weak points:** Life Support (Mecha breathe, Likely: one of them has to stop and repair it) and the crew
+     member in the weapon pod.
+
+   Passes made:
+   - Pass 1: two full ships, each with a dock and two pods. Too strong for bands 1–3 against a lone starting ship.
+   - Pass 2: split the jobs, one loadout each, on one frame.
+   - Pass 3: the Hull Laser's pod needs an integrated crew member, making the crew a target.
+   - Pass 4: hull 7 rather than 10, as light ships. Simulated at hull 10, the fight runs about 86 s and leaves
+     1.82 instead of 2.69: workable, but heavier than a light pair should be.
+   - Pass 5: the suit can't get through a shield layer alone (its shots come about 3 s apart and the layer comes back
+     in 2 s), so its job is popping the layer for the Hull Laser.
+   - Pass 6: checked against the Outrider in a simulation (see 9).
+9. **Weapons:** no Mecha weapons exist yet.
+
+   **Double Shot - Single Target - Hull Laser** (DS-ST Hull Laser): Laser, Damage + Hull bonus, Mechanical, Mecha
+   · Shots 2 · Damage 1 · Power 2 · Breach 20% · double damage to a room without a system.
+   - Charge: 12.8 s (7.0 + 4.0 damage + 0.4 breach + 1.4 hull bonus).
+   - Cost per volley: 0.07 Mawjig (2 × (0.02 + 0.01 hull bonus + 0.006 breach)).
+   - Price: 13.12 (1.41 + 8.18 power + 1.81 damage rate + 0.36 breach rate + 1.36 hull bonus).
+
+   **Laser battlesuit** (suit type for the EVB Dock): one Mecha in a battle suit with a 1-damage laser, priced as
+   the laser combat drone, 12.11. Each sortie costs 0.21 Mawjig (about 10 shots), the EVB cost idea in `ideas.md`.
+
+   **Shield check:** the Hull Laser's two shots beat one layer (the first takes it, the second lands, double in an
+   empty room). With the suit popping the layer, both land.
+
+   **Economy check:** a simulation of 2,000 fights of the Outrider against this pair. The Outrider fires at the
+   Hull Laser first. Assumptions: 15% Outrider evasion, 5% Mecha evasion, the suit firing every 3 s, out 30 s and
+   back 15 s, half the Outrider's rooms empty. Result: the fight lasts about 62 s, and the Outrider loses about 5
+   hull (4.9) and spends 0.59 Mawjig on shots. In band 1 the pair pays 6.84 (3.42 per ship destroyed); after the
+   1.21 jump, the shots and repairing 4.9 hull at 0.48, about 2.69 is left. Each loadout alone pays 0.80 (Hull Laser) or
+   1.92 (Suit Dock, which can't hurt a shielded ship by itself).
+10. **Price:**
+
+    | Part | Hull Laser | Suit Dock |
+    |---|---|---|
+    | Shields (shield test level 1) | 54.46 | 54.46 |
+    | Piloting, Engines, Life Support | installed | installed |
+    | Doors | 14.52 | 14.52 |
+    | Medbay | 12.11 | 12.11 |
+    | Weapon pod (Weapon Control level 2: 4.84 + 9.68) | 14.52 | — |
+    | EVB Dock level 2 | — | 16.94 |
+    | Own power (6 / 7 bars, priced as reactor bars) | 22.99 | 27.83 |
+    | DS-ST Hull Laser / laser battlesuit | 13.12 | 12.11 |
+    | **Total** | **131.72** | **137.97** |
+
+    Crew are extra: 2 Mecha each at 14.52, 29.04.
+11. **New rules recorded:** the Hull bonus effect's charge time and price in `weapon-budget-table.md`; Mecha
+    self-powered bars priced as reactor bars in `system-prices.md`.
+
+### Squad: Light Attack Pair (LAP)
+
+**Ai-Generated-Proposal (2026-10-23)**, a first draft of a squad format, as Production asked. heromedel's view is
+that a squad is mainly a list of ships with counts per tier (`rough-example-squad-layout.md`); the conduct lines
+below are the extra this brief asked for.
+
+- **Ships:** 1 × Light Attack Frame, Hull Laser loadout; 1 × Light Attack Frame, Suit Dock loadout.
+- **Shows up in:** Border clusters of a doing-fine Mecha region, bands 1–3.
+- **Size by band:** bands 1–2, the pair; band 3, the pair or 2 Hull Laser + 1 Suit Dock.
+- **How the two fight together:** the Suit Dock launches its suit at once, at the target's shield room, to keep the
+  layer down. The Hull Laser fires at rooms without systems, for double damage, to gut the hull. Both pick the
+  weakest ship in the player's squad.
+- **Hail:**
+  - When they have the advantage: they demand Mawjig to let the player pass, or attack.
+  - When outmatched: they order the player out of their territory; jumping away ends it without a fight.
+- **Surrender:** they offer one only if they profit and are hurt: 25% chance once a ship is down to 2–3 hull. They
+  pay about half a ship's reward and let the player pass.
+- **Escape:** a ship down to 2–3 hull tries to jump away 50% of the time, charging for about 20 s. The Suit Dock
+  recalls its suit first.
+- **A win pays (per ship, GDD 8I):** band 1: 3.42 destroyed, 4.36 crew killed; band 2: 4.77 / 6.09; band 3:
+  6.21 / 7.88. The crew are tough and dangerous in melee, so killing them is the harder road.
+
+### Judgment calls and open decisions
+
+- One hull in two loadouts rather than two hulls.
+- Border clusters of a doing-fine region as the state.
+- Hull 7 and the fight assumptions in the economy check.
+- Hull bonus priced from FTL's two Hull Smasher lasers: +0.7 s per shot and 0.75 of the damage rate.
+- A suit's sortie: 10 shots, out 30 s, back 15 s.
+- Surrender 25% and escape 50% at 2–3 hull, and a 20 s escape charge.
+- **Open:** how crew integration works in play: how long engaging and disengaging takes, and whether it is always
+  one bar. Assumed here: one bar, a few seconds each way, and never above the system's level (so the Hull Laser's
+  pod is level 2). Whether integration could raise a system past its level is a separate open question.
+- **Open:** whether suits need the ship's air. Assumed here: a suit carries its own air for a sortie (the oxygen
+  timer of the EVB cost idea), so a suit can launch while Life Support is down, but its pilot needs air back aboard.
+- **Open:** what happens to a suit's pilot when the suit is destroyed.
+- **Shared between the two ships:** nothing at system level. The pair shares only tactics: the suit pops the shield
+  for the Hull Laser.

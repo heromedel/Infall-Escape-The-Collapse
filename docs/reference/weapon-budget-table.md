@@ -26,6 +26,7 @@ gap between laser and missile prices, so the two are set equal and lasers are th
 | Fire | +3.0 per shot at 100% chance | scale by chance |
 | Breach | +1.0 per shot at 100% chance | FTL adds ~0; small value by judgment |
 | Conduit damage | +0.3 per shot at 100% chance | a third of breach: only conduit ships, no oxygen loss, rarely lethal |
+| Hull bonus | +0.7 per shot | double damage to rooms without systems; from FTL's two Hull Smasher lasers (judgment) |
 | Pierce | +1.4 per shield layer | |
 | Beam | +5.0 | |
 | Bomb | +5.0 | |
@@ -51,6 +52,7 @@ fit; the half-step damage rule in the cost table applies to per-shot cost only.
 | Stun rate | +1.21 per (stun shots × 10 ÷ cooldown) | FTL's Ion Stunner over the Ion Blast (5 scrap) |
 | Breach or fire rate | +1.15 per (full-chance shots × 10 ÷ cooldown) | fire by judgment; FTL prices it at zero |
 | Conduit damage rate | +0.38 per (full-chance shots × 10 ÷ cooldown) | a third of breach |
+| Hull bonus | + 0.75 × the damage rate term | from FTL's two Hull Smasher lasers (judgment) |
 | Pierce | +0.75 per shield layer | |
 | Bomb | +5.54 | |
 | Flak | +1.38 | |
