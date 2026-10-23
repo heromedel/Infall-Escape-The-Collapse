@@ -401,7 +401,7 @@ Conduct, only where it differs from the Hijacker:
 - The fight assumptions: 8 s to clear a spore-disabled system; 15% Outrider evasion, 5% pirate evasion.
 - **Can a bands 1–3 pirate afford a crew teleporter?** Yes, at level 1 (21.78), by dropping the gun, Medbay, Doors
   and Sensors.
-- **Decided (heromedel, 2026-10-23):** the run is lost if the ship is blown up; a hijacked ship is not blown up (GDD 1F). What the pirates do with a taken ship is still open. The question as asked: A boarded, taken ship is a
+- **Decided (heromedel, 2026-10-23):** a lone ship whose crew is killed is the run lost, as a blown-up ship is (GDD 1F); nothing is "taken", the pirates kill the crew and the ship is worth 30% more as a wreck (8I). With squad-mates left, the boarders go for the next ship (1F, Proposed). The question as asked, now closed: A boarded, taken ship is a
   lost scout, so alone it is the run lost (1F), as losing all crew is in FTL. Options: (a) the run is lost; (b) the
   pirates hold the ship for ransom, an event where the player pays Mawjig to get it back (fits their demands for
   Mawjig or a ship); (c) they strip it and leave it adrift with its systems damaged. Band 1 boarders are only 2
