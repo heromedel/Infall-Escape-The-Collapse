@@ -25,6 +25,7 @@ each with its SVG, PNG exports, review sheets, build tools and a notes README.
 | 2026-10-23 | Conduit check, run before sending any conduit ship: every installed system's room is on the network and traces back to the AZC, and every single point of failure is listed in the piece's README (only intended weak points, such as a single spur, may remain). The floor plan tools fail the build otherwise. Every weapon hardpoint has a run back to the AZC too: whether mounts need power is **Open** (race profiles, Terrans 6), but heromedel asked to work as if they do. |
 | 2026-10-23 | Actual plans and finished art show the real thing only: intact, powered, as designed. Never demonstrate an idea, a mechanic or damage in them. An experimental idea or a demonstration (a cut conduit, a GDD 14C flash, a damage state, an alternative) goes in a separate mockup file, clearly labelled as a mockup. |
 | 2026-10-23 | Console symbols are not red, since red means a cut-off system (GDD 14C). |
+| 2026-10-23 | Plan rooms first: count the rooms a ship needs (plus a few spare for most races; the Tentauri need none), lay them out, then size and shape the hull around them with a margin. |
 | 2026-10-23 | No rocket-like Terran designs for a while: no pointed nose cone, tail fins and engine-bell silhouette. Terran ships look built for deep space, not for launching from a planet (race profiles, Terrans 1, Likely). |
 
 ## Pieces
