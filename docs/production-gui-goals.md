@@ -34,7 +34,7 @@ Points this list stands on: Decided 3C, 3E, 4B–4N, 10A, 12B; Likely 2D, 3A, 3H
 
 | Asset | Goal | Count | Notes | Who |
 |---|---|---|---|---|
-| Ship art, SVG with named parts (10A) | A: 4 hulls; B: 18; C: 42 | hull, floor plan, rooms, weapon mounts, damaged and doomed variants as recolours | Art Test 01 is the method | Arty |
+| Ship art, SVG with named parts (10A) | A: 4 hulls; B: 18; C: 42 | hull, floor plan, rooms, weapon mounts, damaged and doomed variants as recolours | Art Test 01 is the method. **Proposed (heromedel, 2026-10-23):** conduits are drawn on their own layer and exported as a separate file from the floor, so any conduit ruleset (concern 3) or the Classic no-conduit setting fits the same floor | Arty |
 | Weapon art | A: 9; B: 30; C: 64 | icon and ship-mounted art per weapon folder (11B) | race-styled, not FTL look-alikes | Arty |
 | Crew sprites | A: 2 races; B: 3; C: 7 | walk, repair, fight, death; sex variants where the race has them | | Arty |
 | System icons | A | FTL's set under Infall names + AZC, conduits, EVB Dock, Jigawatt Drive; C: EVA, Supershield, AAA, Mutation, growth organ | | Arty |
