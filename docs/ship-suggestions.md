@@ -313,6 +313,101 @@ Judgment calls for review:
   Ion Stunner.
 - Hail behaviour and the Sporewing as loot.
 
+### Pirate Hijacker loadouts (2026-10-23)
+
+**Ai-Generated-Proposal (2026-10-23)**, except where tagged. Asked by heromedel through Infall: Production (handoff
+2026-10-23 20:52): one hull with a loadout per band range (**Proposed**, `ship-design-process.md`). The new bands
+1–3 loadout is nicknamed **"Cutpurse"**: a small-time thief, in the Gatos style of a nickname on the ship.
+
+| | Cutpurse (new) | Hijacker (existing, unchanged) |
+|---|---|---|
+| Bands | 1–3 | 4–6 |
+| Hull | 9 | 14 |
+| AZC level | 2 (4 systems at once) | 3 (6 systems at once) |
+| Piloting | 1 | 2 |
+| Sensors | — | 1 |
+| Doors | — | 2 |
+| Shields | 1 layer (shield test level 1) | 2 layers |
+| Engines | 1 | 3 |
+| Life Support | 1 | 1 |
+| Weapons | 1 | 3 |
+| Medbay | — | 2 |
+| Crew Teleporter | 1 | 2 |
+| Weapons carried | Sporewing | Sporewing, Gat 2.1 "Twinshot" |
+| Crew | 3 Terrans | 5 Terrans |
+| Price | **130.46** | 267.61 |
+
+Same hull and silhouette: the classic Terran cruiser with rust, mismatched panels, darker paint (falling Gatos,
+Decided) and the bolted-on Azurethea launcher.
+
+**Cutpurse price:** Shields 54.46 · Weapon Control level 1 4.84 · Crew Teleporter level 1 21.78 · AZC level 2 42.36 ·
+Sporewing 7.02 · Piloting, Engines and Life Support installed = **130.46**, under band 1's squad value budget (137).
+Crew are extra: 3 Terrans at 10.89, 32.67.
+
+**Ideas considered:** keep the teleporter and drop the guns (picked); keep the Twinshot and drop the teleporter, so
+the "hijack" becomes a shakedown by Hail; keep both and drop the shields; a two-ship pirate pair, one disabler and one
+boarder; a smaller hull. Picked because it keeps what makes it a hijacker, a disabler and boarders, at the lowest
+price. Passes: (1) scaled-down copy, 174 (over budget); (2) dropped the Medbay, so boarders don't heal; (3) dropped
+the Twinshot, since it can't hurt a shielded ship much and a hijacker doesn't want hull damage; (4) dropped Doors,
+since the Outrider can't board back; (5) simulated, found the stun-lock below and set the squad's targeting rule;
+(6) checked the result against the hijacker identity and the Outrider.
+
+#### How it hijacks with less
+
+- **What it lacks:** no gun that hurts the hull, no Medbay (hurt boarders stay hurt), no Doors or Sensors, a
+  level 1 teleporter (slow to recharge), and only 4 of its 5 power-drawing systems at once: it usually runs Life
+  Support off during a fight and turns it back on after.
+- **What it goes for first:** the Sporewing hits the Outrider's **Weapons**, so the Outrider can't gut it while
+  the boarders work. Then the 2 boarders go in, and one Terran stays to pilot.
+- **When the Outrider's shield holds:** it doesn't matter. The Sporewing is a missile and teleporting ignores a
+  normal shield, so its plan never needs the shield down.
+- **Shield check:** it can't hurt a shielded ship's hull at all; it beats a ship by boarding, which a shield doesn't
+  stop.
+
+#### Economy checks against the Outrider
+
+Simulated, 2,000 fights each; same assumptions as the Mecha pair, plus a Sporewing hit disabling the Outrider's
+Weapons for about 8 s of repair. Boarding isn't simulated: it costs crew health, not Mawjig.
+
+| | Fight | Outrider shots | Pays (destroyed / crew killed) | Left after jump and shots |
+|---|---|---|---|---|
+| Band 1, one Cutpurse | about 72 s | 0.39 | 3.26 / 4.24 | 1.66 (no hull damage) |
+| Band 3, two Cutpurses | about 150 s | 0.77 | 7.82 / 10.18 | 5.84 (no hull damage) |
+
+**Stun-lock found:** two Cutpurses both aiming at the Outrider's Weapons keep them disabled almost the whole time
+(about 680 s; a Sporewing every 6.9 s against an 8 s repair). The squad rule below fixes it: only one aims at
+Weapons, the other at Piloting.
+
+#### Squad: Terran Pirates (rough squad format)
+
+**Shows up in:** doomed Terran clusters, and borders (including Mecha borders, where criminals hide).
+
+| Tier | Ships |
+|---|---|
+| Low (bands 1–3) | Bands 1–2: 1 × Cutpurse. Band 3: 1–2 × Cutpurse (2 = 260.92, under 414) |
+| Mid (bands 4–6) | 1–2 × Hijacker |
+| High (bands 7–8) | [heavy pirate ship] · [Hijacker high-band loadout] (placeholders) |
+
+Conduct, only where it differs from the Hijacker:
+- **Targeting:** with two or more Cutpurses, only one aims its Sporewing at Weapons; the others aim at Piloting, to
+  stop the target escaping.
+- **When losing:** a Cutpurse has no stolen tech to spare beyond its one launcher, so it offers Mawjig to be let go
+  rather than technology.
+
+#### Judgment calls and decisions needed
+
+- The Cutpurse nickname; hull 9; AZC level 2 with Life Support off in a fight.
+- Dropping the Twinshot, Medbay, Doors and Sensors.
+- The fight assumptions: 8 s to clear a spore-disabled system; 15% Outrider evasion, 5% pirate evasion.
+- **Can a bands 1–3 pirate afford a crew teleporter?** Yes, at level 1 (21.78), by dropping the gun, Medbay, Doors
+  and Sensors.
+- **Decision needed: what a hijacker does to a lone Outrider in band 1 if it wins.** A boarded, taken ship is a
+  lost scout, so alone it is the run lost (1F), as losing all crew is in FTL. Options: (a) the run is lost; (b) the
+  pirates hold the ship for ransom, an event where the player pays Mawjig to get it back (fits their demands for
+  Mawjig or a ship); (c) they strip it and leave it adrift with its systems damaged. Band 1 boarders are only 2
+  Terrans against 3 crew, so a win for them should be rare either way.
+- The stun-lock targeting rule is needed for any squad with more than one Sporewing.
+
 ## Mecha Light Attack Frame, two loadouts (2026-10-23)
 
 Default tag: **Ai-Generated-Proposal (2026-10-23)**; points taken from the race profile are tagged as they are
