@@ -120,7 +120,8 @@ clone.
   **The Mecha**.
 - **What they are — Proposed (2026-10-23):** not robots. A small race of adults who live inside semi-cybernetic mech
   suits, childlike in size and attitude: immature, adorable adult cyborgs, genetically modified and/or grown.
-  Outside their suits they are rather attractive, like diminutive genetically engineered humans, and oddly
+  Outside their suits they are rather attractive for underdeveloped half-cybernetic creatures, due to their
+  genetic enhancement and quick growth cycle, like diminutive genetically engineered humans, and oddly
   adorable for their viciousness.
 - **Origin — Proposed (2026-10-23):** lost to time and somewhat of a mystery, but genetic evidence suggests they
   were Terran, bred to better fit inside semi-cybernetic mech suits. An accidental by-product of their creation,
