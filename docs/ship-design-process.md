@@ -7,7 +7,7 @@ lists. Finished designs go in `ship-suggestions.md`.
 |---|---|---|
 | 1 | Pick a race. | `race-profiles.md` |
 | 2 | Pick a difficulty band (1–8, about 10 clusters each). Bands map approximately to a race's ship tiers: 1–3 low, 4–6 mid, 7–8 high (the same grouping as hull repair and fight rewards). | GDD 2G, 2H, 2O; `mawjig-cost-table.md` |
-| 3 | Pick the race's state: doing fine, struggling or doomed. A struggling or doomed state doesn't make a ship poor or damaged; it changes the tactics, diplomacy and alliances the race resorts to. | Race profile points 2–4 |
+| 3 | Pick the race's state at the cluster where the ship is met: doing fine, struggling or doomed. State is per cluster (GDD 2R), not race-wide, so one race can be doing fine in one cluster and doomed in another. A struggling or doomed state doesn't make a ship poor or damaged; it changes the tactics, diplomacy and alliances the race resorts to. | Race profile points 2–4; GDD 2R |
 | 4 | Read the race's info: tone, ship style and silhouette, tech, power model, crew traits, ship tiers. | Race profile; `ftl-weapon-system-organization.md` |
 | 5 | Pick a ship function. Anything goes, not just the obvious (scout, explorer, defender, a barely-holding-together refugee ship, a boarding party with stolen tech). | Race profile |
 | 6 | Decide what kinds of systems and weapons it has at this band and state, and how many crew. | Race profile point 10; GDD 2N |
