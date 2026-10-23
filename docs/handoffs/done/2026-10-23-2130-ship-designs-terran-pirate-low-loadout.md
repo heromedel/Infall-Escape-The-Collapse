@@ -8,7 +8,7 @@
 | To | Infall: Ship Designs (`Cloud-C-ShipDesign`) |
 | Asked by | heromedel, 2026-10-23 (loadouts by band range: "a Terran pirate with a loadout for band 1–3, another for 4–6") |
 | Serves | `production-goals.md`, Goal A: Terran doomed pirates (enemy race), the second Terran hull, Terran doomed squads |
-| Status | **sent** |
+| Status | **done** |
 
 ## The task
 
@@ -60,3 +60,5 @@ back numbered points. Questions for heromedel go through Production, numbered.
 
 - 2026-10-23 20:30 UTC: prepared.
 - 2026-10-23 20:52 UTC: sent.
+- 2026-10-23 20:56 UTC: received, commit 1f5979f on `Cloud-C-ShipDesign`: Cutpurse loadout (130.46), loadouts table, Terran Pirates squad, stun-lock targeting rule.
+- 2026-10-23 21:10 UTC: checked (prices recompute: 130.46, rewards 3.26 / 4.24 and 7.82; profile and lore; squad format) and merged. Decision on a winning hijacker in band 1 passed to heromedel. Done.
