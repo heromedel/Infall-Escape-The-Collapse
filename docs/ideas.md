@@ -97,6 +97,13 @@ bonus per level vary between skills).
 - **Proposed (2026-10-23):** the Outrider's blue-and-white chevron roundel is used by some doing-well Gatos
   vessels: perhaps light vessels, scouts, ships not at war, or forward vessels.
 
+### Power cores and Wait (2026-10-23)
+
+- **Proposed (2026-10-23):** lore: every ship somehow produces enough power to gain some on Wait (GDD 6B), and after
+  five Waits it has at least 1.21 Jigawatts (enough for one jump).
+- **Proposed (2026-10-23):** idea, maybe: different power cores and levels provide it faster. Risky for game balance;
+  it can only be gained on Wait, and never more than about 1.25 Jigawatts per Wait.
+
 ## Ships
 
 ### Ship interior art (2026-10-23)

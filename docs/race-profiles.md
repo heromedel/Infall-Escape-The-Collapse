@@ -165,6 +165,12 @@ clone.
      oxygen there, and come back from any airlock.
    - **No repairs — Likely (2026-10-23):** suits are not normally repaired. A suit vanishes when it is taken off
      (lore: it is recycled into a little energy), and a new one is paid for at an EVB Dock.
+   - **A new suit every launch — Likely (2026-10-23):** every launch takes a new suit, the way FTL uses a drone part
+     every time a drone is deployed.
+   - **Recycling refund — Proposed (2026-10-23):** most likely none. If there is one, it is about 0.01 Mawjig, and
+     the suit's cost goes up by the same amount.
+   - **Skills and power vs suits — Decided (2026-10-23):** everything about flying around in battle is the EVB
+     suit; skills and extra power belong to the Mecha themselves.
    - **Tech type — Ai-Generated-Proposal (2026-10-22):** mechanical, which is why integrating with biomechanical
      systems takes them longer (point 9).
    - **Weapon names — Proposed (2026-10-22):** descriptive and functional, e.g. Triple Shot - Single Target -
