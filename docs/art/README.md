@@ -43,6 +43,7 @@ each with its SVG, PNG exports, review sheets, build tools and a notes README.
 | [`mecha/light-attack-frame/`](mecha/light-attack-frame/) | Mecha Light Attack Frame hull, Hull Laser and Suit Dock loadouts, armed preview and floor plans: accepted by Ship Designs. |
 | [`mecha/light-attack-frame/pixel-redo/`](mecha/light-attack-frame/pixel-redo/) | Work in progress: the Mecha frame redone in the Mecha pixel style; version B picked, with its Hull Laser and Suit Dock loadouts and six planned mounts. |
 | [`mecha/console/`](mecha/console/) | The Mecha system console (pixel tower with stepped cheeks, no arm ports), picked by heromedel. |
+| [`mecha/pilot/`](mecha/pilot/) | heromedel's HalfMech pilot out of the suit (base designs and a top-down crew sheet), saved for reference; not planned for the game. |
 | [`mecha/crew/`](mecha/crew/) | heromedel's Mecha crew sprite sheet (16 rows, with power-pulse typing), saved as the crew reference. |
 | [`weapons/`](weapons/) | Sporewing, Gat 2.1 "Twinshot", Tentauri Defense Laser, DS-ST Hull Laser and laser battlesuit art. |
 | [`mockups/`](mockups/) | Labelled mockups of ideas, not finished art: system symbol colours. |
