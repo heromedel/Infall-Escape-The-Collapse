@@ -125,6 +125,25 @@ Decided in GDD 7H (2026-10-23).
   computers, terminals or small machines (like the power core). A system is two things: a nice blended graphic,
   and a small symbol on that graphic in one of the ship's colours. Tried in floor layout test 4 as a pale wall desk
   with the symbol on its screen in the ship's blue.
+  - **Proposed (2026-10-23):** the symbol's colour shows whose system it is and its state: a powered player system
+    is green, a powered pirate (enemy) system is orange, and a damaged system on either side is a distinct red. This
+    replaces the ship-colour symbol above. It sits beside GDD 14B (power systems coloured like FTL's, Proposed), which
+    would need to fit with it. Mocked up in `docs/art/mockups/system-symbol-colours/`; heromedel: it works, because
+    orange makes enemy ships read as a caution or enemy colour.
+    - **Decided (2026-10-25):** the green is **power green, `#66FF66`** (`docs/art/palette.md`): every powered system,
+      powered power bar, and the symbol on an intact player system uses it.
+    - **Decided (2026-10-25):** enemy ships show their own race's power colour: Mecha power purple (`#AA28EB`) on
+      Mecha ships, pirate power orange on pirate ships, for symbols, conduits and the core glow.
+    - **Decided (2026-10-25):** pirate power orange, `#FF8500` (`docs/art/palette.md`), made to look as vivid as power
+      green, is the orange for a powered pirate system.
+- **Proposed (2026-10-23):** each race can have its own system look instead of computer monitors, as long as every
+  system carries the standard system symbol, legible at ship view without distracting from the art. The form can
+  differ per system. Tentauri (heromedel's sketch): small organic forms rising from a soft pad, with the symbol lit in
+  a bulb. First used on the Tentauri scout (`docs/art/tentauri/scout/`), one base per system, shaped by what it does:
+  a grasp for Sensors, a hood for Piloting, a carapace on a stand for Shields, a trigger grip for Weapons, pipes for
+  Engines, an iris for Doors, air sacs for Life Support, a bud for Medbay and a halo for the Supershield Generator.
+  - **Proposed (2026-10-25):** when a Tentauri uses a Tentauri system, it plays a grasping animation instead of
+    typing.
 
 ### EVA Dock and EVA suits (2026-10-21)
 

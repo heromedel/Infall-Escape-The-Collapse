@@ -137,6 +137,9 @@ clone.
 - **Origin — Proposed (2026-10-23):** lost to time and somewhat of a mystery, but genetic evidence suggests they
   were Terran, bred to better fit inside semi-cybernetic mech suits. An accidental by-product of their creation,
   and possibly their personal power inside the mechs, made them immature, violent and greedy, like cruel children.
+- **Look out of their suits — Proposed (2026-10-25):** heromedel's pilot art (`docs/art/mecha/pilot/`): petite,
+  pale, purple hair and eyes, purple implant lights on the left shoulder and the back of the head. No current plans
+  to show them out of their suits.
 - **Out of their suits — Proposed (2026-10-23):** incredibly bashful if not violent. Not truly shy, though: their
   overconfidence tends to override it.
 - **What others know — Proposed (2026-10-23):** most races are likely not fully aware of any of this. Some rumors
@@ -147,7 +150,9 @@ clone.
 1. **Tone — Proposed (2026-10-21):** an aggressive destruction race that guts ships; highly organized and
    tactical.
    - **Silhouette — Proposed (2026-10-22):** wide, aggressive battleships.
-   - **Colours — Ai-Generated-Proposal (2026-10-22):** gunmetal and black with yellow and orange hazard markings.
+   - **Colours — Decided (2026-10-25, heromedel):** dark, sleek, near-black metal with Mecha power purple lights;
+     no hazard or caution markings, stencils or industrial plating. This replaces the earlier proposal (gunmetal and
+     black with yellow and orange hazard markings). Details in `docs/art/style-guides.md`.
 2. **Doing fine — Proposed (2026-10-21):** territorial and aggressive. If outmatched, they may insist the
    interloper leave their territory. If they have the advantage they are likely to attack, only accepting
    surrender if they profit from it and are injured themselves.

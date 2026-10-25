@@ -415,7 +415,8 @@ there. Asked by heromedel through Infall: Production (handoff 2026-10-23 14:17).
 3. **State:** a doing-fine Mecha region, met at its Border clusters. The profile says Mecha borders are in
    constant battle with their neighbours and with criminals (Proposed), which is where a light attack pair patrols.
 4. **Race info used (Proposed unless noted):** aggressive, organized and tactical; guts ships; wide, aggressive
-   battleships; gunmetal and black with hazard markings (Ai-Generated-Proposal); weapons high damage and hull
+   battleships; colours now dark sleek metal with purple lights, no hazard markings (Decided 2026-10-25, replacing
+   gunmetal and black with hazard markings; `docs/art/style-guides.md`); weapons high damage and hull
    destructive; EVB Dock with battlesuits, crew flying out in them; no reactor, each system self-powered, and a
    Mecha crew member integrating with a system adds one bar; a single weapon system is hard for them to power;
    Mecha breathe (Likely); low tier (Ai-Generated-Proposal): one EVB Dock with laser suits plus one or two
@@ -429,7 +430,8 @@ there. Asked by heromedel through Infall: Production (handoff 2026-10-23 14:17).
    guts hulls; the **Suit Dock** loadout launches a laser battlesuit that strips shields. 2 crew each.
 7. **Variation:** standard for the race at low tier.
 8. **Layout and systems:** the **Light Attack Frame**: wide and squat, with the weapon pod or dock on the flank,
-   in gunmetal and black with hazard markings. Hull 7 (the low end of the band 1–3 stand-ins, since these are light
+   in dark sleek metal with purple lights (Decided 2026-10-25; the earlier gunmetal with hazard markings is replaced,
+   `docs/art/style-guides.md`). Hull 7 (the low end of the band 1–3 stand-ins, since these are light
    ships). No reactor: every system carries its own power, and an integrated crew member adds one bar.
 
    | System | Hull Laser loadout | Suit Dock loadout | Own power (bars) |

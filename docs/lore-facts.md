@@ -86,7 +86,7 @@ source doc carries the tag heromedel's words give it.
 ## The Mecha
 
 - The Mecha are an aggressive, highly organized and tactical race known for gutting ships. (Race profiles, Mecha 1; Proposed)
-- Mecha ships are gunmetal and black with yellow and orange hazard markings. (Race profiles, Mecha 1; Ai-Generated-Proposal)
+- Mecha ships are dark, sleek, near-black metal lit by purple lights, with no hazard markings. (Race profiles, Mecha 1; Decided)
 - The Mecha are territorial. When outmatched they insist interlopers leave, and when they have the advantage they attack. (Race profiles, Mecha 2; Proposed)
 - The Mecha accept a surrender only when they profit from it. (Race profiles, Mecha 2, 3; Proposed)
 - Doomed Mecha still expect an advantage for themselves, but turn to teamwork when their survival depends on it. (Race profiles, Mecha 4; Proposed)
