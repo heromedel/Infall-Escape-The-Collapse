@@ -2,8 +2,7 @@
 
 **Date:** 2026-10-25
 **Status:** picked by heromedel (the tower with stepped cheeks; arm ports removed 2026-10-25). Not yet used in a
-floor plan: the Mecha Light
-Attack Frame's plans will take it when the frame is redone in the Mecha pixel style.
+floor plan: the Mecha Light Attack Frame's plans will take it when the frame is redone in the Mecha pixel style.
 
 ![The console at 8x](mecha-console-tower-8x.png)
 
