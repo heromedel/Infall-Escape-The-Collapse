@@ -365,9 +365,9 @@ def armed(hull_svg):
     """The hull with a Defense Laser placed at each mount (weapons are separate art)."""
     text = open(hull_svg).read()
     mounts = re.findall(r'<circle id="mount-[\w-]+" cx="([\d.]+)" cy="([\d.]+)"', text)
-    placed = "".join(f'<g transform="translate({x},{y})">{tw.siphon()}</g>' for x, y in mounts)
+    placed = "".join(f'<g transform="translate({x},{y})">{tw.segmented()}</g>' for x, y in mounts)
     return text.replace('<g id="weapon-mounts" display="none">',
-                        f'{tw.defs()}<g id="weapons-preview">{placed}</g><g id="weapon-mounts" display="none">')
+                        f'{tw.defs()}{tw.defs2()}<g id="weapons-preview">{placed}</g><g id="weapon-mounts" display="none">')
 
 
 def svg(body, title):

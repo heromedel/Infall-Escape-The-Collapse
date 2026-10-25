@@ -16,7 +16,8 @@ game places them at a hull's mount; ship previews do the same with `compose.py`.
   lets it run on a Terran ship. Three styles were tried (`sporewing/sporewing-options.png`): a chitin pod with vanes, a
   segmented tube, and the folded wings (picked).
 - **Twinshot (2026-10-23):** a compact Terran turret block with two parallel laser barrels.
-- **Defense Laser (2026-10-23):** a siphon emitter, a tapered nacre tube with a glowing lens. Built by
+- **Defense Laser (2026-10-25):** a segmented barrel narrowing to a glowing tip (it replaced the 2026-10-23 siphon
+  emitter, whose mouth read as an eye). Built by
   `docs/art/tentauri/scout/tools/tentauri_weapons.py`.
 - **DS-ST Hull Laser and laser battlesuit (2026-10-23):** a twin-barrel turret, and a squat armoured suit with a
   laser arm and jump pack. Built by `docs/art/mecha/light-attack-frame/tools/mecha_weapons.py`.
