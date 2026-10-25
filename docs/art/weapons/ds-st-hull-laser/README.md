@@ -1,8 +1,9 @@
 # DS-ST Hull Laser (Double Shot - Single Target - Hull Laser)
 
 **Date:** 2026-10-23
-**Superseded look (2026-10-25):** this art follows the old Mecha colours (gunmetal with hazard markings), which
-`docs/art/style-guides.md` replaces; to be redone in the Mecha style.
+**Replaced (2026-10-25):** the current DS-ST Hull Laser is the pixel version accepted with the battle-cross frame:
+`docs/art/mecha/light-attack-frame/pixel-redo/weapons/ds-st-hull-laser.*`. This vector version follows the old Mecha
+colours and is kept for the record.
 **Status:** accepted by Ship Designs, with the Mecha Light Attack Frame. Weapon design: `docs/ship-suggestions.md`,
 "Mecha Light Attack Frame, two loadouts", point 9.
 

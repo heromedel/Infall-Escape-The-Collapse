@@ -42,10 +42,10 @@ each with its SVG, PNG exports, review sheets, build tools and a notes README.
 |---|---|
 | [`terran/outrider/`](terran/outrider/) | SC-1 Outrider hull: accepted by Ship Designs. Floor layout tests 1–4 in `floor-layout-tests/`. |
 | [`terran/pirate-hijacker/`](terran/pirate-hijacker/) | Terran Pirate Hijacker hull, Hijacker and Cutpurse loadouts, squad view and floor plans: accepted by Ship Designs. |
-| [`tentauri/scout/`](tentauri/scout/) | Tentauri scout hull, armed preview and floor plan with organic consoles: accepted by Ship Designs. |
+| [`tentauri/scout/`](tentauri/scout/) | Tentauri scout hull, armed preview and floor plan with organic consoles: accepted by Ship Designs, including the later changes (segmented Defense Laser, edge mounts, organs on the walls; 2026-10-25). |
 | [`tentauri/crew/`](tentauri/crew/) | heromedel's Tentauri crew sprite sheet (20 rows, with typing at 1–3 extra systems) and the tentacle reach prototype, saved as the crew reference. |
-| [`mecha/light-attack-frame/`](mecha/light-attack-frame/) | Mecha Light Attack Frame hull, Hull Laser and Suit Dock loadouts, armed preview and floor plans: accepted by Ship Designs. |
-| [`mecha/light-attack-frame/pixel-redo/`](mecha/light-attack-frame/pixel-redo/) | Work in progress: the Mecha frame redone; `battle-cross/` (the sleek version) is the **Mecha hull style reference** to compare future Mecha hulls against. |
+| [`mecha/light-attack-frame/`](mecha/light-attack-frame/) | The earlier vector Mecha Light Attack Frame (old Mecha colours), replaced by `pixel-redo/` on 2026-10-25; kept for the record. |
+| [`mecha/light-attack-frame/pixel-redo/`](mecha/light-attack-frame/pixel-redo/) | **Current Mecha Light Attack Frame**, accepted by Ship Designs (2026-10-25): the sleek battle-cross hull (also the Mecha hull style reference), pixel floor plans, pixel weapons and armed previews for both loadouts. |
 | [`mecha/console/`](mecha/console/) | The Mecha system console (pixel tower with stepped cheeks, no arm ports), picked by heromedel. |
 | [`mecha/pilot/`](mecha/pilot/) | heromedel's HalfMech pilot out of the suit (base designs and a top-down crew sheet), saved for reference; not planned for the game. |
 | [`mecha/crew/`](mecha/crew/) | heromedel's Mecha crew sprite sheet (16 rows, with power-pulse typing), saved as the crew reference. |

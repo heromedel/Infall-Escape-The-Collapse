@@ -1,8 +1,10 @@
 # Mecha Light Attack Frame, pixel redo (work in progress)
 
 **Date:** 2026-10-25
-**Status:** work in progress, saved at heromedel's request. heromedel picked **B** (2026-10-25); A is kept for the
-record. Not yet sent to Ship Designs. The accepted vector frame in `../` stays the current design until this replaces it.
+**Status:** **accepted by Ship Designs (2026-10-25): the current Mecha Light Attack Frame.** The battle-cross hull,
+floor plans, weapons and armed previews in `battle-cross/` and `weapons/` replace the vector frame in `../` and the
+vector weapons in `docs/art/weapons/ds-st-hull-laser/` and `battlesuit-laser/` (kept for the record). Versions A and B
+and the speckled rounds below are the history.
 
 ![Version A and B](review/mount-plan.png)
 
@@ -98,5 +100,5 @@ every Terran ship is a rocket or a shuttle.
 
 ## Next
 
-Send the frame to Ship Designs (it replaces an accepted design); once accepted, it replaces the vector frame in `../`
-and the vector weapons.
+Done: accepted by Ship Designs on 2026-10-25. Ship-design note from Ship Designs: Life Support shares the stern room
+with Engines, so a fire or breach there hits both (a readable weak point).
