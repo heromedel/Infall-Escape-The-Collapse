@@ -2,6 +2,7 @@
 them with what each is for."""
 
 POWER_GREEN = "#66ff66"   # powered systems, power bars, and the symbol on an intact player system
+PIRATE_POWER_ORANGE = "#ffb070"   # the pirate engine glow; matches power green's intensity
 
 MECHA_POWER_PURPLE = "#aa28eb"   # the Mecha's accent: visor, chest lights, their power
 
