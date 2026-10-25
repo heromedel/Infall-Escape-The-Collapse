@@ -8,7 +8,7 @@ heromedel's colour code for system symbols.
 | Colour | Meaning | Here |
 |---|---|---|
 | Power green `#66ff66` (`docs/art/palette.md`) | Player system, powered | the Outrider (floor layout test 4) |
-| Orange `#ff9a3c` | Pirate system, powered | the pirate Hijacker (its floor plan) |
+| Pirate power orange `#ff8500` (`docs/art/palette.md`) | Pirate system, powered | the pirate Hijacker (its floor plan) |
 | Red `#ff3b3b` | Damaged, either side | the Outrider's Shields, the pirate's Weapons (red symbol and a red rim on the desk) |
 
 Made with the real floor plan tools; only the symbol colours change. The Outrider half comes from floor layout

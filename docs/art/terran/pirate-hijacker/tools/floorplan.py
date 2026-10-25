@@ -18,6 +18,9 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "..", "outrider", "floor-layout-tests", "tools"))
 from floor import glyph  # noqa: E402  (shared console symbols)
 
+sys.path.insert(0, os.path.join(HERE, "..", "..", ".."))
+from palette import PIRATE_POWER_ORANGE  # noqa: E402
+
 T = 35
 CX = 240
 X0 = CX - 2 * T          # four columns, c0..c3, centred on the hull
@@ -34,7 +37,7 @@ AIRLOCK = "#e07a3a"
 TERMINAL = "#d9dde3"
 TERMINAL_EDGE = "#6d7581"
 SCREEN = "#1c2028"
-SYMBOL = "#c9d1db"           # the hull's light steel: not red, since red means a cut-off system (GDD 14C)
+SYMBOL = PIRATE_POWER_ORANGE   # a powered, intact pirate system (palette.md); never red, which means cut off (GDD 14C)
 ON = "#5dffa8"
 CUT = "#ff4a3a"
 

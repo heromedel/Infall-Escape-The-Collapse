@@ -16,9 +16,9 @@ sys.path.insert(0, os.path.join(ART, "terran", "pirate-hijacker", "tools"))
 import floor4  # noqa: E402  the Outrider, floor layout test 4
 import floorplan  # noqa: E402  the pirate dagger floor plans
 sys.path.insert(0, ART)
-from palette import POWER_GREEN  # noqa: E402
+from palette import POWER_GREEN, PIRATE_POWER_ORANGE  # noqa: E402
 
-GREEN, ORANGE, RED = (sys.argv[2:5] if len(sys.argv) >= 5 else (POWER_GREEN, "#ff9a3c", "#ff3b3b"))
+GREEN, ORANGE, RED = (sys.argv[2:5] if len(sys.argv) >= 5 else (POWER_GREEN, PIRATE_POWER_ORANGE, "#ff3b3b"))
 DAMAGED = {"outrider": "Shields", "pirate": "Weapons"}
 
 

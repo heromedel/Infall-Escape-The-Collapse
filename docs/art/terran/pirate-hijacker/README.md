@@ -93,8 +93,9 @@ Terran designs for a while (race profiles, Terrans 1, Likely). See `docs/art/REA
   tougher than a spine and weaker than the Outrider's wheel.
 - **Fix (2026-10-23):** the first accepted plans left the Twinshot hardpoint unwired, and the Sporewing spur began on a
   tile the ring didn't reach. heromedel spotted the first; the new check caught the second.
-- **Rules:** no console sits on a door tile. Consoles are wall desks with the system symbol in the hull's light
-  steel; not red, since red means a cut-off system (GDD 14C).
+- **Rules:** no console sits on a door tile. Consoles are wall desks with the system symbol in pirate power orange
+  (`#FF8500`, `docs/art/palette.md`), the colour of a powered, intact pirate system (light steel until 2026-10-25); not
+  red, since red means a cut-off system (GDD 14C).
 - **Files:** each loadout has a floor layer (`floor-*.svg`), a conduit layer (`conduits-*.svg`, its own file as the
   art rules ask) and a combined plan (`plan-*.svg`).
 - **Dark core hatch** (race profiles, Proposed): left off for now, at Ship Designs' call.
