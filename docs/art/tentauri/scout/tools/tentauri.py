@@ -563,7 +563,7 @@ def outrigger(title="Tentauri scout hull", spread=1.0):
         d = rounded_path(pts, [24, 26, 28, 24, 16, 12, 16, 22, 18, 22] if side < 0 else
                          [24, 26, 28, 24, 16, 12, 16, 22, 18, 22][::-1])
         nx = CX + side * 117 * k
-        det = (plate_details(d, [(CX + side * 112 * k, 160, 16, TEAL, .4), (CX + side * 120 * k, 260, 12, LAVENDER, .4)])
+        det = (plate_details(d, [(CX + side * 108 * k, 124, 16, TEAL, .4), (CX + side * 120 * k, 260, 12, LAVENDER, .4)])
                + f'<path d="M{CX + side * 96 * k:.1f},{240} Q{CX + side * 120 * k:.1f},{232} {CX + side * 138 * k:.1f},{244}" '
                  f'fill="none" stroke="{DEEP}" stroke-width="1.2" opacity=".45"/>')
         h.plate("plate-flank-" + ("port" if side < 0 else "starboard"), d, TINT_CORAL, bevel=6, details=det, shadow=4)
@@ -583,9 +583,10 @@ def outrigger(title="Tentauri scout hull", spread=1.0):
             shadow=4)
     h.raw("canopy", {5: single_canopy(CX, 66, 30)})
     h.raw("supershield", {5: supershield_organ(CX, 300)})
-    # on the lit middle of each flank plate, clear of the shaded outer edge (moved in from 124 on 2026-10-25)
-    h.mount("mount-defense-laser-a", CX - 106 * k, 160, "Tentauri Defense Laser A", "left")
-    h.mount("mount-defense-laser-b", CX + 106 * k, 160, "Tentauri Defense Laser B", "right")
+    # forward on each flank plate, so the barrel points past the front edge, seated on the teal dimple (its centre is
+    # 6 px below the mount, where the laser's base pad sits); on the lit face, clear of the shaded outer edge
+    h.mount("mount-defense-laser-a", CX - 108 * k, 118, "Tentauri Defense Laser A", "left")
+    h.mount("mount-defense-laser-b", CX + 108 * k, 118, "Tentauri Defense Laser B", "right")
     return h
 
 
