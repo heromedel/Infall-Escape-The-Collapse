@@ -40,7 +40,7 @@ each with its SVG, PNG exports, review sheets, build tools and a notes README.
 | [`tentauri/scout/`](tentauri/scout/) | Tentauri scout hull, armed preview and floor plan with organic consoles: accepted by Ship Designs. |
 | [`tentauri/crew/`](tentauri/crew/) | heromedel's Tentauri crew sprite sheet (20 rows, with typing at 1–3 extra systems) and the tentacle reach prototype, saved as the crew reference. |
 | [`mecha/light-attack-frame/`](mecha/light-attack-frame/) | Mecha Light Attack Frame hull, Hull Laser and Suit Dock loadouts, armed preview and floor plans: accepted by Ship Designs. |
-| [`mecha/console/`](mecha/console/) | The Mecha system console (pixel tower with ports, stepped cheeks), picked by heromedel. |
+| [`mecha/console/`](mecha/console/) | The Mecha system console (pixel tower with stepped cheeks, no arm ports), picked by heromedel. |
 | [`mecha/crew/`](mecha/crew/) | heromedel's Mecha crew sprite sheet (16 rows, with power-pulse typing), saved as the crew reference. |
 | [`weapons/`](weapons/) | Sporewing, Gat 2.1 "Twinshot", Tentauri Defense Laser, DS-ST Hull Laser and laser battlesuit art. |
 | [`mockups/`](mockups/) | Labelled mockups of ideas, not finished art: system symbol colours. |

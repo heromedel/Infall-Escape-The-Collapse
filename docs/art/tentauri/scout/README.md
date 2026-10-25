@@ -47,6 +47,10 @@ Terran. Prismatic mother-of-pearl colours, light from the upper left.
 | Medbay | bud: half-open petals cupping the bulb |
 | Supershield Generator | halo: a ring of beads round the bulb |
 
+- **On the wall (2026-10-25):** each base is half size, upright and slid against the wall of its tile (never turned
+  or mirrored for the wall), so a Tentauri floats and works on the console's own tile, as the art rules ask. The
+  symbol is shrunk less, to 80%, so it stays legible. Tested first in a 2×2 room with the crew sheet (Test C).
+
 ## History
 
 - **Hull:** 15 versions (`review/versions*.png`). Egg, snowman, jellyfish, mushroom and helmet shapes were dropped.

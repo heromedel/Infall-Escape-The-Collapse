@@ -1,9 +1,9 @@
-"""Mecha console, the tower with ports, as pixel art on the 35 x 35 tile (north wall at the top).
+"""Mecha console, the tower, as pixel art on the 35 x 35 tile (north wall at the top).
 
 Usage: python3 tower_px.py ../../crew/mecha-crew-sheet.svg OUT.svg
 Three cheek shapes. Each part is a pixel mask; outlines, lit and shaded edges and a gritty shade variation are worked
-out per pixel from the Mecha palette. The two ports sit where the HalfMech's hands land when it types (x 9 and 26,
-y 3-4).
+out per pixel from the Mecha palette. The picked console has no ports (they only lined up with the hands on the north
+wall); the option sheet was made with them, at x 9 and 26, y 3-4.
 """
 import random
 import re
@@ -81,7 +81,7 @@ def weapons_px():
     return set(ring + cross)
 
 
-def console(kind, seed=3):
+def console(kind, seed=3, ports=False):
     tower = tower_mask()
     cheek = cheeks(kind)
     px = shade_parts([(cheek, ARMOUR), (tower, DARK)], seed)
@@ -92,7 +92,7 @@ def console(kind, seed=3):
     for dx, dy in weapons_px():
         px[(14 + dx, 5 + dy)] = GREEN
     # ports where the hands land: a dark socket with a deep purple rim
-    for hx in (9, 26):
+    for hx in ((9, 26) if ports else ()):
         for x in range(hx - 1, hx + 2):
             for y in range(2, 6):
                 px[(x, y)] = DEEP if (x in (hx - 1, hx + 1) or y in (2, 5)) else OUTLINE
@@ -111,7 +111,10 @@ def to_svg(px):
 
 KINDS = [("Blade cheeks", "blade"), ("Stepped cheeks", "stepped"), ("Claw cheeks", "claw")]
 
-if __name__ == "__main__":
+if __name__ == "__main__" and sys.argv[1:2] == ["--picked"]:
+    # the picked console: stepped cheeks, no ports
+    open(sys.argv[2], "w").write(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 35" width="35" height="35">{to_svg(console("stepped"))}</svg>\n')
+elif __name__ == "__main__":
     sheet = open(sys.argv[1]).read()
     typing = frame(sheet, 3, 15)
     S = 6
@@ -119,7 +122,7 @@ if __name__ == "__main__":
     for i, (name, kind) in enumerate(KINDS):
         x0 = 20 + i * (T * S + 30)
         tile = f'<rect width="{T}" height="{T}" fill="{FLOOR}"/><path d="M0,0 H35" stroke="#16181c" stroke-width="2"/>'
-        art = to_svg(console(kind))
+        art = to_svg(console(kind, ports=True))
         open(f"tower-{kind}.svg", "w").write(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 35" width="35" height="35">{art}</svg>\n')
         cells.append(f'<text x="{x0 + T * S / 2}" y="24" font-size="14" fill="#e6ebf2" text-anchor="middle" font-family="sans-serif">{i + 1}. {name}</text>'
                      f'<g transform="translate({x0},36) scale({S})">{tile}{art}</g>'

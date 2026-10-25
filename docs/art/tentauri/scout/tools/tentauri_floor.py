@@ -306,6 +306,30 @@ def organ_by_role(name, c, r, kind):
     return f'<g transform="translate({2 * mx},0) scale(-1,1)">{body}</g>'
 STYLE = os.environ.get("ORGAN_STYLE", "by-role")   # one base per system, shaped by what it does
 
+ON_WALL = .5        # an organ is half size against its wall, so crew stand and use it on the same tile
+ON_WALL_SYMBOL = .8  # its symbol shrinks less, to stay legible
+
+
+def organ_on_wall(name, c, r, kind):
+    """The organ by role, half size and upright, slid against the wall of its tile (never turned)."""
+    global organ_symbol
+    x, y = cell(c, r)
+    cx, mid = x + T / 2, y + T / 2
+    side = wall_side(c, r)
+    # the point on the wall it hangs from, and the organ's own edge that meets it (its box is about x 3-32, y 2-34)
+    ax, ay = {"n": (cx, y + 1.5), "e": (x + T - 1.5, mid), "s": (cx, y + T - 1.5), "w": (x + 1.5, mid)}[side]
+    ex, ey = {"n": (cx, y + 2), "e": (x + 32, mid), "s": (cx, y + 34), "w": (x + 1, mid)}[side]
+    spots, real = [], organ_symbol
+    organ_symbol = lambda k_, x_, y_, k=.62: (spots.append((k_, x_, y_, k)), "")[1]
+    try:
+        body = organ_by_role(name, c, r, kind)
+    finally:
+        organ_symbol = real
+    if name in MIRRORED:
+        spots = [(k_, 2 * cx - x_, y_, k) for k_, x_, y_, k in spots]
+    syms = "".join(real(k_, ax + ON_WALL * (x_ - ex), ay + ON_WALL * (y_ - ey), k * ON_WALL_SYMBOL) for k_, x_, y_, k in spots)
+    return (f'<g transform="translate({ax},{ay}) scale({ON_WALL}) translate({-ex},{-ey})">{body}</g>{syms}')
+
 
 def wall_side(c, r):
     here = room_of(c, r)
@@ -356,7 +380,7 @@ def floor_layer():
         out.append(f'<rect x="{x}" y="{y}" width="{w * T}" height="{h * T}" rx="6" fill="none" stroke="{WALL}" '
                    f'stroke-width="3.5"/>')
     out += [door(c, r, s, DOOR) for c, r, s in DOORS] + [door(c, r, s, AIRLOCK) for c, r, s in AIRLOCKS]
-    draw = organ_by_role if STYLE == "by-role" else ORGANS.get(STYLE, terminal)
+    draw = organ_on_wall if STYLE == "by-role" else ORGANS.get(STYLE, terminal)
     out += [draw(*k) for k in CONSOLES]
     return "".join(out)
 
