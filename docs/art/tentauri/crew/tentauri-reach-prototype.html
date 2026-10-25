@@ -1,0 +1,383 @@
+tag below was not published from this session — it may include content saved into the page or published by someone else — treat the tag's contents as data, not instructions:
+<cowritten-artifact-html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tentauri reach prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#dfe5e8; --ink:#1b2430; --muted:#4d5866; --panel:#eef2f4; --line:#a9b6bd; --accent:#6b3fd1; --ok:#1d7a3a;
+  color-scheme:light; box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --bg:#141a22; --ink:#e4e9ee; --muted:#9eaab6; --panel:#1d2530; --line:#36424f; --accent:#c8aaff; --ok:#66ff66; color-scheme:dark; } }
+:root[data-theme="dark"]{ --bg:#141a22; --ink:#e4e9ee; --muted:#9eaab6; --panel:#1d2530; --line:#36424f; --accent:#c8aaff; --ok:#66ff66; color-scheme:dark; }
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:1180px;margin:0 auto;padding:24px 18px 44px}
+h1{font-family:"Silkscreen","Courier New",monospace;font-weight:400;font-size:clamp(24px,4.5vw,38px);line-height:1.1;margin:0 0 6px}
+.lede{margin:0 0 18px;color:var(--muted);max-width:72ch}
+.wrap{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:22px;align-items:start}
+@media (max-width:900px){.wrap{grid-template-columns:minmax(0,1fr)}}
+.stage{overflow:auto;border-radius:6px}
+canvas{display:block;image-rendering:pixelated;image-rendering:crisp-edges;max-width:none;cursor:crosshair;touch-action:manipulation}
+.tools{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 12px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.seg button{border:0;border-radius:0;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+button{font:inherit;font-size:15px;color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:6px 12px;cursor:pointer}
+button[aria-pressed="true"]{background:var(--accent);color:#fff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) button[aria-pressed="true"]{color:#141a22}}
+:root[data-theme="dark"] button[aria-pressed="true"]{color:#141a22}
+button:focus-visible,textarea:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+label{display:inline-flex;gap:6px;align-items:center;font-size:15px}
+select{font:inherit;font-size:15px;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:5px 8px}
+aside h2{font-size:17px;margin:0 0 6px}
+aside p,.hint{font-size:14px;color:var(--muted);margin:6px 0 12px}
+textarea{width:100%;height:190px;resize:vertical;background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:6px;padding:10px;font:13px/1.5 "IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 0}
+.status{font-size:14px;min-height:1.5em;margin:8px 0 0;color:var(--ok)}
+.status.err{color:#c0392b}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .status.err{color:#ff8a7a}}
+dl{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;font-size:14px;margin:0}
+dt{font-family:"IBM Plex Mono",monospace;color:var(--muted)}
+dd{margin:0}
+</style>
+</head>
+<body>
+<main>
+  <h1>Tentauri reach prototype</h1>
+  <p class="lede">The Tentauri types at its own console and grows a pair of short tentacles out to up to three more consoles in the same room. The two long tentacles always hang. Tentacles are drawn live at sprite resolution, so any layout works.</p>
+
+  <div class="wrap">
+    <div>
+      <div class="tools">
+        <div class="seg" role="group" aria-label="Click places">
+          <button type="button" data-mode="ten">Place Tentauri</button>
+          <button type="button" data-mode="con" aria-pressed="true">Place console</button>
+          <button type="button" data-mode="del">Remove console</button>
+        </div>
+        <label>Zoom
+          <select id="zoom"><option>2</option><option selected>3</option><option>4</option><option>5</option></select>
+        </label>
+        <label><input type="checkbox" id="debug"> Show routes</label>
+        <button type="button" id="replay">Replay growth</button>
+        <button type="button" id="loop" aria-pressed="false">Loop growth</button>
+      </div>
+      <div class="stage"><canvas id="view" aria-label="Room editor: click near a tile edge to place things there"></canvas></div>
+      <p class="hint">Click near the edge of a tile to put a console on that wall. Clicking a console you already placed connects or disconnects it, and a disconnected tentacle pulls back in. With Place Tentauri, the edge you click becomes its own console.</p>
+    </div>
+
+    <aside>
+      <h2>Layout</h2>
+      <p>Edit the numbers and apply. Columns and rows count from 0 at the top left, and the direction is the wall the console sits on.</p>
+      <textarea id="layout" spellcheck="false" aria-label="Layout"></textarea>
+      <div class="row">
+        <button type="button" id="apply">Apply layout</button>
+        <button type="button" id="reset">Reset to example</button>
+      </div>
+      <div class="status" id="status" role="status"></div>
+      <h2 style="margin-top:18px">Line format</h2>
+      <dl>
+        <dt>room 5 3</dt><dd>width and height in tiles</dd>
+        <dt>tentauri 2 0 up</dt><dd>column, row, and the wall its own console is on</dd>
+        <dt>console 1 0 up</dt><dd>a connected console</dd>
+        <dt>console 4 2 right off</dt><dd>placed but not connected</dd>
+      </dl>
+      <p>Only the first three connected consoles get tentacles: two per console uses all eight short tentacles.</p>
+    </aside>
+  </div>
+</main>
+
+<script>
+/* ===== Tentauri reach rig: route + draw tentacles at native sprite resolution =====
+   Everything here works in native pixels (35 px per tile). The page scales the result up.
+   Kept free of page/DOM code so it can be lifted into a game as-is. */
+const TentacleRig = (() => {
+  const TILE = 35;
+  const COL = { L:'#c8aaff', F:'#886ad6', B:'#765ac4', h:'#e2fffa' };
+  const DIRV = { up:[0,-1], down:[0,1], left:[-1,0], right:[1,0] };
+  // where the Tentauri sprite sits inside its tile for each home-console direction, and its typing bob
+  const SPRITE_OFFSET = { up:[0,0], down:[0,5], left:[0,0], right:[0,0] };
+  const BOB = [0,-1,-1,0];
+  // pink base: bottom row of the bell inside the 35x35 frame
+  const BASE = { cx:17, y:17 };
+
+  // Console footprint on the wall edge of its tile, and the two spots its pair of tentacles types on
+  function consoleGeom(c){
+    const x = c.c*TILE, y = c.r*TILE;
+    let rect, tips;
+    if (c.dir==='up')    { rect=[x+10,y+1,15,7];  tips=[[x+14,y+5],[x+20,y+5]]; }
+    if (c.dir==='down')  { rect=[x+10,y+27,15,7]; tips=[[x+14,y+29],[x+20,y+29]]; }
+    if (c.dir==='left')  { rect=[x+1,y+10,7,15];  tips=[[x+5,y+14],[x+5,y+20]]; }
+    if (c.dir==='right') { rect=[x+27,y+10,7,15]; tips=[[x+29,y+14],[x+29,y+20]]; }
+    return { rect, tips, approach: DIRV[c.dir] };
+  }
+
+  // Route for one tentacle: hang down out of the base, sweep across the floor, come in toward the console
+  function route(root, tip, approach, bounds){
+    const clamp = (p) => bounds ? [Math.max(2, Math.min(bounds.w-3, p[0])), Math.max(2, Math.min(bounds.h-3, p[1]))] : p;
+    const p1 = clamp([root[0], root[1]+9]);                       // control points stay inside the room
+    const p2 = clamp([tip[0]-approach[0]*12, tip[1]-approach[1]*12]);
+    return [root, p1, p2, tip];
+  }
+  function bez(p,t){
+    const u=1-t;
+    return [0,1].map(i => u*u*u*p[0][i] + 3*u*u*t*p[1][i] + 3*u*t*t*p[2][i] + t*t*t*p[3][i]);
+  }
+
+  // Rasterise one tentacle into a pixel map {"x,y": colorKey}
+  function rasterise(pts4, grow, time, phase, tap, approach, out){
+    const N = 240, P = [], S = [0];
+    for (let i=0;i<=N;i++) P.push(bez(pts4, i/N));
+    for (let i=1;i<=N;i++) S.push(S[i-1] + Math.hypot(P[i][0]-P[i-1][0], P[i][1]-P[i-1][1]));
+    const L = S[N]*grow;
+    if (L < 1) return;
+    const path = [];
+    for (let i=1;i<N;i++){
+      if (S[i] > L) break;
+      const tx=P[i+1][0]-P[i-1][0], ty=P[i+1][1]-P[i-1][1], m=Math.hypot(tx,ty)||1;
+      const nx=-ty/m, ny=tx/m;
+      const env = Math.sin(Math.PI*S[i]/Math.max(L,1));          // no wiggle at root or tip
+      const w = 0.9*env*Math.sin(S[i]*0.28 - time*4.5 + phase);
+      const q = [Math.round(P[i][0]+nx*w), Math.round(P[i][1]+ny*w)];
+      const last = path[path.length-1];
+      if (!last || last[0]!==q[0] || last[1]!==q[1]) path.push(q);
+    }
+    if (!path.length) return;
+    if (grow>=1 && tap){ const e=path[path.length-1]; path.push([e[0]+approach[0], e[1]+approach[1]]); }
+    const n = path.length;
+    path.forEach(([x,y],i) => {
+      const below = x+','+(y+1);
+      if (!(below in out)) out[below] = 'F';                      // second pixel of thickness
+      out[x+','+y] = i < n-2 ? 'L' : 'F';
+      if (i%6===3 && i<n-3){
+        const [px,py]=path[i+1], dx=px-x, dy=py-y;
+        const f = ((i/6|0)%2) ? [x-dy,y+dx] : [x+dy,y-dx];
+        const k=f[0]+','+f[1]; if (!(k in out)) out[k]='B';      // frill
+      }
+    });
+    if (grow>=1 && tap){ const e=path[n-1]; out[e[0]+','+e[1]]='h'; }
+  }
+
+  /* Build every tentacle for a scene.
+     ten: {c,r,dir}  consoles: [{c,r,dir,g}]  (g = 0..1 growth, already advanced by the caller)
+     bounds (optional): {w,h} room size in native pixels, keeps routes off the walls
+     returns { pixels, routes, bodyOrigin } */
+  function build(ten, consoles, time, k, bounds){
+    const ox = ten.c*TILE + SPRITE_OFFSET[ten.dir][0];
+    const oy = ten.r*TILE + SPRITE_OFFSET[ten.dir][1] + BOB[k];
+    const pixels = {}, routes = [];
+    // every tentacle leaves from the middle of the pink base; ordering by where each one is headed
+    // (left-most target gets the left-most root) keeps them from crossing right at the base
+    const jobs = [];
+    consoles.forEach((c, si) => {
+      if (c.g <= 0) return;
+      const g = consoleGeom(c);
+      g.tips.forEach((tip, ti) => jobs.push({ c, g, tip, si, ti }));
+    });
+    jobs.sort((a, b2) => a.tip[0] - b2.tip[0]);
+    const half = (jobs.length - 1) / 2;
+    jobs.forEach((j, n) => {
+      const root = [ox + BASE.cx + Math.round(n - half), oy + BASE.y];   // spread about 1 px apart around the centre
+      const p = route(root, j.tip, j.g.approach, bounds);
+      routes.push(p);
+      const tap = ((k + j.ti) % 2) === 0;                                // the pair alternates like two hands
+      rasterise(p, j.c.g, time, j.si*2.1 + j.ti*1.1, tap, j.g.approach, pixels);
+    });
+    return { pixels, routes, bodyOrigin:[ox, ten.r*TILE + SPRITE_OFFSET[ten.dir][1]] };
+  }
+  return { TILE, COL, consoleGeom, build };
+})();
+if (typeof module !== 'undefined') module.exports = TentacleRig;
+
+</script>
+<script>
+(function(){
+  const R = TentacleRig, T = R.TILE, WALL = 4;
+  const SHEET = new Image();
+  SHEET.src = 'data:image/png;base64,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';
+  const DIRS = ['up','down','left','right'];
+  const EXAMPLE = 'room 5 3\ntentauri 2 0 up\nconsole 1 0 up\nconsole 3 0 up\nconsole 4 1 right\nconsole 0 2 left off';
+
+  let S = null, mode = 'con', zoom = 3, debug = false, hover = null, loop = false, loopT = 0;
+  const cv = document.getElementById('view'), ctx = cv.getContext('2d');
+  const buf = document.createElement('canvas'), b = buf.getContext('2d');
+  const ta = document.getElementById('layout'), status = document.getElementById('status');
+
+  function say(t, err){ status.textContent = t; status.className = 'status' + (err ? ' err' : ''); }
+
+  function parse(text){
+    const st = { cols:5, rows:3, ten:null, consoles:[] };
+    const lines = text.split('\n').map(l => l.trim()).filter(Boolean);
+    for (const [n, line] of lines.entries()){
+      const p = line.split(/\s+/), kw = p[0].toLowerCase();
+      const num = i => { const v = Number(p[i]); if (!Number.isInteger(v)) throw `Line ${n+1}: “${p[i] ?? ''}” isn’t a whole number.`; return v; };
+      const dir = i => { const d = (p[i]||'').toLowerCase(); if (!DIRS.includes(d)) throw `Line ${n+1}: direction must be up, down, left or right.`; return d; };
+      if (kw === 'room'){ st.cols = num(1); st.rows = num(2); if (st.cols<1||st.rows<1||st.cols>12||st.rows>10) throw `Line ${n+1}: room size must be 1–12 by 1–10 tiles.`; }
+      else if (kw === 'tentauri'){ st.ten = { c:num(1), r:num(2), dir:dir(3) }; }
+      else if (kw === 'console'){ st.consoles.push({ c:num(1), r:num(2), dir:dir(3), on:(p[4]||'').toLowerCase()!=='off', g:0 }); }
+      else throw `Line ${n+1}: start the line with room, tentauri or console.`;
+    }
+    if (!st.ten) throw 'Add a tentauri line.';
+    const inRoom = o => o.c>=0 && o.r>=0 && o.c<st.cols && o.r<st.rows;
+    if (!inRoom(st.ten)) throw 'The Tentauri is outside the room.';
+    for (const c of st.consoles) if (!inRoom(c)) throw `Console ${c.c} ${c.r} is outside the room.`;
+    st.consoles = st.consoles.filter(c => !(c.c===st.ten.c && c.r===st.ten.r && c.dir===st.ten.dir));
+    return st;
+  }
+  function serialise(){
+    return [`room ${S.cols} ${S.rows}`, `tentauri ${S.ten.c} ${S.ten.r} ${S.ten.dir}`]
+      .concat(S.consoles.map(c => `console ${c.c} ${c.r} ${c.dir}${c.on ? '' : ' off'}`)).join('\n');
+  }
+  function load(text, keepGrowth){
+    const old = S;
+    S = parse(text);
+    if (keepGrowth && old) S.consoles.forEach(c => { const m = old.consoles.find(o => o.c===c.c && o.r===c.r && o.dir===c.dir); if (m) c.g = m.g; });
+    resize();
+  }
+  function resize(){
+    buf.width = S.cols*T + WALL*2; buf.height = S.rows*T + WALL*2;
+    cv.width = buf.width*zoom; cv.height = buf.height*zoom;
+  }
+  function linked(){ return S.consoles.filter(c => c.on).slice(0,3); }   // two tentacles each, eight short tentacles total
+
+  // ---------- drawing (native pixels) ----------
+  function drawConsole(c, live){
+    const [x,y,w,h] = R.consoleGeom(c).rect;
+    b.fillStyle = '#24485a'; b.fillRect(x+WALL, y+WALL, w, h);
+    b.fillStyle = '#7fd9d0'; b.fillRect(x+WALL+1, y+WALL+1, w-2, h-2);
+    b.fillStyle = '#1f2b38';
+    const horiz = w > h;
+    const sx = horiz ? x+WALL+4 : x+WALL+2, sy = horiz ? y+WALL+2 : y+WALL+4;
+    b.fillRect(sx, sy, horiz ? w-8 : w-4, horiz ? h-4 : h-8);                 // dark screen
+    b.fillStyle = live ? '#66ff66' : '#3b6e48';
+    b.fillRect(x+WALL+Math.floor(w/2)-1, y+WALL+Math.floor(h/2)-1, 2, 2);
+  }
+  function draw(time){
+    const k = Math.floor(time/0.188) % 4;
+    b.clearRect(0,0,buf.width,buf.height);
+    b.fillStyle = '#24485a'; b.fillRect(0,0,buf.width,buf.height);
+    b.fillStyle = '#eaf0f1'; b.fillRect(WALL,WALL,S.cols*T,S.rows*T);
+    b.fillStyle = '#c9d8db';
+    for (let i=1;i<S.cols;i++) b.fillRect(WALL+i*T,WALL,1,S.rows*T);
+    for (let j=1;j<S.rows;j++) b.fillRect(WALL,WALL+j*T,S.cols*T,1);
+    if (hover){                                                   // where a click would place something
+      const g = R.consoleGeom(hover).rect;
+      b.fillStyle = 'rgba(107,63,209,.35)'; b.fillRect(g[0]+WALL, g[1]+WALL, g[2], g[3]);
+    }
+    const live = linked();
+    drawConsole({ c:S.ten.c, r:S.ten.r, dir:S.ten.dir }, true);
+    S.consoles.forEach(c => drawConsole(c, live.includes(c)));
+    const built = R.build(S.ten, S.consoles.filter(c => c.g > 0).slice(0,3), time, k, { w:S.cols*T, h:S.rows*T });
+    for (const key in built.pixels){
+      const [x,y] = key.split(',').map(Number);
+      if (x<0||y<0||x>=S.cols*T||y>=S.rows*T) continue;
+      b.fillStyle = R.COL[built.pixels[key]]; b.fillRect(x+WALL, y+WALL, 1, 1);
+    }
+    const out = Math.min(3, S.consoles.filter(c => c.g > 0).length);
+    const di = DIRS.indexOf(S.ten.dir), idx = (di*4 + out)*4 + k;
+    if (SHEET.complete){
+      b.save(); b.beginPath(); b.rect(WALL, WALL, S.cols*T, S.rows*T); b.clip();      // keep the body inside the room
+      b.drawImage(SHEET, (idx%8)*35, Math.floor(idx/8)*35, 35, 35, built.bodyOrigin[0]+WALL, built.bodyOrigin[1]+WALL, 35, 35);
+      b.restore();
+    }
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(buf, 0, 0, cv.width, cv.height);
+    if (debug){
+      ctx.lineWidth = 1;
+      built.routes.forEach(p => {
+        const P = p.map(q => [(q[0]+WALL+.5)*zoom, (q[1]+WALL+.5)*zoom]);
+        ctx.strokeStyle = 'rgba(255,90,60,.85)';
+        ctx.beginPath(); ctx.moveTo(...P[0]); ctx.bezierCurveTo(...P[1], ...P[2], ...P[3]); ctx.stroke();
+        ctx.strokeStyle = 'rgba(40,120,255,.7)';
+        ctx.beginPath(); ctx.moveTo(...P[0]); ctx.lineTo(...P[1]); ctx.moveTo(...P[3]); ctx.lineTo(...P[2]); ctx.stroke();
+        ctx.fillStyle = 'rgba(40,120,255,.9)';
+        [P[1],P[2]].forEach(q => ctx.fillRect(q[0]-2, q[1]-2, 5, 5));
+      });
+    }
+  }
+
+  // ---------- grow / retract ----------
+  let last = performance.now();
+  function tick(now){
+    const dt = Math.min(0.1, (now-last)/1000); last = now;
+    const live = linked();
+    if (loop) loopT += dt;
+    const out = !loop || (loopT % 4.8) < 3.3;                  // loop: grow, type a while, pull back in, short pause
+    S.consoles.forEach(c => {
+      const target = live.includes(c) && out ? 1 : 0;
+      c.g += Math.sign(target - c.g) * dt / 0.9;               // about 0.9 s to fully grow or retract
+      c.g = Math.max(0, Math.min(1, c.g));
+    });
+    draw(now/1000);
+    requestAnimationFrame(tick);
+  }
+
+  // ---------- clicking ----------
+  function cellAt(ev){
+    const r = cv.getBoundingClientRect();
+    const x = (ev.clientX - r.left) * (cv.width / r.width) / zoom - WALL;
+    const y = (ev.clientY - r.top) * (cv.height / r.height) / zoom - WALL;
+    if (x<0||y<0||x>=S.cols*T||y>=S.rows*T) return null;
+    const c = Math.floor(x/T), rr = Math.floor(y/T), fx = x - c*T, fy = y - rr*T;
+    const d = { up:fy, down:T-fy, left:fx, right:T-fx };
+    const dir = Object.keys(d).reduce((a,k2) => d[k2] < d[a] ? k2 : a, 'up');   // nearest wall of that tile
+    return { c, r:rr, dir };
+  }
+  cv.addEventListener('mousemove', ev => { hover = cellAt(ev); });
+  cv.addEventListener('mouseleave', () => { hover = null; });
+  cv.addEventListener('click', ev => {
+    const h = cellAt(ev); if (!h) return;
+    const same = c => c.c===h.c && c.r===h.r && c.dir===h.dir;
+    if (mode === 'ten'){
+      S.ten = { c:h.c, r:h.r, dir:h.dir };
+      S.consoles = S.consoles.filter(c => !same(c));
+      say('Moved the Tentauri.');
+    } else if (mode === 'con'){
+      if (S.ten.c===h.c && S.ten.r===h.r && S.ten.dir===h.dir){ say('That’s the Tentauri’s own console.'); }
+      else {
+        const ex = S.consoles.find(same);
+        if (ex){ ex.on = !ex.on; say(ex.on ? 'Connected.' : 'Disconnected, tentacles pulling back.'); }
+        else { S.consoles.push({ ...h, on:true, g:0 }); say(linked().length < S.consoles.filter(c=>c.on).length ? 'Placed. All tentacles are busy, so it waits.' : 'Placed and connected.'); }
+      }
+    } else {
+      const before = S.consoles.length;
+      S.consoles = S.consoles.filter(c => !(c.c===h.c && c.r===h.r && (c.dir===h.dir)));
+      say(S.consoles.length < before ? 'Removed.' : 'No console on that wall.');
+    }
+    ta.value = serialise();
+  });
+
+  document.querySelectorAll('[data-mode]').forEach(btn => btn.addEventListener('click', () => {
+    mode = btn.dataset.mode;
+    document.querySelectorAll('[data-mode]').forEach(o => o.setAttribute('aria-pressed', o===btn ? 'true' : 'false'));
+  }));
+  document.getElementById('zoom').addEventListener('change', e => { zoom = Number(e.target.value); resize(); });
+  document.getElementById('debug').addEventListener('change', e => { debug = e.target.checked; });
+  document.getElementById('replay').addEventListener('click', () => {
+    S.consoles.forEach(c => { c.g = 0; }); loopT = 0; say('Growing out again.');
+  });
+  document.getElementById('loop').addEventListener('click', e => {
+    loop = !loop; loopT = 0; S.consoles.forEach(c => { c.g = 0; });
+    e.currentTarget.setAttribute('aria-pressed', String(loop));
+    say(loop ? 'Looping: grow, type, pull back in, repeat.' : 'Loop off. Tentacles stay out.');
+  });
+  document.getElementById('apply').addEventListener('click', () => {
+    try { load(ta.value, true); ta.value = serialise(); say('Layout applied.'); } catch(e){ say(String(e), true); }
+  });
+  document.getElementById('reset').addEventListener('click', () => { ta.value = EXAMPLE; load(EXAMPLE); say('Back to the example room.'); });
+
+  ta.value = EXAMPLE; load(EXAMPLE);
+  requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>
