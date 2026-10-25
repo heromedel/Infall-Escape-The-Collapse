@@ -30,6 +30,8 @@ clone.
 1. **Tone and ship style — Proposed (2026-10-21):** when doing well, clean, soft Federation-like ships. When
    desperate, a grim, survivalist look built from seemingly borrowed or stolen technology.
    - **Silhouette — Proposed (2026-10-22):** classic spaceship shapes, from large shuttles to cruisers and rockets.
+   - **Rendering style — Proposed (2026-10-25):** clean vector, crisp edges, polished plates, tidy clean tech,
+     especially when doing well (`docs/art/README.md`).
    - **Armoured core hatch — Proposed (2026-10-23):** a visible armoured housing over the AZC, like the Outrider's,
      is common on Terran vessels but not mandatory. Its variants can show the ship's state: clean and plated when
      doing well, worn when struggling, dark and scorched on doomed or pirate ships.
@@ -147,7 +149,16 @@ clone.
 1. **Tone — Proposed (2026-10-21):** an aggressive destruction race that guts ships; highly organized and
    tactical.
    - **Silhouette — Proposed (2026-10-22):** wide, aggressive battleships.
-   - **Colours — Ai-Generated-Proposal (2026-10-22):** gunmetal and black with yellow and orange hazard markings.
+   - **Shape — Proposed (2026-10-25):** inspired by the design language of FTL's Lanius ships, with nothing copied:
+     big overlapping plates, hooked and pointed tips, dark machinery between plates, rows of glowing slits. heromedel's
+     picked frame has forward horns around a pointed armoured prow and cleaver blades raked aft.
+   - **Colours — Decided (2026-10-25):** near-black armour with one accent, Mecha power purple (`#AA28EB`,
+     `docs/art/palette.md`). No caution stripes or hazard markings (replaces the earlier gunmetal-and-hazard
+     proposal).
+   - **Rendering style — Proposed (2026-10-25):** low-res pixel art built pixel by pixel on the grid, with a gritty,
+     uneven pixel texture and detail only hinted. It should look made on a Nintendo, not in Flash.
+   - **Crew look — Likely (2026-10-25):** heromedel's crew sheet (`docs/art/mecha/crew/`): a HalfMech in a
+     Gundam-like mech suit, menacing through silhouette and a dark palette with one accent.
 2. **Doing fine — Proposed (2026-10-21):** territorial and aggressive. If outmatched, they may insist the
    interloper leave their territory. If they have the advantage they are likely to attack, only accepting
    surrender if they profit from it and are injured themselves.
@@ -203,9 +214,12 @@ clone.
    - **Breathing — Likely (2026-10-23):** Mecha breathe. Suffocation is their key weakness: taking out their life
      support is a legitimate tactic, and one of them has to disengage and move to repair it.
    - **No overpowering — Decided (2026-10-23):** integration never powers a system above its level.
-   - **Mecha consoles — Proposed (2026-10-23):** every Mecha system works both ways. Each is a tall unit with a
-     computer panel that any crew member can use, plus arm and leg slots a mech plugs into at low, mid and high-mid
-     points, so none is out of reach. Integration is animated on every system.
+   - **Mecha consoles — Likely (2026-10-25):** the tower console heromedel picked (`docs/art/mecha/console/`): a
+     narrow armoured tower with the screen and symbol between two stepped cheeks, with no arm ports. Replaces the
+     earlier arm-and-leg-slot idea.
+   - **How integration looks — Likely (2026-10-25):** a Mecha works an ordinary console, and a power pulse runs
+     from it, starting in Mecha power purple and turning power green as it reaches the console. It works on any
+     race's console.
    - **Cybernetic Servicing Core — Likely (2026-10-23):** Mecha ships have no strong power core. Their Cybernetic
      Servicing Core (earlier working names: Mech Repair Bay, Cybernetic Servicing Bay) gives the ship its minimal
      power. It is the Mecha's Medbay, and also works as a Medbay for other races. It is where Mecha upgrade their
@@ -229,6 +243,13 @@ Octopus-like race (earlier working label "Octopods").
    perhaps two crew members on a standard ship, possibly mates. Their ships have few rooms with many systems in
    them.
    - **Silhouette — Proposed (2026-10-22):** compact, like tiny shuttles.
+   - **Rendering style — Proposed (2026-10-25):** soft, comfy and pillowy: rounded inflated forms, pastel mother of
+     pearl, organic consoles, a gentle glow.
+   - **Crew look — Likely (2026-10-25):** heromedel's crew sheet (`docs/art/tentauri/crew/`): a soft jellyfish-like
+     bell seen from above, with two long tentacles that always hang and eight short ones that type, shoot, punch
+     and reach other systems.
+   - **Using systems — Proposed (2026-10-25):** a Tentauri using a Tentauri system plays a grasping animation
+     instead of typing.
    - **Colours — Proposed (2026-10-22):** prismatic, multicoloured ships, close to a chameleon or mother of
      pearl; aqua, teal and coral white or coral pink among them, in mottled patterns.
 2. **Doing fine — Proposed (2026-10-21):** quiet and diplomatic, but if they want to go into a system they are

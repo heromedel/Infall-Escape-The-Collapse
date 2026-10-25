@@ -415,7 +415,7 @@ there. Asked by heromedel through Infall: Production (handoff 2026-10-23 14:17).
 3. **State:** a doing-fine Mecha region, met at its Border clusters. The profile says Mecha borders are in
    constant battle with their neighbours and with criminals (Proposed), which is where a light attack pair patrols.
 4. **Race info used (Proposed unless noted):** aggressive, organized and tactical; guts ships; wide, aggressive
-   battleships; gunmetal and black with hazard markings (Ai-Generated-Proposal); weapons high damage and hull
+   battleships; near-black with a purple accent (Decided, 2026-10-25); weapons high damage and hull
    destructive; EVB Dock with battlesuits, crew flying out in them; no reactor, each system self-powered, and a
    Mecha crew member integrating with a system adds one bar; a single weapon system is hard for them to power;
    Mecha breathe (Likely); low tier (Ai-Generated-Proposal): one EVB Dock with laser suits plus one or two
@@ -428,8 +428,7 @@ there. Asked by heromedel through Infall: Production (handoff 2026-10-23 14:17).
 6. **Kinds of systems and crew:** one standard frame, thin shields, little evasion. The **Hull Laser** loadout
    guts hulls; the **Suit Dock** loadout launches a laser battlesuit that strips shields. 2 crew each.
 7. **Variation:** standard for the race at low tier.
-8. **Layout and systems:** the **Light Attack Frame**: wide and squat, with the weapon pod or dock on the flank,
-   in gunmetal and black with hazard markings. Hull 7 (the low end of the band 1–3 stand-ins, since these are light
+8. **Layout and systems:** the **Light Attack Frame**, in the Mecha look of race profile point 1. Hull 7 (the low end of the band 1–3 stand-ins, since these are light
    ships). No reactor: every system carries its own power, and an integrated crew member adds one bar.
 
    | System | Hull Laser loadout | Suit Dock loadout | Own power (bars) |
@@ -452,6 +451,11 @@ there. Asked by heromedel through Infall: Production (handoff 2026-10-23 14:17).
      sortie.
    - **Weak points:** Life Support (Mecha breathe, Likely: one of them has to stop and repair it) and the crew
      member in the weapon pod.
+   - **Rooms — Proposed (2026-10-25), heromedel's battle cross:** 5 rooms, 20 tiles. A command deck at the bow
+     (Piloting, Shields, Doors), the Cybernetic Servicing Core at the heart, a weapon bay on each flank (the port one
+     spare, for a second weapon or dock), and Engines with Life Support sharing the stern room. One hull for both
+     loadouts. Six weapon mounts are planned on the hull edge; the Hull Laser takes mount 4, level with the
+     starboard weapon bay (`docs/art/mecha/light-attack-frame/pixel-redo/`).
 
    Passes made:
    - Pass 1: two full ships, each with a dock and two pods. Too strong for bands 1–3 against a lone starting ship.
