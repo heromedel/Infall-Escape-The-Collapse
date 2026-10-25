@@ -6,7 +6,7 @@ one place.
 | Name | Hex | Used for | Status |
 |---|---|---|---|
 | Power green | `#66FF66` | Powered systems, powered power bars, and the symbol on an intact player system | **Decided (2026-10-25)** |
-| Pirate power orange | `#FFB070` | The pirate dagger's engine glow, picked because it matches power green's intensity (same saturation, nearly the same lightness) | **Decided (2026-10-25)** |
+| Pirate power orange | `#FF8500` | The orange for powered pirate systems: made to look as vivid as power green (the most saturated orange a screen can show, at the lightness nearest power green's). Replaces `#FFB070`, which matched in numbers but looked pale | **Decided (2026-10-25)** |
 | Mecha power purple | `#AA28EB` | The Mecha's accent: visor, chest lights, and the start of the power pulse when they power a system | **Decided (2026-10-25)** |
 
 - **Ai-Generated-Proposal (2026-10-25):** the Terran powered conduit glow (`#5DFFA8` in the Outrider and Pirate plans)
@@ -15,8 +15,6 @@ one place.
   and the mockup in `mockups/system-symbol-colours/`.
 - **Proposed (2026-10-25):** enemy Mecha system symbols could use Mecha power purple, the way pirate (enemy)
   systems use orange.
-- **Ai-Generated-Proposal (2026-10-25):** pirate power orange is the orange for powered pirate (enemy) system symbols,
-  in place of the mockup's `#FF9A3C`.
 
 ## Mecha crew palette
 

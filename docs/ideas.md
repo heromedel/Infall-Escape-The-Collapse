@@ -134,8 +134,8 @@ Decided in GDD 7H (2026-10-23).
       powered power bar, and the symbol on an intact player system uses it.
     - **Proposed (2026-10-25):** enemy Mecha system symbols could use Mecha power purple (`#AA28EB`), the way pirate
       (enemy) systems use orange.
-    - **Decided (2026-10-25):** pirate power orange, `#FFB070` (`docs/art/palette.md`), the pirate dagger's engine glow,
-      matches power green's intensity.
+    - **Decided (2026-10-25):** pirate power orange, `#FF8500` (`docs/art/palette.md`), made to look as vivid as power
+      green, is the orange for a powered pirate system.
 - **Proposed (2026-10-23):** each race can have its own system look instead of computer monitors, as long as every
   system carries the standard system symbol, legible at ship view without distracting from the art. The form can
   differ per system. Tentauri (heromedel's sketch): small organic forms rising from a soft pad, with the symbol lit in
