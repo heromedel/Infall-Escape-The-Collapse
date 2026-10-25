@@ -88,7 +88,7 @@ every Terran ship is a rocket or a shuttle.
   the Suit Dock's launch clamp are big machines crew walk over. No conduits: every system carries its own power. The
   build checks every room sits under the hull, no console stands on a door tile, one console per tile, every door
   joins two rooms and every airlock opens to space.
-  - **Two frames (Ship Designs, agreed with heromedel), same hull art, both loadouts** (`frames.png`):
+  - **Two frames (Ship Designs, agreed with heromedel; accepted 2026-10-25), same hull art, both loadouts** (`frames.png`):
     - **Standard** (`plan-standard-*`): the stern split into two 2 × 1 rooms with a door between, Engines in the
       port room and Life Support in the starboard room. The Core's door opens into the engine room.
     - **Open stern** (`plan-open-stern-*`), the alternate, more vulnerable frame: Engines and Life Support share one
