@@ -137,11 +137,10 @@ clone.
 - **Origin — Proposed (2026-10-23):** lost to time and somewhat of a mystery, but genetic evidence suggests they
   were Terran, bred to better fit inside semi-cybernetic mech suits. An accidental by-product of their creation,
   and possibly their personal power inside the mechs, made them immature, violent and greedy, like cruel children.
-- **Look out of their suits — Proposed (2026-10-25):** heromedel's pilot art (`docs/art/mecha/pilot/`): petite,
-  pale, purple hair and eyes, purple implant lights on the left shoulder and the back of the head. No current plans
-  to show them out of their suits.
 - **Out of their suits — Proposed (2026-10-23):** incredibly bashful if not violent. Not truly shy, though: their
-  overconfidence tends to override it.
+  overconfidence tends to override it. **Look — Proposed (2026-10-25):** heromedel's pilot art
+  (`docs/art/mecha/pilot/`): petite, pale, purple hair and eyes, purple implant lights on the left shoulder and the
+  back of the head. No current plans to show them out of their suits.
 - **What others know — Proposed (2026-10-23):** most races are likely not fully aware of any of this. Some rumors
   claim they are hideous and evil, others that they are adorable and just greedy or immature.
 - **Organized and tactical — Proposed (2026-10-23):** because they want power and wealth, and they will work together
@@ -149,7 +148,9 @@ clone.
 
 1. **Tone — Proposed (2026-10-21):** an aggressive destruction race that guts ships; highly organized and
    tactical.
-   - **Silhouette — Proposed (2026-10-22):** wide, aggressive battleships.
+   - **Silhouette — Proposed (2026-10-22):** wide, aggressive battleships. **Likely (2026-10-25):** hull shapes
+     range from sleek, stealth-jet-like frames (the Light Attack Frame) to heavier, armoured mech-warships; not every
+     Mecha ship looks alike (`docs/art/style-guides.md`).
    - **Colours — Decided (2026-10-25, heromedel):** dark, sleek, near-black metal with Mecha power purple lights;
      no hazard or caution markings, stencils or industrial plating. This replaces the earlier proposal (gunmetal and
      black with yellow and orange hazard markings). Details in `docs/art/style-guides.md`.
@@ -208,9 +209,10 @@ clone.
    - **Breathing — Likely (2026-10-23):** Mecha breathe. Suffocation is their key weakness: taking out their life
      support is a legitimate tactic, and one of them has to disengage and move to repair it.
    - **No overpowering — Decided (2026-10-23):** integration never powers a system above its level.
-   - **Mecha consoles — Proposed (2026-10-23):** every Mecha system works both ways. Each is a tall unit with a
-     computer panel that any crew member can use, plus arm and leg slots a mech plugs into at low, mid and high-mid
-     points, so none is out of reach. Integration is animated on every system.
+   - **Mecha consoles — Decided (2026-10-25, heromedel's pick):** a tower console with no arm ports
+     (`docs/art/mecha/console/`). Any crew member types at it; a HalfMech integrating with it sends a power pulse,
+     purple turning power green, which works on any race's console (`docs/art/style-guides.md`). Replaces the
+     earlier proposal of arm and leg slots.
    - **Cybernetic Servicing Core — Likely (2026-10-23):** Mecha ships have no strong power core. Their Cybernetic
      Servicing Core (earlier working names: Mech Repair Bay, Cybernetic Servicing Bay) gives the ship its minimal
      power. It is the Mecha's Medbay, and also works as a Medbay for other races. It is where Mecha upgrade their
@@ -228,9 +230,10 @@ clone.
 
 ## Tentauri (draft, 2026-10-21)
 
-Octopus-like race (earlier working label "Octopods").
+**Octojellies — Likely (2026-10-25, heromedel):** an alien race that doesn't quite match any creature from Terran
+Homeworlds. (Earlier: octopus-like, working label "Octopods".)
 
-1. **Tone and ship style — Proposed (2026-10-21):** octopus-like beings in small groups. Small crews and ships,
+1. **Tone and ship style — Proposed (2026-10-21):** beings in small groups. Small crews and ships,
    perhaps two crew members on a standard ship, possibly mates. Their ships have few rooms with many systems in
    them.
    - **Silhouette — Proposed (2026-10-22):** compact, like tiny shuttles.

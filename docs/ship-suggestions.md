@@ -429,9 +429,7 @@ there. Asked by heromedel through Infall: Production (handoff 2026-10-23 14:17).
 6. **Kinds of systems and crew:** one standard frame, thin shields, little evasion. The **Hull Laser** loadout
    guts hulls; the **Suit Dock** loadout launches a laser battlesuit that strips shields. 2 crew each.
 7. **Variation:** standard for the race at low tier.
-8. **Layout and systems:** the **Light Attack Frame**: wide and squat, with the weapon pod or dock on the flank,
-   in dark sleek metal with purple lights (Decided 2026-10-25; the earlier gunmetal with hazard markings is replaced,
-   `docs/art/style-guides.md`). Hull 7 (the low end of the band 1–3 stand-ins, since these are light
+8. **Layout and systems:** the **Light Attack Frame**. Hull 7 (the low end of the band 1–3 stand-ins, since these are light
    ships). No reactor: every system carries its own power, and an integrated crew member adds one bar.
 
    **Rooms — Likely (2026-10-25, heromedel's battle cross; Arty's art accepted):** 5 rooms, 20 tiles. A command deck

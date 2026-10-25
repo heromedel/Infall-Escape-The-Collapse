@@ -116,7 +116,8 @@ source doc carries the tag heromedel's words give it.
 
 ## Tentauri
 
-- The Tentauri are an octopus-like race living in small groups, often two to a ship, possibly mates. (Race profiles, Tentauri 1; Proposed)
+- The Tentauri (Octojellies) are an alien race that doesn't quite match any creature from Terran Homeworlds. (Race profiles, Tentauri; Likely)
+- The Tentauri live in small groups, often two to a ship, possibly mates. (Race profiles, Tentauri 1; Proposed)
 - Tentauri ships are small and compact, with few rooms holding many systems. (Race profiles, Tentauri 1; Proposed)
 - Tentauri ships are prismatic and mottled, like a chameleon or mother of pearl. (Race profiles, Tentauri 1; Proposed)
 - The Tentauri are quiet and diplomatic, but force their way into any place they want to go, without looking to destroy anyone. (Race profiles, Tentauri 2; Proposed)
