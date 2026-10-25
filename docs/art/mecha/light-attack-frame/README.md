@@ -1,8 +1,9 @@
 # Mecha Light Attack Frame (Hull Laser and Suit Dock loadouts)
 
 **Date:** 2026-10-23
-**Superseded look (2026-10-25):** this art follows the old Mecha colours (gunmetal with hazard markings), which
-`docs/art/style-guides.md` replaces; being redone in `pixel-redo/`.
+**Replaced (2026-10-25):** the current frame is the battle-cross redo, accepted by Ship Designs:
+`pixel-redo/battle-cross/` (README in `pixel-redo/`). This vector frame follows the old Mecha colours (gunmetal with
+hazard markings, replaced by `docs/art/style-guides.md`) and is kept for the record.
 **Status:** accepted by Ship Designs. Ship design: `docs/ship-suggestions.md`, "Mecha Light Attack Frame, two
 loadouts". Race: `docs/race-profiles.md`, The Mecha (HalfMechs).
 

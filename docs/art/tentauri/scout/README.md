@@ -1,7 +1,8 @@
 # Tentauri scout
 
 **Date:** 2026-10-23
-**Status:** accepted by Ship Designs. Ship design: `docs/ship-suggestions.md`, "Tentauri Tough Little Scout" (a
+**Status:** accepted by Ship Designs, including the later changes (segmented Defense Laser, edge mounts, organs on the
+walls; re-accepted 2026-10-25). Ship design: `docs/ship-suggestions.md`, "Tentauri Tough Little Scout" (a
 working label, kept off the art).
 
 ![Hull alone and with its floor plan](review/side-by-side.png)

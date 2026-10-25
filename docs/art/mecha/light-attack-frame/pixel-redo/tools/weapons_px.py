@@ -3,7 +3,7 @@
 Usage: python3 weapons_px.py OUT_DIR
 Writes ds-st-hull-laser.svg (twin barrels, pointing up, its mount point at the base centre), battlesuit-laser.svg (the
 laser battlesuit: heromedel's HalfMech crew sprite with an arm laser and a jump pack) and the armed previews
-armed-hull-laser.svg / armed-suit-dock.svg (the plan view of each loadout with its weapon at mount 4, slid out past
+armed-hull-laser.svg / armed-suit-dock.svg (the plan view of each loadout, standard frame, with its weapon at mount 4, slid out past
 the hull's edge; the suit shown just launched, off the starboard bow). Sleek banded metal as on the hull; purple only at the emitters and thrusters.
 """
 import os, sys
@@ -91,7 +91,7 @@ if __name__ == "__main__":
     hull_px.update(h.glow)
     for lo, weapon in (("hull-laser", L), ("suit-dock", B)):
         plan = dict(hull_px)
-        plan.update(floor_bc.floor_layer(lo, set(h.lv)))
+        plan.update(floor_bc.floor_layer(lo, set(h.lv), "standard"))
         if lo == "hull-laser":
             a = armed(plan, set(h.lv), weapon, mount4)
         else:   # the suit is launched, not mounted: shown in clear space off the starboard bow
