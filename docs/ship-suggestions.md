@@ -434,6 +434,11 @@ there. Asked by heromedel through Infall: Production (handoff 2026-10-23 14:17).
    `docs/art/style-guides.md`). Hull 7 (the low end of the band 1–3 stand-ins, since these are light
    ships). No reactor: every system carries its own power, and an integrated crew member adds one bar.
 
+   **Rooms — Likely (2026-10-25, heromedel's battle cross; Arty's art accepted):** 5 rooms, 20 tiles. A command deck
+   at the bow (Piloting, Shields, Doors), the Cybernetic Servicing Core at the heart, a weapon bay on each flank (the
+   starboard one holds the weapon pod or EVB Dock; the port one is spare, with the airlocks), and a 4 × 1 stern room
+   with Engines and Life Support. One hull for both loadouts; the Hull Laser takes mount 4.
+
    | System | Hull Laser loadout | Suit Dock loadout | Own power (bars) |
    |---|---|---|---|
    | Piloting | 1 | 1 | — |
@@ -452,8 +457,9 @@ there. Asked by heromedel through Infall: Production (handoff 2026-10-23 14:17).
      away and the laser goes quiet.
    - **Suit Dock:** one crew member flies the laser battlesuit; the other pilots. The suit carries its own air for a
      sortie.
-   - **Weak points:** Life Support (Mecha breathe, Likely: one of them has to stop and repair it) and the crew
-     member in the weapon pod.
+   - **Weak points:** the stern room and the crew member in the weapon pod. **Proposed (2026-10-25, heromedel):**
+     Engines and Life Support sharing the stern room is a deliberate vulnerability: one fire, breach or boarder there
+     hits both, and since Mecha breathe (Likely), one of them has to stop and repair it.
 
    Passes made:
    - Pass 1: two full ships, each with a dock and two pods. Too strong for bands 1–3 against a lone starting ship.
