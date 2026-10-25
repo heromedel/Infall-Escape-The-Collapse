@@ -1,8 +1,8 @@
 # Mecha Light Attack Frame, pixel redo (work in progress)
 
 **Date:** 2026-10-25
-**Status:** work in progress, saved at heromedel's request. Two versions of the new hull, A and B; not yet picked,
-not yet sent to Ship Designs. The accepted vector frame in `../` stays the current design until this replaces it.
+**Status:** work in progress, saved at heromedel's request. heromedel picked **B** (2026-10-25); A is kept for the
+record. Not yet sent to Ship Designs. The accepted vector frame in `../` stays the current design until this replaces it.
 
 ![Version A and B](review/mount-plan.png)
 
@@ -41,12 +41,14 @@ Six planned mounts on each version (art rules: plan for at least 4–6), stored 
 | File | What |
 |---|---|
 | `mecha-px-hull-a.*`, `mecha-px-hull-b.*` | The two versions: SVG (pixels as rects, mounts hidden), PNG at 1x and 2x |
+| `mecha-px-hull-laser.*` | B, Hull Laser loadout: a raised octagonal hardpoint at mount 2 (the laser itself is separate art) |
+| `mecha-px-suit-dock.*` | B, Suit Dock loadout: the recessed launch bay with purple guide lights and a launch rail |
 | `review/mount-plan.png` | Both versions with the planned mounts marked |
 | `review/first-plates.png`, `review/blades.png` | Earlier rounds: curved plates (read as tentacles), then faceted blades |
-| `tools/hull_px.py` | Builds A and B: `python3 hull_px.py OUT_DIR` (writes s1 = A, s2 = B, with mount-plan and room overlays) |
+| `tools/hull_px.py` | Builds A and B: `python3 hull_px.py OUT_DIR` (writes s1 = A, s2 = B, with mount-plan and room overlays, and B's two loadouts) |
 | `tools/pixel_kit.py`, `tools/cleavers.py` | The shared pixel shading and earlier versions, kept for the record |
 
 ## Next
 
-Pick A or B, then: draw the hardpoint at mount 2 and the suit bay for the two loadouts, refine the plates (sharper
-tips, light slits instead of dots), and redo the interior with the tower console.
+Refine B's plates if heromedel wants (sharper tips, light slits instead of dots), then redo the interior with the
+tower console, and the weapons in the pixel style.

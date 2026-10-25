@@ -103,6 +103,41 @@ def s2(c):
     spine(c, prow_y=2, long_prow=True)
 
 
+def hardpoint(c, x, y):
+    """A weapon hardpoint: a raised octagonal socket, a dark ring and a purple glint (the weapon is separate art)."""
+    r, k = 9, 4
+    c.part([(x - k, y - r), (x + k, y - r), (x + r, y - k), (x + r, y + k), (x + k, y + r), (x - k, y + r), (x - r, y + k),
+            (x - r, y - k)], DARK, both=False, shadow=2, bevel=1)
+    for yy in range(y - 5, y + 6):
+        for xx in range(x - 5, x + 6):
+            d = ((xx - x) ** 2 + (yy - y) ** 2) ** .5
+            if d < 5.5:
+                c.px[(xx, yy)] = OUTLINE if d > 3.5 else SHADOW
+    c.px[(x, y)] = PURPLE
+    c.px[(x - 1, y - 4)] = c.px[(x + 1, y - 4)] = DEEP
+
+
+def suit_bay(c, x, y):
+    """The suit launch bay: a recessed mouth through the starboard blade, guide lights down both sides, a launch rail
+    running out to the bay mouth."""
+    x0, y0, x1, y1 = x - 16, y - 13, x + 22, y + 11
+    for yy in range(y0, y1):
+        for xx in range(x0, x1):
+            edge = xx in (x0, x1 - 1) or yy in (y0, y1 - 1)
+            c.px[(xx, yy)] = OUTLINE if edge else (SHADOW if yy < y0 + 3 else OUTLINE)
+    for xx in range(x0 + 3, x1 - 2, 4):
+        for yy in (y0 + 2, y1 - 3):
+            c.px[(xx, yy)] = PURPLE
+            c.px[(xx + 1, yy)] = DEEP
+    for xx in range(x0 + 2, x1 + 6):
+        c.px[(xx, y - 1)] = DARK
+        c.px[(xx, y)] = EDGE if xx % 5 else ARMOUR
+        c.px[(xx, y + 1)] = OUTLINE
+
+
+LOADOUTS = {"hull-laser": lambda c, name: hardpoint(c, *MOUNTS[name][1]),
+            "suit-dock": lambda c, name: suit_bay(c, *BAY[name])}
+
 VARIANTS = {"s1": s1, "s2": s2}
 # planned mounts (starboard is the right of the image, nose up)
 MOUNTS = {"s1": [(134, 96), (306, 96), (58, 150), (382, 150), (80, 240), (360, 240)],
@@ -138,3 +173,9 @@ if __name__ == "__main__":
         open(os.path.join(out, f"{name}.svg"), "w").write(base)
         open(os.path.join(out, f"{name}-mounts.svg"), "w").write(base.replace("</svg>", plan_marks(c, MOUNTS[name], BAY[name]) + "</svg>"))
         open(os.path.join(out, f"{name}-rooms.svg"), "w").write(svg(c, True))
+        if name == "s2":   # heromedel picked B: build its two loadouts
+            for lo, add in LOADOUTS.items():
+                c = Canvas()
+                VARIANTS[name](c)
+                add(c, name)
+                open(os.path.join(out, f"{name}-{lo}.svg"), "w").write(svg(c).replace("</svg>", f'<g id="weapon-mounts" display="none">{data}</g></svg>'))
