@@ -27,6 +27,7 @@ each with its SVG, PNG exports, review sheets, build tools and a notes README.
 | 2026-10-23 | Console symbols are not red, since red means a cut-off system (GDD 14C). |
 | 2026-10-23 | Plan rooms first: count the rooms a ship needs (plus a few spare for most races; the Tentauri need none), lay them out, then size and shape the hull around them with a margin. |
 | 2026-10-25 | Shared colours come from the palette (`palette.md`, values in `palette.py` for the tools). Power green `#66FF66` is for every powered system, powered power bar, and the symbol on an intact player system. |
+| 2026-10-25 | **Proposed:** each race has its own rendering style, not just its own shapes. **Gatos** (especially doing well): clean vector, crisp edges, polished plates, tidy clean tech. **Tentauri:** soft, comfy and pillowy: rounded inflated forms, pastel mother-of-pearl, organic consoles, a gentle glow. **Mecha:** low-res SNES-style pixel art built pixel by pixel on the grid, near-black with one purple accent, a gritty, uneven pixel texture (not clean), detail only hinted (see `mecha/crew/`). |
 | 2026-10-23 | No rocket-like Terran designs for a while: no pointed nose cone, tail fins and engine-bell silhouette. Terran ships look built for deep space, not for launching from a planet (race profiles, Terrans 1, Likely). |
 
 ## Pieces
