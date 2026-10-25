@@ -26,6 +26,7 @@ each with its SVG, PNG exports, review sheets, build tools and a notes README.
 | 2026-10-23 | Actual plans and finished art show the real thing only: intact, powered, as designed. Never demonstrate an idea, a mechanic or damage in them. An experimental idea or a demonstration (a cut conduit, a GDD 14C flash, a damage state, an alternative) goes in a separate mockup file, clearly labelled as a mockup. |
 | 2026-10-23 | Console symbols are not red, since red means a cut-off system (GDD 14C). |
 | 2026-10-23 | Plan rooms first: count the rooms a ship needs (plus a few spare for most races; the Tentauri need none), lay them out, then size and shape the hull around them with a margin. |
+| 2026-10-25 | Shared colours come from the palette (`palette.md`, values in `palette.py` for the tools). Power green `#66FF66` is for every powered system, powered power bar, and the symbol on an intact player system. |
 | 2026-10-23 | No rocket-like Terran designs for a while: no pointed nose cone, tail fins and engine-bell silhouette. Terran ships look built for deep space, not for launching from a planet (race profiles, Terrans 1, Likely). |
 
 ## Pieces

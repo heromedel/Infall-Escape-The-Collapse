@@ -71,7 +71,10 @@ def supershield_glyph(x, y, colour):
             f'<path d="M{x},{y + 1} l2,2 l-2,2 l-2,-2 Z" fill="{colour}"/>')
 
 
-POWERED = "#57e07a"   # the powered symbol, green as in heromedel's mockup (system symbol colours idea, Proposed)
+sys.path.insert(0, os.path.join(HERE, "..", "..", ".."))
+from palette import POWER_GREEN  # noqa: E402
+
+POWERED = POWER_GREEN   # the powered symbol (palette.md)
 ORGAN = "#7fe0dc"
 ORGAN_EDGE = "#24485a"
 

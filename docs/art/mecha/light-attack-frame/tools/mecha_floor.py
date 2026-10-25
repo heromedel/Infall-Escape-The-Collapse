@@ -20,6 +20,9 @@ GLYPHS = os.environ.get("GLYPH_DIR", os.path.join(os.path.dirname(os.path.abspat
 sys.path.insert(0, GLYPHS)
 from floor import glyph  # noqa: E402  (shared console symbols)
 
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", ".."))
+from palette import POWER_GREEN  # noqa: E402
+
 INK = "#1b2230"
 PLATE = "#2a2e34"
 FLOOR = "#a4aab1"
@@ -30,7 +33,7 @@ UNIT_TOP = "#2a2e34"
 FACE = "#555c65"
 SCREEN = "#14181d"
 YELLOW = "#f0c02c"
-POWERED = "#57e07a"
+POWERED = POWER_GREEN   # palette.md
 DOOR = "#c9a640"
 AIRLOCK = "#ec7a1e"
 
