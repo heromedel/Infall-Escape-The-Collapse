@@ -94,22 +94,36 @@ def build():
     return c
 
 
-# planned mounts (art rules: 4-6), invisible: 3 and 4 sit over the flank bays, so 4 takes the Hull Laser
-MOUNTS = [(112, 92), (228, 92), (78, 128), (262, 128), (84, 226), (256, 226)]
+# planned mounts (art rules: 4-6), invisible, on the hull's outer edge: a weapon slides out past the edge when armed.
+# (row, the hull row it sits on); odd numbers port, even starboard. 3 and 4 sit level with the flank bays, so 4 takes
+# the Hull Laser.
+MOUNT_ROWS = [("horn", 44), ("cleaver", 150), ("aft blade", 270)]
+
+
+def mounts(c):
+    """Find each mount on the silhouette's outer edge at its row, 3 px in from the edge, sliding outward."""
+    out = []
+    for _, y in MOUNT_ROWS:
+        xs = [x for (x, yy) in c.px if yy == y]
+        out += [(min(xs) + 3, y, "left"), (max(xs) - 3, y, "right")]
+    return out
 
 
 def doc(c, extra=""):
-    data = "".join(f'<circle id="mount-{i + 1}" cx="{x}" cy="{y}" r="7"/>' for i, (x, y) in enumerate(MOUNTS))
+    data = "".join(f'<circle id="mount-{i + 1}" cx="{x}" cy="{y}" r="7" data-slide="{sl}"/>'
+                   for i, (x, y, sl) in enumerate(mounts(c)))
     return pk.svg(c).replace("</svg>", f'<g id="weapon-mounts" display="none">{data}</g>{extra}</svg>')
 
 
-def marks():
+def marks(c):
     out = []
-    for i, (x, y) in enumerate(MOUNTS):
+    for i, (x, y, sl) in enumerate(mounts(c)):
         col = "#ffd040" if i == 3 else "#7fd9ff"
-        out.append(f'<circle cx="{x}" cy="{y}" r="6" fill="none" stroke="{col}" stroke-width="1.3"/>'
-                   f'<text x="{x + 8}" y="{y + 4}" font-family="sans-serif" font-size="9" fill="{col}" stroke="#141a22" '
-                   f'stroke-width="2" paint-order="stroke">{i + 1}</text>')
+        d = -1 if sl == "left" else 1
+        out.append(f'<circle cx="{x}" cy="{y}" r="5" fill="none" stroke="{col}" stroke-width="1.3"/>'
+                   f'<path d="M{x + d * 6},{y} h{d * 14} m{-d * 5},-4 l{d * 5},4 l{-d * 5},4" fill="none" stroke="{col}" stroke-width="1.3"/>'
+                   f'<text x="{x - d * 14}" y="{y + 4}" text-anchor="middle" font-family="sans-serif" font-size="9" fill="{col}" '
+                   f'stroke="#141a22" stroke-width="2" paint-order="stroke">{i + 1}</text>')
     return "".join(out)
 
 
@@ -119,5 +133,5 @@ if __name__ == "__main__":
     c = build()
     print("rooms uncovered (5 px margin):", pk.uncovered(c))
     open(os.path.join(out, "hull.svg"), "w").write(doc(c))
-    open(os.path.join(out, "mounts.svg"), "w").write(doc(c, marks()))
+    open(os.path.join(out, "mounts.svg"), "w").write(doc(c, marks(c)))
     open(os.path.join(out, "rooms.svg"), "w").write(pk.svg(c, True))
