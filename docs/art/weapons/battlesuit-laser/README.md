@@ -1,6 +1,8 @@
 # Laser battlesuit
 
 **Date:** 2026-10-23
+**Superseded look (2026-10-25):** this art follows the old Mecha colours (gunmetal with hazard markings), which
+`docs/art/style-guides.md` replaces; to be redone in the Mecha style.
 **Status:** accepted by Ship Designs, with the Mecha Light Attack Frame. The EVB Dock's suit type (race profiles, Mecha
 6; `docs/ship-suggestions.md`, "Mecha Light Attack Frame, two loadouts", point 9).
 

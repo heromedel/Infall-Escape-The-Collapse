@@ -16,6 +16,12 @@ one place.
 - **Decided (2026-10-25):** enemy ships show their own race's power colour (symbols, conduits and core glow):
   Mecha power purple on Mecha ships, pirate power orange on pirate ships. Player ships use power green.
 
+## Mecha hull ramp
+
+**Likely (2026-10-25):** the sleek Mecha hull (`style-guides.md`) uses a deeper ramp, darkest first, whose main tone is
+the crew palette's shadow grey: `#050507`, `#0B0B0E`, `#111216`, `#17181D`, `#1C1D24` (main tone), `#2A2D35`,
+`#3D414D`, `#5F6576` (brightest highlight). Purple as in the crew palette, with a pale core `#EBE1FA` in the slits.
+
 ## Mecha crew palette
 
 From heromedel's Mecha crew sheet (`mecha/crew/`): near-black armour with one accent, the purple.
