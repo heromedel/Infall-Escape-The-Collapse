@@ -94,18 +94,24 @@ def build():
     return c
 
 
-# planned mounts (art rules: 4-6), invisible, on the hull's outer edge: a weapon slides out past the edge when armed.
-# (row, the hull row it sits on); odd numbers port, even starboard. 3 and 4 sit level with the flank bays, so 4 takes
-# the Hull Laser.
-MOUNT_ROWS = [("horn", 44), ("cleaver", 150), ("aft blade", 270)]
+# planned mounts (art rules: 4-6), invisible, on the hull's outer edge with a clear line ahead: a weapon slides out
+# past the edge when armed and points forward, so no part of the ship may sit in front of it.
+# Odd numbers port, even starboard. 1-2: the horn tips; 3-4: the big blades' forward edges, outboard of the horns
+# (4 takes the Hull Laser, level with the starboard weapon bay); 5-6: the big blades' outermost flanks.
+# (port column, slide): each mount sits on the hull's front profile at that column, so nothing is ahead of it
+MOUNT_COLS = [(72, "up"), (42, "up"), (16, "out")]
 
 
 def mounts(c):
-    """Find each mount on the silhouette's outer edge at its row, 3 px in from the edge, sliding outward."""
+    hull = {p for p, col in c.px.items()}
     out = []
-    for _, y in MOUNT_ROWS:
-        xs = [x for (x, yy) in c.px if yy == y]
-        out += [(min(xs) + 3, y, "left"), (max(xs) - 3, y, "right")]
+    for x, sl in MOUNT_COLS:
+        for xx, side in ((x, "left"), (W - x, "right")):
+            top = min(y for (px_, y) in hull if px_ == xx)
+            out.append((xx, top + 3, side if sl == "out" else sl))
+    for x, y, sl in out:   # where the weapon ends up once slid out, the line ahead of it (toward the bow) is clear
+        cx = x + {"up": 0, "left": -8, "right": 8}[sl]
+        assert not any((xx, yy) in hull for xx in range(cx - 3, cx + 4) for yy in range(0, y - 6)), (x, y)
     return out
 
 
@@ -119,11 +125,13 @@ def marks(c):
     out = []
     for i, (x, y, sl) in enumerate(mounts(c)):
         col = "#ffd040" if i == 3 else "#7fd9ff"
-        d = -1 if sl == "left" else 1
+        dx, dy = {"up": (0, -1), "left": (-1, 0), "right": (1, 0)}[sl]
+        ex, ey = x + dx * 18, y + dy * 18
         out.append(f'<circle cx="{x}" cy="{y}" r="5" fill="none" stroke="{col}" stroke-width="1.3"/>'
-                   f'<path d="M{x + d * 6},{y} h{d * 14} m{-d * 5},-4 l{d * 5},4 l{-d * 5},4" fill="none" stroke="{col}" stroke-width="1.3"/>'
-                   f'<text x="{x - d * 14}" y="{y + 4}" text-anchor="middle" font-family="sans-serif" font-size="9" fill="{col}" '
-                   f'stroke="#141a22" stroke-width="2" paint-order="stroke">{i + 1}</text>')
+                   f'<line x1="{x + dx * 6}" y1="{y + dy * 6}" x2="{ex}" y2="{ey}" stroke="{col}" stroke-width="1.3"/>'
+                   f'<line x1="{x}" y1="{y - 6}" x2="{x}" y2="0" stroke="{col}" stroke-width=".6" stroke-dasharray="2 2" opacity=".7"/>'
+                   f'<text x="{x + (10 if x > CX else -10)}" y="{y + 12}" text-anchor="middle" font-family="sans-serif" font-size="9" '
+                   f'fill="{col}" stroke="#141a22" stroke-width="2" paint-order="stroke">{i + 1}</text>')
     return "".join(out)
 
 

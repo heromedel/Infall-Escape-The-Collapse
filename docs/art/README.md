@@ -13,7 +13,7 @@ each with its SVG, PNG exports, review sheets, build tools and a notes README.
 | 2026-10-23 | Ship hulls are top-down with the nose facing up. |
 | 2026-10-23 | Hull art only, until floor art is asked for. |
 | 2026-10-23 | Weapon mounts are invisible spots on the hull, stored as data; weapons are separate art. |
-| 2026-10-25 | **Likely:** weapon mounts sit on the hull's outer edge, never deep on the hull: a weapon slides out past the edge when armed, as in FTL, and each mount stores its slide direction. |
+| 2026-10-25 | **Likely:** weapon mounts sit on the hull's outer edge, never deep on the hull: a weapon slides out past the edge when armed, as in FTL, and each mount stores its slide direction. Nothing of the ship may sit in front of a mounted weapon's aim (no horn or blade tip ahead of it): put mounts on the front profile, or on an outer flank with a clear line forward. |
 | 2026-10-23 | Art for another session (e.g. Ship Designs) is sent to that session first and committed only once it is accepted. |
 | 2026-10-23 | Floor layouts follow FTL's layouts, except that a room can hold more than one system and rooms can be bigger than 2×2 or as small as 1×1. No marked spare areas: leave blank rooms. No storage rooms. Every ship has airlocks (doors to space). |
 | 2026-10-23 | No system console on a door tile, unless it is a small room with a passable system (such as a backup battery), not a controlled system. |
