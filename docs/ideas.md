@@ -142,6 +142,8 @@ Decided in GDD 7H (2026-10-23).
   a bulb. First used on the Tentauri scout (`docs/art/tentauri/scout/`), one base per system, shaped by what it does:
   a grasp for Sensors, a hood for Piloting, a carapace on a stand for Shields, a trigger grip for Weapons, pipes for
   Engines, an iris for Doors, air sacs for Life Support, a bud for Medbay and a halo for the Supershield Generator.
+  - **Proposed (2026-10-25):** when a Tentauri uses a Tentauri system, it plays a grasping animation instead of
+    typing.
 
 ### EVA Dock and EVA suits (2026-10-21)
 
