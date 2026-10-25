@@ -43,7 +43,8 @@ systems and no reactor, so there are no conduits and no conduit layer; the condu
 
 - Rooms came first: 9 rooms on 35 px tiles, 8 wide and 4 deep, which sets the frame's width.
 - **Consoles** (heromedel's design, Proposed): each system is a tall unit with a computer panel showing the standard
-  symbol in green, and three arm and leg slots on each side for low, mid and high-mid. The tile in front is left clear
+  symbol in Mecha power purple (`docs/art/palette.md`; an enemy ship shows its own power colour, power green until
+  2026-10-25), and three arm and leg slots on each side for low, mid and high-mid. The tile in front is left clear
   for the mech that integrates with it, so the animation has room.
 - **Cybernetic Servicing Core:** a mech servicing cradle, a gantry over a stand pad with two servicing arms, and a
   panel with the Medbay symbol (it is the Mecha's Medbay).

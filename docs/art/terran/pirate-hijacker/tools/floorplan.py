@@ -38,7 +38,8 @@ TERMINAL = "#d9dde3"
 TERMINAL_EDGE = "#6d7581"
 SCREEN = "#1c2028"
 SYMBOL = PIRATE_POWER_ORANGE   # a powered, intact pirate system (palette.md); never red, which means cut off (GDD 14C)
-ON = "#5dffa8"
+ON = PIRATE_POWER_ORANGE   # powered conduits and core: an enemy ship shows its own power colour (palette.md)
+ON_CORE = "#fff0e0"   # the hot core of a powered conduit, warm white for orange
 CUT = "#ff4a3a"
 
 
@@ -169,7 +170,7 @@ def core_block():
             f'fill="#3c424a" stroke="{WALL}" stroke-width="2"/>'
             f'<rect x="{x + 15}" y="{y + 15}" width="{2 * T - 30}" height="{2 * T - 30}" rx="4" fill="#262a31"/>'
             f'<circle cx="{cx}" cy="{cy}" r="10" fill="#0c1018" stroke="{ON}" stroke-width="2.2" filter="url(#cglow)"/>'
-            f'<circle cx="{cx}" cy="{cy}" r="4" fill="#e8fff2"/></g>')
+            f'<circle cx="{cx}" cy="{cy}" r="4" fill="{ON_CORE}"/></g>')
 
 
 def wall_side(c, r):
@@ -265,7 +266,7 @@ def conduit_layer(loadout, cut_spur):
     def wire(d):
         return (f'<path d="{d}" fill="none" stroke="#0c1018" stroke-width="6" stroke-linejoin="round" '
                 f'stroke-linecap="round"/><path d="{d}" fill="none" stroke="{ON}" stroke-width="2.2" '
-                f'stroke-linejoin="round" filter="url(#cglow)"/><path d="{d}" fill="none" stroke="#e8fff2" '
+                f'stroke-linejoin="round" filter="url(#cglow)"/><path d="{d}" fill="none" stroke="{ON_CORE}" '
                 f'stroke-width=".8" stroke-linejoin="round"/>')
     ring = "M" + " L".join(f"{centre(c, r)[0]:.1f},{centre(c, r)[1]:.1f}" for c, r in RING) + " Z"
     out = [wire(ring)]

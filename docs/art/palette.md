@@ -9,12 +9,12 @@ one place.
 | Pirate power orange | `#FF8500` | The orange for powered pirate systems: made to look as vivid as power green (the most saturated orange a screen can show, at the lightness nearest power green's). Replaces `#FFB070`, which matched in numbers but looked pale | **Decided (2026-10-25)** |
 | Mecha power purple | `#AA28EB` | The Mecha's accent: visor, chest lights, and the start of the power pulse when they power a system | **Decided (2026-10-25)** |
 
-- **Ai-Generated-Proposal (2026-10-25):** the Terran powered conduit glow (`#5DFFA8` in the Outrider and Pirate plans)
+- **Ai-Generated-Proposal (2026-10-25):** the player's Terran powered conduit glow (`#5DFFA8` in the Outrider tests)
   could become power green too, since a powered conduit means the same thing.
 - The enemy (orange) and damaged (red) symbol colours are still Proposed: see `docs/ideas.md`, Ship interior art,
   and the mockup in `mockups/system-symbol-colours/`.
-- **Proposed (2026-10-25):** enemy Mecha system symbols could use Mecha power purple, the way pirate (enemy)
-  systems use orange.
+- **Decided (2026-10-25):** enemy ships show their own race's power colour (symbols, conduits and core glow):
+  Mecha power purple on Mecha ships, pirate power orange on pirate ships. Player ships use power green.
 
 ## Mecha crew palette
 

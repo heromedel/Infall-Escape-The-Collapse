@@ -132,8 +132,8 @@ Decided in GDD 7H (2026-10-23).
     orange makes enemy ships read as a caution or enemy colour.
     - **Decided (2026-10-25):** the green is **power green, `#66FF66`** (`docs/art/palette.md`): every powered system,
       powered power bar, and the symbol on an intact player system uses it.
-    - **Proposed (2026-10-25):** enemy Mecha system symbols could use Mecha power purple (`#AA28EB`), the way pirate
-      (enemy) systems use orange.
+    - **Decided (2026-10-25):** enemy ships show their own race's power colour: Mecha power purple (`#AA28EB`) on
+      Mecha ships, pirate power orange on pirate ships, for symbols, conduits and the core glow.
     - **Decided (2026-10-25):** pirate power orange, `#FF8500` (`docs/art/palette.md`), made to look as vivid as power
       green, is the orange for a powered pirate system.
 - **Proposed (2026-10-23):** each race can have its own system look instead of computer monitors, as long as every
