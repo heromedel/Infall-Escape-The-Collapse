@@ -583,8 +583,9 @@ def outrigger(title="Tentauri scout hull", spread=1.0):
             shadow=4)
     h.raw("canopy", {5: single_canopy(CX, 66, 30)})
     h.raw("supershield", {5: supershield_organ(CX, 300)})
-    h.mount("mount-defense-laser-a", CX - 124 * k, 160, "Tentauri Defense Laser A", "left")
-    h.mount("mount-defense-laser-b", CX + 124 * k, 160, "Tentauri Defense Laser B", "right")
+    # on the lit middle of each flank plate, clear of the shaded outer edge (moved in from 124 on 2026-10-25)
+    h.mount("mount-defense-laser-a", CX - 106 * k, 160, "Tentauri Defense Laser A", "left")
+    h.mount("mount-defense-laser-b", CX + 106 * k, 160, "Tentauri Defense Laser B", "right")
     return h
 
 

@@ -86,6 +86,6 @@
 <g id="supershield-emitter"><circle cx="170" cy="300" r="15" fill="#b9b2e6" opacity=".35" filter="url(#glow)"/><circle cx="170" cy="300" r="11" fill="url(#organ)" stroke="#1b2230" stroke-width="1.2"/><circle cx="170" cy="300" r="7" fill="none" stroke="#fbe8e1" stroke-width="1" opacity=".8"/><circle cx="167" cy="297" r="2.2" fill="#ffffff" opacity=".85"/></g>
 </g>
 </g>
-<g id="weapon-mounts" display="none"><circle id="mount-defense-laser-a" cx="46.0" cy="160" r="3" data-weapon="Tentauri Defense Laser A" data-slide="left"/><circle id="mount-defense-laser-b" cx="294.0" cy="160" r="3" data-weapon="Tentauri Defense Laser B" data-slide="right"/></g>
+<g id="weapon-mounts" display="none"><circle id="mount-defense-laser-a" cx="64.0" cy="160" r="3" data-weapon="Tentauri Defense Laser A" data-slide="left"/><circle id="mount-defense-laser-b" cx="276.0" cy="160" r="3" data-weapon="Tentauri Defense Laser B" data-slide="right"/></g>
 
 </svg>
