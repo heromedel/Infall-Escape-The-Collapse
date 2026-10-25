@@ -48,7 +48,7 @@ Six planned mounts on each version (art rules: plan for at least 4–6), stored 
 | `tools/hull_px.py` | Builds A and B: `python3 hull_px.py OUT_DIR` (writes s1 = A, s2 = B, with mount-plan and room overlays, and B's two loadouts) |
 | `tools/pixel_kit.py`, `tools/cleavers.py` | The shared pixel shading and earlier versions, kept for the record |
 
-## Battle cross (2026-10-25, awaiting heromedel's review)
+## Battle cross (2026-10-25): the Mecha hull style reference
 
 heromedel re-planned the rooms first: the **battle cross** (5 rooms, 20 tiles: a command deck with Piloting, Shields
 and Doors at the bow; the Servicing Core at the heart; a weapon bay on each flank, the port one spare for a second
@@ -59,8 +59,21 @@ outer edge, on the front profile so nothing of the ship is ahead of it, and stor
 1–2 on the horn tips and 3–4 on the big blades' forward edges, sliding up (forward); 5–6 on the blades' outermost
 flanks, sliding outward. Odd numbers port, even starboard. Mount 4, level with the starboard weapon bay, takes the
 Hull Laser. The build checks the line ahead of each slid-out weapon is clear. No launch
-opening is drawn for the Suit Dock. Built by `tools/hull_l1.py OUT_DIR`. `review-sheet.png` shows the rooms and the
-planned mounts.
+opening is drawn for the Suit Dock.
+
+**Sleek finish (heromedel: saved as the starting point to compare future Mecha hulls against).** The speckled grit,
+seams, machinery blocks and conduit glints read as damage, so the surface was redone sleek: near-black metal (the main
+tone is the Mecha palette's shadow grey `#1c1d24`) shaded in crisp bands, a bright highlight along each blade's ridge
+falling off in steps, a dark crease and a faint reflected band below it, thin rim light on edges facing the upper-left
+light, short clean shadows under overlapping plates, and the spine shaded like a polished column. The big blades' light
+band is slimmed so their lights sit on dark metal; the rear highlights are thinner than the front ones. Purple stays in
+the light rows, the spine slit, the bow slit (one band across the prow's centre line, on purpose) and four rear vents,
+staggered along the engine block's dark band. Every light and vent has at least 2 px of one even shade around it
+(art rules: detail passes; the build checks it). Built by `tools/hull_bc_sleek.py OUT_DIR`; `tools/hull_l1.py` keeps
+the earlier speckled version. `review-sheet.png` shows the rooms and the planned mounts.
+
+Future Mecha hulls are compared against this one, but different ship styles should still look different, as not
+every Terran ship is a rocket or a shuttle.
 
 ## Next
 
