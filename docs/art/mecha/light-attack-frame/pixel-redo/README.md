@@ -53,9 +53,10 @@ Six planned mounts on each version (art rules: plan for at least 4–6), stored 
 heromedel re-planned the rooms first: the **battle cross** (5 rooms, 20 tiles: a command deck with Piloting, Shields
 and Doors at the bow; the Servicing Core at the heart; a weapon bay on each flank, the port one spare for a second
 weapon or dock; Engines and Life Support sharing the stern room). `battle-cross/` is the B style rebuilt around it at
-340 × 300: mount 4 sits over the starboard weapon bay and takes the Hull Laser; the Suit Dock's launch opening is only
-an implied dark recess (no lights or markings). Built by `tools/hull_l1.py OUT_DIR`. `review-sheet.png` shows the rooms,
-mounts and both loadouts.
+340 × 300, one hull for both loadouts. The six mounts are hidden data, with no hardpoint drawn on any of them (the
+weapon art marks its own mount); mount 4 sits over the starboard weapon bay and takes the Hull Laser. No launch
+opening is drawn for the Suit Dock. Built by `tools/hull_l1.py OUT_DIR`. `review-sheet.png` shows the rooms and the
+planned mounts.
 
 ## Next
 

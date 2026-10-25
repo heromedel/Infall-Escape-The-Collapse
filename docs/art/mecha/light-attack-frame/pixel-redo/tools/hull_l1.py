@@ -2,8 +2,8 @@
 cleavers, a console-like spine, an engine block) fitted to this ship's own rooms.
 
 Usage: python3 hull_l1.py OUT_DIR
-Writes hull.svg (mounts hidden), hull-laser.svg, suit-dock.svg, mounts.svg (planned mounts marked) and rooms.svg
-(the rooms outlined over the hull).
+Writes hull.svg (one hull for both loadouts; mounts are hidden data, the weapon art marks them), mounts.svg (the
+planned mounts marked) and rooms.svg (the rooms outlined over the hull).
 """
 import os, sys
 import pixel_kit as pk
@@ -94,39 +94,12 @@ def build():
     return c
 
 
-# planned mounts (art rules: 4-6): 3 and 4 sit over the flank bays, so 4 takes the starboard bay's weapon pod
+# planned mounts (art rules: 4-6), invisible: 3 and 4 sit over the flank bays, so 4 takes the Hull Laser
 MOUNTS = [(112, 92), (228, 92), (78, 128), (262, 128), (84, 226), (256, 226)]
-BAY = (284, 162)   # the Suit Dock's launch opening, outboard of the starboard bay
-
-
-def hardpoint(c, x, y):
-    r, k = 8, 3
-    c.part([(x - k, y - r), (x + k, y - r), (x + r, y - k), (x + r, y + k), (x + k, y + r), (x - k, y + r),
-            (x - r, y + k), (x - r, y - k)], DARK, both=False, shadow=2, bevel=1)
-    for yy in range(y - 5, y + 6):
-        for xx in range(x - 5, x + 6):
-            d = ((xx - x) ** 2 + (yy - y) ** 2) ** .5
-            if d < 5:
-                c.px[(xx, yy)] = OUTLINE if d > 3 else SHADOW
-    c.px[(x, y)] = PURPLE
-
-
-def launch_opening(c, x, y):
-    """Implied, not marked: a dark recess cut into the blade's flank with a lit lip, no lights."""
-    for yy in range(y - 12, y + 12):
-        for xx in range(x - 14, x + 14):
-            if (xx, yy) in c.px:
-                inside = abs(yy - y) < 10 and xx > x - 12
-                c.px[(xx, yy)] = OUTLINE if inside else c.px[(xx, yy)]
-    for xx in range(x - 12, x + 14):
-        if (xx, y - 10) in c.px:
-            c.px[(xx, y - 11)] = EDGE
-            c.px[(xx, y + 10)] = SHADOW
 
 
 def doc(c, extra=""):
     data = "".join(f'<circle id="mount-{i + 1}" cx="{x}" cy="{y}" r="7"/>' for i, (x, y) in enumerate(MOUNTS))
-    data += f'<rect id="suit-bay" x="{BAY[0] - 14}" y="{BAY[1] - 10}" width="28" height="20"/>'
     return pk.svg(c).replace("</svg>", f'<g id="weapon-mounts" display="none">{data}</g>{extra}</svg>')
 
 
@@ -137,7 +110,6 @@ def marks():
         out.append(f'<circle cx="{x}" cy="{y}" r="6" fill="none" stroke="{col}" stroke-width="1.3"/>'
                    f'<text x="{x + 8}" y="{y + 4}" font-family="sans-serif" font-size="9" fill="{col}" stroke="#141a22" '
                    f'stroke-width="2" paint-order="stroke">{i + 1}</text>')
-    out.append(f'<rect x="{BAY[0] - 14}" y="{BAY[1] - 10}" width="28" height="20" fill="none" stroke="#ff7fd0" stroke-width="1.3"/>')
     return "".join(out)
 
 
@@ -149,7 +121,3 @@ if __name__ == "__main__":
     open(os.path.join(out, "hull.svg"), "w").write(doc(c))
     open(os.path.join(out, "mounts.svg"), "w").write(doc(c, marks()))
     open(os.path.join(out, "rooms.svg"), "w").write(pk.svg(c, True))
-    hl = build(); hardpoint(hl, *MOUNTS[3])
-    open(os.path.join(out, "hull-laser.svg"), "w").write(doc(hl))
-    sd = build(); launch_opening(sd, *BAY)
-    open(os.path.join(out, "suit-dock.svg"), "w").write(doc(sd))
