@@ -75,7 +75,28 @@ the earlier speckled version. `review-sheet.png` shows the rooms and the planned
 Future Mecha hulls are compared against this one, but different ship styles should still look different, as not
 every Terran ship is a rocket or a shuttle.
 
+## Floor plans, weapons and loadouts (2026-10-25)
+
+- **Floor plans** (`battle-cross/floor-plans/`, built by `tools/floor_bc.py`): a floor layer and a plan on the hull for
+  each loadout, in the Mecha pixel style: a light deck so the dark crew read clearly, dark walls with a lit rim, steel
+  door slabs, airlocks only in the floor plan (two, in the spare bay, never marked on the hull). Consoles are the
+  Mecha tower (no ports) turned to face their wall, with the system symbol upright in Mecha power purple: Piloting and
+  Shields on the command deck's front wall, Doors on its side, Engines and Life Support at either end of the engine
+  room, the weapon pod (Hull Laser) or EVB Dock console (Suit Dock) on the weapon bay's outer wall. The Servicing
+  Core's cradle (two tiles against the core room's south wall) and the Suit Dock's launch clamp are big machines crew
+  walk over. No conduits: every system carries its own power. The build checks every room sits under the hull, no
+  console stands on a door tile, one console per tile, every door joins two rooms and every airlock opens to space.
+  - **One change to the picked battle cross:** the engine room is 4 × 1 instead of 2 × 1, since its two consoles and
+    its door each need their own tile (art rules). The hull's shadowed body was widened a few pixels to cover it.
+- **Weapons** (`weapons/`, built by `tools/weapons_px.py`), in the hull's sleek banded metal, purple only at the
+  emitters: the **DS-ST Hull Laser** (a squat housing and two heavy barrels, one per shot) and the **laser
+  battlesuit** (heromedel's HalfMech crew sprite with a laser on its right arm; its jump pack is on its back, out of
+  sight from above). They replace the vector weapons in `docs/art/weapons/` once accepted.
+- **Armed previews** (`battle-cross/mecha-bc-armed-*.png`, overview in `battle-cross/loadouts.png`): the Hull Laser
+  at mount 4, slid out from under the blade's edge (only the part past the edge shows, as when it slides out); the
+  Suit Dock shown with its battlesuit just launched, off the starboard bow. The two loadouts look different.
+
 ## Next
 
-Refine B's plates if heromedel wants (sharper tips, light slits instead of dots), then redo the interior with the
-tower console, and the weapons in the pixel style.
+Send the frame to Ship Designs (it replaces an accepted design); once accepted, it replaces the vector frame in `../`
+and the vector weapons.
