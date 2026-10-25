@@ -1,8 +1,9 @@
 """Mecha Light Attack Frame floor plans on the battle cross, in the Mecha pixel style.
 
 Usage: python3 floor_bc.py OUT_DIR
-Writes floor-LOADOUT.svg (rooms, doors, airlocks, consoles, the big machines) and plan-LOADOUT.svg (the sleek hull
-with the floor) for the hull-laser and suit-dock loadouts. Systems are self-powered (no reactor), so there are no
+Writes floor-FRAME-LOADOUT.svg (rooms, doors, airlocks, consoles, the big machines) and plan-FRAME-LOADOUT.svg (the
+sleek hull with the floor) for the hull-laser and suit-dock loadouts, in two frames: standard (the stern split into an
+engine room and a life support room) and open-stern (one shared stern room, the more vulnerable alternate). Systems are self-powered (no reactor), so there are no
 conduits. Symbols are Mecha power purple (an enemy ship shows its own race's power colour).
 
 Checks: every room sits under the hull; no console stands on a door tile; every door joins two rooms and every
@@ -21,10 +22,17 @@ OUTLINE, WALL, RIM = "#0a0a0e", "#1c1d24", "#3d414d"
 FLOOR = ["#6f747d", "#878c95", "#9da2aa", "#b3b8bf"]      # seam, scuff, base, lit lip
 DOOR, DOOR_EDGE, AIRLOCK = "#7a7f8e", "#2e3039", "#3d414d"
 
-# the battle cross (heromedel's pick); the engine room is 4 x 1 so its two consoles and its door each get a tile
-ROOMS = {"command": (2, 0, 2, 2), "second bay": (0, 1, 2, 2), "weapon bay": (4, 1, 2, 2), "core": (2, 2, 2, 2),
-         "engine room": (1, 4, 4, 1)}
-DOORS = [(2, 1, "s"), (2, 2, "w"), (3, 2, "e"), (2, 3, "s")]          # (col, row, wall)
+# the battle cross (heromedel's pick), in two frames (Ship Designs, agreed with heromedel):
+# standard: the stern split into two 2 x 1 rooms, Engines to port and Life Support to starboard, a door between;
+# open stern: the alternate, more vulnerable frame, Engines and Life Support sharing one 4 x 1 stern room
+BASE_ROOMS = {"command": (2, 0, 2, 2), "second bay": (0, 1, 2, 2), "weapon bay": (4, 1, 2, 2), "core": (2, 2, 2, 2)}
+FRAMES = {
+    "standard": ({**BASE_ROOMS, "engines": (1, 4, 2, 1), "life support": (3, 4, 2, 1)},
+                 [(2, 1, "s"), (2, 2, "w"), (3, 2, "e"), (2, 3, "s"), (2, 4, "e")]),
+    "open-stern": ({**BASE_ROOMS, "engine room": (1, 4, 4, 1)},
+                   [(2, 1, "s"), (2, 2, "w"), (3, 2, "e"), (2, 3, "s")]),
+}
+ROOMS, DOORS = FRAMES["standard"]                                      # (col, row, wall) for doors
 AIRLOCKS = [(0, 1, "w"), (0, 2, "w")]                                   # in the spare bay; not marked on the hull
 CONSOLES = [("Piloting", 2, 0, "n", "piloting"), ("Shields", 3, 0, "n", "shields"), ("Doors", 3, 1, "e", "doors"),
             ("Engines", 1, 4, "w", "engines"), ("Life Support", 4, 4, "e", "life")]
@@ -177,7 +185,13 @@ def clamp(px):
     rect(px, x0 + 6, y0 + 10, x0 + 8, y0 + 25, "#4a4d5a")
 
 
-def floor_layer(loadout, hull_px):
+def use(frame):
+    global ROOMS, DOORS
+    ROOMS, DOORS = FRAMES[frame]
+
+
+def floor_layer(loadout, hull_px, frame="standard"):
+    use(frame)
     check(loadout, hull_px)
     px = {}
     floor(px)
@@ -206,8 +220,9 @@ if __name__ == "__main__":
     hull_px = set(h.lv)
     hull_svg = h.svg()
     inner = hull_svg[hull_svg.index(">") + 1:hull_svg.rindex("</svg>")]
-    for lo in LOADOUT:
-        px = floor_layer(lo, hull_px)
-        open(os.path.join(out, f"floor-{lo}.svg"), "w").write(svg(px))
-        open(os.path.join(out, f"plan-{lo}.svg"), "w").write(svg(px, inner))
+    for frame in FRAMES:
+        for lo in LOADOUT:
+            px = floor_layer(lo, hull_px, frame)
+            open(os.path.join(out, f"floor-{frame}-{lo}.svg"), "w").write(svg(px))
+            open(os.path.join(out, f"plan-{frame}-{lo}.svg"), "w").write(svg(px, inner))
     print("checks passed; plans written")
