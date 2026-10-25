@@ -132,6 +132,8 @@ Decided in GDD 7H (2026-10-23).
     orange makes enemy ships read as a caution or enemy colour.
     - **Decided (2026-10-25):** the green is **power green, `#66FF66`** (`docs/art/palette.md`): every powered system,
       powered power bar, and the symbol on an intact player system uses it.
+    - **Proposed (2026-10-25):** enemy Mecha system symbols could use Mecha power purple (`#AA28EB`), the way pirate
+      (enemy) systems use orange.
 - **Proposed (2026-10-23):** each race can have its own system look instead of computer monitors, as long as every
   system carries the standard system symbol, legible at ship view without distracting from the art. The form can
   differ per system. Tentauri (heromedel's sketch): small organic forms rising from a soft pad, with the symbol lit in
