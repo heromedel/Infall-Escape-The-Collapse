@@ -434,8 +434,14 @@ there. Asked by heromedel through Infall: Production (handoff 2026-10-23 14:17).
 
    **Rooms — Likely (2026-10-25, heromedel's battle cross; Arty's art accepted):** 5 rooms, 20 tiles. A command deck
    at the bow (Piloting, Shields, Doors), the Cybernetic Servicing Core at the heart, a weapon bay on each flank (the
-   starboard one holds the weapon pod or EVB Dock; the port one is spare, with the airlocks), and a 4 × 1 stern room
-   with Engines and Life Support. One hull for both loadouts; the Hull Laser takes mount 4.
+   starboard one holds the weapon pod or EVB Dock; the port one is spare, with the airlocks), and the stern. One hull
+   for both loadouts; the Hull Laser takes mount 4.
+
+   - **Standard stern — Proposed (2026-10-25):** two 2 × 1 rooms with a door between them, Engines in one and Life
+     Support in the other (6 rooms in all). Same hull; only the floor plan gains a wall.
+   - **Open-stern version — Proposed (2026-10-25, heromedel):** an alternate, more vulnerable frame: one 4 × 1 stern
+     room holding both Engines and Life Support (Arty's accepted floor plan). Same systems and price. Suggestion: met
+     in band 1 or in struggling clusters, as one of the weaker ships of the design process.
 
    | System | Hull Laser loadout | Suit Dock loadout | Own power (bars) |
    |---|---|---|---|
@@ -455,9 +461,9 @@ there. Asked by heromedel through Infall: Production (handoff 2026-10-23 14:17).
      away and the laser goes quiet.
    - **Suit Dock:** one crew member flies the laser battlesuit; the other pilots. The suit carries its own air for a
      sortie.
-   - **Weak points:** the stern room and the crew member in the weapon pod. **Proposed (2026-10-25, heromedel):**
-     Engines and Life Support sharing the stern room is a deliberate vulnerability: one fire, breach or boarder there
-     hits both, and since Mecha breathe (Likely), one of them has to stop and repair it.
+   - **Weak points:** Life Support (Mecha breathe, Likely: one of them has to stop and repair it) and the crew
+     member in the weapon pod. In the open-stern version, Engines and Life Support share a room on purpose
+     (Proposed, 2026-10-25, heromedel): one fire, breach or boarder there hits both.
 
    Passes made:
    - Pass 1: two full ships, each with a dock and two pods. Too strong for bands 1–3 against a lone starting ship.
