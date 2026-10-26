@@ -80,9 +80,14 @@ FTL's crew price × 0.242 (`ftl-baseline.md`), each race priced from its closest
 
 ## Mecha self-powered systems
 
-**Ai-Generated-Proposal (2026-10-23):** Mecha ships have no reactor; each system carries its own power. Those
-bars are priced as reactor bars, counted across the whole ship as one reactor would be (bars 1–5 at 3.63, 6–10 at
-4.84, …). A bar added by an integrated crew member costs nothing extra.
+**Proposed (2026-10-26):** Mecha ships have no reactor; each system carries its own power. Each self-powered bar
+adds **8.47 Mawjig** to the system's price, the same as the dearest reactor bar: a self-powered system is always on and
+never competes for power, which is worth more than a shared reactor bar, though the bar can't be moved to another
+system. This applies only on Mecha ships (GDD 8D: a system takes the power behaviour of the ship it is on). Bars
+added by integrated Mecha crew are priced separately, as their mech upgrades (`economy-findings.md`, F5).
+
+Replaces the earlier rule (Ai-Generated-Proposal, 2026-10-23) that priced these bars as ordinary reactor bars
+(3.63 each for bars 1–5, 4.84 for 6–10, …).
 
 ## Standard reactor (per bar)
 

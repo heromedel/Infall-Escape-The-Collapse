@@ -317,3 +317,20 @@ about 16 fuel and about 10 scrap on Normal (hard-coded, from memory) and, for th
   opening (6.05) with a little over; band 1 nets about +6.81 per band for a lone ship (F4), so the start is a
   cushion. It is tighter than FTL: Mawjig is also shopping money, so an early store purchase leaves the squad lean,
   and one unlucky stretch means Waiting.
+
+## F9. Mecha self-powered bars at 8.47 Mawjig each (2026-10-26)
+
+- **Proposed (heromedel, 2026-10-26):** each self-powered bar on a Mecha ship adds 8.47 Mawjig to its system's
+  price, replacing the ordinary reactor-bar price (3.63 for bars 1–5, 4.84 for 6–10). A self-powered system is always
+  on and never competes for power; the bar can't be moved, which is its downside. Over a 20-bar ship, power costs
+  about 55% more than a reactor would (about 169 against about 109). Recorded in `system-prices.md`.
+- **New totals for Ship Designs** (crew extra, as before):
+
+  | Light Attack Frame | Own power, old → new | Ship total, old → new | Band 1 wreck pays |
+  |---|:-:|:-:|:-:|
+  | Hull Laser (6 bars) | 22.99 → 50.82 | 131.72 → 159.55 | 3.99 |
+  | Suit Dock (7 bars) | 27.83 → 59.29 | 137.97 → 169.43 | 4.24 |
+
+- A single frame is now about 20% over the band 1 squad value budget (137, F6). Suggested (Ai-Generated-Proposal):
+  allow it, since Mecha are meant to be tough and a tougher ship pays more; or Ship Designs gives band 1 a lighter
+  loadout.
