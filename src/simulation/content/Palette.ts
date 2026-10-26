@@ -16,6 +16,8 @@ export const COLOURS = {
   malphenFlesh: '#FFA480',
   /** A damaged or cut-off system, either side (GDD 14C; ideas, ship interior art). */
   damagedRed: '#FF3B3B',
+  /** The disc behind a system symbol, standing in for the console until console art exists (heromedel, 2026-10-26). */
+  consoleBlue: '#1C242C',
 } as const;
 
 /** The power colour an enemy ship of each race shows (GDD 14D). "Pirate" is a colour name, not a race. */
@@ -47,6 +49,14 @@ export const PLACEHOLDER_SHAPE_BY_RACE: Record<string, PlaceholderShape> = {
 
 export function powerColourOf(name: string): string {
   return POWER_COLOUR_BY_NAME[name] ?? COLOURS.powerGreen;
+}
+
+/** A power colour from a palette name ("Mecha", "Pirate") or a hex value ("#aa28eb"); nothing if it is neither. */
+export function parsePowerColour(text: string): string | undefined {
+  const trimmed = text.trim();
+  if (/^#[0-9a-f]{6}$/i.test(trimmed)) return trimmed.toUpperCase();
+  const match = Object.keys(POWER_COLOUR_BY_NAME).find((name) => name.toLowerCase() === trimmed.toLowerCase());
+  return match ? POWER_COLOUR_BY_NAME[match] : undefined;
 }
 
 /**

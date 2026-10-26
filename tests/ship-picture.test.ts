@@ -9,6 +9,7 @@ import * as path from 'node:path';
 import { ShipFileReader } from '../src/simulation/content/ShipFileReader';
 import { shipPictureOf } from '../src/host/ShipPicture';
 import type { ContentLibrary } from '../src/host/ContentLibrary';
+import { Settings } from '../src/host/Settings';
 import { COLOURS } from '../src/simulation/content/Palette';
 
 const shipsFolder = path.join(__dirname, '..', 'content', 'ships');
@@ -17,7 +18,7 @@ const reader = new ShipFileReader();
 function pictureOf(folder: string, side: 'player' | 'enemy' = 'player') {
   const definition = reader.readShip(fs.readFileSync(path.join(shipsFolder, folder, 'ship.xml'), 'utf8'));
   const noSystems = { system: () => undefined } as unknown as ContentLibrary;
-  return shipPictureOf({ definition, folder: path.join(shipsFolder, folder) }, side, noSystems);
+  return shipPictureOf({ definition, folder: path.join(shipsFolder, folder) }, side, noSystems, new Settings());
 }
 
 describe('the Outrider picture', () => {
@@ -55,5 +56,14 @@ describe('a Point-centred ship', () => {
   });
   it('shows a pirate hull in pirate orange on the enemy side', () => {
     expect(pictureOf('pirate-hijacker', 'enemy').powerColour).toBe(COLOURS.pirateOrange);
+  });
+});
+
+describe('the player power colour setting', () => {
+  it('colours the player side from the setting, by palette name or hex', async () => {
+    const { parsePowerColour } = await import('../src/simulation/content/Palette');
+    expect(parsePowerColour('mecha')).toBe(COLOURS.mechaPurple);
+    expect(parsePowerColour('#AA28EB')).toBe('#AA28EB');
+    expect(parsePowerColour('plaid')).toBeUndefined();
   });
 });

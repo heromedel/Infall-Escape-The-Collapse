@@ -17,7 +17,11 @@ const LOOK = {
   airlock: '#f0b54a',
   conduit: '#5d6573',
   crewOutline: '#0b1018',
+  /** Console blue (docs/art/palette.md): the disc behind a symbol, standing in for the console. */
+  consoleDisc: '#1C242C',
 };
+
+const CONSOLE_DISC_RADIUS = 13;
 
 export class ShipDrawing {
   /** The group everything is drawn into; the camera moves this. */
@@ -128,6 +132,10 @@ export class ShipDrawing {
       const symbol = this.group(`system-${system.key.replace(/\s+/g, '-')}`);
       symbol.setAttribute('transform', `translate(${x} ${y})`);
       symbol.setAttribute('color', picture.powerColour);
+      const disc = document.createElementNS(SVG, 'circle');
+      disc.setAttribute('cx', String(SYMBOL_BOX / 2)); disc.setAttribute('cy', String(SYMBOL_BOX / 2));
+      disc.setAttribute('r', String(CONSOLE_DISC_RADIUS)); disc.setAttribute('fill', LOOK.consoleDisc);
+      symbol.appendChild(disc);
       symbol.appendChild(systemSymbolElement(system.name, system.symbolSvg));
       const title = document.createElementNS(SVG, 'title');
       title.textContent = `${system.key}, level ${system.level}`;

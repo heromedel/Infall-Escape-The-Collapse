@@ -11,8 +11,9 @@ import * as path from 'node:path';
 import type { PictureArt, PictureCrew, PictureDoor, PictureSegment, PictureTile, ShipPicture } from '../shared/ShipPicture';
 import { ShipDefinition, systemKey } from '../simulation/content/ShipDefinition';
 import { DIRECTIONS, Direction, gridIndex, neighbourTile, Tile, tileKey, tilesBetween } from '../simulation/content/Tile';
-import { placeholderShapeOf, enemyPowerColourOf, COLOURS } from '../simulation/content/Palette';
+import { placeholderShapeOf, enemyPowerColourOf } from '../simulation/content/Palette';
 import { ContentLibrary, ShipEntry } from './ContentLibrary';
+import { Settings } from './Settings';
 
 /** The genre's room scale: 35 pixels a tile, the same the art tools use (GDD 3D). */
 export const TILE_SIZE = 35;
@@ -22,8 +23,9 @@ const DOOR_THICKNESS = 6;
 
 export type Side = 'player' | 'enemy';
 
-export function shipPictureOf(entry: ShipEntry, side: Side, content: ContentLibrary): ShipPicture {
+export function shipPictureOf(entry: ShipEntry, side: Side, content: ContentLibrary, settings: Settings): ShipPicture {
   const ship = entry.definition;
+  const powerColour = side === 'player' ? settings.playerPowerColour : enemyPowerColourOf(ship.race, ship.powerColour);
   const grid = new Grid(ship);
   const roomOfTile = grid.roomOfTile();
 
@@ -33,7 +35,7 @@ export function shipPictureOf(entry: ShipEntry, side: Side, content: ContentLibr
     tileSize: TILE_SIZE,
     columns: grid.columns,
     rows: grid.rows,
-    powerColour: side === 'player' ? COLOURS.powerGreen : enemyPowerColourOf(ship.race, ship.powerColour),
+    powerColour,
     floorTiles: grid.allRoomTiles().map((tile) => grid.at(tile)),
     rooms: ship.rooms.map((room) => {
       const topLeft = grid.at({ x: Math.min(room.from.x, room.to.x), y: Math.min(room.from.y, room.to.y) });
@@ -51,7 +53,7 @@ export function shipPictureOf(entry: ShipEntry, side: Side, content: ContentLibr
       symbolSvg: content.system(system.name)?.symbolSvg,
     })),
     conduits: ship.conduits.map((conduit) => ({ ...grid.at(conduit.tile), runs: conduit.runs })),
-    crew: placeholderCrew(ship, grid, side),
+    crew: placeholderCrew(ship, grid, powerColour),
     hullArt: readHullArt(ship, entry.folder),
   };
 }
@@ -139,8 +141,7 @@ function doorRectangle(column: number, row: number, facing: Direction): { x: num
  * Starting crew stand on their systems' tiles, one each, in file order, then on any free room tile. Where crew
  * really start is the simulation's business (step 4); this only gives the picture someone to draw.
  */
-function placeholderCrew(ship: ShipDefinition, grid: Grid, side: Side): PictureCrew[] {
-  const colour = side === 'player' ? COLOURS.powerGreen : enemyPowerColourOf(ship.race, ship.powerColour);
+function placeholderCrew(ship: ShipDefinition, grid: Grid, colour: string): PictureCrew[] {
   const standingSpots = [...ship.systems.map((system) => system.tile), ...grid.allRoomTiles()];
   const taken = new Set<string>();
   const crew: PictureCrew[] = [];

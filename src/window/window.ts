@@ -52,6 +52,7 @@ function wireDebugConsole(): void {
     if (event.key !== 'Enter' || line.value.trim() === '') return;
     output.textContent = await host.debug(line.value);
     line.value = '';
+    await showPickedShip();   // a command may have changed what the picture looks like
   });
 }
 
