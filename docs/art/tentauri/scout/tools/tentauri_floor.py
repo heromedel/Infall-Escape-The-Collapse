@@ -72,9 +72,11 @@ def supershield_glyph(x, y, colour):
 
 
 sys.path.insert(0, os.path.join(HERE, "..", "..", ".."))
-from palette import POWER_GREEN  # noqa: E402
+from palette import TENTAURI_POWER_PINK  # noqa: E402
 
-POWERED = POWER_GREEN   # the powered symbol (palette.md)
+# the powered symbol: the scout is an enemy encounter (Ship Designs), and a ship fighting the player shows its race's
+# power colour (palette.md); the game recolours it by who controls the ship
+POWERED = TENTAURI_POWER_PINK
 ORGAN = "#7fe0dc"
 ORGAN_EDGE = "#24485a"
 
