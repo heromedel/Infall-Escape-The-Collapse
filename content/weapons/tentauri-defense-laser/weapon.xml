@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Tentauri Defense Laser (ship-suggestions.md, Tentauri scout step 9). Charge 9.0 s; 0.02 a shot. The Defensive
+     special (shooting down missiles when charged and unaimed) is not simulated yet. -->
+<weapon name="Tentauri Defense Laser" type="Laser" effects="Damage, Defensive" techType="Biomechanical" race="Tentauri"
+        shots="1" damage="1" power="1" chargeSeconds="9.0" mawjigPerShot="0.02"
+        description="A segmented laser that can also pick incoming missiles out of the dark."/>

@@ -5,6 +5,10 @@
  * Ships: content/ships/<folder>/ship.xml is the base ship; loadout.<anything>.xml beside it are its loadouts,
  * each registered under the loadout's own name (GDD 5J). Art named in the XML is looked for in the same folder.
  *
+ * Weapons: content/weapons/<folder>/weapon.xml is the weapon's card (GDD 8E, 8F, 11B).
+ *
+ * Races: content/races/<folder>/race.xml holds a race's crew traits; a race with no file gets the defaults.
+ *
  * Systems: content/systems/<folder>/system.xml names the system; symbol.svg beside it is its standard symbol,
  * lifted from the accepted floor plans. A system with no folder still works; it draws as a lettered square.
  */
@@ -14,6 +18,9 @@ import * as path from 'node:path';
 import { ShipDefinition } from '../simulation/content/ShipDefinition';
 import { ShipFileReader, ShipFileError } from '../simulation/content/ShipFileReader';
 import { checkShip } from '../simulation/content/ShipChecks';
+import { WeaponDefinition } from '../simulation/content/WeaponDefinition';
+import { WeaponFileReader, WeaponFileError } from '../simulation/content/WeaponFileReader';
+import { DEFAULT_RACE, RaceDefinition, readRaceDefinition } from '../simulation/content/RaceDefinition';
 import { Log } from './Log';
 
 /** A system's content: its name and, when it has one, its symbol's SVG text. */
@@ -32,6 +39,8 @@ export interface ShipEntry {
 export class ContentLibrary {
   private readonly ships = new Map<string, ShipEntry>();
   private readonly systems = new Map<string, SystemEntry>();
+  private readonly weapons = new Map<string, WeaponDefinition>();
+  private readonly races = new Map<string, RaceDefinition>();
 
   private constructor(private readonly log: Log) {}
 
@@ -42,9 +51,12 @@ export class ContentLibrary {
       return library;
     }
     library.loadSystems(path.join(contentFolder, 'systems'));
+    library.loadRaces(path.join(contentFolder, 'races'));
+    library.loadWeapons(path.join(contentFolder, 'weapons'));
     library.loadShips(path.join(contentFolder, 'ships'));
     library.noteSystemsWithoutSymbols();
-    log.event('content.loaded', { ships: library.ships.size, systems: library.systems.size });
+    library.noteWeaponsMissing();
+    log.event('content.loaded', { ships: library.ships.size, systems: library.systems.size, weapons: library.weapons.size, races: library.races.size });
     return library;
   }
 
@@ -56,6 +68,65 @@ export class ContentLibrary {
 
   shipNames(): string[] {
     return [...this.ships.keys()];
+  }
+
+  weapon(name: string): WeaponDefinition {
+    const weapon = this.weapons.get(name);
+    if (!weapon) throw new Error(`No weapon named "${name}" is loaded`);
+    return weapon;
+  }
+
+  weaponNames(): string[] {
+    return [...this.weapons.keys()];
+  }
+
+  /** The race's traits, or the plain defaults under its name when it has no file. */
+  race(name: string): RaceDefinition {
+    return this.races.get(name) ?? { ...DEFAULT_RACE, name };
+  }
+
+  private loadRaces(racesFolder: string): void {
+    if (!fs.existsSync(racesFolder)) return;
+    for (const folderName of fs.readdirSync(racesFolder).sort()) {
+      const file = path.join(racesFolder, folderName, 'race.xml');
+      if (!fs.existsSync(file)) continue;
+      try {
+        const race = readRaceDefinition(fs.readFileSync(file, 'utf8'));
+        this.races.set(race.name, race);
+        this.log.event('content.race_loaded', { race: race.name, xpRate: race.xpRate, integrationBars: race.integrationBars });
+      } catch (error) {
+        this.log.event('content.race_refused', { file, reason: (error as Error).message });
+      }
+    }
+  }
+
+  private loadWeapons(weaponsFolder: string): void {
+    if (!fs.existsSync(weaponsFolder)) return;
+    const reader = new WeaponFileReader();
+    for (const folderName of fs.readdirSync(weaponsFolder).sort()) {
+      const file = path.join(weaponsFolder, folderName, 'weapon.xml');
+      if (!fs.existsSync(file)) continue;
+      try {
+        const weapon = reader.readWeapon(fs.readFileSync(file, 'utf8'));
+        this.weapons.set(weapon.name, weapon);
+        this.log.event('content.weapon_loaded', { weapon: weapon.name, type: weapon.type, shots: weapon.shots, damage: weapon.damage, chargeSeconds: weapon.chargeSeconds });
+      } catch (error) {
+        const reason = error instanceof WeaponFileError ? error.message : `unexpected error: ${(error as Error).message}`;
+        this.log.event('content.weapon_refused', { file, reason });
+      }
+    }
+  }
+
+  /** A ship that names a weapon with no file can't arm it; say so once per name. */
+  private noteWeaponsMissing(): void {
+    const seen = new Set<string>();
+    for (const entry of this.ships.values()) {
+      for (const weapon of entry.definition.weapons) {
+        if (seen.has(weapon.name) || this.weapons.has(weapon.name)) continue;
+        seen.add(weapon.name);
+        this.log.event('content.weapon_missing', { weapon: weapon.name, ship: entry.definition.name });
+      }
+    }
   }
 
   /** The system's content, or nothing when no folder names it. */

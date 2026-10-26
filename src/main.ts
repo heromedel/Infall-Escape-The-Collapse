@@ -13,6 +13,7 @@ import { ContentLibrary } from './host/ContentLibrary';
 import { DebugConsole } from './host/DebugConsole';
 import { shipPictureOf, Side } from './host/ShipPicture';
 import { Settings } from './host/Settings';
+import { Battle } from './host/Battle';
 import { parsePowerColour, POWER_COLOUR_BY_NAME, POWER_COLOUR_BY_WORD } from './simulation/content/Palette';
 
 const projectFolder = path.join(__dirname, '..');
@@ -24,7 +25,7 @@ app.whenReady().then(() => {
   const content = ContentLibrary.load(contentFolder, log);
   const settings = new Settings();
   const debug = new DebugConsole(log);
-  registerDebugCommands(debug, content, settings);
+  registerDebugCommands(debug, content, settings, log);
 
   const window = openWindow();
   answerWindowRequests(window, content, settings, debug);
@@ -50,11 +51,24 @@ function answerWindowRequests(window: BrowserWindow, content: ContentLibrary, se
   ipcMain.handle('debug', (_event, line: string) => debug.run(line));
 }
 
-function registerDebugCommands(debug: DebugConsole, content: ContentLibrary, settings: Settings): void {
+function registerDebugCommands(debug: DebugConsole, content: ContentLibrary, settings: Settings, log: Log): void {
   debug.register({
     name: 'ships',
     description: 'List the loaded ships.',
     run: () => content.shipNames().join('\n'),
+  });
+  debug.register({
+    name: 'fight',
+    description: 'Run a headless battle to its end and report: fight [seed] [player ship] [enemy ship]. Ship names with spaces go in quotes. Default: the Outrider against the Light Attack Frame.',
+    run: (words) => {
+      const seed = Number(words[0] ?? Date.now() % 100000) || 1;
+      const names = words.slice(1).join(' ').match(/"([^"]+)"/g)?.map((quoted) => quoted.slice(1, -1)) ?? [];
+      const battle = new Battle(content, log, names[0] ?? 'SC-1 Outrider', names[1] ?? 'Light Attack Frame', seed);
+      const result = battle.runToResult();
+      const ships = battle.simulation.squads.flatMap((squad) => squad.ships.map((ship) => `${ship.name}: hull ${ship.hullPoints}/${ship.hullMax}, crew alive ${ship.crew.filter((member) => member.isAlive).length}/${ship.crew.length}`));
+      const mawjig = battle.simulation.squads.map((squad) => `${squad.name} Mawjig left ${squad.mawjig}`);
+      return [`Seed ${seed}: ${result.winner} wins after ${result.seconds} s (${result.reason}).`, ...ships, ...mawjig, 'The tick-by-tick story is in the log file.'].join('\n');
+    },
   });
   debug.register({
     name: 'powercolor',
