@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Cutpurse: the Hijacker's bands 1-3 loadout (ship-suggestions.md, Proposed 2026-10-26). A patch of the base
+     ship (GDD 5J): only what changes is listed; a listed system keeps the ship's tile and wall unless given. -->
+<loadout ship="Terran Pirate Hijacker" name="Terran Pirate Cutpurse" inherit="Patch">
+  <hull points="9"/>
+  <power kind="AZC" level="2"/>
+  <art hull="pirate-cutpurse-hull.svg"/>          <!-- the port bay faired over -->
+
+  <systems>
+    <system name="Piloting"        level="1"/>
+    <system name="Sensors"         removed="true"/>
+    <system name="Doors"           removed="true"/>
+    <system name="Shields"         level="1"/>
+    <system name="Engines"         level="1"/>
+    <system name="Weapons"         level="1"/>
+    <system name="Medbay"          removed="true"/>
+    <system name="Crew Teleporter" level="1"/>
+  </systems>
+
+  <!-- The Twinshot feeds come out: there is no mount 3 weapon. -->
+  <conduits>
+    (-1,-2,Remove)
+    (-2,-2,N,S)
+    (-2,-3,S,E)
+    (1,-2,N,S,E)
+  </conduits>
+
+  <weapons>
+    <weapon name="Sporewing" mount="4"/>
+  </weapons>
+  <crew>
+    <member race="Terran" count="3"/>
+  </crew>
+</loadout>

@@ -1,0 +1,23 @@
+{
+  "name": "infall",
+  "version": "0.0.1",
+  "description": "Infall: Escape The Collapse. A squad roguelike of ships, rooms and crew.",
+  "private": true,
+  "main": "build/main.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json && tsc -p tsconfig.window.json && node -e \"require('fs').cpSync('src/window/index.html','build/window/index.html')\"",
+    "start": "npm run build && electron .",
+    "test": "vitest run",
+    "check": "tsc -p tsconfig.json --noEmit && tsc -p tsconfig.window.json --noEmit"
+  },
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "electron": "^39.0.0",
+    "typescript": "^5.9.0",
+    "vitest": "^3.2.0"
+  },
+  "dependencies": {
+    "fast-xml-parser": "^5.0.0"
+  }
+}

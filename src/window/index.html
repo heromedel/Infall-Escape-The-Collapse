@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Infall: Escape The Collapse</title>
+  <style>
+    /* GDD 14B: muted blue boxes, white text. Placeholder look until the GUI discussion (14A). */
+    :root { --box: #1d2a3a; --edge: #4a6a8a; --text: #ffffff; --faint: #9fb3c8; }
+    body { margin: 0; background: #0b1018; color: var(--text); font: 15px/1.4 system-ui, sans-serif; }
+    main { padding: 16px; display: grid; gap: 16px; max-width: 900px; }
+    section { background: var(--box); border: 1px solid var(--edge); padding: 12px 16px; }
+    h1 { margin: 0 0 4px; font-size: 20px; }
+    h2 { margin: 0 0 8px; font-size: 16px; }
+    table { border-collapse: collapse; }
+    td, th { text-align: left; padding: 2px 12px 2px 0; }
+    th { color: var(--faint); font-weight: normal; }
+    pre { margin: 8px 0 0; white-space: pre-wrap; color: var(--faint); }
+    input { width: 100%; box-sizing: border-box; background: #0b1018; color: var(--text); border: 1px solid var(--edge); padding: 6px; font: inherit; }
+  </style>
+</head>
+<body>
+  <main>
+    <section>
+      <h1>Infall: Escape The Collapse</h1>
+      <div>Goal P build. The host has loaded the ships below.</div>
+    </section>
+    <section>
+      <h2>Loaded ships</h2>
+      <table id="ships"></table>
+    </section>
+    <section>
+      <h2>Debug console</h2>
+      <input id="debug-line" placeholder="Type a command and press Enter (help lists them)">
+      <pre id="debug-output"></pre>
+    </section>
+  </main>
+  <script type="module" src="window.js"></script>
+</body>
+</html>

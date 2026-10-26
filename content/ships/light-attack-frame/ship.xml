@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mecha Light Attack Frame, hull laser loadout as the base (ship-suggestions.md, layout Proposed 2026-10-26).
+     6 tiles wide (Point centering on x) and 5 long. No reactor: each system carries its own power (ownPower). -->
+<ship name="Light Attack Frame" race="Mecha">
+  <center x="Point" y="Tile"/>
+  <hull points="7"/>
+  <power kind="Own"/>
+  <art hull="battle-cross-hull.png" offset="0,0"/>
+  <mounts count="6"/>
+
+  <rooms>
+    <room id="0" from="-1,-2" to="1,-1" note="command deck"/>
+    <room id="1" from="-3,-1" to="-2,0" note="spare bay (port)"/>
+    <room id="2" from="2,-1"  to="3,0"  note="weapon bay (starboard)"/>
+    <room id="3" from="-1,0"  to="1,1"  note="core room"/>
+    <room id="4" from="-2,2"  to="-1,2" note="engine room"/>
+    <room id="5" from="1,2"   to="2,2"  note="life support room"/>
+  </rooms>
+
+  <systems>
+    <system name="Piloting"                  tile="-1,-2" level="1" wall="North"/>
+    <system name="Shields"                   tile="1,-2"  level="1" ownPower="2" wall="North"/>
+    <system name="Doors"                     tile="1,-1"  level="1" wall="East"/>
+    <system name="Cybernetic Servicing Core" tile="1,1"   level="1" ownPower="1" rotation="None"/>
+    <system name="Engines"                   tile="-2,2"  level="1" ownPower="1" wall="West"/>
+    <system name="Life Support"              tile="2,2"   level="1" ownPower="1" wall="East"/>
+    <system name="Weapon Pod"                tile="3,-1"  level="2" ownPower="1" wall="East"/>
+  </systems>
+
+  <doors>
+    <door id="0" tile="-1,-1" facing="South"/>
+    <door id="1" tile="-1,0"  facing="West"/>
+    <door id="2" tile="1,0"   facing="East"/>
+    <door id="3" tile="-1,1"  facing="South"/>
+    <door id="4" tile="-1,2"  facing="East"/>
+    <door id="5" tile="-3,-1" facing="West" note="airlock"/>
+    <door id="6" tile="-3,0"  facing="West" note="airlock"/>
+  </doors>
+
+  <weapons>
+    <weapon name="DS-ST Hull Laser" mount="4"/>
+  </weapons>
+  <crew>
+    <member race="Mecha" count="2"/>
+  </crew>
+</ship>

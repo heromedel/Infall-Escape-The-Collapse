@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Suit Dock: the Weapon Pod gives way to an EVB Dock beside a new airlock (ship-suggestions.md, Proposed
+     2026-10-26). A patch of the base ship (GDD 5J). -->
+<loadout ship="Light Attack Frame" name="Light Attack Frame, Suit Dock" inherit="Patch">
+  <systems>
+    <system name="Weapon Pod" removed="true"/>
+    <system name="EVB Dock" tile="3,-1" level="2" ownPower="2" wall="East"/>
+  </systems>
+  <doors>
+    <door id="7" tile="3,0" facing="East" note="airlock beside the EVB Dock"/>
+  </doors>
+  <weapons/>
+  <suits>
+    <suit name="laser battlesuit"/>
+  </suits>
+</loadout>
