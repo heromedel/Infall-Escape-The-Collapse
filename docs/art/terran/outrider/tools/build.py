@@ -10,7 +10,8 @@ Facing up, light from the upper left.
 import os
 import sys
 
-from art_kit import Hull, rounded_path, symmetric, mirror_x, shade, INK
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "tools"))  # docs/art/tools
+from art_kit import Hull, rounded_path, symmetric, mirror_x, shade, INK  # noqa: E402
 
 W, H, CX = 460, 740, 230
 

@@ -11,7 +11,8 @@ Facing up, light from the upper left.
 import os
 import sys
 
-from art_kit import Hull, rounded_path, INK
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "tools"))  # docs/art/tools
+from art_kit import Hull, rounded_path, INK  # noqa: E402
 
 W, H, CX = 340, 380, 170
 

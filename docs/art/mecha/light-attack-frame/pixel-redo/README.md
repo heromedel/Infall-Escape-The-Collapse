@@ -28,8 +28,7 @@ The Mecha frame in the Mecha style (`docs/art/README.md`): pixel art drawn pixel
 | `tools/floor_bc.py` | Builds the floor plans: `python3 floor_bc.py OUT_DIR` |
 | `tools/weapons_px.py` | Builds the weapons and armed previews: `python3 weapons_px.py OUT_DIR` |
 | `tools/pixel_svg.py` | Writes pixel art as compact SVG (one path per colour, each row's runs merged), used by every tool here. `python3 pixel_svg.py FILE.svg ...` compacts an old one-rect-per-pixel SVG in place. On 2026-10-26 every SVG here was compacted this way (about 14 times smaller) and checked to render pixel for pixel the same. |
-| `tools/render.js` | SVG to PNG for every art folder: `node render.js in.svg out.png [scale] [background]` |
-| `tools/sheet.js` | Side-by-side review sheets |
+| `docs/art/tools/render.js`, `sheet.js` | Shared: SVG to PNG (`node render.js in.svg out.png [scale] [background]`) and review sheets |
 
 ## Battle cross (2026-10-25): the Mecha hull style reference
 
