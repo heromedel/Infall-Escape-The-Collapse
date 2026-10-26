@@ -1,7 +1,7 @@
 # Game Project Standards
 
 Standard rules, elegant code principles and design philosophy for Hero's game projects.
-Copied from https://claude.ai/code/artifact/53e92093-5d74-4093-b5c1-576547d0f438 on 2026-10-21.
+Copied from https://claude.ai/code/artifact/53e92093-5d74-4093-b5c1-576547d0f438 on 2026-10-21; principle 8 reworded by heromedel on 2026-10-26 (both copies updated).
 
 ## Game Design Projects Standard Rules
 
@@ -23,7 +23,7 @@ Copied from https://claude.ai/code/artifact/53e92093-5d74-4093-b5c1-576547d0f438
 5. **Special cases dissolve.** Prefer a way of solving the problem where edge cases become ordinary cases, rather than adding a separate branch for each one.
 6. **Clever only with a purpose.** A trick is welcome if it makes the problem simpler, but not if the reader has to stop and decode it.
 7. **Prefer human readability when possible.** Shorter or slightly faster code is fine if it's clearly labeled and commented. Names are spelled out in plain words, with no cryptic abbreviations, and say exactly what the thing is or does. A name should never imply something the code doesn't do, such as calling crash protection a "journal." Even where jargon uses a term that way, prefer the plain name a reader would expect, like `CrashProtection`.
-8. **Write it elegantly now, not later.** When writing or adding code, put things where they belong from the start. Don't put input handling in main planning to move it into an `Input` class later. Small moves and renames each build are cleaner than untangling or rewriting the code later. Elegant early means right place, not more structure. Focus on making the part of the engine you're building now elegant, rather than sketching many crude structures for later.
+8. **Write it elegantly now, not later.** When planning current or future engines and features, keep the plan elegant too. Prepping for future plans should not overly complicate the current state, nor lead to over-complication while moving on; but failing to prep, and paying for it in complications or rewrites, is the wrong method as well. Elegant early means right place, not more structure: put things where they belong from the start, e.g. input handling in an `Input` class rather than in main to be moved later. Small moves and renames each build are cleaner than untangling the code later.
 9. **Consistency.** The same kind of thing is done the same way everywhere: same naming patterns, same structure, same way of handling similar problems.
 10. **Extend what exists before building new.** If a system already does something close, extend or share it rather than building a parallel version.
 11. **One owner for each piece of state.** Every piece of data has one home, and everything else asks that home rather than keeping its own copy.

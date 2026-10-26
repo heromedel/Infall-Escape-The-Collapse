@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Tentauri Tough Little Scout (ship-suggestions.md, layout Proposed 2026-10-26). Two rooms, many systems
+     (GDD 5B); the genre's default power pool. Console art is named per system (GDD 5H).
+     Two weapon systems, each claiming its own mounts: which mounts are A's and B's is a guess until the hull art
+     numbers them (not in the docs yet). -->
+<ship name="Tentauri Tough Little Scout" race="Tentauri">
+  <center x="Tile" y="Tile"/>                       <!-- 5 x 5 tiles -->
+  <hull points="8"/>
+  <power kind="Reactor" bars="10"/>
+  <art hull="tentauri-scout-hull.svg" offset="0,0"/>
+  <mounts count="6"/>
+
+  <rooms>
+    <room id="0" from="-2,-2" to="2,0" note="forward (controlled)"/>
+    <room id="1" from="-1,1"  to="1,2" note="rear (uncontrolled)"/>
+  </rooms>
+
+  <systems>
+    <system name="Sensors"               tile="-1,-2" level="1" wall="North" art="Tentauri.Sensors.Grasp"/>
+    <system name="Piloting"              tile="0,-2"  level="1" wall="North" art="Tentauri.Pilot.Hood"/>
+    <system name="Shields"               tile="1,-2"  level="1" wall="North" art="Tentauri.Shields.Carapace"/>
+    <system name="Weapons" label="A"     tile="-2,-1" level="1" wall="West"  art="Tentauri.Weapons.Trigger" mounts="1,2,3"/>
+    <system name="Weapons" label="B"     tile="2,-1"  level="1" wall="East"  art="Tentauri.Weapons.Trigger" mirror="Yes" mounts="4,5,6"/>
+    <system name="Engines"               tile="-2,0"  level="2" wall="West"  art="Tentauri.Engines.Pipes"/>
+    <system name="Doors"                 tile="2,0"   level="1" wall="East"  art="Tentauri.Doors.Iris"/>
+    <system name="Life Support"          tile="-1,1"  level="1" wall="North" art="Tentauri.LifeSupport.AirSacs"/>
+    <system name="Medbay"                tile="1,1"   level="1" wall="North" art="Tentauri.Medbay.Bud"/>
+    <system name="Supershield Generator" tile="0,2"   level="2" wall="South" art="Tentauri.Supershield.Halo"/>
+  </systems>
+
+  <doors>
+    <door id="0" tile="0,0"  facing="South" note="forward to rear"/>
+    <door id="1" tile="-1,2" facing="West"  note="airlock"/>
+    <door id="2" tile="1,2"  facing="East"  note="airlock"/>
+  </doors>
+
+  <weapons>
+    <weapon name="Tentauri Defense Laser" mount="1"/>     <!-- fired by Weapons A -->
+    <weapon name="Tentauri Defense Laser" mount="4"/>     <!-- fired by Weapons B -->
+  </weapons>
+  <crew>
+    <member race="Tentauri" count="2"/>
+  </crew>
+</ship>

@@ -1,1 +1,7 @@
 __pycache__/
+node_modules/
+build/
+logs/
+tools/node/
+tools/*.zip
+tools/*.tmp/
