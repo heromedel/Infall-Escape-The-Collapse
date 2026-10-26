@@ -7,39 +7,52 @@
     /* GDD 14B: muted blue boxes, white text. Placeholder look until the GUI discussion (14A). */
     :root { --box: #1d2a3a; --edge: #4a6a8a; --text: #ffffff; --faint: #9fb3c8; --space: #0b1018; }
     html, body { height: 100%; margin: 0; }
-    body { background: var(--space); color: var(--text); font: 15px/1.4 system-ui, sans-serif; display: grid; grid-template-rows: auto 1fr auto; grid-template-columns: 1fr auto; }
-    header, footer { grid-column: 1 / -1; }
-    #ship-panel { width: 340px; overflow: auto; background: var(--box); border-left: 1px solid var(--edge); padding: 8px 12px; font-size: 13px; }
-    #ship-panel:empty { display: none; }
-    .heading { color: var(--faint); margin: 6px 0 2px; }
-    .rows { display: grid; gap: 3px; margin-bottom: 6px; }
-    .row { display: flex; justify-content: space-between; gap: 8px; }
-    .bars { display: flex; gap: 2px; }
-    .bar { width: 12px; height: 16px; padding: 0; border: 1px solid var(--edge); background: var(--space); cursor: pointer; }
-    .bar.on { background: #66FF66; }
-    .weapon, .crew { text-align: left; background: var(--space); color: var(--text); border: 1px solid var(--edge); padding: 4px 6px; font: inherit; font-size: 13px; cursor: pointer; }
-    .weapon.unpowered { color: var(--faint); }
-    .selected { border-color: #ffffff; outline: 1px solid #ffffff; }
-    #paused-banner { position: fixed; left: 50%; top: 50%; transform: translate(-50%, -50%); font-size: 40px; font-weight: bold; letter-spacing: 6px; color: var(--text); text-shadow: 0 0 12px #000; pointer-events: none; }
-    header, footer { background: var(--box); border-bottom: 1px solid var(--edge); padding: 8px 16px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+    body { background: var(--space); color: var(--text); font: 15px/1.4 system-ui, sans-serif; display: grid; grid-template-rows: auto 1fr auto auto; overflow: hidden; }
+    header, footer, #dock-band { background: var(--box); border-bottom: 1px solid var(--edge); padding: 8px 16px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
     footer { border-bottom: none; border-top: 1px solid var(--edge); display: grid; gap: 6px; }
     h1 { margin: 0; font-size: 18px; }
     select, input { background: var(--space); color: var(--text); border: 1px solid var(--edge); padding: 6px; font: inherit; }
     #ship-caption { color: var(--faint); }
-    #viewport { width: 100%; height: 100%; display: block; cursor: grab; touch-action: none; }
+    #viewport { width: 100%; height: 100%; display: block; cursor: default; touch-action: none; }
+    #viewport.panning { cursor: grabbing; }
     pre { margin: 0; white-space: pre-wrap; color: var(--faint); max-height: 6em; overflow: auto; }
+
+    /* the battle: the top band (GDD 3J) carries the squad and the status line; the bottom band holds a docked panel */
+    #battle-band { display: none; justify-content: space-between; }
+    #battle-band .middle { flex: 1; text-align: center; color: var(--faint); }
+    #dock-band { display: none; border-bottom: none; border-top: 1px solid var(--edge); padding: 0 8px; }
+    #dock { width: 100%; height: 182px; display: block; }
+    body.battle #viewer-band { display: none; }
+    body.battle #battle-band { display: flex; }
+    body.battle.panel-docked #dock-band { display: flex; }
+    body.battle footer { display: none; }
+    body.battle.console-open footer { display: grid; position: fixed; left: 0; right: 0; top: 0; z-index: 2; box-shadow: 0 6px 20px #000; }
+    #paused-banner { position: fixed; left: 16px; bottom: 16px; font-size: 28px; font-weight: bold; letter-spacing: 6px; color: var(--text); text-shadow: 0 0 12px #000; pointer-events: none; }
+    #paused-banner small { display: block; font-size: 13px; letter-spacing: 1px; font-weight: normal; color: var(--faint); }
+
+    /* cursors say what the next click does (the genre's crosshair for aiming) */
+    .clickable, rect.door, [data-crew-id] { cursor: pointer; }
+    body.armed #viewport rect.tile.enemy { cursor: crosshair; }
+    body.crew-selected #viewport rect.tile.own { cursor: cell; }
+    rect.tile.hover-room { fill: #ffd27a; }
+    body.crew-selected #viewport rect.tile.own:hover { fill: #bfe3ff; }
   </style>
 </head>
 <body>
-  <header>
+  <header id="viewer-band">
     <h1>Infall: Escape The Collapse</h1>
     <label>Ship <select id="ship-picker"></select></label>
     <label>Side <select id="side-picker"><option value="player">Player</option><option value="enemy">Enemy</option></select></label>
     <span id="ship-caption"></span>
   </header>
+  <header id="battle-band">
+    <span id="squad-line"></span>
+    <span id="status-line" class="middle"></span>
+    <span id="time-line"></span>
+  </header>
   <svg id="viewport" xmlns="http://www.w3.org/2000/svg"></svg>
-  <aside id="ship-panel"></aside>
-  <div id="paused-banner" hidden>PAUSED</div>
+  <div id="dock-band"><svg id="dock" xmlns="http://www.w3.org/2000/svg"></svg></div>
+  <div id="paused-banner" hidden>PAUSED<small>space resumes; orders still work</small></div>
   <footer>
     <input id="debug-line" placeholder="Debug console: type a command and press Enter (help lists them)">
     <pre id="debug-output"></pre>

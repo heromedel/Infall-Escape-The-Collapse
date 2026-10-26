@@ -76,6 +76,15 @@ export class Simulation {
     this.pendingOrders.push(...orders);
   }
 
+  /**
+   * Carries out orders now, without a tick passing: an order given while paused takes effect at once (the genre
+   * lets the player set power, aim and send crew while paused), and the next tick simply finds it done.
+   */
+  applyOrdersNow(orders: Order[]): void {
+    this.pendingOrders.push(...orders);
+    if (!this.result) this.carryOutOrders();
+  }
+
   /** One tick of battle, in this order. */
   advanceOneTick(): void {
     if (this.result) return;

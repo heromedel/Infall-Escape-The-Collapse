@@ -99,6 +99,15 @@ function registerDebugCommands(debug: DebugConsole, content: ContentLibrary, set
     },
   });
   debug.register({
+    name: 'panel',
+    description: 'Ship Panel setting (GDD 3B): panel beside | docked. Beside the hull or in the bottom band; switches at once.',
+    run: ([place]) => {
+      if (place === 'beside' || place === 'docked') { settings.shipPanel = place; host.announceLook(); }
+      else if (place !== undefined) return 'panel beside | docked';
+      return `Ship panel: ${settings.shipPanel === 'beside' ? 'beside the ship, under its hull' : 'docked in the bottom band'}.`;
+    },
+  });
+  debug.register({
     name: 'autopause',
     description: 'Turn Mode auto pause (GDD 4I): autopause off | on [seconds].',
     run: ([state, seconds]) => {

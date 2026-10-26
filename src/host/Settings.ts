@@ -15,4 +15,11 @@ export class Settings {
   /** Squad formation (GDD 3H, 3I): curve depth as a share of the tallest ship, and the inverted curve. */
   formationDepth = 0.7;
   formationInverted = false;
+  /**
+   * Ship Panel (GDD 3B, Proposed): Beside Ship > Docked. Beside: the selected ship's panel sits under its hull
+   * and zooms with it. Docked: the panel sits in the bottom GUI band (3J) at screen scale.
+   */
+  shipPanel: ShipPanelPlace = 'beside';
 }
+
+export type ShipPanelPlace = 'beside' | 'docked';

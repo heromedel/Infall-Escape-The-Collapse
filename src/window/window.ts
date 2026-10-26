@@ -1,7 +1,8 @@
 /**
  * The window: draws what the host sends and sends back what the player did. It holds no game state of its own
  * (standards, principle 11: the host owns it). Outside a battle it is the ship viewer; when the host starts a
- * battle it becomes the battle screen until the battle ends.
+ * battle it becomes the battle screen: the battle fills the window, the top band carries the squad and the
+ * status line (GDD 3J), and the debug console drops down on the backtick key.
  */
 
 import type { ShipPicture } from '../shared/ShipPicture';
@@ -21,16 +22,18 @@ declare const host: {
 };
 
 const viewport = document.getElementById('viewport') as unknown as SVGSVGElement;
+const dock = document.getElementById('dock') as unknown as SVGSVGElement;
 const viewerDrawing = new ShipDrawing();
 const battleView = new BattleView();
-const panel = document.getElementById('ship-panel') as HTMLElement;
 const stage = document.createElementNS('http://www.w3.org/2000/svg', 'g');
 viewport.appendChild(stage);
 const camera = new Camera(viewport, stage);
-const controls = new BattleControls(battleView, viewport, panel,
+camera.onChange = (zoom) => battleView.setZoom(zoom);
+const controls = new BattleControls(battleView, viewport, dock, document.getElementById('status-line')!,
   (order) => host.sendToHost({ kind: 'Order', order }),
   (paused) => host.sendToHost({ kind: paused ? 'Pause' : 'Unpause' }));
 let inBattle = false;
+let battleOver = false;
 
 // ---- the ship viewer (outside a battle) --------------------------------------------------------------------
 
@@ -68,27 +71,51 @@ function listenToHost(): void {
     switch (message.kind) {
       case 'BattleStarted': {
         inBattle = true;
+        battleOver = false;
+        document.body.classList.add('battle');
+        document.body.classList.remove('console-open');
         battleView.start(message.pictures, message.playerShipIds, message.formation);
+        controls.start(message.pictures, message.playerShipIds, message.look.shipPanel === 'beside');
         stage.replaceChildren(battleView.root);
-        const size = battleView.size();
-        camera.fitTo(size.width, size.height);
-        caption('Battle. Click a crew member then a tile to move; a weapon then an enemy room to target; space pauses.');
+        fitBattle();
         break;
       }
-      case 'Snapshot':
+      case 'Look':
+        controls.setPanelBeside(message.look.shipPanel === 'beside');
+        fitBattle();
+        break;
+      case 'Snapshot': {
         battleView.update(message.snapshot);
         controls.update(message.snapshot);
+        const player = message.snapshot.squads.find((squad) => squad.side === 'player');
+        document.getElementById('squad-line')!.textContent = player ? `${player.name}: Mawjig ${player.mawjig.toFixed(2)}` : '';
+        document.getElementById('time-line')!.textContent = `${message.snapshot.seconds.toFixed(1)} s. Backtick opens the console.`;
         break;
+      }
       case 'Paused':
         controls.paused = message.paused;
         document.getElementById('paused-banner')!.hidden = !message.paused;
         break;
       case 'BattleEnded':
-        caption(`Battle over: ${message.winner} wins, ${message.reason}. Pick a ship above to go back to the viewer, or type battle for another.`);
-        inBattle = false;
+        battleOver = true;
+        document.getElementById('time-line')!.textContent = `Battle over: ${message.winner} wins, ${message.reason}. Backtick, then "battle" for another; Escape twice for the viewer.`;
         break;
     }
   });
+}
+
+/** The camera shows the whole battle; the window's size decides the zoom (GDD 3C: ships keep their size). */
+function fitBattle(): void {
+  requestAnimationFrame(() => {   // after the bands have shown or hidden, so the viewport has its final size
+    const size = battleView.size();
+    camera.fitTo(size.width, size.height, size.reservedBottom + 8);
+  });
+}
+
+function leaveBattle(): void {
+  inBattle = false;
+  document.body.classList.remove('battle', 'console-open', 'panel-docked', 'armed', 'crew-selected');
+  showPickedShip();
 }
 
 /** The debug console: Enter runs the line; up and down walk back through the commands typed this session. */
@@ -98,6 +125,16 @@ function wireDebugConsole(): void {
   const history: string[] = [];
   let historyIndex = 0;   // history.length means "the line being typed"
   let unsentLine = '';
+  window.addEventListener('keydown', (event) => {
+    if (event.key === '`' && inBattle) {
+      event.preventDefault();
+      const open = document.body.classList.toggle('console-open');
+      if (open) line.focus(); else line.blur();
+      return;
+    }
+    if (event.key === 'Escape' && event.target === line) { line.blur(); document.body.classList.remove('console-open'); return; }
+    if (event.key === 'Escape' && inBattle && battleOver && !document.body.classList.contains('armed') && !document.body.classList.contains('crew-selected')) leaveBattle();
+  });
   line.addEventListener('keydown', async (event) => {
     if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
       event.preventDefault();

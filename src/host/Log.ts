@@ -27,6 +27,7 @@ const HUMAN_LINES: Record<string, (fields: LogFields) => string> = {
   'content.loaded': (f) => `Content loaded: ${f.ships} ships, ${f.systems} systems, ${f.weapons} weapons, ${f.races} races.`,
   'host.client_connected': (f) => `Client connected: ${f.client}.`,
   'host.paused': (f) => `${f.paused ? 'Paused' : 'Unpaused'} by ${f.by}.`,
+  'host.order': (f) => `Order ${f.kind} for ship ${f.shipId}${f.paused ? ' (paused)' : ''}: ${plainListing({ ...f, kind: undefined, shipId: undefined, paused: undefined })}.`,
   'host.battle_ended': (f) => `The live battle ended after ${f.seconds} s: ${f.winner} wins, ${f.reason}.`,
   'battle.started': (f) => `Battle: ${f.player} against ${f.enemy}, seed ${f.seed}.`,
   'battle.shot_fired': (f) => `${f.ship} fires ${f.weapon} at ship ${f.targetShip} room ${f.room} (${f.cost} Mawjig).`,

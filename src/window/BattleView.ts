@@ -8,13 +8,16 @@ import type { ShipPicture } from '../shared/ShipPicture';
 import type { Snapshot, SnapshotShip, SnapshotShot } from '../shared/Snapshot';
 import { ShipDrawing } from './ShipDrawing.js';
 import { formationSlots, FormationSettings } from './Formation.js';
+import { PANEL_HEIGHT, PANEL_WIDTH } from './ShipPanel.js';
 
 const SVG = 'http://www.w3.org/2000/svg';
 /** Space between the front line of each squad and the divider: the off-screen gap's on-screen edge. */
 const ROW_GAP = 120;
-/** Room above a ship's art for its hull bar, shield pips and name. */
-const LABEL_SPACE = 44;
-/** The on-screen parts of a shot's flight (Simulation.ON_SCREEN_FLIGHT_SECONDS) as a share of the whole, for 400 GM. */
+/** Room above a ship's art for its tag: name, hull bar and shield pips, drawn at screen scale. */
+const LABEL_SPACE = 64;
+const TAG = { width: 170, height: 34 };
+/** Room under the player squad for a ship's panel when it sits beside the hull (Settings: Ship Panel). */
+const PANEL_GAP = 10;
 const LOOK = {
   divider: '#4a6a8a',
   hullBar: '#66FF66',
@@ -26,6 +29,7 @@ const LOOK = {
   missile: '#FF8500',
   damagedSymbol: '#FF3B3B',
   selected: '#FFFFFF',
+  targetLine: '#FF3B3B',
 };
 
 /** One ship on screen: its drawing, where it sits, and its live overlays. */
@@ -36,8 +40,12 @@ interface PlacedShip {
   group: SVGGElement;
   offsetX: number;
   offsetY: number;
+  /** The footprint's edges around the tile grid, for placing things beside the ship. */
+  print: { width: number; height: number; left: number; top: number };
   hullBar: SVGRectElement;
   shieldPips: SVGCircleElement[];
+  /** The screen-scale tag above the ship. */
+  tag: SVGGElement;
   tileByCoordinate: Map<string, { column: number; row: number }>;
 }
 
@@ -46,6 +54,12 @@ export class BattleView {
   readonly ships = new Map<number, PlacedShip>();
   playerShipIds: number[] = [];
   private readonly shotsGroup: SVGGElement;
+  private readonly targetsGroup: SVGGElement;
+  /** Where the selected ship's panel goes when it sits beside the hull. */
+  private readonly panelLayer: SVGGElement;
+  private panelBeside = true;
+  private besidePanel?: { shipId: number; panel: SVGGElement };
+  private zoom = 1;
   private dividerY = 0;
   private width = 0;
   private height = 0;
@@ -54,6 +68,8 @@ export class BattleView {
   constructor() {
     this.root = document.createElementNS(SVG, 'g');
     this.shotsGroup = document.createElementNS(SVG, 'g');
+    this.targetsGroup = document.createElementNS(SVG, 'g');
+    this.panelLayer = document.createElementNS(SVG, 'g');
   }
 
   /** Lays both squads out from their pictures, each in its formation curve facing the divider (GDD 3H). */
@@ -78,11 +94,71 @@ export class BattleView {
 
     this.placeSquad(enemy, enemyLayout.slots, (this.width - enemyLayout.width) / 2, 0);
     this.placeSquad(player, playerLayout.slots, (this.width - playerLayout.width) / 2, enemyHeight + ROW_GAP);
+    this.root.appendChild(this.targetsGroup);
     this.root.appendChild(this.shotsGroup);
+    this.root.appendChild(this.panelLayer);
+    this.rescaleTags();
   }
 
-  size(): { width: number; height: number } {
-    return { width: this.width, height: this.height };
+  /** The battle's size in battle pixels, and the screen pixels to keep clear under it for a panel beside the hull. */
+  size(): { width: number; height: number; reservedBottom: number } {
+    return { width: this.width, height: this.height, reservedBottom: this.panelBeside ? PANEL_GAP + PANEL_HEIGHT : 0 };
+  }
+
+  /**
+   * Puts a ship's panel under its hull, centred on the ship but at screen scale, so it stays readable however
+   * far the camera is out (GDD 3B: near the ship); or takes it out when the panel is docked.
+   */
+  placePanel(shipId: number, panel: SVGGElement | undefined, beside: boolean): void {
+    this.panelBeside = beside;
+    this.panelLayer.replaceChildren();
+    this.besidePanel = undefined;
+    if (!panel || !beside || !this.ships.has(shipId)) return;
+    this.besidePanel = { shipId, panel };
+    this.panelLayer.appendChild(panel);
+    this.rescalePanel();
+  }
+
+  /** The camera moved or zoomed: the tags and a panel beside a hull keep their screen size. */
+  setZoom(zoom: number): void {
+    this.zoom = zoom;
+    this.rescalePanel();
+    this.rescaleTags();
+  }
+
+  /** Tags keep screen size until neighbours would overlap; then they shrink to the ship's pitch. */
+  private rescaleTags(): void {
+    for (const placed of this.ships.values()) {
+      const grid = ShipDrawing.sizeOf(placed.picture);
+      const scale = Math.min(1 / this.zoom, (placed.print.width + 50) / TAG.width);
+      const x = placed.offsetX + grid.width / 2 - (TAG.width / 2) * scale;
+      const y = placed.offsetY - placed.print.top + LABEL_SPACE - TAG.height * scale;
+      placed.tag.setAttribute('transform', `translate(${x} ${y}) scale(${scale})`);
+    }
+  }
+
+  private rescalePanel(): void {
+    if (!this.besidePanel) return;
+    const placed = this.ships.get(this.besidePanel.shipId)!;
+    const grid = ShipDrawing.sizeOf(placed.picture);
+    const scale = 1 / this.zoom;
+    const x = placed.offsetX + grid.width / 2 - (PANEL_WIDTH / 2) * scale;
+    const y = placed.offsetY - placed.print.top + placed.print.height + PANEL_GAP * scale;
+    this.besidePanel.panel.setAttribute('transform', `translate(${x} ${y}) scale(${scale})`);
+  }
+
+  /** Where a ship's tile grid sits on the battle, for the camera. */
+  shipBox(shipId: number): { x: number; y: number; width: number; height: number } | undefined {
+    const placed = this.ships.get(shipId);
+    if (!placed) return undefined;
+    return { x: placed.offsetX - placed.print.left, y: placed.offsetY - placed.print.top, width: placed.print.width, height: placed.print.height };
+  }
+
+  /** Marks every tile of a room as hovered (so a whole room lights up under the pointer), or none. */
+  hoverRoom(shipId: number | undefined, roomId: number | undefined): void {
+    this.root.querySelectorAll('rect.tile.hover-room').forEach((tile) => tile.classList.remove('hover-room'));
+    if (shipId === undefined || roomId === undefined) return;
+    this.root.querySelectorAll(`rect.tile[data-ship-id="${shipId}"][data-room-id="${roomId}"]`).forEach((tile) => tile.classList.add('hover-room'));
   }
 
   /** Redraws everything that moves from the snapshot. */
@@ -94,13 +170,48 @@ export class BattleView {
       }
     }
     this.drawShots(snapshot);
+    this.drawTargets(snapshot);
   }
 
+  /** The selected ship gets a glow; its panel is BattleControls' business. */
   select(shipId: number | undefined): void {
     this.selectedShipId = shipId;
     for (const placed of this.ships.values()) {
       placed.group.setAttribute('filter', placed.id === shipId ? 'drop-shadow(0 0 6px white)' : '');
     }
+  }
+
+  /** The room's rectangle on the battle, for reticles. */
+  private roomBox(placed: PlacedShip, roomId: number): { x: number; y: number; width: number; height: number } | undefined {
+    const room = placed.picture.rooms.find((candidate) => candidate.id === roomId);
+    if (!room) return undefined;
+    const size = placed.picture.tileSize;
+    return { x: placed.offsetX + room.column * size, y: placed.offsetY + room.row * size, width: room.width * size, height: room.height * size };
+  }
+
+  /** The selected ship's aimed weapons: a line to the target room and a box around it (GDD 3L: any enemy ship). */
+  private drawTargets(snapshot: Snapshot): void {
+    this.targetsGroup.replaceChildren();
+    const ship = snapshot.squads.flatMap((squad) => squad.ships).find((candidate) => candidate.id === this.selectedShipId);
+    const from = ship && this.ships.get(ship.id);
+    if (!ship || !from) return;
+    ship.weapons.forEach((weapon, index) => {
+      if (!weapon.target) return;
+      const to = this.ships.get(weapon.target.shipId);
+      const box = to && this.roomBox(to, weapon.target.roomId);
+      if (!to || !box) return;
+      const grid = ShipDrawing.sizeOf(from.picture);
+      const start = { x: from.offsetX + grid.width * (index + 1) / (ship.weapons.length + 1), y: from.offsetY - from.print.top + from.print.height - grid.height / 2 };
+      const line = document.createElementNS(SVG, 'line');
+      line.setAttribute('x1', String(start.x)); line.setAttribute('y1', String(start.y));
+      line.setAttribute('x2', String(box.x + box.width / 2)); line.setAttribute('y2', String(box.y + box.height / 2));
+      line.setAttribute('stroke', LOOK.targetLine); line.setAttribute('stroke-width', '1.5'); line.setAttribute('stroke-dasharray', '6 4');
+      line.setAttribute('opacity', '0.8'); line.setAttribute('pointer-events', 'none');
+      this.targetsGroup.appendChild(line);
+      const reticle = this.rect(box.x + 2, box.y + 2, box.width - 4, box.height - 4, 'none');
+      reticle.setAttribute('stroke', LOOK.targetLine); reticle.setAttribute('stroke-width', '2'); reticle.setAttribute('pointer-events', 'none');
+      this.targetsGroup.appendChild(reticle);
+    });
   }
 
   /** The screen position (in battle pixels) of a ship's tile centre, for shots. */
@@ -124,26 +235,28 @@ export class BattleView {
       group.setAttribute('transform', `translate(${gridX} ${gridY})`);
       group.dataset.shipId = String(id);
       group.appendChild(drawing.root);
-      const size = ShipDrawing.sizeOf(picture);
-      const labelY = -print.top + 4;   // the labels sit at the top of the footprint, above the art
-      const hullBack = this.rect(0, labelY + 30, size.width, 8, LOOK.barBack);
-      const hullBar = this.rect(0, labelY + 30, size.width, 8, LOOK.hullBar);
-      group.appendChild(hullBack); group.appendChild(hullBar);
+      // the tag: name, hull bar and shield pips, kept at screen scale by rescaleTags
+      const tag = document.createElementNS(SVG, 'g');
+      tag.setAttribute('pointer-events', 'none');
+      const name = document.createElementNS(SVG, 'text');
+      name.setAttribute('x', String(TAG.width / 2)); name.setAttribute('y', '12'); name.setAttribute('text-anchor', 'middle');
+      name.setAttribute('font-size', '12'); name.setAttribute('font-family', 'system-ui, sans-serif'); name.setAttribute('fill', '#cfd6e2'); name.textContent = picture.name;
+      tag.appendChild(name);
+      tag.appendChild(this.rect(0, 18, TAG.width, 8, LOOK.barBack));
+      const hullBar = this.rect(0, 18, TAG.width, 8, LOOK.hullBar);
+      tag.appendChild(hullBar);
       const shieldPips: SVGCircleElement[] = [];
       for (let pip = 0; pip < 4; pip++) {
         const circle = document.createElementNS(SVG, 'circle');
-        circle.setAttribute('cx', String(8 + pip * 14)); circle.setAttribute('cy', String(labelY + 18)); circle.setAttribute('r', '5');
+        circle.setAttribute('cx', String(TAG.width - 6 - pip * 12)); circle.setAttribute('cy', '10'); circle.setAttribute('r', '4');
         circle.setAttribute('fill', LOOK.shieldPipEmpty);
-        group.appendChild(circle); shieldPips.push(circle);
+        tag.appendChild(circle); shieldPips.push(circle);
       }
-      const label = document.createElementNS(SVG, 'text');
-      label.setAttribute('x', String(size.width)); label.setAttribute('y', String(labelY + 22)); label.setAttribute('text-anchor', 'end');
-      label.setAttribute('font-size', '12'); label.setAttribute('fill', '#cfd6e2'); label.textContent = picture.name;
-      group.appendChild(label);
       this.tagTilesForClicks(drawing, picture, id);
       this.root.appendChild(group);
+      this.root.appendChild(tag);
       const tileByCoordinate = new Map(picture.floorTiles.map((tile) => [`${tile.x},${tile.y}`, { column: tile.column, row: tile.row }]));
-      this.ships.set(id, { id, picture, drawing, group, offsetX: gridX, offsetY: gridY, hullBar, shieldPips, tileByCoordinate });
+      this.ships.set(id, { id, picture, drawing, group, offsetX: gridX, offsetY: gridY, print, hullBar, shieldPips, tag, tileByCoordinate });
     });
   }
 
@@ -159,14 +272,13 @@ export class BattleView {
       rect.dataset.x = String(tile.x);
       rect.dataset.y = String(tile.y);
       rect.dataset.roomId = String(tile.roomId);
-      rect.classList.add('tile');
+      rect.classList.add('tile', this.playerShipIds.includes(shipId) ? 'own' : 'enemy');
     });
   }
 
   private updateShip(placed: PlacedShip, ship: SnapshotShip): void {
-    const size = ShipDrawing.sizeOf(placed.picture);
     const share = ship.hullMax > 0 ? ship.hullPoints / ship.hullMax : 0;
-    placed.hullBar.setAttribute('width', String(size.width * share));
+    placed.hullBar.setAttribute('width', String(TAG.width * share));
     placed.hullBar.setAttribute('fill', share < 0.34 ? LOOK.hullBarLow : LOOK.hullBar);
     placed.shieldPips.forEach((pip, index) => {
       pip.setAttribute('fill', index < ship.shieldLayers ? LOOK.shieldPip : LOOK.shieldPipEmpty);
@@ -177,6 +289,7 @@ export class BattleView {
       return { id: member.id, column: at.column, row: at.row, race: member.race, health: member.health, walking: member.walking };
     }), placed.picture, ship.id);
     placed.drawing.updateSystems(ship.systems.map((system) => ({ key: system.key, broken: !system.isWorking && system.maxBars > 0 || system.damage > 0 })), placed.picture.powerColour, LOOK.damagedSymbol);
+    placed.drawing.updateDoors(ship.doors, ship.id);
     placed.group.setAttribute('opacity', ship.isGone ? '0.35' : '1');
   }
 

@@ -43,7 +43,7 @@ export class Battle {
       for (const ship of squad.ships) pictures[ship.id] = shipPictureOf(this.content.ship(ship.name), squad.side, this.content, this.settings);
     }
     const playerShipIds = this.simulation.squads.filter((squad) => squad.side === 'player').flatMap((squad) => squad.ships.map((ship) => ship.id));
-    return { kind: 'BattleStarted', pictures, playerShipIds, formation: { depth: this.settings.formationDepth, inverted: this.settings.formationInverted } };
+    return { kind: 'BattleStarted', pictures, playerShipIds, formation: { depth: this.settings.formationDepth, inverted: this.settings.formationInverted }, look: { shipPanel: this.settings.shipPanel } };
   }
 
   /**

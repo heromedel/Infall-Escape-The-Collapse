@@ -1,143 +1,217 @@
 /**
  * Turns what the player does in the window into orders for the host (GDD 4B: the window never changes state
- * itself). Click a crew member then a tile: move. Click a weapon then an enemy room: target. Click a bar in the
- * ship panel: set power. Space: pause or unpause.
+ * itself) and keeps the selection the player is working with: which ship, which weapon is armed, which crew
+ * member is picked. Orders go to the host at once, paused or not; the host answers with a snapshot. The look
+ * follows the genre: click a system's icon to add a bar, right click to take one away; click a weapon (or its
+ * number key) to arm it, then an enemy room; click a crew member, then a tile; click a door to toggle it; space
+ * pauses; Escape drops the selection. The cursor and the status line always say what the next click will do.
  */
 
 import type { Order } from '../shared/Order';
+import type { ShipPicture } from '../shared/ShipPicture';
 import type { Snapshot, SnapshotShip } from '../shared/Snapshot';
 import { BattleView } from './BattleView.js';
+import { ShipPanel } from './ShipPanel.js';
 
 export class BattleControls {
-  private selectedCrew?: { shipId: number; crewId: number };
-  private selectedWeapon?: { shipId: number; mount: number };
-  private latest?: Snapshot;
   paused = false;
+  private selectedShipId?: number;
+  private armedMount?: number;
+  private selectedCrewId?: number;
+  private latest?: Snapshot;
+  private pictures: Record<number, ShipPicture> = {};
+  private panels = new Map<number, ShipPanel>();
+  private panelBeside = true;
 
   constructor(
     private readonly view: BattleView,
     private readonly viewport: SVGSVGElement,
-    private readonly panel: HTMLElement,
+    private readonly dock: SVGSVGElement,
+    private readonly status: HTMLElement,
     private readonly sendOrder: (order: Order) => void,
     private readonly sendPause: (paused: boolean) => void,
   ) {
-    viewport.addEventListener('click', (event) => this.clicked(event));
-    window.addEventListener('keydown', (event) => {
-      if (event.key === ' ' && !(event.target instanceof HTMLInputElement)) { event.preventDefault(); this.sendPause(!this.paused); }
-    });
+    for (const surface of [viewport, dock]) {
+      surface.addEventListener('click', (event) => this.clicked(event));
+      surface.addEventListener('contextmenu', (event) => { event.preventDefault(); this.rightClicked(event); });
+    }
+    viewport.addEventListener('pointerover', (event) => this.hovered(event));
+    window.addEventListener('keydown', (event) => this.keyPressed(event));
   }
 
-  /** Keeps the panel in step with the last snapshot. */
+  /** A new battle: forget the old selection and panels, select the first player ship. */
+  start(pictures: Record<number, ShipPicture>, playerShipIds: number[], panelBeside: boolean): void {
+    this.pictures = pictures;
+    this.panels.clear();
+    this.latest = undefined;
+    this.armedMount = undefined;
+    this.selectedCrewId = undefined;
+    this.panelBeside = panelBeside;
+    this.selectShip(playerShipIds[0]);
+  }
+
+  /** Keeps the panel and the view in step with the last snapshot. */
   update(snapshot: Snapshot): void {
     this.latest = snapshot;
-    this.drawPanel();
+    this.refresh();
   }
+
+  /** The Ship Panel setting changed (Settings): beside the hull or docked in the bottom band. */
+  setPanelBeside(beside: boolean): void {
+    this.panelBeside = beside;
+    this.refresh();
+  }
+
+  get selectedShip(): number | undefined {
+    return this.selectedShipId;
+  }
+
+  // ---- what the player did ---------------------------------------------------------------------------------
 
   private clicked(event: MouseEvent): void {
     const target = event.target as Element;
-    const tile = target.closest('rect.tile') as SVGRectElement | null;
+    const action = target.closest('[data-action]') as SVGElement | null;
+    if (action) { this.panelClicked(action); return; }
     const crewShape = target.closest('[data-crew-id]') as SVGElement | null;
-    if (crewShape) {
+    if (crewShape?.dataset.shipId) {
       const shipId = Number(crewShape.dataset.shipId);
       if (!this.view.playerShipIds.includes(shipId)) return;
-      this.selectedCrew = { shipId, crewId: Number(crewShape.dataset.crewId) };
-      this.selectedWeapon = undefined;
-      this.view.select(shipId);
-      this.drawPanel();
+      this.selectShip(shipId);
+      this.selectedCrewId = Number(crewShape.dataset.crewId);
+      this.armedMount = undefined;
+      this.refresh();
       return;
     }
+    const door = target.closest('rect.door') as SVGRectElement | null;
+    if (door?.dataset.shipId && this.view.playerShipIds.includes(Number(door.dataset.shipId))) {
+      this.sendOrder({ kind: 'ToggleDoor', shipId: Number(door.dataset.shipId), doorId: Number(door.dataset.doorId) });
+      return;
+    }
+    const tile = target.closest('rect.tile') as SVGRectElement | null;
     if (!tile) return;
     const shipId = Number(tile.dataset.shipId);
     const isPlayerShip = this.view.playerShipIds.includes(shipId);
-    if (this.selectedWeapon && !isPlayerShip) {
-      this.sendOrder({ kind: 'TargetWeapon', shipId: this.selectedWeapon.shipId, mount: this.selectedWeapon.mount, targetShipId: shipId, targetRoomId: Number(tile.dataset.roomId) });
-      this.selectedWeapon = undefined;
-      this.drawPanel();
+    if (this.armedMount !== undefined && this.selectedShipId !== undefined && !isPlayerShip) {
+      this.sendOrder({ kind: 'TargetWeapon', shipId: this.selectedShipId, mount: this.armedMount, targetShipId: shipId, targetRoomId: Number(tile.dataset.roomId) });
+      this.armedMount = undefined;
+      this.refresh();
       return;
     }
-    if (this.selectedCrew && isPlayerShip && this.selectedCrew.shipId === shipId) {
-      this.sendOrder({ kind: 'MoveCrew', shipId, crewId: this.selectedCrew.crewId, tile: { x: Number(tile.dataset.x), y: Number(tile.dataset.y) } });
-      this.selectedCrew = undefined;
-      this.drawPanel();
+    if (this.selectedCrewId !== undefined && isPlayerShip && this.selectedShipId === shipId) {
+      this.sendOrder({ kind: 'MoveCrew', shipId, crewId: this.selectedCrewId, tile: { x: Number(tile.dataset.x), y: Number(tile.dataset.y) } });
+      this.selectedCrewId = undefined;
+      this.refresh();
       return;
     }
-    if (isPlayerShip) { this.view.select(shipId); this.drawPanel(); }
+    if (isPlayerShip && shipId !== this.selectedShipId) { this.selectShip(shipId); this.refresh(); }
   }
 
-  /** The selected player ship's systems, weapons and crew (GDD 3B's per-ship panel, first form). */
-  private drawPanel(): void {
-    const snapshot = this.latest;
-    const shipId = this.view.playerShipIds[0];
-    const ship = snapshot?.squads.flatMap((squad) => squad.ships).find((candidate) => candidate.id === shipId);
-    if (!snapshot || !ship) { this.panel.replaceChildren(); return; }
-    this.panel.replaceChildren();
-    this.panel.appendChild(this.heading(`${ship.name}: hull ${ship.hullPoints}/${ship.hullMax}, shields ${ship.shieldLayers}/${ship.shieldLayersMax}, evasion ${ship.evasionPercent}%, power ${ship.barsInUse}/${ship.barsTotal}${ship.powerKind === 'AZC' ? ' (AZC)' : ''}`));
-    this.panel.appendChild(this.heading(`Mawjig ${snapshot.squads.find((squad) => squad.side === 'player')?.mawjig ?? 0}, ${snapshot.seconds.toFixed(1)} s${this.paused ? ', paused' : ''}`));
-    this.panel.appendChild(this.systemsRows(ship));
-    this.panel.appendChild(this.weaponsRows(ship));
-    this.panel.appendChild(this.crewRows(ship));
-    if (snapshot.result) this.panel.appendChild(this.heading(`Battle over: ${snapshot.result.winner} wins, ${snapshot.result.reason}.`));
-  }
-
-  private systemsRows(ship: SnapshotShip): HTMLElement {
-    const box = document.createElement('div');
-    box.className = 'rows';
-    for (const system of ship.systems) {
-      const row = document.createElement('div');
-      row.className = 'row';
-      const name = document.createElement('span');
-      name.textContent = `${system.key}${system.damage > 0 ? ` (${system.damage} damage)` : ''}${system.mannedBy !== undefined ? ' manned' : ''}`;
-      name.style.color = system.isWorking ? '' : '#FF3B3B';
-      row.appendChild(name);
-      const bars = document.createElement('span');
-      bars.className = 'bars';
-      for (let bar = 1; bar <= system.maxBars; bar++) {
-        const pip = document.createElement('button');
-        pip.className = bar <= system.bars ? 'bar on' : 'bar';
-        pip.title = `${system.key}: ${bar} bar(s)`;
-        pip.addEventListener('click', () => this.sendOrder({ kind: 'SetPower', shipId: ship.id, systemKey: system.key, bars: bar === system.bars ? bar - 1 : bar }));
-        bars.appendChild(pip);
+  /** Right click takes a bar off a system, clears a weapon's target, or drops the selection. */
+  private rightClicked(event: MouseEvent): void {
+    const action = (event.target as Element).closest('[data-action]') as SVGElement | null;
+    const ship = this.ship();
+    if (action && ship) {
+      if (action.dataset.action === 'power') {
+        const system = ship.systems.find((candidate) => candidate.key === action.dataset.systemKey);
+        if (system && system.bars > 0) this.sendOrder({ kind: 'SetPower', shipId: ship.id, systemKey: system.key, bars: system.bars - 1 });
+        return;
       }
-      row.appendChild(bars);
-      box.appendChild(row);
+      if (action.dataset.action === 'weapon') {
+        this.sendOrder({ kind: 'ClearTarget', shipId: ship.id, mount: Number(action.dataset.mount) });
+        return;
+      }
     }
-    return box;
+    this.clearSelection();
   }
 
-  private weaponsRows(ship: SnapshotShip): HTMLElement {
-    const box = document.createElement('div');
-    box.className = 'rows';
-    for (const weapon of ship.weapons) {
-      const row = document.createElement('button');
-      const selected = this.selectedWeapon?.shipId === ship.id && this.selectedWeapon.mount === weapon.mount;
-      row.className = `weapon${selected ? ' selected' : ''}${weapon.powered ? '' : ' unpowered'}`;
-      const target = weapon.target ? `target ship ${weapon.target.shipId} room ${weapon.target.roomId}` : 'no target';
-      row.textContent = `${weapon.name} (mount ${weapon.mount}): ${Math.round(weapon.charge * 100)}% ${target}`;
-      row.style.backgroundImage = `linear-gradient(90deg, #2f6b4f ${weapon.charge * 100}%, transparent ${weapon.charge * 100}%)`;
-      row.addEventListener('click', () => { this.selectedWeapon = selected ? undefined : { shipId: ship.id, mount: weapon.mount }; this.selectedCrew = undefined; this.drawPanel(); });
-      box.appendChild(row);
+  private panelClicked(action: SVGElement): void {
+    const ship = this.ship();
+    if (!ship) return;
+    switch (action.dataset.action) {
+      case 'power': {
+        const system = ship.systems.find((candidate) => candidate.key === action.dataset.systemKey);
+        if (system && system.bars < system.maxBars) this.sendOrder({ kind: 'SetPower', shipId: ship.id, systemKey: system.key, bars: system.bars + 1 });
+        break;
+      }
+      case 'weapon': this.armWeapon(Number(action.dataset.mount)); break;
+      case 'crew': {
+        const crewId = Number(action.dataset.crewId);
+        this.selectedCrewId = this.selectedCrewId === crewId ? undefined : crewId;
+        this.armedMount = undefined;
+        this.refresh();
+        break;
+      }
     }
-    return box;
   }
 
-  private crewRows(ship: SnapshotShip): HTMLElement {
-    const box = document.createElement('div');
-    box.className = 'rows';
-    for (const member of ship.crew) {
-      const row = document.createElement('button');
-      const selected = this.selectedCrew?.shipId === ship.id && this.selectedCrew.crewId === member.id;
-      row.className = `crew${selected ? ' selected' : ''}`;
-      row.textContent = `${member.name}: ${member.health} health${member.walking ? ', walking' : ''}${member.stunned ? ', stunned' : ''}`;
-      row.addEventListener('click', () => { this.selectedCrew = selected ? undefined : { shipId: ship.id, crewId: member.id }; this.selectedWeapon = undefined; this.drawPanel(); });
-      box.appendChild(row);
-    }
-    return box;
+  private keyPressed(event: KeyboardEvent): void {
+    if (event.target instanceof HTMLInputElement) return;
+    if (event.key === ' ') { event.preventDefault(); this.sendPause(!this.paused); return; }
+    if (event.key === 'Escape') { this.clearSelection(); return; }
+    const ship = this.ship();
+    const number = Number(event.key);
+    if (ship && number >= 1 && number <= ship.weapons.length) this.armWeapon(ship.weapons[number - 1].mount);
   }
 
-  private heading(text: string): HTMLElement {
-    const line = document.createElement('div');
-    line.className = 'heading';
-    line.textContent = text;
-    return line;
+  private hovered(event: PointerEvent): void {
+    const tile = (event.target as Element).closest('rect.tile') as SVGRectElement | null;
+    if (tile && this.armedMount !== undefined && tile.classList.contains('enemy')) this.view.hoverRoom(Number(tile.dataset.shipId), Number(tile.dataset.roomId));
+    else this.view.hoverRoom(undefined, undefined);
+  }
+
+  // ---- selection ------------------------------------------------------------------------------------------
+
+  private armWeapon(mount: number): void {
+    this.armedMount = this.armedMount === mount ? undefined : mount;
+    this.selectedCrewId = undefined;
+    this.refresh();
+  }
+
+  private clearSelection(): void {
+    this.armedMount = undefined;
+    this.selectedCrewId = undefined;
+    this.view.hoverRoom(undefined, undefined);
+    this.refresh();
+  }
+
+  private selectShip(shipId: number | undefined): void {
+    this.selectedShipId = shipId;
+    this.armedMount = undefined;
+    this.selectedCrewId = undefined;
+    this.view.select(shipId);
+  }
+
+  private ship(): SnapshotShip | undefined {
+    return this.latest?.squads.flatMap((squad) => squad.ships).find((candidate) => candidate.id === this.selectedShipId);
+  }
+
+  /** Redraws the panel, the cursor hints and the status line from the latest snapshot and the selection. */
+  private refresh(): void {
+    const ship = this.ship();
+    document.body.classList.toggle('armed', this.armedMount !== undefined);
+    document.body.classList.toggle('crew-selected', this.selectedCrewId !== undefined);
+    if (!ship) { this.dock.replaceChildren(); this.status.textContent = ''; return; }
+    let panel = this.panels.get(ship.id);
+    if (!panel) { panel = new ShipPanel(ship, this.pictures[ship.id]); this.panels.set(ship.id, panel); }
+    panel.update(ship, { armedMount: this.armedMount, selectedCrewId: this.selectedCrewId });
+    if (this.panelBeside) {
+      this.dock.replaceChildren();
+      this.view.placePanel(ship.id, panel.root, true);
+    } else {
+      this.view.placePanel(ship.id, undefined, false);
+      panel.root.setAttribute('transform', 'translate(8 6)');
+      if (panel.root.parentNode !== this.dock) this.dock.replaceChildren(panel.root);
+    }
+    document.body.classList.toggle('panel-docked', !this.panelBeside);
+    this.status.textContent = this.statusText(ship);
+  }
+
+  private statusText(ship: SnapshotShip): string {
+    const armed = ship.weapons.find((weapon) => weapon.mount === this.armedMount);
+    if (armed) return `${armed.name} armed: click an enemy room to aim it.`;
+    const crew = ship.crew.find((member) => member.id === this.selectedCrewId);
+    if (crew) return `${crew.name} selected: click a tile on ${ship.name} to send them there.`;
+    if (this.latest?.result) return `Battle over: ${this.latest.result.winner} wins, ${this.latest.result.reason}.`;
+    return `${ship.name}. Click a system to power it, a weapon or its number to arm it, a crew member to move them.`;
   }
 }

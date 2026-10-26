@@ -1,7 +1,8 @@
 /**
- * The host owns the running game (GDD 4B): the battle, the tick clock, the pause state and the clients. Every
- * tick it applies the clients' orders and the AI's, advances the simulation, and sends every client a snapshot.
- * Read `tick()` for the order. The host's own window is a client like any LAN client.
+ * The host owns the running game (GDD 4B): the battle, the tick clock, the pause state and the clients. A
+ * client's order is carried out the moment it arrives, paused or not, and every client sees it in a fresh
+ * snapshot; each tick then adds the AI's orders, advances the simulation and sends a snapshot. Read `tick()` for
+ * the order. The host's own window is a client like any LAN client.
  */
 
 import { Order } from '../simulation/Order';
@@ -18,7 +19,6 @@ export class Host {
   battle?: Battle;
   paused = false;
   private readonly clients: ClientConnection[] = [];
-  private readonly orders: Order[] = [];
   private readonly clock = new TickClock(() => this.tick());
   private ticksSinceAutoPause = 0;
 
@@ -40,6 +40,11 @@ export class Host {
     this.clock.start();
   }
 
+  /** Tells every client the look settings changed, so the window can switch without a new battle. */
+  announceLook(): void {
+    this.sendAll({ kind: 'Look', look: { shipPanel: this.settings.shipPanel } });
+  }
+
   /** Pause Control (GDD 4H): Captain mode, so any client of the host's own window pauses. Who asked is logged. */
   setPaused(paused: boolean, by: string): void {
     if (this.paused === paused) return;
@@ -52,7 +57,6 @@ export class Host {
   tick(): void {
     const battle = this.battle;
     if (!battle || this.paused || battle.simulation.result) return;
-    battle.simulation.applyOrders(this.orders.splice(0));
     battle.advanceOneTick((squad) => squad.side === 'enemy' ? battleOrders(battle.simulation, squad) : []);
     this.sendAll({ kind: 'Snapshot', snapshot: battle.simulation.snapshot() });
     this.autoPauseIfDue();
@@ -61,10 +65,20 @@ export class Host {
 
   private receive(client: ClientConnection, message: ClientToHost): void {
     switch (message.kind) {
-      case 'Order': this.orders.push(message.order); break;
+      case 'Order': this.carryOut(message.order); break;
       case 'Pause': this.setPaused(true, client.name); break;
       case 'Unpause': this.setPaused(false, client.name); break;
     }
+  }
+
+  /** An order takes effect at once, so a paused game still answers the player; everyone sees the result. */
+  private carryOut(order: Order): void {
+    const battle = this.battle;
+    if (!battle || battle.simulation.result) return;
+    const fields = order.kind === 'MoveCrew' ? { kind: order.kind, shipId: order.shipId, crewId: order.crewId, x: order.tile.x, y: order.tile.y } : order;
+    this.log.event('host.order', { ...fields, paused: this.paused });
+    battle.simulation.applyOrdersNow([order]);
+    this.sendAll({ kind: 'Snapshot', snapshot: battle.simulation.snapshot() });
   }
 
   /** Turn Mode's auto pause (GDD 4I): every N ticks when it is on. */

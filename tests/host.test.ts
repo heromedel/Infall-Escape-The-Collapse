@@ -47,13 +47,15 @@ describe('the host', () => {
     expect(client.received.filter((message) => message.kind === 'Snapshot')).toHaveLength(2);
     expect(client.lastSnapshot()!.snapshot.tick).toBe(2);
   });
-  it('applies a client order on the next tick', () => {
+  it('carries out a client order at once, even while paused, and shows it in a snapshot', () => {
     const { host, client } = hostWithBattle();
     const playerShipId = (client.received[0] as Extract<HostToClient, { kind: 'BattleStarted' }>).playerShipIds[0];
-    client.say({ kind: 'Order', order: { kind: 'SetPower', shipId: playerShipId, systemKey: 'Shields', bars: 2 } });
-    host.tick();
+    client.say({ kind: 'Pause' });
+    client.say({ kind: 'Order', order: { kind: 'SetPower', shipId: playerShipId, systemKey: 'Shields', bars: 0 } });
     const ship = client.lastSnapshot()!.snapshot.squads[0].ships[0];
-    expect(ship.systems.find((system) => system.key === 'Shields')!.bars).toBe(2);
+    expect(client.lastSnapshot()!.snapshot.tick).toBe(0);
+    expect(ship.systems.find((system) => system.key === 'Shields')!.bars).toBe(0);
+    expect(host.paused).toBe(true);
   });
   it('stops ticking while paused and tells every client', () => {
     const { host, client } = hostWithBattle();
