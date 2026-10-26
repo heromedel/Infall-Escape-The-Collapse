@@ -432,7 +432,7 @@ there. Asked by heromedel through Infall: Production (handoff 2026-10-23 14:17).
 8. **Layout and systems:** the **Light Attack Frame**. Hull 7 (the low end of the band 1–3 stand-ins, since these are light
    ships). No reactor: every system carries its own power, and an integrated crew member adds one bar.
 
-   **Rooms — Likely (2026-10-25, heromedel's battle cross; Arty's art accepted):** 5 rooms, 20 tiles. A command deck
+   **Rooms — Likely (2026-10-25, heromedel's battle cross; Arty's floor plans sent back 2026-10-26):** 5 rooms, 20 tiles. A command deck
    at the bow (Piloting, Shields, Doors), the Cybernetic Servicing Core at the heart, a weapon bay on each flank (the
    starboard one holds the weapon pod or EVB Dock; the port one is spare, with the airlocks), and the stern. One hull
    for both loadouts; the Hull Laser takes mount 4.
