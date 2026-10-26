@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Mecha Light Attack Frame, hull laser loadout as the base (ship-suggestions.md, layout Proposed 2026-10-26).
-     6 tiles wide (Point centering on x) and 5 long. No reactor: each system carries its own power (ownPower). -->
+     6 tiles wide (Point centering on x) and 5 long. No reactor: each system carries its own power (selfPower). -->
 <ship name="Light Attack Frame" race="Mecha">
   <center x="Point" y="Tile"/>
   <hull points="7"/>
-  <power kind="Own"/>
+  <power kind="SelfPowered"/>
   <art hull="battle-cross-hull.png" offset="0,0"/>
   <mounts count="6"/>
 
@@ -19,12 +19,12 @@
 
   <systems>
     <system name="Piloting"                  tile="-1,-2" level="1" wall="North"/>
-    <system name="Shields"                   tile="1,-2"  level="1" ownPower="2" wall="North"/>
+    <system name="Shields"                   tile="1,-2"  level="1" selfPower="2" wall="North"/>
     <system name="Doors"                     tile="1,-1"  level="1" wall="East"/>
-    <system name="Cybernetic Servicing Core" tile="1,1"   level="1" ownPower="1" rotation="None"/>
-    <system name="Engines"                   tile="-2,2"  level="1" ownPower="1" wall="West"/>
-    <system name="Life Support"              tile="2,2"   level="1" ownPower="1" wall="East"/>
-    <system name="Weapon Pod"                tile="3,-1"  level="2" ownPower="1" wall="East"/>
+    <system name="Cybernetic Servicing Core" tile="1,1"   level="1" selfPower="1" rotation="None"/>
+    <system name="Engines"                   tile="-2,2"  level="1" selfPower="1" wall="West"/>
+    <system name="Life Support"              tile="2,2"   level="1" selfPower="1" wall="East"/>
+    <system name="Weapon Pod"                tile="3,-1"  level="2" selfPower="1" wall="East"/>
   </systems>
 
   <doors>

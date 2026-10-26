@@ -7,7 +7,7 @@
   </rooms>
   <systems>
     <system name="Weapon Pod" removed="true"/>
-    <system name="EVB Dock" tile="3,-1" level="2" ownPower="2" wall="East"/>
+    <system name="EVB Dock" tile="3,-1" level="2" selfPower="2" wall="East"/>
   </systems>
   <doors>
     <door id="4" removed="true"/>

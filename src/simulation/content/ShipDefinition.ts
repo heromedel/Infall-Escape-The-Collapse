@@ -20,8 +20,10 @@ export interface SystemPlacement {
   label?: string;
   tile: Tile;
   level: number;
-  /** Mecha ships: the bars this system brings with it instead of drawing on a reactor (race profiles). */
-  ownPower?: number;
+  /** Self-powered ships (Mecha): the bars this system brings with it instead of drawing on a reactor. */
+  selfPower?: number;
+  /** Weapon systems on a ship with more than one: the hull mounts this system fires, e.g. "1,2,3". */
+  mounts?: number[];
   /** The wall the console sits against. No wall: the system is drawn as an icon over the tile centre. */
   wall?: Direction;
   rotation?: string;
@@ -40,10 +42,10 @@ export interface Door {
 
 /**
  * How the ship powers its systems. Reactor: a pool of bars, the genre default. AZC: Terran core with conduits,
- * unlimited while connected (GDD 7E). Own: no shared power, each system carries its own (Mecha).
+ * unlimited while connected (GDD 7E). SelfPowered: no shared power, each system carries its own (Mecha).
  */
 export interface PowerSource {
-  kind: 'Reactor' | 'AZC' | 'Own';
+  kind: 'Reactor' | 'AZC' | 'SelfPowered';
   bars?: number;
   level?: number;
 }
@@ -59,11 +61,10 @@ export interface StartingWeapon {
   name: string;
   /** Hull mount number; positions come with the hull art (ship-design-process). */
   mount?: number;
-  /** For ships with more than one weapon system: which system fires it, e.g. "Weapons A". */
-  system?: string;
 }
 
-export interface CrewGroup {
+/** One line of the starting crew list, e.g. 3 Terrans. */
+export interface StartingCrew {
   race: string;
   count: number;
 }
@@ -83,7 +84,7 @@ export interface ShipDefinition {
   doors: Door[];
   conduits: ConduitTile[];
   weapons: StartingWeapon[];
-  crew: CrewGroup[];
+  crew: StartingCrew[];
   /** Suit types carried for an EVA or EVB Dock, by name. */
   suits: string[];
 }

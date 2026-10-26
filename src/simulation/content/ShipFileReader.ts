@@ -12,7 +12,7 @@ import {
   Centering, CenteringMode, ConduitTile, DIRECTIONS, Direction, parseConduitList, parseTile, tileKey,
 } from './Tile';
 import {
-  CrewGroup, Door, PowerSource, Room, ShipArt, ShipDefinition, StartingWeapon, SystemPlacement, systemKey,
+  Door, PowerSource, StartingCrew, Room, ShipArt, ShipDefinition, StartingWeapon, SystemPlacement, systemKey,
 } from './ShipDefinition';
 
 /** A ship file that can't be read, with the reason in plain words. */
@@ -78,7 +78,7 @@ export class ShipFileReader {
       doors: this.children(root.doors, 'door').map((node) => this.readDoor(node, where)),
       conduits: this.readConduits(root.conduits, where),
       weapons: this.children(root.weapons, 'weapon').map((node) => this.readWeapon(node, where)),
-      crew: this.children(root.crew, 'member').map((node) => this.readCrewGroup(node, where)),
+      crew: this.children(root.crew, 'member').map((node) => this.readStartingCrew(node, where)),
       suits: this.children(root.suits, 'suit').map((node) => this.required(node, 'name', `${where} suit`)),
     };
     if (ship.conduits.some((conduit) => conduit.removed)) {
@@ -120,7 +120,7 @@ export class ShipFileReader {
       weapons: root.weapons !== undefined
         ? this.children(root.weapons, 'weapon').map((node) => this.readWeapon(node, where)) : base.weapons,
       crew: root.crew !== undefined
-        ? this.children(root.crew, 'member').map((node) => this.readCrewGroup(node, where)) : base.crew,
+        ? this.children(root.crew, 'member').map((node) => this.readStartingCrew(node, where)) : base.crew,
       suits: root.suits !== undefined
         ? this.children(root.suits, 'suit').map((node) => this.required(node, 'name', `${where} suit`)) : base.suits,
     };
@@ -133,7 +133,8 @@ export class ShipFileReader {
     const defaults: XmlNode = {};
     for (const [key, value] of Object.entries(old)) {
       if (value === undefined) continue;
-      if (typeof value === 'object' && 'x' in value) defaults[key] = `${value.x},${value.y}`;
+      if (Array.isArray(value)) defaults[key] = value.join(',');
+      else if (typeof value === 'object' && 'x' in value) defaults[key] = `${value.x},${value.y}`;
       else if (typeof value === 'boolean') defaults[key] = value ? 'Yes' : 'No';
       else defaults[key] = String(value);
     }
@@ -192,8 +193,8 @@ export class ShipFileReader {
     switch (kind) {
       case 'Reactor': return { kind, bars: this.wholeNumber(this.required(node ?? {}, 'bars', `${where} power`), `${where} reactor bars`) };
       case 'AZC': return { kind, level: this.wholeNumber(this.required(node ?? {}, 'level', `${where} power`), `${where} AZC level`) };
-      case 'Own': return { kind };
-      default: throw new ShipFileError(`${where}: power kind="${kind}" is not Reactor, AZC or Own`);
+      case 'SelfPowered': return { kind };
+      default: throw new ShipFileError(`${where}: power kind="${kind}" is not Reactor, AZC or SelfPowered`);
     }
   }
 
@@ -228,7 +229,8 @@ export class ShipFileReader {
       label: this.emptyAsUndefined(node.label),
       tile: parseTile(this.required(node, 'tile', at), `${at} tile`),
       level: this.wholeNumber(node.level ?? '1', `${at} level`),
-      ownPower: node.ownPower === undefined ? undefined : this.wholeNumber(node.ownPower, `${at} ownPower`),
+      selfPower: node.selfPower === undefined ? undefined : this.wholeNumber(node.selfPower, `${at} selfPower`),
+      mounts: node.mounts === undefined ? undefined : this.numberList(node.mounts, `${at} mounts`),
       wall: node.wall === undefined ? undefined : this.direction(node.wall, `${at} wall`),
       rotation: this.emptyAsUndefined(node.rotation),
       mirror: node.mirror === undefined ? undefined : String(node.mirror).toLowerCase() === 'yes',
@@ -262,11 +264,10 @@ export class ShipFileReader {
     return {
       name,
       mount: node.mount === undefined ? undefined : this.wholeNumber(node.mount, `${where} weapon ${name} mount`),
-      system: this.emptyAsUndefined(node.system),
     };
   }
 
-  private readCrewGroup(node: XmlNode, where: string): CrewGroup {
+  private readStartingCrew(node: XmlNode, where: string): StartingCrew {
     const race = this.required(node, 'race', `${where} crew member`);
     return { race, count: this.wholeNumber(node.count ?? '1', `${where} crew ${race} count`) };
   }
@@ -301,6 +302,11 @@ export class ShipFileReader {
     const number = Number(value);
     if (!Number.isInteger(number)) throw new ShipFileError(`${where}: "${value}" is not a whole number`);
     return number;
+  }
+
+  /** "1,2,3" to whole numbers. */
+  private numberList(value: unknown, where: string): number[] {
+    return String(value).split(',').map((part) => this.wholeNumber(part.trim(), where));
   }
 
   private direction(value: unknown, where: string): Direction {

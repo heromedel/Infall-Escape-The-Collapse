@@ -91,14 +91,26 @@ function checkDoors(ship: ShipDefinition, roomOfTile: Map<string, number>, refus
   }
 }
 
+/**
+ * Weapons sit on hull mounts. When weapon systems claim mounts (a ship with Weapons A and B), every claimed
+ * mount exists, no two systems claim one, and every mounted weapon's mount belongs to some weapon system.
+ */
 function checkWeapons(ship: ShipDefinition, refusals: string[]): void {
-  const systemKeys = new Set(ship.systems.map(systemKey));
-  for (const weapon of ship.weapons) {
-    if (weapon.mount !== undefined && (weapon.mount < 1 || weapon.mount > ship.mountCount)) {
-      refusals.push(`weapon ${weapon.name} is on mount ${weapon.mount}, but the hull has ${ship.mountCount} mounts`);
+  const systemOfMount = new Map<number, string>();
+  for (const system of ship.systems) {
+    for (const mount of system.mounts ?? []) {
+      if (mount < 1 || mount > ship.mountCount) refusals.push(`system ${systemKey(system)} claims mount ${mount}, but the hull has ${ship.mountCount} mounts`);
+      const other = systemOfMount.get(mount);
+      if (other) refusals.push(`systems ${other} and ${systemKey(system)} both claim mount ${mount}`);
+      systemOfMount.set(mount, systemKey(system));
     }
-    if (weapon.system !== undefined && !systemKeys.has(weapon.system)) {
-      refusals.push(`weapon ${weapon.name} is fired by system "${weapon.system}", which the ship doesn't have`);
+  }
+  for (const weapon of ship.weapons) {
+    if (weapon.mount === undefined) continue;
+    if (weapon.mount < 1 || weapon.mount > ship.mountCount) {
+      refusals.push(`weapon ${weapon.name} is on mount ${weapon.mount}, but the hull has ${ship.mountCount} mounts`);
+    } else if (systemOfMount.size > 0 && !systemOfMount.has(weapon.mount)) {
+      refusals.push(`weapon ${weapon.name} is on mount ${weapon.mount}, which no weapon system claims`);
     }
   }
 }
