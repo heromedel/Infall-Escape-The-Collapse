@@ -12,13 +12,17 @@ working label, kept off the art).
 A small, wide, organic scout for the shielded race: soft, chubby and safe-looking (heromedel), and clearly not
 Terran. Prismatic mother-of-pearl colours, light from the upper left.
 
-- **Hull only** in `tentauri-scout-hull.svg`: top-down, nose up, 340 × 380. `tentauri-scout-hull-mounts.svg` shows
-  the two hidden weapon mounts (`mount-defense-laser-a` and `-b`, on the flank lobes).
+- **Hull only** in `tentauri-scout-hull.svg`: top-down, nose up, 340 × 380. `tentauri-scout-hull-mounts.svg` and
+  `review/mounts.png` show the six hidden mounts (2026-10-26, art rules), each on the outer edge with a clear line
+  forward and its slide direction; odd port, even starboard: 1–2 on the front plate's leading edge (sliding up), 3–4
+  on the flank plates' outer edges (the two Defense Lasers), 5–6 on the front plate's tips. The lasers sat about
+  18 px in, on the flank plates, until then.
 - **Plates:** a broad aqua front plate with a single canopy, a lavender dorsal plate, fat coral flank lobes and a teal
   rear module. The Supershield Generator shows as a pearl organ at the stern.
-- **Propulsion:** a nozzle at the tail of each flank lobe, plus side thrusters, set wide apart. No engine bells.
+- **Propulsion:** a nozzle at the tail of each flank lobe, plus side thrusters, set wide apart. No engine bells. The
+  side thrusters were toned down on 2026-10-26 (a dim, soft vent), so they don't read as marked airlocks (art rules).
 - **Weapons** are separate art: the Defense Laser in `docs/art/weapons/defense-laser/`. The armed preview
-  (`tentauri-scout-armed-preview.*`) places one at each mount.
+  (`tentauri-scout-armed-preview.*`) places one at each fitted mount, slid 12 px out and under the hull.
 - **Scale:** `review/scale.png` shows it at true scale beside the Terran Outrider, and zoomed out on the enemy side.
 
 ## Floor plan

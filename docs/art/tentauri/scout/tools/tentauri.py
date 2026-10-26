@@ -527,9 +527,10 @@ def segmented(title="Tentauri scout hull, version 12"):
 def side_thruster(x, y, side):
     """A small lateral thruster on a flank, glowing outward."""
     gx = x + side * 8
-    return (f'<ellipse cx="{gx}" cy="{y}" rx="9" ry="6" fill="{GLOW}" opacity=".5" filter="url(#glow)"/>'
-            f'<ellipse cx="{x}" cy="{y}" rx="4.5" ry="7" fill="{DEEP}" stroke="{INK}" stroke-width="1"/>'
-            f'<ellipse cx="{x + side * 1.5}" cy="{y}" rx="2" ry="4" fill="{GLOW}"/>')
+    # toned down (2026-10-26): a soft, dim vent, so it doesn't read as a marked airlock (art rules)
+    return (f'<ellipse cx="{gx - side * 2}" cy="{y}" rx="6" ry="5" fill="{GLOW}" opacity=".18" filter="url(#glow)"/>'
+            f'<ellipse cx="{x}" cy="{y}" rx="3" ry="6" fill="{DEEP}" opacity=".55"/>'
+            f'<ellipse cx="{x + side * 1}" cy="{y}" rx="1.3" ry="3.5" fill="{GLOW}" opacity=".45"/>')
 
 
 def outrigger(title="Tentauri scout hull", spread=1.0):
@@ -583,10 +584,15 @@ def outrigger(title="Tentauri scout hull", spread=1.0):
             shadow=4)
     h.raw("canopy", {5: single_canopy(CX, 66, 30)})
     h.raw("supershield", {5: supershield_organ(CX, 300)})
-    # forward on each flank plate, so the barrel points past the front edge, seated on the teal dimple (its centre is
-    # 6 px below the mount, where the laser's base pad sits); on the lit face, clear of the shaded outer edge
-    h.mount("mount-defense-laser-a", CX - 108 * k, 118, "Tentauri Defense Laser A", "left")
-    h.mount("mount-defense-laser-b", CX + 108 * k, 118, "Tentauri Defense Laser B", "right")
+    # six planned mounts on the outer edge, each with a clear line forward and its slide direction (art rules):
+    # 1-2 on the front plate's leading edge, 3-4 on the flank plates' outer edges (the two Defense Lasers), 5-6 on the
+    # front plate's tips. Odd port, even starboard.
+    h.mount("mount-1", CX - 30, 57, "", "up")
+    h.mount("mount-2", CX + 30, 57, "", "up")
+    h.mount("mount-3", CX - 137 * k, 150, "Tentauri Defense Laser A", "left")
+    h.mount("mount-4", CX + 137 * k, 150, "Tentauri Defense Laser B", "right")
+    h.mount("mount-5", CX - 110, 98, "", "left")
+    h.mount("mount-6", CX + 110, 98, "", "right")
     return h
 
 
