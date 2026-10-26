@@ -42,8 +42,10 @@ Reference: the sleek battle-cross frame, `mecha/light-attack-frame/pixel-redo/ba
 
 - **Console — Decided (2026-10-25, heromedel's pick):** the pixel tower with stepped cheeks, without arm ports
   (`mecha/console/`). Turned to face its wall; crew stand and type on its own tile (art rules).
-- **Big machines — Decided (2026-10-25):** the Cybernetic Servicing Core and the EVB launch clamp may be big and look
-  blocking, but crew walk over their tiles.
+- **Big machines — Decided (2026-10-25):** the Cybernetic Servicing Core may look big and blocking, but crew walk
+  over its tile.
+- **One tile per system — Decided (2026-10-26, heromedel):** no system takes more than one tile.
+- **EVB Dock — Decided (2026-10-26, heromedel):** the EVB Dock must be next to an airlock door.
 - **Floors and walls — Open:** the pixel-style floor is not drawn yet (a light deck read best in a first test, so the
   dark crew stand out).
 
