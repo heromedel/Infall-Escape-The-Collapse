@@ -522,7 +522,12 @@ Crew Teleporter    Level 1
 
 Weapons: Sporewing (mount 4)
 Crew: 3 Terrans
-(Conduits are inherited unchanged; the Twinshot feeds now end at the faired-over mount 3, unused.)
+
+Conduits:                       the Twinshot feeds come out (no mount 3 weapon)
+    (-1,-2,Remove)
+    (-2,-2,N,S)
+    (-2,-3,S,E)
+    (1,-2,N,S,E)
 ```
 
 **Ideas considered:** keep the teleporter and drop the guns (picked); keep the Twinshot and drop the teleporter, so
