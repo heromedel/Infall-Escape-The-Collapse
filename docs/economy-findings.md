@@ -292,8 +292,11 @@ about FTL's per ship (F4).
   the collapse advances about one jump per jump (2Q).
 - **Dive strategy:** pushing outward early for higher-band pay, then roaming until the collapse catches up. It limits
   itself: a band 1–2 squad meets band 4–6 encounters (a band 5 budget of about 772 against a starting ship of about
-  130), and roaming spends lead, not Mawjig, since the collapse gains a jump on every jump in any direction. Linked
-  to concern 1 (grinding), which is parked.
+  130), and roaming spends lead, not Mawjig, since the collapse spreads a fixed distance on every jump in any
+  direction (GDD 2S). Linked to concern 1 (grinding), which is parked.
+- **GDD 2S (Decided, merged 2026-10-26):** jump lengths vary, and a jump costs 1.21 whatever its length (6C), so
+  a long outward jump buys more lead for the same Mawjig. No change suggested: it makes route choice matter, and
+  Mawjig is not the late-game pressure anyway.
 - **Snowball check — heromedel (2026-10-23):** store prices aren't effectively flat: higher-band stores stock
   higher-tech, dearer items, and later purchases are for several ships. Spending rises with band and squad size,
   so high-band pay doesn't run away (F4: per-ship upgrade money stays near FTL's). An early diver with 1–2 ships
