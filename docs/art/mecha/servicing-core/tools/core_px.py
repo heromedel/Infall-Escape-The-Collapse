@@ -183,9 +183,37 @@ def core_g(top=10):
     return px
 
 
+def core_h(top=10):
+    """H. G with E's arms back (C's tapered arms, unchanged): the table narrowed and its upper jaws drawn compact so
+    the arms stay 2 px clear; four jaws with a purple light each, and a purple light inside each arm near its foot."""
+    body = housing({0: (10, 17), 1: (10, 17), 2: (10, 17), 3: (11, 17), 4: (11, 17), 5: (11, 17), 6: (12, 17),
+                    7: (12, 17), 8: (13, 17), 9: (14, 17)})
+    arms = housing(C_ARMS)
+    shape = poly_mask({1: (10, 14), 2: (10, 14), 3: (10, 15), 4: (11, 15), 5: (11, 13), 6: (11, 12)})
+    jaw = {(x, y + top) for x, y in shape}
+    low = {(x, 2 * top + 24 - y) for x, y in jaw}
+    jaws = jaw | mirror(jaw) | low | mirror(low)
+    px = {}
+    pad(px, 11, top, 24, 34, corners=False)
+    px.update(shade_parts([(jaws, ARMOUR)], 9))
+    px.update(shade_parts([(arms, ARMOUR), (body, DARK)], 9))
+    core_window(px, 16, 2, 19, 8)
+    lights = [(12, top + 3), (22, top + 3), (12, top + 21), (22, top + 21), (6, 13), (28, 13)]
+    for xy in lights:
+        px[xy] = PURPLE
+    near = {(x + dx, y + dy) for x, y in arms if y > 9 for dx in range(-2, 3) for dy in range(-2, 3)}
+    table = jaws | {(x, y) for x in range(11, 24) for y in range(top, 34)}
+    assert not (near & table), "the arms must stay 2 px clear of the table"
+    parts = arms | jaws
+    for x, y in lights:   # each light sits inside its part, never on an edge pixel
+        assert all((x + dx, y + dy) in parts for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1))), (x, y)
+    return px
+
+
 OPTIONS = [("A. Wall core and arms", core_a), ("B. Clamp ring", core_b), ("C. Service arch", core_c), ("D. A's panel, C's arms", core_d),
            ("E. D, arms over B's table", core_e), ("F. D, short arms, B's table", core_f),
-           ("G. Long arms clear of the table", core_g)]
+           ("G. Long arms clear of the table", core_g),
+           ("H. E's arms, clear of the table", core_h)]
 TURN_E = lambda x, y: (34 - y, x)
 
 
@@ -218,7 +246,7 @@ if __name__ == "__main__":
     cells = []
     for i, (name, fn) in enumerate(OPTIONS):
         px = fn()
-        open(os.path.join(out, f"core-option-{'abcdefg'[i]}.svg"), "w").write(
+        open(os.path.join(out, f"core-option-{'abcdefgh'[i]}.svg"), "w").write(
             f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 35" width="35" height="35">{to_svg(px)}</svg>\n')
         x0 = 20 + i * (T * S + 30)
         cells.append(
