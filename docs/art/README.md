@@ -38,6 +38,13 @@ each with its SVG, PNG exports, review sheets, build tools and a notes README.
 | 2026-10-26 | **Decided:** any EVA or EVB Dock must be next to an airlock door: its tile is beside the airlock. |
 | 2026-10-23 | No rocket-like Terran designs for a while: no pointed nose cone, tail fins and engine-bell silhouette. Terran ships look built for deep space, not for launching from a planet (race profiles, Terrans 1, Likely). |
 
+## Shared tools
+
+`tools/` holds what every piece uses: `render.js` (SVG to PNG: `node render.js in.svg out.png [scale] [background]`),
+`sheet.js` (side-by-side review sheets), `art_kit.py` (the vector hull drawing kit) and `check_mounts.py` (checks
+every mount sits on the hull's edge with a clear line forward, and that a hull plans at least 4).
+`palette.py` holds the shared colours.
+
 ## Pieces
 
 | Piece | Status |

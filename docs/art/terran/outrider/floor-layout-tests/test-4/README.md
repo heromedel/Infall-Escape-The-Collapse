@@ -33,6 +33,14 @@ and systems drawn as terminals. The ship is drawn twice: selected on the left, n
 The AZC's graphic used to spill about 6 px past its tile on every side; it now fits inside its one tile (no system
 takes more than one tile). The plan was redrawn on the current hull (no marked hatches, six mounts).
 
+**Hardpoint feeds (2026-10-26, Ship Designs):** the Triblast and Pathfinder mounts on the shoulders are wired, working
+as if mounts need power (race profiles, Terrans 6, Open). Each is fed twice from the rim (port: from the Doors tile
+and the Medbay; starboard: from the two starboard rim tiles beside it), so no single cut drops a weapon;
+`floor4.py` checks it.
+
+**When this becomes the real floor plan** (Ship Designs): it must show everything intact and powered, with the
+conduit breaks moved to a separate, labelled mockup (art rules).
+
 ## Unchanged from test 3
 
 Rooms, doors, airlocks and the conduit wheel's route.

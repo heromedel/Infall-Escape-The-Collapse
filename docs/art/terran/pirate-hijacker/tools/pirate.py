@@ -7,12 +7,11 @@ weapon pod in both bays, the Cutpurse only the starboard one, with the port bay 
 art (weapons.py) and only drawn in the previews.
 Facing up, light from the upper left.
 """
-import copy
-import math
 import os
 import sys
 
-from art_kit import Hull, rounded_path, symmetric, mirror_x, shade, INK
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "tools"))  # docs/art/tools
+from art_kit import Hull, rounded_path, symmetric, mirror_x, shade, INK  # noqa: E402
 
 W, H, CX = 480, 760, 240
 
@@ -256,27 +255,6 @@ def dagger():
     return s
 
 
-def canard():
-    """Version 2: the dagger with small forward canards."""
-    s = dagger()
-    s["title"] = "Terran pirate cruiser, version 2"
-    s["canard"] = [(206, 150), (160, 186), (154, 200), (196, 196)]
-    return s
-
-
-def stepped():
-    """Version 3: a stepped hull: a narrow forward section, a wider armoured midsection, an engine block."""
-    s = dagger()
-    s["title"] = "Terran pirate cruiser, version 3"
-    s["body_half"] = [(CX, 36), (224, 60), (210, 130), (204, 196), (172, 212), (162, 236), (162, 470),
-                      (176, 488), (176, 600), (180, 640), (206, 654), (CX, 656)]
-    s["body_radii"] = [4, 6, 6, 3, 3, 4, 4, 3, 3, 8, 8, 4]
-    return s
-
-
-VERSIONS = {"v1": dagger, "v2": canard, "v3": stepped}
-
-
 def hijacker():
     s = dagger()
     s["title"] = "Terran Pirate Hijacker hull"
@@ -294,12 +272,12 @@ def cutpurse():
     return s
 
 
-VERSIONS.update({"hijacker": hijacker, "cutpurse": cutpurse})
+VERSIONS = {"hijacker": hijacker, "cutpurse": cutpurse}
 
 if __name__ == "__main__":
     out = sys.argv[1]
     os.makedirs(out, exist_ok=True)
-    for name in sys.argv[2:] or ["v1", "v2", "v3"]:
+    for name in sys.argv[2:] or list(VERSIONS):
         hull = build(VERSIONS[name]())
         open(os.path.join(out, f"{name}.svg"), "w").write(hull.svg(5))
         open(os.path.join(out, f"{name}-mounts.svg"), "w").write(hull.svg(5, show_mounts=True))

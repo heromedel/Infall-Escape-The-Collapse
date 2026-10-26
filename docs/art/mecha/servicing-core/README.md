@@ -26,4 +26,4 @@ git history.
 | File | What |
 |---|---|
 | `mecha-servicing-core.svg`, `.png`, `-8x.png` | The pick, on a 35 × 35 tile, at 1x and 8x |
-| `tools/core_px.py` | Builds it (`servicing_core()`, used by the floor plan tool) and the option sheet: `python3 core_px.py ../../crew/mecha-crew-sheet.svg OUT_DIR` |
+| `tools/core_px.py` | Builds it: `python3 core_px.py OUT_DIR`; `servicing_core()` is used by the floor plan tool |

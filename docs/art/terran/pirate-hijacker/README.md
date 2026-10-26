@@ -1,7 +1,7 @@
 # Terran Pirate Hijacker hull (Hijacker and Cutpurse loadouts)
 
 **Date:** 2026-10-23
-**Status:** accepted by Ship Designs (version 3 of the review, the dagger cruiser). Ship design: `docs/ship-suggestions.md`,
+**Status:** accepted by Ship Designs (version 3 of the review, the dagger cruiser); the 2026-10-26 art-rule fixes (one-tile AZC, six edge mounts, no hull hatches) re-accepted (7b5b613). Ship design: `docs/ship-suggestions.md`,
 "Terran Pirate Hijacker" and "Pirate Hijacker loadouts".
 
 ![Loadouts](loadouts.png)
@@ -113,10 +113,9 @@ Terran designs for a while (race profiles, Terrans 1, Likely). See `docs/art/REA
 
 | File | What it does |
 |---|---|
-| `tools/pirate.py` | Builds the hulls: `python3 pirate.py OUT_DIR hijacker cutpurse` (or `v1 v2 v3` for the versions) |
-| `tools/weapons.py` | Builds the weapon files and the Sporewing options sheet |
+| `tools/pirate.py` | Builds the hulls: `python3 pirate.py OUT_DIR hijacker cutpurse` |
+| `tools/weapons.py` | Builds the weapon files (Twinshot and Sporewing) |
 | `tools/compose.py` | Places weapons at a hull's mounts, slid out and under the hull: `python3 compose.py HULL.svg OUT.svg` |
 | `tools/squad.py` | Builds the squad view against the Outrider |
-| `../outrider/tools/check_mounts.py` | Checks the mounts: `python3 ../outrider/tools/check_mounts.py ../pirate-*-hull.svg` |
 | `tools/floorplan.py` | Builds the floor plans: `python3 floorplan.py HIJACKER_ARMED.svg CUTPURSE_ARMED.svg OUT_DIR` |
-| `tools/art_kit.py`, `render.js`, `sheet.js` | Shared drawing kit, SVG-to-PNG, review sheets |
+| `docs/art/tools/` | Shared: `art_kit.py` (drawing kit), `render.js` (SVG to PNG), `sheet.js` (review sheets), `check_mounts.py` (the mount check: `python3 ../../../tools/check_mounts.py ../pirate-*-hull.svg`) |

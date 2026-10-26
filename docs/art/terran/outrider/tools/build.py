@@ -10,7 +10,8 @@ Facing up, light from the upper left.
 import os
 import sys
 
-from art_kit import Hull, rounded_path, symmetric, mirror_x, shade, INK
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "tools"))  # docs/art/tools
+from art_kit import Hull, rounded_path, symmetric, mirror_x, shade, INK  # noqa: E402
 
 W, H, CX = 460, 740, 230
 
@@ -355,94 +356,10 @@ V1 = {
 }
 
 # version 2: wider cruiser body, engines in pods at the wing roots, small forward canards
-V2 = {
-    "title": "Gatos light battle scout, version 2",
-    "body_half": [(CX, 40), (200, 50), (176, 80), (160, 130), (148, 200), (140, 300), (138, 420), (140, 540),
-                  (150, 600), (172, 628), (CX, 634)],
-    "body_radii": [34, 18, 18, 14, 10, 8, 6, 8, 12, 14, 8],
-    "wings": [{"id": "canard", "points": [(160, 150), (112, 200), (108, 218), (152, 214)],
-               "radii": [3, 8, 6, 3], "trim": [(160, 150), (112, 200), (118, 203), (160, 160)]},
-              {"id": "wing", "points": [(140, 380), (52, 520), (46, 560), (140, 560)],
-               "radii": [4, 10, 8, 4], "trim": [(140, 380), (52, 520), (60, 524), (140, 398)],
-               "seams": [((118, 450), (70, 530))]}],
-    "pods": [{"id": "engine-pod", "points": [(104, 420), (128, 404), (150, 420), (152, 600), (140, 616), (114, 616),
-                                             (102, 600)],
-              "radii": [10, 14, 10, 6, 6, 6, 6], "trim": [(102, 450), (152, 450), (152, 458), (102, 458)],
-              "seams": [((104, 540), (150, 540))]}],
-    "engines": [{"id": "engine-port", "at": (127, 606, 34, 46, 40), "mirror": True},
-                {"id": "engine-centre", "at": (CX, 624, 34, 44, 34)}],
-    "body_trim": [[(CX - 44, 118), (CX + 44, 118), (CX + 45, 125), (CX - 45, 125)]],
-    "body_seams": [((150, 230), (310, 230)), ((140, 330), (320, 330)), ((138, 520), (322, 520))],
-    "windows": [(160, 150, 5, 14)],
-    "vents": [(CX - 18, 590, 36, 16, 5)],
-    "rivets": [(x, 612) for x in range(176, 290, 12)],
-    "spine": {"points": [(CX - 50, 200), (CX + 50, 200), (CX + 62, 250), (CX + 62, 560), (CX + 44, 590),
-                         (CX - 44, 590), (CX - 62, 560), (CX - 62, 250)],
-              "seams": [((CX - 62, 290), (CX + 62, 290)), ((CX - 62, 500), (CX + 62, 500))]},
-    "azc": (400, 52, 52),
-    "cockpit": (62, 104, 28),
-    "sensor": (CX, 160, 16),
-    "airlock": (144, 470),
-    "mounts": [("mount-triblast", 116, 204, "Gat 3.1 Triblast", "left"),
-               ("mount-pathfinder", 344, 204, "Gat M1 Pathfinder", "right")],
-}
 
 # version 3: broad shuttle, a rounded wide body with short fins and a four-bell engine block
-V3 = {
-    "title": "Gatos light battle scout, version 3",
-    "body_half": [(CX, 50), (190, 58), (150, 90), (124, 150), (114, 240), (112, 400), (114, 540), (124, 596),
-                  (150, 618), (CX, 622)],
-    "body_radii": [40, 30, 30, 24, 10, 8, 14, 18, 14, 8],
-    "wings": [{"id": "fin", "points": [(118, 470), (64, 556), (62, 590), (118, 590)],
-               "radii": [4, 10, 8, 4], "trim": [(118, 470), (64, 556), (72, 560), (118, 488)]}],
-    "engines": [{"id": "engine-port-outer", "at": (170, 612, 30, 40, 34), "mirror": True},
-                {"id": "engine-port-inner", "at": (210, 616, 30, 40, 38), "mirror": True}],
-    "body_trim": [[(124, 150), (138, 150), (126, 560), (114, 560)],
-                  [(CX - 60, 128), (CX + 60, 128), (CX + 64, 136), (CX - 64, 136)]],
-    "body_seams": [((124, 220), (336, 220)), ((116, 330), (344, 330)), ((114, 450), (346, 450)),
-                   ((118, 560), (342, 560))],
-    "windows": [(134, 170, 8, 14)],
-    "vents": [(150, 580, 22, 14, 4), (288, 580, 22, 14, 4)],
-    "rivets": [(x, 600) for x in range(160, 304, 12)],
-    "spine": {"points": [(CX - 70, 170), (CX + 70, 170), (CX + 84, 210), (CX + 84, 550), (CX + 64, 576),
-                         (CX - 64, 576), (CX - 84, 550), (CX - 84, 210)],
-              "seams": [((CX - 84, 260), (CX + 84, 260)), ((CX - 84, 500), (CX + 84, 500))]},
-    "azc": (370, 54, 54),
-    "cockpit": (66, 108, 34),
-    "sensor": (CX, 150, 0) if False else (CX, 146, 15),
-    "airlock": (126, 500),
-    "mounts": [("mount-triblast", 118, 250, "Gat 3.1 Triblast", "left"),
-               ("mount-pathfinder", 342, 250, "Gat M1 Pathfinder", "right")],
-}
 
 # version 4: rocket cruiser, a slim nose flaring to a wide stern with big swept fins and one main engine
-V4 = {
-    "title": "Gatos light battle scout, version 4",
-    "body_half": [(CX, 28), (212, 40), (196, 70), (184, 120), (174, 200), (164, 300), (152, 400), (140, 500),
-                  (132, 580), (142, 622), (170, 640), (CX, 644)],
-    "body_radii": [22, 14, 16, 14, 10, 8, 8, 8, 10, 14, 14, 8],
-    "wings": [{"id": "fin", "points": [(160, 360), (60, 540), (52, 640), (78, 652), (136, 610)],
-               "radii": [4, 14, 10, 8, 4], "trim": [(160, 360), (60, 540), (68, 546), (160, 380)],
-               "seams": [((140, 450), (80, 560)), ((134, 540), (76, 620))]}],
-    "engines": [{"id": "engine-centre", "at": (CX, 630, 52, 72, 46)},
-                {"id": "engine-port", "at": (164, 626, 22, 30, 26), "mirror": True}],
-    "body_trim": [[(CX - 30, 112), (CX + 30, 112), (CX + 32, 119), (CX - 32, 119)],
-                  [(CX - 34, 125), (CX + 34, 125), (CX + 35, 129), (CX - 35, 129)]],
-    "body_seams": [((176, 220), (284, 220)), ((160, 330), (300, 330)), ((146, 450), (314, 450)),
-                   ((136, 560), (324, 560))],
-    "windows": [(186, 150, 5, 14)],
-    "vents": [(CX - 40, 596, 22, 14, 4), (CX + 18, 596, 22, 14, 4)],
-    "rivets": [(x, 618) for x in range(160, 304, 12)],
-    "spine": {"points": [(CX - 36, 180), (CX + 36, 180), (CX + 48, 240), (CX + 62, 560), (CX + 46, 592),
-                         (CX - 46, 592), (CX - 62, 560), (CX - 48, 240)],
-              "seams": [((CX - 50, 280), (CX + 50, 280)), ((CX - 60, 500), (CX + 60, 500))]},
-    "azc": (400, 48, 48),
-    "cockpit": (50, 90, 20),
-    "sensor": (CX, 150, 14),
-    "airlock": (160, 470),
-    "mounts": [("mount-triblast", 172, 250, "Gat 3.1 Triblast", "left"),
-               ("mount-pathfinder", 288, 250, "Gat M1 Pathfinder", "right")],
-}
 
 
 # ---------- version 1 refinement passes ----------
@@ -619,7 +536,7 @@ def pass_7(spec):
 
 
 P7 = pass_7(P6)
-VERSIONS = {1: V1, 2: V2, 3: V3, 4: V4, 11: P1, 12: P2, 13: P3, 14: P4, 15: P5, 16: P6, 17: P7}
+VERSIONS = {17: P7}
 
 if __name__ == "__main__":
     out = sys.argv[1] if len(sys.argv) > 1 else "."
