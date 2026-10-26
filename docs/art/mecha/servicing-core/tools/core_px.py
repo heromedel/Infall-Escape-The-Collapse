@@ -282,6 +282,22 @@ def core_m(top=10, left=11):
     return px
 
 
+MEDBAY = ["..###..", "..###..", "#######", "#######", "#######", "..###..", "..###.."]
+
+
+def core_n():
+    """N. M with the core's light slit widened into a screen like a console's, holding the medbay symbol in Mecha
+    power purple (the floor plans' symbol)."""
+    px = core_m()
+    rect(px, 13, 0, 22, 9, OUTLINE)
+    rect(px, 14, 1, 21, 8, SCREEN)
+    for j, row in enumerate(MEDBAY):
+        for i, ch in enumerate(row):
+            if ch == "#":
+                px[(14 + i, 1 + j)] = PURPLE
+    return px
+
+
 OPTIONS = [("A. Wall core and arms", core_a), ("B. Clamp ring", core_b), ("C. Service arch", core_c), ("D. A's panel, C's arms", core_d),
            ("E. D, arms over B's table", core_e), ("F. D, short arms, B's table", core_f),
            ("G. Long arms clear of the table", core_g),
@@ -290,7 +306,8 @@ OPTIONS = [("A. Wall core and arms", core_a), ("B. Clamp ring", core_b), ("C. Se
            ("J. H without the table", core_j),
            ("K. H without the table or its jaws", core_k),
            ("L. K with F's table, skinnier and tall", core_l),
-           ("M. L with smaller shoulders, wider table", core_m)]
+           ("M. L with smaller shoulders, wider table", core_m),
+           ("N. M with a symbol screen", core_n)]
 TURN_E = lambda x, y: (34 - y, x)
 
 
@@ -323,7 +340,7 @@ if __name__ == "__main__":
     cells = []
     for i, (name, fn) in enumerate(OPTIONS):
         px = fn()
-        open(os.path.join(out, f"core-option-{'abcdefghijklm'[i]}.svg"), "w").write(
+        open(os.path.join(out, f"core-option-{'abcdefghijklmn'[i]}.svg"), "w").write(
             f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 35" width="35" height="35">{to_svg(px)}</svg>\n')
         x0 = 20 + i * (T * S + 30)
         cells.append(

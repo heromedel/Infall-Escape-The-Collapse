@@ -38,6 +38,8 @@ faces up and is never turned. Two ways to fit them (`review/mix-tiles.png`, `rev
 
 | M | L with smaller shoulders (the same flared style, scaled down) so the table can be wider (heromedel) |
 
-`review/m-8x.png` shows M. `review/l-8x.png` shows L. `review/k-8x.png` shows K. `review/h-vs-j.png`, `review/j-inroom.png` show J. `review/f-h-i.png`, `review/i-inroom.png` show I. `review/e-vs-h.png`, `review/h-inroom.png` show H. `review/g-tile.png`, `review/g-inroom.png` show G. `review/inroom.png` shows each in the battle cross's core room, empty and with a HalfMech standing in it.
+| N | M with the core's light slit widened into a dark screen like a console's, holding the medbay symbol in Mecha power purple (heromedel) |
+
+`review/n-8x.png` shows N. `review/m-8x.png` shows M. `review/l-8x.png` shows L. `review/k-8x.png` shows K. `review/h-vs-j.png`, `review/j-inroom.png` show J. `review/f-h-i.png`, `review/i-inroom.png` show I. `review/e-vs-h.png`, `review/h-inroom.png` show H. `review/g-tile.png`, `review/g-inroom.png` show G. `review/inroom.png` shows each in the battle cross's core room, empty and with a HalfMech standing in it.
 
 Built by `tools/core_px.py ../crew/mecha-crew-sheet.svg OUT_DIR`.
