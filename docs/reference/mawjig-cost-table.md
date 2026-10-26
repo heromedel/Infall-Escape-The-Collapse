@@ -2,7 +2,7 @@
 
 First-pass costs for the simulation to tune. Anchors: a jump costs a fixed **1.21** Mawjig for the whole squad
 (GDD 6C, Decided); a
-won fight yields roughly **3–4** Mawjig; Wait gathers **0.25**, so about five Waits buy a jump (GDD 6B). Weapon parts follow the generator
+won fight yields roughly **3–4** Mawjig; Wait gathers **0.25** for the whole squad, so about five Waits buy a jump at any squad size (GDD 6B, Decided). Weapon parts follow the generator
 categories (Type, Effect, Shots, Targets, Special).
 
 Convention: Mawjig amounts never end in a zero (0.21, not 0.20; 0.11, not 0.10). If the weapon generator ever

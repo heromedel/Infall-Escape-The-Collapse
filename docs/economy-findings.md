@@ -284,3 +284,17 @@ about FTL's per ship (F4).
   (F5, 13): as a squad it belongs in band 2–3, or as a rare, richer band 1 fight.
 - Enemy value per player ship rises about 2.3× over the run (137 to 311), so a band 8 enemy ship is worth a little
   over two band 1 frames.
+
+## F7. Late game: time replaces fuel, and the dive strategy (2026-10-23)
+
+- With the jump and the Wait both per squad (GDD 6B, 6C, Decided), one late fight (about 52 for a 4-ship squad in
+  band 8) funds about 40 jumps. The fear of being stranded fades late, as in FTL, and the pressure moves to time:
+  the collapse advances about one jump per jump (2Q).
+- **Dive strategy:** pushing outward early for higher-band pay, then roaming until the collapse catches up. It limits
+  itself: a band 1–2 squad meets band 4–6 encounters (a band 5 budget of about 772 against a starting ship of about
+  130), and roaming spends lead, not Mawjig, since the collapse gains a jump on every jump in any direction. Linked
+  to concern 1 (grinding), which is parked.
+- **Snowball check — heromedel (2026-10-23):** store prices aren't effectively flat: higher-band stores stock
+  higher-tech, dearer items, and later purchases are for several ships. Spending rises with band and squad size,
+  so high-band pay doesn't run away (F4: per-ship upgrade money stays near FTL's). An early diver with 1–2 ships
+  gets more per ship, but needs that power to survive; that is the dive's intended payoff. No change suggested.

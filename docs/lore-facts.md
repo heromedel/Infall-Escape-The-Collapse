@@ -13,7 +13,7 @@ source doc carries the tag heromedel's words give it.
 
 ## The galaxy and the collapse
 
-- The galaxy's core has collapsed into a super black hole. (GDD 1B; Decided)
+- The Galactic Core has collapsed into a super black hole. (GDD 1B; Decided)
 - The collapse horizon expands outward from the core, swallowing star clusters as it goes. (GDD 2A, 2P; Likely)
 - Before the collapse, some races sensed it coming, and astronomers detected something wrong in the core. (GDD 2P; Likely)
 - Unusual radiation emanated from the core before it collapsed. (GDD 2P; Likely)
@@ -29,11 +29,20 @@ source doc carries the tag heromedel's words give it.
 - In occupied clusters, the original race's stores are nearly barren, and beggars of that race may be met. (GDD 2R, Occupied; Proposed)
 - Scavengers, pirates and Malphen move into abandoned clusters to salvage the derelicts and wreckage. (GDD 2R, Abandoned; Decided)
 - Only the most powerful factions, and those who band together, are making it far toward the rim. (GDD 3G; Proposed)
+- Some regions are fields of dead stars or other anomalies. (GDD 2C; Likely)
+- A race can be doing fine in one cluster and doomed in another, depending on how close each is to the collapse or to war. (GDD 2R; Decided)
+- A race placed near the core fields small, lightly armed squads and is soon doomed. Far from the core the same race fields larger squads with more weapons and better designs. (GDD 2N; Likely)
+- A border is a front line between two regions, or between a region and pirates. (GDD 2R, Border; Decided)
+- Fleeing people gather in or pass through refugee clusters, asking for help, fuel or an escort. (GDD 2R, Refugee; Decided)
+- In occupied clusters, the original race lives on as resistance, prisoners or refugees. (GDD 2R, Occupied; Decided)
+- Clusters inside the collapse horizon are swallowed, and no ordinary ship can reach them. (GDD 2R, Swallowed; Decided)
+- Mercenaries will fight for pay, but they can do nothing to slow the collapse. (GDD 7G; Likely)
 
 ## The player's people
 
 - A giant colony ship carries the last survivors of the player's home planet toward the rim. (GDD 1D; Decided)
-- Scout ships fly ahead of the colony ship, scouting and mapping the way, and stay in communication with it. (GDD 1D; Decided)
+- Scout ships fly ahead of The Colony Ship, scouting and mapping the way, and stay in communication with it. (GDD 1D; Decided)
+- The player's race sensed the collapse coming, or its astronomers detected something wrong in the core, and sent out The Colony Ship with the scouts ahead of it. (GDD 2P; Likely)
 
 ## Mawjig and jump travel
 
@@ -42,15 +51,20 @@ source doc carries the tag heromedel's words give it.
 - Wreckage and other matter can be converted into Mawjig. (GDD 8C; Decided)
 - The Jigawatt Drive is the common jump drive, and it burns Mawjig. (GDD 6A; Proposed)
 - The jump drive's technical name is the Material to Energy, Space-Time JigaWatt Powered, Jump Drive. Its full name is the Mawjig Powered Jigawatt Drive, it is called the Jigawatt Drive, and its nickname is the Jig Drive. Some people call it the MawJig Drive. (GDD 6D; Decided)
+- The Jigawatt Drive needs 1.21 Mawjig to power a jump. (GDD 6C; Decided)
+- A squad that waits in a cluster slowly gathers a little Mawjig, so it is never stranded for good. (GDD 6B; Likely)
 
 ## Technology
 
 - Technology comes in types, such as mechanical and biomechanical. Biomechanical technology is part organic. (GDD 8D; Decided)
 - Most races struggle to repair biomechanical technology, but the Azurethea repair it quickly. (GDD 8D; Decided)
+- A system takes on the technology of the ship it is installed on: on a biomechanical ship it becomes biomechanical. (GDD 8D; Decided)
+- A weapon works on any ship, but works best on a system of its own tech type. (GDD 8E; Proposed)
+- Infection damages the system in its room and spreads to neighbouring rooms. Crew can clear it, fire burns it out, and it spreads faster into biomechanical systems. (GDD 8G; Ai-Generated-Proposal)
 
-## Terrans (the Gatos)
+## Terrans (the GATOS)
 
-- The Terrans' formal name is the Galactic Alliance of Terran Occupied Systems, known as the Gatos. (Race profiles, Terrans; Proposed)
+- The Terrans' formal name is the Galactic Alliance of Terran Occupied Systems, written G.A.T.O.S. and known as the GATOS. (Race profiles, Terrans; Proposed)
 - Terrans are believed to be the most common race in the galaxy. (Race profiles, Terrans 8; Proposed)
 - Terrans live in tight-knit core areas, with arms of colonies reaching out from them. (Race profiles, Terrans 8; Proposed)
 - In good times Terrans are accepted by others and are interested in trade and other cultures. (Race profiles, Terrans 2; Proposed)
@@ -61,10 +75,13 @@ source doc carries the tag heromedel's words give it.
 - Terran ships are powered by an Armoured ZeroPoint Core (AZC) through power conduits. (Race profiles, Terrans 6; Proposed)
 - Terran ships are clean and soft in good times. Desperate Terran ships look grim, built from borrowed or stolen technology. (Race profiles, Terrans 1; Proposed)
 - Terran ships are white and pale grey with blue trim. Desperate ones add rust and mismatched panels from other races. (Race profiles, Terrans 1; Ai-Generated-Proposal)
-- Terran weapons carry an official designation and a nickname, such as Gat 3.1 "Triblast". In Gatos codes, M means missile. (Race profiles, Terrans 6; Likely)
+- Terran weapons carry an official designation and a nickname, such as Gat 3.1 "Triblast". In GATOS codes, M means missile. (Race profiles, Terrans 6; Likely)
 - Terran core worlds are busy trade hubs with patrols that keep pirates down, while the colony arms are thinly patrolled. (Race profiles, Terrans 7; Ai-Generated-Proposal)
 - When the Terrans are doomed, their trade hubs become checkpoints with scans, tolls and shakedowns. (Race profiles, Terrans 7; Ai-Generated-Proposal)
-- Terrans are quick learners. (Race profiles, Terrans 9; Proposed)
+- Terrans are quick learners. (Race profiles, Terrans 9; GDD 7H; Decided)
+- As the GATOS fall from struggling toward doomed, their ships take on darker or black colours and scarier emblems. (Race profiles, Terrans 1; Decided)
+- The GATOS have no standard emblem, because they are an alliance, not a federation. (Race profiles, Terrans 1; Decided)
+- Struggling Terrans are less tolerant of aggressive races and quicker to fight. (Race profiles, Terrans 5; Proposed)
 
 ## Azurethea
 
@@ -82,6 +99,7 @@ source doc carries the tag heromedel's words give it.
 - Azurethea weapons often disable systems with spores. (Race profiles, Azurethea 6; Proposed)
 - Azurethea weapons are named after creatures and natural things, such as the Stinger. (Race profiles, Azurethea 6; Ai-Generated-Proposal)
 - The Azurethea spread in thin, vein-like regions reaching out for exploration and resources, and leave the neutral clusters near them alone. (Race profiles, Azurethea 8; Proposed)
+- The Azurethea are physically fragile, and they cannot wear EVA suits. (Race profiles, Azurethea 9; Proposed)
 
 ## The Mecha
 
@@ -100,9 +118,13 @@ source doc carries the tag heromedel's words give it.
 - The Mecha flow like water into the regions of least resistance, preferring previously populated areas to empty ones. (Race profiles, Mecha 8; Proposed)
 - A Mecha can integrate with a ship system and power it. (Race profiles, Mecha 9; Proposed)
 - The Mecha are slow-moving, physically tough and dangerous in melee. (Race profiles, Mecha 9; Proposed)
+- The Mecha breathe, and suffocation is their key weakness. (Race profiles, Mecha 9; Likely)
+- A Mecha battlesuit carries its own limited oxygen. If it runs out, the Mecha inside slowly suffocates. (Race profiles, Mecha 6; Likely)
+- Mecha weapons are high-damage and destructive to hulls, with little finesse. (Race profiles, Mecha 6; Proposed)
+- Other races can use an EVB Dock if they get hold of one. (Race profiles, Mecha 6; Proposed)
 - Mecha battlesuits are not repaired. A suit that is taken off is recycled into minimal energy, and a new one is bought at an EVB Dock. (Race profiles, Mecha 6; Likely)
 - Mecha ships have no strong power core. Their Cybernetic Servicing Core gives the ship its minimal power, heals Mecha crew, also works as a Medbay for other races, and is where the Mecha upgrade their own mechs to give more power. (Race profiles, Mecha 9; Likely)
-- The Mecha learn fast, since they are genetically and cybernetically enhanced, but they are hampered by their mechs until the mechs are upgraded. (Race profiles, Mecha 9; Likely)
+- The Mecha learn fast, since they are genetically and cybernetically enhanced, but they are hampered by their mechs until the mechs are upgraded. (Race profiles, Mecha 9; GDD 7H; Decided)
 - Other races call them the Mecha. (Race profiles, Mecha names; Proposed)
 - Some rumors claim the Mecha are hideous and evil inside their suits, others that they are adorable and just greedy or immature. (Race profiles, Mecha what others know; Proposed)
 - The Mecha are organized and tactical because they want power and wealth, and they will work together to get it. (Race profiles, Mecha organized and tactical; Proposed)
@@ -128,7 +150,9 @@ source doc carries the tag heromedel's words give it.
 - Tentauri weapon names come from their own anatomy, such as Coil, Grasp, Siphon and Tendril Beam. (Race profiles, Tentauri 6; Ai-Generated-Proposal)
 - The Tentauri are explorers who found small regions far apart from each other. (Race profiles, Tentauri 8; Proposed)
 - Lone Tentauri ships are a common sight passing through other races' territory. (Race profiles, Tentauri 7; Ai-Generated-Proposal)
-- A Tentauri can work several systems at once. (Race profiles, Tentauri 9; Proposed)
+- A Tentauri can work multiple systems at once. (Race profiles, Tentauri 9; Proposed)
+- The Tentauri learn each skill slowly, but they can learn multiple skills at once. (GDD 7H; Decided)
+- The Tentauri adapt their weapons to whatever they need: lasers, beams or missiles. (Race profiles, Tentauri 6; Proposed)
 
 ## Senti-GPH
 
@@ -148,6 +172,11 @@ source doc carries the tag heromedel's words give it.
 - Senti-GPH weapon names are number codes, such as 3B 01 V2. (Race profiles, Senti-GPH 6; Proposed)
 - The Senti-GPH live in small, dense clusters built around relay and broadcast stations. (Race profiles, Senti-GPH 7, 8; Proposed)
 - The Senti-GPH don't breathe, can't burn and are disrupted by ion. (Race profiles, Senti-GPH 9; Proposed)
+- The Senti-GPH learn very poorly on their own. (Race profiles, Senti-GPH 9; GDD 7H; Decided)
+- When a ship's AAA is damaged, fewer Senti can be broadcast until it is repaired. They don't die from it unless the ship is destroyed. (Race profiles, Senti-GPH 6; Proposed)
+- A highly upgraded AAA can broadcast a Senti directly onto another ship. (Race profiles, Senti-GPH 9; Proposed)
+- Senti-GPH technology is much like the Terrans', with advanced beams and sensors. The Senti rarely use ion weapons themselves. (Race profiles, Senti-GPH 6; Proposed)
+- Struggling Senti-GPH also trade for whatever they need to survive, such as defensive equipment. (Race profiles, Senti-GPH 3; Proposed)
 
 ## Lykario
 
@@ -162,11 +191,16 @@ source doc carries the tag heromedel's words give it.
 - The Lykario live in small, independent clusters that even attack each other. (Race profiles, Lykario 8; Proposed)
 - The Lykario have Animal Senses, as if they were psychic. The senses are never explained, and they are never called psychic. (Race profiles, Lykario 9; Decided)
 - The Lykario sense Life Signs without ship sensors, even on other ships and in hazards. (Race profiles, Lykario 9; Decided)
+- The Lykario are quick in a fight, but fragile. (Race profiles, Lykario 9; Proposed)
+- Lykario technology is basic, stolen and never biomechanical. They favour crew teleporters and cloaking, and leave their ships on autopilot while they board others. (Race profiles, Lykario 6; Proposed)
+- The Lykario hunt anyone who borders them. (Race profiles, Relations between races; Proposed)
+- The Lykario rarely become refugees. Doomed Lykario bands follow refugee convoys instead. (Race profiles, Lykario 5; Ai-Generated-Proposal)
 
 ## Malphen (Malphagius)
 
 - The Malphen are a tumor race. Their formal name, Malphagius, roughly means "the malignant devourer". (Race profiles, Malphen; Proposed)
 - Malphen weapons infect a ship's systems, and the infection spreads. (Race profiles, Malphen; Proposed)
+- Malphen weapons fire like fleshy missiles or flak, to get through shields. (Race profiles, Malphen; Proposed)
 - When the Malphen can't win or escape, they launch valuable debris for the other side to take and try to flee, which is their way of surrendering. (Race profiles, Malphen; Proposed)
 - Each Malphen ship is a living organism, and its crew are parts it grows. (Race profiles, Malphen 1; Ai-Generated-Proposal)
 - The Malphen don't speak. (Race profiles, Malphen 1; Ai-Generated-Proposal)
@@ -176,6 +210,7 @@ source doc carries the tag heromedel's words give it.
 - No race takes the Malphen in. The Azurethea and Tentauri fear them most. (Race profiles, Malphen 5; Ai-Generated-Proposal)
 - Malphen weapons are named by the races who face them, such as the Flesh Mortar. (Race profiles, Malphen 6; Ai-Generated-Proposal)
 - Malphen territory is one connected mass that slowly grows outward. (Race profiles, Malphen 8; Ai-Generated-Proposal)
+- Killing a Malphen ship's crew is not the end of it. The ship grows new crew unless its growth organ is destroyed. (Race profiles, Malphen 1; Ai-Generated-Proposal)
 
 ## Hidden from the world
 
@@ -184,5 +219,7 @@ True in the world, but no one in it knows. Events must not reveal these unless t
 - The Whispwraith are beings that seem to be made of a cloud of particles and energy. (Race profiles, Whispwraith; Proposed)
 - No other race knows the Whispwraith exist. They likely live undiscovered inside the collapse. (Race profiles, Whispwraith 5; Proposed)
 - Oxygen atmospheres are toxic to the Whispwraith, and their own atmosphere is harmful to other races. (Race profiles, Whispwraith; Proposed)
+- The Whispwraith drain oxygen atmospheres and convert them to their own, and they heal once surrounded by it. (Race profiles, Whispwraith; Proposed)
+- A Whispwraith can teleport itself to another room or another ship. (Race profiles, Whispwraith; Proposed)
 - Whispwraith weapon names are their own, highly strange and alien. (Race profiles, Whispwraith 6; Proposed)
 - The deeper into the collapse, the better the Whispwraith do. (Race profiles, Whispwraith 2; Ai-Generated-Proposal)

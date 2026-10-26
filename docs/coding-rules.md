@@ -1,0 +1,39 @@
+# Infall: Coding Rules
+
+Rules for the coding session, set by heromedel (2026-10-26). They sit on top of `game-project-standards.md` (the
+elegant code principles and the standard rules) and `CLAUDE.md` (the hard rule for code). Every rule here is
+**Decided** from heromedel's words unless tagged otherwise.
+
+1. **Feel.** Match FTL's feel and speed as closely as possible without plagiarizing: no FTL code, data, assets or
+   names anywhere in the code.
+2. **Readable.** Efficient, elegant, human-readable code; class, variable and function names match what they do.
+   The standards' elegant code principles apply.
+3. **Electron with TypeScript:** a desktop program with full file access, local files, no browser permissions.
+   Game logic runs in the main process; the window only draws.
+4. **Open engine.** Art is visible in its folders, data is in XML or text documents, and both are easily moddable.
+5. **ECS.** An entity is a folder with a file naming the entity, its tags and components, and its art by name or
+   path. The game systems load the file, see the components and know what to do. A weapon is an entity with
+   component tags and no code: changing it from laser to missile behaviour is changing a tag. No code per entity.
+6. **Approval.** Code is presented as blocks with a plain explanation of what each does, for heromedel's approval,
+   before it goes in. Class and function names come first, so nobody ends up halfway down the pipeline wondering
+   what a class does or why it has a journal.
+7. **Vanilla as a setting.** FTL vanilla behaviour is a setting, not a different branch of the game: classic power
+   versus a race's own power model is a simple toggle built on shared code. Settings are written with the default
+   first (GDD 1K).
+8. **Main shows the flow.** Reading through the main class clearly shows the flow of the game: clean logic calling
+   what it needs, functions and classes, and returning. Never a spaghetti of classes calling classes.
+   - Bad: main calls a power change function, which draws the GUI; the GUI changes the power level.
+   - Good: main calls draw GUI; main calls change power; main calls refresh GUI.
+   - A system changes state and returns; drawing is always its own call from main. *(the last line: Ai-Generated-Proposal, 2026-10-26)*
+9. **Art is SVG with named parts** (GDD 10A), loaded live. A part's name is the handle for recolouring, hiding and
+   animating it. Missing part names in a modder's file are tolerated: the engine falls back to drawing the whole
+   file. *(the fallback: Ai-Generated-Proposal, 2026-10-26)*
+10. **Logs.** Every log entry is two lines: a machine line with every field, and a human-readable line written from
+    it. Extra logs, debug logs and admin commands are welcome (standards); the command list is kept in its own doc,
+    not here.
+11. **Saves** are local, hand-readable XML or text files, and a save holds the run's seed.
+12. **Tests.** Run the tests the change needs. Don't run every test every time.
+13. **Ticks.** The simulation runs on fixed ticks (GDD 3E), 20 a second (0.05 s); every time in the reference
+    tables is converted to ticks.
+
+Branch and merge rules for the coding session are heromedel's to set.

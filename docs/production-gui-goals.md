@@ -24,7 +24,7 @@ Points this list stands on: Decided 3C, 3E, 4B–4N, 10A, 12B; Likely 2D, 3A, 3H
 | Store | A | FTL-style sections (systems, weapons, crew, repair, Mawjig can't be bought: it is the currency), stock by cluster state, race-themed texts | |
 | Ship upgrade and crew screens | A | Upgrade systems and AZC or reactor, move crew, assign ships and crew to players (4C) | |
 | Results and run end | A | Run lost (1F) or band 3 reached; later the escape (B) | |
-| Settings | A | Multiplayer settings, map zoom, conduits toggle, controls, sound; defaults shown first | |
+| Settings | A | Multiplayer settings, map zoom, conduits toggle, controls, sound; defaults shown first; a Classic group for settings that bring play closer to the genre's default (GDD 1K, Likely), never naming FTL | |
 | Save and load | B | Resume a run; the host saves (4N) | |
 | Rim and escape | B | The last clusters, the final battle, the escape sequence | Arty |
 | Victory and unlocks | C | Tech victory flow, race and ship unlocks (7C) | |
@@ -34,10 +34,10 @@ Points this list stands on: Decided 3C, 3E, 4B–4N, 10A, 12B; Likely 2D, 3A, 3H
 
 | Asset | Goal | Count | Notes | Who |
 |---|---|---|---|---|
-| Ship art, SVG with named parts (10A) | A: 4 hulls; B: 18; C: 42 | hull, floor plan, rooms, weapon mounts, damaged and doomed variants as recolours | Art Test 01 is the method | Arty |
-| Weapon art | A: 9; B: 30; C: 64 | icon and ship-mounted art per weapon folder (11B) | race-styled, not FTL look-alikes | Arty |
+| Ship art, SVG with named parts (10A) | A: 4 hulls; B: about 10; C: about 25 | hull, floor plan, rooms, weapon mounts, loadout and doomed variants as modules and recolours | Art Test 01 is the method. **Proposed (heromedel, 2026-10-23):** conduits on their own layer, exported as a separate file. Done 2026-10-23: Outrider hull and floor tests; Pirate Hijacker hull with Hijacker and Cutpurse loadouts, floor plans and conduit layers; Tentauri scout hull and floor plan with organic consoles (`docs/art/`) | Arty |
+| Weapon art | A: 9; B: 30; C: 64 | icon and ship-mounted art per weapon folder (11B) | race-styled, not FTL look-alikes. Done: Sporewing, Twinshot, Tentauri Defense Laser (`docs/art/weapons/`) | Arty |
 | Crew sprites | A: 2 races; B: 3; C: 7 | walk, repair, fight, death; sex variants where the race has them | | Arty |
-| System icons | A | FTL's set under Infall names + AZC, conduits, EVB Dock, Jigawatt Drive; C: EVA, Supershield, AAA, Mutation, growth organ | | Arty |
+| System icons | A | FTL's set under Infall names + AZC, conduits, EVB Dock, Jigawatt Drive; C: EVA, Supershield, AAA, Mutation, growth organ | Standard symbols drawn on the floor plans; per-race console looks (Tentauri organs) and symbol colours (player green, enemy orange, damaged red) are Proposed in `ideas.md`, mocked up in `docs/art/mockups/` | Arty |
 | Map art | A | cluster dot groups per state, region tints per race, collapse ring, link lines | | Arty |
 | Backgrounds | A: 6; B: 16; C: 30 | space backgrounds per region type and hazard (nebula, asteroids, sun), near-collapse distortion (B) | | Arty |
 | Event images | B | race and situation images for events, as FTL's planets and ships | | Arty |

@@ -103,12 +103,14 @@
 
 <h2 id="overview">1. Overview</h2>
 <div class="pt"><b>A:</b> <span class="tag decided">Decided</span> A roguelike in the vein of FTL: ships made of rooms, tiles and systems; jumping from star system to star system; events and real-time combat.</div>
-<div class="pt"><b>B:</b> <span class="tag decided">Decided</span> The galaxy core has collapsed into a super black hole. The player leads a small squad of scout ships toward the far rim of the galaxy and must find a way, possibly a technology, to jump to a new galaxy.</div>
+<div class="pt"><b>B:</b> <span class="tag decided">Decided</span> The Galactic Core has collapsed into a super black hole. The player leads a small squad of scout ships toward the far rim of the galaxy and must find a way, possibly a technology, to jump to a new galaxy.</div>
 <div class="pt"><b>C:</b> <span class="tag decided">Decided</span> FTL is treated as a genre: mechanics work exactly as in FTL unless a decision here says otherwise (e.g. firing, then checking for a miss against engines/evasion or a block by shields). Content differs: weapons, systems and races get their own names and may get new behaviour (e.g. a dual laser that can target two different rooms) when we decide so.</div>
 <div class="pt"><b>D:</b> <span class="tag decided">Decided</span> The player's ships are scout ships flying ahead of a giant colony ship carrying the last survivors of their home planet. The scouts scout and map the way for it and stay in communication with it. It is not a few crew on one ship leaving to save their race.</div>
-<div class="pt"><b>E:</b> <span class="tag likely">Likely</span> The colony ship is not shown on the map; it is simply "behind you".</div>
-<div class="pt"><b>F:</b> <span class="tag decided">Decided</span> A run is lost when all scout ships are gone.</div>
-<div class="pt"><b>G:</b> <span class="tag likely">Likely</span> The colony ship is a layer on top of the FTL-like game and isn't a focus yet. The first build has almost no interaction with it, so the basics can be made to work first. Whether it exists in play at all is undecided.</div>
+<div class="pt"><b>E:</b> <span class="tag likely">Likely</span> The Colony Ship is not shown on the map; it is simply "behind you".</div>
+<div class="pt"><b>F:</b> <span class="tag decided">Decided</span> A run is lost when all scout ships are gone.
+<br><span class="tag decided">Decided</span> (2026-10-23) A ship is gone when it is blown up or when all its crew are killed. There is no &ldquo;taken&rdquo; ship: as in FTL, a ship whose crew is killed is not kept by the other side, it is only worth about 30% more reward (8I).
+<br><span class="tag proposed">Proposed</span> (2026-10-23) When one ship of a squad loses all its crew but the squad has others, the boarders that killed them go for the next ship, most likely by returning to their own ship first.</div>
+<div class="pt"><b>G:</b> <span class="tag likely">Likely</span> The Colony Ship is a layer on top of the FTL-like game and isn't a focus yet. The first build has almost no interaction with it, so the basics can be made to work first. Whether it exists in play at all is undecided.</div>
 <div class="pt"><b>H:</b> <span class="tag decided">Decided</span> The core loop is the same as FTL's. More ships are an extension of FTL's loop of gaining systems and weapons.</div>
 <div class="pt"><b>I:</b> <span class="tag ai">Ai-Generated-Proposal</span> Ship loss. In FTL you can always recover fully (hull, systems, breaches, missiles, drone parts) until you lose the game. Losing one ship of a squad is a major setback FTL has no equivalent of. A destroyed ship is gone, with its systems and weapons, but the loss is softened so it stays attrition rather than an instant run-ender:
 <ol>
@@ -158,11 +160,11 @@
 <div class="pt"><b>O:</b> <span class="tag likely">Likely</span> Run length is about FTL's: about 8 difficulty bands, each about 10 clusters deep, with some grinding expected rather than rushing straight through.</div>
 <div class="pt"><b>P:</b> <span class="tag likely">Likely</span> The collapse begins over about 5 jumps, each an ordinary event or encounter plus a message:
 <ol>
-  <li>Start: your race has sensed the collapse coming, or its astronomers have detected something wrong in the core, and has sent out its colony ship with you as the scouts.</li>
+  <li>Start: your race has sensed the collapse coming, or its astronomers have detected something wrong in the core, and has sent out The Colony Ship with you as the scouts.</li>
   <li>Unusual radiation is emanating from the core.</li>
   <li>The core is visibly brighter than it has ever been; communication with regions closer to the core is interrupted.</li>
   <li>The core has gone dark; jumps detected heading away from the core have increased tenfold.</li>
-  <li>Entire regions are being swallowed: the galaxy core has collapsed into a super black hole. The collapse is now visible on the map, and clusters that looked reachable a few jumps inward are swallowed all at once.</li>
+  <li>Entire regions are being swallowed: the Galactic Core has collapsed into a super black hole. The collapse is now visible on the map, and clusters that looked reachable a few jumps inward are swallowed all at once.</li>
 </ol></div>
 <div class="pt"><b>Q:</b> <span class="tag likely">Likely</span> From then on, the collapse expands about one jump's distance each time the player jumps, like FTL's rebel fleet; on the open map it is a ring growing outward from the core.</div>
 <div class="pt"><b>R:</b> <span class="tag decided">Decided</span> What each cluster state (2L) changes. A state changes who you meet, what the store has and which events appear; the map shows it, so the player can plan around it.
@@ -179,6 +181,7 @@
 <tr><td>Abandoned</td><td>Left empty.</td><td>No store; derelicts and wreckage to salvage for Mawjig; scavengers, pirates and Malphen move in.</td></tr>
 <tr><td>Swallowed</td><td>Inside the collapse horizon.</td><td>Unreachable, except for the ??? victory path (ideas).</td></tr>
 </table>
+<div class="pt"><b>S:</b> <span class="tag decided">Decided</span> <b>Collapse speed against jump length.</b> The collapse spreads at a fixed distance rate, measured in map units such as pixels (or another calculation), not in jumps: it expands once per jump. Jumps between connected or adjacent clusters are shorter or longer depending on the distance between them, so a player can actually gain distance from the collapse by choosing longer jumps. This refines 2Q&rsquo;s &ldquo;about one jump&rsquo;s distance&rdquo;.</div>
 Doing Fine, Struggling and Doomed are the owning race's state at this cluster, not across its whole region: e.g. the Tentauri can be Doomed at a small cluster next to the collapse and Doing Fine at another 2 bands away. Border clusters (2K) are a region's front lines. When a front moves, the state and the rank change together (except core clusters, 2K): e.g. an inner cluster becomes a Border once the clusters beyond it fall.
 <br>(Note) A cluster that touches only clusters of its own race and a neutral or Abandoned cluster is most likely still a Border cluster, unless the abandoned cluster or region is fully enveloped by that race.
 <br><span class="tag likely">Likely</span> A cluster can have more than one state at once, e.g. Core, Border, At War, Refugee, Doomed, Occupied: Mecha.
@@ -200,6 +203,7 @@ Doing Fine, Struggling and Doomed are the owning race's state at this cluster, n
 <div class="pt"><b>M:</b> <span class="tag likely">Likely</span> As in FTL, combat has no movement or positioning; a ship's place in the formation doesn't change what it can hit or be hit by. (Exception: EVA crossing time between ships, if that idea is used.)</div>
 <div class="pt"><b>N:</b> <span class="tag proposed">Proposed</span> A ship can only protect a squad-mate through systems, e.g. drones or a shield beam projected onto another ship.</div>
 <div class="pt"><b>O:</b> <span class="tag likely">Likely</span> Battles have a <b>Hail</b> button, so the player can ask for or offer surrender early, or use other such options.</div>
+<div class="pt"><b>P:</b> <span class="tag open">Open</span> Whether a ship can fire on its own squad-mates, and whether an enemy ship can be taken over and made to fire on its own side (heromedel, 2026-10-23).</div>
 
 <h2 id="multiplayer">4. Multiplayer</h2>
 <div class="pt"><b>A:</b> <span class="tag likely">Likely</span> Additional players join via a second controller or over LAN, up to 6 players.
@@ -251,13 +255,13 @@ Doing Fine, Struggling and Doomed are the owning race's state at this cluster, n
 
 <h2 id="jump">6. Jump Travel</h2>
 <div class="pt"><b>A:</b> <span class="tag proposed">Proposed</span> The base jump drive is the <b>Jigawatt Drive</b> (named in 6D), powered by Mawjig (see 8C). Races may have their own drive variants, but all use the same fuel (cost in 6C).</div>
-<div class="pt"><b>B:</b> <span class="tag likely">Likely</span> <b>Wait</b> action: staying at a cluster gathers a little Mawjig (0.25) while the collapse advances, so a squad is never permanently stranded, only slowed: about five Waits buy one jump (1.21).</div>
+<div class="pt"><b>B:</b> <span class="tag decided">Decided</span> <b>Wait</b> action: staying at a cluster gathers a little Mawjig while the collapse advances, so a squad is never permanently stranded, only slowed. A Wait gathers 0.25 for the whole squad, not per ship, just as a jump costs 1.21 for the whole squad (6C): about five Waits buy one jump at any squad size. If the gain were per ship, the jump cost would have to be per ship too.</div>
 <div class="pt"><b>C:</b> <span class="tag decided">Decided</span> A jump costs 1.21 Mawjig for the whole squad, fixed (the DeLorean's 1.21 jigawatts). Charging per ship would only make big squads more expensive; FTL's balance is built for one ship.</div>
 <div class="pt"><b>D:</b> <span class="tag decided">Decided</span> <b>Jump drive names.</b> Technical name: <i>Material to Energy, Space-Time JigaWatt Powered, Jump Drive</i>. Real full name: <i>Mawjig Powered Jigawatt Drive</i>. Name: <b>Jigawatt Drive</b>. Nickname: <b>Jig Drive</b>. Alternate name some people use: <b>MawJig Drive</b>. The long technical name says what it does (a jump), so the short names don't have to. &ldquo;Jump Drive&rdquo; appears only inside the technical name and is never used on its own, since on its own it reads as a USB stick. &ldquo;Jigawatt&rdquo; is the deliberate Back to the Future callback to the 1.21 jump cost (6C), used where it fits most naturally.</div>
 <div class="pt"><b>E:</b> <span class="tag proposed">Proposed</span> The drive needs power; it does not supply it. Lore text that says the ship&rsquo;s &ldquo;power core&rdquo; produces the Mawjig for a jump either uses different flavor text for races without a visible dedicated core, or assumes every ship has some form of power core (not yet chosen).</div>
 
 <h2 id="races">7. Races &amp; Crew</h2>
-<div class="pt"><b>A:</b> <span class="tag open">Open</span> Which races exist. Drafted so far in <code>docs/race-profiles.md</code>: Terrans (the Gatos), the Azurethea, the Mecha, the Tentauri, the Senti-GPH, the Lykario, the Malphen (a tumor race) and, likely non-core, the Whispwraith. Other ideas are in the ideas document.</div>
+<div class="pt"><b>A:</b> <span class="tag open">Open</span> Which races exist. Drafted so far in <code>docs/race-profiles.md</code>: Terrans (the GATOS), the Azurethea, the Mecha, the Tentauri, the Senti-GPH, the Lykario, the Malphen (a tumor race) and, likely non-core, the Whispwraith. Other ideas are in the ideas document.</div>
 <div class="pt"><b>B:</b> <span class="tag decided">Decided</span> Crew work as in FTL: they man systems and gain skills in them.</div>
 <div class="pt"><b>C:</b> <span class="tag likely">Likely</span> The first starting ship is Terran. Other races are unlocked later as starting options.</div>
 <div class="pt"><b>D:</b> <span class="tag likely">Likely</span> Each race is defined with a race profile (<code>docs/race-profiles.md</code>).</div>
@@ -325,7 +329,7 @@ Doing Fine, Struggling and Doomed are the owning race's state at this cluster, n
 
 <h2 id="ui">14. User Interface</h2>
 <div class="pt"><b>A:</b> <span class="tag open">Open</span> A full GUI discussion with mockups: per-ship panels (3B), fitting the squads on screen (3C), and pause, vote and lock-in indicators (4L).</div>
-<div class="pt"><b>B:</b> <span class="tag proposed">Proposed</span> Colour scheme. In game: muted blue background boxes, white text and message borders, and power systems coloured like FTL's. Elsewhere, such as the title screen or anything not specified: grimmer colour schemes, perhaps a Gatos silver or gold.</div>
+<div class="pt"><b>B:</b> <span class="tag proposed">Proposed</span> Colour scheme. In game: muted blue background boxes, white text and message borders, and power systems coloured like FTL's. Elsewhere, such as the title screen or anything not specified: grimmer colour schemes, perhaps a GATOS silver or gold.</div>
 <div class="pt"><b>C:</b> <span class="tag likely">Likely</span> A broken conduit flashes red, and the flash scales with zoom, so even zoomed far out a flashing red dot still shows where it is. The system it cuts off may turn red too.</div>
 <div class="pt"><b>D:</b> <span class="tag decided">Decided</span> <b>Player Power Color</b> setting (default first): <code>Player Power Color: Default (Green) &gt; Racial &gt; Specific Color</code>. It colours the player's powered systems, power bars and system symbols. <b>Default:</b> power green (<code>#66FF66</code>). <b>Racial:</b> the player race's own power colour, the one its enemy ships show (Pirate Power Orange <code>#FF8500</code>, Mecha Power Purple <code>#AA28EB</code>; the Tentauri colour is not chosen yet). <b>Specific Color:</b> the player picks one colour. Enemy ships always show their own race's power colour (<a href="art/palette.md">art palette</a>).</div>
 
@@ -352,14 +356,14 @@ Doing Fine, Struggling and Doomed are the owning race's state at this cluster, n
   <tr><td>2026-10-21</td><td>Open galaxy node map built from regions is Likely (2C); clamped map zoom by default (2D); no dead ends (2F).</td></tr>
   <tr><td>2026-10-21</td><td>The scouts fly ahead of a colony ship of the last survivors of their home planet (1D).</td></tr>
   <tr><td>2026-10-21</td><td>Run stages (2G) as hidden distance bands from the core (2H); start with one ship, win with about 3–4 very strong or 6 good ones (3K).</td></tr>
-  <tr><td>2026-10-21</td><td>A run is lost when all scouts are gone (1F); the colony ship stays out of the first build (1G).</td></tr>
+  <tr><td>2026-10-21</td><td>A run is lost when all scouts are gone (1F); The Colony Ship stays out of the first build (1G).</td></tr>
   <tr><td>2026-10-21</td><td>Any ship can target any enemy ship; no positioning in combat (3L, 3M).</td></tr>
   <tr><td>2026-10-21</td><td>Core loop same as FTL (1H); crew work as in FTL (7B); systems are FTL's plus more (8A).</td></tr>
   <tr><td>2026-10-21</td><td>Map terms: node = star cluster, clusters form regions (2J); deep, inner and border clusters (2K); clusters can change state (2L).</td></tr>
   <tr><td>2026-10-21</td><td>Tone varies by race, region and proximity to the collapse (1J); random race placement with strength from placement (2M, 2N); Terran first start, other races unlockable (7C).</td></tr>
   <tr><td>2026-10-21</td><td>Run length about FTL's (2O); 5-jump collapse opening (2P); collapse expands about one jump per jump (2Q).</td></tr>
   <tr><td>2026-10-21</td><td>Tech types are a basic mechanic (8D).</td></tr>
-  <tr><td>2026-10-21</td><td>First two races drafted (Gatos, Azurethea); races can differ in how power works, Terrans use conduits (7E).</td></tr>
+  <tr><td>2026-10-21</td><td>First two races drafted (GATOS, Azurethea); races can differ in how power works, Terrans use conduits (7E).</td></tr>
   <tr><td>2026-10-21</td><td>Hail button in battles (3O).</td></tr>
   <tr><td>2026-10-21</td><td>More than one system per room moved to Likely (5B).</td></tr>
   <tr><td>2026-10-21</td><td>A system takes the tech type and power behaviour of the ship it is installed on (8D).</td></tr>
@@ -371,11 +375,14 @@ Doing Fine, Struggling and Doomed are the owning race's state at this cluster, n
   <tr><td>2026-10-23</td><td>Wait gathering a little Mawjig is Likely (6B); Mawjig as the single fuel, ammunition and currency is Decided (8C).</td></tr>
   <tr><td>2026-10-23</td><td>Jump drive names decided: Jigawatt Drive, nickname Jig Drive, with a long technical name and a full name (6D); example event text and lines added (9B, 9C).</td></tr>
   <tr><td>2026-10-23</td><td>Almost every big departure from FTL will eventually get a Classic setting, Likely (1K).</td></tr>
+  <tr><td>2026-10-23</td><td>The collapse spreads a fixed map distance once per jump; jump lengths vary, so players can gain distance, Decided (2S).</td></tr>
   <tr><td>2026-10-23</td><td>Fight rewards are paid per enemy ship, from its wreckage; surrender and negotiation pay on their own terms (8I).</td></tr>
   <tr><td>2026-10-23</td><td>A Wait gathers 0.25 Mawjig, so about five Waits buy one jump (6B).</td></tr>
+  <tr><td>2026-10-23</td><td>Wait is Decided: its 0.25 gain is for the whole squad, like the jump's 1.21 cost (6B, 6C).</td></tr>
   <tr><td>2026-10-23</td><td>A wreck pays 2.5% of the ship's value &times; a small band adjustment (8I); salvaging your own lost ship pays 2.5% with no adjustment, when allowed (1I).</td></tr>
-  <tr><td>2026-10-23</td><td>Colour scheme proposed: muted blue in game, grimmer Gatos silver or gold elsewhere (14B).</td></tr>
+  <tr><td>2026-10-23</td><td>Colour scheme proposed: muted blue in game, grimmer GATOS silver or gold elsewhere (14B).</td></tr>
   <tr><td>2026-10-23</td><td>LAN with direct IP connect is enough for now, with Steam joining possibly later, Proposed (4A).</td></tr>
+  <tr><td>2026-10-23</td><td>A ship is gone when blown up or when all its crew are killed; no ship is ever "taken" (1F). Firing on squad-mates and taking over enemy ships is Open (3P).</td></tr>
   <tr><td>2026-10-23</td><td>Crew skills: one XP curve for every skill (100, then 150), balanced by XP per event at about FTL's pace, fixed gains, race rates (7H).</td></tr>
   <tr><td>2026-10-25</td><td>Player Power Color setting: Default (Green), Racial or Specific Color (14D).</td></tr>
 </table>
