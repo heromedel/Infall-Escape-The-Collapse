@@ -20,7 +20,7 @@ export class Room {
 }
 
 /** Systems that take no bars at all: they work as long as they aren't broken (the genre's subsystems). */
-const UNPOWERED_SYSTEMS = new Set(['Piloting', 'Sensors', 'Doors']);
+const UNPOWERED_SYSTEMS = new Set(['Piloting', 'Sensors', 'Doors', 'AZC']);   // the AZC is the source, not a drain
 
 export class ShipSystem {
   readonly key: string;
@@ -146,6 +146,7 @@ export class Ship {
       return new Door(door.id, door.tile, door.facing, !this.roomByTile.has(tileKey(across)));
     });
     this.power = new PowerSupply(definition.power, this.systems);
+    this.power.assignStartingBars();
     this.weapons = definition.weapons.map((weapon) => {
       const card = weaponsByName(weapon.name);
       // A weapon on another tech type's ship charges about 20% slower (GDD 8E; weapon-budget-table).

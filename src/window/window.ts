@@ -1,23 +1,38 @@
 /**
  * The window: draws what the host sends and sends back what the player did. It holds no game state of its own
- * (standards, principle 11: the host owns it).
+ * (standards, principle 11: the host owns it). Outside a battle it is the ship viewer; when the host starts a
+ * battle it becomes the battle screen until the battle ends.
  */
 
 import type { ShipPicture } from '../shared/ShipPicture';
+import type { ClientToHost, HostToClient } from '../shared/Messages';
 import { ShipDrawing } from './ShipDrawing.js';
 import { Camera } from './Camera.js';
+import { BattleView } from './BattleView.js';
+import { BattleControls } from './BattleControls.js';
 
 /** The functions the host bridge (src/host/preload.ts) gives the window. */
 declare const host: {
   shipNames(): Promise<string[]>;
   shipPicture(name: string, side: 'player' | 'enemy'): Promise<ShipPicture>;
   debug(line: string): Promise<string>;
+  onHostMessage(listener: (message: HostToClient) => void): void;
+  sendToHost(message: ClientToHost): void;
 };
 
 const viewport = document.getElementById('viewport') as unknown as SVGSVGElement;
-const drawing = new ShipDrawing();
-viewport.appendChild(drawing.root);
-const camera = new Camera(viewport, drawing.root);
+const viewerDrawing = new ShipDrawing();
+const battleView = new BattleView();
+const panel = document.getElementById('ship-panel') as HTMLElement;
+const stage = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+viewport.appendChild(stage);
+const camera = new Camera(viewport, stage);
+const controls = new BattleControls(battleView, viewport, panel,
+  (order) => host.sendToHost({ kind: 'Order', order }),
+  (paused) => host.sendToHost({ kind: paused ? 'Pause' : 'Unpause' }));
+let inBattle = false;
+
+// ---- the ship viewer (outside a battle) --------------------------------------------------------------------
 
 async function fillShipPicker(): Promise<void> {
   const picker = document.getElementById('ship-picker') as HTMLSelectElement;
@@ -33,16 +48,47 @@ async function fillShipPicker(): Promise<void> {
 }
 
 async function showPickedShip(): Promise<void> {
+  if (inBattle) return;
   const name = (document.getElementById('ship-picker') as HTMLSelectElement).value;
   const side = (document.getElementById('side-picker') as HTMLSelectElement).value as 'player' | 'enemy';
   if (!name) return;
   const picture = await host.shipPicture(name, side);
-  drawing.draw(picture);
+  stage.replaceChildren(viewerDrawing.root);
+  viewerDrawing.draw(picture);
   const size = ShipDrawing.sizeOf(picture);
   camera.centreOn(size.width, size.height);
-  document.getElementById('ship-caption')!.textContent =
-    `${picture.name} (${picture.race}): ${picture.columns} by ${picture.rows} tiles, ${picture.rooms.length} rooms, `
-    + `${picture.systems.length} systems, ${picture.doors.length} doors, hull art ${picture.hullArt ? picture.hullArt.kind : 'none'}.`;
+  caption(`${picture.name} (${picture.race}): ${picture.columns} by ${picture.rows} tiles, ${picture.rooms.length} rooms, `
+    + `${picture.systems.length} systems, ${picture.doors.length} doors, hull art ${picture.hullArt ? picture.hullArt.kind : 'none'}.`);
+}
+
+// ---- the battle screen (what the host sends) ----------------------------------------------------------------
+
+function listenToHost(): void {
+  host.onHostMessage((message) => {
+    switch (message.kind) {
+      case 'BattleStarted': {
+        inBattle = true;
+        battleView.start(message.pictures, message.playerShipIds);
+        stage.replaceChildren(battleView.root);
+        const size = battleView.size();
+        camera.fitTo(size.width, size.height);
+        caption('Battle. Click a crew member then a tile to move; a weapon then an enemy room to target; space pauses.');
+        break;
+      }
+      case 'Snapshot':
+        battleView.update(message.snapshot);
+        controls.update(message.snapshot);
+        break;
+      case 'Paused':
+        controls.paused = message.paused;
+        document.getElementById('paused-banner')!.hidden = !message.paused;
+        break;
+      case 'BattleEnded':
+        caption(`Battle over: ${message.winner} wins, ${message.reason}. Pick a ship above to go back to the viewer, or type battle for another.`);
+        inBattle = false;
+        break;
+    }
+  });
 }
 
 /** The debug console: Enter runs the line; up and down walk back through the commands typed this session. */
@@ -71,5 +117,10 @@ function wireDebugConsole(): void {
   });
 }
 
+function caption(text: string): void {
+  document.getElementById('ship-caption')!.textContent = text;
+}
+
+listenToHost();
 fillShipPicker();
 wireDebugConsole();

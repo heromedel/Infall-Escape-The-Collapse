@@ -22,6 +22,16 @@ export class Camera {
     this.apply();
   }
 
+  /** Zooms out just enough to show a drawing of this size whole, centred, with a margin. */
+  fitTo(width: number, height: number): void {
+    const box = this.viewport.getBoundingClientRect();
+    const margin = 24;
+    this.zoom = Math.min(1.5, (box.width - 2 * margin) / width, (box.height - 2 * margin) / height);
+    this.x = (box.width - width * this.zoom) / 2;
+    this.y = (box.height - height * this.zoom) / 2;
+    this.apply();
+  }
+
   private listenForDragAndWheel(): void {
     let dragging = false;
     let lastX = 0;

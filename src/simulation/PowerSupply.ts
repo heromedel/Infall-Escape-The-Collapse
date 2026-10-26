@@ -12,6 +12,9 @@ import { ShipSystem } from './Ship';
 
 const BARS_PER_AZC_LEVEL = 5;
 
+/** The order systems take bars when a ship powers up and when the AI shares power: the genre's priorities. */
+export const POWER_ORDER = ['Shields', 'Engines', 'Weapons', 'Weapon Pod', 'Life Support', 'Medbay', 'Crew Teleporter', 'Supershield Generator', 'EVB Dock'];
+
 export class PowerSupply {
   readonly kind: PowerSource['kind'];
   readonly totalBars: number;
@@ -32,6 +35,13 @@ export class PowerSupply {
 
   get barsFree(): number {
     return this.totalBars - this.barsInUse;
+  }
+
+  /** Powers the ship up as it starts a fight: each system in POWER_ORDER takes its full bars while the pool lasts. */
+  assignStartingBars(): void {
+    for (const name of POWER_ORDER) {
+      for (const system of this.systems.filter((candidate) => candidate.name === name)) this.setBars(system, system.maxBars);
+    }
   }
 
   /** Gives a system this many bars, as far as the pool and the system's level allow. Returns what it got. */

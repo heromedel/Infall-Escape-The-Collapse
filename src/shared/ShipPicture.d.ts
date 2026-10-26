@@ -29,6 +29,10 @@ export interface ShipPicture {
 export interface PictureTile {
   column: number;
   row: number;
+  /** The signed ship coordinates (GDD 5G) the simulation uses, for orders. */
+  x: number;
+  y: number;
+  roomId: number;
 }
 
 export interface PictureRoom {

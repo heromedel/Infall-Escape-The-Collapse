@@ -43,6 +43,37 @@ export class ShipDrawing {
     this.root.appendChild(this.crew(picture));
   }
 
+  /** Live crew from a snapshot replace the placeholder crew: same shapes, on the tiles they stand on now. */
+  updateCrew(crew: { id: number; column: number; row: number; race: string; health: number; walking: boolean }[], picture: ShipPicture, shipId: number): void {
+    const old = this.root.querySelector('#crew');
+    const group = this.group('crew');
+    const size = picture.tileSize;
+    const shapeOf = new Map(picture.crew.map((member) => [member.race, member]));
+    for (const member of crew) {
+      const look = shapeOf.get(member.race) ?? picture.crew[0] ?? { race: member.race, shape: 'QuestionMark' as const, colour: picture.powerColour, column: 0, row: 0 };
+      const centreX = member.column * size + size / 2;
+      const centreY = member.row * size + size / 2;
+      const shape = this.crewShape({ ...look, column: member.column, row: member.row }, centreX, centreY);
+      shape.setAttribute('fill', look.colour);
+      shape.setAttribute('stroke', LOOK.crewOutline);
+      shape.setAttribute('stroke-width', '1.5');
+      shape.setAttribute('opacity', member.health <= 0 ? '0.25' : '1');
+      shape.dataset.crewId = String(member.id);
+      shape.dataset.shipId = String(shipId);
+      shape.style.cursor = 'pointer';
+      group.appendChild(shape);
+    }
+    if (old) old.replaceWith(group); else this.root.appendChild(group);
+  }
+
+  /** A damaged or broken system's symbol turns damaged red (GDD 14C); a working one shows the power colour. */
+  updateSystems(systems: { key: string; broken: boolean }[], powerColour: string, damagedColour: string): void {
+    for (const system of systems) {
+      const symbol = this.root.querySelector(`#system-${CSS.escape(system.key.replace(/\s+/g, '-'))}`) as SVGElement | null;
+      if (symbol) symbol.setAttribute('color', system.broken ? damagedColour : powerColour);
+    }
+  }
+
   /** The drawn size in ship pixels, so the camera can centre it. */
   static sizeOf(picture: ShipPicture): { width: number; height: number } {
     return { width: picture.columns * picture.tileSize, height: picture.rows * picture.tileSize };

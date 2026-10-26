@@ -16,6 +16,7 @@ import { RandomSource } from '../src/simulation/RandomSource';
 import { BattleLog } from '../src/simulation/BattleLog';
 import { secondsToTicks } from '../src/simulation/Ticks';
 import { readRaceDefinition, DEFAULT_RACE } from '../src/simulation/content/RaceDefinition';
+import { DEFAULT_DISTANCE_GM } from '../src/simulation/Simulation';
 
 const contentFolder = path.join(__dirname, '..', 'content');
 const shipReader = new ShipFileReader();
@@ -80,6 +81,16 @@ describe('a battle', () => {
     expect(pod.mannedBy?.race.name).toBe('Mecha');
     expect(pod.workingBars).toBe(2);
     expect(simulation.snapshot().squads[0].ships[0].weapons[0].powered).toBe(true);
+  });
+});
+
+describe('the distance between the squads (GDD 3Q)', () => {
+  it('makes a shot fly longer at a longer distance, 1 GM a millisecond plus the on-screen parts', () => {
+    const near = new Simulation(1, weaponsByName, raceByName, 400);
+    const far = new Simulation(1, weaponsByName, raceByName, 2400);
+    expect(near.distanceGm).toBe(DEFAULT_DISTANCE_GM);
+    expect(near.shotFlightTicks).toBe(secondsToTicks(1.0));
+    expect(far.shotFlightTicks).toBe(secondsToTicks(3.0));
   });
 });
 

@@ -1,0 +1,21 @@
+/**
+ * What travels between the host and a client (GDD 4B: the host owns everything; clients send orders and get the
+ * picture back). The window and, later, a LAN client use exactly these. Types only.
+ */
+
+import type { ShipPicture } from './ShipPicture';
+import type { Snapshot } from './Snapshot';
+import type { Order } from './Order';
+
+export type ClientToHost =
+  | { kind: 'Order'; order: Order }
+  | { kind: 'Pause' }
+  | { kind: 'Unpause' };
+
+export type HostToClient =
+  /** Sent once when a battle starts: everything the window needs to draw each ship (the static parts). */
+  | { kind: 'BattleStarted'; pictures: Record<number, ShipPicture>; playerShipIds: number[] }
+  /** Sent every tick while a battle runs, and once more when it ends. */
+  | { kind: 'Snapshot'; snapshot: Snapshot }
+  | { kind: 'Paused'; paused: boolean; by: string }
+  | { kind: 'BattleEnded'; winner: string; reason: string };

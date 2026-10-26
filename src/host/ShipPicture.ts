@@ -8,7 +8,7 @@
 
 import * as fs from 'node:fs';
 import * as path from 'node:path';
-import type { PictureArt, PictureCrew, PictureDoor, PictureSegment, PictureTile, ShipPicture } from '../shared/ShipPicture';
+import type { PictureArt, PictureCrew, PictureDoor, PictureSegment, ShipPicture } from '../shared/ShipPicture';
 import { ShipDefinition, systemKey } from '../simulation/content/ShipDefinition';
 import { DIRECTIONS, Direction, gridIndex, neighbourTile, Tile, tileKey, tilesBetween } from '../simulation/content/Tile';
 import { placeholderShapeOf, enemyPowerColourOf } from '../simulation/content/Palette';
@@ -36,7 +36,7 @@ export function shipPictureOf(entry: ShipEntry, side: Side, content: ContentLibr
     columns: grid.columns,
     rows: grid.rows,
     powerColour,
-    floorTiles: grid.allRoomTiles().map((tile) => grid.at(tile)),
+    floorTiles: grid.allRoomTiles().map((tile) => ({ ...grid.at(tile), x: tile.x, y: tile.y, roomId: roomOfTile.get(tileKey(tile))! })),
     rooms: ship.rooms.map((room) => {
       const topLeft = grid.at({ x: Math.min(room.from.x, room.to.x), y: Math.min(room.from.y, room.to.y) });
       const bottomRight = grid.at({ x: Math.max(room.from.x, room.to.x), y: Math.max(room.from.y, room.to.y) });
@@ -75,7 +75,7 @@ class Grid {
     this.rows = gridIndex(highestY, this.lowestY, ship.centering.y) + 1;
   }
 
-  at(tile: Tile): PictureTile {
+  at(tile: Tile): { column: number; row: number } {
     return {
       column: gridIndex(tile.x, this.lowestX, this.ship.centering.x),
       row: gridIndex(tile.y, this.lowestY, this.ship.centering.y),

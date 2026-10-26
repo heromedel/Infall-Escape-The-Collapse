@@ -9,4 +9,7 @@ contextBridge.exposeInMainWorld('host', {
   shipNames: () => ipcRenderer.invoke('ship-names'),
   shipPicture: (name: string, side: 'player' | 'enemy') => ipcRenderer.invoke('ship-picture', name, side),
   debug: (line: string) => ipcRenderer.invoke('debug', line),
+  /** The client side of the host connection: messages from the host, and messages to it. */
+  onHostMessage: (listener: (message: unknown) => void) => { ipcRenderer.on('host-message', (_event, message) => listener(message)); },
+  sendToHost: (message: unknown) => ipcRenderer.send('client-message', message),
 });

@@ -4,8 +4,12 @@
  */
 
 import { COLOURS } from '../simulation/content/Palette';
+import { secondsToTicks } from '../simulation/Ticks';
 
 export class Settings {
   /** Player Power Color (GDD 14D): Default (Green) > Racial > Specific Color. The colour in use. */
   playerPowerColour: string = COLOURS.powerGreen;
+  /** Turn Mode (GDD 4I): Auto Pause Off > On, and its interval, stored in ticks and shown in seconds. */
+  autoPause = false;
+  autoPauseIntervalTicks = secondsToTicks(10);
 }

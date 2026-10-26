@@ -11,9 +11,9 @@ import { Squad } from './Squad';
 import { Simulation } from './Simulation';
 import { secondsToTicks } from './Ticks';
 import { sameTile } from './content/Tile';
+import { POWER_ORDER } from './PowerSupply';
 
 const THINK_EVERY = secondsToTicks(1);
-const POWER_ORDER = ['Shields', 'Engines', 'Weapons', 'Weapon Pod', 'Life Support', 'Medbay', 'Crew Teleporter', 'Supershield Generator', 'EVB Dock'];
 const MANNING_ORDER = ['Piloting', 'Weapons', 'Weapon Pod', 'Shields', 'Engines'];
 const TARGET_ORDER = ['Shields', 'Weapons', 'Weapon Pod', 'Piloting', 'Engines'];
 
