@@ -229,7 +229,14 @@ step, not to every line; points he agreed to are tagged.
    Door 12: (2,0)   Facing: East   (airlock)
    Door 13: (2,1)   Facing: East   (airlock)
 
-   Conduits: wheel (rim and 4 spokes), weapon mounts 3 and 4 fed twice each, as in the accepted plan
+   Conduits:                       wheel: rim, 4 spokes; mounts 3 and 4 fed twice (W and E exits)
+       (-1,-6,S,E) (0,-6,E,W) (1,-6,S,W) (-1,-5,N,S,E) (0,-5,S,W) (1,-5,N,S)
+       (-1,-4,N,S) (0,-4,N,S) (1,-4,N,S) (-1,-3,N,S,W) (0,-3,N,S) (1,-3,N,S,E)
+       (-2,-2,S,E,W) (-1,-2,N,W) (0,-2,N,S) (1,-2,N,S,E) (-2,-1,N,S) (0,-1,N,S)
+       (1,-1,N,S) (-2,0,N,S) (0,0,N,S) (1,0,N,S) (-2,1,N,E) (-1,1,S,E,W)
+       (0,1) (1,1,N,S,W) (-1,2,N,S) (0,2,N,S) (1,2,N,S) (-1,3,N,S)
+       (0,3,N,S) (1,3,N,S) (-1,4,N,S) (0,4,N,S) (1,4,N,S) (-1,5,N,S)
+       (0,5,N,S) (1,5,N,S) (-1,6,N,E) (0,6,N,E,W) (1,6,N,W)
    Weapons: Gat 3.1 "Triblast" (mount 3), Gat M1 "Pathfinder" (mount 4)
    Mounts: 6
    Crew: 3 Terrans
@@ -396,7 +403,13 @@ Default tag: **Ai-Generated-Proposal (2026-10-22)**; not reviewed yet.
    Door 17: (2,3)   Facing: East   (airlock)
    Door 18: (2,4)   Facing: East   (airlock)
 
-   Conduits: ring, a spur to the Sporewing (the weak point), the Twinshot fed twice, as in the accepted plan
+   Conduits:                       ring; one spur E to the Sporewing; Twinshot fed twice (W exits)
+       (-1,-6,S,E) (1,-6,S,W) (-1,-5,N,S) (1,-5,N,S) (-1,-4,N,S) (1,-4,N,S)
+       (-2,-3,S,E,W) (-1,-3,N,W) (1,-3,N,S) (-2,-2) (-1,-2,E,W) (1,-2)
+       (2,-2,E,W) (-2,-1,N,S) (1,-1,N,S) (-2,0,N,S) (1,0,N,E) (2,0,S,W)
+       (-2,1,N,S) (2,1,N,S) (-2,2,N,S) (2,2,N,S) (-2,3,N,S) (2,3,N,S)
+       (-2,4,N,S) (2,4,N,S) (-2,5,N,E) (-1,5,S,W) (1,5,S,E) (2,5,N,W)
+       (-1,6,N,E) (1,6,N,W)
    Weapons: Gat 2.1 "Twinshot" (mount 3), Sporewing (mount 4)
    Mounts: 6
    Crew: 5 Terrans
@@ -509,6 +522,7 @@ Crew Teleporter    Level 1
 
 Weapons: Sporewing (mount 4)
 Crew: 3 Terrans
+(Conduits are inherited unchanged; the Twinshot feeds now end at the faired-over mount 3, unused.)
 ```
 
 **Ideas considered:** keep the teleporter and drop the guns (picked); keep the Twinshot and drop the teleporter, so

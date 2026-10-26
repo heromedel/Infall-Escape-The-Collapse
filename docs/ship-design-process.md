@@ -25,8 +25,8 @@ and the game build the same ship:
 - **Systems:** keyed by name (plus a label if there are two, e.g. `Weapons A`), with tile, wall and level/power.
   One tile per system. Anything not listed doesn't exist, so Life Support is never left out by accident.
 - **Doors:** numbered, by tile and facing; airlocks are doors facing space. EVA and EVB Docks sit next to one.
-- **Other data:** hull, reactor (or Mecha self-power, Terran conduits), starting weapons and crew, and the number of
-  weapon mounts (positions come with the hull art).
+- **Other data:** hull, reactor (or Mecha self-power; Terran conduits tile by tile with directions, GDD 5H),
+  starting weapons and crew, and the number of weapon mounts (positions come with the hull art).
 - **Loadouts:** as patches of the base ship (`Inherit: Patch`): list only what changes, `removed` for what goes;
   weapons and crew lists are given whole. A loadout derives from the base ship only.
 
