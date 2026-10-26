@@ -323,7 +323,7 @@ about 16 fuel and about 10 scrap on Normal (hard-coded, from memory) and, for th
 - **Proposed (heromedel, 2026-10-26):** each self-powered bar on a Mecha ship adds 8.47 Mawjig to its system's
   price, replacing the ordinary reactor-bar price (3.63 for bars 1–5, 4.84 for 6–10). A self-powered system is always
   on and never competes for power; the bar can't be moved, which is its downside. Over a 20-bar ship, power costs
-  about 55% more than a reactor would (169.40 against 108.90). Recorded in `system-prices.md`.
+  about 55% more than a reactor would (about 169 against about 109). Recorded in `system-prices.md`.
 - **New totals for Ship Designs** (crew extra, as before):
 
   | Light Attack Frame | Own power, old → new | Ship total, old → new | Band 1 wreck pays |
