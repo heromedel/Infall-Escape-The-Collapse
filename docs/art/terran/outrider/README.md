@@ -80,7 +80,7 @@ fitted 17 rooms.
 | `outrider-hull.png`, `outrider-hull-2x.png` | PNG exports at 1× and 2×, transparent |
 | `outrider-hull-mounts.svg`, `outrider-hull-mounts-preview.png` | Review copy showing the mount spots |
 | `stages.png`, `squad-test.png` | Review sheets of the final hull |
-| `tools/build.py` | Builds every version and stage: `python3 build.py OUT_DIR [version numbers]` (17 is the final) |
+| `tools/build.py` | Builds the final hull (version 17) and its stages: `python3 build.py OUT_DIR`. Its passes 1–7 run in order from version 1; the other versions' code is in git history |
 | `tools/check_mounts.py` | Checks every mount sits on the hull's edge with a clear line forward, and that there are at least 4: `python3 check_mounts.py HULL.svg ...` (used for the Outrider and the pirate dagger) |
 | `tools/art_kit.py` | Shared hull drawing kit (plates, stages, mounts) |
 | `tools/render.js` | SVG to PNG: `node render.js in.svg out.png [scale] [background]` |

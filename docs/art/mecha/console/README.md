@@ -24,5 +24,4 @@ pixel or two (a slit at the base). A narrow armoured tower with the screen and t
 
 | File | What it does |
 |---|---|
-| `tools/consoles.py` | The first console shapes, with and without ports: `python3 consoles.py ../../crew/mecha-crew-sheet.svg OUT.svg` |
-| `tools/tower_px.py` | The picked console: `python3 tower_px.py --picked ../mecha-console-tower.svg`. The option sheet (three cheek shapes, with ports, the typing frame over each): `python3 tower_px.py ../../crew/mecha-crew-sheet.svg OUT.svg` (writes `tower-*.svg` beside it) |
+| `tools/tower_px.py` | The picked console: `python3 tower_px.py ../mecha-console-tower.svg`. Also used by the Light Attack Frame floor plans and the Servicing Core. The option-sheet code is in git history |

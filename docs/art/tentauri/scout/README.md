@@ -71,7 +71,7 @@ Terran. Prismatic mother-of-pearl colours, light from the upper left.
 
 | File | What it does |
 |---|---|
-| `tools/tentauri.py` | Builds the hulls: `python3 tentauri.py OUT_DIR v13` (v13 is the final; no names builds every version and stage) |
-| `tools/tentauri_weapons.py` | Builds the Defense Laser styles: `python3 tentauri_weapons.py OUT_DIR` |
+| `tools/tentauri.py` | Builds the final hull (v13) and its stages: `python3 tentauri.py OUT_DIR` (the other versions' code is in git history) |
+| `tools/tentauri_weapons.py` | Builds the Defense Laser: `python3 tentauri_weapons.py OUT_DIR` |
 | `tools/tentauri_floor.py` | Builds the floor layer, armed preview and plan: `python3 tentauri_floor.py ../tentauri-scout-hull.svg OUT_DIR` |
 | `tools/art_kit.py`, `render.js`, `sheet.js` | Shared drawing kit, SVG-to-PNG, review sheets |

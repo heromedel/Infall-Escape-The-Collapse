@@ -1,15 +1,12 @@
 """Mecha console, the tower, as pixel art on the 35 x 35 tile (north wall at the top).
 
-Usage: python3 tower_px.py ../../crew/mecha-crew-sheet.svg OUT.svg
-Three cheek shapes. Each part is a pixel mask; outlines, lit and shaded edges and a gritty shade variation are worked
+Usage: python3 tower_px.py OUT.svg   (writes the picked console: stepped cheeks, no ports)
+Three cheek shapes (blade, stepped, claw; the option sheets are in git history). Each part is a pixel mask; outlines, lit and shaded edges and a gritty shade variation are worked
 out per pixel from the Mecha palette. The picked console has no ports (they only lined up with the hands on the north
 wall); the option sheet was made with them, at x 9 and 26, y 3-4.
 """
 import random
-import re
 import sys
-
-from consoles import frame, FLOOR, T
 
 OUTLINE, SHADOW, DARK, ARMOUR, EDGE = "#0a0a0e", "#1c1d24", "#2e3039", "#4a4d5a", "#7a7f8e"
 PURPLE, DEEP = "#aa28eb", "#5a128c"
@@ -109,26 +106,6 @@ def to_svg(px):
         f'<rect x="{x}" y="{y}" width="1" height="1" fill="{c}"/>' for (x, y), c in px.items()) + "</g>"
 
 
-KINDS = [("Blade cheeks", "blade"), ("Stepped cheeks", "stepped"), ("Claw cheeks", "claw")]
-
-if __name__ == "__main__" and sys.argv[1:2] == ["--picked"]:
+if __name__ == "__main__":
     # the picked console: stepped cheeks, no ports
-    open(sys.argv[2], "w").write(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 35" width="35" height="35">{to_svg(console("stepped"))}</svg>\n')
-elif __name__ == "__main__":
-    sheet = open(sys.argv[1]).read()
-    typing = frame(sheet, 3, 15)
-    S = 6
-    cells = []
-    for i, (name, kind) in enumerate(KINDS):
-        x0 = 20 + i * (T * S + 30)
-        tile = f'<rect width="{T}" height="{T}" fill="{FLOOR}"/><path d="M0,0 H35" stroke="#16181c" stroke-width="2"/>'
-        art = to_svg(console(kind, ports=True))
-        open(f"tower-{kind}.svg", "w").write(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 35" width="35" height="35">{art}</svg>\n')
-        cells.append(f'<text x="{x0 + T * S / 2}" y="24" font-size="14" fill="#e6ebf2" text-anchor="middle" font-family="sans-serif">{i + 1}. {name}</text>'
-                     f'<g transform="translate({x0},36) scale({S})">{tile}{art}</g>'
-                     f'<g transform="translate({x0},{36 + T * S + 14}) scale({S})">{tile}{art}{typing}</g>'
-                     f'<g transform="translate({x0 + T * S - 2 * T - 6},{36 + 2 * (T * S + 14)})">{tile}{art}</g>'
-                     f'<g transform="translate({x0 + T * S - T},{36 + 2 * (T * S + 14)})">{tile}{art}{typing}</g>')
-    W = 20 + 3 * (T * S + 30)
-    H = 36 + 2 * (T * S + 14) + T + 20
-    open(sys.argv[2], "w").write(f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}"><rect width="100%" height="100%" fill="#141920"/>{"".join(cells)}</svg>')
+    open(sys.argv[-1], "w").write(f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 35" width="35" height="35">{to_svg(console("stepped"))}</svg>\n')
