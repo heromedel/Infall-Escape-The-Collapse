@@ -68,9 +68,18 @@ describe('a battle', () => {
   });
   it('lets a Mecha crew member power the weapon pod up to its level by integrating', () => {
     // The pod has one bar of its own and the laser needs two; an integrating HalfMech makes up the second.
-    const fired = [1, 2, 3, 4, 5].map(fight).filter((simulation) =>
-      simulation.log.events.some((event) => event.name === 'shot_fired' && event.fields.ship === 'Light Attack Frame'));
-    expect(fired.length).toBeGreaterThan(0);
+    const simulation = new Simulation(1, weaponsByName, raceByName);
+    const squad = simulation.addSquad('Enemy', 'enemy', 10, [shipFile('light-attack-frame')]);
+    const frame = squad.ships[0];
+    const pod = frame.system('Weapon Pod')!;
+    expect(pod.workingBars).toBe(1);
+    for (let ticks = 0; ticks < secondsToTicks(10); ticks++) {
+      simulation.applyOrders(battleOrders(simulation, squad));
+      simulation.advanceOneTick();
+    }
+    expect(pod.mannedBy?.race.name).toBe('Mecha');
+    expect(pod.workingBars).toBe(2);
+    expect(simulation.snapshot().squads[0].ships[0].weapons[0].powered).toBe(true);
   });
 });
 
