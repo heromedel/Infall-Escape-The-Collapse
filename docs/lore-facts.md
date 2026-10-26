@@ -131,8 +131,8 @@ source doc carries the tag heromedel's words give it.
 
 ### Unknown to most other races
 
-- The Mecha call themselves HalfMechs. They are not robots, but a small race of childlike, genetically modified cyborgs who live inside semi-cybernetic mech suits. (Race profiles, Mecha names, what they are; Proposed)
-- HalfMechs are childlike in size and attitude, and oddly adorable for their viciousness. (Race profiles, Mecha what they are; Proposed)
+- The Mecha call themselves HalfMechs. They are not robots, but a small race of halfling-like, genetically modified cyborgs who live inside semi-cybernetic mech suits. (Race profiles, Mecha names, what they are; Proposed)
+- HalfMechs are halfling-like in size and attitude, and oddly adorable for their viciousness. (Race profiles, Mecha what they are; Proposed)
 - The HalfMechs' origin is lost to time, but genetic evidence suggests they were Terran, bred to fit inside mech suits. Their creation, and possibly the power the suits give them, made them immature, violent and greedy, like cruel children. (Race profiles, Mecha origin; Proposed)
 - Outside their suits, HalfMechs are incredibly bashful if not violent, but their overconfidence keeps them from being truly shy. (Race profiles, Mecha out of their suits; Proposed)
 
