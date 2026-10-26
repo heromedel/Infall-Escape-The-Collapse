@@ -1,8 +1,19 @@
-# Mecha Cybernetic Servicing Core (work in progress)
+# Mecha Cybernetic Servicing Core
 
 **Date:** 2026-10-26
-**Status:** test options, not picked yet. heromedel asked for a new Mecha design for the Core, to replace the
-placeholder cradle in the Light Attack Frame floor plans (a medbay cross under a gantry).
+**Status:** **picked by heromedel (2026-10-26): option N**, now used in the Light Attack Frame floor plans
+(`mecha/light-attack-frame/pixel-redo/`). heromedel asked for a new Mecha design for the Core, to replace the
+placeholder cradle there (a medbay cross under a gantry).
+
+![The pick, N, at 8x](review/n-8x.png)
+
+**The pick (N):** a stepped wall panel with a dark console-style screen holding the medbay symbol in Mecha power
+purple; two tapered servicing arms hanging either side, each with a purple light inside it near its foot; a tall
+stand table between them, clear of the arms, with four small flared shoulders, each with a purple light. Unlike other
+systems it **always faces up** and is never turned (heromedel). `servicing_core()` in `tools/core_px.py` gives it;
+the floor plan tool draws it from there. Files: `mecha-servicing-core.svg`, `.png` (1x), `-8x.png`.
+
+## Option rounds
 
 ![The options](review/core-options.png)
 

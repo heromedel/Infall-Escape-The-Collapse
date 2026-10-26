@@ -298,6 +298,9 @@ def core_n():
     return px
 
 
+servicing_core = core_n   # heromedel's pick (2026-10-26)
+
+
 OPTIONS = [("A. Wall core and arms", core_a), ("B. Clamp ring", core_b), ("C. Service arch", core_c), ("D. A's panel, C's arms", core_d),
            ("E. D, arms over B's table", core_e), ("F. D, short arms, B's table", core_f),
            ("G. Long arms clear of the table", core_g),
