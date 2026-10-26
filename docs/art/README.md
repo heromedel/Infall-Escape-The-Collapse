@@ -49,12 +49,12 @@ every mount sits on the hull's edge with a clear line forward, and that a hull p
 
 | Piece | Status |
 |---|---|
-| [`terran/outrider/`](terran/outrider/) | SC-1 Outrider hull: accepted by Ship Designs. Floor layout tests 1–4 in `floor-layout-tests/`. |
-| [`terran/pirate-hijacker/`](terran/pirate-hijacker/) | Terran Pirate Hijacker hull, Hijacker and Cutpurse loadouts, squad view and floor plans: accepted by Ship Designs. |
-| [`tentauri/scout/`](tentauri/scout/) | Tentauri scout hull, armed preview and floor plan with organic consoles: accepted by Ship Designs, including the later changes (segmented Defense Laser, edge mounts, organs on the walls; 2026-10-25). |
+| [`terran/outrider/`](terran/outrider/) | SC-1 Outrider hull: accepted by Ship Designs (pass 7, six edge mounts, re-accepted 2026-10-26). Floor layout test 4 in `floor-layout-tests/` (tests 1–3 in git history). |
+| [`terran/pirate-hijacker/`](terran/pirate-hijacker/) | Terran Pirate Hijacker hull, Hijacker and Cutpurse loadouts, squad view and floor plans: accepted by Ship Designs (one-tile AZC, six edge mounts, no hull hatches: re-accepted 2026-10-26). |
+| [`tentauri/scout/`](tentauri/scout/) | Tentauri scout hull, armed preview and floor plan with organic consoles: accepted by Ship Designs, including the later changes (segmented Defense Laser, edge mounts, organs on the walls; 2026-10-25), then six edge mounts, toned-down side thrusters and Tentauri pink symbols (2026-10-26). |
 | [`tentauri/crew/`](tentauri/crew/) | heromedel's Tentauri crew sprite sheet (20 rows, with typing at 1–3 extra systems) and the tentacle reach prototype, saved as the crew reference. |
 | [`mecha/light-attack-frame/pixel-redo/`](mecha/light-attack-frame/pixel-redo/) | **Current Mecha Light Attack Frame**, accepted by Ship Designs (2026-10-25): the sleek battle-cross hull (also the Mecha hull style reference), pixel floor plans, pixel weapons and armed previews for both loadouts. |
-| [`mecha/servicing-core/`](mecha/servicing-core/) | The Mecha Cybernetic Servicing Core (heromedel's pick, option N, always upright), used in the Light Attack Frame plans; the option rounds kept in `review/`. |
+| [`mecha/servicing-core/`](mecha/servicing-core/) | The Mecha Cybernetic Servicing Core (heromedel's pick, option N, always upright), used in the Light Attack Frame plans (option rounds in git history). |
 | [`mecha/console/`](mecha/console/) | The Mecha system console (pixel tower with stepped cheeks, no arm ports), picked by heromedel. |
 | [`mecha/pilot/`](mecha/pilot/) | heromedel's HalfMech pilot out of the suit (base designs and a top-down crew sheet), saved for reference; not planned for the game. |
 | [`mecha/crew/`](mecha/crew/) | heromedel's Mecha crew sprite sheet (16 rows, with power-pulse typing), saved as the crew reference. |
