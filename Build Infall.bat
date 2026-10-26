@@ -5,9 +5,13 @@ rem the folder, kept for the subroutines (inside a CALLed label, %0 is the label
 set "HERE=%~dp0"
 title Infall: Escape The Collapse - Build
 rem Builds Infall from the source in this folder into build\. "Play Infall.bat" launches the result.
-rem First run installs Node.js if it is missing (with winget) and the game's packages (npm install, which
-rem downloads Electron once, a few hundred MB); later builds take seconds.
+rem First run downloads Node.js into tools\ if the computer has none (about 30 MB, once; nothing is installed on
+rem Windows) and the game's packages (npm install, which downloads Electron once, a few hundred MB); later builds
+rem take seconds.
 
+set "TOOLS=%~dp0tools"
+set "NODE=%TOOLS%\node"
+set "NODE_URL=https://nodejs.org/dist/v22.22.0/node-v22.22.0-win-x64.zip"
 set "BUILT="
 
 rem the version about to be built (and its branch), shown before anything is chosen
@@ -79,8 +83,7 @@ exit /b 0
 rem ---- :construct: Node.js and the packages if missing, then the build ----
 :construct
 echo.
-where node >nul 2>nul
-if errorlevel 1 call :node || exit /b 1
+call :node || exit /b 1
 if not exist node_modules call :packages || exit /b 1
 
 echo Building Infall...
@@ -97,22 +100,14 @@ echo To play, run "Play Infall.bat".
 set "BUILT=1"
 exit /b 0
 
-rem ---- :node: installs Node.js with winget; Windows needs a new window to see it afterwards ----
+rem ---- :node: Node.js from tools\ when it is there, else the computer's own, else a download into tools\ ----
 :node
-echo ==========================================================
-echo  Node.js is not installed. Installing it with winget ...
-echo ==========================================================
-winget install --id OpenJS.NodeJS.LTS --exact --accept-source-agreements --accept-package-agreements
-if errorlevel 1 (
-    echo.
-    echo Node.js could not be installed automatically. Install it from https://nodejs.org and run this again.
-    exit /b 1
-)
-echo.
-echo Node.js is installed. Close this window, open "Build Infall.bat" again, and the build will carry on.
-echo (A new window is needed so Windows picks up the new program.)
-pause
-exit /b 1
+if exist "%NODE%\node.exe" ( set "PATH=%NODE%;%PATH%" & exit /b 0 )
+where node >nul 2>nul
+if not errorlevel 1 exit /b 0
+call :fetch "Node.js" "%NODE_URL%" "%TOOLS%\node.zip" "%NODE%" 20000000 || exit /b 1
+set "PATH=%NODE%;%PATH%"
+exit /b 0
 
 rem ---- :packages: the first build gathers the game's packages, Electron among them ----
 :packages
@@ -145,4 +140,36 @@ powershell -NoProfile -ExecutionPolicy Bypass -Command ^
   "$s.Description = 'Infall: Escape The Collapse'; $s.Save()"
 if errorlevel 1 ( echo The shortcut could not be made: see the message above. The game itself is built. & exit /b 1 )
 echo Shortcut ready: "Infall" on your desktop.
+exit /b 0
+
+rem ---- :fetch name url zip dest minbytes ----
+rem Downloads with curl (resumes a cut-off download on the next run), checks the size, unpacks the zip's
+rem single top folder as dest. Invoke-WebRequest is only the fallback: it holds the file in memory and
+rem gives up on any hiccup.
+:fetch
+echo Downloading %~1 into tools\ ...
+if not exist "%TOOLS%" mkdir "%TOOLS%"
+where curl.exe >nul 2>&1
+if errorlevel 1 (
+    powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+      "$ProgressPreference='SilentlyContinue'; [Net.ServicePointManager]::SecurityProtocol='Tls12';" ^
+      "Invoke-WebRequest '%~2' -OutFile '%~3'"
+) else (
+    curl.exe -L --fail --retry 5 --retry-delay 3 -C - -o "%~3" "%~2"
+)
+if not exist "%~3" ( echo The %~1 download failed: nothing was saved. Check the connection and run this again. & exit /b 1 )
+for %%s in ("%~3") do set "GOT=%%~zs"
+if %GOT% LSS %~5 (
+    echo The %~1 download stopped early ^(%GOT% bytes^). Run this again: it carries on where it left off.
+    exit /b 1
+)
+powershell -NoProfile -ExecutionPolicy Bypass -Command ^
+  "$ProgressPreference='SilentlyContinue';" ^
+  "Expand-Archive '%~3' '%~3.tmp' -Force;" ^
+  "$d = Get-ChildItem '%~3.tmp' -Directory | Select-Object -First 1; Move-Item $d.FullName '%~4';" ^
+  "Remove-Item '%~3.tmp' -Recurse -Force; Remove-Item '%~3'"
+if not exist "%~4" (
+    echo The %~1 zip could not be unpacked. Delete "%~3" and run this again.
+    exit /b 1
+)
 exit /b 0

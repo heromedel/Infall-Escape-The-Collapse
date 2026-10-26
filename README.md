@@ -6,7 +6,7 @@ document); this is the game itself, started 2026-10-26 on the Goal P prototype (
 ## Running it
 
 On Windows, `Build Infall.bat` is the build menu: build, build with a desktop shortcut, or build and play. The first
-run installs Node.js if it is missing and the game's packages. `Play Infall.bat` launches the built game and never
+run downloads Node.js into `tools/` if the computer has none, and the game's packages. `Play Infall.bat` launches the built game and never
 builds on its own, so build again after the code changes. By hand, on any system:
 
     npm install

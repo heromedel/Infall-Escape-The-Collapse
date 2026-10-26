@@ -3,6 +3,8 @@ setlocal
 cd /d "%~dp0"
 title Infall: Escape The Collapse
 rem Launches the built game. It never builds on its own: run "Build Infall.bat" after the code changes.
+rem Uses the Node.js the build put in tools\, if there is one; otherwise the computer's own.
+if exist "%~dp0tools\node\node.exe" set "PATH=%~dp0tools\node;%PATH%"
 
 if not exist build\main.js (
     echo Infall has not been built yet. Run "Build Infall.bat" first.
