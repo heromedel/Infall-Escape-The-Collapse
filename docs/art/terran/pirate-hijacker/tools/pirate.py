@@ -15,7 +15,7 @@ from art_kit import Hull, rounded_path, symmetric, mirror_x, shade, INK  # noqa:
 
 W, H, CX = 480, 760, 240
 
-# falling Gatos: darker colours (race profiles, Terrans 1), kept restrained
+# falling GATOS: darker colours (race profiles, Terrans 1), kept restrained
 HULL = "#545b65"
 HULL_DARK = "#434951"
 HULL_LIGHT = "#68707b"

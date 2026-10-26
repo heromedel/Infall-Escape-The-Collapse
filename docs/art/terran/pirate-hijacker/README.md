@@ -31,7 +31,7 @@ Designs):
 - **Fittings:** a narrow swept canopy, a dorsal teleporter emitter and two engines. The flank airlock hatches and
   the two dorsal hatches were removed on 2026-10-26 (art rules: no marked exterior doors); the airlocks are in the
   floor plan.
-- **No emblem.** There is no standard Gatos emblem (Decided), and heromedel's review asked for none or a small one.
+- **No emblem.** There is no standard GATOS emblem (Decided), and heromedel's review asked for none or a small one.
 
 ## History
 
