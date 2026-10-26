@@ -108,6 +108,29 @@ which with the shared pools (section 3) lands near FTL's 647, as the measuring s
 Each goal lists what must exist. "Exists" means in the docs, priced and checked, in the form a coder can build from:
 ships in `ship-suggestions.md`, weapons in the cost tables, events in Lori's event files, squads in a squad file.
 
+### Goal P: first prototype
+
+**Ai-Generated-Proposal (2026-10-26).** Goal A is the smallest thing a player could call a game; this is the smallest
+thing the coder can run. Everything in it exists already in the docs. Each step after it (add a jump, a store, an
+event, a second squad) is one line between P and A, so the coder never faces Goal A as one jump. LAN preparation
+stays step 0 (heromedel), even if the first build is played alone.
+
+| Area | Needed | Exists |
+|---|---|---|
+| Ships | 1 player ship and 1 enemy ship, loaded from their XML (GDD 5F–5L), drawn with the missing-art fallback (5K): walls, grey tiles, system icons, door rectangles | Outrider XML; Cutpurse or Light Attack Frame XML (`ship-suggestions.md`) |
+| Squads | 1 enemy squad of 1 ship, hardcoded | Terran Pirates Low row, or one half of the Light Attack Pair |
+| Weapons | 1 per side, lasers only | Gat 3.1, Gat 2.1 (cost tables); a weapon tile with missing art shows its name (8J) |
+| Crew | 1 or 2 per ship, placeholder race icons (12D) in power colours (14D); walk, man a system, repair, fight | icon list and colours in the GDD; no name list needed |
+| Systems | power, shields, engines, weapons, piloting, life support, doors; FTL-style power bars with the 20 ticks/s loop | names and prices exist; no AZC or conduits yet (Terran ship runs as a plain reactor ship for P) |
+| Map | 2 clusters and 1 jump, hardcoded; Mawjig shown and spent (1.21) | 6C Decided |
+| Encounter | 1 hardcoded fight, no event text; win when the enemy is blown up or its crew dies, lose the same way (1F) | 1F Decided |
+| Screens | battle screen with pause, power, targeting and crew orders; a debug panel (give Mawjig, spawn, kill) | mockups only |
+| Save | one hand-readable save with the seed, written and reloaded once | coding rule 11 |
+
+Steps from P to A, each one line of work: AZC and conduits on the Terran ship; the Wait action and the collapse
+counter; a generated map of one band; the event window with one of Lori's opening texts; a store; the second
+squad; host and join over LAN; the remaining Goal A rows.
+
 ### Goal A: minimum playable prototype
 
 One playable race, a short run, every core loop present once.
