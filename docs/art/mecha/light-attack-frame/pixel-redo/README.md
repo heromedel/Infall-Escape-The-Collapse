@@ -84,11 +84,15 @@ every Terran ship is a rocket or a shuttle.
   door slabs, airlocks only in the floor plan (two, in the spare bay, never marked on the hull). Consoles are the
   Mecha tower (no ports) turned to face their wall, with the system symbol upright in Mecha power purple: Piloting and
   Shields on the command deck's front wall, Doors on its side, the weapon pod (Hull Laser) or EVB Dock console (Suit
-  Dock) on the weapon bay's outer wall. The Servicing Core's cradle (two tiles against the core room's south wall) and
-  the Suit Dock's launch clamp are big machines crew walk over. No conduits: every system carries its own power. The
-  build checks every room sits under the hull, no console stands on a door tile, one console per tile, every door
-  joins two rooms and every airlock opens to space.
-  - **Two frames (Ship Designs, agreed with heromedel), same hull art, both loadouts** (`frames.png`):
+  Dock) on the weapon bay's outer wall. The Servicing Core's cradle is a single tile (the core room's free corner),
+  which crew walk over. In the Suit Dock loadout the weapon bay has an airlock on its outer wall, on the tile next to
+  the EVB Dock console (the dock sits next to an airlock; art rules); the Hull Laser loadout has no airlock there, as
+  the weapon pod has nothing to do with airlocks. No conduits: every system carries its own power. The build checks
+  every room sits under the hull, no console stands on a door tile, one console per tile, no system takes more than
+  one tile, the EVB Dock is next to an airlock, every door joins two rooms and every airlock opens to space.
+  - **2026-10-26 changes (heromedel's rules):** the Core's cradle went from two tiles to one, and the Suit Dock's
+    launch clamp was removed in favour of the airlock beside the EVB Dock.
+  - **Two frames (Ship Designs, agreed with heromedel; accepted 2026-10-25), same hull art, both loadouts** (`frames.png`):
     - **Standard** (`plan-standard-*`): the stern split into two 2 × 1 rooms with a door between, Engines in the
       port room and Life Support in the starboard room. The Core's door opens into the engine room.
     - **Open stern** (`plan-open-stern-*`), the alternate, more vulnerable frame: Engines and Life Support share one
