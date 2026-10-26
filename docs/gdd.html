@@ -332,6 +332,7 @@ Doing Fine, Struggling and Doomed are the owning race's state at this cluster, n
 <h2 id="modding">11. Modding &amp; Data Format</h2>
 <div class="pt"><b>A:</b> <span class="tag proposed">Proposed</span> Each ship is a self-contained folder (or zipped folder) holding every file it needs; adding a ship means dropping in its folder.</div>
 <div class="pt"><b>B:</b> <span class="tag proposed">Proposed</span> Weapons, and possibly other content, follow the same pattern: e.g. a folder in <code>Weapons/</code> containing its icon art, ship-mounted art, and a data file labelled as a weapon.</div>
+<div class="pt"><b>C:</b> <span class="tag proposed">Proposed</span> <b>Saved games.</b> Once the game can save, a save holds its own copy of every ship folder or zip in play, including the art, crew and all other data. A save therefore runs exactly as it was, even if the original files have since changed or are missing. A save also holds logs, such as a game log, a squad log and a debug log, and others can be added. Each ship&rsquo;s folder holds a log of that ship&rsquo;s entire history, which stays with the ship.</div>
 
 <h2 id="prototypes">12. Prototypes &amp; Mockups</h2>
 <div class="pt"><b>A:</b> <span class="tag proposed">Proposed</span> Small JavaScript demos built on art mockups to try ideas before committing to them, e.g. the per-ship power display.</div>
@@ -444,6 +445,7 @@ The icons themselves are made by whoever builds the demo; this is only the list.
   <tr><td>2026-10-26</td><td>Placeholder race icons for demos and prototypes: a list of shapes, one per race, Likely (12D); coloured by power colour in other factions, Proposed (12E).</td></tr>
   <tr><td>2026-10-26</td><td>A weapon tile with missing art could show a square with its name typed in, Proposed (8J).</td></tr>
   <tr><td>2026-10-26</td><td>Art can be SVG or PNG (10A).</td></tr>
+  <tr><td>2026-10-26</td><td>Saved games keep their own copy of every ship folder, plus game, squad and debug logs and a history log in each ship folder, Proposed (11C).</td></tr>
 </table>
 
 </main>
