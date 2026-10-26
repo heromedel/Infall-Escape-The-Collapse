@@ -91,7 +91,7 @@ every Terran ship is a rocket or a shuttle.
   every room sits under the hull, no console stands on a door tile, one console per tile, no system takes more than
   one tile, the EVB Dock is next to an airlock, every door joins two rooms and every airlock opens to space.
   - **2026-10-26 changes (heromedel's rules):** the Core's cradle went from two tiles to one, and the Suit Dock's
-    launch clamp was removed in favour of the airlock beside the EVB Dock.
+    launch clamp was removed in favour of the airlock beside the EVB Dock. Re-accepted by Ship Designs (78aa3d0).
   - **Two frames (Ship Designs, agreed with heromedel; accepted 2026-10-25), same hull art, both loadouts** (`frames.png`):
     - **Standard** (`plan-standard-*`): the stern split into two 2 × 1 rooms with a door between, Engines in the
       port room and Life Support in the starboard room. The Core's door opens into the engine room.
