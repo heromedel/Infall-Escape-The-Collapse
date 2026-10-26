@@ -21,6 +21,7 @@ const HUMAN_LINES: Record<string, (fields: LogFields) => string> = {
   'content.symbol_missing': (f) => `System "${f.system}" has no symbol file; it draws as a lettered square.`,
   'content.loaded': (f) => `Content loaded: ${f.ships} ships, ${f.systems} systems.`,
   'debug.command': (f) => `Debug command: ${f.line}`,
+  'debug.reply': (f) => `${f.command} answered: ${String(f.reply).split('\n')[0]}`,
   'debug.unknown_command': (f) => `No such debug command: ${f.command}. Type help.`,
 };
 

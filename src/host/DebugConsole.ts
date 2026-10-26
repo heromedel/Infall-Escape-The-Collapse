@@ -32,7 +32,9 @@ export class DebugConsole {
       this.log.event('debug.unknown_command', { command: name });
       return `No such command: ${name}. Type help.`;
     }
-    return command.run(arguments_);
+    const reply = command.run(arguments_);
+    this.log.event('debug.reply', { command: name, reply });
+    return reply;
   }
 
   private helpText(): string {

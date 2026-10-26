@@ -64,6 +64,9 @@ describe('the player power colour setting', () => {
     const { parsePowerColour } = await import('../src/simulation/content/Palette');
     expect(parsePowerColour('mecha')).toBe(COLOURS.mechaPurple);
     expect(parsePowerColour('#AA28EB')).toBe('#AA28EB');
+    expect(parsePowerColour('ffffff')).toBe('#FFFFFF');
+    expect(parsePowerColour('blue')).toBe(COLOURS.azuretheaBlue);
+    expect(parsePowerColour('power blue')).toBe(COLOURS.azuretheaBlue);
     expect(parsePowerColour('plaid')).toBeUndefined();
   });
 });

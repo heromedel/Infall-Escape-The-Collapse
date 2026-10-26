@@ -51,12 +51,30 @@ export function powerColourOf(name: string): string {
   return POWER_COLOUR_BY_NAME[name] ?? COLOURS.powerGreen;
 }
 
-/** A power colour from a palette name ("Mecha", "Pirate") or a hex value ("#aa28eb"); nothing if it is neither. */
+/** The plain colour words of the palette, so "blue" means Azurethea power blue. */
+export const POWER_COLOUR_BY_WORD: Record<string, string> = {
+  green: COLOURS.powerGreen,
+  orange: COLOURS.pirateOrange,
+  purple: COLOURS.mechaPurple,
+  pink: COLOURS.tentauriPink,
+  blue: COLOURS.azuretheaBlue,
+  'yellow-green': COLOURS.sentiYellowGreen,
+  magenta: COLOURS.whispwraithMagenta,
+  silver: COLOURS.lykarioSilver,
+  flesh: COLOURS.malphenFlesh,
+};
+
+/**
+ * A power colour from a race or palette name ("Mecha", "Pirate"), a colour word ("blue"), or a hex value with or
+ * without its # ("aa28eb"); nothing if it is none of these. Several words are joined, so "power blue" works.
+ */
 export function parsePowerColour(text: string): string | undefined {
-  const trimmed = text.trim();
-  if (/^#[0-9a-f]{6}$/i.test(trimmed)) return trimmed.toUpperCase();
-  const match = Object.keys(POWER_COLOUR_BY_NAME).find((name) => name.toLowerCase() === trimmed.toLowerCase());
-  return match ? POWER_COLOUR_BY_NAME[match] : undefined;
+  const trimmed = text.trim().replace(/^power\s+/i, '');
+  if (/^#?[0-9a-f]{6}$/i.test(trimmed)) return `#${trimmed.replace('#', '')}`.toUpperCase();
+  const wanted = trimmed.toLowerCase();
+  const byName = Object.keys(POWER_COLOUR_BY_NAME).find((name) => name.toLowerCase() === wanted);
+  if (byName) return POWER_COLOUR_BY_NAME[byName];
+  return POWER_COLOUR_BY_WORD[wanted];
 }
 
 /**
