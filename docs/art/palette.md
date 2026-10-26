@@ -9,12 +9,19 @@ one place.
 | Pirate power orange | `#FF8500` | The orange for powered pirate systems: made to look as vivid as power green (the most saturated orange a screen can show, at the lightness nearest power green's). Replaces `#FFB070`, which matched in numbers but looked pale | **Decided (2026-10-25)** |
 | Mecha power purple | `#AA28EB` | The Mecha's accent: visor, chest lights, and the start of the power pulse when they power a system | **Decided (2026-10-25)** |
 | Tentauri power pink | `#FF5ECA` | The Tentauri's power colour ("bubblegum matched", liked by heromedel) | **Likely (2026-10-26)** |
-| Azurethea power blue | `#2E7BFF` | The Azurethea's power colour | Blue: **Likely (2026-10-26)**; the value: **Ai-Generated-Proposal** |
+| Azurethea power blue | `#4F8FFF` | The Azurethea's power colour | Blue: **Likely (2026-10-26)**; the value: **Ai-Generated-Proposal** |
 | Senti-GPH power yellow-green | `#D2FF00` | The Senti-GPH's power colour; kept yellow enough to tell from power green | Yellow-green: **Likely (2026-10-26)**; the value: **Ai-Generated-Proposal** |
 | Whispwraith power magenta | `#FF00E6` | The Whispwraith's power colour; the closest of all to another race's (between Tentauri pink and Mecha purple) | Magenta: **Proposed (2026-10-26)**; the value: **Ai-Generated-Proposal** |
-| Lykario power silver | `#C9D1DC` | The Lykario's power colour; faint on light floors, so it may need a dark outline there | Silver: **Likely (2026-10-26)**; the value: **Ai-Generated-Proposal** |
+| Lykario power silver | `#D1DBE7` | The Lykario's power colour; faint on light floors, so it may need a dark outline there | Silver: **Likely (2026-10-26)**; the value: **Ai-Generated-Proposal** |
 | Malphen power flesh | `#FFA480` | The Malphen's power colour, a fleshy pink-orange, kept pale so it doesn't read as cut-off red or pirate orange | Fleshy pink-orange: **Likely (2026-10-26)**; the value: **Ai-Generated-Proposal** |
 
+- **Checked against power green (2026-10-26):** power green has a perceived lightness of 0.89 and saturation (chroma)
+  of 0.23 (OKLCH). Each race colour is the most saturated its hue allows at a lightness that still reads as lit:
+  pirate orange 0.74 / 0.18, Tentauri pink 0.72 / 0.22, Mecha purple 0.58 / 0.27, Azurethea blue 0.66 / 0.18
+  (brightened from `#2E7BFF`, which was too dark), Senti-GPH yellow-green 0.94 / 0.23, Whispwraith magenta
+  0.69 / 0.31, Malphen flesh 0.80 / 0.12 (the most saturation a pale pink-orange can have; it stays pale so it
+  doesn't read as cut-off red or pirate orange), Lykario silver 0.89 / 0.02 (matched to power green's lightness;
+  silver is grey by nature, so it reads as lit by its brightness).
 - **Likely (2026-10-26, heromedel):** GATOS ships use power green, player and enemy alike; GATOS enemies are
   typically pirates, shown in pirate power orange.
 
