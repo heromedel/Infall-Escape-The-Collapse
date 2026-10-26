@@ -86,7 +86,7 @@ EMPTY = {"hijacker": {"port-flank", "starboard-flank", "aft-hall"},
 DOORS = [(2, 1, "s"), (2, 2, "s"), (1, 4, "e"), (0, 4, "s"), (3, 4, "s"), (1, 5, "w"), (2, 6, "e"),
          (1, 4, "s"), (1, 6, "s"), (2, 6, "s"), (1, 8, "e"), (1, 8, "s"), (2, 8, "s"), (1, 10, "s"), (2, 10, "s")]
 AIRLOCKS = [(0, 9, "w"), (0, 10, "w"), (3, 9, "e"), (3, 10, "e")]
-CORE_TILES = [(1, 5), (2, 5), (1, 6), (2, 6)]
+CORE_TILES = [(2, 5)]   # the AZC takes one tile (no system takes more), the core room's only tile free of doors
 
 # the ring: out of the core's top, up the starboard side to the bridge, down the port side to the engine room,
 # then up the starboard side and back into the core
@@ -97,9 +97,9 @@ RING = [(2, 5), (2, 4), (2, 3), (2, 2), (2, 1), (2, 0), (1, 0), (1, 1), (1, 2), 
 # then on to the hardpoint. The Sporewing, a crude refit of stolen tech, has one spur: the readable weak point. The
 # Twinshot, Terran-built, is fed twice: a run from the weapons room and a tap off the ring, so no single cut drops it.
 HARDPOINTS = {
-    "Sporewing": {"at": (345.2, 296), "loadouts": {"hijacker", "cutpurse"}, "feeds": [[(2, 4), (3, 4)]],
+    "Sporewing": {"at": (364, 296), "loadouts": {"hijacker", "cutpurse"}, "feeds": [[(2, 4), (3, 4)]],
                   "intended_weak_point": True},
-    "Twinshot": {"at": (134.8, 296), "loadouts": {"hijacker"}, "feeds": [[(2, 4), (1, 4), (0, 4)], [(0, 3)]],
+    "Twinshot": {"at": (116, 296), "loadouts": {"hijacker"}, "feeds": [[(2, 4), (1, 4), (0, 4)], [(0, 3)]],
                  "intended_weak_point": False},
 }
 
@@ -116,6 +116,9 @@ def door_tiles():
 def check():
     blocked = [n for n, c, r, _, _ in CONSOLES if (c, r) in door_tiles()]
     assert not blocked, f"consoles on door tiles: {blocked}"
+    assert len(CORE_TILES) == 1, "no system takes more than one tile"
+    assert not set(CORE_TILES) & door_tiles(), "the AZC needs a free tile of its own"
+    assert not set(CORE_TILES) & {(c, r) for _, c, r, _, _ in CONSOLES}, "the AZC shares a tile with a console"
 
 
 def room_of(c, r):
@@ -163,14 +166,14 @@ def door(c, r, side, colour):
 
 
 def core_block():
-    """The AZC: a dark armoured block centred in the core room (a pirate's worn housing, not the Outrider's plating)."""
-    x, y = cell(1, 5)
-    cx, cy = x + T, y + T
-    return (f'<g id="core"><rect x="{x + 8}" y="{y + 8}" width="{2 * T - 16}" height="{2 * T - 16}" rx="7" '
-            f'fill="#3c424a" stroke="{WALL}" stroke-width="2"/>'
-            f'<rect x="{x + 15}" y="{y + 15}" width="{2 * T - 30}" height="{2 * T - 30}" rx="4" fill="#262a31"/>'
-            f'<circle cx="{cx}" cy="{cy}" r="10" fill="#0c1018" stroke="{ON}" stroke-width="2.2" filter="url(#cglow)"/>'
-            f'<circle cx="{cx}" cy="{cy}" r="4" fill="{ON_CORE}"/></g>')
+    """The AZC: a dark armoured block on its one tile (a pirate's worn housing, not the Outrider's plating)."""
+    x, y = cell(*CORE_TILES[0])
+    cx, cy = x + T / 2, y + T / 2
+    return (f'<g id="core"><rect x="{x + 4}" y="{y + 4}" width="{T - 8}" height="{T - 8}" rx="5" '
+            f'fill="#3c424a" stroke="{WALL}" stroke-width="1.6"/>'
+            f'<rect x="{x + 8}" y="{y + 8}" width="{T - 16}" height="{T - 16}" rx="3" fill="#262a31"/>'
+            f'<circle cx="{cx}" cy="{cy}" r="7" fill="#0c1018" stroke="{ON}" stroke-width="2" filter="url(#cglow)"/>'
+            f'<circle cx="{cx}" cy="{cy}" r="3" fill="{ON_CORE}"/></g>')
 
 
 def wall_side(c, r):

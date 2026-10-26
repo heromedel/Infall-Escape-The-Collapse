@@ -84,7 +84,8 @@ Reference: the Tentauri scout, `tentauri/scout/`.
   turned or mirrored for the wall.
 - **Weapons — Likely (2026-10-25):** the Defense Laser's segmented style (accepted by Ship Designs), mounted on the
   hull's edge.
-- **Power colour — Open:** a Tentauri power pink (`#FF5ECA`, "bubblegum matched") was liked but is not yet saved.
+- **Power colour — Likely (2026-10-26, heromedel):** Tentauri power pink, `#FF5ECA` ("bubblegum matched";
+  `palette.md`).
 
 ## Tentauri crew
 

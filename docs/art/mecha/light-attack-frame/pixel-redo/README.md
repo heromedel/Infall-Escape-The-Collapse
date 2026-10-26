@@ -1,54 +1,35 @@
-# Mecha Light Attack Frame, pixel redo (work in progress)
+# Mecha Light Attack Frame, pixel redo
 
 **Date:** 2026-10-25
-**Status:** **accepted by Ship Designs (2026-10-25): the current Mecha Light Attack Frame.** The battle-cross hull,
-floor plans, weapons and armed previews in `battle-cross/` and `weapons/` replace the vector frame in `../` and the
-vector weapons in `docs/art/weapons/ds-st-hull-laser/` and `battlesuit-laser/` (kept for the record). Versions A and B
-and the speckled rounds below are the history.
+**Status:** **accepted by Ship Designs: the current Mecha Light Attack Frame.** The battle-cross hull, floor plans,
+weapons and armed previews in `battle-cross/` and `weapons/`. They replaced the earlier vector frame and vector
+weapons; those, and the pixel rounds before the battle cross (versions A and B, curved plates, faceted blades), were
+removed on 2026-10-26 and are in git history.
 
-![Version A and B](review/mount-plan.png)
+![The battle cross: rooms and mounts](battle-cross/review-sheet.png)
 
 ## What it is
 
-A new start on the Mecha frame in the Mecha style (`docs/art/README.md`): pixel art drawn pixel by pixel on the hull's
-440 × 330 grid, in the Mecha palette (`docs/art/palette.md`), with purple only in the light slits.
+The Mecha frame in the Mecha style (`docs/art/README.md`): pixel art drawn pixel by pixel, in the Mecha palette
+(`docs/art/palette.md`), with purple only in the light slits.
 
 - **Inspiration:** the design language of FTL's Lanius ships (big overlapping plates, hooked and pointed tips, dark
   machinery between the plates, rows of glowing slits). Nothing is copied or recoloured from them: the shapes are
   drawn new, around this ship's own rooms.
-- **Matched to the Mecha console** (`../../console/`): the spine is drawn like the console's tower (a narrow dark
-  column, a recessed screen, purple slits), the plates have stepped notches like its cheeks, and the shading is the
-  same per-pixel method (outline, lit upper-left edges, gritty shade variation).
+- **Matched to the Mecha console** (`../../console/`): the spine is drawn like the console's tower, and the plates
+  have stepped notches like its cheeks.
 - **No caution stripes and no boxy panelled deck**, as heromedel asked.
-- **Shape (heromedel's pick of the blade rounds):** forward horns framing a pointed armoured prow, two big cleaver
-  blades each side raked aft, each split by a ridge into a lit and a dark facet, and an engine block at the stern
-  with four purple vents. B has a longer prow and horns and blades raked further aft.
-- **Rooms:** the same room plan as the accepted frame (`../tools/rooms.py`); the build checks every room sits under
-  the hull with a 5 px margin.
 
-## Weapon mounts
-
-Six planned mounts on each version (art rules: plan for at least 4–6), stored as invisible spots in the SVG
-(`mount-1` to `mount-6`), plus the Suit Dock's bay mouth (`suit-bay`):
-
-| Mount | Where | Use |
-|---|---|---|
-| 1, 2 | horn roots, firing forward | 2 (starboard) takes the DS-ST Hull Laser in the Hull Laser loadout |
-| 3, 4 | the big blades' leading edges, out wide | free for later loadouts |
-| 5, 6 | the aft blades' roots | free for later loadouts |
-| suit bay | outboard under the starboard blade, over the weapon bay | the Suit Dock loadout's launch bay |
-
-## Files
+## Tools
 
 | File | What |
 |---|---|
-| `mecha-px-hull-a.*`, `mecha-px-hull-b.*` | The two versions: SVG (pixels as rects, mounts hidden), PNG at 1x and 2x |
-| `mecha-px-hull-laser.*` | B, Hull Laser loadout: a raised octagonal hardpoint at mount 2 (the laser itself is separate art) |
-| `mecha-px-suit-dock.*` | B, Suit Dock loadout: the recessed launch bay with purple guide lights and a launch rail |
-| `review/mount-plan.png` | Both versions with the planned mounts marked |
-| `review/first-plates.png`, `review/blades.png` | Earlier rounds: curved plates (read as tentacles), then faceted blades |
-| `tools/hull_px.py` | Builds A and B: `python3 hull_px.py OUT_DIR` (writes s1 = A, s2 = B, with mount-plan and room overlays, and B's two loadouts) |
-| `tools/pixel_kit.py`, `tools/cleavers.py` | The shared pixel shading and earlier versions, kept for the record |
+| `tools/hull_bc_sleek.py` | Builds the battle-cross hull: `python3 hull_bc_sleek.py OUT_DIR` |
+| `tools/floor_bc.py` | Builds the floor plans: `python3 floor_bc.py OUT_DIR` |
+| `tools/weapons_px.py` | Builds the weapons and armed previews: `python3 weapons_px.py OUT_DIR` |
+| `tools/pixel_svg.py` | Writes pixel art as compact SVG (one path per colour, each row's runs merged), used by every tool here. `python3 pixel_svg.py FILE.svg ...` compacts an old one-rect-per-pixel SVG in place. On 2026-10-26 every SVG here was compacted this way (about 14 times smaller) and checked to render pixel for pixel the same. |
+| `tools/render.js` | SVG to PNG for every art folder: `node render.js in.svg out.png [scale] [background]` |
+| `tools/sheet.js` | Side-by-side review sheets |
 
 ## Battle cross (2026-10-25): the Mecha hull style reference
 
@@ -71,8 +52,8 @@ light, short clean shadows under overlapping plates, and the spine shaded like a
 band is slimmed so their lights sit on dark metal; the rear highlights are thinner than the front ones. Purple stays in
 the light rows, the spine slit, the bow slit (one band across the prow's centre line, on purpose) and four rear vents,
 staggered along the engine block's dark band. Every light and vent has at least 2 px of one even shade around it
-(art rules: detail passes; the build checks it). Built by `tools/hull_bc_sleek.py OUT_DIR`; `tools/hull_l1.py` keeps
-the earlier speckled version. `review-sheet.png` shows the rooms and the planned mounts.
+(art rules: detail passes; the build checks it). Built by `tools/hull_bc_sleek.py OUT_DIR` (the earlier speckled version is in git
+history). `review-sheet.png` shows the rooms and the planned mounts.
 
 Future Mecha hulls are compared against this one, but different ship styles should still look different, as not
 every Terran ship is a rocket or a shuttle.
@@ -94,7 +75,7 @@ every Terran ship is a rocket or a shuttle.
   - **2026-10-26 changes (heromedel's rules):** the Core's cradle went from two tiles to one, and the Suit Dock's
     launch clamp was removed in favour of the airlock beside the EVB Dock. Re-accepted by Ship Designs (78aa3d0).
   - **2026-10-26: new Servicing Core art** (heromedel's pick, `mecha/servicing-core/`) replaces the placeholder cradle
-    (a medbay cross under a gantry) in every plan, armed preview and overview. Nothing else changed.
+    (a medbay cross under a gantry) in every plan, armed preview and overview. Nothing else changed. Re-accepted by Ship Designs (2d544e3).
   - **Two frames (Ship Designs, agreed with heromedel; accepted 2026-10-25), same hull art, both loadouts** (`frames.png`):
     - **Standard** (`plan-standard-*`): the stern split into two 2 × 1 rooms with a door between, Engines in the
       port room and Life Support in the starboard room. The Core's door opens into the engine room.

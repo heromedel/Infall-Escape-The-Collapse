@@ -173,11 +173,12 @@ def console(name, c, r, kind):
 def core():
     x, y = cell(*CORE_TILE)
     cx, cy = x + T / 2, y + T / 2
-    return (f'<g id="core-console"><rect x="{x - 6}" y="{y - 6}" width="{T + 12}" height="{T + 12}" rx="8" '
-            f'fill="#5c6676" stroke="{WALL}" stroke-width="2"/>'
-            f'<rect x="{x}" y="{y}" width="{T}" height="{T}" rx="5" fill="#3a4352"/>'
-            f'<circle cx="{cx}" cy="{cy}" r="10" fill="#0c1018" stroke="{ON}" stroke-width="2.2" filter="url(#cglow)"/>'
-            f'<circle cx="{cx}" cy="{cy}" r="4" fill="#e8fff2"/></g>')
+    # the AZC stays inside its one tile (no system takes more than one tile)
+    return (f'<g id="core-console"><rect x="{x + 2}" y="{y + 2}" width="{T - 4}" height="{T - 4}" rx="6" '
+            f'fill="#5c6676" stroke="{WALL}" stroke-width="1.6"/>'
+            f'<rect x="{x + 6}" y="{y + 6}" width="{T - 12}" height="{T - 12}" rx="4" fill="#3a4352"/>'
+            f'<circle cx="{cx}" cy="{cy}" r="8" fill="#0c1018" stroke="{ON}" stroke-width="2" filter="url(#cglow)"/>'
+            f'<circle cx="{cx}" cy="{cy}" r="3.2" fill="#e8fff2"/></g>')
 
 
 RING_NOTE = "Conduit ring: one loop from the core through every system and back."

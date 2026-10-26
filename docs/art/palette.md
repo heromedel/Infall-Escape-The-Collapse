@@ -8,6 +8,7 @@ one place.
 | Power green | `#66FF66` | Powered systems, powered power bars, and the symbol on an intact player system | **Decided (2026-10-25)** |
 | Pirate power orange | `#FF8500` | The orange for powered pirate systems: made to look as vivid as power green (the most saturated orange a screen can show, at the lightness nearest power green's). Replaces `#FFB070`, which matched in numbers but looked pale | **Decided (2026-10-25)** |
 | Mecha power purple | `#AA28EB` | The Mecha's accent: visor, chest lights, and the start of the power pulse when they power a system | **Decided (2026-10-25)** |
+| Tentauri power pink | `#FF5ECA` | The Tentauri's power colour ("bubblegum matched", liked by heromedel) | **Likely (2026-10-26)** |
 
 - **Ai-Generated-Proposal (2026-10-25):** the player's Terran powered conduit glow (`#5DFFA8` in the Outrider tests)
   could become power green too, since a powered conduit means the same thing.

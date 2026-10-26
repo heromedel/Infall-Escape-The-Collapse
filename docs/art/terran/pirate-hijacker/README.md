@@ -19,12 +19,18 @@ Designs):
 
 - **Hull only** in `pirate-*-hull.svg`: top-down, nose up, 480 × 760. Weapon mounts are hidden points in the
   `weapon-mounts` group. The weapons are separate art in `docs/art/weapons/` (`sporewing/`, `twinshot/`).
-- **Previews** in `pirate-*-armed-preview.*` place the weapon files at the mounts, at 1.35× their file size, as
-  the game would.
+- **Six planned mounts (2026-10-26, art rules):** each on the hull's outer edge with a clear line forward, storing its
+  slide direction (`data-slide`): 1–2 on the nose chines, 3–4 on the weapon pods' outer flanks, 5–6 on the fin tips
+  (odd port, even starboard; `mounts.png`). The Hijacker fits the Twinshot at 3 and the Sporewing at 4; the Cutpurse
+  fits the Sporewing at 4, and its mount 3 sits on the faired-over port bay. Before, the two weapons sat about 21 px in,
+  on the pods' hardpoint rings.
+- **Previews** in `pirate-*-armed-preview.*` place the weapon files at the mounts, at 1.35× their file size, slid
+  12 px out in the mount's slide direction and drawn under the hull, so only the part past the edge shows.
 - **Wear,** kept sparing: soft scorching behind the engines and weapon ports, faded paint, a little pitting, and two
   replaced plates in a slightly different shade. Nothing drips.
-- **Fittings:** a narrow swept canopy, a dorsal teleporter emitter, an airlock hatch on each flank (level with the
-  floor plan's aft-hall airlocks, moved there at Ship Designs' request) and two engines.
+- **Fittings:** a narrow swept canopy, a dorsal teleporter emitter and two engines. The flank airlock hatches and
+  the two dorsal hatches were removed on 2026-10-26 (art rules: no marked exterior doors); the airlocks are in the
+  floor plan.
 - **No emblem.** There is no standard Gatos emblem (Decided), and heromedel's review asked for none or a small one.
 
 ## History
@@ -43,7 +49,7 @@ This design started fresh. Concepts considered:
 - **Pincer ship:** cheesy.
 - **Retrofitted box freighter:** no threat.
 
-Versions: the dagger (picked), the dagger with canards, and a stepped hull (`versions.png`, `alternates/`).
+Versions: the dagger (picked), the dagger with canards, and a stepped hull (the versions sheet and alternates are in git history).
 
 | Pass | Changes |
 |---|---|
@@ -66,7 +72,7 @@ Terran designs for a while (race profiles, Terrans 1, Likely). See `docs/art/REA
   - Doors room
   - Shields
   - Weapons, beside the starboard Sporewing pod
-  - the 2×2 AZC core room, with empty 1×2 flank rooms
+  - the 2×2 core room with the AZC on one tile (its only tile free of doors), with empty 1×2 flank rooms
   - Medbay
   - Crew Teleporter
   - an aft hall with four airlock doors to space
@@ -99,6 +105,9 @@ Terran designs for a while (race profiles, Terrans 1, Likely). See `docs/art/REA
 - **Files:** each loadout has a floor layer (`floor-*.svg`), a conduit layer (`conduits-*.svg`, its own file as the
   art rules ask) and a combined plan (`plan-*.svg`).
 - **Dark core hatch** (race profiles, Proposed): left off for now, at Ship Designs' call.
+- **One-tile AZC (2026-10-26, art rules: no system takes more than one tile):** the AZC was a 2×2 block filling the
+  core room; it is now one tile, (2, 5), the room's only tile free of doors, and the ring passes through it. The build
+  checks it is one tile, off every door tile and console. The conduit check is unchanged (above).
 
 ## Tools
 
@@ -106,7 +115,8 @@ Terran designs for a while (race profiles, Terrans 1, Likely). See `docs/art/REA
 |---|---|
 | `tools/pirate.py` | Builds the hulls: `python3 pirate.py OUT_DIR hijacker cutpurse` (or `v1 v2 v3` for the versions) |
 | `tools/weapons.py` | Builds the weapon files and the Sporewing options sheet |
-| `tools/compose.py` | Places weapons at a hull's mounts: `python3 compose.py HULL.svg OUT.svg` |
+| `tools/compose.py` | Places weapons at a hull's mounts, slid out and under the hull: `python3 compose.py HULL.svg OUT.svg` |
 | `tools/squad.py` | Builds the squad view against the Outrider |
+| `../outrider/tools/check_mounts.py` | Checks the mounts: `python3 ../outrider/tools/check_mounts.py ../pirate-*-hull.svg` |
 | `tools/floorplan.py` | Builds the floor plans: `python3 floorplan.py HIJACKER_ARMED.svg CUTPURSE_ARMED.svg OUT_DIR` |
 | `tools/art_kit.py`, `render.js`, `sheet.js` | Shared drawing kit, SVG-to-PNG, review sheets |

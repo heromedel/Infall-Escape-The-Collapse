@@ -28,6 +28,11 @@ and systems drawn as terminals. The ship is drawn twice: selected on the left, n
 | Flat floor panel | Reads as a hatch, not a machine. |
 | Wall bank with status lights | The symbol is too small at real size. |
 
+## 2026-10-26: art rules
+
+The AZC's graphic used to spill about 6 px past its tile on every side; it now fits inside its one tile (no system
+takes more than one tile). The plan was redrawn on the current hull (no marked hatches, six mounts).
+
 ## Unchanged from test 3
 
 Rooms, doors, airlocks and the conduit wheel's route.

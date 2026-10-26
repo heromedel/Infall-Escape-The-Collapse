@@ -5,6 +5,7 @@ POWER_GREEN = "#66ff66"   # powered systems, power bars, and the symbol on an in
 PIRATE_POWER_ORANGE = "#ff8500"   # as vivid as power green: the most saturated orange at the nearest lightness
 
 MECHA_POWER_PURPLE = "#aa28eb"   # the Mecha's accent: visor, chest lights, their power
+TENTAURI_POWER_PINK = "#ff5eca"   # the Tentauri's power colour, "bubblegum matched"
 
 # the Mecha crew palette (mecha/crew/), darkest first
 MECHA = {

@@ -17,8 +17,8 @@ pixel or two (a slit at the base). A narrow armoured tower with the screen and t
   HalfMech stands and types on the console's own tile (art rules: no system blocks a tile). Tested in a 2×2 room
   with the power-pulse typing frames, at full depth (20 px, picked) and at a shorter 15 px.
 - **How it was picked:** three console shapes (slab, tower, low bar), each with and without ports, shown with the
-  typing frame over them (`console-options.png`); heromedel picked the tower with ports, made more pixelated and
-  menacing. Three cheek shapes in pixel art (`tower-options.png`): blade, stepped (picked) and claw.
+  typing frame over them (option sheet in git history); heromedel picked the tower with ports, made more pixelated and
+  menacing. Three cheek shapes in pixel art (option sheet in git history): blade, stepped (picked) and claw.
 
 ## Tools
 
