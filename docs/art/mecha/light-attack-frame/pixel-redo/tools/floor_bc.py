@@ -7,7 +7,8 @@ engine room and a life support room) and open-stern (one shared stern room, the 
 conduits. Symbols are Mecha power purple (an enemy ship shows its own race's power colour).
 
 Checks: every room sits under the hull; no console stands on a door tile; every door joins two rooms and every
-airlock opens to space; one console per tile; consoles keep their tile walkable (art rules).
+airlock opens to space; one console per tile; consoles keep their tile walkable; no system takes more than one tile
+(the Core's cradle has a free tile of its own); the EVB Dock sits next to an airlock (art rules).
 """
 import os, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -34,11 +35,11 @@ FRAMES = {
 }
 ROOMS, DOORS = FRAMES["standard"]                                      # (col, row, wall) for doors
 AIRLOCKS = [(0, 1, "w"), (0, 2, "w")]                                   # in the spare bay; not marked on the hull
+LOADOUT_AIRLOCKS = {"hull-laser": [], "suit-dock": [(5, 2, "e")]}      # the EVB Dock sits next to an airlock (art rules)
 CONSOLES = [("Piloting", 2, 0, "n", "piloting"), ("Shields", 3, 0, "n", "shields"), ("Doors", 3, 1, "e", "doors"),
             ("Engines", 1, 4, "w", "engines"), ("Life Support", 4, 4, "e", "life")]
 LOADOUT = {"hull-laser": [("Weapon pod", 5, 1, "e", "weapons")], "suit-dock": [("EVB Dock", 5, 1, "e", "evb")]}
-CORE = (2, 3)        # the Servicing Core's cradle, over two tiles against the south wall (walkable)
-CLAMP = (5, 2)       # the Suit Dock's launch clamp at the bay's outer wall (walkable)
+CORE = (3, 3)        # the Servicing Core's cradle: one tile (no system takes more), the core room's free corner; walkable
 STEP = {"n": (0, -1), "s": (0, 1), "w": (-1, 0), "e": (1, 0)}
 
 # 7 x 7 system symbols, upright
@@ -78,16 +79,22 @@ def check(loadout, hull_px):
         dc, dr = STEP[side]
         assert room_of(c, r) and room_of(c + dc, r + dr) and room_of(c, r) != room_of(c + dc, r + dr), (c, r, side)
         door_tiles |= {(c, r), (c + dc, r + dr)}
-    for c, r, side in AIRLOCKS:
+    airlock_tiles = set()
+    for c, r, side in AIRLOCKS + LOADOUT_AIRLOCKS[loadout]:
         dc, dr = STEP[side]
         assert room_of(c, r) and room_of(c + dc, r + dr) is None, (c, r, side)
         door_tiles.add((c, r))
+        airlock_tiles.add((c, r))
+    assert CORE not in door_tiles and room_of(*CORE) == "core", "the Core's cradle needs a free tile of its own"
     tiles = [(c, r) for _, c, r, _, _ in CONSOLES + LOADOUT[loadout]]
     assert len(tiles) == len(set(tiles)), "two consoles on one tile"
     for name, c, r, wall, _ in CONSOLES + LOADOUT[loadout]:
         dc, dr = STEP[wall]
         assert room_of(c, r) and room_of(c + dc, r + dr) != room_of(c, r), (name, "not against a wall")
         assert (c, r) not in door_tiles, (name, "on a door tile")
+        if name == "EVB Dock":   # next to an airlock door
+            assert any(abs(c - ac) + abs(r - ar) == 1 for ac, ar in airlock_tiles), "the EVB Dock must be next to an airlock"
+        assert (c, r) != CORE, (name, "on the Core's tile")
 
 
 def rect(px, x0, y0, x1, y1, col):
@@ -154,35 +161,21 @@ def console(px, c, r, wall, kind):
 
 
 def core_cradle(px):
-    """The Cybernetic Servicing Core: a gantry over a stand pad, two tiles wide against the south wall; walkable."""
+    """The Cybernetic Servicing Core: a mech stand pad under a small gantry, on one tile; crew walk over it."""
     x0, y0 = cell(*CORE)
-    w = 2 * T
-    rect(px, x0 + 4, y0 + T - 8, x0 + w - 4, y0 + T - 1, OUTLINE)            # gantry base along the wall
-    rect(px, x0 + 5, y0 + T - 7, x0 + w - 5, y0 + T - 2, "#2e3039")
-    for gx in (x0 + 6, x0 + w - 12):                                          # gantry legs
-        rect(px, gx, y0 + 8, gx + 6, y0 + T - 7, OUTLINE)
-        rect(px, gx + 1, y0 + 9, gx + 5, y0 + T - 7, "#4a4d5a")
-        rect(px, gx + 1, y0 + 9, gx + 2, y0 + T - 7, "#7a7f8e")
-    cx, cy = x0 + T, y0 + 17
+    rect(px, x0 + 3, y0 + 3, x0 + 32, y0 + 8, OUTLINE)                      # gantry beam along the top
+    rect(px, x0 + 4, y0 + 4, x0 + 31, y0 + 7, "#2e3039")
+    rect(px, x0 + 4, y0 + 4, x0 + 31, y0 + 5, "#5f6576")
+    for gx in (x0 + 3, x0 + 28):                                             # its two legs
+        rect(px, gx, y0 + 8, gx + 4, y0 + 31, OUTLINE)
+        rect(px, gx + 1, y0 + 8, gx + 3, y0 + 30, "#4a4d5a")
+    cx, cy = x0 + 17, y0 + 19
     for y in range(cy - 9, cy + 10):
         for x in range(cx - 9, cx + 10):
             d = ((x - cx) ** 2 + (y - cy) ** 2) ** .5
             if d < 9.5:
                 px[(x, y)] = OUTLINE if d > 8.5 else (DEEP if d > 7.2 else "#2e3039" if d > 6 else "#4a4d5a")
     symbol(px, "medbay", cx, cy)
-
-
-def clamp(px):
-    """The Suit Dock's launch clamp at the bay's outer wall: a rail and a clamp frame; walkable."""
-    x0, y0 = cell(*CLAMP)
-    rect(px, x0 + 8, y0 + 14, x0 + T, y0 + 21, OUTLINE)
-    rect(px, x0 + 9, y0 + 15, x0 + T, y0 + 20, "#2e3039")
-    rect(px, x0 + 9, y0 + 15, x0 + T, y0 + 16, "#5f6576")
-    for gx in range(x0 + 12, x0 + T - 2, 6):
-        px[(gx, y0 + 17)] = PURPLE
-        px[(gx + 1, y0 + 17)] = DEEP
-    rect(px, x0 + 5, y0 + 9, x0 + 9, y0 + 26, OUTLINE)
-    rect(px, x0 + 6, y0 + 10, x0 + 8, y0 + 25, "#4a4d5a")
 
 
 def use(frame):
@@ -197,11 +190,9 @@ def floor_layer(loadout, hull_px, frame="standard"):
     floor(px)
     for c, r, side in DOORS:
         door(px, c, r, side, DOOR)
-    for c, r, side in AIRLOCKS:
+    for c, r, side in AIRLOCKS + LOADOUT_AIRLOCKS[loadout]:
         door(px, c, r, side, AIRLOCK)
     core_cradle(px)
-    if loadout == "suit-dock":
-        clamp(px)
     for _, c, r, wall, kind in CONSOLES + LOADOUT[loadout]:
         console(px, c, r, wall, kind)
     return px
