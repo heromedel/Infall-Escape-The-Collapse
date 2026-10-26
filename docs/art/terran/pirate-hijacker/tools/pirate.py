@@ -197,21 +197,11 @@ def build(spec):
     return h
 
 
-def hatch(x, y, w, h):
-    return (f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="2" fill="none" stroke="{shade(HULL_DARK, .6)}" '
-            f'stroke-width="1"/>{line(x + 2, y + h + .8, x + w - 2, y + h + .8, shade(HULL_DARK, 1.4), .8)}')
-
-
 def teleporter(x, y):
     """The crew teleporter's dorsal emitter: a recessed ring with a faint violet core."""
     return (f'<g id="teleporter"><circle cx="{x}" cy="{y}" r="13" fill="{DARK}" stroke="{INK}" stroke-width="1.2"/>'
             f'<circle cx="{x}" cy="{y}" r="9" fill="none" stroke="{STEEL}" stroke-width="1"/>'
             f'<circle cx="{x}" cy="{y}" r="4.5" fill="#9b7fd8" opacity=".7" filter="url(#glow)"/></g>')
-
-
-def airlock(x, y):
-    return (f'<g id="airlock"><rect x="{x - 5}" y="{y - 10}" width="10" height="20" rx="2" fill="{HULL_DARK}" '
-            f'stroke="{INK}" stroke-width="1.1"/>{line(x - 3, y, x + 3, y, DARK, 1)}</g>')
 
 
 def widen(spec, k):
@@ -251,18 +241,17 @@ def dagger():
         "scorch": [(204, 632, 24, 14), (276, 632, 24, 14), (140, 286, 18, 22, .3), (340, 286, 18, 22, .3)],
         "pits": [(196, 150, .8), (200, 162, .6), (284, 330, .7), (288, 340, .6), (190, 590, .8)],
         "rivets": [(x, 360) for x in range(186, 300, 14)],
-        "raw": [("cockpit", canopy(54, 120, 18)), ("teleporter", teleporter(CX, 300)),
-                ("hatches", hatch(CX - 11, 400, 22, 26) + hatch(CX - 11, 500, 22, 30)),
-                ("airlock", airlock(172, 420))],
+        "raw": [("cockpit", canopy(54, 120, 18)), ("teleporter", teleporter(CX, 300))],
         "mounts": [],
     }
     s = widen(s, 1.3)
-    # airlock hatches on both flanks, level with the floor plan's aft-hall airlock doors
-    ax = CX - (CX - 176) * 1.3 + 3
-    s["raw"][-1] = ("airlocks", airlock(ax, 475) + airlock(2 * CX - ax, 475))
+    # no airlock hatches drawn on the hull (art rules: no marked exterior doors; airlocks are in the floor plan)
     px = 154 - s["pod_dx"]
-    s["mounts"] = [("mount-sporewing", 2 * CX - px, 296, "Sporewing", "right"),
-                   ("mount-twinshot", px, 296, "Gat 2.1 Twinshot", "left")]
+    # six planned mounts on the outer edge, each with a clear line forward and its slide direction (art rules):
+    # 1-2 on the nose chines, 3-4 on the weapon pods' outer flanks, 5-6 on the fin tips. Odd port, even starboard.
+    s["mounts"] = [("mount-1", 178, 180, "", "left"), ("mount-2", 302, 180, "", "right"),
+                   ("mount-3", 116, 296, "Gat 2.1 Twinshot", "left"), ("mount-4", 364, 296, "Sporewing", "right"),
+                   ("mount-5", 84, 618, "", "left"), ("mount-6", 396, 618, "", "right")]
     s["scorch"][2:4] = [(px - 4, 286, 18, 22, .3), (2 * CX - px + 4, 286, 18, 22, .3)]
     return s
 
@@ -300,7 +289,8 @@ def cutpurse():
     s["title"] = "Terran Pirate Cutpurse hull"
     s["pods"] = ["starboard"]
     s["stripes"] = []
-    s["mounts"] = [m for m in s["mounts"] if m[0] != "mount-twinshot"]
+    # the port bay is faired over: mount 3 moves in to the fairing's flank, and is left free
+    s["mounts"] = [("mount-3", 158, 296, "", "left") if m[0] == "mount-3" else m for m in s["mounts"]]
     return s
 
 
