@@ -6,6 +6,12 @@ PIRATE_POWER_ORANGE = "#ff8500"   # as vivid as power green: the most saturated 
 
 MECHA_POWER_PURPLE = "#aa28eb"   # the Mecha's accent: visor, chest lights, their power
 TENTAURI_POWER_PINK = "#ff5eca"   # the Tentauri's power colour, "bubblegum matched"
+# race power colours picked by heromedel (2026-10-26); the exact values are proposals, see palette.md
+AZURETHEA_POWER_BLUE = "#4f8fff"
+SENTI_POWER_YELLOW_GREEN = "#d2ff00"
+WHISPWRAITH_POWER_MAGENTA = "#ff00e6"
+LYKARIO_POWER_SILVER = "#d1dbe7"
+MALPHEN_POWER_FLESH = "#ffa480"
 
 # the Mecha crew palette (mecha/crew/), darkest first
 MECHA = {
