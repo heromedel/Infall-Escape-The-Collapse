@@ -30,6 +30,8 @@ faces up and is never turned. Two ways to fit them (`review/mix-tiles.png`, `rev
 
 | I | E's arms with F's table unchanged in shape (heromedel: closer to F's table), moved down so its upper jaws sit 2 px below the arm tips |
 
-`review/f-h-i.png`, `review/i-inroom.png` show I. `review/e-vs-h.png`, `review/h-inroom.png` show H. `review/g-tile.png`, `review/g-inroom.png` show G. `review/inroom.png` shows each in the battle cross's core room, empty and with a HalfMech standing in it.
+| J | H with its table removed and nothing else changed (heromedel): the four jaws stand on the deck |
+
+`review/h-vs-j.png`, `review/j-inroom.png` show J. `review/f-h-i.png`, `review/i-inroom.png` show I. `review/e-vs-h.png`, `review/h-inroom.png` show H. `review/g-tile.png`, `review/g-inroom.png` show G. `review/inroom.png` shows each in the battle cross's core room, empty and with a HalfMech standing in it.
 
 Built by `tools/core_px.py ../crew/mecha-crew-sheet.svg OUT_DIR`.
