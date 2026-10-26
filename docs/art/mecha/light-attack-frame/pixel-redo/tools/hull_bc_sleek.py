@@ -153,7 +153,7 @@ def build(lights=False):
 
 
 
-# rooms (the battle cross, see hull_l1.py) and the six planned mounts: on the front profile, a clear line ahead
+# rooms (the battle cross, see floor_bc.py) and the six planned mounts: on the front profile, a clear line ahead
 T, X0, Y0 = 35, 65, 72
 ROOMS = [(2, 0, 2, 2), (0, 1, 2, 2), (4, 1, 2, 2), (2, 2, 2, 2), (2, 4, 2, 1)]
 MOUNT_COLS = [(72, "up"), (42, "up"), (16, "out")]

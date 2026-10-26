@@ -54,12 +54,12 @@ Terran. Prismatic mother-of-pearl colours, light from the upper left.
 
 ## History
 
-- **Hull:** 15 versions (`review/versions*.png`). Egg, snowman, jellyfish, mushroom and helmet shapes were dropped.
+- **Hull:** 15 versions (version sheets in git history). Egg, snowman, jellyfish, mushroom and helmet shapes were dropped.
   heromedel's advice fixed it: plan the rooms first, then shape the hull, and spread the thrusters apart, on the sides
   or on wings. v13 (the fat outrigger) was picked over a slimmer pass.
 - **Consoles:** monitors were replaced by organic bases after heromedel's sketch. The grasp was the first favourite
   ("gorgeous"); heromedel then asked for one base per system. Rounds for Medbay, Life Support, Engines and Shields are
-  in `review/organ-options*.png`. Piloting took the hood, and Shields got the carapace, raised on a stand.
+  in git history (the option sheets). Piloting took the hood, and Shields got the carapace, raised on a stand.
 - **Symbols:** the Engines, Sensors and Doors symbols were redrawn for every ship during this piece (side-view jet,
   radar scope, door slabs).
 
@@ -70,5 +70,4 @@ Terran. Prismatic mother-of-pearl colours, light from the upper left.
 | `tools/tentauri.py` | Builds the hulls: `python3 tentauri.py OUT_DIR v13` (v13 is the final; no names builds every version and stage) |
 | `tools/tentauri_weapons.py` | Builds the Defense Laser styles: `python3 tentauri_weapons.py OUT_DIR` |
 | `tools/tentauri_floor.py` | Builds the floor layer, armed preview and plan: `python3 tentauri_floor.py ../tentauri-scout-hull.svg OUT_DIR` |
-| `tools/organ_options2.py`–`4.py` | Build the console base option sheets: `python3 organ_options2.py OUT.svg` |
 | `tools/art_kit.py`, `render.js`, `sheet.js` | Shared drawing kit, SVG-to-PNG, review sheets |

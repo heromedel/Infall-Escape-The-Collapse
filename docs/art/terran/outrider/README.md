@@ -46,8 +46,8 @@ Concepts considered: a lifting-body shuttle with swept wings (picked), a slim ro
 pylons (too close to well-known designs), a hammerhead sensor nose, and a capsule with an armour collar (its collar
 idea became the armour shoulders).
 
-Four versions of the shuttle were drawn (`versions.png`; versions 2–4 are in `alternates/`, as unreviewed first
-drafts). Version 1 was picked for the cleanest silhouette and thumbnail, then reviewed six times (`passes.png`):
+Four versions of the shuttle were drawn (the versions sheet and versions 2–4, unreviewed first
+drafts, are in git history). Version 1 was picked for the cleanest silhouette and thumbnail, then reviewed six times (the passes sheet is in git history):
 
 | Pass | Changes |
 |---|---|
@@ -74,8 +74,7 @@ fitted 17 rooms.
 | `outrider-hull.svg` | Final hull, with named parts and hidden weapon mounts |
 | `outrider-hull.png`, `outrider-hull-2x.png` | PNG exports at 1× and 2×, transparent |
 | `outrider-hull-mounts.svg`, `outrider-hull-mounts-preview.png` | Review copy showing the mount spots |
-| `stages.png`, `passes.png`, `versions.png`, `squad-test.png` | Review sheets |
-| `alternates/` | Versions 2–4 |
+| `stages.png`, `squad-test.png` | Review sheets of the final hull |
 | `tools/build.py` | Builds every version and stage: `python3 build.py OUT_DIR [version numbers]` (16 is the final) |
 | `tools/art_kit.py` | Shared hull drawing kit (plates, stages, mounts) |
 | `tools/render.js` | SVG to PNG: `node render.js in.svg out.png [scale] [background]` |

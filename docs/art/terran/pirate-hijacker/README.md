@@ -43,7 +43,7 @@ This design started fresh. Concepts considered:
 - **Pincer ship:** cheesy.
 - **Retrofitted box freighter:** no threat.
 
-Versions: the dagger (picked), the dagger with canards, and a stepped hull (`versions.png`, `alternates/`).
+Versions: the dagger (picked), the dagger with canards, and a stepped hull (the versions sheet and alternates are in git history).
 
 | Pass | Changes |
 |---|---|
