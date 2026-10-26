@@ -3,30 +3,46 @@
  * (standards, principle 11: the host owns it).
  */
 
-interface ShipSummary {
-  name: string;
-  race: string;
-  rooms: number;
-  systems: number;
-  hull: number;
-}
+import type { ShipPicture } from '../shared/ShipPicture';
+import { ShipDrawing } from './ShipDrawing.js';
+import { Camera } from './Camera.js';
 
 /** The functions the host bridge (src/host/preload.ts) gives the window. */
 declare const host: {
-  ships(): Promise<ShipSummary[]>;
+  shipNames(): Promise<string[]>;
+  shipPicture(name: string, side: 'player' | 'enemy'): Promise<ShipPicture>;
   debug(line: string): Promise<string>;
 };
 
-async function showLoadedShips(): Promise<void> {
-  const table = document.getElementById('ships') as HTMLTableElement;
-  const ships = await host.ships();
-  table.innerHTML = '<tr><th>Ship</th><th>Race</th><th>Rooms</th><th>Systems</th><th>Hull</th></tr>';
-  for (const ship of ships) {
-    const row = table.insertRow();
-    for (const value of [ship.name, ship.race, ship.rooms, ship.systems, ship.hull]) {
-      row.insertCell().textContent = String(value);
-    }
+const viewport = document.getElementById('viewport') as unknown as SVGSVGElement;
+const drawing = new ShipDrawing();
+viewport.appendChild(drawing.root);
+const camera = new Camera(viewport, drawing.root);
+
+async function fillShipPicker(): Promise<void> {
+  const picker = document.getElementById('ship-picker') as HTMLSelectElement;
+  for (const name of await host.shipNames()) {
+    const option = document.createElement('option');
+    option.value = name;
+    option.textContent = name;
+    picker.appendChild(option);
   }
+  picker.addEventListener('change', showPickedShip);
+  (document.getElementById('side-picker') as HTMLSelectElement).addEventListener('change', showPickedShip);
+  await showPickedShip();
+}
+
+async function showPickedShip(): Promise<void> {
+  const name = (document.getElementById('ship-picker') as HTMLSelectElement).value;
+  const side = (document.getElementById('side-picker') as HTMLSelectElement).value as 'player' | 'enemy';
+  if (!name) return;
+  const picture = await host.shipPicture(name, side);
+  drawing.draw(picture);
+  const size = ShipDrawing.sizeOf(picture);
+  camera.centreOn(size.width, size.height);
+  document.getElementById('ship-caption')!.textContent =
+    `${picture.name} (${picture.race}): ${picture.columns} by ${picture.rows} tiles, ${picture.rooms.length} rooms, `
+    + `${picture.systems.length} systems, ${picture.doors.length} doors, hull art ${picture.hullArt ? picture.hullArt.kind : 'none'}.`;
 }
 
 function wireDebugConsole(): void {
@@ -39,5 +55,5 @@ function wireDebugConsole(): void {
   });
 }
 
-showLoadedShips();
+fillShipPicker();
 wireDebugConsole();

@@ -76,6 +76,12 @@ export function neighbourTile(tile: Tile, direction: Direction, centering: Cente
   }
 }
 
+/** How many tiles a coordinate is from the lowest coordinate, so signed tiles map onto a plain grid from 0. */
+export function gridIndex(value: number, lowest: number, mode: CenteringMode): number {
+  const skipsZero = mode === 'Point' && lowest < 0 && value > 0;
+  return value - lowest - (skipsZero ? 1 : 0);
+}
+
 /** Every tile in the rectangle between two corner tiles, inclusive, honouring the centering. */
 export function tilesBetween(from: Tile, to: Tile, centering: Centering): Tile[] {
   const tiles: Tile[] = [];

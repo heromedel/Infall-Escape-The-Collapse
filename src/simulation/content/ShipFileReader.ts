@@ -67,6 +67,7 @@ export class ShipFileReader {
     const ship: ShipDefinition = {
       name,
       race: this.required(root, 'race', where),
+      powerColour: this.emptyAsUndefined(root.powerColour),
       baseShip,
       centering,
       hullPoints: this.readHullPoints(root.hull, where),
@@ -103,6 +104,7 @@ export class ShipFileReader {
       baseShip: base.name,
       centering,
       race: root.race ?? base.race,
+      powerColour: this.emptyAsUndefined(root.powerColour) ?? base.powerColour,
       hullPoints: root.hull ? this.readHullPoints(root.hull, where) : base.hullPoints,
       power: root.power ? this.readPower(root.power, where) : base.power,
       art: root.art ? this.readArt(root.art, base.art, where) : base.art,
@@ -202,7 +204,7 @@ export class ShipFileReader {
     return {
       hull: this.emptyAsUndefined(node?.hull) ?? previous.hull,
       floor: this.emptyAsUndefined(node?.floor) ?? previous.floor,
-      offset: node?.offset ? parseTile(node.offset, `${where} art offset`) : previous.offset,
+      offset: node?.offset ? this.point(node.offset, `${where} art offset`) : previous.offset,
     };
   }
 
@@ -302,6 +304,13 @@ export class ShipFileReader {
     const number = Number(value);
     if (!Number.isInteger(number)) throw new ShipFileError(`${where}: "${value}" is not a whole number`);
     return number;
+  }
+
+  /** "x,y" with decimals allowed, for art pixels. */
+  private point(value: unknown, where: string): { x: number; y: number } {
+    const parts = String(value).split(',').map((part) => Number(part.trim()));
+    if (parts.length !== 2 || parts.some((part) => Number.isNaN(part))) throw new ShipFileError(`${where}: "${value}" is not "x,y"`);
+    return { x: parts[0], y: parts[1] };
   }
 
   /** "1,2,3" to whole numbers. */

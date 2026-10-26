@@ -11,6 +11,7 @@ import * as path from 'node:path';
 import { Log } from './host/Log';
 import { ContentLibrary } from './host/ContentLibrary';
 import { DebugConsole } from './host/DebugConsole';
+import { shipPictureOf, Side } from './host/ShipPicture';
 
 const projectFolder = path.join(__dirname, '..');
 const contentFolder = path.join(projectFolder, 'content');
@@ -41,7 +42,8 @@ function openWindow(): BrowserWindow {
 
 /** What the window may ask the host for. Later this becomes the client connection the LAN also uses. */
 function answerWindowRequests(window: BrowserWindow, content: ContentLibrary, debug: DebugConsole): void {
-  ipcMain.handle('ships', () => content.shipNames().map((name) => summarizeShip(content, name)));
+  ipcMain.handle('ship-names', () => content.shipNames());
+  ipcMain.handle('ship-picture', (_event, name: string, side: Side) => shipPictureOf(content.ship(name), side));
   ipcMain.handle('debug', (_event, line: string) => debug.run(line));
 }
 
@@ -51,9 +53,4 @@ function registerDebugCommands(debug: DebugConsole, content: ContentLibrary): vo
     description: 'List the loaded ships.',
     run: () => content.shipNames().join('\n'),
   });
-}
-
-function summarizeShip(content: ContentLibrary, name: string) {
-  const ship = content.ship(name).definition;
-  return { name, race: ship.race, rooms: ship.rooms.length, systems: ship.systems.length, hull: ship.hullPoints };
 }

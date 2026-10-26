@@ -6,6 +6,7 @@
 import { contextBridge, ipcRenderer } from 'electron';
 
 contextBridge.exposeInMainWorld('host', {
-  ships: () => ipcRenderer.invoke('ships'),
+  shipNames: () => ipcRenderer.invoke('ship-names'),
+  shipPicture: (name: string, side: 'player' | 'enemy') => ipcRenderer.invoke('ship-picture', name, side),
   debug: (line: string) => ipcRenderer.invoke('debug', line),
 });
