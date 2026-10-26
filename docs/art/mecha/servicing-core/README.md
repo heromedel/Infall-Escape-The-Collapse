@@ -24,6 +24,8 @@ faces up and is never turned. Two ways to fit them (`review/mix-tiles.png`, `rev
 | E | the arms reach down over the table's upper corners (its upper jaws left off) |
 | F | shorter arms ending above the table, which keeps all four jaws |
 
-`review/inroom.png` shows each in the battle cross's core room, empty and with a HalfMech standing in it.
+| G | heromedel's notes on E: long arms stopping 2 px clear of the table, the table narrowed so all four jaws (shoulders) fit, a purple light on each jaw, and one near the foot of each arm, inside it, not on an edge pixel (the build checks the gap and the lights) |
+
+`review/g-tile.png`, `review/g-inroom.png` show G. `review/inroom.png` shows each in the battle cross's core room, empty and with a HalfMech standing in it.
 
 Built by `tools/core_px.py ../crew/mecha-crew-sheet.svg OUT_DIR`.

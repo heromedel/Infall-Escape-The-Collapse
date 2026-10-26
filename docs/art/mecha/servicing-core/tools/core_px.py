@@ -154,8 +154,38 @@ def core_f():
     return mix({y: C_ARMS[y] for y in range(12)}, 12, True)
 
 
+def core_g(top=10):
+    """G. heromedel's notes on E: long arms that stop clear of the table (2 px gap), the table narrowed so all four
+    jaws (shoulders) fit, a purple light on each jaw, and a purple light near the foot of each arm, inside it."""
+    body = housing({0: (10, 17), 1: (10, 17), 2: (10, 17), 3: (11, 17), 4: (11, 17), 5: (11, 17), 6: (12, 17),
+                    7: (12, 17), 8: (13, 17), 9: (14, 17)})
+    arm_rows = {0: (1, 9), 1: (1, 9), 2: (1, 9), 3: (1, 8), 4: (1, 6), 5: (1, 6)}
+    arm_rows.update({y: (1, 5) for y in range(6, 18)})
+    arm_rows.update({18: (2, 4), 19: (3, 3)})
+    arms = housing(arm_rows)
+    shape = poly_mask({1: (8, 13), 2: (8, 13), 3: (8, 14), 4: (9, 15), 5: (10, 12), 6: (10, 11)})
+    jaw = {(x, y + top) for x, y in shape}
+    low = {(x, 2 * top + 24 - y) for x, y in jaw}
+    jaws = jaw | mirror(jaw) | low | mirror(low)
+    px = {}
+    pad(px, 11, top, 24, 34, corners=False)
+    px.update(shade_parts([(jaws, ARMOUR)], 9))
+    px.update(shade_parts([(arms, ARMOUR), (body, DARK)], 9))
+    core_window(px, 16, 2, 19, 8)
+    lights = [(10, top + 3), (24, top + 3), (10, top + 21), (24, top + 21), (3, 16), (31, 16)]
+    for xy in lights:
+        px[xy] = PURPLE
+    near = {(x + dx, y + dy) for x, y in arms if y > 9 for dx in range(-2, 3) for dy in range(-2, 3)}
+    table = jaws | {(x, y) for x in range(11, 24) for y in range(top, 34)}
+    assert not (near & table), "the arms must stay 2 px clear of the table"
+    for x, y in lights:   # each light sits inside its part, never on an edge pixel
+        assert all(px.get((x + dx, y + dy)) not in (None, OUTLINE) for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1))), (x, y)
+    return px
+
+
 OPTIONS = [("A. Wall core and arms", core_a), ("B. Clamp ring", core_b), ("C. Service arch", core_c), ("D. A's panel, C's arms", core_d),
-           ("E. D, arms over B's table", core_e), ("F. D, short arms, B's table", core_f)]
+           ("E. D, arms over B's table", core_e), ("F. D, short arms, B's table", core_f),
+           ("G. Long arms clear of the table", core_g)]
 TURN_E = lambda x, y: (34 - y, x)
 
 
@@ -188,7 +218,7 @@ if __name__ == "__main__":
     cells = []
     for i, (name, fn) in enumerate(OPTIONS):
         px = fn()
-        open(os.path.join(out, f"core-option-{'abcdef'[i]}.svg"), "w").write(
+        open(os.path.join(out, f"core-option-{'abcdefg'[i]}.svg"), "w").write(
             f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 35" width="35" height="35">{to_svg(px)}</svg>\n')
         x0 = 20 + i * (T * S + 30)
         cells.append(
