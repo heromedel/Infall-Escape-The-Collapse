@@ -180,6 +180,8 @@
 <tr><td>Occupied</td><td>Taken by another race.</td><td>The occupier's ships; the original race appears as resistance, prisoners or refugees. <span class="tag proposed">Proposed</span> Stores can be from either side: the occupier's are low on stock, the original race's nearly barren. You may meet beggars of the original race, empty stores, or stations needing help that offer trades instead of the usual goods for sale.</td></tr>
 <tr><td>Abandoned</td><td>Left empty.</td><td>No store; derelicts and wreckage to salvage for Mawjig; scavengers, pirates and Malphen move in.</td></tr>
 <tr><td>Swallowed</td><td>Inside the collapse horizon.</td><td>Unreachable, except for the ??? victory path (ideas).</td></tr>
+  <tr><td>2026-10-26</td><td>Placeholder race icons for demos and prototypes: a list of shapes, one per race, Likely (12D); coloured by power colour in other factions, Proposed (12E).</td></tr>
+  <tr><td>2026-10-26</td><td>A weapon tile with missing art could show a square with its name typed in, Proposed (8J).</td></tr>
 </table>
 <div class="pt"><b>S:</b> <span class="tag decided">Decided</span> <b>Collapse speed against jump length.</b> The collapse spreads at a fixed distance rate, measured in map units such as pixels (or another calculation), not in jumps: it expands once per jump. Jumps between connected or adjacent clusters are shorter or longer depending on the distance between them, so a player can actually gain distance from the collapse by choosing longer jumps. This refines 2Q&rsquo;s &ldquo;about one jump&rsquo;s distance&rdquo;.</div>
 Doing Fine, Struggling and Doomed are the owning race's state at this cluster, not across its whole region: e.g. the Tentauri can be Doomed at a small cluster next to the collapse and Doing Fine at another 2 bands away. Border clusters (2K) are a region's front lines. When a front moves, the state and the rank change together (except core clusters, 2K): e.g. an inner cluster becomes a Border once the clusters beyond it fall.
@@ -252,6 +254,13 @@ Doing Fine, Struggling and Doomed are the owning race's state at this cluster, n
 <div class="pt"><b>C:</b> <span class="tag proposed">Proposed</span> Hull breaches can occur in walls, not only floors.</div>
 <div class="pt"><b>D:</b> <span class="tag decided">Decided</span> All ships have an airlock.</div>
 <div class="pt"><b>E:</b> <span class="tag proposed">Proposed</span> A system is installed into a room of the player's choice, not into a room reserved for it in advance, as FTL does. On a ship with conduits, its connection is made when it is installed.</div>
+<div class="pt"><b>F:</b> <span class="tag likely">Likely</span> <b>Ship setup (the designer called this &ldquo;highly likely&rdquo;).</b> Despite how the current art tests are set up, a ship would probably be loaded into the game as described in 5G to 5L. The art tests show how art represents a ship, but went in their own directions. All the examples below are approximate and would be defined in XML.</div>
+<div class="pt"><b>G:</b> <span class="tag likely">Likely</span> <b>Floor layout is the most important part.</b> An XML file gives coordinates from the ship&rsquo;s center point that say where rooms, doors and systems are. For example, <code>Room 0: (-1,-1),(1,1)</code> makes a 2x2 room of four tiles. With no art provided, the game can still render walls around the room and grey tiles for the floor.</div>
+<div class="pt"><b>H:</b> <span class="tag likely">Likely</span> <b>Systems in the layout.</b> A system entry gives its tile, and optionally its wall, rotation, mirroring and art. For example, <code>Piloting(-1,-1)</code> with Location: North Wall, Rotation: None, Mirror: None and Art: Tentauri.Pilot.Hood puts the piloting system in the room&rsquo;s top left tile, by the north wall, unrotated, with the Tentauri artwork. <code>Weapons(-1,1)</code> with Art: None goes in the same room&rsquo;s top right tile but is drawn only as a system icon over the center of the tile, with no console graphic.</div>
+<div class="pt"><b>I:</b> <span class="tag likely">Likely</span> <b>Doors in the layout.</b> A door entry gives a tile and the direction it faces. For example, <code>Door 0: (1,1)</code> facing South and <code>Door 1: (1,1)</code> facing East put two doors in the same room&rsquo;s bottom right corner, one on the south wall and one on the east wall.</div>
+<div class="pt"><b>J:</b> <span class="tag likely">Likely</span> <b>Files.</b> The artwork sits in the same folder as the XML, zipped or left in a folder named for the ship (see 11A). A ship typically has hull art and can have extra floor art. The same XML holds the other data: hull durability, hull art offset, starting weapons and crew members.</div>
+<div class="pt"><b>K:</b> <span class="tag likely">Likely</span> <b>Art is optional.</b> The game can technically handle a ship with no defined hull, console art or floor art: it builds the rooms from walls, floor squares, icons right over the tiles and door rectangles. It could possibly use default numbers for hull durability, or place systems anywhere they fit when no place is given.</div>
+<div class="pt"><b>L:</b> <span class="tag likely">Likely</span> <b>An unlisted system means the ship doesn&rsquo;t have it.</b> If the XML doesn&rsquo;t list life support, the ship has none and the crew will probably asphyxiate.</div>
 
 <h2 id="jump">6. Jump Travel</h2>
 <div class="pt"><b>A:</b> <span class="tag proposed">Proposed</span> The base jump drive is the <b>Jigawatt Drive</b> (named in 6D), powered by Mawjig (see 8C). Races may have their own drive variants, but all use the same fuel (cost in 6C).</div>
@@ -291,6 +300,7 @@ Doing Fine, Struggling and Doomed are the owning race's state at this cluster, n
 <div class="pt"><b>H:</b> <span class="tag proposed">Proposed</span> <b>Shield test:</b> shields go 1 for 1, one level per shield layer, with no odd bars. Each level costs two power and takes two damage (or two ion) to lose, so FTL's balance is kept. Each level is priced as FTL's two bars together (<code>system-prices.md</code>).</div>
 <div class="pt"><b>I:</b> <span class="tag likely">Likely</span> <b>Fight rewards:</b> a won fight pays per enemy ship destroyed or left without crew, from its wreckage (8C), plus any extra reward from the fight's event or story. Enemy ships that surrender or negotiate pay on those terms instead, possibly on top of any wrecks: the terms or the event might not allow picking at the other side's fallen comrades. Amounts are in <code>docs/reference/mawjig-cost-table.md</code>.
 <br><span class="tag proposed">Proposed</span> A wreck pays 2.5% of the ship's value &times; a band adjustment of 1.(band &minus; 1), from &times;1.0 in band 1 to &times;1.7 in band 8. A ship's value never changes; the adjustment multiplies only the reward. Killing the crew pays about 30% more (Decided).</div>
+<div class="pt"><b>J:</b> <span class="tag proposed">Proposed</span> A weapon tile with missing art could be displayed as a square with the weapon&rsquo;s name typed into it (see 5K for ships with missing art).</div>
 
 <h2 id="events">9. Events</h2>
 <div class="pt"><b>A:</b> <span class="tag open">Open</span> New events will be needed; see 2B for how distance from the collapse shapes them.</div>
@@ -318,6 +328,20 @@ Doing Fine, Struggling and Doomed are the owning race's state at this cluster, n
 <div class="pt"><b>A:</b> <span class="tag proposed">Proposed</span> Small JavaScript demos built on art mockups to try ideas before committing to them, e.g. the per-ship power display.</div>
 <div class="pt"><b>B:</b> <span class="tag decided">Decided</span> Art tests live in <code>docs/art-tests/</code>, one folder per test with a README recording what was done and the decision.</div>
 <div class="pt"><b>C:</b> Tried out a version of the document where we both are able to edit it. Unsure if it will continue to be used, or maybe occasionally.</div>
+<div class="pt"><b>D:</b> <span class="tag likely">Likely</span> <b>Placeholder race icons.</b> Demos and prototypes that have no creature art use a simple shape for each race:
+<table>
+<tr><th>Race</th><th>Shape</th></tr>
+<tr><td>Terran</td><td>Square</td></tr>
+<tr><td>Azurethea</td><td>Cross</td></tr>
+<tr><td>Mecha</td><td>Triangle</td></tr>
+<tr><td>Tentauri</td><td>Star</td></tr>
+<tr><td>Senti-GPH</td><td>Diamond</td></tr>
+<tr><td>Lykario</td><td>Crescent</td></tr>
+<tr><td>Malphen</td><td>Circle</td></tr>
+<tr><td>Whispwraith</td><td>Question mark</td></tr>
+</table>
+The icons themselves are made by whoever builds the demo; this is only the list.</div>
+<div class="pt"><b>E:</b> <span class="tag proposed">Proposed</span> A placeholder icon may be coloured with its race&rsquo;s designated power colour (see 14D) when it appears in another faction.</div>
 
 <h2 id="inspiration">13. Inspirations</h2>
 <ul>
@@ -401,6 +425,7 @@ Doing Fine, Struggling and Doomed are the owning race's state at this cluster, n
   <tr><td>2026-10-25</td><td>Controller layout for Xbox and PlayStation style controllers, with pause on a stick click, Likely (14E); customizable buttons Likely (14F).</td></tr>
   <tr><td>2026-10-25</td><td>Player Power Color setting: Default (Green), Racial or Specific Color (14D).</td></tr>
   <tr><td>2026-10-26</td><td>Tentauri Power Pink <code>#FF5ECA</code>, Likely (14D).</td></tr>
+  <tr><td>2026-10-26</td><td>Ship setup from an XML floor layout with optional art, Likely (5F to 5L).</td></tr>
 </table>
 
 </main>
