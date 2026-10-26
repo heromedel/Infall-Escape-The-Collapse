@@ -39,8 +39,8 @@ Terran. Prismatic mother-of-pearl colours, light from the upper left.
   build checks this). No spare rooms, as the art rules ask for the Tentauri.
 - **Consoles:** instead of monitors, each system is a small organic base growing from a soft pad, with the standard
   system symbol lit in a dark bulb (heromedel's sketch): Tentauri power pink (`#FF5ECA`) since 2026-10-26, as the
-  scout is an enemy encounter (Ship Designs) and a ship fighting the player shows its race's power colour; green
-  before. Each system has its own base, shaped by what it does:
+  scout is an enemy encounter (Ship Designs) and a ship fighting the player shows its race's power colour (accepted,
+  c75761b); green before. Each system has its own base, shaped by what it does:
 
 | System | Base |
 |---|---|
