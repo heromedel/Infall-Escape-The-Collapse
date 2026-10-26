@@ -5,7 +5,7 @@
  */
 
 import type { PictureCrew, ShipPicture } from '../shared/ShipPicture';
-import { systemSymbol, SYMBOL_BOX } from './SystemSymbols.js';
+import { systemSymbolElement, SYMBOL_BOX } from './SystemSymbols.js';
 
 const SVG = 'http://www.w3.org/2000/svg';
 
@@ -128,7 +128,7 @@ export class ShipDrawing {
       const symbol = this.group(`system-${system.key.replace(/\s+/g, '-')}`);
       symbol.setAttribute('transform', `translate(${x} ${y})`);
       symbol.setAttribute('color', picture.powerColour);
-      symbol.innerHTML = systemSymbol(system.name);
+      symbol.appendChild(systemSymbolElement(system.name, system.symbolSvg));
       const title = document.createElementNS(SVG, 'title');
       title.textContent = `${system.key}, level ${system.level}`;
       symbol.appendChild(title);

@@ -16,7 +16,10 @@ const HUMAN_LINES: Record<string, (fields: LogFields) => string> = {
   'content.ship_refused': (f) => `Refused ship "${f.ship}" from ${f.file}: ${f.reason}`,
   'content.ship_warning': (f) => `Ship "${f.ship}": ${f.warning}`,
   'content.art_missing': (f) => `Ship "${f.ship}" names ${f.kind} art ${f.art}, which is not in its folder; it will draw without it (GDD 5K).`,
-  'content.loaded': (f) => `Content loaded: ${f.ships} ships.`,
+  'content.system_loaded': (f) => `Loaded system "${f.system}"${f.symbol ? ' with its symbol' : ' without a symbol'}.`,
+  'content.system_refused': (f) => `Refused system file ${f.file}: ${f.reason}`,
+  'content.symbol_missing': (f) => `System "${f.system}" has no symbol file; it draws as a lettered square.`,
+  'content.loaded': (f) => `Content loaded: ${f.ships} ships, ${f.systems} systems.`,
   'debug.command': (f) => `Debug command: ${f.line}`,
   'debug.unknown_command': (f) => `No such debug command: ${f.command}. Type help.`,
 };

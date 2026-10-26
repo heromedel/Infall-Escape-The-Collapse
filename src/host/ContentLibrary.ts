@@ -4,6 +4,9 @@
  *
  * Ships: content/ships/<folder>/ship.xml is the base ship; loadout.<anything>.xml beside it are its loadouts,
  * each registered under the loadout's own name (GDD 5J). Art named in the XML is looked for in the same folder.
+ *
+ * Systems: content/systems/<folder>/system.xml names the system; symbol.svg beside it is its standard symbol,
+ * lifted from the accepted floor plans. A system with no folder still works; it draws as a lettered square.
  */
 
 import * as fs from 'node:fs';
@@ -13,6 +16,13 @@ import { ShipFileReader, ShipFileError } from '../simulation/content/ShipFileRea
 import { checkShip } from '../simulation/content/ShipChecks';
 import { Log } from './Log';
 
+/** A system's content: its name and, when it has one, its symbol's SVG text. */
+export interface SystemEntry {
+  name: string;
+  folder: string;
+  symbolSvg?: string;
+}
+
 /** A loaded ship together with the folder its art lives in. */
 export interface ShipEntry {
   definition: ShipDefinition;
@@ -21,6 +31,7 @@ export interface ShipEntry {
 
 export class ContentLibrary {
   private readonly ships = new Map<string, ShipEntry>();
+  private readonly systems = new Map<string, SystemEntry>();
 
   private constructor(private readonly log: Log) {}
 
@@ -30,8 +41,10 @@ export class ContentLibrary {
       log.event('content.folder_missing', { folder: contentFolder });
       return library;
     }
+    library.loadSystems(path.join(contentFolder, 'systems'));
     library.loadShips(path.join(contentFolder, 'ships'));
-    log.event('content.loaded', { ships: library.ships.size });
+    library.noteSystemsWithoutSymbols();
+    log.event('content.loaded', { ships: library.ships.size, systems: library.systems.size });
     return library;
   }
 
@@ -43,6 +56,41 @@ export class ContentLibrary {
 
   shipNames(): string[] {
     return [...this.ships.keys()];
+  }
+
+  /** The system's content, or nothing when no folder names it. */
+  system(name: string): SystemEntry | undefined {
+    return this.systems.get(name);
+  }
+
+  private loadSystems(systemsFolder: string): void {
+    if (!fs.existsSync(systemsFolder)) return;
+    for (const folderName of fs.readdirSync(systemsFolder).sort()) {
+      const folder = path.join(systemsFolder, folderName);
+      const systemFile = path.join(folder, 'system.xml');
+      if (!fs.existsSync(systemFile)) continue;
+      const name = /<system\s[^>]*name="([^"]+)"/.exec(fs.readFileSync(systemFile, 'utf8'))?.[1];
+      if (!name) {
+        this.log.event('content.system_refused', { file: systemFile, reason: 'the <system> element has no name="..."' });
+        continue;
+      }
+      const symbolFile = path.join(folder, 'symbol.svg');
+      const symbolSvg = fs.existsSync(symbolFile) ? fs.readFileSync(symbolFile, 'utf8') : undefined;
+      this.systems.set(name, { name, folder, symbolSvg });
+      this.log.event('content.system_loaded', { system: name, symbol: symbolSvg !== undefined });
+    }
+  }
+
+  /** A system a ship uses that has no symbol draws as a lettered square; say so once per name. */
+  private noteSystemsWithoutSymbols(): void {
+    const seen = new Set<string>();
+    for (const entry of this.ships.values()) {
+      for (const system of entry.definition.systems) {
+        if (seen.has(system.name) || this.systems.get(system.name)?.symbolSvg) continue;
+        seen.add(system.name);
+        this.log.event('content.symbol_missing', { system: system.name });
+      }
+    }
   }
 
   private loadShips(shipsFolder: string): void {

@@ -43,7 +43,7 @@ function openWindow(): BrowserWindow {
 /** What the window may ask the host for. Later this becomes the client connection the LAN also uses. */
 function answerWindowRequests(window: BrowserWindow, content: ContentLibrary, debug: DebugConsole): void {
   ipcMain.handle('ship-names', () => content.shipNames());
-  ipcMain.handle('ship-picture', (_event, name: string, side: Side) => shipPictureOf(content.ship(name), side));
+  ipcMain.handle('ship-picture', (_event, name: string, side: Side) => shipPictureOf(content.ship(name), side, content));
   ipcMain.handle('debug', (_event, line: string) => debug.run(line));
 }
 

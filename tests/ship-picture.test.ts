@@ -8,6 +8,7 @@ import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { ShipFileReader } from '../src/simulation/content/ShipFileReader';
 import { shipPictureOf } from '../src/host/ShipPicture';
+import type { ContentLibrary } from '../src/host/ContentLibrary';
 import { COLOURS } from '../src/simulation/content/Palette';
 
 const shipsFolder = path.join(__dirname, '..', 'content', 'ships');
@@ -15,7 +16,8 @@ const reader = new ShipFileReader();
 
 function pictureOf(folder: string, side: 'player' | 'enemy' = 'player') {
   const definition = reader.readShip(fs.readFileSync(path.join(shipsFolder, folder, 'ship.xml'), 'utf8'));
-  return shipPictureOf({ definition, folder: path.join(shipsFolder, folder) }, side);
+  const noSystems = { system: () => undefined } as unknown as ContentLibrary;
+  return shipPictureOf({ definition, folder: path.join(shipsFolder, folder) }, side, noSystems);
 }
 
 describe('the Outrider picture', () => {

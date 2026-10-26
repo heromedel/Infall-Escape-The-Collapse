@@ -65,6 +65,8 @@ export interface PictureSystem {
   row: number;
   /** The wall the console sits against, if any. */
   wall?: 'North' | 'South' | 'East' | 'West';
+  /** The system's standard symbol as SVG text (content/systems), or nothing: the window then draws a lettered square. */
+  symbolSvg?: string;
 }
 
 export interface PictureConduit {

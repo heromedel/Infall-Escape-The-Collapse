@@ -12,7 +12,7 @@ import type { PictureArt, PictureCrew, PictureDoor, PictureSegment, PictureTile,
 import { ShipDefinition, systemKey } from '../simulation/content/ShipDefinition';
 import { DIRECTIONS, Direction, gridIndex, neighbourTile, Tile, tileKey, tilesBetween } from '../simulation/content/Tile';
 import { placeholderShapeOf, powerColourOf, COLOURS } from '../simulation/content/Palette';
-import { ShipEntry } from './ContentLibrary';
+import { ContentLibrary, ShipEntry } from './ContentLibrary';
 
 /** The genre's room scale: 35 pixels a tile, the same the art tools use (GDD 3D). */
 export const TILE_SIZE = 35;
@@ -22,7 +22,7 @@ const DOOR_THICKNESS = 6;
 
 export type Side = 'player' | 'enemy';
 
-export function shipPictureOf(entry: ShipEntry, side: Side): ShipPicture {
+export function shipPictureOf(entry: ShipEntry, side: Side, content: ContentLibrary): ShipPicture {
   const ship = entry.definition;
   const grid = new Grid(ship);
   const roomOfTile = grid.roomOfTile();
@@ -46,7 +46,10 @@ export function shipPictureOf(entry: ShipEntry, side: Side): ShipPicture {
       const airlock = !roomOfTile.has(tileKey(neighbourTile(door.tile, door.facing, ship.centering)));
       return { id: door.id, ...doorRectangle(column, row, door.facing), airlock };
     }),
-    systems: ship.systems.map((system) => ({ key: systemKey(system), name: system.name, level: system.level, ...grid.at(system.tile), wall: system.wall })),
+    systems: ship.systems.map((system) => ({
+      key: systemKey(system), name: system.name, level: system.level, ...grid.at(system.tile), wall: system.wall,
+      symbolSvg: content.system(system.name)?.symbolSvg,
+    })),
     conduits: ship.conduits.map((conduit) => ({ ...grid.at(conduit.tile), runs: conduit.runs })),
     crew: placeholderCrew(ship, grid, side),
     hullArt: readHullArt(ship, entry.folder),
