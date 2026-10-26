@@ -117,5 +117,6 @@ Terran designs for a while (race profiles, Terrans 1, Likely). See `docs/art/REA
 | `tools/weapons.py` | Builds the weapon files and the Sporewing options sheet |
 | `tools/compose.py` | Places weapons at a hull's mounts, slid out and under the hull: `python3 compose.py HULL.svg OUT.svg` |
 | `tools/squad.py` | Builds the squad view against the Outrider |
+| `../outrider/tools/check_mounts.py` | Checks the mounts: `python3 ../outrider/tools/check_mounts.py ../pirate-*-hull.svg` |
 | `tools/floorplan.py` | Builds the floor plans: `python3 floorplan.py HIJACKER_ARMED.svg CUTPURSE_ARMED.svg OUT_DIR` |
 | `tools/art_kit.py`, `render.js`, `sheet.js` | Shared drawing kit, SVG-to-PNG, review sheets |

@@ -316,7 +316,8 @@ def build_ship(spec):
         h.raw(raw_id, {5: svg})
     h.raw("cockpit", {5: cockpit(*spec["cockpit"])})
     h.raw("sensor-array", {5: sensor_array(*spec["sensor"])})
-    h.raw("airlock", {5: airlock(*spec["airlock"])})
+    if spec["airlock"]:
+        h.raw("airlock", {5: airlock(*spec["airlock"])})
     for m in spec["mounts"]:
         h.mount(*m)
     return h
@@ -601,7 +602,24 @@ def pass_6(spec):
 
 
 P6 = pass_6(P5)
-VERSIONS = {1: V1, 2: V2, 3: V3, 4: V4, 11: P1, 12: P2, 13: P3, 14: P4, 15: P5, 16: P6}
+
+
+def pass_7(spec):
+    """Art rules (2026-10-26): no marked exterior doors, and six planned mounts on the outer edge."""
+    s = copy.deepcopy(spec)
+    s["airlock"] = None                                                     # the side airlock hatch
+    s["extra_raw"] = [r for r in s["extra_raw"] if r[0] != "spine-hatches"]  # the dorsal access hatches
+    # each mount on the outer edge with a clear line forward and its slide direction: 1-2 on the nose flanks, 3-4 on
+    # the shoulders (the two weapons), 5-6 on the wingtips. Odd port, even starboard.
+    s["mounts"] = [("mount-1", 162, 120, "", "left"), ("mount-2", 2 * CX - 162, 120, "", "right"),
+                   ("mount-3", 140, 266, "Gat 3.1 Triblast", "left"),
+                   ("mount-4", 2 * CX - 140, 266, "Gat M1 Pathfinder", "right"),
+                   ("mount-5", 36, 566, "", "left"), ("mount-6", 2 * CX - 36, 566, "", "right")]
+    return s
+
+
+P7 = pass_7(P6)
+VERSIONS = {1: V1, 2: V2, 3: V3, 4: V4, 11: P1, 12: P2, 13: P3, 14: P4, 15: P5, 16: P6, 17: P7}
 
 if __name__ == "__main__":
     out = sys.argv[1] if len(sys.argv) > 1 else "."
