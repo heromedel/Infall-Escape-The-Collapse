@@ -168,6 +168,12 @@ enemies or reaching squad-mates.
     laser suit with 10 shots ≈ 10 × 0.02 = 0.21. Farther targets leave fewer shots; a higher dock level means more
     oxygen, so more shots and a pricier launch. Possibly paid up front per launch, like loading a magazine.
 
+### XML injection in loadouts (2026-10-26)
+
+- **Proposed (2026-10-26, heromedel):** a tag or option letting a loadout XML inject raw XML into its ship, beyond
+  Patch and Replace (GDD 5J). Held back for now: it is mainly a modding feature and needs its own rules; Patch and
+  Replace cover every ship designed so far. Revisit when modding comes up.
+
 ### Stations as enemies (2026-10-23)
 
 **Open (2026-10-23):** stations that can fight like a ship, e.g. the doomed Senti relay station in
