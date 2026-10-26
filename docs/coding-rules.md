@@ -15,6 +15,9 @@ elegant code principles and the standard rules) and `CLAUDE.md` (the hard rule f
 5. **ECS.** An entity is a folder with a file naming the entity, its tags and components, and its art by name or
    path. The game systems load the file, see the components and know what to do. A weapon is an entity with
    component tags and no code: changing it from laser to missile behaviour is changing a tag. No code per entity.
+   A ship is the worked example (GDD 5F to 5L): `Ships/shipname.xml` holds the floor layout, systems, doors,
+   hull data, starting weapons and crew; `loadout.shipname.loadoutname.xml` derives a loadout from it (5J); the art
+   sits beside them in the same folder.
 6. **Approval.** Code is presented as blocks with a plain explanation of what each does, for heromedel's approval,
    before it goes in. Class and function names come first, so nobody ends up halfway down the pipeline wondering
    what a class does or why it has a journal.
