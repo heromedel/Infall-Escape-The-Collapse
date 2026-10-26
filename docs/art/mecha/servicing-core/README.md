@@ -32,6 +32,8 @@ faces up and is never turned. Two ways to fit them (`review/mix-tiles.png`, `rev
 
 | J | H with its table removed and nothing else changed (heromedel): the four jaws stand on the deck |
 
-`review/h-vs-j.png`, `review/j-inroom.png` show J. `review/f-h-i.png`, `review/i-inroom.png` show I. `review/e-vs-h.png`, `review/h-inroom.png` show H. `review/g-tile.png`, `review/g-inroom.png` show G. `review/inroom.png` shows each in the battle cross's core room, empty and with a HalfMech standing in it.
+| K | H with the table and its jaws removed, nothing else changed (heromedel): the wall panel and the two arms |
+
+`review/k-8x.png` shows K. `review/h-vs-j.png`, `review/j-inroom.png` show J. `review/f-h-i.png`, `review/i-inroom.png` show I. `review/e-vs-h.png`, `review/h-inroom.png` show H. `review/g-tile.png`, `review/g-inroom.png` show G. `review/inroom.png` shows each in the battle cross's core room, empty and with a HalfMech standing in it.
 
 Built by `tools/core_px.py ../crew/mecha-crew-sheet.svg OUT_DIR`.

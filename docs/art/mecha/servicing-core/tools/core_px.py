@@ -235,12 +235,23 @@ def core_j():
     return core_h(table=False)
 
 
+def core_k():
+    """K. H with its table and the table's jaws removed (and their lights); nothing else changed."""
+    px = core_h()
+    keep = core_h(table=False)
+    jaw_px = {xy for xy in keep if xy[1] >= 10 and 9 <= xy[0] <= 25}
+    for xy in set(px) - set(keep) | jaw_px:
+        px.pop(xy, None)
+    return px
+
+
 OPTIONS = [("A. Wall core and arms", core_a), ("B. Clamp ring", core_b), ("C. Service arch", core_c), ("D. A's panel, C's arms", core_d),
            ("E. D, arms over B's table", core_e), ("F. D, short arms, B's table", core_f),
            ("G. Long arms clear of the table", core_g),
            ("H. E's arms, clear of the table", core_h),
            ("I. E's arms, F's table lower", core_i),
-           ("J. H without the table", core_j)]
+           ("J. H without the table", core_j),
+           ("K. H without the table or its jaws", core_k)]
 TURN_E = lambda x, y: (34 - y, x)
 
 
@@ -273,7 +284,7 @@ if __name__ == "__main__":
     cells = []
     for i, (name, fn) in enumerate(OPTIONS):
         px = fn()
-        open(os.path.join(out, f"core-option-{'abcdefghij'[i]}.svg"), "w").write(
+        open(os.path.join(out, f"core-option-{'abcdefghijk'[i]}.svg"), "w").write(
             f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 35" width="35" height="35">{to_svg(px)}</svg>\n')
         x0 = 20 + i * (T * S + 30)
         cells.append(
