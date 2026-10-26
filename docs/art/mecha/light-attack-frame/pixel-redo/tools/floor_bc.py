@@ -18,6 +18,7 @@ import hull_bc_sleek as hull    # noqa: E402
 import tower_px as tp           # noqa: E402
 sys.path.insert(0, os.path.join(HERE, "..", "..", "..", "servicing-core", "tools"))
 import core_px as core          # noqa: E402
+from pixel_svg import paths     # noqa: E402
 
 T, X0, Y0, W, H = 35, hull.X0, hull.Y0, hull.W, hull.H
 PURPLE, DEEP, PALE = "#aa28eb", "#5a128c", "#ebe1fa"
@@ -191,7 +192,7 @@ def floor_layer(loadout, hull_px, frame="standard"):
 
 
 def svg(px, under=""):
-    r = "".join(f'<rect x="{x}" y="{y}" width="1" height="1" fill="{c}"/>' for (x, y), c in px.items())
+    r = paths(px)
     return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" '
             f'shape-rendering="crispEdges">{under}{r}</svg>')
 

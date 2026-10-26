@@ -38,34 +38,6 @@ def twinshot():
             + f'<circle cx="0" cy="6" r="3" fill="{DARK}" stroke="{STEEL_LIGHT}" stroke-width=".8"/></g>')
 
 
-def terran_base():
-    """The Terran hardpoint base every refitted weapon sits on."""
-    return (f'<rect x="-14" y="-6" width="28" height="22" rx="4" fill="url(#w-metal)" stroke="{INK}" stroke-width="1.5"/>'
-            f'<rect x="-10" y="10" width="20" height="3" rx="1" fill="{DARK}"/>')
-
-
-def sporewing_a():
-    """A sleek chitin missile pod with two wing vanes folded flat along it, seated in a Terran hardpoint base."""
-    pod = (f'<path d="M0,-50 C9,-46 11,-26 10,-4 C9,8 5,14 0,16 C-5,14 -9,8 -10,-4 C-11,-26 -9,-46 0,-50 Z" '
-           f'fill="url(#w-chitin)" stroke="{INK}" stroke-width="1.5"/>'
-           + "".join(f'<path d="M-9,{y} Q0,{y + 4} 9,{y}" fill="none" stroke="{AZ_DEEP}" stroke-width="1"/>'
-                     for y in (-30, -18, -6))
-           + f'<path d="M-4,-44 Q-6,-20 -4,8" fill="none" stroke="#ffffff" stroke-width="2.4" opacity=".3"/>'
-           f'<circle cx="0" cy="-44" r="3" fill="{AZ_DEEP}"/><circle cx="0" cy="-44" r="1.4" fill="{AZ_SHEEN}"/>')
-    vanes = "".join(f'<path d="M{s * 9},-28 C{s * 18},-22 {s * 20},-4 {s * 15},8 L{s * 10},4 Z" fill="{AZ_ROYAL}" '
-                    f'stroke="{INK}" stroke-width="1.2"/><path d="M{s * 11},-20 Q{s * 15},-8 {s * 13},2" fill="none" '
-                    f'stroke="{AZ_SHEEN}" stroke-width=".9" opacity=".7"/>' for s in (-1, 1))
-    return f'<g id="weapon-sporewing">{terran_base()}{vanes}{pod}</g>'
-
-
-def sporewing_b():
-    """A segmented organic tube on a Terran swivel mount: insect-like ring segments."""
-    segs = "".join(f'<ellipse cx="0" cy="{y}" rx="{9 - i * .6:.1f}" ry="6" fill="url(#w-chitin)" stroke="{INK}" '
-                   f'stroke-width="1.2"/>' for i, y in enumerate((4, -6, -16, -26, -36)))
-    tip = f'<ellipse cx="0" cy="-45" rx="5" ry="6" fill="{AZ_DEEP}" stroke="{INK}" stroke-width="1.2"/>'
-    return f'<g id="weapon-sporewing">{terran_base()}{segs}{tip}</g>'
-
-
 def sporewing_c():
     """The Sporewing, refitted: two folded wing plates close into a launcher housing that opens to fire, seated
     neatly in a Terran hardpoint base. Its moth-like Azurethea origin shows in the wings and their eye-spots."""
@@ -89,14 +61,6 @@ def file(body, w=80, h=90, ox=40, oy=60):
 if __name__ == "__main__":
     out = sys.argv[1]
     os.makedirs(out, exist_ok=True)
-    pieces = {"twinshot": twinshot(), "sporewing-a": sporewing_a(), "sporewing-b": sporewing_b(),
-              "sporewing-c": sporewing_c()}
-    for name, body in pieces.items():
+    for name, body in {"twinshot": twinshot(), "sporewing": sporewing_c()}.items():
         open(os.path.join(out, f"{name}.svg"), "w").write(file(body))
-    cells = "".join(f'<g transform="translate({60 + i * 120},90) scale(1.6)">{b}</g>'
-                    f'<text x="{60 + i * 120}" y="170" font-size="12" fill="#cfd6e2" text-anchor="middle" '
-                    f'font-family="sans-serif">{n}</text>' for i, (n, b) in enumerate(pieces.items()))
-    open(os.path.join(out, "weapon-options.svg"), "w").write(
-        f'<svg xmlns="http://www.w3.org/2000/svg" width="490" height="185">{defs()}'
-        f'<rect width="100%" height="100%" fill="#434951"/>{cells}</svg>')
     print("saved weapons")

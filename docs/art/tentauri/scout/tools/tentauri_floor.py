@@ -72,9 +72,11 @@ def supershield_glyph(x, y, colour):
 
 
 sys.path.insert(0, os.path.join(HERE, "..", "..", ".."))
-from palette import POWER_GREEN  # noqa: E402
+from palette import TENTAURI_POWER_PINK  # noqa: E402
 
-POWERED = POWER_GREEN   # the powered symbol (palette.md)
+# the powered symbol: the scout is an enemy encounter (Ship Designs), and a ship fighting the player shows its race's
+# power colour (palette.md); the game recolours it by who controls the ship
+POWERED = TENTAURI_POWER_PINK
 ORGAN = "#7fe0dc"
 ORGAN_EDGE = "#24485a"
 
@@ -386,12 +388,16 @@ def floor_layer():
 
 
 def armed(hull_svg):
-    """The hull with a Defense Laser placed at each mount (weapons are separate art)."""
+    """The hull with a Defense Laser at each fitted mount (weapons are separate art), slid out in the mount's slide
+    direction and drawn under the hull, so only the part past the edge shows."""
     text = open(hull_svg).read()
-    mounts = re.findall(r'<circle id="mount-[\w-]+" cx="([\d.]+)" cy="([\d.]+)"', text)
-    placed = "".join(f'<g transform="translate({x},{y})">{tw.segmented()}</g>' for x, y in mounts)
-    return text.replace('<g id="weapon-mounts" display="none">',
-                        f'{tw.defs()}{tw.defs2()}<g id="weapons-preview">{placed}</g><g id="weapon-mounts" display="none">')
+    mounts = re.findall(r'<circle id="mount-[\w-]+" cx="([\d.]+)" cy="([\d.]+)" r="3" data-weapon="([^"]*)" '
+                        r'data-slide="(\w+)"', text)
+    step = {"left": (-12, 0), "right": (12, 0), "up": (0, -12), "down": (0, 12)}
+    placed = "".join(f'<g transform="translate({float(x) + step[s][0]},{float(y) + step[s][1]})">{tw.segmented()}</g>'
+                     for x, y, w, s in mounts if w)
+    start = text.index(">", text.index("<svg")) + 1
+    return text[:start] + f'{tw.defs()}{tw.defs2()}<g id="weapons-preview">{placed}</g>' + text[start:]
 
 
 def svg(body, title):

@@ -12,6 +12,7 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
 import hull_bc_sleek as hull   # noqa: E402
 import floor_bc               # noqa: E402
+from pixel_svg import paths   # noqa: E402
 
 RAMP = hull.RAMP
 PURPLE, DEEP, PALE = "#aa28eb", "#5a128c", "#ebe1fa"
@@ -63,7 +64,7 @@ def battlesuit():
 
 
 def svg(px, w, h):
-    r = "".join(f'<rect x="{x}" y="{y}" width="1" height="1" fill="{c}"/>' for (x, y), c in sorted(px.items()))
+    r = paths(px)
     return f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {w} {h}" width="{w}" height="{h}" shape-rendering="crispEdges">{r}</svg>'
 
 
@@ -96,7 +97,7 @@ if __name__ == "__main__":
             a = armed(plan, set(h.lv), weapon, mount4)
         else:   # the suit is launched, not mounted: shown in clear space off the starboard bow
             a = armed(plan, set(h.lv), weapon, (318, 74), under=False)
-        r = "".join(f'<rect x="{x}" y="{y}" width="1" height="1" fill="{c}"/>' for (x, y), c in a.items() if 0 <= x < hull.W and 0 <= y < hull.H)
+        r = paths({(x, y): c for (x, y), c in a.items() if 0 <= x < hull.W and 0 <= y < hull.H})
         open(os.path.join(out, f"armed-{lo}.svg"), "w").write(
             f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {hull.W} {hull.H}" width="{hull.W}" height="{hull.H}" shape-rendering="crispEdges">{r}</svg>')
     print("weapons and armed previews written; mount 4 at", mount4)

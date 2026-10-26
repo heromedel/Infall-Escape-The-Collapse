@@ -7,12 +7,11 @@ weapon pod in both bays, the Cutpurse only the starboard one, with the port bay 
 art (weapons.py) and only drawn in the previews.
 Facing up, light from the upper left.
 """
-import copy
-import math
 import os
 import sys
 
-from art_kit import Hull, rounded_path, symmetric, mirror_x, shade, INK
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "tools"))  # docs/art/tools
+from art_kit import Hull, rounded_path, symmetric, mirror_x, shade, INK  # noqa: E402
 
 W, H, CX = 480, 760, 240
 
@@ -197,21 +196,11 @@ def build(spec):
     return h
 
 
-def hatch(x, y, w, h):
-    return (f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="2" fill="none" stroke="{shade(HULL_DARK, .6)}" '
-            f'stroke-width="1"/>{line(x + 2, y + h + .8, x + w - 2, y + h + .8, shade(HULL_DARK, 1.4), .8)}')
-
-
 def teleporter(x, y):
     """The crew teleporter's dorsal emitter: a recessed ring with a faint violet core."""
     return (f'<g id="teleporter"><circle cx="{x}" cy="{y}" r="13" fill="{DARK}" stroke="{INK}" stroke-width="1.2"/>'
             f'<circle cx="{x}" cy="{y}" r="9" fill="none" stroke="{STEEL}" stroke-width="1"/>'
             f'<circle cx="{x}" cy="{y}" r="4.5" fill="#9b7fd8" opacity=".7" filter="url(#glow)"/></g>')
-
-
-def airlock(x, y):
-    return (f'<g id="airlock"><rect x="{x - 5}" y="{y - 10}" width="10" height="20" rx="2" fill="{HULL_DARK}" '
-            f'stroke="{INK}" stroke-width="1.1"/>{line(x - 3, y, x + 3, y, DARK, 1)}</g>')
 
 
 def widen(spec, k):
@@ -251,41 +240,19 @@ def dagger():
         "scorch": [(204, 632, 24, 14), (276, 632, 24, 14), (140, 286, 18, 22, .3), (340, 286, 18, 22, .3)],
         "pits": [(196, 150, .8), (200, 162, .6), (284, 330, .7), (288, 340, .6), (190, 590, .8)],
         "rivets": [(x, 360) for x in range(186, 300, 14)],
-        "raw": [("cockpit", canopy(54, 120, 18)), ("teleporter", teleporter(CX, 300)),
-                ("hatches", hatch(CX - 11, 400, 22, 26) + hatch(CX - 11, 500, 22, 30)),
-                ("airlock", airlock(172, 420))],
+        "raw": [("cockpit", canopy(54, 120, 18)), ("teleporter", teleporter(CX, 300))],
         "mounts": [],
     }
     s = widen(s, 1.3)
-    # airlock hatches on both flanks, level with the floor plan's aft-hall airlock doors
-    ax = CX - (CX - 176) * 1.3 + 3
-    s["raw"][-1] = ("airlocks", airlock(ax, 475) + airlock(2 * CX - ax, 475))
+    # no airlock hatches drawn on the hull (art rules: no marked exterior doors; airlocks are in the floor plan)
     px = 154 - s["pod_dx"]
-    s["mounts"] = [("mount-sporewing", 2 * CX - px, 296, "Sporewing", "right"),
-                   ("mount-twinshot", px, 296, "Gat 2.1 Twinshot", "left")]
+    # six planned mounts on the outer edge, each with a clear line forward and its slide direction (art rules):
+    # 1-2 on the nose chines, 3-4 on the weapon pods' outer flanks, 5-6 on the fin tips. Odd port, even starboard.
+    s["mounts"] = [("mount-1", 178, 180, "", "left"), ("mount-2", 302, 180, "", "right"),
+                   ("mount-3", 116, 296, "Gat 2.1 Twinshot", "left"), ("mount-4", 364, 296, "Sporewing", "right"),
+                   ("mount-5", 84, 618, "", "left"), ("mount-6", 396, 618, "", "right")]
     s["scorch"][2:4] = [(px - 4, 286, 18, 22, .3), (2 * CX - px + 4, 286, 18, 22, .3)]
     return s
-
-
-def canard():
-    """Version 2: the dagger with small forward canards."""
-    s = dagger()
-    s["title"] = "Terran pirate cruiser, version 2"
-    s["canard"] = [(206, 150), (160, 186), (154, 200), (196, 196)]
-    return s
-
-
-def stepped():
-    """Version 3: a stepped hull: a narrow forward section, a wider armoured midsection, an engine block."""
-    s = dagger()
-    s["title"] = "Terran pirate cruiser, version 3"
-    s["body_half"] = [(CX, 36), (224, 60), (210, 130), (204, 196), (172, 212), (162, 236), (162, 470),
-                      (176, 488), (176, 600), (180, 640), (206, 654), (CX, 656)]
-    s["body_radii"] = [4, 6, 6, 3, 3, 4, 4, 3, 3, 8, 8, 4]
-    return s
-
-
-VERSIONS = {"v1": dagger, "v2": canard, "v3": stepped}
 
 
 def hijacker():
@@ -300,16 +267,17 @@ def cutpurse():
     s["title"] = "Terran Pirate Cutpurse hull"
     s["pods"] = ["starboard"]
     s["stripes"] = []
-    s["mounts"] = [m for m in s["mounts"] if m[0] != "mount-twinshot"]
+    # the port bay is faired over: mount 3 moves in to the fairing's flank, and is left free
+    s["mounts"] = [("mount-3", 158, 296, "", "left") if m[0] == "mount-3" else m for m in s["mounts"]]
     return s
 
 
-VERSIONS.update({"hijacker": hijacker, "cutpurse": cutpurse})
+VERSIONS = {"hijacker": hijacker, "cutpurse": cutpurse}
 
 if __name__ == "__main__":
     out = sys.argv[1]
     os.makedirs(out, exist_ok=True)
-    for name in sys.argv[2:] or ["v1", "v2", "v3"]:
+    for name in sys.argv[2:] or list(VERSIONS):
         hull = build(VERSIONS[name]())
         open(os.path.join(out, f"{name}.svg"), "w").write(hull.svg(5))
         open(os.path.join(out, f"{name}-mounts.svg"), "w").write(hull.svg(5, show_mounts=True))

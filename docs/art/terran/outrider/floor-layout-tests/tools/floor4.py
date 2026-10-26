@@ -24,6 +24,37 @@ SCREEN = "#1b2a44"
 METAL = "#c3c9d1"
 METAL_EDGE = "#a9b0ba"
 SHIP_W = 460
+# weapon hardpoints at the hull's shoulder mounts (mounts 3 and 4), each fed twice from the rim, so no single cut
+# drops a weapon (art rules: every hardpoint has a run back to the AZC; work as if mounts need power)
+HARDPOINTS = {"Triblast": {"at": (140, 266), "feeds": [(1, 3), (0, 4)]},
+              "Pathfinder": {"at": (320, 266), "feeds": [(3, 3), (3, 4)]}}
+
+
+def feed_points(tile, at):
+    """A feed from a rim tile straight out through the hull wall, then into the hardpoint."""
+    (x, y), (tx, ty) = centre(*tile), at
+    side = 1 if tx > x else -1
+    return [(x, y), (tx - side * 6, y), (tx, ty)]
+
+
+def check_hardpoints():
+    """Every hardpoint traces back to the core, and no single cut (rim, spoke or feed) drops a hardpoint."""
+    segs = wheel.segments() | {frozenset((t, name)) for name, hp in HARDPOINTS.items() for t in hp["feeds"]}
+
+    def reach(live):
+        seen, todo = {CORE_TILE}, [CORE_TILE]
+        while todo:
+            n = todo.pop()
+            for e in live:
+                if n in e:
+                    (other,) = e - {n}
+                    if other not in seen:
+                        seen.add(other)
+                        todo.append(other)
+        return seen
+    assert set(HARDPOINTS) <= reach(segs), "a hardpoint has no run to the core"
+    weak = [sorted(map(str, e)) for e in segs if not set(HARDPOINTS) <= reach(segs - {e})]
+    assert not weak, f"single points of failure for a hardpoint: {weak}"
 
 
 def room_of(c, r):
@@ -69,8 +100,9 @@ def conduits_metal():
         return "M" + " L".join(f"{centre(c, r)[0]:.1f},{centre(c, r)[1]:.1f}" for c, r in points)
     cut_set = {frozenset(cu) for cu in wheel.DEMO_CUTS}
     out = []
-    for path in [wheel.RIM] + list(wheel.SPOKES.values()):
-        d = path_d(path)
+    feeds = ["M" + " L".join(f"{x:.1f},{y:.1f}" for x, y in feed_points(t, hp["at"]))
+             for hp in HARDPOINTS.values() for t in hp["feeds"]]
+    for d in [path_d(p) for p in [wheel.RIM] + list(wheel.SPOKES.values())] + feeds:
         out.append(f'<path d="{d}" fill="none" stroke="{METAL_EDGE}" stroke-width="4" stroke-linejoin="round" '
                    f'opacity=".55"/>'
                    f'<path d="{d}" fill="none" stroke="{METAL}" stroke-width="2" stroke-linejoin="round" '
@@ -86,6 +118,22 @@ def conduits_metal():
     return "".join(out)
 
 
+def hardpoint_feeds():
+    """Selected: each hardpoint's two feeds glow like the rest of the network, ending in a lit hardpoint."""
+    out = []
+    for hp in HARDPOINTS.values():
+        for t in hp["feeds"]:
+            d = "M" + " L".join(f"{x:.1f},{y:.1f}" for x, y in feed_points(t, hp["at"]))
+            out.append(f'<path d="{d}" fill="none" stroke="#0c1018" stroke-width="6" stroke-linejoin="round" '
+                       f'stroke-linecap="round"/><path d="{d}" fill="none" stroke="{ON}" stroke-width="2.2" '
+                       f'stroke-linejoin="round" filter="url(#cglow)"/><path d="{d}" fill="none" stroke="#e8fff2" '
+                       f'stroke-width=".8" stroke-linejoin="round"/>')
+        tx, ty = hp["at"]
+        out.append(f'<circle cx="{tx}" cy="{ty}" r="4.2" fill="#0c1018"/><circle cx="{tx}" cy="{ty}" r="2.4" '
+                   f'fill="{ON}"/>')
+    return "".join(out)
+
+
 def ship(hull_data, dx, selected):
     parts = [f'<g transform="translate({dx},0)">',
              f'<image href="data:image/svg+xml;base64,{hull_data}" x="0" y="0" width="460" height="740"/>',
@@ -93,7 +141,7 @@ def ship(hull_data, dx, selected):
     parts += [base.room_svg(*rm) for rm in ROOMS]
     parts += [base.door_svg(c, r, s, DOOR) for c, r, s in DOORS]
     parts += [base.door_svg(c, r, s, AIRLOCK) for c, r, s in AIRLOCKS]
-    parts.append(f'<g class="conduits">{wheel.conduits() if selected else conduits_metal()}</g>')
+    parts.append(f'<g class="conduits">{(wheel.conduits() + hardpoint_feeds()) if selected else conduits_metal()}</g>')
     parts.append(base.core())
     parts += [terminal(*s) for s in SYSTEMS]
     label = "Selected: conduits glow" if selected else "Not selected: metal conduits, only breaks show"
@@ -116,6 +164,7 @@ def legend(x0, stats):
         "set into the floor and blend in; only the broken runs show, with sparks.",
         f"Conduit wheel as in test 3: no single cut unpowers a system, two cuts lose at most {stats['worst pair']}, "
         f"and it takes {stats['cuts to kill all']} to lose them all.",
+        "Weapon hardpoints (the shoulder mounts) are each fed twice from the rim, so no single cut drops a weapon.",
     ]
     yy = y + 52
     for text in notes:
@@ -148,6 +197,7 @@ def legend(x0, stats):
 def build(hull_svg):
     base.check_layout()
     stats = wheel.check_power()
+    check_hardpoints()
     hull_data = base64.b64encode(open(hull_svg, "rb").read()).decode()
     w, h = SHIP_W * 2 + 300, 740
     body = ship(hull_data, 0, True) + ship(hull_data, SHIP_W, False) + legend(SHIP_W * 2 + 10, stats)
