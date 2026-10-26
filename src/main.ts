@@ -76,15 +76,26 @@ function registerDebugCommands(debug: DebugConsole, content: ContentLibrary, set
   });
   debug.register({
     name: 'battle',
-    description: 'Start a live battle in the window: battle [seed] [player ship] [enemy ship] [distance GM]. Ship names with spaces go in quotes. Default: the Outrider against the Light Attack Frame at 400 GM.',
+    description: 'Start a live battle in the window: battle [seed] ["player ships"] ["enemy ships"] [distance GM]. Each quoted list is ship names separated by commas, e.g. battle 7 "SC-1 Outrider,Terran Pirate Cutpurse" "Light Attack Frame,Light Attack Frame". Default: the Outrider against the Light Attack Frame at 400 GM.',
     run: (words) => {
       const seed = Number(words[0] ?? Date.now() % 100000) || 1;
       const rest = words.slice(1).join(' ');
-      const names = rest.match(/"([^"]+)"/g)?.map((quoted) => quoted.slice(1, -1)) ?? [];
+      const lists = rest.match(/"([^"]+)"/g)?.map((quoted) => quoted.slice(1, -1).split(',').map((name) => name.trim()).filter(Boolean)) ?? [];
       const distance = Number(rest.replace(/"[^"]+"/g, '').trim()) || undefined;
-      const battle = new Battle(content, log, settings, names[0] ?? 'SC-1 Outrider', names[1] ?? 'Light Attack Frame', seed, distance);
+      const battle = new Battle(content, log, settings, lists[0] ?? 'SC-1 Outrider', lists[1] ?? 'Light Attack Frame', seed, distance);
       host.startBattle(battle);
-      return `Battle started, seed ${seed}: ${battle.simulation.squads[0].ships[0].name} against ${battle.simulation.squads[1].ships[0].name} at ${battle.simulation.distanceGm} GM. Space pauses.`;
+      const names = (index: number) => battle.simulation.squads[index].ships.map((ship) => ship.name).join(' + ');
+      return `Battle started, seed ${seed}: ${names(0)} against ${names(1)} at ${battle.simulation.distanceGm} GM. Space pauses.`;
+    },
+  });
+  debug.register({
+    name: 'formation',
+    description: 'Squad formation (GDD 3H, 3I): formation depth 0.7 | inverted on|off. Takes effect at the next battle.',
+    run: ([what, value]) => {
+      if (what === 'depth' && value !== undefined && !Number.isNaN(Number(value))) settings.formationDepth = Number(value);
+      else if (what === 'inverted' && value !== undefined) settings.formationInverted = value === 'on';
+      else if (what !== undefined) return 'formation depth <share of the tallest ship> | inverted on|off';
+      return `Formation: curve depth ${settings.formationDepth}, ${settings.formationInverted ? 'inverted (centre forward)' : 'centre back'}.`;
     },
   });
   debug.register({

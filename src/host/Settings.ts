@@ -12,4 +12,7 @@ export class Settings {
   /** Turn Mode (GDD 4I): Auto Pause Off > On, and its interval, stored in ticks and shown in seconds. */
   autoPause = false;
   autoPauseIntervalTicks = secondsToTicks(10);
+  /** Squad formation (GDD 3H, 3I): curve depth as a share of the tallest ship, and the inverted curve. */
+  formationDepth = 0.7;
+  formationInverted = false;
 }

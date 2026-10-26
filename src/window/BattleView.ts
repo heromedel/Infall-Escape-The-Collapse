@@ -7,9 +7,10 @@
 import type { ShipPicture } from '../shared/ShipPicture';
 import type { Snapshot, SnapshotShip, SnapshotShot } from '../shared/Snapshot';
 import { ShipDrawing } from './ShipDrawing.js';
+import { formationSlots, FormationSettings } from './Formation.js';
 
 const SVG = 'http://www.w3.org/2000/svg';
-const SHIP_GAP = 60;
+/** Space between the front line of each squad and the divider: the off-screen gap's on-screen edge. */
 const ROW_GAP = 120;
 /** Room above a ship's art for its hull bar, shield pips and name. */
 const LABEL_SPACE = 44;
@@ -55,19 +56,19 @@ export class BattleView {
     this.shotsGroup = document.createElementNS(SVG, 'g');
   }
 
-  /** Lays both squads out from their pictures. */
-  start(pictures: Record<number, ShipPicture>, playerShipIds: number[]): void {
+  /** Lays both squads out from their pictures, each in its formation curve facing the divider (GDD 3H). */
+  start(pictures: Record<number, ShipPicture>, playerShipIds: number[], formation: FormationSettings): void {
     this.root.replaceChildren();
     this.ships.clear();
     this.playerShipIds = playerShipIds;
     const enemy = Object.entries(pictures).filter(([id]) => !playerShipIds.includes(Number(id)));
     const player = Object.entries(pictures).filter(([id]) => playerShipIds.includes(Number(id)));
-    const rowWidth = (row: [string, ShipPicture][]) => row.reduce((sum, [, picture]) => sum + footprint(picture).width, 0) + SHIP_GAP * Math.max(0, row.length - 1);
-    const rowHeight = (row: [string, ShipPicture][]) => Math.max(0, ...row.map(([, picture]) => footprint(picture).height));
-    this.width = Math.max(rowWidth(enemy), rowWidth(player));
-    const enemyHeight = rowHeight(enemy);
+    const enemyLayout = formationSlots(enemy.map(([, picture]) => footprint(picture)), 'down', formation);
+    const playerLayout = formationSlots(player.map(([, picture]) => footprint(picture)), 'up', formation);
+    this.width = Math.max(enemyLayout.width, playerLayout.width);
+    const enemyHeight = enemyLayout.height;
     this.dividerY = enemyHeight + ROW_GAP / 2;
-    this.height = enemyHeight + ROW_GAP + rowHeight(player);
+    this.height = enemyHeight + ROW_GAP + playerLayout.height;
 
     const divider = document.createElementNS(SVG, 'line');
     divider.setAttribute('x1', '0'); divider.setAttribute('x2', String(this.width));
@@ -75,8 +76,8 @@ export class BattleView {
     divider.setAttribute('stroke', LOOK.divider); divider.setAttribute('stroke-dasharray', '8 8');
     this.root.appendChild(divider);
 
-    this.placeRow(enemy, (this.width - rowWidth(enemy)) / 2, 0);
-    this.placeRow(player, (this.width - rowWidth(player)) / 2, enemyHeight + ROW_GAP);
+    this.placeSquad(enemy, enemyLayout.slots, (this.width - enemyLayout.width) / 2, 0);
+    this.placeSquad(player, playerLayout.slots, (this.width - playerLayout.width) / 2, enemyHeight + ROW_GAP);
     this.root.appendChild(this.shotsGroup);
   }
 
@@ -110,16 +111,15 @@ export class BattleView {
     return { x: placed.offsetX + tile.column * size + size / 2, y: placed.offsetY + tile.row * size + size / 2 };
   }
 
-  private placeRow(row: [string, ShipPicture][], startX: number, y: number): void {
-    let x = startX;
-    for (const [idText, picture] of row) {
+  private placeSquad(row: [string, ShipPicture][], slots: { x: number; y: number }[], startX: number, startY: number): void {
+    row.forEach(([idText, picture], index) => {
       const id = Number(idText);
       const drawing = new ShipDrawing();
       drawing.draw(picture);
       const print = footprint(picture);
       // the tile grid sits inside its footprint: past the art's overhang on the left, and below the labels and overhang on top
-      const gridX = x + print.left;
-      const gridY = y + print.top;
+      const gridX = startX + slots[index].x + print.left;
+      const gridY = startY + slots[index].y + print.top;
       const group = document.createElementNS(SVG, 'g');
       group.setAttribute('transform', `translate(${gridX} ${gridY})`);
       group.dataset.shipId = String(id);
@@ -144,8 +144,7 @@ export class BattleView {
       this.root.appendChild(group);
       const tileByCoordinate = new Map(picture.floorTiles.map((tile) => [`${tile.x},${tile.y}`, { column: tile.column, row: tile.row }]));
       this.ships.set(id, { id, picture, drawing, group, offsetX: gridX, offsetY: gridY, hullBar, shieldPips, tileByCoordinate });
-      x += print.width + SHIP_GAP;
-    }
+    });
   }
 
   /** Floor tiles carry the ship, tile and room they are, so BattleControls can read a click. */

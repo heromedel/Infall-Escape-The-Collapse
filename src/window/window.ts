@@ -68,7 +68,7 @@ function listenToHost(): void {
     switch (message.kind) {
       case 'BattleStarted': {
         inBattle = true;
-        battleView.start(message.pictures, message.playerShipIds);
+        battleView.start(message.pictures, message.playerShipIds, message.formation);
         stage.replaceChildren(battleView.root);
         const size = battleView.size();
         camera.fitTo(size.width, size.height);

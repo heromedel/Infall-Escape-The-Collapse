@@ -14,7 +14,7 @@ export type ClientToHost =
 
 export type HostToClient =
   /** Sent once when a battle starts: everything the window needs to draw each ship (the static parts). */
-  | { kind: 'BattleStarted'; pictures: Record<number, ShipPicture>; playerShipIds: number[] }
+  | { kind: 'BattleStarted'; pictures: Record<number, ShipPicture>; playerShipIds: number[]; formation: { depth: number; inverted: boolean } }
   /** Sent every tick while a battle runs, and once more when it ends. */
   | { kind: 'Snapshot'; snapshot: Snapshot }
   | { kind: 'Paused'; paused: boolean; by: string }
