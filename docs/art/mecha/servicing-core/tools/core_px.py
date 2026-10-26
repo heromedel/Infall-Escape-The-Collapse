@@ -245,13 +245,33 @@ def core_k():
     return px
 
 
+def core_l(top=10, shift=5):
+    """L. K with F's table style (B's flared jaws and lights, unchanged in shape) made skinnier, as tall as H's table,
+    clear of the arms."""
+    shape = poly_mask({11: (4, 9), 12: (4, 9), 13: (4, 10), 14: (5, 11), 15: (6, 8), 16: (6, 7)})
+    jaw = {(x + shift, y + top - 10) for x, y in shape}
+    low = {(x + shift, 45 - y) for x, y in shape}
+    jaws = jaw | mirror(jaw) | low | mirror(low)
+    px = {}
+    pad(px, 8 + shift, top, 27 - shift, 34, corners=False)
+    px.update(shade_parts([(jaws, ARMOUR)], 7))
+    for x, y in ((10, top + 4), (24, top + 4), (10, 31), (24, 31)):
+        px[(x + shift if x < 17 else x - shift, y)] = PURPLE
+    arms = core_k()
+    table = set(px)
+    assert not {(x + dx, y) for x, y in arms if y > 9 for dx in (-1, 0, 1)} & table, "the table must not touch the arms"
+    px.update(arms)
+    return px
+
+
 OPTIONS = [("A. Wall core and arms", core_a), ("B. Clamp ring", core_b), ("C. Service arch", core_c), ("D. A's panel, C's arms", core_d),
            ("E. D, arms over B's table", core_e), ("F. D, short arms, B's table", core_f),
            ("G. Long arms clear of the table", core_g),
            ("H. E's arms, clear of the table", core_h),
            ("I. E's arms, F's table lower", core_i),
            ("J. H without the table", core_j),
-           ("K. H without the table or its jaws", core_k)]
+           ("K. H without the table or its jaws", core_k),
+           ("L. K with F's table, skinnier and tall", core_l)]
 TURN_E = lambda x, y: (34 - y, x)
 
 
@@ -284,7 +304,7 @@ if __name__ == "__main__":
     cells = []
     for i, (name, fn) in enumerate(OPTIONS):
         px = fn()
-        open(os.path.join(out, f"core-option-{'abcdefghijk'[i]}.svg"), "w").write(
+        open(os.path.join(out, f"core-option-{'abcdefghijkl'[i]}.svg"), "w").write(
             f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 35" width="35" height="35">{to_svg(px)}</svg>\n')
         x0 = 20 + i * (T * S + 30)
         cells.append(
