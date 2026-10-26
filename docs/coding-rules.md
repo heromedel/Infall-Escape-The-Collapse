@@ -41,5 +41,7 @@ elegant code principles and the standard rules) and `CLAUDE.md` (the hard rule f
 12. **Tests.** Run the tests the change needs. Don't run every test every time.
 13. **Ticks.** The simulation runs on fixed ticks (GDD 3E), 20 a second (0.05 s); every time in the reference
     tables is converted to ticks.
+14. **FTL's terms.** FTL's terms, e.g. scrap, may appear in the design docs only beside their Mawjig conversion,
+    and likely never in the code. *(Likely, heromedel, 2026-10-26)*
 
 Branch and merge rules for the coding session are heromedel's to set.
