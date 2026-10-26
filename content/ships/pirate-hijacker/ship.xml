@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Terran Pirate Hijacker: a mid-tier doomed-Terran pirate (ship-suggestions.md, layout Proposed 2026-10-26).
      4 tiles wide (Point centering on x, so there is no x = 0) and 13 long (Tile centering on y). -->
-<ship name="Terran Pirate Hijacker" race="Terran" powerColour="Pirate">
+<ship name="Terran Pirate Hijacker" race="Terran">
   <center x="Point" y="Tile"/>
   <hull points="14"/>
   <power kind="AZC" level="3"/>

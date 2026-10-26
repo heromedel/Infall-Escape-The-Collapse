@@ -49,6 +49,16 @@ export function powerColourOf(name: string): string {
   return POWER_COLOUR_BY_NAME[name] ?? COLOURS.powerGreen;
 }
 
+/**
+ * The power colour an enemy ship shows: its own colour name when the ship file gives one, else its race's. An
+ * enemy Terran ship reads as a pirate and shows pirate orange (heromedel, 2026-10-26; the setting
+ * `Enemy Terran Color: Pirate Power Orange > Power Green` is Proposed in GDD 14D and not built yet).
+ */
+export function enemyPowerColourOf(race: string, colourName?: string): string {
+  if (colourName) return powerColourOf(colourName);
+  return race === 'Terran' ? COLOURS.pirateOrange : powerColourOf(race);
+}
+
 export function placeholderShapeOf(race: string): PlaceholderShape {
   return PLACEHOLDER_SHAPE_BY_RACE[race] ?? 'QuestionMark';
 }

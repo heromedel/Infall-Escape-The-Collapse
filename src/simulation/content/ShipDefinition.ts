@@ -76,8 +76,8 @@ export interface ShipDefinition {
   name: string;
   race: string;
   /**
-   * The power colour this ship shows as an enemy, by palette name, when it isn't its race's: pirates show pirate
-   * orange on a Terran hull (GDD 14D). Unset: the race's own colour.
+   * The power colour this ship shows as an enemy, by palette name, when it isn't the usual one for its race
+   * (GDD 14D). Unset: the race's own colour, or pirate orange for a Terran enemy.
    */
   powerColour?: string;
   /** The base ship's name when this definition came from a loadout file; otherwise the same as `name`. */

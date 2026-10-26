@@ -11,7 +11,7 @@ import * as path from 'node:path';
 import type { PictureArt, PictureCrew, PictureDoor, PictureSegment, PictureTile, ShipPicture } from '../shared/ShipPicture';
 import { ShipDefinition, systemKey } from '../simulation/content/ShipDefinition';
 import { DIRECTIONS, Direction, gridIndex, neighbourTile, Tile, tileKey, tilesBetween } from '../simulation/content/Tile';
-import { placeholderShapeOf, powerColourOf, COLOURS } from '../simulation/content/Palette';
+import { placeholderShapeOf, enemyPowerColourOf, COLOURS } from '../simulation/content/Palette';
 import { ContentLibrary, ShipEntry } from './ContentLibrary';
 
 /** The genre's room scale: 35 pixels a tile, the same the art tools use (GDD 3D). */
@@ -33,7 +33,7 @@ export function shipPictureOf(entry: ShipEntry, side: Side, content: ContentLibr
     tileSize: TILE_SIZE,
     columns: grid.columns,
     rows: grid.rows,
-    powerColour: side === 'player' ? COLOURS.powerGreen : powerColourOf(ship.powerColour ?? ship.race),
+    powerColour: side === 'player' ? COLOURS.powerGreen : enemyPowerColourOf(ship.race, ship.powerColour),
     floorTiles: grid.allRoomTiles().map((tile) => grid.at(tile)),
     rooms: ship.rooms.map((room) => {
       const topLeft = grid.at({ x: Math.min(room.from.x, room.to.x), y: Math.min(room.from.y, room.to.y) });
@@ -140,7 +140,7 @@ function doorRectangle(column: number, row: number, facing: Direction): { x: num
  * really start is the simulation's business (step 4); this only gives the picture someone to draw.
  */
 function placeholderCrew(ship: ShipDefinition, grid: Grid, side: Side): PictureCrew[] {
-  const colour = side === 'player' ? COLOURS.powerGreen : powerColourOf(ship.powerColour ?? ship.race);
+  const colour = side === 'player' ? COLOURS.powerGreen : enemyPowerColourOf(ship.race, ship.powerColour);
   const standingSpots = [...ship.systems.map((system) => system.tile), ...grid.allRoomTiles()];
   const taken = new Set<string>();
   const crew: PictureCrew[] = [];
