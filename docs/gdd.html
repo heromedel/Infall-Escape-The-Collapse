@@ -252,6 +252,13 @@ Doing Fine, Struggling and Doomed are the owning race's state at this cluster, n
 <div class="pt"><b>C:</b> <span class="tag proposed">Proposed</span> Hull breaches can occur in walls, not only floors.</div>
 <div class="pt"><b>D:</b> <span class="tag decided">Decided</span> All ships have an airlock.</div>
 <div class="pt"><b>E:</b> <span class="tag proposed">Proposed</span> A system is installed into a room of the player's choice, not into a room reserved for it in advance, as FTL does. On a ship with conduits, its connection is made when it is installed.</div>
+<div class="pt"><b>F:</b> <span class="tag likely">Likely</span> <b>Ship setup (the designer called this &ldquo;highly likely&rdquo;).</b> Despite how the current art tests are set up, a ship would probably be loaded into the game as described in 5G to 5L. The art tests show how art represents a ship, but went in their own directions. All the examples below are approximate and would be defined in XML.</div>
+<div class="pt"><b>G:</b> <span class="tag likely">Likely</span> <b>Floor layout is the most important part.</b> An XML file gives coordinates from the ship&rsquo;s center point that say where rooms, doors and systems are. For example, <code>Room 0: (-1,-1),(1,1)</code> makes a 2x2 room of four tiles. With no art provided, the game can still render walls around the room and grey tiles for the floor.</div>
+<div class="pt"><b>H:</b> <span class="tag likely">Likely</span> <b>Systems in the layout.</b> A system entry gives its tile, and optionally its wall, rotation, mirroring and art. For example, <code>Piloting(-1,-1)</code> with Location: North Wall, Rotation: None, Mirror: None and Art: Tentauri.Pilot.Hood puts the piloting system in the room&rsquo;s top left tile, by the north wall, unrotated, with the Tentauri artwork. <code>Weapons(-1,1)</code> with Art: None goes in the same room&rsquo;s top right tile but is drawn only as a system icon over the center of the tile, with no console graphic.</div>
+<div class="pt"><b>I:</b> <span class="tag likely">Likely</span> <b>Doors in the layout.</b> A door entry gives a tile and the direction it faces. For example, <code>Door 0: (1,1)</code> facing South and <code>Door 1: (1,1)</code> facing East put two doors in the same room&rsquo;s bottom right corner, one on the south wall and one on the east wall.</div>
+<div class="pt"><b>J:</b> <span class="tag likely">Likely</span> <b>Files.</b> The artwork sits in the same folder as the XML, zipped or left in a folder named for the ship (see 11A). A ship typically has hull art and can have extra floor art. The same XML holds the other data: hull durability, hull art offset, starting weapons and crew members.</div>
+<div class="pt"><b>K:</b> <span class="tag likely">Likely</span> <b>Art is optional.</b> The game can technically handle a ship with no defined hull, console art or floor art: it builds the rooms from walls, floor squares, icons right over the tiles and door rectangles. It could possibly use default numbers for hull durability, or place systems anywhere they fit when no place is given.</div>
+<div class="pt"><b>L:</b> <span class="tag likely">Likely</span> <b>An unlisted system means the ship doesn&rsquo;t have it.</b> If the XML doesn&rsquo;t list life support, the ship has none and the crew will probably asphyxiate.</div>
 
 <h2 id="jump">6. Jump Travel</h2>
 <div class="pt"><b>A:</b> <span class="tag proposed">Proposed</span> The base jump drive is the <b>Jigawatt Drive</b> (named in 6D), powered by Mawjig (see 8C). Races may have their own drive variants, but all use the same fuel (cost in 6C).</div>
@@ -401,6 +408,7 @@ Doing Fine, Struggling and Doomed are the owning race's state at this cluster, n
   <tr><td>2026-10-25</td><td>Controller layout for Xbox and PlayStation style controllers, with pause on a stick click, Likely (14E); customizable buttons Likely (14F).</td></tr>
   <tr><td>2026-10-25</td><td>Player Power Color setting: Default (Green), Racial or Specific Color (14D).</td></tr>
   <tr><td>2026-10-26</td><td>Tentauri Power Pink <code>#FF5ECA</code>, Likely (14D).</td></tr>
+  <tr><td>2026-10-26</td><td>Ship setup from an XML floor layout with optional art, Likely (5F to 5L).</td></tr>
 </table>
 
 </main>
