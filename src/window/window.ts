@@ -45,11 +45,26 @@ async function showPickedShip(): Promise<void> {
     + `${picture.systems.length} systems, ${picture.doors.length} doors, hull art ${picture.hullArt ? picture.hullArt.kind : 'none'}.`;
 }
 
+/** The debug console: Enter runs the line; up and down walk back through the commands typed this session. */
 function wireDebugConsole(): void {
   const line = document.getElementById('debug-line') as HTMLInputElement;
   const output = document.getElementById('debug-output') as HTMLPreElement;
+  const history: string[] = [];
+  let historyIndex = 0;   // history.length means "the line being typed"
+  let unsentLine = '';
   line.addEventListener('keydown', async (event) => {
+    if (event.key === 'ArrowUp' || event.key === 'ArrowDown') {
+      event.preventDefault();
+      if (historyIndex === history.length) unsentLine = line.value;
+      historyIndex = Math.max(0, Math.min(history.length, historyIndex + (event.key === 'ArrowUp' ? -1 : 1)));
+      line.value = historyIndex === history.length ? unsentLine : history[historyIndex];
+      line.setSelectionRange(line.value.length, line.value.length);
+      return;
+    }
     if (event.key !== 'Enter' || line.value.trim() === '') return;
+    history.push(line.value);
+    historyIndex = history.length;
+    unsentLine = '';
     output.textContent = await host.debug(line.value);
     line.value = '';
     await showPickedShip();   // a command may have changed what the picture looks like
