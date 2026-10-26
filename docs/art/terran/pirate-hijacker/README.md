@@ -1,7 +1,7 @@
 # Terran Pirate Hijacker hull (Hijacker and Cutpurse loadouts)
 
 **Date:** 2026-10-23
-**Status:** accepted by Ship Designs (version 3 of the review, the dagger cruiser). Ship design: `docs/ship-suggestions.md`,
+**Status:** accepted by Ship Designs (version 3 of the review, the dagger cruiser); the 2026-10-26 art-rule fixes (one-tile AZC, six edge mounts, no hull hatches) re-accepted (7b5b613). Ship design: `docs/ship-suggestions.md`,
 "Terran Pirate Hijacker" and "Pirate Hijacker loadouts".
 
 ![Loadouts](loadouts.png)

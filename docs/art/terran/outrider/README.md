@@ -1,7 +1,7 @@
 # SC-1 "Outrider" hull
 
 **Date:** 2026-10-23
-**Status:** accepted by Ship Designs (version 1). Ship design: `docs/ship-suggestions.md`, the Outrider section
+**Status:** accepted by Ship Designs (version 1); pass 7 (no marked hatches, six edge mounts) re-accepted on 2026-10-26. Ship design: `docs/ship-suggestions.md`, the Outrider section
 (the player's first ship, a doing-well Terran light battle scout).
 
 ## What it is
