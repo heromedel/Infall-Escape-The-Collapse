@@ -301,3 +301,19 @@ about FTL's per ship (F4).
   higher-tech, dearer items, and later purchases are for several ships. Spending rises with band and squad size,
   so high-band pay doesn't run away (F4: per-ship upgrade money stays near FTL's). An early diver with 1–2 ships
   gets more per ship, but needs that power to survive; that is the dive's intended payoff. No change suggested.
+
+## F8. Starting Mawjig (2026-10-26)
+
+No doc set how much Mawjig a run starts with; Production's Goal P made the gap visible. FTL starts a ship with
+about 16 fuel and about 10 scrap on Normal (hard-coded, from memory) and, for the Kestrel, 8 missiles (data).
+
+| Option | Amount | Matches |
+|---|:-:|---|
+| A | 19.36 | FTL's 16 fuel as 16 jumps |
+| B | 22.18 | The Kestrel's whole start at Infall's prices |
+| C | 12.11 | One band of jumps (10 × 1.21) |
+
+- **Proposed (heromedel, 2026-10-26): C, 12.11 for the squad, for now** (GDD 8K). It covers the 5-jump collapse
+  opening (6.05) with a little over; band 1 nets about +6.81 per band for a lone ship (F4), so the start is a
+  cushion. It is tighter than FTL: Mawjig is also shopping money, so an early store purchase leaves the squad lean,
+  and one unlucky stretch means Waiting.
