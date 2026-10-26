@@ -5,6 +5,8 @@ Usage: python3 pixel_kit.py OUT_DIR [v7 v8 v9]  (earlier hull versions, kept for
 """
 import math, os, random, sys
 from PIL import Image, ImageDraw
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from pixel_svg import paths  # noqa: E402
 
 W, H, CX = 440, 330, 220
 OUTLINE, SHADOW, DARK, ARMOUR, EDGE = "#0a0a0e", "#1c1d24", "#2e3039", "#4a4d5a", "#7a7f8e"
@@ -216,7 +218,7 @@ VARIANTS = {"v7": v7, "v8": v8, "v9": v9}
 
 
 def svg(c, rooms=False):
-    rects = "".join(f'<rect x="{x}" y="{y}" width="1" height="1" fill="{col}"/>' for (x, y), col in c.px.items() if 0 <= x < W and 0 <= y < H)
+    rects = paths({(x, y): col for (x, y), col in c.px.items() if 0 <= x < W and 0 <= y < H})
     over = "".join(f'<rect x="{a}" y="{b}" width="{cc - a}" height="{d - b}" fill="none" stroke="#66ff66" stroke-width=".6" '
                    f'stroke-dasharray="3 2" opacity=".7"/>' for a, b, cc, d in ROOMS) if rooms else ""
     return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" '

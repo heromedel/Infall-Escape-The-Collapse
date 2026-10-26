@@ -49,6 +49,7 @@ Six planned mounts on each version (art rules: plan for at least 4–6), stored 
 | `review/first-plates.png`, `review/blades.png` | Earlier rounds: curved plates (read as tentacles), then faceted blades |
 | `tools/hull_px.py` | Builds A and B: `python3 hull_px.py OUT_DIR` (writes s1 = A, s2 = B, with mount-plan and room overlays, and B's two loadouts) |
 | `tools/pixel_kit.py`, `tools/cleavers.py` | The shared pixel shading and earlier versions, kept for the record |
+| `tools/pixel_svg.py` | Writes pixel art as compact SVG (one path per colour, each row's runs merged), used by every tool here. `python3 pixel_svg.py FILE.svg ...` compacts an old one-rect-per-pixel SVG in place. On 2026-10-26 every SVG here was compacted this way (about 14 times smaller, e.g. 4.9 MB to 346 KB) and checked to render pixel for pixel the same. |
 
 ## Battle cross (2026-10-25): the Mecha hull style reference
 

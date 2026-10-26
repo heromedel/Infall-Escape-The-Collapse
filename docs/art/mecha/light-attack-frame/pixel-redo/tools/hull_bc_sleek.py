@@ -8,6 +8,7 @@ the prow's centre line on purpose.
 """
 import math, os, sys
 from PIL import Image, ImageDraw
+from pixel_svg import paths
 W, H, CX = 340, 300, 170
 RAMP = ["#050507", "#0b0b0e", "#111216", "#17181d", "#1c1d24", "#2a2d35", "#3d414d", "#5f6576"]   # 4: Mecha shadow grey
 OUT = 0
@@ -115,8 +116,7 @@ class Hull:
                     self.glow[(xx, y)] = PALE if (x0 < x < x1 - 1 and y0 < y < y1 - 1) else PURPLE
 
     def svg(self):
-        r = "".join(f'<rect x="{x}" y="{y}" width="1" height="1" fill="{RAMP[l]}"/>' for (x, y), l in self.lv.items())
-        r += "".join(f'<rect x="{x}" y="{y}" width="1" height="1" fill="{c}"/>' for (x, y), c in self.glow.items())
+        r = paths({**{p: RAMP[l] for p, l in self.lv.items()}, **self.glow})
         return f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {W} {H}" width="{W}" height="{H}" shape-rendering="crispEdges">{r}</svg>'
 
 
