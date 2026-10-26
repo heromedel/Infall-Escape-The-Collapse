@@ -16,6 +16,8 @@ sys.path.insert(0, HERE)
 sys.path.insert(0, os.path.join(HERE, "..", "..", "..", "console", "tools"))
 import hull_bc_sleek as hull    # noqa: E402
 import tower_px as tp           # noqa: E402
+sys.path.insert(0, os.path.join(HERE, "..", "..", "..", "servicing-core", "tools"))
+import core_px as core          # noqa: E402
 
 T, X0, Y0, W, H = 35, hull.X0, hull.Y0, hull.W, hull.H
 PURPLE, DEEP, PALE = "#aa28eb", "#5a128c", "#ebe1fa"
@@ -161,21 +163,11 @@ def console(px, c, r, wall, kind):
 
 
 def core_cradle(px):
-    """The Cybernetic Servicing Core: a mech stand pad under a small gantry, on one tile; crew walk over it."""
+    """The Cybernetic Servicing Core (heromedel's pick, mecha/servicing-core/): a wall panel with the medbay symbol,
+    two servicing arms and a stand table, on one tile; crew walk over it. Always upright, never turned."""
     x0, y0 = cell(*CORE)
-    rect(px, x0 + 3, y0 + 3, x0 + 32, y0 + 8, OUTLINE)                      # gantry beam along the top
-    rect(px, x0 + 4, y0 + 4, x0 + 31, y0 + 7, "#2e3039")
-    rect(px, x0 + 4, y0 + 4, x0 + 31, y0 + 5, "#5f6576")
-    for gx in (x0 + 3, x0 + 28):                                             # its two legs
-        rect(px, gx, y0 + 8, gx + 4, y0 + 31, OUTLINE)
-        rect(px, gx + 1, y0 + 8, gx + 3, y0 + 30, "#4a4d5a")
-    cx, cy = x0 + 17, y0 + 19
-    for y in range(cy - 9, cy + 10):
-        for x in range(cx - 9, cx + 10):
-            d = ((x - cx) ** 2 + (y - cy) ** 2) ** .5
-            if d < 9.5:
-                px[(x, y)] = OUTLINE if d > 8.5 else (DEEP if d > 7.2 else "#2e3039" if d > 6 else "#4a4d5a")
-    symbol(px, "medbay", cx, cy)
+    for (a, b), col in core.servicing_core().items():
+        px[(x0 + a, y0 + b)] = col
 
 
 def use(frame):

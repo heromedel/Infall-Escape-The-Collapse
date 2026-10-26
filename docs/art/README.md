@@ -35,7 +35,7 @@ each with its SVG, PNG exports, review sheets, build tools and a notes README.
 | 2026-10-25 | **Likely:** the sleek battle-cross frame (`mecha/light-attack-frame/pixel-redo/battle-cross/`) is the reference future Mecha hulls are compared against: dark sleek metal in crisp bands, purple only in lights. Different ship styles of one race should still look different, as not every Terran ship is a rocket or a shuttle. |
 | 2026-10-25 | **Decided:** no marked exterior doors: no airlock hatches, docking frames or launch bays drawn brightly on a hull. The hull may imply an opening by its shapes, never mark exactly where a door is (airlocks stay in the floor plan). |
 | 2026-10-26 | **Decided:** no system takes more than one tile, big machines included (such as the Cybernetic Servicing Core). |
-| 2026-10-26 | **Decided:** an EVB Dock system must be next to an airlock door: its tile is beside the airlock. |
+| 2026-10-26 | **Decided:** any EVA or EVB Dock must be next to an airlock door: its tile is beside the airlock. |
 | 2026-10-23 | No rocket-like Terran designs for a while: no pointed nose cone, tail fins and engine-bell silhouette. Terran ships look built for deep space, not for launching from a planet (race profiles, Terrans 1, Likely). |
 
 ## Pieces
@@ -48,6 +48,7 @@ each with its SVG, PNG exports, review sheets, build tools and a notes README.
 | [`tentauri/crew/`](tentauri/crew/) | heromedel's Tentauri crew sprite sheet (20 rows, with typing at 1–3 extra systems) and the tentacle reach prototype, saved as the crew reference. |
 | [`mecha/light-attack-frame/`](mecha/light-attack-frame/) | The earlier vector Mecha Light Attack Frame (old Mecha colours), replaced by `pixel-redo/` on 2026-10-25; kept for the record. |
 | [`mecha/light-attack-frame/pixel-redo/`](mecha/light-attack-frame/pixel-redo/) | **Current Mecha Light Attack Frame**, accepted by Ship Designs (2026-10-25): the sleek battle-cross hull (also the Mecha hull style reference), pixel floor plans, pixel weapons and armed previews for both loadouts. |
+| [`mecha/servicing-core/`](mecha/servicing-core/) | The Mecha Cybernetic Servicing Core (heromedel's pick, option N, always upright), used in the Light Attack Frame plans; the option rounds kept in `review/`. |
 | [`mecha/console/`](mecha/console/) | The Mecha system console (pixel tower with stepped cheeks, no arm ports), picked by heromedel. |
 | [`mecha/pilot/`](mecha/pilot/) | heromedel's HalfMech pilot out of the suit (base designs and a top-down crew sheet), saved for reference; not planned for the game. |
 | [`mecha/crew/`](mecha/crew/) | heromedel's Mecha crew sprite sheet (16 rows, with power-pulse typing), saved as the crew reference. |
