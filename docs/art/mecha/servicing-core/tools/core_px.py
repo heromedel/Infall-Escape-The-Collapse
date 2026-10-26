@@ -264,6 +264,24 @@ def core_l(top=10, shift=5):
     return px
 
 
+def core_m(top=10, left=11):
+    """M. L with smaller shoulders (the same flared style, scaled down) so the table can be wider."""
+    shape = poly_mask({1: (-2, 1), 2: (-2, 1), 3: (-2, 2), 4: (-1, 3), 5: (0, 1), 6: (0, 0)})
+    jaw = {(x + left, y + top) for x, y in shape}
+    low = {(x, 2 * top + 24 - y) for x, y in jaw}
+    jaws = jaw | mirror(jaw) | low | mirror(low)
+    px = {}
+    pad(px, left, top, 35 - left, 34, corners=False)
+    px.update(shade_parts([(jaws, ARMOUR)], 7))
+    for y in (top + 3, top + 21):
+        px[(left + 1, y)] = PURPLE
+        px[(33 - left, y)] = PURPLE
+    arms = core_k()
+    assert not {(x + dx, y) for x, y in arms if y > 9 for dx in (-1, 0, 1)} & set(px), "the table must not touch the arms"
+    px.update(arms)
+    return px
+
+
 OPTIONS = [("A. Wall core and arms", core_a), ("B. Clamp ring", core_b), ("C. Service arch", core_c), ("D. A's panel, C's arms", core_d),
            ("E. D, arms over B's table", core_e), ("F. D, short arms, B's table", core_f),
            ("G. Long arms clear of the table", core_g),
@@ -271,7 +289,8 @@ OPTIONS = [("A. Wall core and arms", core_a), ("B. Clamp ring", core_b), ("C. Se
            ("I. E's arms, F's table lower", core_i),
            ("J. H without the table", core_j),
            ("K. H without the table or its jaws", core_k),
-           ("L. K with F's table, skinnier and tall", core_l)]
+           ("L. K with F's table, skinnier and tall", core_l),
+           ("M. L with smaller shoulders, wider table", core_m)]
 TURN_E = lambda x, y: (34 - y, x)
 
 
@@ -304,7 +323,7 @@ if __name__ == "__main__":
     cells = []
     for i, (name, fn) in enumerate(OPTIONS):
         px = fn()
-        open(os.path.join(out, f"core-option-{'abcdefghijkl'[i]}.svg"), "w").write(
+        open(os.path.join(out, f"core-option-{'abcdefghijklm'[i]}.svg"), "w").write(
             f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 35" width="35" height="35">{to_svg(px)}</svg>\n')
         x0 = 20 + i * (T * S + 30)
         cells.append(
