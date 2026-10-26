@@ -47,6 +47,38 @@ Default tag: **Proposed (2026-10-22)**, from heromedel's worked example; Claude'
      simulation.
    - **Weakness — Ai-Generated-Proposal (2026-10-22):** every controlled system is in the forward room, so one fire, breach or boarder there hits them
      all.
+   **Layout — Proposed (2026-10-26):** in the ship setup format (GDD 5F–5L; `ship-design-process.md` step 8),
+   converted from the accepted floor plan (`docs/art/tentauri/scout/`). North is the bow; y grows toward the stern.
+
+   ```
+   Ship: Tentauri Tough Little Scout
+   Center: Tile                    (5 x 5 tiles)
+   Hull: 8
+   Reactor: 10
+
+   Room 0: (-2,-2),(2,0)           forward (controlled)
+   Room 1: (-1,1),(1,2)            rear (uncontrolled)
+
+   Sensors(-1,-2)                  Level 1   Location: North Wall   Art: Tentauri.Sensors.Grasp
+   Piloting(0,-2)                  Level 1   Location: North Wall   Art: Tentauri.Pilot.Hood
+   Shields(1,-2)                   Level 1 (2 bars)   Location: North Wall   Art: Tentauri.Shields.Carapace
+   Weapons A(-2,-1)                Level 1   Location: West Wall    Art: Tentauri.Weapons.Trigger
+   Weapons B(2,-1)                 Level 1   Location: East Wall    Mirror: Yes   Art: Tentauri.Weapons.Trigger
+   Engines(-2,0)                   Level 2   Location: West Wall    Art: Tentauri.Engines.Pipes
+   Doors(2,0)                      Level 1   Location: East Wall    Art: Tentauri.Doors.Iris
+   Life Support(-1,1)              Level 1   Location: North Wall   Art: Tentauri.LifeSupport.AirSacs
+   Medbay(1,1)                     Level 1   Location: North Wall   Art: Tentauri.Medbay.Bud
+   Supershield Generator(0,2)      Level 2   Location: South Wall   Art: Tentauri.Supershield.Halo
+
+   Door 0: (0,0)    Facing: South  (forward to rear)
+   Door 1: (-1,2)   Facing: West   (airlock)
+   Door 2: (1,2)    Facing: East   (airlock)
+
+   Weapons: Tentauri Defense Laser (Weapons A), Tentauri Defense Laser (Weapons B)
+   Mounts: 6
+   Crew: 2 Tentauri
+   ```
+
 9. **Weapons:** the Tentauri have no weapons yet, so one is designed.
 
    **Tentauri Defense Laser** (×2): Laser, Damage, Biomechanical, Tentauri · Shots 1 · Damage 1 · Power 1 ·
@@ -151,6 +183,58 @@ step, not to every line; points he agreed to are tagged.
      (later found to miss the core's two exits; replaced by the wheel).
    - Pass 5: weapons follow the Terran breach/conduit rule (below).
    - Pass 6: checked against band 1 enemies (FTL's scout templates: hull 7–10, 1 shield layer): see 9.
+   **Layout — Proposed (2026-10-26):** in the ship setup format (GDD 5F–5L; `ship-design-process.md` step 8),
+   converted from the accepted floor plan (`docs/art/terran/outrider/floor-layout-tests/test-4/`). North is the bow;
+   y grows toward the stern.
+
+   ```
+   Ship: SC-1 Outrider
+   Center: Tile                    (5 x 13 tiles)
+   Hull: 30
+   Reactor: AZC level 2
+
+   Room 0: (-1,-6),(1,-5)          bridge
+   Room 1: (-1,-4),(1,-3)          sensors and doors room
+   Room 2: (-2,-2),(-1,-1)         medbay
+   Room 3: (0,-2),(0,-1)           corridor (empty)
+   Room 4: (1,-2),(2,-1)           starboard forward (empty)
+   Room 5: (-2,0),(-2,1)           port airlock room (empty)
+   Room 6: (-1,0),(1,2)            core room
+   Room 7: (2,0),(2,1)             starboard airlock room (empty)
+   Room 8: (-1,3),(1,4)            aft hall (empty)
+   Room 9: (-1,5),(1,6)            engine room
+
+   Shields(-1,-6)        Level 1 (2 bars)   Location: North Wall
+   Piloting(0,-6)        Level 1   Location: North Wall
+   Weapons(1,-6)         Level 3   Location: North Wall
+   Sensors(-1,-4)        Level 2   Location: West Wall
+   Doors(-1,-3)          Level 1   Location: West Wall
+   Medbay(-2,-2)         Level 1   Location: West Wall
+   AZC(0,1)              Level 2
+   Life Support(-1,6)    Level 1   Location: South Wall
+   Engines(0,6)          Level 2   Location: South Wall
+
+   Door 0: (0,-5)   Facing: South
+   Door 1: (0,-3)   Facing: South
+   Door 2: (1,-3)   Facing: South
+   Door 3: (-1,-2)  Facing: East
+   Door 4: (0,-1)   Facing: South
+   Door 5: (1,-1)   Facing: South
+   Door 6: (-1,0)   Facing: West
+   Door 7: (1,0)    Facing: East
+   Door 8: (0,2)    Facing: South
+   Door 9: (0,4)    Facing: South
+   Door 10: (-2,0)  Facing: West   (airlock)
+   Door 11: (-2,1)  Facing: West   (airlock)
+   Door 12: (2,0)   Facing: East   (airlock)
+   Door 13: (2,1)   Facing: East   (airlock)
+
+   Conduits: wheel (rim and 4 spokes), weapon mounts 3 and 4 fed twice each, as in the accepted plan
+   Weapons: Gat 3.1 "Triblast" (mount 3), Gat M1 "Pathfinder" (mount 4)
+   Mounts: 6
+   Crew: 3 Terrans
+   ```
+
 9. **Weapons:** no Terran weapons exist yet. The Stinger fits the missile role but is Azurethea and biomechanical,
    so on a Terran (mechanical) system it would charge 20% slower; a Terran missile is designed with the same parts
    instead. **Names — Likely (2026-10-22):** they follow the GATOS style (race profile 6).
@@ -258,6 +342,66 @@ Default tag: **Ai-Generated-Proposal (2026-10-22)**; not reviewed yet.
    - Pass 4: conduit spur to the launcher, a readable weak point.
    - Pass 5: all-Terran crew (xenophobic when doomed).
    - Pass 6: checked counters and rewards (see 9).
+   **Layout — Proposed (2026-10-26):** in the ship setup format (GDD 5F–5L; `ship-design-process.md` step 8),
+   converted from the accepted floor plan (`docs/art/terran/pirate-hijacker/floor-plans/`). North is the bow; y grows
+   toward the stern.
+
+   ```
+   Ship: Terran Pirate Hijacker
+   Center X: Point                 (4 tiles wide)
+   Center Y: Tile                  (13 tiles long)
+   Hull: 14
+   Reactor: AZC level 3
+
+   Room 0: (-1,-6),(1,-5)          bridge
+   Room 1: (-1,-4),(1,-4)          doors room
+   Room 2: (-2,-3),(-1,-2)         shields room
+   Room 3: (1,-3),(2,-2)           weapons room
+   Room 4: (-2,-1),(-2,0)          port flank (empty)
+   Room 5: (-1,-1),(1,0)           core room
+   Room 6: (2,-1),(2,0)            starboard flank (empty)
+   Room 7: (-2,1),(-1,2)           medbay
+   Room 8: (1,1),(2,2)             teleporter room
+   Room 9: (-2,3),(2,4)            aft hall (empty)
+   Room 10: (-2,5),(2,6)           engine room
+
+   Piloting(-1,-6)          Level 2   Location: North Wall
+   Sensors(1,-6)            Level 1   Location: North Wall
+   Doors(-1,-4)             Level 2   Location: West Wall
+   Shields(-2,-3)           Level 2 (4 bars)   Location: West Wall
+   Weapons(2,-3)            Level 3   Location: East Wall
+   AZC(1,-1)                Level 3
+   Medbay(-2,2)             Level 2   Location: West Wall
+   Crew Teleporter(2,2)     Level 2   Location: East Wall
+   Engines(-1,6)            Level 3   Location: South Wall
+   Life Support(1,6)        Level 1   Location: South Wall
+
+   Door 0: (1,-5)   Facing: South
+   Door 1: (1,-4)   Facing: South
+   Door 2: (-1,-2)  Facing: East
+   Door 3: (-2,-2)  Facing: South
+   Door 4: (2,-2)   Facing: South
+   Door 5: (-1,-1)  Facing: West
+   Door 6: (1,0)    Facing: East
+   Door 7: (-1,-2)  Facing: South
+   Door 8: (-1,0)   Facing: South
+   Door 9: (1,0)    Facing: South
+   Door 10: (-1,2)  Facing: East
+   Door 11: (-1,2)  Facing: South
+   Door 12: (1,2)   Facing: South
+   Door 13: (-1,4)  Facing: South
+   Door 14: (1,4)   Facing: South
+   Door 15: (-2,3)  Facing: West   (airlock)
+   Door 16: (-2,4)  Facing: West   (airlock)
+   Door 17: (2,3)   Facing: East   (airlock)
+   Door 18: (2,4)   Facing: East   (airlock)
+
+   Conduits: ring, a spur to the Sporewing (the weak point), the Twinshot fed twice, as in the accepted plan
+   Weapons: Gat 2.1 "Twinshot" (mount 3), Sporewing (mount 4)
+   Mounts: 6
+   Crew: 5 Terrans
+   ```
+
 9. **Weapons:** no Terran or Azurethea weapon fits (the Stinger damages hull), so two are designed.
 
    **Sporewing** (stolen Azurethea, keeps its maker's name): Missile, Spores + Stun, Biomechanical, Azurethea ·
@@ -343,6 +487,29 @@ Decided) and the bolted-on Azurethea launcher.
 **Cutpurse price:** Shields 54.46 · Weapon Control level 1 4.84 · Crew Teleporter level 1 21.78 · AZC level 2 42.36 ·
 Sporewing 7.02 · Piloting, Engines and Life Support installed = **130.46**, under band 1's squad value budget (137).
 Crew are extra: 3 Terrans at 10.89, 32.67.
+
+**Cutpurse loadout file — Proposed (2026-10-26):** a patch of the Hijacker (GDD 5J). Rooms and doors are unchanged;
+the Doors and Medbay rooms stand empty.
+
+```
+Loadout: Cutpurse               (loadout.hijacker.cutpurse.xml)
+Inherit: Patch
+Hull: 9
+Hull Art: faired-over port bay
+Reactor: AZC level 2
+
+Piloting           Level 1
+Sensors            removed
+Doors              removed
+Shields            Level 1 (2 bars)
+Engines            Level 1
+Weapons            Level 1
+Medbay             removed
+Crew Teleporter    Level 1
+
+Weapons: Sporewing (mount 4)
+Crew: 3 Terrans
+```
 
 **Ideas considered:** keep the teleporter and drop the guns (picked); keep the Twinshot and drop the teleporter, so
 the "hijack" becomes a shakedown by Hail; keep both and drop the shields; a two-ship pirate pair, one disabler and one
@@ -474,6 +641,76 @@ there. Asked by heromedel through Infall: Production (handoff 2026-10-23 14:17).
    - Pass 5: the suit can't get through a shield layer alone (its shots come about 3 s apart and the layer comes back
      in 2 s), so its job is popping the layer for the Hull Laser.
    - Pass 6: checked against the Outrider in a simulation (see 9).
+   **Layout — Proposed (2026-10-26):** in the ship setup format (GDD 5F–5L; `ship-design-process.md` step 8),
+   converted from the accepted floor plans
+   (`docs/art/mecha/light-attack-frame/pixel-redo/battle-cross/floor-plans/`); the base ship is the standard frame
+   with the Hull Laser. North is the bow; y grows toward the stern.
+
+   ```
+   Ship: Light Attack Frame
+   Center X: Point                 (6 tiles wide)
+   Center Y: Tile                  (5 tiles long)
+   Hull: 7
+   Reactor: none (each system has its own power)
+
+   Room 0: (-1,-2),(1,-1)          command deck
+   Room 1: (-3,-1),(-2,0)          spare bay (port)
+   Room 2: (2,-1),(3,0)            weapon bay (starboard)
+   Room 3: (-1,0),(1,1)            core room
+   Room 4: (-2,2),(-1,2)           engine room
+   Room 5: (1,2),(2,2)             life support room
+
+   Piloting(-1,-2)                     Level 1   Location: North Wall
+   Shields(1,-2)                       Level 1   Own Power: 2   Location: North Wall
+   Doors(1,-1)                         Level 1   Location: East Wall
+   Cybernetic Servicing Core(1,1)      Level 1   Own Power: 1   Rotation: None (always upright)
+   Engines(-2,2)                       Level 1   Own Power: 1   Location: West Wall
+   Life Support(2,2)                   Level 1   Own Power: 1   Location: East Wall
+   Weapon Pod(3,-1)                    Level 2   Own Power: 1   Location: East Wall
+
+   Door 0: (-1,-1)  Facing: South
+   Door 1: (-1,0)   Facing: West
+   Door 2: (1,0)    Facing: East
+   Door 3: (-1,1)   Facing: South
+   Door 4: (-1,2)   Facing: East
+   Door 5: (-3,-1)  Facing: West   (airlock)
+   Door 6: (-3,0)   Facing: West   (airlock)
+
+   Weapons: DS-ST Hull Laser (mount 4)
+   Mounts: 6
+   Crew: 2 Mecha
+   ```
+
+   **Loadout files — Proposed (2026-10-26):** patches of the base ship (GDD 5J). A loadout derives from the base
+   ship only, so the open-stern Suit Dock repeats both changes.
+
+   ```
+   Loadout: Suit Dock                       (loadout.lightattackframe.suitdock.xml)
+   Inherit: Patch
+   Weapon Pod       removed
+   EVB Dock(3,-1)   Level 2   Own Power: 2   Location: East Wall
+   Door 7: (3,0)    Facing: East   (airlock beside the EVB Dock)
+   Weapons: none
+   EVB Suits: laser battlesuit
+
+   Loadout: Open Stern                      (loadout.lightattackframe.openstern.xml)
+   Inherit: Patch
+   Room 4: (-2,2),(2,2)                     one stern room: Engines and Life Support together
+   Room 5: removed
+   Door 4: removed
+
+   Loadout: Open Stern Suit Dock            (loadout.lightattackframe.opensternsuitdock.xml)
+   Inherit: Patch
+   Room 4: (-2,2),(2,2)
+   Room 5: removed
+   Door 4: removed
+   Weapon Pod       removed
+   EVB Dock(3,-1)   Level 2   Own Power: 2   Location: East Wall
+   Door 7: (3,0)    Facing: East   (airlock beside the EVB Dock)
+   Weapons: none
+   EVB Suits: laser battlesuit
+   ```
+
 9. **Weapons:** no Mecha weapons exist yet.
 
    **Double Shot - Single Target - Hull Laser** (DS-ST Hull Laser): Laser, Damage + Hull bonus, Mechanical, Mecha
