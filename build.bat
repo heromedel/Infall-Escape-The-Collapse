@@ -1,6 +1,6 @@
 @echo off
-rem Infall: Escape The Collapse. Installs what the game needs, if anything, then launches it.
-rem Needs: Node.js (installed here with winget if missing) and the project's packages (npm install).
+rem Infall: Escape The Collapse. Installs what the game needs, if anything, then builds it.
+rem Run this after the code changes. play.bat launches the result.
 setlocal
 cd /d "%~dp0"
 
@@ -15,7 +15,7 @@ if errorlevel 1 (
         exit /b 1
     )
     echo.
-    echo Node.js installed. Close this window, open a new one, and run start.bat again so the PATH is picked up.
+    echo Node.js installed. Close this window, open a new one, and run build.bat again so the PATH is picked up.
     pause
     exit /b 0
 )
@@ -31,12 +31,13 @@ if not exist node_modules (
     )
 )
 
-echo Building and launching Infall...
-call npm start
+echo Building Infall...
+call npm run build
 if errorlevel 1 (
     echo.
-    echo The game did not start. Send the text above to the coding session.
+    echo The build failed. Send the text above to the coding session.
     pause
     exit /b 1
 )
+echo Build done. Run play.bat to launch the game.
 endlocal

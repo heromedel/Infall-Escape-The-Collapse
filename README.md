@@ -5,11 +5,12 @@ document); this is the game itself, started 2026-10-26 on the Goal P prototype (
 
 ## Running it
 
-On Windows, double-click `start.bat`: it installs Node.js if it is missing, installs the packages on the first
-run, then builds and opens the game. By hand, on any system:
+On Windows: `build.bat` installs Node.js and the packages if they are missing, then builds; `play.bat` launches the
+built game (and builds first if there is no build yet). Build again after the code changes. By hand, on any system:
 
     npm install
     npm start        builds and opens the game
+    npm run play     opens the game without rebuilding
     npm test         runs the tests the code has
     npm run check    type-checks without building
 
