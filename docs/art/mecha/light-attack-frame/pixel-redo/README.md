@@ -94,7 +94,7 @@ every Terran ship is a rocket or a shuttle.
   - **2026-10-26 changes (heromedel's rules):** the Core's cradle went from two tiles to one, and the Suit Dock's
     launch clamp was removed in favour of the airlock beside the EVB Dock. Re-accepted by Ship Designs (78aa3d0).
   - **2026-10-26: new Servicing Core art** (heromedel's pick, `mecha/servicing-core/`) replaces the placeholder cradle
-    (a medbay cross under a gantry) in every plan, armed preview and overview. Nothing else changed.
+    (a medbay cross under a gantry) in every plan, armed preview and overview. Nothing else changed. Re-accepted by Ship Designs (2d544e3).
   - **Two frames (Ship Designs, agreed with heromedel; accepted 2026-10-25), same hull art, both loadouts** (`frames.png`):
     - **Standard** (`plan-standard-*`): the stern split into two 2 × 1 rooms with a door between, Engines in the
       port room and Life Support in the starboard room. The Core's door opens into the engine room.
