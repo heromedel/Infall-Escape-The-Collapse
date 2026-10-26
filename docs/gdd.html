@@ -332,6 +332,8 @@ Doing Fine, Struggling and Doomed are the owning race's state at this cluster, n
 <div class="pt"><b>A:</b> <span class="tag proposed">Proposed</span> Each ship is a self-contained folder (or zipped folder) holding every file it needs; adding a ship means dropping in its folder.</div>
 <div class="pt"><b>B:</b> <span class="tag proposed">Proposed</span> Weapons, and possibly other content, follow the same pattern: e.g. a folder in <code>Weapons/</code> containing its icon art, ship-mounted art, and a data file labelled as a weapon.</div>
 
+<div class="pt"><b>C:</b> <span class="tag proposed">Proposed</span> (2026-10-26) <b>Saves.</b> A run is saved instantly: the host writes the save at the end of any tick where something changed, so a crash loses at most a tick and a crash can never undo a bad roll. There is no save interval setting, no save button and no &ldquo;save and quit&rdquo;: quitting is just quitting. The save is a folder, <code>saves/&lt;squad name&gt;-&lt;id&gt;/</code>, holding <code>squad.xml</code> (the squad&rsquo;s name, its unique ID, the seed, the Mawjig, the map position and the ships in slot order) and <code>ships/&lt;ship name&gt;.xml</code> for each ship as it is now (the ship file format plus its state), each with its own unique ship ID and the squad ID it belongs to. A loaded run keeps its IDs and only ever writes to the folder and files that carry them; a mismatch is refused and logged. There is no continue file: Continue opens the most recently written save folder, and the list of saves is the list of folders. Every write goes to a temporary file first and is renamed over the old one, so a save is always whole.</div>
+
 <h2 id="prototypes">12. Prototypes &amp; Mockups</h2>
 <div class="pt"><b>A:</b> <span class="tag proposed">Proposed</span> Small JavaScript demos built on art mockups to try ideas before committing to them, e.g. the per-ship power display.</div>
 <div class="pt"><b>B:</b> <span class="tag decided">Decided</span> Art tests live in <code>docs/art-tests/</code>, one folder per test with a README recording what was done and the decision.</div>
@@ -444,6 +446,7 @@ The icons themselves are made by whoever builds the demo; this is only the list.
   <tr><td>2026-10-26</td><td>Art can be SVG or PNG (10A).</td></tr>
   <tr><td>2026-10-26</td><td>A patched loadout entry keeps the values it leaves out, Likely (5J).</td></tr>
   <tr><td>2026-10-26</td><td>Enemy Terran ships show pirate power orange; a setting to keep green is Proposed (14D).</td></tr>
+  <tr><td>2026-10-26</td><td>Saves: instant, a folder per squad with unique squad and ship IDs, no continue file, no save setting, Proposed (11C).</td></tr>
 </table>
 
 </main>
