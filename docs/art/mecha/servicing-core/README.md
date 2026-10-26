@@ -16,6 +16,14 @@ like the Mecha console, and uses the console's shading and Mecha power purple.
 | B. Clamp ring | a low core block on the wall, four clamp jaws at the pad's corners |
 | C. Service arch | a stepped arch of armour over the pad, the core's light along its crown, a tool head over the shoulders |
 
+**heromedel's mix (2026-10-26):** A's wall panel, C's arms and B's table. Unlike other systems, the Core always
+faces up and is never turned. Two ways to fit them (`review/mix-tiles.png`, `review/mix-inroom.png`):
+
+| Option | What |
+|---|---|
+| E | the arms reach down over the table's upper corners (its upper jaws left off) |
+| F | shorter arms ending above the table, which keeps all four jaws |
+
 `review/inroom.png` shows each in the battle cross's core room, empty and with a HalfMech standing in it.
 
 Built by `tools/core_px.py ../crew/mecha-crew-sheet.svg OUT_DIR`.

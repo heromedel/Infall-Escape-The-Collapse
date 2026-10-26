@@ -101,7 +101,61 @@ def core_c():
     return px
 
 
-OPTIONS = [("A. Wall core and arms", core_a), ("B. Clamp ring", core_b), ("C. Service arch", core_c)]
+def core_d():
+    """D. A's wall panel with C's arms (heromedel's mix): the stepped housing and the core's light slit, flanked by
+    the arch's stepped arms reaching down either side of the pad. Always drawn upright, never turned."""
+    body = housing({0: (10, 17), 1: (10, 17), 2: (10, 17), 3: (11, 17), 4: (11, 17), 5: (11, 17), 6: (12, 17),
+                    7: (12, 17), 8: (13, 17), 9: (14, 17)})
+    arms = housing({0: (3, 9), 1: (3, 9), 2: (3, 9), 3: (3, 9), 4: (3, 8), 5: (4, 8), 6: (4, 7), 7: (4, 7),
+                    8: (4, 7), 9: (4, 7), 10: (4, 7), 11: (5, 7), 12: (5, 7), 13: (5, 7), 14: (5, 7), 15: (6, 7),
+                    16: (6, 7), 17: (6, 7)})
+    px = {}
+    pad(px, 9, 13, 26, 32, corners=False)
+    px.update(shade_parts([(arms, ARMOUR), (body, DARK)], 9))
+    core_window(px, 16, 2, 19, 8)
+    return px
+
+
+def b_table(px, top, jaws_top=True):
+    """B's table: the stand pad with a clamp jaw at each corner, pointing in, a purple light on each jaw."""
+    shape = poly_mask({11: (4, 9), 12: (4, 9), 13: (4, 10), 14: (5, 11), 15: (6, 8), 16: (6, 7)})
+    jaw = {(x, y + top - 10) for x, y in shape}
+    low = {(x, 45 - y) for x, y in shape}
+    jaws = low | mirror(low) | ((jaw | mirror(jaw)) if jaws_top else set())
+    pad(px, 8, top, 27, 34, corners=False)
+    return jaws, [(10, top + 4), (24, top + 4)] * jaws_top + [(10, 31), (24, 31)]
+
+
+def mix(arm_rows, top, jaws_top, seed=9):
+    body = housing({0: (10, 17), 1: (10, 17), 2: (10, 17), 3: (11, 17), 4: (11, 17), 5: (11, 17), 6: (12, 17),
+                    7: (12, 17), 8: (13, 17), 9: (14, 17)})
+    arms = housing(arm_rows)
+    px = {}
+    jaws, lights = b_table(px, top, jaws_top)
+    px.update(shade_parts([(jaws, ARMOUR)], seed))
+    px.update(shade_parts([(arms, ARMOUR), (body, DARK)], seed))
+    core_window(px, 16, 2, 19, 8)
+    for xy in lights:
+        px[xy] = PURPLE
+    return px
+
+
+C_ARMS = {0: (3, 9), 1: (3, 9), 2: (3, 9), 3: (3, 9), 4: (3, 8), 5: (4, 8), 6: (4, 7), 7: (4, 7), 8: (4, 7),
+          9: (4, 7), 10: (4, 7), 11: (5, 7), 12: (5, 7), 13: (5, 7), 14: (5, 7), 15: (6, 7), 16: (6, 7), 17: (6, 7)}
+
+
+def core_e():
+    """E. D with B's table: the arms reach down over the table's upper corners (its upper jaws left off)."""
+    return mix(C_ARMS, 10, False)
+
+
+def core_f():
+    """F. D with B's table: shorter arms ending above the table, which keeps all four jaws."""
+    return mix({y: C_ARMS[y] for y in range(12)}, 12, True)
+
+
+OPTIONS = [("A. Wall core and arms", core_a), ("B. Clamp ring", core_b), ("C. Service arch", core_c), ("D. A's panel, C's arms", core_d),
+           ("E. D, arms over B's table", core_e), ("F. D, short arms, B's table", core_f)]
 TURN_E = lambda x, y: (34 - y, x)
 
 
@@ -134,7 +188,7 @@ if __name__ == "__main__":
     cells = []
     for i, (name, fn) in enumerate(OPTIONS):
         px = fn()
-        open(os.path.join(out, f"core-option-{'abc'[i]}.svg"), "w").write(
+        open(os.path.join(out, f"core-option-{'abcdef'[i]}.svg"), "w").write(
             f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 35" width="35" height="35">{to_svg(px)}</svg>\n')
         x0 = 20 + i * (T * S + 30)
         cells.append(
@@ -144,7 +198,7 @@ if __name__ == "__main__":
             f'<g transform="translate({x0 + T * S / 2 - T * 3},{64 + 2 * T * S}) scale(3)">{tile("e")}{to_svg(px, TURN_E)}{stand}</g>'
             f'<g transform="translate({x0},{80 + 2 * T * S + 3 * T})">{tile()}{to_svg(px)}</g>'
             f'<g transform="translate({x0 + 40},{80 + 2 * T * S + 3 * T})">{tile()}{to_svg(px)}{stand}</g>')
-    W = 20 + 3 * (T * S + 30)
+    W = 20 + len(OPTIONS) * (T * S + 30)
     H = 100 + 2 * T * S + 4 * T
     open(os.path.join(out, "core-options.svg"), "w").write(
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}"><rect width="100%" height="100%" fill="#141920"/>{"".join(cells)}</svg>')
