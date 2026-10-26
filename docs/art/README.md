@@ -35,7 +35,7 @@ each with its SVG, PNG exports, review sheets, build tools and a notes README.
 | 2026-10-25 | **Likely:** the sleek battle-cross frame (`mecha/light-attack-frame/pixel-redo/battle-cross/`) is the reference future Mecha hulls are compared against: dark sleek metal in crisp bands, purple only in lights. Different ship styles of one race should still look different, as not every Terran ship is a rocket or a shuttle. |
 | 2026-10-25 | **Decided:** no marked exterior doors: no airlock hatches, docking frames or launch bays drawn brightly on a hull. The hull may imply an opening by its shapes, never mark exactly where a door is (airlocks stay in the floor plan). |
 | 2026-10-26 | **Decided:** no system takes more than one tile, big machines included (such as the Cybernetic Servicing Core). |
-| 2026-10-26 | **Decided:** an EVB Dock system must be next to an airlock door: its tile is beside the airlock. |
+| 2026-10-26 | **Decided:** any EVA or EVB Dock must be next to an airlock door: its tile is beside the airlock. |
 | 2026-10-23 | No rocket-like Terran designs for a while: no pointed nose cone, tail fins and engine-bell silhouette. Terran ships look built for deep space, not for launching from a planet (race profiles, Terrans 1, Likely). |
 
 ## Pieces

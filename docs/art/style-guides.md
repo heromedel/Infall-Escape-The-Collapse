@@ -45,7 +45,7 @@ Reference: the sleek battle-cross frame, `mecha/light-attack-frame/pixel-redo/ba
 - **Big machines — Decided (2026-10-25):** the Cybernetic Servicing Core may look big and blocking, but crew walk
   over its tile.
 - **One tile per system — Decided (2026-10-26, heromedel):** no system takes more than one tile.
-- **EVB Dock — Decided (2026-10-26, heromedel):** the EVB Dock must be next to an airlock door.
+- **EVB Dock — Decided (2026-10-26, heromedel):** any EVA or EVB Dock must be next to an airlock door.
 - **Floors and walls — Open:** the pixel-style floor is not drawn yet (a light deck read best in a first test, so the
   dark crew stand out).
 
