@@ -1,8 +1,9 @@
 # Infall: Coding Rules
 
-Rules for the coding session, set by heromedel (2026-10-26). They sit on top of `game-project-standards.md` (the
-elegant code principles and the standard rules) and `CLAUDE.md` (the hard rule for code). Every rule here is
-**Decided** from heromedel's words unless tagged otherwise.
+**All of these are Proposed rules, not hard rules, unless a different document or heromedel says otherwise.**
+
+Rules for the coding session, from heromedel (2026-10-26). They sit on top of `game-project-standards.md` (the
+elegant code principles and the standard rules) and `CLAUDE.md` (the hard rule for code).
 
 1. **Feel.** Match FTL's feel and speed as closely as possible without plagiarizing: no FTL code, data, assets or
    names anywhere in the code.
