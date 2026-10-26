@@ -26,9 +26,11 @@ elegant code principles and the standard rules) and `CLAUDE.md` (the hard rule f
    - Bad: main calls a power change function, which draws the GUI; the GUI changes the power level.
    - Good: main calls draw GUI; main calls change power; main calls refresh GUI.
    - A system changes state and returns; drawing is always its own call from main. *(the last line: Ai-Generated-Proposal, 2026-10-26)*
-9. **Art is SVG with named parts** (GDD 10A), loaded live. A part's name is the handle for recolouring, hiding and
-   animating it. Missing part names in a modder's file are tolerated: the engine falls back to drawing the whole
-   file. *(the fallback: Ai-Generated-Proposal, 2026-10-26)*
+9. **Art is SVG or PNG** (GDD 10A, 5K), loaded live from the entity's folder. The engine renders either, the same
+   way or differently as needed: an SVG's named parts are handles for recolouring, hiding and animating; a PNG is
+   drawn as needed, or the system to handle each will be decided by the coder and heromedel. The game can handle
+   missing art: with none, the ship is built from its XML as walls, floor tiles, icons and door rectangles (5K), and
+   a weapon shows a square with its name (8J).
 10. **Logs.** Every log entry is two lines: a machine line with every field, and a human-readable line written from
     it. Extra logs, debug logs and admin commands are welcome (standards); the command list is kept in its own doc,
     not here.
