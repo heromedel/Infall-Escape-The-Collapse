@@ -210,10 +210,30 @@ def core_h(top=10):
     return px
 
 
+def core_i(top=20):
+    """I. E's arms with F's table (B's, unchanged in shape): the table moved down so its upper jaws sit 2 px below
+    the arm tips; a purple light inside each arm near its foot."""
+    body = housing({0: (10, 17), 1: (10, 17), 2: (10, 17), 3: (11, 17), 4: (11, 17), 5: (11, 17), 6: (12, 17),
+                    7: (12, 17), 8: (13, 17), 9: (14, 17)})
+    arms = housing(C_ARMS)
+    px = {}
+    jaws, lights = b_table(px, top, True)
+    px.update(shade_parts([(jaws, ARMOUR)], 9))
+    px.update(shade_parts([(arms, ARMOUR), (body, DARK)], 9))
+    core_window(px, 16, 2, 19, 8)
+    for xy in lights + [(6, 13), (28, 13)]:
+        px[xy] = PURPLE
+    near = {(x + dx, y + dy) for x, y in arms if y > 9 for dx in range(-2, 3) for dy in range(-2, 3)}
+    table = jaws | {(x, y) for x in range(8, 27) for y in range(top, 34)}
+    assert not (near & table), "the arms must stay 2 px clear of the table"
+    return px
+
+
 OPTIONS = [("A. Wall core and arms", core_a), ("B. Clamp ring", core_b), ("C. Service arch", core_c), ("D. A's panel, C's arms", core_d),
            ("E. D, arms over B's table", core_e), ("F. D, short arms, B's table", core_f),
            ("G. Long arms clear of the table", core_g),
-           ("H. E's arms, clear of the table", core_h)]
+           ("H. E's arms, clear of the table", core_h),
+           ("I. E's arms, F's table lower", core_i)]
 TURN_E = lambda x, y: (34 - y, x)
 
 
@@ -246,7 +266,7 @@ if __name__ == "__main__":
     cells = []
     for i, (name, fn) in enumerate(OPTIONS):
         px = fn()
-        open(os.path.join(out, f"core-option-{'abcdefgh'[i]}.svg"), "w").write(
+        open(os.path.join(out, f"core-option-{'abcdefghi'[i]}.svg"), "w").write(
             f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 35 35" width="35" height="35">{to_svg(px)}</svg>\n')
         x0 = 20 + i * (T * S + 30)
         cells.append(

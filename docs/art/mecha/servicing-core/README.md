@@ -28,6 +28,8 @@ faces up and is never turned. Two ways to fit them (`review/mix-tiles.png`, `rev
 
 | H | G redone with E's arms unchanged (heromedel: G's arms were changed too much and lost the taper): the table narrowed and its upper jaws made compact so the arms stay 2 px clear |
 
-`review/e-vs-h.png`, `review/h-inroom.png` show H. `review/g-tile.png`, `review/g-inroom.png` show G. `review/inroom.png` shows each in the battle cross's core room, empty and with a HalfMech standing in it.
+| I | E's arms with F's table unchanged in shape (heromedel: closer to F's table), moved down so its upper jaws sit 2 px below the arm tips |
+
+`review/f-h-i.png`, `review/i-inroom.png` show I. `review/e-vs-h.png`, `review/h-inroom.png` show H. `review/g-tile.png`, `review/g-inroom.png` show G. `review/inroom.png` shows each in the battle cross's core room, empty and with a HalfMech standing in it.
 
 Built by `tools/core_px.py ../crew/mecha-crew-sheet.svg OUT_DIR`.
