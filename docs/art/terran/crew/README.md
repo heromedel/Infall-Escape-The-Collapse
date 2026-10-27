@@ -12,6 +12,12 @@ angle), upright enough to sit with the Mecha and Tentauri crew. Each person has 
 round 5 pixel art exported pixel for pixel, nothing changed (one path per colour; the viewBox is the 70 × 70 frame, so
 they scale to any size with crisp pixels; checked: every pixel matches). Built by `tools/export_svg.py OUT_DIR`.
 
+**Drifter at 2x resolution (experiment, 2026-10-27):** `svg/gatos-drifter-2x.svg` (140 × 140), built by
+`tools/hires.py drifter OUT.svg` from the round 5 pixels: each pixel becomes a 2 × 2 block, then the outline thins to
+one sub-pixel, one-pixel stair-steps on the silhouette lose their outer corner, and the shading gains in-between
+tones (each 4-tone ramp becomes 7, each sub-pixel a soft average of its neighbours snapped to that ramp); the face keeps
+its hand-placed pixels. `review/gatos-drifter-2x-compare.png`: round 5 (left) beside it (right).
+
 **Vector test (experiment, 2026-10-27):** heromedel: the pixel versions look flat, with beady eyes and shading so
 contrasty it reads as embossed panels; try higher resolution or vectors, from scratch, with rounder, subtler and more
 anatomical shading. The drifter redrawn as a vector (`review/gatos-drifter-vector.svg`, built by
