@@ -42,6 +42,7 @@ function openWindow(): BrowserWindow {
     width: 1280,
     height: 720,
     title: 'Infall: Escape The Collapse',
+    autoHideMenuBar: true,   // the battle wants the whole window; Alt shows the menu
     webPreferences: { preload: path.join(__dirname, 'host', 'preload.js') },
   });
   window.loadFile(path.join(__dirname, 'window', 'index.html'));

@@ -114,6 +114,7 @@ export class ShipDrawing {
 
   private conduits(picture: ShipPicture): SVGElement {
     const group = this.group('conduits');
+    group.setAttribute('pointer-events', 'none');   // a click on a conduit is a click on its tile
     const size = picture.tileSize;
     const half = size / 2;
     for (const conduit of picture.conduits) {
@@ -166,6 +167,7 @@ export class ShipDrawing {
   /** Each system's symbol in the ship's power colour, against its wall or over the tile's centre (GDD 5H). */
   private systems(picture: ShipPicture): SVGElement {
     const group = this.group('systems');
+    group.setAttribute('pointer-events', 'none');   // a click on a symbol is a click on its tile
     const size = picture.tileSize;
     for (const system of picture.systems) {
       let x = system.column * size + (size - SYMBOL_BOX) / 2;

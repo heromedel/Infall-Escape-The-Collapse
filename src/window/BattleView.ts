@@ -58,7 +58,6 @@ export class BattleView {
   /** Where the selected ship's panel goes when it sits beside the hull. */
   private readonly panelLayer: SVGGElement;
   private panelBeside = true;
-  private besidePanel?: { shipId: number; panel: SVGGElement };
   private zoom = 1;
   private dividerY = 0;
   private width = 0;
@@ -100,29 +99,30 @@ export class BattleView {
     this.rescaleTags();
   }
 
-  /** The battle's size in battle pixels, and the screen pixels to keep clear under it for a panel beside the hull. */
-  size(): { width: number; height: number; reservedBottom: number } {
-    return { width: this.width, height: this.height, reservedBottom: this.panelBeside ? PANEL_GAP + PANEL_HEIGHT : 0 };
+  /** The battle's size in battle pixels, with room under the player squad for a panel beside the hull. */
+  size(): { width: number; height: number } {
+    return { width: Math.max(this.width, PANEL_WIDTH), height: this.height + (this.panelBeside ? PANEL_GAP + PANEL_HEIGHT : 0) };
   }
 
   /**
-   * Puts a ship's panel under its hull, centred on the ship but at screen scale, so it stays readable however
-   * far the camera is out (GDD 3B: near the ship); or takes it out when the panel is docked.
+   * Puts a ship's panel under its hull, centred, at hull scale, so it moves and zooms with the ship it belongs to
+   * (GDD 3B: near the ship); or takes it out when the panel is docked.
    */
   placePanel(shipId: number, panel: SVGGElement | undefined, beside: boolean): void {
     this.panelBeside = beside;
     this.panelLayer.replaceChildren();
-    this.besidePanel = undefined;
-    if (!panel || !beside || !this.ships.has(shipId)) return;
-    this.besidePanel = { shipId, panel };
+    const placed = this.ships.get(shipId);
+    if (!panel || !beside || !placed) return;
+    const grid = ShipDrawing.sizeOf(placed.picture);
+    const x = placed.offsetX + grid.width / 2 - PANEL_WIDTH / 2;
+    const y = placed.offsetY - placed.print.top + placed.print.height + PANEL_GAP;
+    panel.setAttribute('transform', `translate(${x} ${y})`);
     this.panelLayer.appendChild(panel);
-    this.rescalePanel();
   }
 
-  /** The camera moved or zoomed: the tags and a panel beside a hull keep their screen size. */
+  /** The camera moved or zoomed: the tags keep their screen size. */
   setZoom(zoom: number): void {
     this.zoom = zoom;
-    this.rescalePanel();
     this.rescaleTags();
   }
 
@@ -135,16 +135,6 @@ export class BattleView {
       const y = placed.offsetY - placed.print.top + LABEL_SPACE - TAG.height * scale;
       placed.tag.setAttribute('transform', `translate(${x} ${y}) scale(${scale})`);
     }
-  }
-
-  private rescalePanel(): void {
-    if (!this.besidePanel) return;
-    const placed = this.ships.get(this.besidePanel.shipId)!;
-    const grid = ShipDrawing.sizeOf(placed.picture);
-    const scale = 1 / this.zoom;
-    const x = placed.offsetX + grid.width / 2 - (PANEL_WIDTH / 2) * scale;
-    const y = placed.offsetY - placed.print.top + placed.print.height + PANEL_GAP * scale;
-    this.besidePanel.panel.setAttribute('transform', `translate(${x} ${y}) scale(${scale})`);
   }
 
   /** Where a ship's tile grid sits on the battle, for the camera. */

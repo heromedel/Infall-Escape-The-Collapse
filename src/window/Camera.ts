@@ -50,12 +50,12 @@ export class Camera {
     this.viewport.addEventListener('pointerdown', (event) => {
       if (event.button !== 0 && event.button !== 1) return;
       dragging = true; moved = 0; lastX = event.clientX; lastY = event.clientY;
-      this.viewport.setPointerCapture(event.pointerId);
     });
     this.viewport.addEventListener('pointermove', (event) => {
       if (!dragging) return;
       moved += Math.abs(event.clientX - lastX) + Math.abs(event.clientY - lastY);
-      if (moved > 4) this.viewport.classList.add('panning');
+      // only a real drag takes the pointer: a plain click must reach what was clicked
+      if (moved > 4 && !this.viewport.hasPointerCapture(event.pointerId)) { this.viewport.classList.add('panning'); this.viewport.setPointerCapture(event.pointerId); }
       this.x += event.clientX - lastX;
       this.y += event.clientY - lastY;
       lastX = event.clientX; lastY = event.clientY;

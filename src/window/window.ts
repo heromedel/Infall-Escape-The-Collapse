@@ -108,7 +108,7 @@ function listenToHost(): void {
 function fitBattle(): void {
   requestAnimationFrame(() => {   // after the bands have shown or hidden, so the viewport has its final size
     const size = battleView.size();
-    camera.fitTo(size.width, size.height, size.reservedBottom + 8);
+    camera.fitTo(size.width, size.height);
   });
 }
 

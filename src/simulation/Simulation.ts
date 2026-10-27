@@ -192,7 +192,7 @@ export class Simulation {
       rooms: ship.rooms.map((room) => ({ id: room.id, oxygen: Math.round(room.oxygen) })),
       systems: ship.systems.map((system) => ({
         key: system.key, name: system.name, level: system.level, damage: system.damage,
-        bars: system.selfPower ?? system.bars, maxBars: system.maxBars, isWorking: system.isWorking, spored: system.spored,
+        bars: system.selfPower ?? system.bars, maxBars: system.needsPower ? system.maxBars : 0, isWorking: system.isWorking, spored: system.spored,
         mannedBy: system.mannedBy?.id,
       })),
       doors: ship.doors.map((door) => ({ id: door.id, open: door.open })),

@@ -16,10 +16,12 @@ export class Settings {
   formationDepth = 0.7;
   formationInverted = false;
   /**
-   * Ship Panel (GDD 3B, Proposed): Beside Ship > Docked. Beside: the selected ship's panel sits under its hull
-   * and zooms with it. Docked: the panel sits in the bottom GUI band (3J) at screen scale.
+   * Ship Panel (GDD 3B, Proposed): Docked > Beside Ship. Docked: the panel sits over the battle's bottom-left
+   * corner at screen scale, as the genre's does. Beside: it sits under the selected ship's hull and zooms with it.
+   * Not in the docs yet: docked is the default because a hull-scale panel is unreadable once the camera is out far
+   * enough to show both squads.
    */
-  shipPanel: ShipPanelPlace = 'beside';
+  shipPanel: ShipPanelPlace = 'docked';
 }
 
 export type ShipPanelPlace = 'beside' | 'docked';
