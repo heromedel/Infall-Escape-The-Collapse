@@ -1,12 +1,21 @@
 # GATOS (Terran) crew
 
 **Date:** 2026-10-27
-**Status:** round 4, three options for heromedel. **Ai-Generated-Proposal** in every detail, built on heromedel's
+**Status:** round 5 (experiment, not pushed), three options for heromedel. **Ai-Generated-Proposal** in every detail, built on heromedel's
 direction (2026-10-27): pants, dark boots, a mid-tone shirt and a jacket, a rough look; a subtle mix of a space
 alliance, a Mexican gang and a 1980s punk gang (no mohawks), as if the GATOS were an alliance of legal and sometimes
 benevolent Terran gangs; leaning leather jackets and long-coated mercs, with Firefly as one style inspiration; no
 spacemen, nothing cute or cheesy, no stereotypes. Facing forward, seen from about 45° above (heromedel's "1/2"
 angle), upright enough to sit with the Mecha and Tentauri crew. Each person has their own emblem, not one alliance mark.
+
+![Round 5](review/gatos-crew-round5.png)
+
+**Round 5:** the same three outfits fitted to heromedel's rigged model (`reference/heromedel-rig-front-right-back.png`;
+its front view, the 1/2 view, cut to `reference/rig-front-45.png`). The joint and clothing-edge marks are cleaned off
+the picture; each pixel goes to its nearest bone (torso, upper and lower arms, thighs, shins, feet), hands start at the
+wrists, the shirt ends at the model's hem line, and the clothing is placed by the joints (the duster reaches between
+the knees and ankles). Built by `tools/show2.py OUT.svg` (`tools/rig.py`, `tools/paint2.py`, `tools/crews2.py`).
+Round 4 is kept below for comparison.
 
 ![Round 4](review/gatos-crew-round4.png)
 
