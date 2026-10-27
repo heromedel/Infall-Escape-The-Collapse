@@ -8,6 +8,16 @@ benevolent Terran gangs; leaning leather jackets and long-coated mercs, with Fir
 spacemen, nothing cute or cheesy, no stereotypes. Facing forward, seen from about 45° above (heromedel's "1/2"
 angle), upright enough to sit with the Mecha and Tentauri crew. Each person has their own emblem, not one alliance mark.
 
+**Vector test (experiment, 2026-10-27):** heromedel: the pixel versions look flat, with beady eyes and shading so
+contrasty it reads as embossed panels; try higher resolution or vectors, from scratch, with rounder, subtler and more
+anatomical shading. The drifter redrawn as a vector (`review/gatos-drifter-vector.svg`, built by
+`tools/vector_drifter.py`) over the rig's joints: rounded shapes with soft, low-contrast gradients, a head at the 45°
+view (the crown and parted, tousled hair above, the face lower and shorter), almond eyes with whites under a brow
+shadow, a nose and jaw shown by shadow, sleeves that read apart from the coat, hands with thumbs, the coat's lapels,
+belt and folds drawn as soft shapes. Shown large, at 2x and at true size (`review/gatos-crew-vector-test.png`).
+
+![Vector test](review/gatos-crew-vector-test.png)
+
 ![Round 5](review/gatos-crew-round5.png)
 
 **Round 5:** the same three outfits fitted to heromedel's rigged model (`reference/heromedel-rig-front-right-back.png`;
