@@ -101,3 +101,13 @@ with one ship and wins with about 3–4 very strong or 6 good ones (GDD 3K).
 7. Crew prices and the drone per-use rule are Ai-Generated-Proposal and unreviewed.
 8. Whether the economy is too loose or too tight over a whole run (8 bands, squad growth from 1 to 3–6 ships,
    more ships costing more Mawjig per fight) has never been checked.
+
+## From Infall: Init Coding (2026-10-27)
+
+GDD 8L (Proposed) adds two things for you:
+
+1. A second weapon system of the same kind on one ship costs a small installation surcharge, about 5 to 10
+   percent of that system's installation cost. Please set the number.
+2. A weapon system's slots now equal its level (one slot at level 1, up to six), so a band 1 to 3 ship carries
+   fewer weapons than the genre's fixed four slots. Please check the early weapon prices and the fight rewards
+   against that.
