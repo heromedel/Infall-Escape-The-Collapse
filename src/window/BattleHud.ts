@@ -1,0 +1,333 @@
+/**
+ * The battle GUI as floating elements over the battle, placed as the genre places them (GDD 1C, 3J) and drawn
+ * with our own icons and colours (GDD 14B, 14D): hull, shields and crew down the top-left; the reactor, the
+ * powered systems and then the subsystems along the bottom-left; the weapons along the bottom; the enemy's hull
+ * and shields top-right; the squad, the time and the pause state top-centre. Everything shows the selected
+ * player ship. Drawn once per ship into a screen-sized SVG over the battle and updated in place, so a click
+ * never lands on an element that was just replaced. Clickable parts carry data-action; BattleControls reads them.
+ */
+
+import type { ShipPicture } from '../shared/ShipPicture';
+import type { Snapshot, SnapshotCrew, SnapshotShip, SnapshotSystem, SnapshotWeapon } from '../shared/Snapshot';
+import { systemSymbolElement, SYMBOL_BOX } from './SystemSymbols.js';
+import { group, placeholderShape, rect, text } from './HudBits.js';
+
+const LOOK = {
+  frame: 'rgba(29, 42, 58, 0.55)',
+  edge: '#4a6a8a',
+  text: '#ffffff',
+  faint: '#9fb3c8',
+  hull: '#66FF66',
+  hullLow: '#FF3B3B',
+  barBack: 'rgba(11, 16, 24, 0.7)',
+  barEmpty: '#2a3a4e',
+  shield: '#4F8FFF',
+  shieldEmpty: '#263445',
+  charge: '#2f6b4f',
+  chargeFull: '#66FF66',
+  armed: '#ffffff',
+  damaged: '#FF3B3B',
+  subsystem: '#cfd6e2',
+  enemy: '#FF8500',
+};
+
+const MARGIN = 16;
+/** The screen bands the GUI takes above and below the battle (GDD 3J), kept clear by the camera. */
+export const GUI_BANDS = { top: 60, bottom: 130 };
+const BAR = { width: 24, height: 6, step: 8 };
+const SYSTEM_STEP = 42;
+const SUBSYSTEM_GAP = 26;
+const WEAPON_BOX = { width: 160, height: 34, gap: 8 };
+const CREW_ROW = 24;
+
+export interface HudSelection {
+  armedMount?: number;
+  selectedCrewId?: number;
+}
+
+/** The elements built for one ship, updated in place while it stays selected. */
+interface ShipElements {
+  shipId: number;
+  root: SVGGElement;
+  topLeft: SVGGElement;
+  bottomLeft: SVGGElement;
+  weapons: SVGGElement;
+  hullBar: SVGRectElement;
+  hullText: SVGTextElement;
+  shieldPips: SVGCircleElement[];
+  evasionText: SVGTextElement;
+  reactorBars: SVGRectElement[];
+  systems: Map<string, { icon: SVGGElement; bars: SVGRectElement[]; manned: SVGRectElement; hit: SVGRectElement; subsystem: boolean }>;
+  weaponBoxes: Map<number, { box: SVGRectElement; fill: SVGRectElement; aimed: SVGTextElement; name: SVGTextElement }>;
+  crew: Map<number, { box: SVGRectElement; health: SVGRectElement; shape: SVGElement }>;
+  weaponsWidth: number;
+}
+
+export class BattleHud {
+  private elements?: ShipElements;
+  private readonly topCentre: SVGGElement;
+  private readonly squadText: SVGTextElement;
+  private readonly pausedText: SVGTextElement;
+  private readonly hintText: SVGTextElement;
+  private readonly topRight: SVGGElement;
+  private readonly enemyName: SVGTextElement;
+  private readonly enemyHull: SVGRectElement;
+  private readonly enemyPips: SVGCircleElement[] = [];
+
+  constructor(private readonly hud: SVGSVGElement) {
+    this.topCentre = group({ 'pointer-events': 'none' });
+    this.squadText = text(0, 18, '', { size: 14, anchor: 'middle' });
+    this.pausedText = text(0, 48, 'PAUSED', { size: 26, anchor: 'middle', weight: 'bold' });
+    this.pausedText.setAttribute('letter-spacing', '6');
+    this.hintText = text(0, 0, '', { size: 13, anchor: 'middle', fill: LOOK.faint });
+    this.topCentre.append(this.squadText, this.pausedText, this.hintText);
+
+    this.topRight = group({ 'pointer-events': 'none' });
+    this.enemyName = text(0, 14, '', { size: 13, anchor: 'end' });
+    this.topRight.appendChild(this.enemyName);
+    this.topRight.appendChild(rect(-200, 20, 200, 12, LOOK.barBack));
+    this.enemyHull = rect(-200, 20, 200, 12, LOOK.enemy);
+    this.topRight.appendChild(this.enemyHull);
+    for (let pip = 0; pip < 4; pip++) {
+      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      circle.setAttribute('cx', String(-6 - pip * 16)); circle.setAttribute('cy', '42'); circle.setAttribute('r', '6');
+      this.topRight.appendChild(circle); this.enemyPips.push(circle);
+    }
+    hud.append(this.topCentre, this.topRight);
+    window.addEventListener('resize', () => this.layout());
+  }
+
+  clear(): void {
+    this.elements?.root.remove();
+    this.elements = undefined;
+    this.enemyName.textContent = '';
+    this.squadText.textContent = '';
+    this.hintText.textContent = '';
+  }
+
+  /** Redraws from the snapshot: builds the selected ship's elements when the selection changed. */
+  update(snapshot: Snapshot, ship: SnapshotShip | undefined, picture: ShipPicture | undefined, selection: HudSelection, paused: boolean, hint: string): void {
+    const player = snapshot.squads.find((squad) => squad.side === 'player');
+    this.squadText.textContent = player ? `${player.name}  ·  Mawjig ${player.mawjig.toFixed(2)}  ·  ${snapshot.seconds.toFixed(1)} s` : '';
+    this.pausedText.setAttribute('visibility', paused ? 'visible' : 'hidden');
+    this.hintText.textContent = hint;
+    this.updateEnemy(snapshot, ship);
+    if (!ship || !picture) { this.elements?.root.remove(); this.elements = undefined; return; }
+    if (!this.elements || this.elements.shipId !== ship.id) {
+      this.elements?.root.remove();
+      this.elements = this.build(ship, picture);
+      this.hud.appendChild(this.elements.root);
+    }
+    this.updateShip(this.elements, ship, picture, selection);
+    this.layout();
+  }
+
+  /** Anchors each block to its corner of the viewport, whatever the window size. */
+  private layout(): void {
+    const width = this.hud.clientWidth;
+    const height = this.hud.clientHeight;
+    this.topCentre.setAttribute('transform', `translate(${width / 2} ${MARGIN})`);
+    this.hintText.setAttribute('y', String(height - MARGIN - WEAPON_BOX.height - 14 - MARGIN));
+    this.topRight.setAttribute('transform', `translate(${width - MARGIN} ${MARGIN})`);
+    if (!this.elements) return;
+    this.elements.topLeft.setAttribute('transform', `translate(${MARGIN} ${MARGIN})`);
+    this.elements.bottomLeft.setAttribute('transform', `translate(${MARGIN} ${height - MARGIN})`);
+    this.elements.weapons.setAttribute('transform', `translate(${Math.max(360, width / 2 - this.elements.weaponsWidth / 2)} ${height - MARGIN - WEAPON_BOX.height})`);
+  }
+
+  // ---- building ------------------------------------------------------------------------------------------
+
+  private build(ship: SnapshotShip, picture: ShipPicture): ShipElements {
+    const root = group();
+    const topLeft = group();
+    const bottomLeft = group();
+    const weapons = group();
+    root.append(topLeft, bottomLeft, weapons);
+
+    // top-left: the ship's name, hull bar, shield bubbles and evasion, then the crew list
+    topLeft.appendChild(text(0, 14, ship.name, { size: 13 }));
+    topLeft.appendChild(rect(0, 20, 200, 14, LOOK.barBack));
+    const hullBar = rect(0, 20, 200, 14, LOOK.hull);
+    topLeft.appendChild(hullBar);
+    const hullText = text(100, 31, '', { size: 11, anchor: 'middle', weight: 'bold', fill: '#0b1018' });
+    topLeft.appendChild(hullText);
+    const shieldPips: SVGCircleElement[] = [];
+    for (let pip = 0; pip < 4; pip++) {
+      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      circle.setAttribute('cx', String(8 + pip * 16)); circle.setAttribute('cy', '46'); circle.setAttribute('r', '6');
+      topLeft.appendChild(circle); shieldPips.push(circle);
+    }
+    const evasionText = text(200, 50, '', { size: 11, anchor: 'end', fill: LOOK.faint });
+    topLeft.appendChild(evasionText);
+    const crew = this.buildCrew(topLeft, ship.crew, picture, 64);
+
+    // bottom-left: reactor stack, powered systems, then the subsystems a little apart
+    const reactorBars: SVGRectElement[] = [];
+    for (let bar = 0; bar < ship.barsTotal; bar++) {
+      const drawn = rect(0, -SYMBOL_BOX - 12 - bar * BAR.step, BAR.width, BAR.height, LOOK.barEmpty);
+      bottomLeft.appendChild(drawn); reactorBars.push(drawn);
+    }
+    bottomLeft.appendChild(text(BAR.width / 2, -2, 'free', { size: 9, anchor: 'middle', fill: LOOK.faint }));
+    const systems = this.buildSystems(bottomLeft, ship, picture);
+
+    // bottom: the weapon slots
+    const weaponBoxes = this.buildWeapons(weapons, ship.weapons);
+    const weaponsWidth = ship.weapons.length * (WEAPON_BOX.width + WEAPON_BOX.gap) - WEAPON_BOX.gap;
+
+    return { shipId: ship.id, root, topLeft, bottomLeft, weapons, hullBar, hullText, shieldPips, evasionText, reactorBars, systems, weaponBoxes, crew, weaponsWidth };
+  }
+
+  private buildCrew(into: SVGGElement, crew: SnapshotCrew[], picture: ShipPicture, top: number): ShipElements['crew'] {
+    const built: ShipElements['crew'] = new Map();
+    const shapeOf = new Map(picture.crew.map((member) => [member.race, member]));
+    crew.forEach((member, index) => {
+      const y = top + index * CREW_ROW;
+      const row = group({ 'data-action': 'crew', 'data-crew-id': String(member.id), class: 'clickable' });
+      const box = rect(0, y, 200, CREW_ROW - 3, LOOK.frame, { rx: '3' });
+      row.appendChild(box);
+      const look = shapeOf.get(member.race) ?? picture.crew[0];
+      const shape = group({ transform: `translate(12 ${y + (CREW_ROW - 3) / 2}) scale(0.7)` });
+      shape.innerHTML = placeholderShape(look?.shape ?? 'QuestionMark', look?.colour ?? picture.powerColour);
+      row.appendChild(shape);
+      row.appendChild(text(26, y + 14, member.name, { size: 11 }));
+      row.appendChild(rect(106, y + 8, 88, 6, LOOK.barBack));
+      const health = rect(106, y + 8, 88, 6, LOOK.hull);
+      row.appendChild(health);
+      const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+      title.textContent = `${member.name} (${member.race}): click to select, then click a tile on this ship.`;
+      row.appendChild(title);
+      into.appendChild(row);
+      built.set(member.id, { box, health, shape });
+    });
+    return built;
+  }
+
+  /** Powered systems first in file order, then the subsystems (those that take no bars) after a gap. */
+  private buildSystems(into: SVGGElement, ship: SnapshotShip, picture: ShipPicture): ShipElements['systems'] {
+    const built: ShipElements['systems'] = new Map();
+    const symbolOf = new Map(picture.systems.map((system) => [system.key, system]));
+    const powered = ship.systems.filter((system) => system.maxBars > 0);
+    const subsystems = ship.systems.filter((system) => system.maxBars === 0);
+    let x = BAR.width + 16;
+    const place = (system: SnapshotSystem, subsystem: boolean) => {
+      const column = group({ 'data-action': 'power', 'data-system-key': system.key, class: 'clickable', transform: `translate(${x} 0)` });
+      const barCount = subsystem ? system.level : system.maxBars;
+      const hit = rect(-6, -SYMBOL_BOX - 16 - barCount * BAR.step, SYSTEM_STEP - 6, SYMBOL_BOX + 20 + barCount * BAR.step, 'transparent');
+      hit.appendChild(document.createElementNS('http://www.w3.org/2000/svg', 'title'));
+      column.appendChild(hit);
+      const bars: SVGRectElement[] = [];
+      for (let bar = 0; bar < barCount; bar++) {
+        const drawn = rect(0, -SYMBOL_BOX - 12 - bar * BAR.step, BAR.width, BAR.height, LOOK.barEmpty);
+        column.appendChild(drawn); bars.push(drawn);
+      }
+      const manned = rect(BAR.width - 6, -SYMBOL_BOX - 4, 6, 3, picture.powerColour);
+      column.appendChild(manned);
+      const icon = group({ transform: `translate(${(BAR.width - SYMBOL_BOX * 1.3) / 2} ${-SYMBOL_BOX * 1.3 - 2}) scale(1.3)`, color: picture.powerColour });
+      icon.appendChild(systemSymbolElement(system.name, symbolOf.get(system.key)?.symbolSvg));
+      column.appendChild(icon);
+      into.appendChild(column);
+      built.set(system.key, { icon, bars, manned, hit, subsystem });
+      x += SYSTEM_STEP;
+    };
+    for (const system of powered) place(system, false);
+    x += SUBSYSTEM_GAP;
+    for (const system of subsystems) place(system, true);
+    return built;
+  }
+
+  private buildWeapons(into: SVGGElement, weapons: SnapshotWeapon[]): ShipElements['weaponBoxes'] {
+    const built: ShipElements['weaponBoxes'] = new Map();
+    weapons.forEach((weapon, index) => {
+      const x = index * (WEAPON_BOX.width + WEAPON_BOX.gap);
+      const slot = group({ 'data-action': 'weapon', 'data-mount': String(weapon.mount), class: 'clickable' });
+      const box = rect(x, 0, WEAPON_BOX.width, WEAPON_BOX.height, LOOK.frame, { stroke: LOOK.edge, rx: '3' });
+      const fill = rect(x + 1, WEAPON_BOX.height - 9, 0, 8, LOOK.charge);
+      slot.append(box, fill);
+      slot.appendChild(text(x + 6, 16, String(index + 1), { size: 11, fill: LOOK.faint, weight: 'bold' }));
+      const name = text(x + 18, 16, weapon.name, { size: 12 });
+      slot.appendChild(name);
+      const aimed = text(x + WEAPON_BOX.width - 6, 16, '', { size: 10, anchor: 'end', fill: LOOK.faint });
+      slot.appendChild(aimed);
+      const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+      title.textContent = `${weapon.name} (key ${index + 1}): click to arm, then click an enemy room. Right click clears its target.`;
+      slot.appendChild(title);
+      into.appendChild(slot);
+      built.set(weapon.mount, { box, fill, aimed, name });
+    });
+    return built;
+  }
+
+  // ---- updating ------------------------------------------------------------------------------------------
+
+  private updateShip(elements: ShipElements, ship: SnapshotShip, picture: ShipPicture, selection: HudSelection): void {
+    const hullShare = ship.hullMax > 0 ? ship.hullPoints / ship.hullMax : 0;
+    elements.hullBar.setAttribute('width', String(200 * hullShare));
+    elements.hullBar.setAttribute('fill', hullShare < 0.34 ? LOOK.hullLow : LOOK.hull);
+    elements.hullText.textContent = `${ship.hullPoints} / ${ship.hullMax}`;
+    elements.shieldPips.forEach((pip, index) => {
+      pip.setAttribute('fill', index < ship.shieldLayers ? LOOK.shield : LOOK.shieldEmpty);
+      pip.setAttribute('visibility', index < ship.shieldLayersMax ? 'visible' : 'hidden');
+    });
+    elements.evasionText.textContent = `evade ${ship.evasionPercent}%`;
+    elements.reactorBars.forEach((bar, index) => bar.setAttribute('fill', index < ship.barsTotal - ship.barsInUse ? picture.powerColour : LOOK.barEmpty));
+
+    for (const system of ship.systems) {
+      const drawn = elements.systems.get(system.key);
+      if (!drawn) continue;
+      const broken = !system.isWorking || system.damage > 0;
+      drawn.icon.setAttribute('color', broken ? LOOK.damaged : picture.powerColour);
+      drawn.manned.setAttribute('visibility', system.mannedBy !== undefined ? 'visible' : 'hidden');
+      const barsPerLevel = drawn.subsystem ? 1 : system.maxBars / system.level;
+      const barsDamagedAway = system.damage * barsPerLevel;
+      drawn.bars.forEach((bar, index) => {
+        const damagedAway = index >= drawn.bars.length - barsDamagedAway;
+        const lit = drawn.subsystem ? !damagedAway : index < system.bars;
+        bar.setAttribute('fill', damagedAway ? LOOK.damaged : lit ? (drawn.subsystem ? LOOK.subsystem : picture.powerColour) : LOOK.barEmpty);
+      });
+      drawn.hit.querySelector('title')!.textContent = drawn.subsystem
+        ? `${system.key}: level ${system.level}, needs no power${system.damage > 0 ? `, ${system.damage} damage` : ''}${system.mannedBy !== undefined ? ', manned' : ''}.`
+        : `${system.key}: ${system.bars} of ${system.maxBars} bars${system.damage > 0 ? `, ${system.damage} damage` : ''}${system.mannedBy !== undefined ? ', manned' : ''}. Click adds power, right click removes.`;
+    }
+
+    for (const weapon of ship.weapons) {
+      const drawn = elements.weaponBoxes.get(weapon.mount);
+      if (!drawn) continue;
+      const armed = selection.armedMount === weapon.mount;
+      drawn.fill.setAttribute('width', String((WEAPON_BOX.width - 2) * (weapon.powered ? weapon.charge : 0)));
+      drawn.fill.setAttribute('fill', weapon.charge >= 1 ? LOOK.chargeFull : LOOK.charge);
+      drawn.box.setAttribute('stroke', armed ? LOOK.armed : LOOK.edge);
+      drawn.box.setAttribute('stroke-width', armed ? '2' : '1');
+      drawn.name.setAttribute('fill', weapon.powered ? LOOK.text : LOOK.faint);
+      drawn.aimed.textContent = weapon.target ? 'aimed' : weapon.powered ? '' : 'no power';
+      drawn.aimed.setAttribute('fill', weapon.target ? picture.powerColour : LOOK.faint);
+    }
+
+    for (const member of ship.crew) {
+      const drawn = elements.crew.get(member.id);
+      if (!drawn) continue;
+      const selected = selection.selectedCrewId === member.id;
+      drawn.box.setAttribute('stroke', selected ? LOOK.armed : 'none');
+      drawn.box.setAttribute('stroke-width', selected ? '2' : '0');
+      drawn.health.setAttribute('width', String(88 * Math.max(0, member.health) / 100));
+      drawn.health.setAttribute('fill', member.health < 34 ? LOOK.hullLow : LOOK.hull);
+      drawn.shape.setAttribute('opacity', member.health <= 0 ? '0.25' : '1');
+    }
+  }
+
+  /** Top-right: the enemy ship the selected ship is aiming at, else the first enemy still in the fight. */
+  private updateEnemy(snapshot: Snapshot, ship: SnapshotShip | undefined): void {
+    const enemies = snapshot.squads.filter((squad) => squad.side === 'enemy').flatMap((squad) => squad.ships);
+    const aimedId = ship?.weapons.find((weapon) => weapon.target)?.target?.shipId;
+    const enemy = enemies.find((candidate) => candidate.id === aimedId) ?? enemies.find((candidate) => !candidate.isGone) ?? enemies[0];
+    if (!enemy) { this.enemyName.textContent = ''; this.topRight.setAttribute('visibility', 'hidden'); return; }
+    this.topRight.setAttribute('visibility', 'visible');
+    this.enemyName.textContent = enemy.name;
+    const share = enemy.hullMax > 0 ? enemy.hullPoints / enemy.hullMax : 0;
+    this.enemyHull.setAttribute('x', String(-200 * share));
+    this.enemyHull.setAttribute('width', String(200 * share));
+    this.enemyPips.forEach((pip, index) => {
+      pip.setAttribute('fill', index < enemy.shieldLayers ? LOOK.shield : LOOK.shieldEmpty);
+      pip.setAttribute('visibility', index < enemy.shieldLayersMax ? 'visible' : 'hidden');
+    });
+  }
+}

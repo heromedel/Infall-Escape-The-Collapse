@@ -8,7 +8,6 @@ import type { ShipPicture } from '../shared/ShipPicture';
 import type { Snapshot, SnapshotShip, SnapshotShot } from '../shared/Snapshot';
 import { ShipDrawing } from './ShipDrawing.js';
 import { formationSlots, FormationSettings } from './Formation.js';
-import { PANEL_HEIGHT, PANEL_WIDTH } from './ShipPanel.js';
 
 const SVG = 'http://www.w3.org/2000/svg';
 /** Space between the front line of each squad and the divider: the off-screen gap's on-screen edge. */
@@ -16,8 +15,6 @@ const ROW_GAP = 120;
 /** Room above a ship's art for its tag: name, hull bar and shield pips, drawn at screen scale. */
 const LABEL_SPACE = 64;
 const TAG = { width: 170, height: 34 };
-/** Room under the player squad for a ship's panel when it sits beside the hull (Settings: Ship Panel). */
-const PANEL_GAP = 10;
 const LOOK = {
   divider: '#4a6a8a',
   hullBar: '#66FF66',
@@ -55,9 +52,8 @@ export class BattleView {
   playerShipIds: number[] = [];
   private readonly shotsGroup: SVGGElement;
   private readonly targetsGroup: SVGGElement;
-  /** Where the selected ship's panel goes when it sits beside the hull. */
-  private readonly panelLayer: SVGGElement;
-  private panelBeside = true;
+  /** The ring under the selected ship. */
+  private readonly selectionRing: SVGRectElement;
   private zoom = 1;
   private dividerY = 0;
   private width = 0;
@@ -68,7 +64,13 @@ export class BattleView {
     this.root = document.createElementNS(SVG, 'g');
     this.shotsGroup = document.createElementNS(SVG, 'g');
     this.targetsGroup = document.createElementNS(SVG, 'g');
-    this.panelLayer = document.createElementNS(SVG, 'g');
+    this.selectionRing = document.createElementNS(SVG, 'rect');
+    this.selectionRing.setAttribute('rx', '14');
+    this.selectionRing.setAttribute('fill', 'rgba(102, 255, 102, 0.07)');
+    this.selectionRing.setAttribute('stroke', 'rgba(102, 255, 102, 0.75)');
+    this.selectionRing.setAttribute('stroke-width', '2');
+    this.selectionRing.setAttribute('pointer-events', 'none');
+    this.selectionRing.setAttribute('visibility', 'hidden');
   }
 
   /** Lays both squads out from their pictures, each in its formation curve facing the divider (GDD 3H). */
@@ -90,34 +92,17 @@ export class BattleView {
     divider.setAttribute('y1', String(this.dividerY)); divider.setAttribute('y2', String(this.dividerY));
     divider.setAttribute('stroke', LOOK.divider); divider.setAttribute('stroke-dasharray', '8 8');
     this.root.appendChild(divider);
+    this.root.appendChild(this.selectionRing);   // under the ships
 
     this.placeSquad(enemy, enemyLayout.slots, (this.width - enemyLayout.width) / 2, 0);
     this.placeSquad(player, playerLayout.slots, (this.width - playerLayout.width) / 2, enemyHeight + ROW_GAP);
     this.root.appendChild(this.targetsGroup);
     this.root.appendChild(this.shotsGroup);
-    this.root.appendChild(this.panelLayer);
     this.rescaleTags();
   }
 
-  /** The battle's size in battle pixels, with room under the player squad for a panel beside the hull. */
   size(): { width: number; height: number } {
-    return { width: Math.max(this.width, PANEL_WIDTH), height: this.height + (this.panelBeside ? PANEL_GAP + PANEL_HEIGHT : 0) };
-  }
-
-  /**
-   * Puts a ship's panel under its hull, centred, at hull scale, so it moves and zooms with the ship it belongs to
-   * (GDD 3B: near the ship); or takes it out when the panel is docked.
-   */
-  placePanel(shipId: number, panel: SVGGElement | undefined, beside: boolean): void {
-    this.panelBeside = beside;
-    this.panelLayer.replaceChildren();
-    const placed = this.ships.get(shipId);
-    if (!panel || !beside || !placed) return;
-    const grid = ShipDrawing.sizeOf(placed.picture);
-    const x = placed.offsetX + grid.width / 2 - PANEL_WIDTH / 2;
-    const y = placed.offsetY - placed.print.top + placed.print.height + PANEL_GAP;
-    panel.setAttribute('transform', `translate(${x} ${y})`);
-    this.panelLayer.appendChild(panel);
+    return { width: this.width, height: this.height };
   }
 
   /** The camera moved or zoomed: the tags keep their screen size. */
@@ -163,12 +148,15 @@ export class BattleView {
     this.drawTargets(snapshot);
   }
 
-  /** The selected ship gets a glow; its panel is BattleControls' business. */
+  /** The selected ship gets a ring under its hull (heromedel, 2026-10-27). */
   select(shipId: number | undefined): void {
     this.selectedShipId = shipId;
-    for (const placed of this.ships.values()) {
-      placed.group.setAttribute('filter', placed.id === shipId ? 'drop-shadow(0 0 6px white)' : '');
-    }
+    const box = shipId === undefined ? undefined : this.shipBox(shipId);
+    if (!box) { this.selectionRing.setAttribute('visibility', 'hidden'); return; }
+    const pad = 10;
+    this.selectionRing.setAttribute('x', String(box.x - pad)); this.selectionRing.setAttribute('y', String(box.y + LABEL_SPACE - pad));
+    this.selectionRing.setAttribute('width', String(box.width + 2 * pad)); this.selectionRing.setAttribute('height', String(box.height - LABEL_SPACE + 2 * pad));
+    this.selectionRing.setAttribute('visibility', 'visible');
   }
 
   /** The room's rectangle on the battle, for reticles. */

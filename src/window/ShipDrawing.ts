@@ -141,14 +141,19 @@ export class ShipDrawing {
     return group;
   }
 
-  /** Doors are clickable (BattleControls toggles them), so each carries its id. */
+  /** Doors are clickable (BattleControls toggles them): each drawn door has a wider invisible twin to click. */
   private doors(picture: ShipPicture): SVGElement {
     const group = this.group('doors');
+    const reach = 5;   // ship pixels added on every side, so a thin door is still an easy target
     for (const door of picture.doors) {
-      const rect = this.rect(door.x, door.y, door.width, door.height, door.airlock ? LOOK.airlock : LOOK.door);
-      rect.dataset.doorId = String(door.id);
-      rect.classList.add('door');
-      group.appendChild(rect);
+      const drawn = this.rect(door.x, door.y, door.width, door.height, door.airlock ? LOOK.airlock : LOOK.door);
+      drawn.dataset.doorId = String(door.id);
+      drawn.classList.add('door');
+      group.appendChild(drawn);
+      const hit = this.rect(door.x - reach, door.y - reach, door.width + 2 * reach, door.height + 2 * reach, 'transparent');
+      hit.dataset.doorId = String(door.id);
+      hit.classList.add('door', 'door-hit');
+      group.appendChild(hit);
     }
     return group;
   }
@@ -156,11 +161,12 @@ export class ShipDrawing {
   /** An open door shows as an outline, a closed one as a solid bar. */
   updateDoors(doors: { id: number; open: boolean }[], shipId: number): void {
     for (const door of doors) {
-      const rect = this.root.querySelector(`#doors rect[data-door-id="${door.id}"]`) as SVGRectElement | null;
-      if (!rect) continue;
-      rect.dataset.shipId = String(shipId);
-      rect.setAttribute('fill-opacity', door.open ? '0.25' : '1');
-      rect.setAttribute('stroke', door.open ? LOOK.door : 'none');
+      const rects = this.root.querySelectorAll(`#doors rect[data-door-id="${door.id}"]`);
+      rects.forEach((element) => { (element as SVGRectElement).dataset.shipId = String(shipId); });
+      const drawn = rects[0] as SVGRectElement | undefined;
+      if (!drawn) continue;
+      drawn.setAttribute('fill-opacity', door.open ? '0.25' : '1');
+      drawn.setAttribute('stroke', door.open ? LOOK.door : 'none');
     }
   }
 

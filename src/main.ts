@@ -100,12 +100,12 @@ function registerDebugCommands(debug: DebugConsole, content: ContentLibrary, set
     },
   });
   debug.register({
-    name: 'panel',
-    description: 'Ship Panel setting (GDD 3B): panel beside | docked. Beside the hull or in the bottom band; switches at once.',
-    run: ([place]) => {
-      if (place === 'beside' || place === 'docked') { settings.shipPanel = place; host.announceLook(); }
-      else if (place !== undefined) return 'panel beside | docked';
-      return `Ship panel: ${settings.shipPanel === 'beside' ? 'beside the ship, under its hull' : 'docked in the bottom band'}.`;
+    name: 'gui',
+    description: 'Battle GUI setting (GDD 1C, 3J): gui floating | card. The genre\'s floating placement or one card bottom-left; switches at once.',
+    run: ([kind]) => {
+      if (kind === 'floating' || kind === 'card') { settings.battleGui = kind; host.announceLook(); }
+      else if (kind !== undefined) return 'gui floating | card';
+      return `Battle GUI: ${settings.battleGui}.`;
     },
   });
   debug.register({

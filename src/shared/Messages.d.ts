@@ -14,8 +14,8 @@ export type ClientToHost =
 
 /** How the window lays the battle out: settings that change nothing in the simulation. */
 export interface Look {
-  /** Ship Panel: 'beside' (under the selected ship's hull) or 'docked' (in the bottom band). */
-  shipPanel: 'beside' | 'docked';
+  /** Battle GUI: 'floating' (the genre's placement over the battle) or 'card' (one panel bottom-left). */
+  battleGui: 'floating' | 'card';
 }
 
 export type HostToClient =

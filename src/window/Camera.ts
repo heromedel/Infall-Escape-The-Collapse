@@ -25,15 +25,16 @@ export class Camera {
   }
 
   /**
-   * Zooms out just enough to show a drawing of this size whole, centred, with a margin. `reservedBottom` is
-   * screen space under the drawing kept clear (a ship panel drawn at screen scale).
+   * Zooms out just enough to show a drawing of this size whole, centred, with a margin. `bands` is the screen
+   * space above and below kept clear for the GUI (GDD 3J).
    */
-  fitTo(width: number, height: number, reservedBottom = 0): void {
+  fitTo(width: number, height: number, bands: { top: number; bottom: number } = { top: 0, bottom: 0 }): void {
     const box = this.viewport.getBoundingClientRect();
     const margin = 24;
-    this.zoom = Math.min(1.5, (box.width - 2 * margin) / width, (box.height - 2 * margin - reservedBottom) / height);
+    const free = box.height - bands.top - bands.bottom - 2 * margin;
+    this.zoom = Math.min(1.5, (box.width - 2 * margin) / width, free / height);
     this.x = (box.width - width * this.zoom) / 2;
-    this.y = (box.height - reservedBottom - height * this.zoom) / 2;
+    this.y = bands.top + margin + (free - height * this.zoom) / 2;
     this.apply();
   }
 

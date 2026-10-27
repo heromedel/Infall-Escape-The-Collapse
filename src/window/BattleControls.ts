@@ -12,6 +12,7 @@ import type { ShipPicture } from '../shared/ShipPicture';
 import type { Snapshot, SnapshotShip } from '../shared/Snapshot';
 import { BattleView } from './BattleView.js';
 import { ShipPanel } from './ShipPanel.js';
+import { BattleHud } from './BattleHud.js';
 
 export class BattleControls {
   paused = false;
@@ -21,17 +22,19 @@ export class BattleControls {
   private latest?: Snapshot;
   private pictures: Record<number, ShipPicture> = {};
   private panels = new Map<number, ShipPanel>();
-  private panelBeside = true;
+  private floating = true;
+  private readonly hud: BattleHud;
 
   constructor(
     private readonly view: BattleView,
     private readonly viewport: SVGSVGElement,
+    hudSurface: SVGSVGElement,
     private readonly dock: SVGSVGElement,
-    private readonly status: HTMLElement,
     private readonly sendOrder: (order: Order) => void,
     private readonly sendPause: (paused: boolean) => void,
   ) {
-    for (const surface of [viewport, dock]) {
+    this.hud = new BattleHud(hudSurface);
+    for (const surface of [viewport, hudSurface, dock]) {
       surface.addEventListener('click', (event) => this.clicked(event));
       surface.addEventListener('contextmenu', (event) => { event.preventDefault(); this.rightClicked(event); });
     }
@@ -40,14 +43,21 @@ export class BattleControls {
   }
 
   /** A new battle: forget the old selection and panels, select the first player ship. */
-  start(pictures: Record<number, ShipPicture>, playerShipIds: number[], panelBeside: boolean): void {
+  start(pictures: Record<number, ShipPicture>, playerShipIds: number[], floating: boolean): void {
     this.pictures = pictures;
     this.panels.clear();
+    this.hud.clear();
     this.latest = undefined;
     this.armedMount = undefined;
     this.selectedCrewId = undefined;
-    this.panelBeside = panelBeside;
+    this.floating = floating;
     this.selectShip(playerShipIds[0]);
+  }
+
+  /** Pause state from the host, shown by the GUI. */
+  setPaused(paused: boolean): void {
+    this.paused = paused;
+    this.refresh();
   }
 
   /** Keeps the panel and the view in step with the last snapshot. */
@@ -56,9 +66,9 @@ export class BattleControls {
     this.refresh();
   }
 
-  /** The Ship Panel setting changed (Settings): beside the hull or docked in the bottom band. */
-  setPanelBeside(beside: boolean): void {
-    this.panelBeside = beside;
+  /** The Battle GUI setting changed (Settings): floating elements or the card. */
+  setFloating(floating: boolean): void {
+    this.floating = floating;
     this.refresh();
   }
 
@@ -185,25 +195,20 @@ export class BattleControls {
     return this.latest?.squads.flatMap((squad) => squad.ships).find((candidate) => candidate.id === this.selectedShipId);
   }
 
-  /** Redraws the panel, the cursor hints and the status line from the latest snapshot and the selection. */
+  /** Redraws the GUI and the cursor hints from the latest snapshot and the selection. */
   private refresh(): void {
     const ship = this.ship();
     document.body.classList.toggle('armed', this.armedMount !== undefined);
     document.body.classList.toggle('crew-selected', this.selectedCrewId !== undefined);
-    if (!ship) { this.dock.replaceChildren(); this.status.textContent = ''; return; }
+    document.body.classList.toggle('gui-card', !this.floating);
+    const selection = { armedMount: this.armedMount, selectedCrewId: this.selectedCrewId };
+    if (this.latest) this.hud.update(this.latest, this.floating ? ship : undefined, ship && this.pictures[ship.id], selection, this.paused, ship ? this.statusText(ship) : '');
+    if (!ship || this.floating) { this.dock.replaceChildren(); return; }
     let panel = this.panels.get(ship.id);
     if (!panel) { panel = new ShipPanel(ship, this.pictures[ship.id]); this.panels.set(ship.id, panel); }
-    panel.update(ship, { armedMount: this.armedMount, selectedCrewId: this.selectedCrewId });
-    if (this.panelBeside) {
-      this.dock.replaceChildren();
-      this.view.placePanel(ship.id, panel.root, true);
-    } else {
-      this.view.placePanel(ship.id, undefined, false);
-      panel.root.setAttribute('transform', 'translate(8 6)');
-      if (panel.root.parentNode !== this.dock) this.dock.replaceChildren(panel.root);
-    }
-    document.body.classList.toggle('panel-docked', !this.panelBeside);
-    this.status.textContent = this.statusText(ship);
+    panel.update(ship, selection);
+    panel.root.setAttribute('transform', 'translate(8 6)');
+    if (panel.root.parentNode !== this.dock) this.dock.replaceChildren(panel.root);
   }
 
   private statusText(ship: SnapshotShip): string {

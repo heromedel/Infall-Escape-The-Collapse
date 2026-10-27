@@ -11,6 +11,7 @@ import { ShipDrawing } from './ShipDrawing.js';
 import { Camera } from './Camera.js';
 import { BattleView } from './BattleView.js';
 import { BattleControls } from './BattleControls.js';
+import { GUI_BANDS } from './BattleHud.js';
 
 /** The functions the host bridge (src/host/preload.ts) gives the window. */
 declare const host: {
@@ -23,13 +24,14 @@ declare const host: {
 
 const viewport = document.getElementById('viewport') as unknown as SVGSVGElement;
 const dock = document.getElementById('dock') as unknown as SVGSVGElement;
+const hud = document.getElementById('hud') as unknown as SVGSVGElement;
 const viewerDrawing = new ShipDrawing();
 const battleView = new BattleView();
 const stage = document.createElementNS('http://www.w3.org/2000/svg', 'g');
 viewport.appendChild(stage);
 const camera = new Camera(viewport, stage);
 camera.onChange = (zoom) => battleView.setZoom(zoom);
-const controls = new BattleControls(battleView, viewport, dock, document.getElementById('status-line')!,
+const controls = new BattleControls(battleView, viewport, hud, dock,
   (order) => host.sendToHost({ kind: 'Order', order }),
   (paused) => host.sendToHost({ kind: paused ? 'Pause' : 'Unpause' }));
 let inBattle = false;
@@ -75,30 +77,24 @@ function listenToHost(): void {
         document.body.classList.add('battle');
         document.body.classList.remove('console-open');
         battleView.start(message.pictures, message.playerShipIds, message.formation);
-        controls.start(message.pictures, message.playerShipIds, message.look.shipPanel === 'beside');
+        controls.start(message.pictures, message.playerShipIds, message.look.battleGui === 'floating');
         stage.replaceChildren(battleView.root);
         fitBattle();
         break;
       }
       case 'Look':
-        controls.setPanelBeside(message.look.shipPanel === 'beside');
-        fitBattle();
+        controls.setFloating(message.look.battleGui === 'floating');
         break;
       case 'Snapshot': {
         battleView.update(message.snapshot);
         controls.update(message.snapshot);
-        const player = message.snapshot.squads.find((squad) => squad.side === 'player');
-        document.getElementById('squad-line')!.textContent = player ? `${player.name}: Mawjig ${player.mawjig.toFixed(2)}` : '';
-        document.getElementById('time-line')!.textContent = `${message.snapshot.seconds.toFixed(1)} s. Backtick opens the console.`;
         break;
       }
       case 'Paused':
-        controls.paused = message.paused;
-        document.getElementById('paused-banner')!.hidden = !message.paused;
+        controls.setPaused(message.paused);
         break;
       case 'BattleEnded':
         battleOver = true;
-        document.getElementById('time-line')!.textContent = `Battle over: ${message.winner} wins, ${message.reason}. Backtick, then "battle" for another; Escape twice for the viewer.`;
         break;
     }
   });
@@ -106,15 +102,15 @@ function listenToHost(): void {
 
 /** The camera shows the whole battle; the window's size decides the zoom (GDD 3C: ships keep their size). */
 function fitBattle(): void {
-  requestAnimationFrame(() => {   // after the bands have shown or hidden, so the viewport has its final size
+  requestAnimationFrame(() => {   // after the header has hidden, so the viewport has its final size
     const size = battleView.size();
-    camera.fitTo(size.width, size.height);
+    camera.fitTo(size.width, size.height, GUI_BANDS);
   });
 }
 
 function leaveBattle(): void {
   inBattle = false;
-  document.body.classList.remove('battle', 'console-open', 'panel-docked', 'armed', 'crew-selected');
+  document.body.classList.remove('battle', 'console-open', 'gui-card', 'armed', 'crew-selected');
   showPickedShip();
 }
 
