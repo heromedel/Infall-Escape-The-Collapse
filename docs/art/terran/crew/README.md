@@ -8,6 +8,10 @@ benevolent Terran gangs; leaning leather jackets and long-coated mercs, with Fir
 spacemen, nothing cute or cheesy, no stereotypes. Facing forward, seen from about 45° above (heromedel's "1/2"
 angle), upright enough to sit with the Mecha and Tentauri crew. Each person has their own emblem, not one alliance mark.
 
+**Round 5 as SVG (2026-10-27):** `svg/gatos-drifter.svg`, `gatos-leather-jacket.svg`, `gatos-vest-merc.svg`: the
+round 5 pixel art exported pixel for pixel, nothing changed (one path per colour; the viewBox is the 70 × 70 frame, so
+they scale to any size with crisp pixels; checked: every pixel matches). Built by `tools/export_svg.py OUT_DIR`.
+
 **Vector test (experiment, 2026-10-27):** heromedel: the pixel versions look flat, with beady eyes and shading so
 contrasty it reads as embossed panels; try higher resolution or vectors, from scratch, with rounder, subtler and more
 anatomical shading. The drifter redrawn as a vector (`review/gatos-drifter-vector.svg`, built by
