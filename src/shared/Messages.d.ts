@@ -16,6 +16,10 @@ export type ClientToHost =
 export interface Look {
   /** Battle GUI: 'floating' (the genre's placement over the battle) or 'card' (one panel bottom-left). */
   battleGui: 'floating' | 'card';
+  /** The fire mode weapons get without Ctrl. */
+  autofire: boolean;
+  /** Draw a line from the ship to each target room as well as the room mark. */
+  targetLines: boolean;
 }
 
 export type HostToClient =

@@ -83,5 +83,5 @@ function targetOrders(ship: Ship, enemy: Ship): Order[] {
   if (!room) return [];
   return ship.weapons
     .filter((weapon) => !weapon.target || weapon.target.roomId !== room.id || weapon.target.shipId !== enemy.id)
-    .map((weapon) => ({ kind: 'TargetWeapon', shipId: ship.id, mount: weapon.mount, targetShipId: enemy.id, targetRoomId: room.id }));
+    .map((weapon) => ({ kind: 'TargetWeapon', shipId: ship.id, mount: weapon.mount, targetShipId: enemy.id, targetRoomId: room.id, autofire: true }));
 }

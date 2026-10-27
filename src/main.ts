@@ -109,6 +109,24 @@ function registerDebugCommands(debug: DebugConsole, content: ContentLibrary, set
     },
   });
   debug.register({
+    name: 'autofire',
+    description: 'Autofire setting (the genre\'s default fire mode): autofire off | on. Ctrl at the room click gives the opposite; V toggles it in the battle.',
+    run: ([state]) => {
+      if (state === 'on' || state === 'off') { settings.autofire = state === 'on'; host.announceLook(); }
+      else if (state !== undefined) return 'autofire off | on';
+      return `Autofire ${settings.autofire ? 'on: weapons keep their target' : 'off: weapons fire one volley and let go'}.`;
+    },
+  });
+  debug.register({
+    name: 'targetlines',
+    description: 'Target Lines setting: targetlines off | on. A dashed line to each target room as well as the room mark.',
+    run: ([state]) => {
+      if (state === 'on' || state === 'off') { settings.targetLines = state === 'on'; host.announceLook(); }
+      else if (state !== undefined) return 'targetlines off | on';
+      return `Target lines ${settings.targetLines ? 'on' : 'off'}.`;
+    },
+  });
+  debug.register({
     name: 'autopause',
     description: 'Turn Mode auto pause (GDD 4I): autopause off | on [seconds].',
     run: ([state, seconds]) => {

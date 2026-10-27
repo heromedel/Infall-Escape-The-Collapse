@@ -77,13 +77,13 @@ function listenToHost(): void {
         document.body.classList.add('battle');
         document.body.classList.remove('console-open');
         battleView.start(message.pictures, message.playerShipIds, message.formation);
-        controls.start(message.pictures, message.playerShipIds, message.look.battleGui === 'floating');
+        controls.start(message.pictures, message.playerShipIds, message.look);
         stage.replaceChildren(battleView.root);
         fitBattle();
         break;
       }
       case 'Look':
-        controls.setFloating(message.look.battleGui === 'floating');
+        controls.setLook(message.look);
         break;
       case 'Snapshot': {
         battleView.update(message.snapshot);

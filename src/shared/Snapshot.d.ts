@@ -73,6 +73,8 @@ export interface SnapshotWeapon {
   charge: number;
   powered: boolean;
   target?: { shipId: number; roomId: number };
+  /** The target stays after a volley (autofire) or is let go after one. */
+  autofire: boolean;
 }
 
 export interface SnapshotShot {

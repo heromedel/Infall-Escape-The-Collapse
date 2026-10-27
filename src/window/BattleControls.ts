@@ -5,9 +5,12 @@
  * follows the genre: click a system's icon to add a bar, right click to take one away; click a weapon (or its
  * number key) to arm it, then an enemy room; click a crew member, then a tile; click a door to toggle it; space
  * pauses; Escape drops the selection. The cursor and the status line always say what the next click will do.
+ * Fire mode is the genre's: Autofire (the V key or its button) is the default, and holding Ctrl at the room click
+ * gives that target the opposite; red marks autofire, yellow fire once (docs/reference/genre-battle-screen).
  */
 
 import type { Order } from '../shared/Order';
+import type { Look } from '../shared/Messages';
 import type { ShipPicture } from '../shared/ShipPicture';
 import type { Snapshot, SnapshotShip } from '../shared/Snapshot';
 import { BattleView } from './BattleView.js';
@@ -23,6 +26,9 @@ export class BattleControls {
   private pictures: Record<number, ShipPicture> = {};
   private panels = new Map<number, ShipPanel>();
   private floating = true;
+  /** The fire mode weapons get without Ctrl (Settings: Autofire; the V key flips it for this battle). */
+  private autofire = false;
+  private ctrlHeld = false;
   private readonly hud: BattleHud;
 
   constructor(
@@ -40,18 +46,33 @@ export class BattleControls {
     }
     viewport.addEventListener('pointerover', (event) => this.hovered(event));
     window.addEventListener('keydown', (event) => this.keyPressed(event));
+    window.addEventListener('keyup', (event) => { if (event.key === 'Control') this.setCtrl(false); });
+    window.addEventListener('blur', () => this.setCtrl(false));
   }
 
   /** A new battle: forget the old selection and panels, select the first player ship. */
-  start(pictures: Record<number, ShipPicture>, playerShipIds: number[], floating: boolean): void {
+  start(pictures: Record<number, ShipPicture>, playerShipIds: number[], look: Look): void {
     this.pictures = pictures;
     this.panels.clear();
     this.hud.clear();
     this.latest = undefined;
     this.armedMount = undefined;
     this.selectedCrewId = undefined;
-    this.floating = floating;
+    this.setLook(look);
     this.selectShip(playerShipIds[0]);
+  }
+
+  /** The look settings, at the start and whenever they change. */
+  setLook(look: Look): void {
+    this.floating = look.battleGui === 'floating';
+    this.autofire = look.autofire;
+    this.view.targetLines = look.targetLines;
+    this.refresh();
+  }
+
+  /** The mode the next room click would give: the default, or the opposite while Ctrl is held. */
+  get aimMode(): 'auto' | 'once' {
+    return this.autofire !== this.ctrlHeld ? 'auto' : 'once';
   }
 
   /** Pause state from the host, shown by the GUI. */
@@ -63,12 +84,6 @@ export class BattleControls {
   /** Keeps the panel and the view in step with the last snapshot. */
   update(snapshot: Snapshot): void {
     this.latest = snapshot;
-    this.refresh();
-  }
-
-  /** The Battle GUI setting changed (Settings): floating elements or the card. */
-  setFloating(floating: boolean): void {
-    this.floating = floating;
     this.refresh();
   }
 
@@ -102,7 +117,7 @@ export class BattleControls {
     const shipId = Number(tile.dataset.shipId);
     const isPlayerShip = this.view.playerShipIds.includes(shipId);
     if (this.armedMount !== undefined && this.selectedShipId !== undefined && !isPlayerShip) {
-      this.sendOrder({ kind: 'TargetWeapon', shipId: this.selectedShipId, mount: this.armedMount, targetShipId: shipId, targetRoomId: Number(tile.dataset.roomId) });
+      this.sendOrder({ kind: 'TargetWeapon', shipId: this.selectedShipId, mount: this.armedMount, targetShipId: shipId, targetRoomId: Number(tile.dataset.roomId), autofire: this.aimMode === 'auto' });
       this.armedMount = undefined;
       this.refresh();
       return;
@@ -116,10 +131,15 @@ export class BattleControls {
     if (isPlayerShip && shipId !== this.selectedShipId) { this.selectShip(shipId); this.refresh(); }
   }
 
-  /** Right click takes a bar off a system, clears a weapon's target, or drops the selection. */
+  /** Right click while aiming cancels the aim and clears that weapon's target; on a system it takes a bar off. */
   private rightClicked(event: MouseEvent): void {
     const action = (event.target as Element).closest('[data-action]') as SVGElement | null;
     const ship = this.ship();
+    if (ship && this.armedMount !== undefined) {
+      this.sendOrder({ kind: 'ClearTarget', shipId: ship.id, mount: this.armedMount });
+      this.clearSelection();
+      return;
+    }
     if (action && ship) {
       if (action.dataset.action === 'power') {
         const system = ship.systems.find((candidate) => candidate.key === action.dataset.systemKey);
@@ -144,6 +164,7 @@ export class BattleControls {
         break;
       }
       case 'weapon': this.armWeapon(Number(action.dataset.mount)); break;
+      case 'autofire': this.autofire = !this.autofire; this.refresh(); break;
       case 'crew': {
         const crewId = Number(action.dataset.crewId);
         this.selectedCrewId = this.selectedCrewId === crewId ? undefined : crewId;
@@ -158,6 +179,8 @@ export class BattleControls {
     if (event.target instanceof HTMLInputElement) return;
     if (event.key === ' ') { event.preventDefault(); this.sendPause(!this.paused); return; }
     if (event.key === 'Escape') { this.clearSelection(); return; }
+    if (event.key === 'Control') { this.setCtrl(true); return; }
+    if (event.key === 'v' || event.key === 'V') { this.autofire = !this.autofire; this.refresh(); return; }
     const ship = this.ship();
     const number = Number(event.key);
     if (ship && number >= 1 && number <= ship.weapons.length) this.armWeapon(ship.weapons[number - 1].mount);
@@ -167,6 +190,12 @@ export class BattleControls {
     const tile = (event.target as Element).closest('rect.tile') as SVGRectElement | null;
     if (tile && this.armedMount !== undefined && tile.classList.contains('enemy')) this.view.hoverRoom(Number(tile.dataset.shipId), Number(tile.dataset.roomId));
     else this.view.hoverRoom(undefined, undefined);
+  }
+
+  private setCtrl(held: boolean): void {
+    if (this.ctrlHeld === held) return;
+    this.ctrlHeld = held;
+    this.refresh();
   }
 
   // ---- selection ------------------------------------------------------------------------------------------
@@ -199,9 +228,11 @@ export class BattleControls {
   private refresh(): void {
     const ship = this.ship();
     document.body.classList.toggle('armed', this.armedMount !== undefined);
+    document.body.classList.toggle('aim-auto', this.armedMount !== undefined && this.aimMode === 'auto');
+    document.body.classList.toggle('aim-once', this.armedMount !== undefined && this.aimMode === 'once');
     document.body.classList.toggle('crew-selected', this.selectedCrewId !== undefined);
     document.body.classList.toggle('gui-card', !this.floating);
-    const selection = { armedMount: this.armedMount, selectedCrewId: this.selectedCrewId };
+    const selection = { armedMount: this.armedMount, selectedCrewId: this.selectedCrewId, aimMode: this.aimMode, autofire: this.autofire };
     if (this.latest) this.hud.update(this.latest, this.floating ? ship : undefined, ship && this.pictures[ship.id], selection, this.paused, ship ? this.statusText(ship) : '');
     if (!ship || this.floating) { this.dock.replaceChildren(); return; }
     let panel = this.panels.get(ship.id);
@@ -213,7 +244,7 @@ export class BattleControls {
 
   private statusText(ship: SnapshotShip): string {
     const armed = ship.weapons.find((weapon) => weapon.mount === this.armedMount);
-    if (armed) return `${armed.name} armed: click an enemy room to aim it.`;
+    if (armed) return `${armed.name} armed: click an enemy room to ${this.aimMode === 'auto' ? 'keep firing at it (autofire)' : 'fire once'}. Ctrl gives the opposite, right click cancels.`;
     const crew = ship.crew.find((member) => member.id === this.selectedCrewId);
     if (crew) return `${crew.name} selected: click a tile on ${ship.name} to send them there.`;
     if (this.latest?.result) return `Battle over: ${this.latest.result.winner} wins, ${this.latest.result.reason}.`;

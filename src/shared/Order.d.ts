@@ -6,7 +6,8 @@
 
 export type Order =
   | { kind: 'SetPower'; shipId: number; systemKey: string; bars: number }
-  | { kind: 'TargetWeapon'; shipId: number; mount: number; targetShipId: number; targetRoomId: number }
+  /** Autofire keeps the target and fires every time the weapon charges; otherwise it fires one volley and lets go. */
+  | { kind: 'TargetWeapon'; shipId: number; mount: number; targetShipId: number; targetRoomId: number; autofire: boolean }
   | { kind: 'ClearTarget'; shipId: number; mount: number }
   | { kind: 'MoveCrew'; shipId: number; crewId: number; tile: { x: number; y: number } }
   | { kind: 'ToggleDoor'; shipId: number; doorId: number };

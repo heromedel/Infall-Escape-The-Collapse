@@ -1,7 +1,8 @@
 /**
  * Weapons each tick: a weapon system's bars power its weapons in mount order; a powered weapon with a target
  * charges, a manned weapon room charges a little faster; a charged weapon fires its volley, one shot every fifth
- * of a second, paying Mawjig per shot from the squad's pool (GDD 8C). A squad that can't pay doesn't fire.
+ * of a second, paying Mawjig per shot from the squad's pool (GDD 8C). A squad that can't pay doesn't fire. A
+ * weapon without autofire lets its target go once its volley is away (the genre's fire-once).
  */
 
 import { Ship, Weapon } from '../Ship';
@@ -55,4 +56,5 @@ function continueVolley(ship: Ship, weapon: Weapon, squad: Squad, shots: Shot[],
   log.event('shot_fired', { ship: ship.name, weapon: weapon.definition.name, targetShip: weapon.target!.shipId, room: weapon.target!.roomId, cost });
   weapon.volleyShotsLeft--;
   weapon.nextShotTicks = TICKS_BETWEEN_SHOTS;
+  if (weapon.volleyShotsLeft === 0 && !weapon.autofire) weapon.target = undefined;
 }

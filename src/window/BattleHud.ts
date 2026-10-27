@@ -26,6 +26,8 @@ const LOOK = {
   charge: '#2f6b4f',
   chargeFull: '#66FF66',
   armed: '#ffffff',
+  auto: '#FF3B3B',
+  once: '#FFE066',
   damaged: '#FF3B3B',
   subsystem: '#cfd6e2',
   enemy: '#FF8500',
@@ -38,11 +40,16 @@ const BAR = { width: 24, height: 6, step: 8 };
 const SYSTEM_STEP = 42;
 const SUBSYSTEM_GAP = 26;
 const WEAPON_BOX = { width: 160, height: 34, gap: 8 };
+const AUTOFIRE_BOX = { width: 92, height: 34 };
 const CREW_ROW = 24;
 
 export interface HudSelection {
   armedMount?: number;
   selectedCrewId?: number;
+  /** The mode the next room click gives: autofire (red) or fire once (yellow). */
+  aimMode: 'auto' | 'once';
+  /** The Autofire default, shown on its button. */
+  autofire: boolean;
 }
 
 /** The elements built for one ship, updated in place while it stays selected. */
@@ -59,6 +66,8 @@ interface ShipElements {
   reactorBars: SVGRectElement[];
   systems: Map<string, { icon: SVGGElement; bars: SVGRectElement[]; manned: SVGRectElement; hit: SVGRectElement; subsystem: boolean }>;
   weaponBoxes: Map<number, { box: SVGRectElement; fill: SVGRectElement; aimed: SVGTextElement; name: SVGTextElement }>;
+  autofireBox: SVGRectElement;
+  autofireText: SVGTextElement;
   crew: Map<number, { box: SVGRectElement; health: SVGRectElement; shape: SVGElement }>;
   weaponsWidth: number;
 }
@@ -172,9 +181,19 @@ export class BattleHud {
 
     // bottom: the weapon slots
     const weaponBoxes = this.buildWeapons(weapons, ship.weapons);
-    const weaponsWidth = ship.weapons.length * (WEAPON_BOX.width + WEAPON_BOX.gap) - WEAPON_BOX.gap;
+    // the Autofire button after the slots (genre reference frame 15): the default mode for every weapon
+    const buttonX = ship.weapons.length * (WEAPON_BOX.width + WEAPON_BOX.gap);
+    const button = group({ 'data-action': 'autofire', class: 'clickable' });
+    const autofireBox = rect(buttonX, 0, AUTOFIRE_BOX.width, AUTOFIRE_BOX.height, LOOK.frame, { stroke: LOOK.edge, rx: '3' });
+    const autofireText = text(buttonX + AUTOFIRE_BOX.width / 2, 21, 'AUTOFIRE', { size: 11, anchor: 'middle', weight: 'bold' });
+    autofireText.setAttribute('letter-spacing', '1');
+    const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+    title.textContent = 'Autofire: weapons keep their target and fire every time they charge. Key V. Holding Ctrl when clicking the room gives that target the opposite.';
+    button.append(autofireBox, autofireText, title);
+    weapons.appendChild(button);
+    const weaponsWidth = buttonX + AUTOFIRE_BOX.width;
 
-    return { shipId: ship.id, root, topLeft, bottomLeft, weapons, hullBar, hullText, shieldPips, evasionText, reactorBars, systems, weaponBoxes, crew, weaponsWidth };
+    return { shipId: ship.id, root, topLeft, bottomLeft, weapons, hullBar, hullText, shieldPips, evasionText, reactorBars, systems, weaponBoxes, autofireBox, autofireText, crew, weaponsWidth };
   }
 
   private buildCrew(into: SVGGElement, crew: SnapshotCrew[], picture: ShipPicture, top: number): ShipElements['crew'] {
@@ -293,14 +312,19 @@ export class BattleHud {
       const drawn = elements.weaponBoxes.get(weapon.mount);
       if (!drawn) continue;
       const armed = selection.armedMount === weapon.mount;
+      const modeColour = selection.aimMode === 'auto' ? LOOK.auto : LOOK.once;
       drawn.fill.setAttribute('width', String((WEAPON_BOX.width - 2) * (weapon.powered ? weapon.charge : 0)));
       drawn.fill.setAttribute('fill', weapon.charge >= 1 ? LOOK.chargeFull : LOOK.charge);
-      drawn.box.setAttribute('stroke', armed ? LOOK.armed : LOOK.edge);
+      drawn.box.setAttribute('stroke', armed ? modeColour : LOOK.edge);
       drawn.box.setAttribute('stroke-width', armed ? '2' : '1');
       drawn.name.setAttribute('fill', weapon.powered ? LOOK.text : LOOK.faint);
-      drawn.aimed.textContent = weapon.target ? 'aimed' : weapon.powered ? '' : 'no power';
-      drawn.aimed.setAttribute('fill', weapon.target ? picture.powerColour : LOOK.faint);
+      drawn.aimed.textContent = weapon.target ? (weapon.autofire ? 'auto' : 'once') : weapon.powered ? '' : 'no power';
+      drawn.aimed.setAttribute('fill', weapon.target ? (weapon.autofire ? LOOK.auto : LOOK.once) : LOOK.faint);
     }
+
+    elements.autofireBox.setAttribute('fill', selection.autofire ? 'rgba(255, 59, 59, 0.25)' : LOOK.frame);
+    elements.autofireBox.setAttribute('stroke', selection.autofire ? LOOK.auto : LOOK.edge);
+    elements.autofireText.setAttribute('fill', selection.autofire ? LOOK.auto : LOOK.faint);
 
     for (const member of ship.crew) {
       const drawn = elements.crew.get(member.id);

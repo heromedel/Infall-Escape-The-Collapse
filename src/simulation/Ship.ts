@@ -100,6 +100,8 @@ export class Weapon {
   /** Charge in ticks, from 0 up to the ticks the definition needs. */
   chargeTicks = 0;
   target?: { shipId: number; roomId: number };
+  /** Keep the target after a volley (the genre's autofire); otherwise one volley, then the target is let go. */
+  autofire = false;
   /** Shots of the current volley still to leave, with the ticks until each. */
   volleyShotsLeft = 0;
   nextShotTicks = 0;

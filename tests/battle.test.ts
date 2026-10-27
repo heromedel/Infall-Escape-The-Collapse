@@ -84,6 +84,29 @@ describe('a battle', () => {
   });
 });
 
+describe('fire modes (the genre: autofire keeps the target, fire once lets it go)', () => {
+  function aimedFight(autofire: boolean): { simulation: Simulation; weapon: () => { target?: unknown } } {
+    const simulation = new Simulation(3, weaponsByName, raceByName);
+    simulation.addSquad('Player', 'player', 10, [shipFile('outrider')]);
+    simulation.addSquad('Enemy', 'enemy', 10, [shipFile('light-attack-frame')]);
+    const player = simulation.squads[0].ships[0];
+    const enemy = simulation.squads[1].ships[0];
+    const gat = player.weapons[0];
+    simulation.applyOrders([{ kind: 'TargetWeapon', shipId: player.id, mount: gat.mount, targetShipId: enemy.id, targetRoomId: enemy.rooms[0].id, autofire }]);
+    // charge, fire the whole volley and a little more
+    for (let tick = 0; tick < gat.chargeNeeded + secondsToTicks(2); tick++) simulation.advanceOneTick();
+    return { simulation, weapon: () => gat };
+  }
+  it('fire once: the target is let go after the volley', () => {
+    const { weapon } = aimedFight(false);
+    expect(weapon().target).toBeUndefined();
+  });
+  it('autofire: the target stays after the volley', () => {
+    const { weapon } = aimedFight(true);
+    expect(weapon().target).toBeDefined();
+  });
+});
+
 describe('the distance between the squads (GDD 3Q)', () => {
   it('makes a shot fly longer at a longer distance, 1 GM a millisecond plus the on-screen parts', () => {
     const near = new Simulation(1, weaponsByName, raceByName, 400);

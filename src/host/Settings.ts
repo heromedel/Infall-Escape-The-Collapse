@@ -20,6 +20,10 @@ export class Settings {
    * one panel in the bottom-left corner. Not in the docs yet.
    */
   battleGui: BattleGui = 'floating';
+  /** Autofire: Off > On (the genre's default for every weapon; Ctrl at the room click gives the opposite). */
+  autofire = false;
+  /** Target Lines: Off > On. A dashed line from the ship to each target room, on top of the genre's room marks. */
+  targetLines = false;
 }
 
 export type BattleGui = 'floating' | 'card';

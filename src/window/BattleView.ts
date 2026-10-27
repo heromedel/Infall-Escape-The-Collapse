@@ -26,7 +26,9 @@ const LOOK = {
   missile: '#FF8500',
   damagedSymbol: '#FF3B3B',
   selected: '#FFFFFF',
-  targetLine: '#FF3B3B',
+  /** Red marks a target the weapon keeps (autofire), yellow one it fires at once (genre reference frames 05, 06). */
+  targetAuto: '#FF3B3B',
+  targetOnce: '#FFE066',
 };
 
 /** One ship on screen: its drawing, where it sits, and its live overlays. */
@@ -54,6 +56,8 @@ export class BattleView {
   private readonly targetsGroup: SVGGElement;
   /** The ring under the selected ship. */
   private readonly selectionRing: SVGRectElement;
+  /** Target Lines setting: a dashed line to each target room as well as the room mark. */
+  targetLines = false;
   private zoom = 1;
   private dividerY = 0;
   private width = 0;
@@ -167,7 +171,7 @@ export class BattleView {
     return { x: placed.offsetX + room.column * size, y: placed.offsetY + room.row * size, width: room.width * size, height: room.height * size };
   }
 
-  /** The selected ship's aimed weapons: a line to the target room and a box around it (GDD 3L: any enemy ship). */
+  /** The selected ship's aimed weapons: a reticle with the slot number on each target room, red for autofire and yellow for fire once, plus a line when Target Lines is on (GDD 3L: any enemy ship). */
   private drawTargets(snapshot: Snapshot): void {
     this.targetsGroup.replaceChildren();
     const ship = snapshot.squads.flatMap((squad) => squad.ships).find((candidate) => candidate.id === this.selectedShipId);
@@ -178,17 +182,19 @@ export class BattleView {
       const to = this.ships.get(weapon.target.shipId);
       const box = to && this.roomBox(to, weapon.target.roomId);
       if (!to || !box) return;
-      const grid = ShipDrawing.sizeOf(from.picture);
-      const start = { x: from.offsetX + grid.width * (index + 1) / (ship.weapons.length + 1), y: from.offsetY - from.print.top + from.print.height - grid.height / 2 };
-      const line = document.createElementNS(SVG, 'line');
-      line.setAttribute('x1', String(start.x)); line.setAttribute('y1', String(start.y));
-      line.setAttribute('x2', String(box.x + box.width / 2)); line.setAttribute('y2', String(box.y + box.height / 2));
-      line.setAttribute('stroke', LOOK.targetLine); line.setAttribute('stroke-width', '1.5'); line.setAttribute('stroke-dasharray', '6 4');
-      line.setAttribute('opacity', '0.8'); line.setAttribute('pointer-events', 'none');
-      this.targetsGroup.appendChild(line);
-      const reticle = this.rect(box.x + 2, box.y + 2, box.width - 4, box.height - 4, 'none');
-      reticle.setAttribute('stroke', LOOK.targetLine); reticle.setAttribute('stroke-width', '2'); reticle.setAttribute('pointer-events', 'none');
-      this.targetsGroup.appendChild(reticle);
+      const colour = weapon.autofire ? LOOK.targetAuto : LOOK.targetOnce;
+      const centre = { x: box.x + box.width / 2, y: box.y + box.height / 2 };
+      if (this.targetLines) {
+        const grid = ShipDrawing.sizeOf(from.picture);
+        const start = { x: from.offsetX + grid.width * (index + 1) / (ship.weapons.length + 1), y: from.offsetY - from.print.top + from.print.height - grid.height / 2 };
+        const line = document.createElementNS(SVG, 'line');
+        line.setAttribute('x1', String(start.x)); line.setAttribute('y1', String(start.y));
+        line.setAttribute('x2', String(centre.x)); line.setAttribute('y2', String(centre.y));
+        line.setAttribute('stroke', colour); line.setAttribute('stroke-width', '1.5'); line.setAttribute('stroke-dasharray', '6 4');
+        line.setAttribute('opacity', '0.7'); line.setAttribute('pointer-events', 'none');
+        this.targetsGroup.appendChild(line);
+      }
+      this.targetsGroup.appendChild(reticleMark(centre.x + index * 4, centre.y + index * 4, colour, String(index + 1)));
     });
   }
 
@@ -268,6 +274,8 @@ export class BattleView {
     }), placed.picture, ship.id);
     placed.drawing.updateSystems(ship.systems.map((system) => ({ key: system.key, broken: !system.isWorking && system.maxBars > 0 || system.damage > 0 })), placed.picture.powerColour, LOOK.damagedSymbol);
     placed.drawing.updateDoors(ship.doors, ship.id);
+    // enemy crew can't be ordered, so a click on one is a click on the room under it
+    if (!this.playerShipIds.includes(ship.id)) placed.drawing.root.querySelector('#crew')?.setAttribute('pointer-events', 'none');
     placed.group.setAttribute('opacity', ship.isGone ? '0.35' : '1');
   }
 
@@ -311,6 +319,24 @@ export class BattleView {
     rect.setAttribute('fill', fill);
     return rect;
   }
+}
+
+/** A target mark: a ring with a cross and the weapon's slot number beside it, in the fire mode's colour. */
+function reticleMark(x: number, y: number, colour: string, label: string): SVGGElement {
+  const group = document.createElementNS(SVG, 'g');
+  group.setAttribute('pointer-events', 'none');
+  const r = 11;
+  const parts = [
+    `<circle cx="${x}" cy="${y}" r="${r}" fill="none" stroke="${colour}" stroke-width="2"/>`,
+    `<circle cx="${x}" cy="${y}" r="3" fill="${colour}"/>`,
+    `<line x1="${x - r - 4}" y1="${y}" x2="${x - r + 4}" y2="${y}" stroke="${colour}" stroke-width="2"/>`,
+    `<line x1="${x + r - 4}" y1="${y}" x2="${x + r + 4}" y2="${y}" stroke="${colour}" stroke-width="2"/>`,
+    `<line x1="${x}" y1="${y - r - 4}" x2="${x}" y2="${y - r + 4}" stroke="${colour}" stroke-width="2"/>`,
+    `<line x1="${x}" y1="${y + r - 4}" x2="${x}" y2="${y + r + 4}" stroke="${colour}" stroke-width="2"/>`,
+    `<text x="${x + r + 3}" y="${y + r + 6}" font-size="11" font-weight="bold" font-family="system-ui, sans-serif" fill="${colour}">${label}</text>`,
+  ];
+  group.innerHTML = parts.join('');
+  return group;
 }
 
 /** The space a ship takes on screen: its tiles plus the hull art's overhang on each side, plus the labels above. */

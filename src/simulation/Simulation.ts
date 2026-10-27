@@ -139,7 +139,7 @@ export class Simulation {
         case 'TargetWeapon': {
           const weapon = ship.weapons.find((candidate) => candidate.mount === order.mount);
           const target = this.ship(order.targetShipId);
-          if (weapon && target && target.room(order.targetRoomId)) weapon.target = { shipId: order.targetShipId, roomId: order.targetRoomId };
+          if (weapon && target && target.room(order.targetRoomId)) { weapon.target = { shipId: order.targetShipId, roomId: order.targetRoomId }; weapon.autofire = order.autofire; }
           break;
         }
         case 'ClearTarget': {
@@ -202,7 +202,7 @@ export class Simulation {
       })),
       weapons: ship.weapons.map((weapon) => ({
         name: weapon.definition.name, mount: weapon.mount, charge: weapon.chargeTicks / weapon.chargeNeeded,
-        powered: powered.has(weapon), target: weapon.target,
+        powered: powered.has(weapon), target: weapon.target, autofire: weapon.autofire,
       })),
     };
   }
