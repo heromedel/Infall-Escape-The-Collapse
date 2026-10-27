@@ -43,6 +43,7 @@ The stage 7 rival who wants your escape route could by default be a band of doom
 ### Cluster populations and population movement (2026-10-27)
 
 - **Proposed (2026-10-27):** each cluster has a racial population, measured in **Gatillions**.
+- **Proposed (2026-10-27):** 1,000 Gatillion is 1 **Gazillion**.
 - **Proposed (2026-10-27):** different races have different thresholds for mobility. For example, the Lykario are
   highly likely to start migrating when within one band of the collapse, and the Tentauri are likely to start a
   minor migration, and to send out additional scouts, even as far as two bands from the collapse.
