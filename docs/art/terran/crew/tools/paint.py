@@ -50,7 +50,8 @@ def body():
 
 
 def tone_of(v):
-    return 1 if v < .4 else 2 if v < .85 else 3
+    """Flat, cartoon-style shading: one shadow shape and the base, with highlights only on lit edges."""
+    return 1 if v < .45 else 2
 
 
 def paint(materials, overlays=(), head=None, details=(), stage=5):

@@ -1,14 +1,14 @@
 # GATOS (Terran) crew
 
 **Date:** 2026-10-27
-**Status:** round 2, three options for heromedel. **Ai-Generated-Proposal** in every detail, built on heromedel's
+**Status:** round 3, three options for heromedel. **Ai-Generated-Proposal** in every detail, built on heromedel's
 direction (2026-10-27): pants, dark boots, a mid-tone shirt and a jacket, a rough look; a subtle mix of a space
 alliance, a Mexican gang and a 1980s punk gang (no mohawks), as if the GATOS were an alliance of legal and sometimes
 benevolent Terran gangs; leaning leather jackets and long-coated mercs, with Firefly as one style inspiration; no
 spacemen, nothing cute or cheesy, no stereotypes. Facing forward, seen from about 45° above (heromedel's "1/2"
 angle), upright enough to sit with the Mecha and Tentauri crew. Each person has their own emblem, not one alliance mark.
 
-![Round 2](review/gatos-crew-round2.png)
+![Round 3](review/gatos-crew-round3.png)
 
 | Option | Look | Emblem |
 |---|---|---|
@@ -22,8 +22,13 @@ proportions come from the model, not guesswork: the render is scaled to the fram
 from the upper left; its outline gives the silhouette, and its smoothed lightness gives each region's shading (three
 tones per material, warmer in the light, cooler in the shade). Coats, vests and the shirt tail are painted over it as
 cloth panels; the heads are drawn by hand, a little larger than the model's (sprites exaggerate the head).
-`review/gatos-crew-round2-stages.png` shows the stages: silhouette, flat colours, shading, highlights and outline,
+`review/gatos-crew-round3-stages.png` shows the stages: silhouette, flat colours, shading, highlights and outline,
 details.
+
+**Round 3 (heromedel: less derpy, a clean style with strong features, e.g. Batman: The Animated Series):** square,
+angular heads with heavy flat shadow shapes, separate dark brows over the eyes instead of dot eyes, no drawn mouth
+beyond a shadow, square jaws; the body shading flattened to one shadow shape and the base, with highlights only on lit
+edges. Round 2 (the round, blobby faces and noisy shading) is in git history.
 
 Round 1 (turned figures, which distorted the heads and feet) and the earlier spacemen concepts are in git history.
 
