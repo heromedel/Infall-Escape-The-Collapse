@@ -147,6 +147,37 @@ export class Simulation {
           if (weapon) weapon.target = undefined;
           break;
         }
+        case 'PowerWeapon': {
+          const weapon = ship.weapons.find((candidate) => candidate.mount === order.mount);
+          const system = weapon && ship.weaponSystemOf(weapon);
+          if (!weapon || !system || weapon.powered) break;
+          // bars already in the system and spare are used first; the rest come from the reactor, if it has them and the system's level has room
+          const spare = (ship.power.kind === 'SelfPowered' ? system.workingBars : system.bars) - ship.barsUsedByWeapons(system);
+          const fromReactor = Math.max(0, weapon.cost - spare);
+          const roomInSystem = Math.max(0, system.level - system.damage) * system.barsPerLevel;   // damaged levels take no bars
+          if (fromReactor > 0 && (ship.power.kind === 'SelfPowered' || ship.power.barsFree < fromReactor || system.bars + fromReactor > roomInSystem)) {
+            this.log.event('weapon_power_refused', { ship: ship.name, weapon: weapon.definition.name, needed: fromReactor, free: ship.power.barsFree });
+            break;
+          }
+          if (fromReactor > 0) ship.power.setBars(system, system.bars + fromReactor);
+          weapon.powered = true;
+          break;
+        }
+        case 'DepowerWeapon': {
+          const weapon = ship.weapons.find((candidate) => candidate.mount === order.mount);
+          const system = weapon && ship.weaponSystemOf(weapon);
+          if (!weapon || !system || !weapon.powered) break;
+          weapon.powered = false;
+          if (ship.power.kind !== 'SelfPowered') ship.power.setBars(system, Math.max(0, system.bars - weapon.cost));
+          break;
+        }
+        case 'ReorderWeapons': {
+          const from = ship.weapons.findIndex((candidate) => candidate.mount === order.mount);
+          if (from < 0) break;
+          const [weapon] = ship.weapons.splice(from, 1);
+          ship.weapons.splice(Math.max(0, Math.min(order.slot, ship.weapons.length)), 0, weapon);
+          break;
+        }
         case 'MoveCrew': {
           const member = ship.crew.find((candidate) => candidate.id === order.crewId);
           if (member?.isAlive) member.path = findPath(ship, member.tile, order.tile);
@@ -202,7 +233,7 @@ export class Simulation {
       })),
       weapons: ship.weapons.map((weapon) => ({
         name: weapon.definition.name, mount: weapon.mount, charge: weapon.chargeTicks / weapon.chargeNeeded,
-        powered: powered.has(weapon), target: weapon.target, autofire: weapon.autofire,
+        powered: powered.has(weapon), cost: weapon.cost, target: weapon.target, autofire: weapon.autofire,
       })),
     };
   }

@@ -23,6 +23,7 @@ export function battleOrders(simulation: Simulation, squad: Squad): Order[] {
   const orders: Order[] = [];
   for (const ship of squad.livingShips) {
     orders.push(...powerOrders(ship));
+    orders.push(...ship.weapons.filter((weapon) => !weapon.powered).map((weapon) => ({ kind: 'PowerWeapon' as const, shipId: ship.id, mount: weapon.mount })));
     orders.push(...crewOrders(ship));
     if (enemies.length > 0) orders.push(...targetOrders(ship, enemies[0]));
   }

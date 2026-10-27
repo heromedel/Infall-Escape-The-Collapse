@@ -71,7 +71,10 @@ export interface SnapshotWeapon {
   mount: number;
   /** Charge from 0 to 1. */
   charge: number;
+  /** Live: the player powered it and its weapon system still has the bars for it. */
   powered: boolean;
+  /** Bars it needs from its weapon system. */
+  cost: number;
   target?: { shipId: number; roomId: number };
   /** The target stays after a volley (autofire) or is let go after one. */
   autofire: boolean;

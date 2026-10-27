@@ -107,6 +107,78 @@ describe('fire modes (the genre: autofire keeps the target, fire once lets it go
   });
 });
 
+describe('per-weapon power (the genre: slots take bars from the reactor into the weapon system)', () => {
+  function outriderFight() {
+    const simulation = new Simulation(4, weaponsByName, raceByName);
+    simulation.addSquad('Player', 'player', 10, [shipFile('outrider')]);
+    simulation.addSquad('Enemy', 'enemy', 10, [shipFile('light-attack-frame')]);
+    const ship = simulation.squads[0].ships[0];
+    const weaponsSystem = ship.system('Weapons')!;
+    const [gat, missile] = ship.weapons;   // Gat 3.1 (2 bars) in slot 1, Gat M1 (1 bar) in slot 2, Weapons level 3
+    return { simulation, ship, weaponsSystem, gat, missile };
+  }
+  const tick = (simulation: Simulation) => simulation.advanceOneTick();
+
+  it('starts with slots powered left to right while the bars last', () => {
+    const { gat, missile, weaponsSystem } = outriderFight();
+    expect(gat.powered && missile.powered).toBe(true);
+    expect(weaponsSystem.bars).toBe(3);
+  });
+  it('example 2: damage knocks out the last slot first and its bars go back to the reactor; the player then swaps', () => {
+    const { simulation, ship, weaponsSystem, gat, missile } = outriderFight();
+    const freeBefore = ship.power.barsFree;
+    weaponsSystem.damage = 1;   // 2 working bars for 3 bars of weapons
+    tick(simulation);
+    expect(gat.powered).toBe(true);
+    expect(missile.powered).toBe(false);
+    expect(weaponsSystem.bars).toBe(2);
+    expect(ship.power.barsFree).toBe(freeBefore + 1);
+    // the player depowers the laser and powers the missile with the room that frees
+    simulation.applyOrders([{ kind: 'DepowerWeapon', shipId: ship.id, mount: gat.mount }, { kind: 'PowerWeapon', shipId: ship.id, mount: missile.mount }]);
+    tick(simulation);
+    expect(gat.powered).toBe(false);
+    expect(missile.powered).toBe(true);
+    expect(weaponsSystem.bars).toBe(1);
+    // repair gives nothing back by itself
+    weaponsSystem.damage = 0;
+    tick(simulation);
+    expect(gat.powered).toBe(false);
+    expect(weaponsSystem.bars).toBe(1);
+  });
+  it('refuses to power a weapon the damaged system has no room for', () => {
+    const { simulation, ship, weaponsSystem, gat, missile } = outriderFight();
+    weaponsSystem.damage = 1;
+    tick(simulation);
+    simulation.applyOrders([{ kind: 'PowerWeapon', shipId: ship.id, mount: missile.mount }]);
+    tick(simulation);
+    expect(missile.powered).toBe(false);
+    expect(gat.powered).toBe(true);
+  });
+  it('example 1: a dragged weapon changes which slot goes offline first', () => {
+    const { simulation, ship, weaponsSystem, gat, missile } = outriderFight();
+    simulation.applyOrders([{ kind: 'ReorderWeapons', shipId: ship.id, mount: missile.mount, slot: 0 }]);
+    weaponsSystem.damage = 1;
+    tick(simulation);
+    expect(ship.weapons[0]).toBe(missile);
+    expect(missile.powered).toBe(true);
+    expect(gat.powered).toBe(false);
+  });
+  it('an unpowered weapon keeps its charge, losing it slowly, and resumes from there', () => {
+    const { simulation, ship, gat } = outriderFight();
+    const enemy = simulation.squads[1].ships[0];
+    simulation.applyOrders([{ kind: 'TargetWeapon', shipId: ship.id, mount: gat.mount, targetShipId: enemy.id, targetRoomId: enemy.rooms[0].id, autofire: true }]);
+    for (let i = 0; i < 40; i++) tick(simulation);
+    const charged = gat.chargeTicks;
+    expect(charged).toBeGreaterThan(30);
+    simulation.applyOrders([{ kind: 'DepowerWeapon', shipId: ship.id, mount: gat.mount }]);
+    for (let i = 0; i < 10; i++) tick(simulation);
+    expect(gat.chargeTicks).toBe(charged - 10);
+    simulation.applyOrders([{ kind: 'PowerWeapon', shipId: ship.id, mount: gat.mount }]);
+    for (let i = 0; i < 10; i++) tick(simulation);
+    expect(gat.chargeTicks).toBeGreaterThan(charged - 10);
+  });
+});
+
 describe('the distance between the squads (GDD 3Q)', () => {
   it('makes a shot fly longer at a longer distance, 1 GM a millisecond plus the on-screen parts', () => {
     const near = new Simulation(1, weaponsByName, raceByName, 400);

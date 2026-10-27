@@ -65,7 +65,9 @@ interface ShipElements {
   evasionText: SVGTextElement;
   reactorBars: SVGRectElement[];
   systems: Map<string, { icon: SVGGElement; bars: SVGRectElement[]; manned: SVGRectElement; hit: SVGRectElement; subsystem: boolean }>;
-  weaponBoxes: Map<number, { box: SVGRectElement; fill: SVGRectElement; aimed: SVGTextElement; name: SVGTextElement }>;
+  weaponBoxes: Map<number, { box: SVGRectElement; fill: SVGRectElement; aimed: SVGTextElement; name: SVGTextElement; costBars: SVGRectElement[] }>;
+  /** The mounts in slot order the row was built for; a reorder rebuilds it. */
+  slotOrder: string;
   autofireBox: SVGRectElement;
   autofireText: SVGTextElement;
   crew: Map<number, { box: SVGRectElement; health: SVGRectElement; shape: SVGElement }>;
@@ -122,7 +124,8 @@ export class BattleHud {
     this.hintText.textContent = hint;
     this.updateEnemy(snapshot, ship);
     if (!ship || !picture) { this.elements?.root.remove(); this.elements = undefined; return; }
-    if (!this.elements || this.elements.shipId !== ship.id) {
+    const slotOrder = ship.weapons.map((weapon) => weapon.mount).join(',');
+    if (!this.elements || this.elements.shipId !== ship.id || this.elements.slotOrder !== slotOrder) {
       this.elements?.root.remove();
       this.elements = this.build(ship, picture);
       this.hud.appendChild(this.elements.root);
@@ -193,7 +196,7 @@ export class BattleHud {
     weapons.appendChild(button);
     const weaponsWidth = buttonX + AUTOFIRE_BOX.width;
 
-    return { shipId: ship.id, root, topLeft, bottomLeft, weapons, hullBar, hullText, shieldPips, evasionText, reactorBars, systems, weaponBoxes, autofireBox, autofireText, crew, weaponsWidth };
+    return { shipId: ship.id, root, topLeft, bottomLeft, weapons, hullBar, hullText, shieldPips, evasionText, reactorBars, systems, weaponBoxes, autofireBox, autofireText, crew, weaponsWidth, slotOrder: ship.weapons.map((weapon) => weapon.mount).join(',') };
   }
 
   private buildCrew(into: SVGGElement, crew: SnapshotCrew[], picture: ShipPicture, top: number): ShipElements['crew'] {
@@ -260,18 +263,24 @@ export class BattleHud {
       const x = index * (WEAPON_BOX.width + WEAPON_BOX.gap);
       const slot = group({ 'data-action': 'weapon', 'data-mount': String(weapon.mount), class: 'clickable' });
       const box = rect(x, 0, WEAPON_BOX.width, WEAPON_BOX.height, LOOK.frame, { stroke: LOOK.edge, rx: '3' });
-      const fill = rect(x + 1, WEAPON_BOX.height - 9, 0, 8, LOOK.charge);
+      const fill = rect(x + 14, WEAPON_BOX.height - 9, 0, 8, LOOK.charge);
       slot.append(box, fill);
-      slot.appendChild(text(x + 6, 16, String(index + 1), { size: 11, fill: LOOK.faint, weight: 'bold' }));
-      const name = text(x + 18, 16, weapon.name, { size: 12 });
+      // the weapon's cost as small bars on the slot's left edge, lit while it has them (genre reference frames 08, 52)
+      const costBars: SVGRectElement[] = [];
+      for (let bar = 0; bar < weapon.cost; bar++) {
+        const drawn = rect(x + 4, WEAPON_BOX.height - 8 - bar * 7, 7, 5, LOOK.barEmpty);
+        slot.appendChild(drawn); costBars.push(drawn);
+      }
+      slot.appendChild(text(x + 18, 16, String(index + 1), { size: 11, fill: LOOK.faint, weight: 'bold' }));
+      const name = text(x + 30, 16, weapon.name, { size: 12 });
       slot.appendChild(name);
       const aimed = text(x + WEAPON_BOX.width - 6, 16, '', { size: 10, anchor: 'end', fill: LOOK.faint });
       slot.appendChild(aimed);
       const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
-      title.textContent = `${weapon.name} (key ${index + 1}): click to arm, then click an enemy room. Right click clears its target.`;
+      title.textContent = `${weapon.name} (key ${index + 1}, ${weapon.cost} bar${weapon.cost === 1 ? '' : 's'}): click to power it or, powered, to arm it; then click an enemy room. Right click depowers it (Shift+${index + 1}); right click while aiming cancels. Drag to another slot to reorder.`;
       slot.appendChild(title);
       into.appendChild(slot);
-      built.set(weapon.mount, { box, fill, aimed, name });
+      built.set(weapon.mount, { box, fill, aimed, name, costBars });
     });
     return built;
   }
@@ -313,7 +322,9 @@ export class BattleHud {
       if (!drawn) continue;
       const armed = selection.armedMount === weapon.mount;
       const modeColour = selection.aimMode === 'auto' ? LOOK.auto : LOOK.once;
-      drawn.fill.setAttribute('width', String((WEAPON_BOX.width - 2) * (weapon.powered ? weapon.charge : 0)));
+      drawn.fill.setAttribute('width', String((WEAPON_BOX.width - 15) * weapon.charge));
+      drawn.fill.setAttribute('opacity', weapon.powered ? '1' : '0.4');
+      drawn.costBars.forEach((bar) => bar.setAttribute('fill', weapon.powered ? picture.powerColour : LOOK.barEmpty));
       drawn.fill.setAttribute('fill', weapon.charge >= 1 ? LOOK.chargeFull : LOOK.charge);
       drawn.box.setAttribute('stroke', armed ? modeColour : LOOK.edge);
       drawn.box.setAttribute('stroke-width', armed ? '2' : '1');

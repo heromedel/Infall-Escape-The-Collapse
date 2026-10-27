@@ -102,6 +102,11 @@ export class Weapon {
   target?: { shipId: number; roomId: number };
   /** Keep the target after a volley (the genre's autofire); otherwise one volley, then the target is let go. */
   autofire = false;
+  /**
+   * The player has given this weapon its bars (the genre's slot click). Damage to the weapon system takes them
+   * back from the last slot first, and repair does not return them: the player powers the weapon again.
+   */
+  powered = false;
   /** Shots of the current volley still to leave, with the ticks until each. */
   volleyShotsLeft = 0;
   nextShotTicks = 0;
@@ -110,6 +115,11 @@ export class Weapon {
 
   get isCharged(): boolean {
     return this.chargeTicks >= this.chargeNeeded;
+  }
+
+  /** Bars the weapon needs from its weapon system. */
+  get cost(): number {
+    return this.definition.power;
   }
 }
 
@@ -122,6 +132,7 @@ export class Ship {
   readonly systems: ShipSystem[];
   readonly doors: Door[];
   readonly crew: Crew[];
+  /** In slot order: the first is slot 1. The order is the player's (ReorderWeapons), not the mount number's. */
   readonly weapons: Weapon[];
   readonly power: PowerSupply;
   shieldLayers = 0;
@@ -155,7 +166,39 @@ export class Ship {
       const foreignTech = this.techType !== card.techType ? 1.2 : 1;
       return new Weapon(card, weapon.mount ?? 0, secondsToTicks(card.chargeSeconds * foreignTech));
     });
+    this.powerStartingWeapons();
     this.crew = this.startingCrew(firstCrewId, raceByName);
+  }
+
+  /** The weapon systems: Weapons, the Mecha's Weapon Pod, and whatever a race adds with mounts (GDD 8L). */
+  get weaponSystems(): ShipSystem[] {
+    return this.systems.filter((system) => system.name === 'Weapons' || system.name === 'Weapon Pod');
+  }
+
+  /** The weapon system a weapon draws from: the one whose mounts list its mount, else the ship's first. */
+  weaponSystemOf(weapon: Weapon): ShipSystem | undefined {
+    const systems = this.weaponSystems;
+    return systems.find((system) => this.definition.systems.find((placement) => systemKey(placement) === system.key)?.mounts?.includes(weapon.mount)) ?? systems[0];
+  }
+
+  /** A weapon system's weapons, in slot order. */
+  weaponsOf(system: ShipSystem): Weapon[] {
+    return this.weapons.filter((weapon) => this.weaponSystemOf(weapon) === system);
+  }
+
+  /** Bars a weapon system has given to its powered weapons so far. */
+  barsUsedByWeapons(system: ShipSystem): number {
+    return this.weaponsOf(system).filter((weapon) => weapon.powered).reduce((sum, weapon) => sum + weapon.cost, 0);
+  }
+
+  /** A ship starts a fight with its slots powered left to right while the system's bars last (genre). */
+  private powerStartingWeapons(): void {
+    for (const system of this.weaponSystems) {
+      let barsLeft = system.workingBars;
+      for (const weapon of this.weaponsOf(system)) {
+        if (weapon.cost <= barsLeft) { weapon.powered = true; barsLeft -= weapon.cost; }
+      }
+    }
   }
 
   /** The ship's tech type by race (GDD 8D). Not in the docs yet: which races count as biomechanical; Terrans and Mecha are mechanical, the rest biomechanical. */

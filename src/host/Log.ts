@@ -26,6 +26,8 @@ const HUMAN_LINES: Record<string, (fields: LogFields) => string> = {
   'content.race_refused': (f) => `Refused race file ${f.file}: ${f.reason}`,
   'content.loaded': (f) => `Content loaded: ${f.ships} ships, ${f.systems} systems, ${f.weapons} weapons, ${f.races} races.`,
   'host.client_connected': (f) => `Client connected: ${f.client}.`,
+  'battle.weapon_offline': (f) => `${f.weapon} on ${f.ship} loses power: ${f.system} can't hold it any more.`,
+  'battle.weapon_power_refused': (f) => `${f.weapon} on ${f.ship} can't be powered: needs ${f.needed} more bar(s), ${f.free} free.`,
   'host.paused': (f) => `${f.paused ? 'Paused' : 'Unpaused'} by ${f.by}.`,
   'host.order': (f) => `Order ${f.kind} for ship ${f.shipId}${f.paused ? ' (paused)' : ''}: ${plainListing({ ...f, kind: undefined, shipId: undefined, paused: undefined })}.`,
   'host.battle_ended': (f) => `The live battle ended after ${f.seconds} s: ${f.winner} wins, ${f.reason}.`,

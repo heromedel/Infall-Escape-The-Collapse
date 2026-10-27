@@ -29,6 +29,8 @@ export class BattleControls {
   /** The fire mode weapons get without Ctrl (Settings: Autofire; the V key flips it for this battle). */
   private autofire = false;
   private ctrlHeld = false;
+  /** Set when a drag just ended, so the click that follows it is not an order. */
+  private swallowNextClick = false;
   private readonly hud: BattleHud;
 
   constructor(
@@ -45,6 +47,7 @@ export class BattleControls {
       surface.addEventListener('contextmenu', (event) => { event.preventDefault(); this.rightClicked(event); });
     }
     viewport.addEventListener('pointerover', (event) => this.hovered(event));
+    this.listenForSlotDrags(hudSurface);
     window.addEventListener('keydown', (event) => this.keyPressed(event));
     window.addEventListener('keyup', (event) => { if (event.key === 'Control') this.setCtrl(false); });
     window.addEventListener('blur', () => this.setCtrl(false));
@@ -94,6 +97,7 @@ export class BattleControls {
   // ---- what the player did ---------------------------------------------------------------------------------
 
   private clicked(event: MouseEvent): void {
+    if (this.swallowNextClick) { this.swallowNextClick = false; return; }
     const target = event.target as Element;
     const action = target.closest('[data-action]') as SVGElement | null;
     if (action) { this.panelClicked(action); return; }
@@ -147,7 +151,7 @@ export class BattleControls {
         return;
       }
       if (action.dataset.action === 'weapon') {
-        this.sendOrder({ kind: 'ClearTarget', shipId: ship.id, mount: Number(action.dataset.mount) });
+        this.sendOrder({ kind: 'DepowerWeapon', shipId: ship.id, mount: Number(action.dataset.mount) });
         return;
       }
     }
@@ -163,7 +167,14 @@ export class BattleControls {
         if (system && system.bars < system.maxBars) this.sendOrder({ kind: 'SetPower', shipId: ship.id, systemKey: system.key, bars: system.bars + 1 });
         break;
       }
-      case 'weapon': this.armWeapon(Number(action.dataset.mount)); break;
+      case 'weapon': {
+        const mount = Number(action.dataset.mount);
+        const weapon = ship.weapons.find((candidate) => candidate.mount === mount);
+        // a dark slot is powered first (the genre's slot click); a lit one is armed
+        if (weapon && !weapon.powered) this.sendOrder({ kind: 'PowerWeapon', shipId: ship.id, mount });
+        else this.armWeapon(mount);
+        break;
+      }
       case 'autofire': this.autofire = !this.autofire; this.refresh(); break;
       case 'crew': {
         const crewId = Number(action.dataset.crewId);
@@ -182,14 +193,49 @@ export class BattleControls {
     if (event.key === 'Control') { this.setCtrl(true); return; }
     if (event.key === 'v' || event.key === 'V') { this.autofire = !this.autofire; this.refresh(); return; }
     const ship = this.ship();
-    const number = Number(event.key);
-    if (ship && number >= 1 && number <= ship.weapons.length) this.armWeapon(ship.weapons[number - 1].mount);
+    const number = Number(event.code.startsWith('Digit') ? event.code.slice(5) : event.key);
+    if (!ship || !(number >= 1 && number <= ship.weapons.length)) return;
+    const weapon = ship.weapons[number - 1];
+    if (event.shiftKey) { this.sendOrder({ kind: 'DepowerWeapon', shipId: ship.id, mount: weapon.mount }); return; }
+    if (!weapon.powered) { this.sendOrder({ kind: 'PowerWeapon', shipId: ship.id, mount: weapon.mount }); return; }
+    this.armWeapon(weapon.mount);
   }
 
   private hovered(event: PointerEvent): void {
     const tile = (event.target as Element).closest('rect.tile') as SVGRectElement | null;
     if (tile && this.armedMount !== undefined && tile.classList.contains('enemy')) this.view.hoverRoom(Number(tile.dataset.shipId), Number(tile.dataset.roomId));
     else this.view.hoverRoom(undefined, undefined);
+  }
+
+  /** Dragging a weapon slot onto another reorders the weapons (the genre's drag to rearrange). */
+  private listenForSlotDrags(hud: SVGSVGElement): void {
+    let dragged: { mount: number; x: number; y: number } | undefined;
+    let moved = false;
+    hud.addEventListener('pointerdown', (event) => {
+      if (event.button !== 0) return;
+      const slot = (event.target as Element).closest('[data-action="weapon"]') as SVGElement | null;
+      if (!slot) return;
+      dragged = { mount: Number(slot.dataset.mount), x: event.clientX, y: event.clientY };
+      moved = false;
+    });
+    window.addEventListener('pointermove', (event) => {
+      if (!dragged || moved) return;
+      if (Math.abs(event.clientX - dragged.x) + Math.abs(event.clientY - dragged.y) > 8) { moved = true; document.body.classList.add('dragging-slot'); }
+    });
+    window.addEventListener('pointerup', (event) => {
+      if (!dragged) return;
+      const from = dragged;
+      dragged = undefined;
+      document.body.classList.remove('dragging-slot');
+      if (!moved) return;
+      this.swallowNextClick = true;
+      const under = document.elementFromPoint(event.clientX, event.clientY)?.closest('[data-action="weapon"]') as SVGElement | null;
+      const ship = this.ship();
+      if (!under || !ship) return;
+      const toMount = Number(under.dataset.mount);
+      const slot = ship.weapons.findIndex((weapon) => weapon.mount === toMount);
+      if (toMount !== from.mount && slot >= 0) this.sendOrder({ kind: 'ReorderWeapons', shipId: ship.id, mount: from.mount, slot });
+    });
   }
 
   private setCtrl(held: boolean): void {
