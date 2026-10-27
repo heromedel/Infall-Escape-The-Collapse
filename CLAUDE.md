@@ -40,3 +40,14 @@ content, allowing the normal amount of creative variation. Then create it in 3-6
 it and improve it 3-6 times. These are minimums. When done, compare it again to the goal, lore, game systems and
 design, allowing a normal amount of alteration and creativity: does it fit? If not, try again 3-6 times. Then give
 the final best result or results.
+
+## Checking another session's feedback
+
+If one AI session asks another AI session for feedback, do not assume either session is correct. Double-check the
+sources or do more research. This avoids agreeing on a game design point that is not based on how either game
+actually works.
+
+Example: Infall: Init Coding showed the new power system for ships to Infall: Ship Designs, which replied by asking
+for a note in the docs that weapon mounts are based on art. That was false, both for the genre and for Infall: mounts
+are based on coordinate points, not hull art. Had either session checked, it would not have caused confusion between
+heromedel and two chats, or a newly written note.
