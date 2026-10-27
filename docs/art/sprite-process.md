@@ -52,6 +52,34 @@ Tags follow `docs/tag-styles.md`.
 - **True size:** every change is also judged at the size the game shows it, not only enlarged.
 - **Reference:** the angle and proportions are checked against heromedel's render or rig, side by side.
 
+## Ideas taken from the 3D-to-Diablo-2 pipeline's quality harness (Ai-Generated-Proposal, 2026-10-27)
+
+heromedel shared that pipeline's harness (https://claude.ai/artifact/5dZrESQNxaUFirbmhHfTnG) as an example of how to
+quality-check. Its tools are for rendering 3D models and mostly don't apply here; these are the ideas worth adapting to
+hand-built 2D sprites:
+
+1. **Every rule comes from a real mistake, and says which.** Each check names the case that caused it (e.g. "the 2x
+   drifter: a whole-image softening erased the belt, collar and buttons").
+2. **Each checker has a self-test.** It rebuilds the known bad cases (a stray pixel, the blurred belt, a missing
+   button, a mismatched boot, a hole in the silhouette) and must fail every one, plus a known-good sprite it must pass.
+   A checker that can't catch an old mistake isn't trusted.
+3. **A numeric harness runs first, and must pass before anyone looks.** Measured per part with the exact part map
+   (the sprite builder knows which part every pixel belongs to): brightness, saturation, number of shades, the size
+   of each shading step (the embossed-panel problem), outline thickness, detail survival, stray pixels and enclosed
+   holes. Its targets come from **references heromedel approved** (his Mecha and Tentauri crew sheets, and accepted
+   art), measured the same way, never from my own taste.
+4. **Hole check:** background pixels fully enclosed by the silhouette are defects (real gaps, like between the legs,
+   open to the outside).
+5. **Inspection sheets:** a hard-pixel zoom; the sprite on a floor tile in context; the sprite beside heromedel's Mecha
+   and Tentauri crew at the same scale; and a shuffled line-up for an odd-one-out test.
+6. **Two reviewers, both separate agents.** Stage 1 is blind: it isn't told what the sprite is, and names the subject,
+   then each cropped part ("what is this?"), the light direction and the style; words like "cute", "derpy", "blobby"
+   or "embossed" are failures. Stage 2 is informed (the brief, the style guide, the reference, the harness numbers),
+   scores set categories 1–10 and ends APPROVE or REVISE. Give reviewers measured numbers and tell them to trust those
+   over impressions; keep a list of each reviewer's known biases.
+7. **Rounds are logged.** Up to about five rounds per sprite, each logged in the piece's README with the scores and
+   the changes, and shown to heromedel only after an APPROVE.
+
 ## Lessons so far
 
 - A whole-image pass (round 5 at 2x) blurred the belt, collar and buttons. Work per part.
