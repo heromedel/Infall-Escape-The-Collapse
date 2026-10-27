@@ -38,6 +38,46 @@ distance, so the way back is short, but every jump does damage (attrition).
 
 The stage 7 rival who wants your escape route could by default be a band of doomed, criminal Terrans (GATOS).
 
+## Clusters
+
+### Cluster populations and population movement (2026-10-27)
+
+- **Proposed (2026-10-27):** each cluster has a racial population, measured in **Gatillions**.
+- **Proposed (2026-10-27):** different races have different thresholds for mobility. For example, the Lykario are
+  highly likely to start migrating when within one band of the collapse, and the Tentauri are likely to start a
+  minor migration, and to send out additional scouts, even as far as two bands from the collapse.
+- **Proposed (2026-10-27):** wars, refugee situations and similar events can also push populations.
+- **Proposed (2026-10-27):** a large established population struggles to get even a low percentage, such as up to
+  10%, to become migratory. Once a population has become mobile, it is much easier for it to move again.
+
+**Example (an illustration of the idea, not a rule):**
+
+1. A Gatos border cluster with 100 Gatillion people is threatened by the collapse. In response, 10 Gatillion of them
+   migrate away, into an Azurethea cluster of 50 Gatillion Azurethea.
+2. The Azurethea are friendly and welcome them in, but things become tense: 10 Gatillion against 50 is quite a lot
+   of pressure. The collapse moves closer, and the doomed and potentially starving Gatos turn to crime. That raises
+   the likelihood of meeting Gatos pirates or criminals, and of events with the Azurethea struggling, or trying to
+   chase down or arrest Gatos ships.
+3. As the collapse approaches, between 1 and all 10 Gatillion Gatos flee to still further clusters, now with
+   around 5 Gatillion Azurethea, more or less, also fleeing.
+4. If that is a border cluster to some Tentauri, then suddenly something like 8 Gatillion Gatos and 6 Gatillion
+   Azurethea push in on the Tentauri. The Tentauri tend to have lower populations (a border cluster might only have
+   30 Gatillion), so they can't support this many refugees. (More likely the Tentauri are already abandoning the
+   cluster, and have been for some time.)
+5. The refugees might instead go deeper into Azurethea territory, maybe eventually to a core cluster. The 8 to 10
+   Gatillion Gatos would then meet a larger Azurethea population, maybe 250 Gatillion plus the arriving Azurethea
+   migrants. That cluster has a much better chance of supporting the refugees and actually reducing crime and
+   incidents.
+6. But it is now getting close to the collapse, and the Azurethea react to being doomed. They are far less likely to
+   tolerate criminals and far more likely to fight back against enemies like the Mecha.
+7. They might not let 10 Gatillion Gatos who have been committing crimes all the way to their deep clusters. Not
+   letting them in means the Gatos die, and might lead to war at those clusters. And if the Azurethea are busy
+   evacuating themselves, they might not be able to stop them.
+
+- **Proposed (2026-10-27):** this has only three effects: numerical population movements with semi-random
+  outcomes; state changes on the cluster (see GDD 2L and 2R); and changing the event pools based on race,
+  population, situation and so on.
+
 ## Resources
 
 ### Material and Energy (2026-10-21) — superseded by Mawjig (GDD 8C)
