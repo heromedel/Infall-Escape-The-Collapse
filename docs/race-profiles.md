@@ -41,6 +41,9 @@ a Spanish pun is beside the point. They are a loose alliance of humans, not cats
      they use darker or black colours and scarier emblems.
    - **No standard emblem — Decided (2026-10-23):** there is no standard GATOS emblem, because they are an alliance,
      not a federation.
+   - **Inspired by Firefly — Proposed (2026-10-27):** the GATOS style of look, clothing and ships can be inspired by the TV
+     show Firefly, amongst others.
+   - **A loose alliance of gangs — Likely (2026-10-27):** they are like a loose alliance of gangs, not a federation.
 2. **Doing fine — Proposed (2026-10-21):** accepted by others, interested in trade and other cultures. Technology
    is clean, easy to use and humane.
 3. **Struggling — Proposed (2026-10-21):** hopeful, somewhat optimistic, with the occasional pessimistic
