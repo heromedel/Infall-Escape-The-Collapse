@@ -18,18 +18,17 @@ DUSTER = ["#24130f", "#57301f", "#7c4a2b", "#a26a40"]
 SHIRT1 = ["#10262a", "#2a5054", "#3f7470", "#64a094"]
 PANTS1 = ["#11141c", "#222936", "#333d4e", "#4a566a"]
 HAIR1 = ["#120b09", "#2c1b13", "#47301f", "#664530"]
-H1 = ["..oooooo..",
-      ".oHHhhhho.",
-      "oHHhhhhdoo",
-      "oHhhhhdooo",
-      "ohhhhohdoo",
-      "oLLssssSko",
-      "oLkkSkkSko",
-      "kLsssSsSkk",
-      "kLsssSSSkk",
-      "kLssSSSSk.",
-      ".kLssSSSk.",
-      ".kkkkkkkk."]
+H1 = ["...oooo...",
+      ".ooHHhhoo.",
+      "oHHhHhhhdo",
+      "oHhhhhhhdo",
+      "ohhhhhhhdo",
+      "ohhdhddhdo",
+      "kSLLsssSSk",
+      "kSLesseSSk",
+      ".kLssssSk.",
+      ".kssmmSSk.",
+      "..kssssk.."]
 
 
 def crew1(stage=5):
@@ -53,17 +52,16 @@ JEANS = ["#0e1424", "#1f2d48", "#33466a", "#4f6690"]
 HAIR2 = ["#08080a", "#16141a", "#26232a", "#3c3842"]
 BANDANA = ["#2a2410", "#6e5e22", "#a08a34", "#c8b050"]
 H2 = ["...oooo...",
-      ".oohhhhoo.",
-      "oHhhhhhdoo",
-      "ohhhhhdooo",
-      "kddddddoko",
-      "kLLssssSkk",
-      "kLkkSkkSkk",
-      "kLsssSsSkk",
-      "kLsssSSSkk",
-      "kLssSSSSk.",
-      ".kLssSSSk.",
-      ".kkkkkkkk."]
+      ".ooHHHhoo.",
+      "oHHhHhhhdo",
+      "ohhhhhhhdo",
+      "odhhhhhhdo",
+      "kSddddddSk",
+      "ksLLsssSSk",
+      "ksLesseSSk",
+      ".kLssssSk.",
+      ".kssmmSSk.",
+      "..kssSSk.."]
 
 
 def crew2(stage=5):
@@ -88,17 +86,16 @@ SHIRT3 = ["#2e2620", "#5e5244", "#857864", "#ab9e86"]
 CARGO = ["#161410", "#2e2a22", "#454033", "#625b4a"]
 HAIR3 = ["#0e0806", "#2a1610", "#44261a", "#663c28"]
 WRAP = ["#2a2420", "#5a5048", "#8a7e70", "#b0a494"]
-H3 = ["..oooooo..",
-      ".oHHhhhho.",
-      "oHhhhhhdoo",
-      "oHhhhhdooo",
-      "ohhdhhhooo",
-      "ohLLssSSko",
-      "ohLkkSkkko",
-      "ohLssSsSk.",
-      "ohLssSSSk.",
-      "oh.kLSSk..",
-      "oh.kLSSk..",
+H3 = ["...oooo...",
+      ".ooHHhhoo.",
+      "oHHhHHhhdo",
+      "oHhhhhhhdo",
+      "ohhhhhhhdo",
+      "ohdhddhddo",
+      "okLLsssSko",
+      "okLesseSk.",
+      "ohkLsssSk.",
+      "oh.ksmmk..",
       "oh..kkk..."]
 
 

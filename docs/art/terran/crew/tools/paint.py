@@ -49,9 +49,20 @@ def body():
     return out
 
 
+def despeckle(tones, owner):
+    """Clean shading: a pixel whose tone matches none of its four neighbours in the same part takes the most common
+    neighbouring tone, so shading reads as clean bands with no single stray pixels."""
+    out = dict(tones)
+    for p, t in tones.items():
+        x, y = p
+        nb = [tones[q] for q in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)) if q in tones and owner.get(q) == owner.get(p)]
+        if len(nb) >= 3 and t not in nb:
+            out[p] = max(set(nb), key=nb.count)
+    return out
+
+
 def tone_of(v):
-    """Flat, cartoon-style shading: one shadow shape and the base, with highlights only on lit edges."""
-    return 1 if v < .45 else 2
+    return 1 if v < .4 else 2 if v < .85 else 3
 
 
 def paint(materials, overlays=(), head=None, details=(), stage=5):
@@ -59,13 +70,33 @@ def paint(materials, overlays=(), head=None, details=(), stage=5):
     head: {(x, y): (ramp, tone) or colour}. Returns {(x, y): colour}."""
     B = body()
     px, owner = {}, {}
-    for p, (r, v) in B.items():
-        if r == "head":
-            continue
-        ramp = materials[r]
+    rid = {p: r for p, (r, v) in B.items()}
+    tones = {p: (2 if stage == 2 else tone_of(v)) for p, (r, v) in B.items() if r != "head"}
+    if stage >= 3:
+        # arms and legs are cylinders: shade the far (right) third of each row, keep the rest base
+        spans = {}
+        for (x, y), r in rid.items():
+            if r.startswith(("arm", "leg")):
+                lo, hi = spans.get((r, y), (x, x))
+                spans[(r, y)] = (min(lo, x), max(hi, x))
+        for p in tones:
+            r = rid[p]
+            if (r, p[1]) in spans:
+                lo, hi = spans[(r, p[1])]
+                w = hi - lo + 1
+                tones[p] = 1 if p[0] > hi - max(1, w // 3) else 2
+    if stage >= 3:
+        tones = despeckle(despeckle(tones, rid), rid)
+    if stage >= 4:
+        for p in list(tones):
+            x, y = p
+            if tones[p] == 2 and rid.get((x - 1, y)) != rid[p] and rid.get((x - 1, y - 1)) != rid[p]:
+                tones[p] = 3                      # lit left edge of each body part
+    for p, t in tones.items():
+        ramp = materials[rid[p]]
         if callable(ramp):
             ramp = ramp(*p)
-        px[p] = ramp[2] if stage == 2 else ramp[tone_of(v)]
+        px[p] = ramp[t]
         owner[p] = ("body", ramp)
     for i, (mask, ramp) in enumerate(overlays):
         for (x, y) in mask:
@@ -87,6 +118,11 @@ def paint(materials, overlays=(), head=None, details=(), stage=5):
     if stage == 1:
         return {p: "#20242c" for p in px}
     if stage >= 4:
+        for p, t in list(tones.items()):
+            x, y = p
+            if owner.get(p, ("",))[0] == "body" and rid[p] != rid.get((x + 1, y), rid[p]) and (x + 1, y) in px \
+                    and owner[(x + 1, y)][0] == "body":
+                px[p] = owner[p][1][max(0, min(t, 2) - 1)]
         for p in list(px):
             x, y = p
             if owner[p][0] == "head" or owner[p][1] is None:
