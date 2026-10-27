@@ -15,7 +15,11 @@ its front view, the 1/2 view, cut to `reference/rig-front-45.png`). The joint an
 the picture; each pixel goes to its nearest bone (torso, upper and lower arms, thighs, shins, feet), hands start at the
 wrists, the shirt ends at the model's hem line, and the clothing is placed by the joints (the duster reaches between
 the knees and ankles). Built by `tools/show2.py OUT.svg` (`tools/rig.py`, `tools/paint2.py`, `tools/crews2.py`).
-Round 4 is kept below for comparison.
+**Round 5, pass 2:** the duster shaded as a trench coat, from cloth-shading advice (folds start where the cloth
+hangs from, shadow only along the fold lines, slightly bent lines, one light direction): lit shoulder tops, lapels
+folded back with a shadow under their edge, a belt at the waist, one soft fold per panel hanging from the belt and
+drifting outward as the coat flares, a lining line on the open front edge, the hem in shade. The boots are now one
+matched pair, the same shape on both feet. Round 4 is kept below for comparison.
 
 ![Round 4](review/gatos-crew-round4.png)
 

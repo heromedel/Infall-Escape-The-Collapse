@@ -109,13 +109,17 @@ def paint(materials, overlays=(), head=None, details=(), stage=5):
             x, y = p
             if tones[p] == 2 and rid.get((x - 1, y)) != rid[p] and rid.get((x - 1, y - 1)) != rid[p]:
                 tones[p] = 3                      # lit left edge of each body part
-    for p, t in tones.items():
+    for p, t in list(tones.items()):
+        if materials.get(rid[p], 0) is None:
+            continue
         ramp = materials[rid[p]]
         if callable(ramp):
             ramp = ramp(*p)
         px[p] = ramp[t]
         owner[p] = ("body", ramp)
-    for i, (mask, ramp) in enumerate(overlays):
+    for i, ov in enumerate(overlays):
+        mask, ramp = ov[0], ov[1]
+        tone_fn = ov[2] if len(ov) > 2 else None
         for (x, y) in mask:
             t = 2
             if stage >= 3:
@@ -126,6 +130,8 @@ def paint(materials, overlays=(), head=None, details=(), stage=5):
                     t = 1
                 if stage >= 4 and x == lo and t == 2:
                     t = 3
+                if tone_fn:
+                    t = tone_fn(x, y, t, stage)
             px[(x, y)] = ramp[2] if stage == 2 else ramp[t]
             owner[(x, y)] = ("over%d" % i, ramp)
     if head:
