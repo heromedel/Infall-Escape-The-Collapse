@@ -78,6 +78,8 @@ The stage 7 rival who wants your escape route could by default be a band of doom
 - **Proposed (2026-10-27):** this has only three effects: numerical population movements with semi-random
   outcomes; state changes on the cluster (see GDD 2L and 2R); and changing the event pools based on race,
   population, situation and so on.
+- **Proposed (2026-10-27):** with the right sensors, a player may be able to see the population of nearby clusters
+  before jumping to them (see GDD 2E for sensor range).
 
 ## Resources
 
