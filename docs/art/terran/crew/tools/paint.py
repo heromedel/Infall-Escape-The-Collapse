@@ -115,6 +115,14 @@ def paint(materials, overlays=(), head=None, details=(), stage=5):
         for p, v in head.items():
             px[p] = v if isinstance(v, str) else (v[0][2] if stage == 2 else v[0][v[1]])
             owner[p] = ("head", v[0] if not isinstance(v, str) else None)
+    # clean the silhouette: drop stray pixels that hang off it (touching it on one side or none), until none are left
+    while True:
+        spurs = [q for q in px if sum(n in px for n in ((q[0] + 1, q[1]), (q[0] - 1, q[1]), (q[0], q[1] + 1), (q[0], q[1] - 1))) <= 1]
+        if not spurs:
+            break
+        for q in spurs:
+            del px[q]
+            owner.pop(q, None)
     if stage == 1:
         return {p: "#20242c" for p in px}
     if stage >= 4:
