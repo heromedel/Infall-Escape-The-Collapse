@@ -1,6 +1,6 @@
 import os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from paint2 import paint, poly, grid, J
+from paint2 import paint, poly, grid, J, PARTS
 import crews as C          # palettes and the round 2 heads
 
 HX, HY = 30, 6
@@ -74,18 +74,26 @@ def crew1(stage=5):
                   lambda x, y: 15 <= y <= 23 and x == 33 - (23 - y) // 3 - 1)
     far_lapel = (lambda x, y: 15 <= y <= 23 and 36 <= x <= 36 + (23 - y) // 3,
                  lambda x, y: 15 <= y <= 23 and x == 36 + (23 - y) // 3 + 1)
+    def coat_part(side, lapel):
+        return lambda x, y: "belt" if y in belt else "lapel-" + side if (lapel[0](x, y) or lapel[1](x, y)) else "coat-" + side
     over = [(poly([(27.5, 14.5), (34, 15), (34, 31), (33.5, 51), (25, 50.5), (26.5, 31)]), D,
-             coat_tone(25, 34, [(29, -1)], belt, near_lapel, inner_edge=33)),
+             coat_tone(25, 34, [(29, -1)], belt, near_lapel, inner_edge=33), coat_part("near", near_lapel)),
             (poly([(36, 15), (42.5, 14.5), (43.5, 31), (45.5, 50.5), (36.5, 51), (36, 31)]), D,
-             coat_tone(36, 46, [(41, 1)], belt, far_lapel, inner_edge=36)),
+             coat_tone(36, 46, [(41, 1)], belt, far_lapel, inner_edge=36), coat_part("far", far_lapel)),
             (set(boots(C.BOOTS)), C.BOOTS, lambda x, y, t, s: t)]
     over[-1] = None
     over = [o for o in over if o]
-    d = [((35, y), C.SHIRT1[1]) for y in (20, 24)]
-    d += [((34, 29), "#c8a860"), ((35, 29), "#a8884a")]                                    # belt buckle
-    d += [((29, 19), "#c8a050"), ((28, 20), "#c8a050"), ((30, 20), "#a07c38"), ((29, 21), "#a07c38"), ((29, 20), "#3a2416")]
-    d += [(p, c) for p, c in boot_pixels(C.BOOTS).items()]
-    return paint(mats, over, head(C.S1, C.HAIR1, C.H1), d, stage)
+    d = [((35, y), C.SHIRT1[1], "button") for y in (20, 24)]
+    d += [((34, 29), "#c8a860", "buckle"), ((35, 29), "#a8884a", "buckle")]
+    d += [(q, col, "emblem") for q, col in (((29, 19), "#c8a050"), ((28, 20), "#c8a050"), ((30, 20), "#a07c38"),
+                                             ((29, 21), "#a07c38"), ((29, 20), "#3a2416"))]
+    d += [(q, col, "boot-near" if q[0] < 35 else "boot-far") for q, col in boot_pixels(C.BOOTS).items()]
+    px = paint(mats, over, head(C.S1, C.HAIR1, C.H1), d, stage)
+    hair = {h.lower() for h in C.HAIR1}
+    for q, part in list(PARTS.items()):
+        if part == "head":
+            PARTS[q] = "hair" if px[q].lower() in hair else "face"
+    return px
 
 
 def crew2(stage=5):

@@ -82,9 +82,15 @@ def tone_of(v):
     return 1 if v < .4 else 2 if v < .85 else 3
 
 
+PARTS = {}          # after paint(): (x, y) -> the part each pixel belongs to (the part map the checks use)
+EYE, MOUTH = "#16100e", "#5e2c24"
+
+
 def paint(materials, overlays=(), head=None, details=(), stage=5):
-    """materials: region -> ramp. overlays: (mask, ramp) drawn over the body, shaded by rule.
-    head: {(x, y): (ramp, tone) or colour}. Returns {(x, y): colour}."""
+    """materials: region -> ramp. overlays: (mask, ramp[, tone_fn[, name or name_fn(x, y)]]) drawn over the body.
+    head: {(x, y): (ramp, tone) or colour}. details: (xy, colour[, part name]).
+    Returns {(x, y): colour}; the part map is left in PARTS."""
+    PARTS.clear()
     B = body()
     px, owner = {}, {}
     rid = {p: r for p, (r, v) in B.items()}
@@ -117,6 +123,7 @@ def paint(materials, overlays=(), head=None, details=(), stage=5):
             ramp = ramp(*p)
         px[p] = ramp[t]
         owner[p] = ("body", ramp)
+        PARTS[p] = rid[p]
     for i, ov in enumerate(overlays):
         mask, ramp = ov[0], ov[1]
         tone_fn = ov[2] if len(ov) > 2 else None
@@ -134,10 +141,13 @@ def paint(materials, overlays=(), head=None, details=(), stage=5):
                     t = tone_fn(x, y, t, stage)
             px[(x, y)] = ramp[2] if stage == 2 else ramp[t]
             owner[(x, y)] = ("over%d" % i, ramp)
+            nm = ov[3] if len(ov) > 3 else "over%d" % i
+            PARTS[(x, y)] = nm(x, y) if callable(nm) else nm
     if head:
         for p, v in head.items():
             px[p] = v if isinstance(v, str) else (v[0][2] if stage == 2 else v[0][v[1]])
             owner[p] = ("head", v[0] if not isinstance(v, str) else None)
+            PARTS[p] = "eye" if v == EYE else "mouth" if v == MOUTH else "head"
     # clean the silhouette: drop stray pixels that hang off it (touching it on one side or none), until none are left
     while True:
         spurs = [q for q in px if sum(n in px for n in ((q[0] + 1, q[1]), (q[0] - 1, q[1]), (q[0], q[1] + 1), (q[0], q[1] - 1))) <= 1]
@@ -146,6 +156,7 @@ def paint(materials, overlays=(), head=None, details=(), stage=5):
         for q in spurs:
             del px[q]
             owner.pop(q, None)
+            PARTS.pop(q, None)
     if stage == 1:
         return {p: "#20242c" for p in px}
     if stage >= 4:
@@ -162,6 +173,8 @@ def paint(materials, overlays=(), head=None, details=(), stage=5):
                 lit = (x + 1, y) in px and (x, y + 1) in px
                 px[p] = owner[p][1][1 if lit else 0]
     if stage >= 5:
-        for p, c in details:
-            px[p] = c
+        for dt in details:
+            px[dt[0]] = dt[1]
+            if len(dt) > 2:
+                PARTS[dt[0]] = dt[2]
     return px

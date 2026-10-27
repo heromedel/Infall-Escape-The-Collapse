@@ -12,6 +12,24 @@ angle), upright enough to sit with the Mecha and Tentauri crew. Each person has 
 round 5 pixel art exported pixel for pixel, nothing changed (one path per colour; the viewBox is the 70 × 70 frame, so
 they scale to any size with crisp pixels; checked: every pixel matches). Built by `tools/export_svg.py OUT_DIR`.
 
+**Drifter at 2x, one goal at a time (experiment, 2026-10-27; `docs/art/sprite-process.md`):** rebuilt by
+`tools/hires2.py OUT_DIR` from the round 5 pixels with a part map (every pixel labelled: coat, belt, lapels, buttons,
+buckle, emblem, eyes, mouth, boots…). Each goal may only change its own parts and is checked by `tools/qa.py`
+(details survive and still stand out, no change outside the goal's parts, no stray pixels, no holes, matched pairs
+symmetric; `python3 qa.py --selftest` rebuilds the old mistakes, including the whole-image blur, and catches each).
+`review/gatos-drifter-2x-rounds.png`: the 2x blocks, after round 1, after round 2. Result: `svg/gatos-drifter-2x.svg`.
+
+| Round | Goal | Check |
+|---|---|---|
+| 1 | softer coat and sleeve shading (coat and sleeves only) | pass, belt/buttons/lapels kept |
+| 1 | one-sub-pixel outline: coat, hair, face, legs, hands, each separately | pass |
+| 1 | belt darker with a lit strap edge, brighter buckle rim | pass (belt contrast 42 → 45) |
+| 1 | matched boots | pass (shapes identical) |
+| 1 | jaw tapering to a rounded chin, eyes with lids, whites and irises, a thin mouth | pass |
+| blind 1 | named him right ("a man in a long brown coat"); found: boots like flower pots, no neck, pupils to one side, a pale jaw patch, jagged sleeves, block hands, the skirt lit evenly | |
+| 2 | boots with toes turned out, a toe cap and a sole; a neck; centred eyes; a cleaner jaw; smoother sleeve edges; hands with fingers; the far skirt in shade | all pass |
+| blind 2 | boots now read as boots ("clearly boots"), the neck and eyes no longer flagged; still weak: the hands (square blocks, no thumb), boxy arms and shoulders, short legs under the coat, the jagged lower-left hem, flat coat shading | next |
+
 **Drifter at 2x resolution (experiment, 2026-10-27):** `svg/gatos-drifter-2x.svg` (140 × 140), built by
 `tools/hires.py drifter OUT.svg` from the round 5 pixels: each pixel becomes a 2 × 2 block, then the outline thins to
 one sub-pixel, one-pixel stair-steps on the silhouette lose their outer corner, and the shading gains in-between
