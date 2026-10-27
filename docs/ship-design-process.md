@@ -31,6 +31,8 @@ and the game build the same ship:
   two weapon systems may flag mounts to one system (`system="Weapons B"`) and cap a system's slots
   (`maxSlots`), GDD 8L. The Light Attack Frame's Weapon Pod is the first `maxSlots="1"`: one weapon by design,
   a semi-hard lock on the hull.
+  **Proposed (2026-10-27):** a mount never lies inside a room; it sits on the hull outside the floor, so a weapon is
+  never drawn over a floor. The loader refuses a ship with a mount inside a room and says why.
 - **Loadouts:** as patches of the base ship (`Inherit: Patch`): list only what changes, `removed` for what goes;
   weapons and crew lists are given whole. A loadout derives from the base ship only.
 
