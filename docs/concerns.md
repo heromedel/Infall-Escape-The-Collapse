@@ -48,3 +48,16 @@ Ideas:
   path leads from it to the AZC; the ship finds the path itself. A damaged conduit (and possibly a breached room)
   doesn't carry power, so a system goes dark only when every path to it is cut. The decisions become which conduit
   to repair first, ship layouts with loops (tough) or a single spine (fragile), and enemies targeting conduit hubs.
+
+## 4. Conduit power and systems with several options, such as weapon mounts (heromedel, 2026-10-27)
+
+If Terran ships are powered through conduits and more than one weapon sits on the same weapon system, there has to
+be a way to set which of those weapons are powered. So a system with several options, such as weapon mounts, must
+still work like vanilla FTL after it receives power from a conduit: the conduit delivers bars to the system, and
+inside the system the player assigns those bars to its options (which weapons are on) with the genre's clicks.
+
+Ideas:
+
+- **Proposed (2026-10-27):** two layers. The conduit layer answers "how many bars reach this system". The system
+  layer is the genre's: the Weapons system's bars are handed to weapon slots in order, and clicking a slot powers
+  or depowers that weapon. Only the first layer is Terran-specific; the second is the same for every race.
