@@ -26,9 +26,11 @@ and the game build the same ship:
   One tile per system. Anything not listed doesn't exist, so Life Support is never left out by accident.
 - **Doors:** numbered, by tile and facing; airlocks are doors facing space. EVA and EVB Docks sit next to one.
 - **Other data:** hull, reactor (or Mecha self-power; Terran conduits tile by tile with directions, GDD 5H),
-  starting weapons and crew, and the number of weapon mounts (positions come with the hull art). Extra mounts
-  are suggested, not required: a hull planned for 2 to 4 weapons should carry 2 more. A hull with two weapon
-  systems may flag mounts to one system (`system="B"`) and cap a system's slots (`maxSlots`), GDD 8L.
+  starting weapons and crew, and the weapon mounts (coordinates on the ship; the hull art at most hints at them).
+  Extra mounts are suggested, not required: a hull planned for 2 to 4 weapons should carry 2 more. A hull with
+  two weapon systems may flag mounts to one system (`system="Weapons B"`) and cap a system's slots
+  (`maxSlots`), GDD 8L. The Light Attack Frame's Weapon Pod is the first `maxSlots="1"`: one weapon by design,
+  a semi-hard lock on the hull.
 - **Loadouts:** as patches of the base ship (`Inherit: Patch`): list only what changes, `removed` for what goes;
   weapons and crew lists are given whole. A loadout derives from the base ship only.
 

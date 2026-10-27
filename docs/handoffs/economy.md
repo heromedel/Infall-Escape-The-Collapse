@@ -104,10 +104,9 @@ with one ship and wins with about 3–4 very strong or 6 good ones (GDD 3K).
 
 ## From Infall: Init Coding (2026-10-27)
 
-GDD 8L (Proposed) adds two things for you:
-
-1. A second weapon system of the same kind on one ship costs a small installation surcharge, about 5 to 10
-   percent of that system's installation cost. Please set the number.
-2. A weapon system's slots now equal its level (one slot at level 1, up to six), so a band 1 to 3 ship carries
-   fewer weapons than the genre's fixed four slots. Please check the early weapon prices and the fight rewards
-   against that.
+GDD 8L (Proposed) keeps level prices per system, since two weapon systems are different systems. Each additional
+weapon system on a ship costs more to install than the one before, enough to slightly hamper splitting one big
+system into several small ones. Please set the amount and the shape of the increase: compounding, an increasing
+flat step, or whatever lines up best with your tables. Also a price for a bought mount beyond the hull's; your
+4.84 is the first guess. By your reading, slots from level changes no weapon prices or fight rewards, so nothing
+else needs retuning.
