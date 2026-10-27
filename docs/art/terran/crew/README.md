@@ -12,6 +12,11 @@ angle), upright enough to sit with the Mecha and Tentauri crew. Each person has 
 round 5 pixel art exported pixel for pixel, nothing changed (one path per colour; the viewBox is the 70 × 70 frame, so
 they scale to any size with crisp pixels; checked: every pixel matches). Built by `tools/export_svg.py OUT_DIR`.
 
+**Reference rigs (heromedel, 2026-10-27):** `reference/heromedel-rig-male-standing-idle-step.png` and
+`reference/heromedel-rig-female-standing-idle-step.png`: a male and a female model, each standing, idle and mid-step,
+seen from the front, right side and back, with joints and the shirt, trouser and boot edges marked. For use as needed:
+body proportions (female and male), idle and walking poses, and side and back views for later animation frames.
+
 **Drifter at 2x, one goal at a time (experiment, 2026-10-27; `docs/art/sprite-process.md`):** rebuilt by
 `tools/hires2.py OUT_DIR` from the round 5 pixels with a part map (every pixel labelled: coat, belt, lapels, buttons,
 buckle, emblem, eyes, mouth, boots…). Each goal may only change its own parts and is checked by `tools/qa.py`
