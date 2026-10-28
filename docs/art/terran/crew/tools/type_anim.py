@@ -29,12 +29,14 @@ HAND_DOWN = ["kwwwwwk.",
              "kLssssSk",
              "kLsfsfSk",
              ".kfkfkk."]
-# lifted: three pixels higher (less doesn't read as a keystroke), the fingers curled under so the hand looks shorter
+# lifted by LIFT pixels (at game size a smaller lift vanishes: 3 pixels here came out as none), the fingers curled
+# under so the hand looks shorter
 HAND_UP = ["kwwwwwk.",
            "kLsssssk",
            "kLssssSk",
            ".kSSSSk."]
 HAND_X, HAND_Y = 42, 61                  # the near hand's top-left corner, just under the cuff, at the hip
+LIFT = 5
 FRAMES = [("down", "down"), ("up", "down"), ("down", "down"), ("down", "up")]    # (near hand, far hand)
 PROTECTED = ["buckle", "lapel-near", "lapel-far", "emblem", "eye", "mouth", "button"]
 
@@ -44,7 +46,7 @@ def hands(out, parts, near, far):
     key = {"k": S[0], "S": S[1], "s": S[2], "L": S[3], "f": S[1], "w": S[1]}
     for name, state in (("hand-near", near), ("hand-far", far)):
         grid = HAND_DOWN if state == "down" else HAND_UP
-        y0 = HAND_Y if state == "down" else HAND_Y - 3
+        y0 = HAND_Y if state == "down" else HAND_Y - LIFT
         if name == "hand-far":                   # mirrored; swapping the lit and shaded edges keeps the light on the left
             grid = [r[::-1].translate(str.maketrans("LS", "SL")) for r in grid]
             x0 = coat3.CENTRE - (HAND_X + len(grid[0]) - 1)
@@ -119,14 +121,9 @@ RAISED = [".kfkfkk.",
           "kLssssSk",
           "kLsssssk",
           "kwwwwwwk"]
-RAISED_UP = [".kSSSSk.",                  # lifted: three pixels higher, the fingers bent, the wrist showing below
+RAISED_UP = [".kSSSSk.",                  # lifted: the fingers bent, the wrist showing below down to the cuff
              "kLssssSk",
-             "kLsssssk",
-             ".kwwwwk.",
-             ".kwwwwk.",
-             ".kwwwwk.",
-             ".kwwwwk.",
-             ".kwwwwwk"]
+             "kLsssssk"] + [".kwwwwk."] * (LIFT + 1) + [".kwwwwwk"]
 RAISED_X, RAISED_Y = 41, 34
 
 # --- facing right (typing right): both forearms reach forward to the console at chest height, the backs of the
@@ -142,7 +139,9 @@ SIDE_TYPE = ["kwwwk..",
 SIDE_TYPE_UP = ["kwwwk..",
                 "kLsssk.",
                 "kLsssk.",
-                ".kSSk.."]
+                "kkSSk..",
+                "kwk....",
+                "kwk...."]                  # the wrist bent up from the cuff
 SIDE_X, SIDE_Y = 86, 45
 FAR_SHIFT = (-2, -1)
 
@@ -169,7 +168,7 @@ def frames_up(stand, sparts):
         out, parts = dict(pose), dict(pparts)
         for name, state, mirror in (("hand-near", near, False), ("hand-far", far, True)):
             grid = RAISED if state == "down" else RAISED_UP
-            y0 = RAISED_Y if state == "down" else RAISED_Y - 3
+            y0 = RAISED_Y if state == "down" else RAISED_Y - LIFT
             x0 = RAISED_X if not mirror else coat3.CENTRE - (RAISED_X + len(grid[0]) - 1)
             draw(out, parts, grid, x0, y0, name, mirror=mirror)
         result.append((out, parts))
@@ -187,11 +186,11 @@ def frames_right(stand, sparts):
         for q, c in far_px.items():
             if parts.get(q) not in body:
                 out[q] = c; parts[q] = "arm-far"
-        dy = 0 if far == "down" else -3
+        dy = 0 if far == "down" else -LIFT
         draw(out, parts, SIDE_TYPE if far == "down" else SIDE_TYPE_UP, SIDE_X + FAR_SHIFT[0],
              SIDE_Y + FAR_SHIFT[1] + dy, "hand-far", dim=1, behind=body)
         out, parts = views.side_arm(out, parts, TYPE_SIDE_SLEEVE)
-        dy = 0 if near == "down" else -3
+        dy = 0 if near == "down" else -LIFT
         draw(out, parts, SIDE_TYPE if near == "down" else SIDE_TYPE_UP, SIDE_X, SIDE_Y + dy, "hand-near")
         for q in [q for q, v in parts.items() if v in ("arm-far", "hand-far")]:      # the far arm's lone corners
             if sum((q[0] + dx, q[1] + dy) in out for dx, dy in qa.NB4) <= 1:

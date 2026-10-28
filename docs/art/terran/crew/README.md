@@ -84,6 +84,12 @@ coat with the back of the hand to us (heromedel), the legs one behind the other,
 forward at chest height, the far one behind him and darker; up with the elbows out and the hands raised beside the
 shoulders, the backs of the hands to us.
 
+**Typing at game size (round 3g, 2026-10-28):** `tools/game_anim.py` brings every typing frame down to the Mecha
+crew's size the way heromedel chose (outline on the full-size frame, then scaled down and tidied), all frames at the
+standing sprite's scale so nothing jitters (`svg/drifter-game-type-{direction}-0..3.svg`,
+`review/drifter-game-type-sheet.png`, `-6x.gif`, `-2x.gif`). The keystroke lift went from 3 to 5 pixels at 2x: 3 came
+out as no movement at all at game size.
+
 **Faster tries:** `python3 tools/review.py OUT_DIR` builds the sprite with every goal and check and writes one review
 sheet (the figure enlarged, at 2x and true size, and close-ups of the head, a hand and the boots), in about 3 seconds.
 

@@ -28,12 +28,12 @@ def rgb(c):
     return tuple(int(c[i:i + 2], 16) for i in (1, 3, 5))
 
 
-def downsample(px, parts, height):
-    """The figure scaled to `height` pixels tall, centred in the frame, feet on the floor row."""
+def downsample(px, parts, height, box=None):
+    """The figure scaled to `height` pixels tall, centred in the frame, feet on the floor row. `box` (top, bottom,
+    centre x) fixes the scale and placement, so every frame of an animation is scaled the same way."""
     xs = [x for x, _ in px]; ys = [y for _, y in px]
-    top, bottom = min(ys), max(ys) + 1
+    top, bottom, cx = box or (min(ys), max(ys) + 1, (min(xs) + max(xs) + 1) / 2)
     k = (bottom - top) / height
-    cx = (min(xs) + max(xs) + 1) / 2
     palette = sorted(set(px.values()))
     out, out_parts = {}, {}
     for ty in range(FRAME):
