@@ -12,7 +12,7 @@
   <system type="weapon" id="ion" name="Ion Blaster" kind="ion" weaponType="1" level="2"/>
   <system type="weapon" id="laser" name="Bomber Laser" kind="laser" weaponType="1" level="1"/>
   <system type="weapon" id="torpedo" name="Bomber Torpedo" kind="missile" weaponType="1" level="1"/>
-  <crew name="Unit K-2" skill="0" station="piloting"/>
-  <crew name="Unit K-5" skill="0" station="ion"/>
-  <crew name="Unit K-8" skill="0" station="shields"/>
+  <crew name="Unit K-2" station="piloting"/>
+  <crew name="Unit K-5" station="ion"/>
+  <crew name="Unit K-8" station="shields"/>
 </ship>

@@ -5,6 +5,7 @@ extends Node
 const SYSTEMS_FILE := "res://data/systems.xml"
 const WEAPONS_FILE := "res://data/weapons.xml"
 const SUITS_FILE := "res://data/suits.xml"
+const RULES_FILE := "res://data/rules.xml"
 const BUILT_IN_SHIPS_FOLDER := "res://data/ships"
 const USER_SHIPS_FOLDER := "user://ships"
 
@@ -14,6 +15,8 @@ var systems := {}
 var weapon_kinds := {}
 ## EVB battlesuit types by id, in file order.
 var suit_kinds := {}
+## Rule numbers from rules.xml: element name -> its attributes (numbers and lists already converted).
+var rules := {}
 ## Every ship design that can be picked: built-in first, then the player's own.
 var designs: Array[ShipDesign] = []
 
@@ -22,6 +25,7 @@ func _ready() -> void:
 	load_systems()
 	load_weapon_kinds()
 	load_suit_kinds()
+	load_rules()
 	reload_designs()
 
 
@@ -35,11 +39,15 @@ func load_systems() -> void:
 			"name": attrs.get("name", attrs.type),
 			"card": attrs.get("card", ""),
 			"cards_per_level": int(attrs.get("cardsPerLevel", 0)),
-			"points_per_level": int(attrs.get("pointsPerLevel", 1)),
 			"min_level": int(attrs.get("minLevel", 1)),
 			"max_level": int(attrs.get("maxLevel", 3)),
 			"required": attrs.get("required", "false") == "true",
 			"mannable": attrs.get("mannable", "false") == "true",
+			"prices": number_list(attrs.get("prices", "")),
+			"manned_evasion": number_list(attrs.get("mannedEvasion", "")),
+			"crew_draw": number_list(attrs.get("crewDraw", "")),
+			"manned_level": int(attrs.get("mannedLevel", 0)),
+			"evasion_by_level": number_list(attrs.get("evasionByLevel", "")),
 			"summary": XmlTree.clean_text(node),
 		}
 
@@ -67,6 +75,7 @@ func load_weapon_kinds() -> void:
 			kind.types[int(type_node.attrs.level)] = {
 				"shots": int(type_node.attrs.get("shots", 1)),
 				"damage": int(type_node.attrs.get("damage", 1)),
+				"price": float(type_node.attrs.get("price", 0)),
 			}
 		weapon_kinds[kind.id] = kind
 
@@ -87,8 +96,38 @@ func load_suit_kinds() -> void:
 			"shields": attrs.get("shields", "pop"),
 			"ion": attrs.get("ion", "false") == "true",
 			"never_misses": attrs.get("neverMisses", "false") == "true",
+			"price": float(attrs.get("price", 0)),
 			"summary": XmlTree.clean_text(node),
 		}
+
+
+func load_rules() -> void:
+	rules.clear()
+	for node in XmlTree.parse_file(RULES_FILE).get("children", []):
+		var values := {}
+		for key in node.attrs:
+			var text: String = node.attrs[key]
+			values[key] = number_list(text) if text.contains(",") else float(text)
+		rules[node.name] = values
+
+
+## A rule number, e.g. rule("jump", "chargesNeeded").
+func rule(element: String, key: String, fallback = 0):
+	return rules.get(element, {}).get(key, fallback)
+
+
+## A per-skill number list from a rule or system ("10,15,20"), read at a skill level (0 untrained … 2 Master).
+static func by_skill(values: Array, skill: int) -> float:
+	if values.is_empty():
+		return 0.0
+	return float(values[clampi(skill, 0, values.size() - 1)])
+
+
+static func number_list(text: String) -> Array:
+	var numbers: Array = []
+	for part in text.split(",", false):
+		numbers.append(float(part.strip_edges()))
+	return numbers
 
 
 func suit_kind(suit_id: String) -> Dictionary:

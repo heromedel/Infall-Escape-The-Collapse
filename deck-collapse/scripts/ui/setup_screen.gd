@@ -83,7 +83,7 @@ func _refresh() -> void:
 
 func _ship_button(design: ShipDesign, side: int, selected: bool) -> Button:
 	var color := Color.from_string(design.color, UiKit.GOOD)
-	var button := UiKit.button("%s\n%s · hull %d · %d pts%s" % [design.name, design.faction, design.hull, design.points(),
+	var button := UiKit.button("%s\n%s · hull %d · worth %s%s" % [design.name, design.faction, design.hull, Money.text(design.total_cost()),
 		"" if design.built_in else " · yours"], func():
 			if side == 0:
 				player_design = design
@@ -119,7 +119,7 @@ func _show_preview(box: VBoxContainer, design: ShipDesign) -> void:
 	for system in design.systems:
 		grid.add_child(_system_line(system, color))
 	box.add_child(grid)
-	var crew_names: Array = design.crew.map(func(m): return "%s (%s)" % [m.name, Battle.SKILL_NAMES[m.skill]])
+	var crew_names: Array = design.crew.map(func(m): return "%s (%s)" % [m.name, CrewSkills.summary(m.skills)])
 	var crew_label := UiKit.label("Crew: " + ", ".join(crew_names), 14, UiKit.MUTED)
 	crew_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	box.add_child(crew_label)

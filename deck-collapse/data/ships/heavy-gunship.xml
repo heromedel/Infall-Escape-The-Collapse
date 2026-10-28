@@ -13,8 +13,8 @@
   <system type="evb" id="dock" suit="guardian" level="2"/>
   <system type="weapon" id="heavy" name="Heavy Laser" kind="heavy" weaponType="1" level="2"/>
   <system type="weapon" id="beam" name="Cutter Beam" kind="beam" weaponType="2" level="2"/>
-  <crew name="Cmdr. Ost" skill="2" station="piloting"/>
-  <crew name="Lt. Barra" skill="1" station="heavy"/>
-  <crew name="Ens. Quill" skill="1" station="shields"/>
-  <crew name="Ens. Faro" skill="0" station="dock"/>
+  <crew name="Cmdr. Ost" station="piloting" piloting="2" repair="1"/>
+  <crew name="Lt. Barra" station="heavy" weapons="1"/>
+  <crew name="Ens. Quill" station="shields" shields="1"/>
+  <crew name="Ens. Faro" station="dock"/>
 </ship>

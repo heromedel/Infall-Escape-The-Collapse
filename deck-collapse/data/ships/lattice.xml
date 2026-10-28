@@ -12,7 +12,7 @@
   <system type="airlock" level="1"/>
   <system type="evb" id="dock" suit="assault" level="2"/>
   <system type="weapon" id="ion" name="Heavy Ion" kind="ion" weaponType="2" level="2"/>
-  <crew name="Ossa-3" skill="1" station="piloting"/>
-  <crew name="Ossa-7" skill="0" station="dock"/>
-  <crew name="Ossa-9" skill="0" station="ion"/>
+  <crew name="Ossa-3" station="piloting" piloting="1"/>
+  <crew name="Ossa-7" station="dock"/>
+  <crew name="Ossa-9" station="ion"/>
 </ship>

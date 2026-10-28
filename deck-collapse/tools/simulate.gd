@@ -26,7 +26,7 @@ func _ready() -> void:
 	var battle_count := 0
 	var outcomes := {}
 	var stalls := 0
-	print("Ships: ", designs.map(func(d): return "%s (%d pts)" % [d.name, d.points()]))
+	print("Ships: ", designs.map(func(d): return "%s (%.0f M)" % [d.name, d.total_cost()]))
 	for a in designs:
 		for b in designs:
 			if a == b:
@@ -37,7 +37,7 @@ func _ready() -> void:
 				var battle := Battle.new(a, b, i % 2, seed_value)
 				var captains := [BattleAI.new(ai_level, seed_value + 1), BattleAI.new(ai_level, seed_value + 2)]
 				var actions := 0
-				while not battle.over and actions < ACTION_LIMIT:
+				while not battle.over and not battle.aftermath and actions < ACTION_LIMIT:
 					var side := battle.active_side
 					var action: Dictionary = captains[side].next_action(battle, side)
 					var events := perform(battle, side, action)
@@ -45,18 +45,19 @@ func _ready() -> void:
 						print("REFUSED ", action, " ", events.filter(func(e): return e.type == "refused"))
 						battle.end_turn(side)
 					actions += 1
-				if not battle.over:
+				if not battle.over and not battle.aftermath:
 					stalls += 1
 					pair_wins[2] += 1
-				elif battle.winner >= 0:
+				elif battle.winner >= 0 and battle.outcome != Battle.OUTCOME_ESCAPED:
 					pair_wins[battle.winner] += 1
 				else:
 					pair_wins[2] += 1
 				outcomes[battle.outcome] = outcomes.get(battle.outcome, 0) + 1
 				turn_totals += battle.turn_number
 				battle_count += 1
-				wins[a.name] = wins.get(a.name, 0) + (1 if battle.winner == 0 else 0)
-				wins[b.name] = wins.get(b.name, 0) + (1 if battle.winner == 1 else 0)
+				var decisive := battle.outcome != Battle.OUTCOME_ESCAPED
+				wins[a.name] = wins.get(a.name, 0) + (1 if decisive and battle.winner == 0 else 0)
+				wins[b.name] = wins.get(b.name, 0) + (1 if decisive and battle.winner == 1 else 0)
 			print("%-22s vs %-22s  %2d - %2d  (other %d)" % [a.name, b.name, pair_wins[0], pair_wins[1], pair_wins[2]])
 	print("Average captain turns per battle: %.1f" % (float(turn_totals) / battle_count))
 	print("Outcomes: ", outcomes, "  stalls: ", stalls)
@@ -71,4 +72,5 @@ static func perform(battle: Battle, side: int, action: Dictionary) -> Array:
 		"move": return battle.move_crew(side, action.crew, action.system)
 		"burn": return battle.burn_engines(side)
 		"reroute": return battle.reroute_power(side)
+		"jump": return battle.jump(side)
 	return battle.end_turn(side)

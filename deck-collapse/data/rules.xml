@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Rule numbers for Infall: Deck Collapse that aren't tied to one system, weapon or suit.
+  Lists by skill read untrained, Veteran, Master. Edit to rebalance; the game reads this file at start.
+-->
+<rules>
+  <!-- Spool Jump Drive cards each add one charge; at this many charges the ship can jump. -->
+  <jump chargesNeeded="6"/>
+
+  <!-- Crew in a damaged system may draw an extra Repair card each turn; in a burning one, an extra Extinguish Fire.
+       Uses the crew member's Repair skill. -->
+  <crewDraw repair="10,15,20"/>
+
+  <!-- Each point of damage to a system has this % chance to wound each crew member standing in it.
+       Weapons marked woundsCrew (torpedoes, beams) always wound. -->
+  <crewHit chancePerDamage="25"/>
+
+  <!-- As each turn ends, a fire may spread to a neighbouring system (the next tile left or right).
+       Each Airlock Control level lowers the chance. A fire burns out when its system is broken, and may burn out
+       when Life Support is down. -->
+  <fire spreadChance="30" spreadPerAirlockLevel="-10" spreadMinimum="5" burnOutWithoutAir="50"/>
+
+  <!-- Turns an enemy boarder needs to leave the system they're in, by your Airlock Control level (0 = none). -->
+  <airlock boarderExitTurns="0,1,2,3,3"/>
+
+  <!-- Mawjig (docs/reference/mawjig-cost-table.md, band 1). A wreck pays rewardPercent of the ship's value;
+       killing the crew pays crewKillBonus % more. -->
+  <economy rewardPercent="2.5" crewKillBonus="30" hullRepair="0.48" missile="1.45" crew="10.89"
+      skillVeteran="0.25" skillMaster="0.37" jumpCost="1.21" startingMawjig="5"/>
+</rules>

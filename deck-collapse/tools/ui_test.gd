@@ -24,15 +24,39 @@ func _play_battle(player: ShipDesign, enemy: ShipDesign) -> void:
 	var screen := BattleScreen.new()
 	screen.size = Vector2(1600, 900)
 	add_child(screen)
-	screen.start(player, enemy)
+	var run := RunState.new(player)
+	screen.start(player, enemy, {}, run)
 	var turns := 0
-	while not screen.battle.over and turns < 25:
+	while not screen.battle.over and turns < 60:
 		await _wait_for_player(screen)
 		if screen.battle.over:
 			break
 		turns += 1
 		await _human_turn(screen)
-	print("%s vs %s: %d player turns, over=%s outcome=%s" % [player.name, enemy.name, turns, screen.battle.over, screen.battle.outcome])
+	print("%s vs %s: %d player turns, over=%s aftermath=%s outcome=%s" % [player.name, enemy.name, turns,
+		screen.battle.over, screen.battle.aftermath, screen.battle.outcome])
+	if screen.battle.over and screen.player_survived():
+		# Carry the ship into the store and on into a second battle, as Continue Run does.
+		run.record_battle(screen.battle)
+		var store := RunScreen.new()
+		store.run = run
+		add_child(store)
+		await get_tree().process_frame
+		var hull_before := run.hull()
+		run.repair_hull(3)
+		if run.hull() < hull_before:
+			problems.append("Hull repair lowered the hull.")
+		store.queue_free()
+		var second := BattleScreen.new()
+		second.size = Vector2(1600, 900)
+		add_child(second)
+		second.start(player, enemy, run.carry, run)
+		await get_tree().process_frame
+		if second.battle.ships[0].hull != run.hull():
+			problems.append("Carried hull %d became %d." % [run.hull(), second.battle.ships[0].hull])
+		print("  carried into battle 2: hull %d, crew %d, Mawjig %s" % [second.battle.ships[0].hull,
+			second.battle.living_crew_of(0).size(), Money.text(run.mawjig)])
+		second.queue_free()
 	screen.queue_free()
 	await get_tree().process_frame
 
@@ -101,6 +125,9 @@ func _human_turn(screen: BattleScreen) -> void:
 					await _settle(screen)
 					break
 			break
+	if not battle.over and battle.aftermath and battle.why_cannot_jump(0) == "":
+		await screen._on_jump()
+		return
 	if not battle.over and battle.active_side == 0:
 		if battle.why_cannot_burn(0) == "":
 			screen._on_tile_clicked(screen._tiles[0][battle.ships[0].first_system_of_type("engines")])

@@ -13,7 +13,7 @@ var hull := 16
 var missiles := 0
 ## Each system: { "id", "type", "level", and for weapons "name", "kind", "weapon_type" }.
 var systems: Array = []
-## Each crew member: { "name", "skill" (0 Green, 1 Trained, 2 Veteran), "station" (a system id) }.
+## Each crew member: { "name", "skills" (see CrewSkills), "station" (a system id) }.
 var crew: Array = []
 ## Where the design was loaded from, so saving a user design overwrites the same file.
 var source_path := ""
@@ -52,7 +52,7 @@ static func from_xml(xml_text: String) -> ShipDesign:
 		var crew_attrs: Dictionary = crew_node.attrs
 		design.crew.append({
 			"name": crew_attrs.get("name", "Crew"),
-			"skill": clampi(int(crew_attrs.get("skill", 0)), 0, 2),
+			"skills": CrewSkills.from_attributes(crew_attrs),
 			"station": crew_attrs.get("station", ""),
 		})
 	return design
@@ -73,8 +73,9 @@ func to_xml() -> String:
 		else:
 			lines.append('  <system type="%s" level="%d"/>' % [system.type, system.level])
 	for member in crew:
-		lines.append('  <crew name="%s" skill="%d" station="%s"/>' % [
-			XmlTree.escape(member.name), member.skill, XmlTree.escape(member.station)])
+		var skills := CrewSkills.to_attributes(member.skills)
+		lines.append('  <crew name="%s" station="%s"%s/>' % [
+			XmlTree.escape(member.name), XmlTree.escape(member.station), "" if skills == "" else " " + skills])
 	lines.append("</ship>")
 	return "\n".join(lines) + "\n"
 
@@ -97,18 +98,39 @@ func has_system(type: String) -> bool:
 	return systems.any(func(system): return system.type == type)
 
 
-## Design points: what the ship is worth, so two designs can be compared for a fair fight.
-func points() -> int:
-	var total := hull / 2 + missiles / 2
+## The ship's value in Mawjig, as the economy docs price a ship: its systems at their levels (the reactor
+## counted bar by bar), its weapons and its battlesuits. Crew and missiles are extra (see crew_value, total_cost).
+## A wreck's reward is a share of this value.
+func value() -> float:
+	var total := 0.0
 	for system in systems:
-		total += int(Catalog.systems[system.type].points_per_level) * system.level
+		var prices: Array = Catalog.systems[system.type].prices
+		for level in mini(system.level, prices.size()):
+			total += float(prices[level])
 		if system.type == "weapon":
-			total += system.weapon_type * 2
+			total += float(Catalog.weapon_profile(system.kind, system.weapon_type).price)
 		elif system.type == "evb":
-			total += Catalog.suit_kind(system.suit).cost * 2
-	for member in crew:
-		total += 3 + member.skill
+			total += float(Catalog.suit_kind(system.suit).price)
 	return total
+
+
+## What the crew are worth: each crew member's hire price plus their trained skills.
+func crew_value() -> float:
+	var total := 0.0
+	for member in crew:
+		total += float(Catalog.rule("economy", "crew"))
+		for skill in CrewSkills.NAMES:
+			var level := int(member.skills.get(skill, 0))
+			if level >= 1:
+				total += float(Catalog.rule("economy", "skillVeteran"))
+			if level >= 2:
+				total += float(Catalog.rule("economy", "skillMaster"))
+	return total
+
+
+## Everything the design costs to build: the ship, its crew and its missiles.
+func total_cost() -> float:
+	return value() + crew_value() + missiles * float(Catalog.rule("economy", "missile"))
 
 
 ## Problems that stop the design from being flown, as readable sentences. Empty means it can fly.

@@ -13,10 +13,12 @@ const OPTIONS := {
 		"help": "On: you only see what your Sensors show. Off: you see the enemy's crew, power and hand."},
 	"hull_scale": {"label": "Hull Scale", "choices": ["Ship Value", "75%", "50%", "150%"],
 		"help": "Multiplies every ship's hull. Lower makes battles shorter."},
-	"engine_burn": {"label": "Engine Burn", "choices": ["On", "Off"],
-		"help": "On: spend power on Engines for +5% evasion each until your next turn."},
+	"engine_efficiency": {"label": "Engine Efficiency", "choices": ["Classic", "Extra Burn"],
+		"help": "Classic: Engines give 0% evasion until you burn power in them, +5% per burn up to their level. Extra Burn: each Engines level gives 5% on its own and burns add more."},
+	"auto_burn": {"label": "Auto Burn", "choices": ["On", "Off"],
+		"help": "On: power you leave unspent when you end your turn goes into Engines automatically."},
 	"jump_escape": {"label": "Jump Escape", "choices": ["On", "Off"],
-		"help": "On: Spool Jump Drive cards build charges; at 3 you escape and the battle ends."},
+		"help": "On: once your jump drive is spooled you can jump away mid-battle. Off: you can only jump after the enemy is beaten."},
 	"crew_fights": {"label": "Crew Fights", "choices": ["On", "Off"],
 		"help": "On: boarders and defenders in the same system trade wounds at the end of the turn."},
 	"ai_level": {"label": "Enemy Captain", "choices": ["Normal", "Easy", "Hard"],
@@ -26,7 +28,7 @@ const OPTIONS := {
 	"animation_speed": {"label": "Animation Speed", "choices": ["Normal", "Fast", "Slow"],
 		"help": "How fast cards and shots move."},
 	"sound": {"label": "Sound", "choices": ["On", "Off"], "help": "Sound effects."},
-	"budget": {"label": "Designer Budget", "choices": ["Off", "60 Points", "80 Points"],
+	"budget": {"label": "Designer Budget", "choices": ["Off", "200 Mawjig", "250 Mawjig", "300 Mawjig"],
 		"help": "A design point limit in the Ship Designer."},
 }
 
@@ -80,6 +82,7 @@ func hull_multiplier() -> float:
 
 func budget_limit() -> int:
 	match value("budget"):
-		"60 Points": return 60
-		"80 Points": return 80
+		"200 Mawjig": return 200
+		"250 Mawjig": return 250
+		"300 Mawjig": return 300
 	return 0

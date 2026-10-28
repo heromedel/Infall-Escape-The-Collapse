@@ -10,7 +10,7 @@
   <system type="lifeSupport" level="1"/>
   <system type="medBay" level="1"/>
   <system type="weapon" id="burst" name="Patrol Laser" kind="laser" weaponType="2" level="2"/>
-  <crew name="Sgt. Vohr" skill="1" station="piloting"/>
-  <crew name="Pvt. Lenn" skill="0" station="burst"/>
-  <crew name="Pvt. Adair" skill="0" station="shields"/>
+  <crew name="Sgt. Vohr" station="piloting" piloting="1"/>
+  <crew name="Pvt. Lenn" station="burst"/>
+  <crew name="Pvt. Adair" station="shields"/>
 </ship>

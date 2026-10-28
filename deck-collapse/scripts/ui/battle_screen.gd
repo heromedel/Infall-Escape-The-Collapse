@@ -17,6 +17,8 @@ var autoplay := false
 var _player_autopilot: BattleAI
 var player_design: ShipDesign
 var enemy_design: ShipDesign
+## The run this battle belongs to, for showing rewards. The screen never changes it; main records the result.
+var run: RunState
 
 # What the captain is doing right now.
 var _busy := false
@@ -38,21 +40,27 @@ var _log: RichTextLabel
 var _info: RichTextLabel
 var _end_turn_button: Button
 var _reroute_button: Button
+var _jump_button: Button
 var _turn_label: Label
 var _stage: Control
 var _overlay: Control
+var _crew_popup: Control
+var _log_file := BattleLogFile.new()
 
 
-func start(player: ShipDesign, enemy: ShipDesign) -> void:
+## carry: the player's ship state from the run's last battle (empty for a fresh ship).
+func start(player: ShipDesign, enemy: ShipDesign, carry: Dictionary = {}, the_run: RunState = null) -> void:
 	player_design = player
 	enemy_design = enemy
+	run = the_run
 	var first := randi() % 2
 	match Settings.value("first_turn"):
 		"You": first = PLAYER
 		"Enemy": first = ENEMY
-	battle = Battle.new(player, enemy, first)
+	battle = Battle.new(player, enemy, first, 0, carry)
 	enemy_captain = BattleAI.new(Settings.value("ai_level"))
 	_player_autopilot = BattleAI.new("Normal")
+	_log_file.open(battle)
 	_build()
 	_refresh()
 	await get_tree().process_frame
@@ -97,6 +105,7 @@ func _build() -> void:
 			tile.crew_clicked.connect(_on_crew_clicked)
 			tile.burn_clicked.connect(func(_t): _act(func(): return battle.burn_engines(PLAYER)))
 			tile.hovered.connect(_on_tile_hovered)
+			tile.crew_hovered.connect(_on_crew_hovered)
 			_tile_rows[side].add_child(tile)
 			_tiles[side][system_id] = tile
 	column.add_child(_tile_rows[ENEMY])
@@ -143,10 +152,14 @@ func _build() -> void:
 	_end_turn_button.custom_minimum_size = Vector2(0, 46)
 	controls.add_child(_end_turn_button)
 	var small_row := UiKit.hbox(6)
-	_reroute_button = UiKit.button("Reroute Power", _on_reroute, 14)
+	_reroute_button = UiKit.button("Reroute", _on_reroute, 14)
 	_reroute_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_reroute_button.tooltip_text = "Only if you played no cards this turn: put a Power Cell from your deck into play, shuffle, and end your turn."
+	_reroute_button.tooltip_text = "Reroute Power. Only if you played no cards this turn: put a Power Cell from your deck into play, shuffle, and end your turn."
 	small_row.add_child(_reroute_button)
+	_jump_button = UiKit.button("Jump", _on_jump, 14)
+	_jump_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	_jump_button.tooltip_text = "Jump away once Spool Jump Drive cards have charged the drive. Needs Piloting working and manned (or Auto Pilot)."
+	small_row.add_child(_jump_button)
 	var menu_button := UiKit.button("Menu", _on_menu, 14)
 	small_row.add_child(menu_button)
 	controls.add_child(small_row)
@@ -223,9 +236,20 @@ func _refresh() -> void:
 	_refresh_enemy_hand()
 	var my_turn := battle.active_side == PLAYER and not battle.over
 	_turn_label.text = "YOUR TURN" if my_turn else ("ENEMY TURN" if not battle.over else "BATTLE OVER")
+	if battle.aftermath and not battle.over:
+		_turn_label.text = "ENEMY BEATEN"
 	_turn_label.add_theme_color_override("font_color", UiKit.GOOD if my_turn else Color("#FF8500"))
 	_end_turn_button.disabled = not my_turn or _busy
 	_reroute_button.disabled = not my_turn or _busy or battle.why_cannot_reroute(PLAYER) != ""
+	var ship := battle.ships[PLAYER]
+	_jump_button.text = "JUMP %d/%d" % [ship.jump_charge, battle.jump_charges_needed()]
+	var jump_reason := battle.why_cannot_jump(PLAYER)
+	_jump_button.disabled = not my_turn or _busy or jump_reason != ""
+	_jump_button.tooltip_text = "Jump away. " + (jump_reason if jump_reason != "" else "Ready!")
+	if not _jump_button.disabled:
+		_jump_button.add_theme_color_override("font_color", UiKit.GOOD)
+	else:
+		_jump_button.remove_theme_color_override("font_color")
 	_refresh_info()
 
 
@@ -287,6 +311,10 @@ func _instruction() -> String:
 	if _moving_crew >= 0:
 		return "Click a [color=#66ff66]green system[/color] to move %s there. Right-click to cancel." % battle.crew_by_id(_moving_crew).name
 	var ship := battle.ships[PLAYER]
+	if battle.aftermath:
+		if battle.why_cannot_jump(PLAYER) == "":
+			return "[color=#66ff66]Jump drive ready.[/color] Finish repairs and healing, then press [b]JUMP[/b] to leave."
+		return "The enemy is beaten. Repair, put out fires, send the wounded to the Med Bay, and play [b]Spool Jump Drive[/b] cards (%d/%d) to leave." % [ship.jump_charge, battle.jump_charges_needed()]
 	if ship.hand.any(func(c): return c.id == "power"):
 		return "Play [color=#ffc247]Power Cells[/color] to build up power, then spend it on your cards. Click your crew to move them between systems."
 	if ship.available_power() == 0 and ship.power_row.is_empty():
@@ -444,6 +472,53 @@ func _on_tile_hovered(tile: SystemTile, is_hovered: bool) -> void:
 	_refresh_info()
 
 
+## Hovering a crew token shows who they are: health, what they're doing and their six skills.
+func _on_crew_hovered(tile: SystemTile, crew_id: int) -> void:
+	if _crew_popup:
+		_crew_popup.queue_free()
+		_crew_popup = null
+	var member := battle.crew_by_id(crew_id)
+	if member.is_empty():
+		return
+	var owner_color := battle.ships[member.owner].color
+	var panel := UiKit.panel(Color("#0d1220"), owner_color.darkened(0.2), 8)
+	panel.z_index = 95
+	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var box := UiKit.vbox(6)
+	panel.add_child(box)
+	var health := Battle.WOUNDS_TO_DIE - int(member.wounds)
+	box.add_child(UiKit.label(member.name, 17, UiKit.TEXT, UiKit.display_bold_font))
+	var status: Array[String] = ["%s crew" % ("Your" if member.owner == PLAYER else "Enemy"), "health %d/%d" % [health, Battle.WOUNDS_TO_DIE]]
+	if member.controlled_by >= 0:
+		status.append("mind controlled")
+	if member.leaving_to != "":
+		status.append("forcing doors (%d turn%s)" % [member.leaving_turns, "" if member.leaving_turns == 1 else "s"])
+	if member.owner == battle.active_side:
+		if member.moved:
+			status.append("moved this turn")
+		if member.acted:
+			status.append("acted this turn")
+	box.add_child(UiKit.label(" · ".join(status), 13, UiKit.MUTED))
+	var grid := GridContainer.new()
+	grid.columns = 2
+	grid.add_theme_constant_override("h_separation", 6)
+	grid.add_theme_constant_override("v_separation", 6)
+	for skill in CrewSkills.NAMES:
+		grid.add_child(SkillChip.new().setup(skill, int(member.skills.get(skill, 0)), false))
+	box.add_child(grid)
+	add_child(panel)
+	_crew_popup = panel
+	await get_tree().process_frame
+	if not is_instance_valid(panel):
+		return
+	var anchor := tile.crew_token_center(crew_id)
+	var popup_size := panel.get_combined_minimum_size()
+	var at := anchor + Vector2(18, -popup_size.y - 14)
+	at.x = clampf(at.x, 8, size.x - popup_size.x - 8)
+	at.y = clampf(at.y, 8, size.y - popup_size.y - 8)
+	panel.position = at
+
+
 func _cancel_selection() -> void:
 	if _targeting_uid >= 0 or _moving_crew >= 0:
 		_targeting_uid = -1
@@ -463,6 +538,13 @@ func _on_end_turn() -> void:
 		return
 	_cancel_selection()
 	await _act(func(): return battle.end_turn(PLAYER))
+	await _run_ai_turns()
+
+
+func _on_jump() -> void:
+	if _busy or battle.why_cannot_jump(PLAYER) != "":
+		return
+	await _act(func(): return battle.jump(PLAYER))
 	await _run_ai_turns()
 
 
@@ -508,6 +590,7 @@ func _run_ai_turns() -> void:
 			"move": events = battle.move_crew(side, action.crew, action.system)
 			"burn": events = battle.burn_engines(side)
 			"reroute": events = battle.reroute_power(side)
+			"jump": events = battle.jump(side)
 			_: events = battle.end_turn(side)
 		if events.any(func(e): return e.type == "refused"):
 			events = battle.end_turn(side)
@@ -526,7 +609,13 @@ func _run_ai_turns() -> void:
 
 func _play_events(events: Array) -> void:
 	for event in events:
+		_log_file.write_event(event, battle)
+	for event in events:
 		await _play_event(event)
+
+
+func _exit_tree() -> void:
+	_log_file.close()
 
 
 func _play_event(event: Dictionary) -> void:
@@ -545,6 +634,8 @@ func _play_event(event: Dictionary) -> void:
 			if event.side == PLAYER:
 				Sounds.play("draw")
 				_refresh()
+				if event.get("bonus", false):
+					_fx.float_text(_hand.card_center(event.card.uid) + Vector2(0, -60), "+1 CARD", UiKit.GOOD, 20)
 				await _wait(0.12)
 		"card_played":
 			await _animate_card_played(event)
@@ -620,10 +711,21 @@ func _play_event(event: Dictionary) -> void:
 			_fx.float_text(_tile_center(event.side, event.system), "+5% EVASION", UiKit.ACCENT, 18)
 		"jump_charge":
 			Sounds.play("power", 0.0, 0.7)
-			_fx.float_text(_shield_point(event.side), "JUMP %d/%d" % [event.charge, Battle.JUMP_CHARGES_NEEDED], UiKit.ACCENT, 24)
+			_fx.float_text(_shield_point(event.side), "JUMP %d/%d" % [event.charge, battle.jump_charges_needed()], UiKit.ACCENT, 24)
 		"jumped":
 			Sounds.play("jump")
-			await _wait(0.6)
+			_fx.float_text(_shield_point(event.side), "JUMP!", UiKit.ACCENT, 36)
+			await _wait(0.8)
+		"enemy_beaten":
+			Sounds.play("victory")
+			_refresh()
+			var title: String = {Battle.OUTCOME_DESTROYED: "ENEMY DESTROYED", Battle.OUTCOME_CREW_LOST: "ENEMY CREW LOST",
+				Battle.OUTCOME_ESCAPED: "ENEMY FLED"}.get(event.outcome, "ENEMY BEATEN")
+			await _fx.banner(title, UiKit.GOOD)
+		"fire_out":
+			_fx.float_text(_tile_center(event.side, event.system), "FIRE OUT", Color("#cfd6e8"), 18)
+		"crew_leaving":
+			_fx.float_text(_crew_point(event.crew), "FORCING DOORS", UiKit.ACCENT, 16)
 		"reroute":
 			Sounds.play("power")
 			_fx.float_text(_shield_point(event.side), "POWER REROUTED", Color("#ffc247"), 22)
@@ -815,36 +917,39 @@ func _add_log(text: String, side: int) -> void:
 # ---------------------------------------------------------------- end of battle
 
 func _show_result(event: Dictionary) -> void:
+	var enemy := battle.ships[ENEMY]
+	var mine := battle.ships[PLAYER]
+	var survived := player_survived()
 	var title := "VICTORY"
 	var color := UiKit.GOOD
 	var text := ""
-	var enemy := battle.ships[ENEMY]
-	var mine := battle.ships[PLAYER]
-	match event.outcome:
-		Battle.OUTCOME_DESTROYED:
-			if event.winner == PLAYER:
-				text = "%s breaks apart." % enemy.name
-				Sounds.play("victory")
-			else:
-				title = "DEFEAT"
-				color = UiKit.DANGER
-				text = "%s is destroyed." % mine.name
-				Sounds.play("defeat")
-		Battle.OUTCOME_CREW_LOST:
-			if event.winner == PLAYER:
-				text = "No one is left alive aboard %s." % enemy.name
-				Sounds.play("victory")
-			else:
-				title = "DEFEAT"
-				color = UiKit.DANGER
-				text = "Your whole crew is lost."
-				Sounds.play("defeat")
-		Battle.OUTCOME_ESCAPED:
-			title = "ESCAPED"
-			color = UiKit.ACCENT
-			text = "You jumped away." if event.escaped == PLAYER else "%s jumped away before you could finish it." % enemy.name
-	var stats := "Turns: %d   ·   Your hull: %d/%d   ·   Enemy hull: %d/%d" % [battle.turn_number, mine.hull, mine.hull_max, enemy.hull, enemy.hull_max]
-	_show_overlay(title, text + "\n\n" + stats, color, false)
+	if not survived:
+		title = "DEFEAT"
+		color = UiKit.DANGER
+		text = "%s is destroyed." % mine.name if mine.hull <= 0 else "Your whole crew is lost."
+		Sounds.play("defeat")
+	elif event.outcome == Battle.OUTCOME_ESCAPED:
+		title = "ESCAPED" if event.escaped == PLAYER else "ENEMY FLED"
+		color = UiKit.ACCENT
+		text = "You jumped away mid-battle." if event.escaped == PLAYER else "%s jumped away; you regrouped and jumped on." % enemy.name
+	else:
+		text = ("%s broke apart" % enemy.name if event.outcome == Battle.OUTCOME_DESTROYED else "No one is left alive aboard %s" % enemy.name) + ", and you jumped away."
+	var lines: Array[String] = [text, ""]
+	lines.append("Turns: %d   ·   Your hull: %d/%d   ·   Crew: %d" % [battle.turn_number, mine.hull, mine.hull_max, battle.living_crew_of(PLAYER).size()])
+	if run:
+		if survived:
+			var reward := RunState.wreck_reward(enemy.design, event.outcome) if battle.winner == PLAYER and event.outcome != Battle.OUTCOME_ESCAPED else 0.0
+			var jump_cost := float(Catalog.rule("economy", "jumpCost", 0))
+			lines.append("Salvage: +%s   ·   Jump: -%s   ·   Mawjig after: %s" % [Money.text(reward, false), Money.text(jump_cost, false),
+				Money.text(maxf(0.0, run.mawjig + reward - jump_cost))])
+		else:
+			lines.append("Run over: %d battle%s won, %s banked." % [run.battles_won, "" if run.battles_won == 1 else "s", Money.text(run.mawjig)])
+	_show_overlay(title, "\n".join(lines), color, false)
+
+
+## True once the battle is over and the player's ship and crew made it out.
+func player_survived() -> bool:
+	return battle.over and battle.ships[PLAYER].hull > 0 and not battle.living_crew_of(PLAYER).is_empty()
 
 
 func _show_overlay(title: String, text: String, color: Color, can_resume: bool) -> void:
@@ -876,11 +981,17 @@ func _show_overlay(title: String, text: String, color: Color, can_resume: bool) 
 		buttons.add_child(UiKit.primary_button("Resume", func():
 			_overlay.queue_free()
 			_overlay = null, 18))
-	buttons.add_child(UiKit.primary_button("Rematch", func(): finished.emit("rematch"), 18) if not can_resume else UiKit.button("Restart", func(): finished.emit("rematch"), 18))
+		buttons.add_child(UiKit.button("Restart", func(): finished.emit("rematch"), 18))
+	elif player_survived():
+		buttons.add_child(UiKit.primary_button("Continue Run", func(): finished.emit("continue"), 18))
+	else:
+		buttons.add_child(UiKit.primary_button("Retry Battle", func(): finished.emit("rematch"), 18))
 	buttons.add_child(UiKit.button("Change Ships", func(): finished.emit("setup"), 18))
 	buttons.add_child(UiKit.button("Main Menu", func(): finished.emit("menu"), 18))
 	box.add_child(buttons)
 	_overlay.modulate.a = 0.0
+	_hand.input_enabled = false
+	_overlay.tree_exited.connect(func(): if is_instance_valid(_hand): _hand.input_enabled = true)
 	create_tween().tween_property(_overlay, "modulate:a", 1.0, 0.3)
 
 

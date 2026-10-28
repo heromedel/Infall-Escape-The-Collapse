@@ -22,6 +22,9 @@ func _ready() -> void:
 	var title := UiKit.heading("SETTINGS", 32)
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	top.add_child(title)
+	top.add_child(UiKit.button("Open Logs Folder", func():
+		DirAccess.make_dir_recursive_absolute(BattleLogFile.FOLDER)
+		OS.shell_open(BattleLogFile.folder_path()), 15))
 	top.add_child(UiKit.button("Reset to Defaults", _reset, 15))
 	box.add_child(top)
 	box.add_child(UiKit.label("Defaults follow the design document. Click a value to change it.", 14, UiKit.MUTED))

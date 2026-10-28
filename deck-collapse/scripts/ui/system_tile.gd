@@ -10,6 +10,8 @@ signal tile_clicked(tile: SystemTile)
 signal crew_clicked(tile: SystemTile, crew_id: int)
 signal burn_clicked(tile: SystemTile)
 signal hovered(tile: SystemTile, is_hovered: bool)
+## The crew token under the mouse changed: a crew id, or -1 when the mouse left all tokens.
+signal crew_hovered(tile: SystemTile, crew_id: int)
 
 var battle: Battle
 var ship_side := 0
@@ -52,10 +54,22 @@ func setup(the_battle: Battle, side: int, id: String, viewer: int) -> SystemTile
 	return self
 
 
+var _hovered_crew := -1
+
+
 func _process(delta: float) -> void:
 	_time += delta
 	if flash > 0.0:
 		flash = maxf(0.0, flash - delta * 2.5)
+	var under := -1
+	if _hover:
+		var mouse := get_local_mouse_position()
+		for crew_id in _token_rects:
+			if _token_rects[crew_id].grow(2).has_point(mouse):
+				under = crew_id
+	if under != _hovered_crew:
+		_hovered_crew = under
+		crew_hovered.emit(self, under)
 	queue_redraw()
 
 
@@ -201,11 +215,17 @@ func _draw_token(member: Dictionary, center: Vector2) -> void:
 		draw_arc(center, TOKEN_RADIUS - 1, start, start + TAU / 3.0 - 0.24, 8, Color(UiKit.DANGER if lost else UiKit.GOOD, alpha), 2.5, true)
 	var initials := _initials(member.name)
 	UiKit.draw_text_centered(self, UiKit.display_bold_font, initials, Rect2(center - Vector2(12, 9), Vector2(24, 18)), 11, Color(Color.WHITE, alpha))
-	# Skill pips under the token.
-	for s in member.skill:
-		draw_circle(center + Vector2((s - (member.skill - 1) / 2.0) * 6.0, TOKEN_RADIUS + 3), 1.8, UiKit.ACCENT)
+	# Pips under the token: their skill for the system they're in (Veteran 1, Master 2).
+	var skill := CrewSkills.level(member.skills, battle.ships[ship_side].systems[system_id].type)
+	for s in skill:
+		draw_circle(center + Vector2((s - (skill - 1) / 2.0) * 6.0, TOKEN_RADIUS + 3), 1.8, UiKit.ACCENT)
 	if member.controlled_by >= 0:
 		draw_arc(center, TOKEN_RADIUS + 2, 0, TAU, 24, UiKit.MIND, 2.5, true)
+	if member.leaving_to != "":
+		# Forcing the doors: a turning dashed ring.
+		for dash in 8:
+			var angle := _time * 2.0 + dash * TAU / 8.0
+			draw_arc(center, TOKEN_RADIUS + 3, angle, angle + 0.4, 4, UiKit.ACCENT, 2.0, true)
 
 
 func _state_color(ship: ShipState, system: Dictionary) -> Color:
@@ -231,7 +251,7 @@ func _status_text(ship: ShipState, system: Dictionary) -> String:
 		"engines":
 			return "Evasion %d%%" % battle.evasion(ship)
 		"piloting":
-			return "Jump %d/%d" % [ship.jump_charge, Battle.JUMP_CHARGES_NEEDED] if ship.jump_charge > 0 else "Evasion %d%%" % battle.evasion(ship)
+			return "Jump %d/%d" % [ship.jump_charge, battle.jump_charges_needed()]
 		"weapon":
 			var kind := Catalog.weapon_kind(system.kind)
 			var text := "%s · T%d" % [kind.name, system.weapon_type]
@@ -245,6 +265,13 @@ func _status_text(ship: ShipState, system: Dictionary) -> String:
 			return "CLOAKED" if ship.cloaked else "Level %d" % system.level
 		"medBay":
 			return "Heals %d" % ship.capacity(system.id)
+		"sensors", "airlock":
+			var level := battle.effective_level(ship, system.id)
+			var manned := level > ship.capacity(system.id)
+			if system.type == "airlock":
+				var turns := int(Catalog.by_skill(Catalog.rule("airlock", "boarderExitTurns", [0]), level))
+				return "Lv %d%s · doors %d turn%s" % [level, " manned" if manned else "", turns, "" if turns == 1 else "s"]
+			return "Level %d%s" % [level, " (manned)" if manned else ""]
 	return "Level %d" % system.level
 
 

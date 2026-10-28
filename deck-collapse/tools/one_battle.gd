@@ -19,6 +19,8 @@ func _ready() -> void:
 	var actions := 0
 	var started := Time.get_ticks_msec()
 	while not battle.over and actions < 3000:
+		if battle.aftermath and battle.active_side == 1:
+			break
 		var side := battle.active_side
 		var action: Dictionary = captains[side].next_action(battle, side)
 		var events: Array = load("res://tools/simulate.gd").perform(battle, side, action)

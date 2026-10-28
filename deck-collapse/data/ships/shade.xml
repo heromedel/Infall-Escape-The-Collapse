@@ -12,7 +12,7 @@
   <system type="cloak" level="1"/>
   <system type="weapon" id="needle" name="Needle Beam" kind="beam" weaponType="1" level="1"/>
   <system type="weapon" id="twin" name="Twin Laser" kind="laser" weaponType="1" level="2"/>
-  <crew name="Rhee" skill="1" station="piloting"/>
-  <crew name="Calder" skill="0" station="engines"/>
-  <crew name="Moss" skill="0" station="twin"/>
+  <crew name="Rhee" station="piloting" piloting="1"/>
+  <crew name="Calder" station="engines"/>
+  <crew name="Moss" station="twin"/>
 </ship>

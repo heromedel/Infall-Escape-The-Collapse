@@ -13,8 +13,8 @@
   <system type="airlock" level="1"/>
   <system type="weapon" id="halo" name="Halo Beam" kind="beam" weaponType="2" level="2"/>
   <system type="weapon" id="spark" name="Spark Torpedo" kind="missile" weaponType="1" level="1"/>
-  <crew name="Ael" skill="1" station="piloting"/>
-  <crew name="Iru" skill="0" station="shields"/>
-  <crew name="Senn" skill="0" station="halo"/>
-  <crew name="Oto" skill="0" station="engines"/>
+  <crew name="Ael" station="piloting" piloting="1"/>
+  <crew name="Iru" station="shields"/>
+  <crew name="Senn" station="halo"/>
+  <crew name="Oto" station="engines"/>
 </ship>

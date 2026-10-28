@@ -159,6 +159,15 @@ static func paint(canvas: CanvasItem, art: String, center: Vector2, size: float,
 			for i in 3:
 				var link_center: Vector2 = p.call(-0.55 + i * 0.55, 0.45 - i * 0.45)
 				canvas.draw_arc(link_center, s * 0.3, 0, TAU, 20, color if i != 1 else light, width * 1.1)
+		"combat":
+			# Two crossed blades.
+			for direction in [-1.0, 1.0]:
+				var tip: Vector2 = p.call(0.75 * direction, -0.8)
+				var hilt: Vector2 = p.call(-0.45 * direction, 0.45)
+				canvas.draw_line(hilt, tip, light, width * 1.4)
+				var across := (tip - hilt).normalized().orthogonal() * s * 0.25
+				canvas.draw_line(hilt + across, hilt - across, color, width * 1.2)
+				canvas.draw_line(hilt, hilt + (hilt - tip).normalized() * s * 0.3, color, width * 1.6)
 		"suit_bolt":
 			canvas.draw_circle(center, s * 0.5, color)
 		"reactor":

@@ -10,6 +10,8 @@ extends Control
 
 var player_design: ShipDesign
 var enemy_design: ShipDesign
+## The current run: starts with each battle picked on the setup screen, continues through "Continue Run".
+var run: RunState
 var _screen: Control
 var _options := {}
 
@@ -52,6 +54,7 @@ func show_setup() -> void:
 	setup.fight.connect(func(player: ShipDesign, enemy: ShipDesign):
 		player_design = player
 		enemy_design = enemy
+		run = RunState.new(player_design)
 		show_battle())
 	setup.customize.connect(func(design: ShipDesign): show_designer(design.duplicate_design()))
 	setup.back.connect(show_menu)
@@ -59,18 +62,33 @@ func show_setup() -> void:
 
 
 func show_battle() -> void:
+	if run == null:
+		run = RunState.new(player_design)
 	var battle_screen := BattleScreen.new()
 	battle_screen.autoplay = _options.has("autoplay")
-	battle_screen.finished.connect(_on_battle_finished)
+	battle_screen.finished.connect(func(choice: String): _on_battle_finished(choice, battle_screen.battle))
 	_swap(battle_screen)
-	battle_screen.start(player_design, enemy_design)
+	battle_screen.start(player_design, enemy_design, run.carry, run)
 
 
-func _on_battle_finished(choice: String) -> void:
+func _on_battle_finished(choice: String, battle: Battle) -> void:
 	match choice:
+		"continue":
+			run.record_battle(battle)
+			show_run()
 		"rematch": show_battle()
 		"setup": show_setup()
 		_: show_menu()
+
+
+func show_run() -> void:
+	var run_screen := RunScreen.new()
+	run_screen.run = run
+	run_screen.next_battle.connect(func():
+		enemy_design = _random_enemy()
+		show_battle())
+	run_screen.end_run.connect(show_menu)
+	_swap(run_screen)
 
 
 func show_designer(design: ShipDesign) -> void:
@@ -105,6 +123,11 @@ func _swap(next_screen: Control) -> void:
 	add_child(_screen)
 	_screen.modulate.a = 0.0
 	create_tween().tween_property(_screen, "modulate:a", 1.0, 0.25)
+
+
+func _random_enemy() -> ShipDesign:
+	var choices := Catalog.designs.filter(func(d): return d.built_in and d.name != player_design.name)
+	return choices[randi() % choices.size()]
 
 
 func _design_named(ship_name: String) -> ShipDesign:

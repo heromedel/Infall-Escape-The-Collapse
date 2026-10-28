@@ -12,7 +12,7 @@
   <system type="airlock" level="1"/>
   <system type="weapon" id="triad" name="Triad Laser" kind="laser" weaponType="2" level="2"/>
   <system type="weapon" id="lance" name="Lance Torpedo" kind="missile" weaponType="1" level="1"/>
-  <crew name="Mara Okafor" skill="1" station="piloting"/>
-  <crew name="Jun Halvorsen" skill="0" station="triad"/>
-  <crew name="Teo Brandt" skill="0" station="shields"/>
+  <crew name="Mara Okafor" station="piloting" piloting="1"/>
+  <crew name="Jun Halvorsen" station="triad"/>
+  <crew name="Teo Brandt" station="shields"/>
 </ship>

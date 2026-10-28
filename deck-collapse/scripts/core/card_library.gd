@@ -26,7 +26,7 @@ const FIXED_CARDS := {
 	"shield": {"name": "Raise Shield", "cost": 1, "group": GROUP_DEFENSE, "target": TARGET_NONE, "art": "shield",
 		"text": "Raise 1 shield layer. Its power stays under it until the layer is hit."},
 	"jump": {"name": "Spool Jump Drive", "cost": 1, "group": GROUP_TACTIC, "target": TARGET_NONE, "art": "jump",
-		"text": "Add 1 jump charge. At 3 charges you jump away and the battle ends."},
+		"text": "Add 1 charge to the jump drive. Fully charged (6), you can JUMP away. Needs a working, manned Piloting."},
 	"restore": {"name": "Restore Environment", "cost": 1, "group": GROUP_CREW, "target": TARGET_OWN_SYSTEM, "art": "restore",
 		"text": "Seal the breach in one of your systems. Crew there recover 1 wound."},
 	"teleport": {"name": "Teleport", "cost": 1, "group": GROUP_TACTIC, "target": TARGET_CREW_THEN_SYSTEM, "art": "teleport",
@@ -40,7 +40,7 @@ const FIXED_CARDS := {
 	"battery": {"name": "Backup Cell", "cost": 0, "group": GROUP_POWER, "target": TARGET_NONE, "art": "battery",
 		"text": "+1 power this turn only."},
 	"repair": {"name": "Repair", "cost": 0, "group": GROUP_CREW, "target": TARGET_OWN_SYSTEM, "art": "repair",
-		"text": "A crew member in the system repairs 1 damage (2 if Veteran)."},
+		"text": "A crew member in the system repairs 1 damage; a repair Veteran 2. A Master can act again."},
 	"extinguish": {"name": "Extinguish Fire", "cost": 0, "group": GROUP_CREW, "target": TARGET_OWN_SYSTEM, "art": "extinguish",
 		"text": "A crew member in the system puts out its fire."},
 	"airlock": {"name": "Cycle Airlock", "cost": 0, "group": GROUP_CREW, "target": TARGET_OWN_SYSTEM, "art": "airlock",
@@ -99,7 +99,7 @@ static func deck_list(design: ShipDesign) -> Array:
 	for system in design.systems:
 		var system_definition: Dictionary = Catalog.systems[system.type]
 		var card_id: String = system_definition.card
-		if card_id == "" or card_id == "jump" and Settings.value("jump_escape") == "Off":
+		if card_id == "":
 			continue
 		for i in system.level * system_definition.cards_per_level:
 			entries.append({"id": card_id, "system": system.id})
@@ -117,7 +117,8 @@ static func deck_summary(design: ShipDesign) -> Array:
 	var counts := {}
 	var order: Array = []
 	for entry in deck_list(design):
-		var key: String = entry.id + "|" + entry.system
+		# Weapon and suit cards differ by system; other cards are the same whichever system added them.
+		var key: String = entry.id + ("|" + entry.system if entry.id in ["weapon", "suit"] else "")
 		if not counts.has(key):
 			counts[key] = {"entry": entry, "count": 0}
 			order.append(key)

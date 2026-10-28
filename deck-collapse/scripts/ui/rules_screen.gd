@@ -7,54 +7,68 @@ signal back
 const RULES := """[font_size=30][b]How to Play[/b][/font_size]
 
 [color=#ffb347][b]The goal[/b][/color]
-Bring the enemy's [b]hull to 0[/b] or kill their whole crew. They'll try the same. A captain can also spool their jump drive and escape.
+Bring the enemy's [b]hull to 0[/b] or kill their whole crew. Then the battle goes on for you alone: repair, fight fires, heal, spool the jump drive and [b]JUMP[/b] to leave. In a run, your ship carries into the next battle exactly as you left it.
 
 [color=#ffb347][b]Your deck is your ship[/b][/color]
-Every system puts cards in your deck: the Reactor adds [b]Power Cells[/b], Shields add [b]Raise Shield[/b], each weapon system adds its weapon cards, and so on. Every crew member adds [b]Repair[/b], [b]Extinguish Fire[/b] and, with Airlock Control, [b]Cycle Airlock[/b]. Cards are never discarded: when a card leaves play it is shuffled back into your deck.
+Every system puts cards in your deck: the Reactor adds [b]Power Cells[/b], Shields add [b]Raise Shield[/b], each weapon system adds its weapon cards, Engines and Piloting add [b]Spool Jump Drive[/b], and so on. Every crew member adds [b]Repair[/b], [b]Extinguish Fire[/b] and, with Airlock Control, [b]Cycle Airlock[/b]. Cards are never discarded: when a card leaves play it is shuffled back into your deck.
 
 [color=#ffb347][b]A turn[/b][/color]
 1. Start of turn: cloaks and burns end, the Med Bay heals.
 2. Your power recharges.
-3. Draw a card.
+3. Draw a card, plus any extra cards your crew earn (below).
 4. Play cards and move crew, in any order.
-5. End of turn: fires burn, breaches choke, boarders sabotage.
+5. End of turn: unspent power burns in Engines (Auto Burn), fires burn and spread, breaches choke, boarders sabotage.
 
 [color=#ffb347][b]Power[/b][/color]
 Play a [b]Power Cell[/b] from your hand to put it in your power row; it stays there all battle. Spending power flips cells; they recharge at the start of your turn. Damage to the Reactor takes cells offline. If you play no cards at all in a turn, you can [b]Reroute Power[/b]: a Power Cell from your deck comes into play, the deck is shuffled, and your turn ends.
 
 [color=#ffb347][b]System limits[/b][/color]
-A system's level is how much power its cards can use in one turn. Damage lowers it; a system with all its levels damaged is broken. Ion and hacks take a system offline through its captain's next turn. A weapon's [b]Type[/b] is its power cost, so a damaged weapon system may be unable to fire.
+A system's level is how much power its cards can use in one turn. Damage lowers it; a system with all its levels damaged is broken. Ion and hacks take a system offline through its captain's next turn. A weapon's [b]Type[/b] is its power cost.
+
+[color=#ffb347][b]Evasion[/b][/color]
+Engines dodge only when powered: burn power in them (click BURN on the Engines tile, or leave power unspent with Auto Burn). In Classic mode, 1 burn gives 5%, 2 give 10%, up to the Engines level. A pilot is needed to dodge at all (unless Auto Pilot), and a pilot and an engineer each add 5/7/10% while the engines run. Cloaking adds 40%.
 
 [color=#ffb347][b]Shooting[/b][/color]
-Play a weapon card, then click an enemy system. Each shot can miss against the target's [b]evasion[/b] (Engines, a pilot, burns and cloaking). A hit damages the system and the hull.
-• Pulse and heavy lasers, chain repeaters and ion: each shield layer stops one shot and drops.
-• Torpedoes ignore shields but use missiles.
-• Beams never miss, but each shield layer cuts their damage.
+Play a weapon card, then click an enemy system. Each shot can miss against the target's evasion. A hit damages the system and the hull, and may wound the crew inside.
+• Lasers, chain repeaters and ion: each shield layer stops one shot and drops.
+• Torpedoes ignore shields but use missiles; beams never miss, but each shield layer cuts their damage.
 
 [color=#ffb347][b]Shields[/b][/color]
 [b]Raise Shield[/b] costs 1 power; that power cell stays under the layer until the layer is hit. You can hold one layer per working Shields level.
 
 [color=#ffb347][b]Crew[/b][/color]
-Click one of your crew, then a green system, to move them (once per turn). Crew in a system give a bonus: weapons hit more often, Piloting and Engines add evasion, and Sensors 3 manned reveals the enemy's hand. Crew cards need a free crew member in the system. Each crew member can do one crew card per turn. A crew member dies at their third wound; the Med Bay heals them.
+Click one of your crew, then a green system, to move them (once per turn). Hover a crew member to see their skills: Piloting, Engines, Shields, Weapons, Repair and Combat, each untrained, Veteran or Master.
+• Crew working Shields, a weapon or Engines may draw an [b]extra card[/b] for it each turn (10/15/20% by skill): the system recharging faster.
+• Crew in a damaged or burning system may draw an extra Repair or Extinguish Fire.
+• A manned Sensors or Airlock Control works one level higher; its top level is only reached manned.
+• Crew cards need a free crew member in the system; each crew member does one per turn (a repair Master can do two).
+A crew member dies at their third wound; the Med Bay heals them.
 
 [color=#ffb347][b]Hazards[/b][/color]
-[b]Fire[/b] damages its system and wounds everyone inside at the end of your turn. [b]Breaches[/b] wound everyone inside; Restore Environment seals them. If [b]Life Support[/b] is broken or offline, all your crew take a wound each turn. Venting a system through the airlock puts out its fire but kills anyone in it.
+[b]Fire[/b] damages its system and wounds everyone inside at the end of your turn, and may spread to the system beside it. It burns out when its system is broken, and may choke out while Life Support is down. [b]Breaches[/b] wound everyone inside; Restore Environment seals them. If [b]Life Support[/b] is broken or offline, all your crew take a wound each turn. Venting a system through the airlock puts out its fire but kills anyone in it.
+
+[color=#ffb347][b]Airlock Control[/b][/color]
+Each level makes enemy boarders take a turn longer to force their way out of a system, and makes fire spread less often.
 
 [color=#ffb347][b]Tactics[/b][/color]
-[b]Teleport[/b] sends crew to either ship: boarders damage their system and the hull each enemy turn. [b]Mind Control[/b] turns an enemy against their own ship for a turn. [b]Hack[/b] shuts a system down. [b]Cloak[/b] adds 40% evasion. [b]Battlesuits[/b] from an EVB Dock fight on their own for 3 turns.
+[b]Teleport[/b] sends crew to either ship: boarders damage their system and the hull each enemy turn. [b]Mind Control[/b] turns an enemy against their own ship for a turn. [b]Hack[/b] shuts a system down. [b]Battlesuits[/b] from an EVB Dock fight on their own for 3 turns.
 
 [color=#ffb347][b]Sensors[/b][/color]
-Level 1 shows enemy crew. Level 2 shows their power. Level 3 shows their weapon cards; with a crew member there, their whole hand.
+Level 1 shows enemy crew, 2 their power, 3 their weapon cards, 4 (level 3 manned) their whole hand.
+
+[color=#ffb347][b]Runs and Mawjig[/b][/color]
+After you jump, Continue Run takes your ship to a random enemy. A beaten enemy pays salvage: 2.5% of its ship's value, 30% more if you killed its crew. Each jump costs 1.21 Mawjig. Between battles you can repair hull, buy missiles and hire crew.
 
 [color=#ffb347][b]Controls[/b][/color]
-Click a card to play it; aimed cards then need a target. Right-click or Esc cancels. Space ends your turn. Hover anything for details.
+Click a card to play it; aimed cards then need a target. Right-click or Esc cancels. Space ends your turn. Hover anything for details. Battle logs are saved; Settings has a button to open their folder.
 
 [color=#ffb347][b]Rules this prototype adds[/b][/color] [color=#8e98b5](each can be changed in Settings or the XML files)[/color]
-• Engine Burn: spend 1 power on Engines for +5% evasion until your next turn.
-• Jump Escape: Spool Jump Drive cards build charges; at 3 you jump away.
+• Engine Efficiency (Classic or Extra Burn) and Auto Burn.
+• Jump Escape: jumping away mid-battle is allowed.
 • Crew Fights: boarders and defenders in the same system trade wounds each turn.
 • Each crew member can do one crew card per turn.
 • Ion and hacks on a Reactor knock one Power Cell loose instead of shutting it down.
+• Fire spreads to the neighbouring tile; tiles stand in for rooms until ships have floor plans.
 """
 
 

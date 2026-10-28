@@ -13,6 +13,6 @@
   <system type="mindControl" level="1"/>
   <system type="weapon" id="repeater" name="Chain Repeater" kind="chain" weaponType="2" level="2"/>
   <system type="weapon" id="stunner" name="Ion Stunner" kind="ion" weaponType="1" level="1"/>
-  <crew name="Vael" skill="1" station="piloting"/>
-  <crew name="Nix" skill="0" station="repeater"/>
+  <crew name="Vael" station="piloting" piloting="1"/>
+  <crew name="Nix" station="repeater"/>
 </ship>

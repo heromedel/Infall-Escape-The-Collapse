@@ -13,8 +13,8 @@
   <system type="teleport" level="1"/>
   <system type="weapon" id="spike" name="Spike Laser" kind="laser" weaponType="1" level="1"/>
   <system type="weapon" id="charge" name="Breach Charge" kind="missile" weaponType="1" level="1"/>
-  <crew name="Krell" skill="2" station="teleport"/>
-  <crew name="Vash" skill="1" station="teleport"/>
-  <crew name="Toor" skill="1" station="piloting"/>
-  <crew name="Ima" skill="0" station="spike"/>
+  <crew name="Krell" station="teleport" combat="2" repair="1"/>
+  <crew name="Vash" station="teleport" combat="1"/>
+  <crew name="Toor" station="piloting" piloting="1"/>
+  <crew name="Ima" station="spike"/>
 </ship>

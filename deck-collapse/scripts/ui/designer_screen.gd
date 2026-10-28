@@ -19,7 +19,7 @@ var _systems_box: VBoxContainer
 var _crew_box: VBoxContainer
 var _deck_grid: GridContainer
 var _deck_title: Label
-var _points_label: Label
+var _worth_label: Label
 var _problems_label: Label
 var _status_label: Label
 var _identity_box: VBoxContainer
@@ -44,7 +44,7 @@ func _ready() -> void:
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	top.add_child(title)
 	var presets := OptionButton.new()
-	presets.add_item("Start from a ship…")
+	presets.add_item("Load a ship…")
 	for d in Catalog.designs:
 		presets.add_item(d.name + ("" if d.built_in else " (yours)"))
 	presets.item_selected.connect(func(index):
@@ -170,8 +170,8 @@ func _rebuild_identity() -> void:
 	note.text_changed.connect(func(): design.note = note.text)
 	_identity_box.add_child(note)
 
-	_points_label = UiKit.heading("", 22, UiKit.TEXT)
-	_identity_box.add_child(_points_label)
+	_worth_label = UiKit.heading("", 22, UiKit.TEXT)
+	_identity_box.add_child(_worth_label)
 	_problems_label = UiKit.label("", 14, UiKit.DANGER)
 	_problems_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_identity_box.add_child(_problems_label)
@@ -283,20 +283,15 @@ func _rebuild_crew() -> void:
 		child.queue_free()
 	for member in design.crew:
 		var panel := UiKit.panel(UiKit.PANEL_LIGHT, UiKit.LINE, 8)
+		var rows := UiKit.vbox(6)
+		panel.add_child(rows)
 		var row := UiKit.hbox(10)
-		panel.add_child(row)
+		rows.add_child(row)
 		var name_edit := LineEdit.new()
 		name_edit.text = member.name
 		name_edit.custom_minimum_size = Vector2(180, 0)
 		name_edit.text_changed.connect(func(text): member.name = text)
 		row.add_child(name_edit)
-		var skill := OptionButton.new()
-		for skill_name in Battle.SKILL_NAMES:
-			skill.add_item(skill_name)
-		skill.select(member.skill)
-		skill.tooltip_text = "Crew skill raises the bonus they give the system they man."
-		skill.item_selected.connect(func(index): member.skill = index; _refresh_summary())
-		row.add_child(skill)
 		row.add_child(UiKit.label("starts at", 14, UiKit.MUTED))
 		var station := OptionButton.new()
 		var ids: Array = design.systems.map(func(s): return s.id)
@@ -312,21 +307,35 @@ func _rebuild_crew() -> void:
 			design.crew.erase(member)
 			_rebuild_crew()
 			_refresh_summary(), 15))
+		var skill_row := HFlowContainer.new()
+		skill_row.add_theme_constant_override("h_separation", 6)
+		skill_row.add_theme_constant_override("v_separation", 6)
+		for skill_name in CrewSkills.NAMES:
+			var chip := SkillChip.new().setup(skill_name, int(member.skills.get(skill_name, 0)), true)
+			chip.changed.connect(func(changed_skill, changed_level):
+				member.skills[changed_skill] = changed_level
+				_refresh_summary())
+			skill_row.add_child(chip)
+		rows.add_child(skill_row)
 		_crew_box.add_child(panel)
 	if design.crew.size() < 8:
 		_crew_box.add_child(UiKit.button("+ Add crew member", _add_crew, 15))
 
 
 func _refresh_summary() -> void:
-	if _points_label == null:
+	if _worth_label == null:
 		return
-	var points := design.points()
+	var cost := design.total_cost()
 	var budget := Settings.budget_limit()
-	_points_label.text = "%d DESIGN POINTS" % points + ("" if budget == 0 else "  /  %d" % budget)
-	_points_label.add_theme_color_override("font_color", UiKit.DANGER if budget > 0 and points > budget else UiKit.TEXT)
+	_worth_label.text = "WORTH %s" % Money.text(cost) + ("" if budget == 0 else "  /  %d" % budget)
+	_worth_label.add_theme_color_override("font_color", UiKit.DANGER if budget > 0 and cost > budget else UiKit.TEXT)
+	_worth_label.tooltip_text = "Ship %s + crew %s + missiles %s. A wreck of it pays %s." % [Money.text(design.value()),
+		Money.text(design.crew_value()), Money.text(design.missiles * float(Catalog.rule("economy", "missile"))),
+		Money.text(design.value() * float(Catalog.rule("economy", "rewardPercent")) / 100.0)]
+	_worth_label.mouse_filter = Control.MOUSE_FILTER_PASS
 	var problems := design.problems()
-	if budget > 0 and points > budget:
-		problems.append("Over the %d point budget (Settings)." % budget)
+	if budget > 0 and cost > budget:
+		problems.append("Over the %d Mawjig budget (Settings)." % budget)
 	_problems_label.text = "\n".join(problems.map(func(p): return "• " + p))
 	_refresh_deck()
 
@@ -385,7 +394,7 @@ func _remove_system(system: Dictionary) -> void:
 func _add_crew() -> void:
 	var names := ["Ada", "Bram", "Cass", "Dov", "Esme", "Finn", "Gale", "Hux", "Ines", "Jory", "Kael", "Lio"]
 	var station: String = design.systems[0].id if not design.systems.is_empty() else ""
-	design.crew.append({"name": names[design.crew.size() % names.size()], "skill": 0, "station": station})
+	design.crew.append({"name": names[design.crew.size() % names.size()], "skills": CrewSkills.empty(), "station": station})
 	_rebuild_crew()
 	_refresh_summary()
 
@@ -399,7 +408,10 @@ func _new_blank() -> void:
 		var level: int = 6 if type == "reactor" else 1
 		design.systems.append({"type": type, "level": level, "id": type})
 	design.systems.append({"type": "weapon", "id": "weapon-1", "kind": "laser", "weapon_type": 2, "level": 2, "name": "Pulse Laser"})
-	design.crew = [{"name": "Ada", "skill": 1, "station": "piloting"}, {"name": "Bram", "skill": 0, "station": "weapon-1"}]
+	var pilot_skills := CrewSkills.empty()
+	pilot_skills.piloting = 1
+	design.crew = [{"name": "Ada", "skills": pilot_skills, "station": "piloting"},
+		{"name": "Bram", "skills": CrewSkills.empty(), "station": "weapon-1"}]
 	_rebuild_all()
 
 

@@ -4,7 +4,7 @@ class_name BattleAI
 extends RefCounted
 
 ## Action shapes: { kind: "play", uid, target } · { kind: "move", crew, system } · { kind: "burn" } ·
-## { kind: "reroute" } · { kind: "end" }
+## { kind: "reroute" } · { kind: "jump" } · { kind: "end" }
 var level := "Normal"
 var _rng := RandomNumberGenerator.new()
 
@@ -187,7 +187,7 @@ func _hack(battle: Battle, side: int) -> Dictionary:
 func _mind_control(battle: Battle, side: int) -> Dictionary:
 	var enemy := battle.ships[1 - side]
 	var victims := battle.living_crew_of(1 - side).filter(func(m): return m.ship == 1 - side and m.controlled_by < 0)
-	victims.sort_custom(func(a, b): return a.skill > b.skill)
+	victims.sort_custom(func(a, b): return CrewSkills.total(a.skills) > CrewSkills.total(b.skills))
 	var targets := _ranked_targets(battle, side)
 	for victim in victims:
 		for system_id in targets:
@@ -296,7 +296,7 @@ func _teleport(battle: Battle, side: int) -> Dictionary:
 	var crew_aboard := battle.living_crew_of(side).filter(func(m): return m.ship == side and m.controlled_by < 0 and m.wounds == 0)
 	if crew_aboard.size() < 2:
 		return {}
-	crew_aboard.sort_custom(func(a, b): return a.skill > b.skill)
+	crew_aboard.sort_custom(func(a, b): return int(a.skills.combat) > int(b.skills.combat))
 	var enemy := battle.ships[1 - side]
 	for system_id in _ranked_targets(battle, side):
 		if enemy.is_broken(system_id):
@@ -314,13 +314,20 @@ func _cloak(battle: Battle, side: int) -> Dictionary:
 	return {}
 
 
+## Spool and jump: in the aftermath to leave (repairs come earlier in the step order), mid-battle only to flee.
 func _jump(battle: Battle, side: int) -> Dictionary:
+	if battle.aftermath:
+		if battle.why_cannot_jump(side) == "":
+			return {"kind": "jump"}
+		return _play_first(battle, side, "jump", {})
 	if level == "Easy" or Settings.value("jump_escape") == "Off":
 		return {}
 	var ship := battle.ships[side]
 	var enemy := battle.ships[1 - side]
 	var losing := float(ship.hull) / ship.hull_max < 0.3 and float(enemy.hull) / enemy.hull_max > 0.5
 	if losing or ship.jump_charge > 0 and float(ship.hull) / ship.hull_max < 0.4:
+		if battle.why_cannot_jump(side) == "":
+			return {"kind": "jump"}
 		return _play_first(battle, side, "jump", {})
 	return {}
 
