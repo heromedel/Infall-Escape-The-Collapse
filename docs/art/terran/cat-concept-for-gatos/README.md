@@ -1,13 +1,13 @@
-# Mercenary cat crew (new race, working name)
+# Cat Concept for Gatos
 
 **Date:** 2026-10-28
-**Status:** first sprite for heromedel's new race. The race's name, lore and systems aren't decided yet: "cat-merc" is
-only a folder name.
+**Status:** a concept: a cat take on the GATOS crew (heromedel: not a new race, as first briefed). Not decided; the
+art rules still say the GATOS are human and the cat pun is only in their name (`docs/art/README.md`, 2026-10-23).
 
 ![Beside the Mecha and Tentauri crews](review/cat-merc-sheet.png)
 
-heromedel's brief (2026-10-28): a race about human height, shorter than the Mecha crew; a mercenary cat in loose pants
-and a cool jacket, cute but tough; in the game's general style (the Mecha and Tentauri crew sheets).
+heromedel's brief (2026-10-28): about human height, shorter than the Mecha crew; a mercenary cat in loose pants and a
+cool jacket, cute but tough; in the game's general style (the Mecha and Tentauri crew sheets).
 
 The sprite (`svg/cat-merc.svg`, built by `tools/cat.py`; **Ai-Generated-Proposal** in every detail): pixel art on the
 crew grid, a 35 × 35 frame like the other crews, facing down, 23 pixels tall (the Mecha crew is 25). A one-pixel dark

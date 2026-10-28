@@ -1,4 +1,4 @@
-"""A mercenary cat crew sprite (a new race, working name only): pixel art on the crew grid, a 35 x 35 frame, facing
+"""Cat Concept for Gatos: a mercenary cat crew sprite, a cat take on the GATOS crew (a concept): pixel art on the crew grid, a 35 x 35 frame, facing
 down, about human height (22 pixels, shorter than the Mecha crew's 25). Cute but tough: a big head with big glinting
 eyes, a pink nose and cheek fluff, but level, half-lowered lids (a calm, unimpressed look), no mouth line, a notched ear and a scar down the cheek; a bandolier strap
 across a bomber jacket and a pistol holstered on his hip; the jacket has a shearling
