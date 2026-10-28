@@ -52,3 +52,24 @@ only; a second recording from a clean fight is still needed for a burst's spacin
 
 Read off the frames: a laser bolt is an elongated streak in the weapon's colour, not a dot; it is drawn on the
 firing ship's screen leaving, then on the target's screen arriving, and is not drawn in between.
+
+## From the genre's data files (2026-10-28)
+
+Read from the packed game data in the Wine setup, as a reference only; nothing from it is copied into the repo
+(hard rule). Weapon entries have no field for the gap between a burst's shots: that spacing lives in the engine,
+not the data, so it can only be measured from a recording. What the data does give:
+
+- **Projectile speed:** a `speed` value on some weapons, absent on the burst lasers (the wiki's 60 is the default),
+  75 and 90 on the heavy lasers, 13 on beams. Units unknown; relative only.
+- **Laser bolt:** a four-frame strip, each frame 50 by 20 pixels, cycling over 0.5 s. The bolt is a glowing streak
+  about 40 px long and 10 px thick with a bright rounded head and a tail that thins out behind it; the frames vary
+  the tail so it flickers. Light lasers are a thin orange-red streak, burst and heavy lasers a fatter green, blue,
+  purple or orange one. The bolt flies head first along its path.
+- **Missile:** one 32 by 80 pixel image of a slim rocket seen from above, pointed nose, small fins, a small exhaust
+  flame at the tail; it flies nose first. The bomb projectile is a plain teardrop.
+- **Firing animation:** the mounted weapon has a frame strip with a charged frame and a fire frame, a fire point
+  where the bolt appears, and a mount point; missiles add a glow image while charged.
+- **Sounds per weapon:** launch (two or three variants chosen at random), hit hull, hit shield, miss.
+
+For ours: a laser is a streak with a bright head and a thinning tail in the weapon's colour, flickering a little;
+a missile is a slim nose-first rocket with an exhaust flame. Each weapon file names its own projectile art later.
