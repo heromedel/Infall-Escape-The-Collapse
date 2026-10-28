@@ -15,6 +15,7 @@ import crews as C
 import coat3
 import hires2
 import qa
+import views
 from hires import ramp7, rgbhex
 
 # the near sleeve bent for typing, clockwise from the shoulder: the elbow out to the side, the forearm coming down
@@ -109,24 +110,132 @@ def frames():
     return stand, result
 
 
+# --- facing away (typing up): the elbows out and the hands raised beside the shoulders, palms forward, so from behind
+# we see the backs of the hands, fingers up; hands held in front of him would be hidden by his body
+TYPE_UP_SLEEVE = [(53.5, 33.8), (50, 35), (48.6, 36.8), (47.6, 38.6), (41.8, 38.6), (41, 42), (40.8, 46), (42, 49.8),
+                  (45.5, 50), (49, 47), (52, 43.5), (54, 40), (54.6, 34.5)]
+RAISED = [".kfkfkk.",
+          "kLsfsfSk",
+          "kLssssSk",
+          "kLsssssk",
+          "kwwwwwwk"]
+RAISED_UP = [".kSSSSk.",                  # lifted: three pixels higher, the fingers bent, the wrist showing below
+             "kLssssSk",
+             "kLsssssk",
+             ".kwwwwk.",
+             ".kwwwwk.",
+             ".kwwwwk.",
+             ".kwwwwk.",
+             ".kwwwwwk"]
+RAISED_X, RAISED_Y = 41, 34
+
+# --- facing right (typing right): both forearms reach forward to the console at chest height, the backs of the
+# hands up and toward us, fingertips down on the keys; the far arm is behind him, seen only where it reaches past his
+# chest, and darker
+TYPE_SIDE_SLEEVE = [(66.5, 34), (70, 33), (73.5, 34.5), (76, 39), (79, 44.6), (85.4, 44.4), (85.6, 50.4), (79, 51),
+                    (74.5, 50), (70.5, 45), (67.5, 40), (65.5, 36.5)]
+SIDE_TYPE = ["kwwwk..",
+             "kLsssk.",
+             "kLssssk",
+             "kLsSsSk",
+             ".kSkSkk"]
+SIDE_TYPE_UP = ["kwwwk..",
+                "kLsssk.",
+                "kLsssk.",
+                ".kSSk.."]
+SIDE_X, SIDE_Y = 86, 45
+FAR_SHIFT = (-2, -1)
+
+
+def draw(out, parts, grid, x0, y0, name, dim=0, mirror=False, behind=()):
+    """A hand grid at (x0, y0). `mirror` flips it (keeping the light on its left), `dim` darkens it a step, and it
+    never covers pixels of the parts in `behind`."""
+    S = [c.lower() for c in C.S1]
+    tone = {"k": 0, "S": 1, "s": 2, "L": 3, "f": 1, "w": 1}
+    if mirror:
+        grid = [r[::-1].translate(str.maketrans("LS", "SL")) for r in grid]
+    for j, row in enumerate(grid):
+        for i, ch in enumerate(row):
+            q = (x0 + i, y0 + j)
+            if ch in tone and parts.get(q) not in behind:
+                out[q] = S[max(0, tone[ch] - dim) if ch != "k" else 0]; parts[q] = name
+    return out, parts
+
+
+def frames_up(stand, sparts):
+    pose, pparts = views.back(stand, sparts, TYPE_UP_SLEEVE)
+    result = []
+    for near, far in FRAMES:
+        out, parts = dict(pose), dict(pparts)
+        for name, state, mirror in (("hand-near", near, False), ("hand-far", far, True)):
+            grid = RAISED if state == "down" else RAISED_UP
+            y0 = RAISED_Y if state == "down" else RAISED_Y - 3
+            x0 = RAISED_X if not mirror else coat3.CENTRE - (RAISED_X + len(grid[0]) - 1)
+            draw(out, parts, grid, x0, y0, name, mirror=mirror)
+        result.append((out, parts))
+    return result
+
+
+def frames_right(stand, sparts):
+    base, bparts = views.side(stand, sparts, arms=False)
+    body = ("coat-near", "belt", "buckle", "hair", "face", "eye", "brow", "mouth")
+    result = []
+    for near, far in FRAMES:
+        out, parts = dict(base), dict(bparts)
+        # the far arm first, behind him: only what reaches out past his chest shows
+        far_px, far_parts = views.side_arm({}, {}, TYPE_SIDE_SLEEVE, "arm-far", dim=1.2, shift=FAR_SHIFT)
+        for q, c in far_px.items():
+            if parts.get(q) not in body:
+                out[q] = c; parts[q] = "arm-far"
+        dy = 0 if far == "down" else -3
+        draw(out, parts, SIDE_TYPE if far == "down" else SIDE_TYPE_UP, SIDE_X + FAR_SHIFT[0],
+             SIDE_Y + FAR_SHIFT[1] + dy, "hand-far", dim=1, behind=body)
+        out, parts = views.side_arm(out, parts, TYPE_SIDE_SLEEVE)
+        dy = 0 if near == "down" else -3
+        draw(out, parts, SIDE_TYPE if near == "down" else SIDE_TYPE_UP, SIDE_X, SIDE_Y + dy, "hand-near")
+        for q in [q for q, v in parts.items() if v in ("arm-far", "hand-far")]:      # the far arm's lone corners
+            if sum((q[0] + dx, q[1] + dy) in out for dx, dy in qa.NB4) <= 1:
+                del out[q]; del parts[q]
+        for q in qa.holes(out):                  # a pinhole left between the far arm and the near one: shadow
+            out[q] = coat3.COAT[0]; parts[q] = "arm-far"
+        result.append((out, parts))
+    return result
+
+
+def mirrored(frames):
+    """Facing left: the facing-right frames flipped."""
+    return [({(coat3.CENTRE - x, y): c for (x, y), c in px.items()}, {(coat3.CENTRE - x, y): v for (x, y), v in pa.items()})
+            for px, pa in frames]
+
+
 if __name__ == "__main__":
     sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "mecha", "light-attack-frame", "pixel-redo", "tools"))
     from pixel_svg import paths
     from PIL import Image
     out_dir = sys.argv[1]; os.makedirs(out_dir, exist_ok=True)
-    stand, result = frames()
-    images = []
-    for n, (px, parts) in enumerate(result):
-        open(os.path.join(out_dir, f"drifter-2x-type-down-{n}.svg"), "w").write(
-            f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140" width="560" height="560" '
-            f'shape-rendering="crispEdges">{paths(px)}</svg>\n')
-        im = Image.new("RGB", (140, 140), (157, 162, 170))
-        for p, c in px.items():
-            im.putpixel(p, tuple(int(c[i:i + 2], 16) for i in (1, 3, 5)))
-        images.append(im.crop((36, 8, 104, 130)).resize((68 * 4, 122 * 4), Image.NEAREST))
-    strip = Image.new("RGB", (len(images) * (images[0].width + 10), images[0].height), (157, 162, 170))
-    for n, im in enumerate(images):
-        strip.paste(im, (n * (im.width + 10), 0))
-    strip.save(os.path.join(out_dir, "drifter-2x-type-down-strip.png"))
-    images[0].save(os.path.join(out_dir, "drifter-2x-type-down.gif"), save_all=True, append_images=images[1:],
-                   duration=180, loop=0)
+    stand, down = frames()
+    stand2, sparts2, _ = hires2.build()
+    right = frames_right(stand2, sparts2)
+    directions = [("down", down), ("right", right), ("up", frames_up(stand2, sparts2)), ("left", mirrored(right))]
+    rows = []
+    for direction, result in directions:
+        images = []
+        for n, (px, parts) in enumerate(result):
+            st, ho = qa.stray_pixels(px), qa.holes(px)
+            print(f"type {direction} {n}", "PASS" if not (st or ho) else f"FAIL stray {st[:4]} holes {ho[:4]}")
+            open(os.path.join(out_dir, f"drifter-2x-type-{direction}-{n}.svg"), "w").write(
+                f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140" width="560" height="560" '
+                f'shape-rendering="crispEdges">{paths(px)}</svg>\n')
+            im = Image.new("RGB", (140, 140), (157, 162, 170))
+            for p, c in px.items():
+                im.putpixel(p, tuple(int(c[i:i + 2], 16) for i in (1, 3, 5)))
+            images.append(im.crop((32, 8, 108, 130)).resize((76 * 3, 122 * 3), Image.NEAREST))
+        images[0].save(os.path.join(out_dir, f"drifter-2x-type-{direction}.gif"), save_all=True,
+                       append_images=images[1:], duration=180, loop=0)
+        rows.append(images)
+    w, h = rows[0][0].size
+    sheet = Image.new("RGB", (4 * (w + 8), len(rows) * (h + 8)), (157, 162, 170))
+    for r, images in enumerate(rows):
+        for n, im in enumerate(images):
+            sheet.paste(im, (n * (w + 8), r * (h + 8)))
+    sheet.save(os.path.join(out_dir, "drifter-2x-type-sheet.png"))

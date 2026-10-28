@@ -63,10 +63,16 @@ def fold_pixels(folds):
     return crease
 
 
-def redraw(big, bp, old_ramp, sleeve=None):
+FRONT_ONLY = ("torso", "lapel-near", "lapel-far", "collar-near", "collar-far", "emblem", "button", "buckle", "neck",
+              "belt")
+
+
+def redraw(big, bp, old_ramp, sleeve=None, back=False):
     """Goal: the coat's outline and the sleeves redrawn as shapes, shaded by form. Everything that isn't coat, sleeve
     or hand keeps its pixels; the lapels and collar keep their shapes and take the new ramp. `sleeve` is the near
-    sleeve's outline for another pose (the far one is its mirror image); by default the sleeves hang."""
+    sleeve's outline for another pose (the far one is its mirror image); by default the sleeves hang. With `back`,
+    the coat is seen from behind: no opening, shirt, lapels or buckle, the belt all the way round, a vent up the
+    middle of the skirt from the hem, and the lower sleeves hidden where they pass in front of the coat."""
     out, parts = dict(big), dict(bp)
     old = {c.lower(): i for i, c in enumerate(old_ramp)}
     remap = {c: COAT[min(7, round(i * 7 / (len(old_ramp) - 1)))] for c, i in old.items()}
@@ -75,16 +81,20 @@ def redraw(big, bp, old_ramp, sleeve=None):
         if v in redrawn:
             del out[p]; del parts[p]
     body, near_sleeve, far_sleeve = mask(BODY), sleeve_mask(False, sleeve), sleeve_mask(True, sleeve)
+    if back:                            # the hem's centre point, a lone pixel once there's no opening beside it
+        body = {(x, y) for (x, y) in body if sum((x + dx, y + dy) in body for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1))) > 1}
     belt_rows = sorted({y for (x, y), v in bp.items() if v == "belt"})
     hem = max(y for _, y in body)
-    keep = {p for p, v in parts.items() if v not in ("leg-near", "leg-far")}        # the front: shirt, lapels...
+    hidden = ("leg-near", "leg-far") + (FRONT_ONLY if back else ())
+    keep = {p for p, v in parts.items() if v not in hidden}                         # the front: shirt, lapels...
     crease = fold_pixels(FOLDS_NEAR + FOLDS_FAR)
     ridge = {(x - 1, y): d for (x, y), d in crease.items()}
     rows = {}
     for x, y in body:
         rows.setdefault(y, []).append(x)
     # the front opening below the belt, where the trousers show: it widens a little toward the hem
-    opening = lambda x, y: y > belt_rows[-1] and abs(x - 69.5) < 2 + (y - belt_rows[-1]) / 40 * 1.5
+    opening = lambda x, y: not back and y > belt_rows[-1] and abs(x - 69.5) < 2 + (y - belt_rows[-1]) / 40 * 1.5
+    vent_top = belt_rows[-1] + 14
 
     for (x, y) in body:
         if (x, y) in keep or opening(x, y):
@@ -103,6 +113,8 @@ def redraw(big, bp, old_ramp, sleeve=None):
         if any((x + d, y) in far_sleeve for d in (1, 2)):
             v -= .6                                                   # tucked under the far arm
         v -= crease.get((x, y), 0)
+        if back and y >= vent_top and x in (69, 70):
+            v -= 2.2 if x == 70 else -.4                              # the vent: a dark split, its left lip lit
         v += .7 * ridge.get((x, y), 0) / 1.4
         if y in belt_rows:
             c = BELT[0] if y == belt_rows[0] else BELT[1]
@@ -114,6 +126,8 @@ def redraw(big, bp, old_ramp, sleeve=None):
         for x, y in sleeve:
             xs_by_y.setdefault(y, []).append(x)
         for (x, y) in sleeve:
+            if back and y > 56 and (x, y) in body:
+                continue                     # from behind, the forearm swings forward of the coat: the coat hides it
             xs = xs_by_y[y]
             u = (x - min(xs)) / max(1, max(xs) - min(xs))
             v = 5.6 - 2.8 * u + lit                                   # a cylinder lit from the left

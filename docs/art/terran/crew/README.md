@@ -73,6 +73,17 @@ room art, and the crew stands on its tile (a console mockup tried first was wron
 check: reads as working only weakly without the console, and would bring the hands together in front; kept as the
 crew sheets do it unless heromedel prefers otherwise.
 
+**Back and side views, and typing in every direction (round 3f, 2026-10-28):** `tools/views.py` draws the 2x drifter
+from behind and from the right (left is the mirror image), from heromedel's rig renders
+(`review/drifter-2x-views.png`). Back: the head all hair over a strip of nape, the collar up, the belt all round, a
+vent up the skirt; the hands and lower sleeves are hidden, since they hang in front of the coat (heromedel). Side:
+the head in profile, the coat's front edge with the lapel, the buckle at the front, the near arm hanging over the
+coat with the back of the hand to us (heromedel), the legs one behind the other, boots in profile over the legs.
+`tools/type_anim.py` makes the four typing frames for each direction (`svg/drifter-2x-type-{down,right,up,left}-0..3.svg`,
+`review/drifter-2x-type-sheet.png` and a `.gif` per direction): down as before; right with both forearms reaching
+forward at chest height, the far one behind him and darker; up with the elbows out and the hands raised beside the
+shoulders, the backs of the hands to us.
+
 **Faster tries:** `python3 tools/review.py OUT_DIR` builds the sprite with every goal and check and writes one review
 sheet (the figure enlarged, at 2x and true size, and close-ups of the head, a hand and the boots), in about 3 seconds.
 
