@@ -90,6 +90,9 @@ systems, crew and augments carry over from FTL's prices at the same 0.242 conver
 - **Likely (2026-10-23):** Rewards are paid per enemy ship destroyed or left without crew, not once per fight (GDD 8I).
 - **Proposed (2026-10-23):** Salvaging your own lost ship, only when the encounter allows: 2.5% of its value, no band
   adjustment, since it isn't a reward (GDD 1I).
+- **Proposed (2026-10-28):** An enemy ship carries its own wreck reward as Mawjig to pay for its shots: 2.5% of its
+  value × the band adjustment (`economy-findings.md`, F11).
+- **Likely (2026-10-28):** Its wreck pays the normal reward; Mawjig it didn't spend is not added on top.
 - **Likely (2026-10-23):** Band 1 starts near FTL, but later bands may need rewards to rise faster than FTL's to pay
   for a bigger squad's costs, unless the run allows, or ends up with, more time for grinding.
 
