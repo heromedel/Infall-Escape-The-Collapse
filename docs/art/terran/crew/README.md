@@ -41,9 +41,16 @@ symmetric; `python3 qa.py --selftest` rebuilds the old mistakes, including the w
 | 3 | the coat and sleeves redrawn as shapes (`tools/coat3.py`): sloped round shoulders, a slight waist, a skirt flaring to a curved hem, sleeves hanging beside the body, shading by form (one light, cooler shadows, warmer lights, drop folds of different lengths and angles from the belt, cast shadows under the belt and beside the sleeves) | pass |
 | blind 3 | named right ("a man in a long brown trench coat", "a coated spacer"); boots attached, toes forward, not duck feet; hands hang (still mitten-like). Still flagged: a slightly sleepy look, the face's light/shadow split, the coat body a bit barrel-shaped, skirt panels reading as two tubes, long vertical stripes. 5/10 | |
 
+| 3b (heromedel: arms too straight, like fists at his sides; pencil legs with a crotch bulge; a long mouth; a dark spot under the eye) | the sleeves bend a little at the elbow so the forearms angle in and the hands rest in front of the coat's sides; the legs drawn bare first (`tools/legs3.py`: thighs meeting at the crotch in a soft V, knees, calves swelling below them, ankles into the boots), then the coat put back on over them; a shorter mouth; the lower lid lighter | pass |
+| blind 3b | arms "relaxed and hanging, not stiff or angry"; no pencil legs or crotch problem. Still flagged: a slightly sleepy, soft face; wide puffy shoulders; mitten hands. 5/10 | |
+
 Tried and dropped in round 3: shading by regions (the skirt's lower half a step darker, then with a checker seam, then
 following the folds) made visible squares and bands (heromedel); an ordered dither over the whole coat read as
-checkerboard noise. `review/gatos-drifter-2x-round3.png`: round 2 beside round 3.
+checkerboard noise. `review/gatos-drifter-2x-round3.png`: round 2 beside round 3; `review/gatos-drifter-2x-round3b.png`:
+the review sheet of round 3b.
+
+**Faster tries:** `python3 tools/review.py OUT_DIR` builds the sprite with every goal and check and writes one review
+sheet (the figure enlarged, at 2x and true size, and close-ups of the head, a hand and the boots), in about 3 seconds.
 
 **Drifter at 2x resolution (experiment, 2026-10-27):** `svg/gatos-drifter-2x.svg` (140 × 140), built by
 `tools/hires.py drifter OUT.svg` from the round 5 pixels: each pixel becomes a 2 × 2 block, then the outline thins to

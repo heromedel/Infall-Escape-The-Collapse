@@ -94,3 +94,8 @@ hand-built 2D sprites:
 - A part's shape problems (a square coat, splayed arms) are not fixed by shading: redraw the shape first (round 3).
 - Hands and boots have their own checks (`qa.hand_hangs`, `qa.attached`, `qa.boot_forward`), from round 2's
   sideways-fist hands and severed duck-foot boots.
+- Draw the body before the clothes over it: the legs drawn bare (thighs, groin, knees, calves) and then the coat put
+  back on fixed pencil legs and a crotch bulge (round 3b, heromedel's suggestion).
+- Relaxed arms bend a little at the elbow; straight arms held at the sides read as fists, angry (round 3b).
+- Speed (heromedel, round 3b: the process has to be faster): one command per try (`review.py`: build, every check,
+  one review sheet), one look per try, and the blind reviewer once per round, not after every tweak.

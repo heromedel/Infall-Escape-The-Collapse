@@ -23,8 +23,10 @@ CUFF_Y = 66
 # the near half of the outline (the far half is its mirror image), in 2x pixels
 BODY = [(62, 30), (58, 31), (55, 32.5), (53, 35), (52, 38.5), (52.5, 43), (53.5, 52), (54, 57), (53.5, 63),
         (51.5, 72), (49.5, 82), (48, 92), (47.5, 99), (52, 100.5), (60, 101.5), (69.5, 102.5)]
-SLEEVE = [(53.5, 33.8), (51, 35), (49.5, 38.5), (48.8, 45), (48.6, 52), (48.6, 60), (48.8, CUFF_Y + .9),
-          (54.8, CUFF_Y + .9), (55, 58), (55.1, 50), (55, 43), (54.8, 37), (54.6, 34.5)]
+# the sleeve hangs relaxed: the upper arm drops from the shoulder to a slightly bent elbow, and the forearm angles in
+# so the hand rests in front of the coat's side, not held straight down like a soldier's
+SLEEVE = [(53.5, 33.8), (51, 35), (49.5, 38.5), (48.6, 45), (48.3, 51), (49.2, 58), (50.4, CUFF_Y + .9),
+          (56.8, CUFF_Y + .9), (56, 58), (55.2, 51), (55, 43), (54.8, 37), (54.6, 34.5)]
 # drop folds from the belt, (top x, top y, length, drift per row): different lengths, slightly different angles
 FOLDS_NEAR = [(58, 63, 22, -.16), (63, 66, 14, .06), (55, 80, 16, -.2)]
 FOLDS_FAR = [(77, 63, 26, .14), (83, 70, 15, .2), (79, 88, 12, .1)]
@@ -140,9 +142,4 @@ def redraw(big, bp, old_ramp):
             out[(x, y)] = COAT[1]
         if v == "arm-far" and parts.get((x - 1, y), "").startswith("coat"):
             out[(x, y)] = COAT[0]
-    # between the legs, below the crotch, the opening shows the gap between them, not a stub of trouser
-    crotch = 76
-    for p, v in list(parts.items()):
-        if v in ("leg-near", "leg-far") and p[1] > crotch and p in body and opening(*p):
-            del out[p]; del parts[p]
     return out, parts

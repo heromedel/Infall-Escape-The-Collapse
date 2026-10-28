@@ -9,6 +9,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import crews as C
 import crews2
 import coat3
+import legs3
 import paint2
 import qa
 from hires import TONE, RAMPS, ramp7, rgbhex, hexrgb
@@ -132,10 +133,11 @@ def face2(big, bp):
         out[(ex, 27)] = "#e6dacb"; out[(ex + 1, 27)] = "#3a2418"; out[(ex + 2, 27)] = "#d8c8b8"
         for x in range(ex, ex + 3):
             parts[(x, 27)] = "eye"
-    # the mouth: a thin line with a soft lower lip
-    for x in range(68, 72):
+    # the mouth: a short line, its far corner softer, with a soft lower lip
+    for x in range(68, 71):
         out[(x, 30)] = "#6a3a2e"; parts[(x, 30)] = "mouth"
-    out[(71, 30)] = "#7a4a3c"
+    out[(70, 30)] = "#7a4a3c"
+    out[(71, 30)] = S[2]; parts[(71, 30)] = "face"
     for x in range(68, 71):
         out[(x, 31)] = S[2]; parts[(x, 31)] = "face"
     return out, parts
@@ -318,7 +320,8 @@ def eyes3(big, bp):
             for y in (24, 25):
                 out[(x, y)] = S[2] if ex == 65 else S[1]; parts[(x, y)] = "face"
         out[(ex, 26)] = "#e6dacb"; out[(ex + 1, 26)] = "#2a1810"; out[(ex + 2, 26)] = "#e6dacb"
-        out[(ex, 27)] = S[2]; out[(ex + 1, 27)] = "#4a2e1e"; out[(ex + 2, 27)] = S[2]    # a light lower lid
+        out[(ex, 27)] = S[2]; out[(ex + 1, 27)] = S[1]; out[(ex + 2, 27)] = S[2]    # a light lower lid; the
+                                                    # iris's dark lower half read as a dark spot under the eye
         out[(ex - 1 if ex == 65 else ex + 3, 26)] = S[0]    # the outer corner, so the eye has an edge
         for x in range(ex, ex + 3):
             parts[(x, 26)] = parts[(x, 27)] = "eye"
@@ -417,7 +420,9 @@ if __name__ == "__main__":
             ("9 smoother sleeve edges", lambda a, b: smooth_part_edges(a, b, {"arm-near", "arm-far"}), {"arm-near", "arm-far"}),
             ("10 hanging hands", hands3, {"hand-near", "hand-far"}),
             ("11 the coat's far side in shade", coat_light2, {"coat-far"}),
-            ("12 the coat and sleeves redrawn by shape", lambda a, b: coat3.redraw(a, b, [rgbhex(t) for t in ramp7(C.DUSTER)]),
+            # the legs are drawn with the coat off, then the coat goes back on, so they're checked as one goal
+            ("12 legs drawn bare, then the coat and sleeves by shape over them",
+             lambda a, b: coat3.redraw(*legs3.redraw(a, b), [rgbhex(t) for t in ramp7(C.DUSTER)]),
              {"coat-near", "coat-far", "arm-near", "arm-far", "hand-near", "hand-far", "lapel-near", "lapel-far",
               "collar-near", "collar-far", "belt", "leg-near", "leg-far"}),
             ("13 hands hanging from the new cuffs", hands3, {"hand-near", "hand-far", "coat-near", "coat-far"})):
@@ -431,6 +436,7 @@ if __name__ == "__main__":
     stages.append(("6-round2", s, pr))
     import json
     json.dump({f"{x},{y}": v for (x, y), v in pr.items()}, open(os.path.join(out_dir, "parts.json"), "w"))
+    json.dump({f"{x},{y}": c for (x, y), c in s.items()}, open(os.path.join(out_dir, "pixels.json"), "w"))
     for name, im, _ in stages:
         open(os.path.join(out_dir, f"drifter-2x-{name}.svg"), "w").write(
             f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140" width="560" height="560" shape-rendering="crispEdges">'
