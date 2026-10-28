@@ -1,14 +1,13 @@
-"""The 2x drifter typing at a console in front of him, at the sprite's own angle (facing the viewer, seen from about
-45 degrees above): four frames, as the Mecha crew's "type down" row does them: both hands on the keys, the near hand
-lifted, both on the keys again, the far hand lifted.
+"""The 2x drifter typing, at the sprite's own angle (facing the viewer, seen from about 45 degrees above): four
+frames, as the crew sheets' "type down" rows do them: both hands down, the near hand lifted, both down, the far hand
+lifted. There is no console in the sprite: the console belongs to the room art, and the crew stands on its tile.
 
-The pose comes from the finished standing sprite (`hires2.build`): the coat and sleeves are redrawn by `coat3` with
-the sleeves bent, the upper arms hanging to the elbows and the forearms coming forward and in toward the console (from
-above, a forearm pointing at the viewer looks short and slanted), then the hands are drawn on the keys, seen from
-above as the backs of the hands with the fingertips down.
+Typing facing down is drawn as in the crew sheets: the elbows go out to the sides, and the hands come down at hip
+level outside the body, palms down, pressing alternately. The pose comes from the finished standing sprite
+(`hires2.build`): the coat and sleeves are redrawn by `coat3` with the sleeves bent out, then the hands are drawn,
+seen from above as the backs of the hands with the fingertips down.
 
-Usage: python3 type_anim.py OUT_DIR    (frame SVGs, a strip and an animated preview, and the same over a labelled
-                                        console mockup for review)"""
+Usage: python3 type_anim.py OUT_DIR    (frame SVGs, a strip and an animated preview)"""
 import os
 import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -18,9 +17,10 @@ import hires2
 import qa
 from hires import ramp7, rgbhex
 
-# the near sleeve bent for typing, clockwise from the shoulder; the far sleeve is its mirror image
-TYPE_SLEEVE = [(53.5, 33.8), (51, 35), (49.5, 38.5), (48.4, 45), (47.6, 50), (49, 54), (54, 59.5), (57, 61.6),
-               (63.6, 61.6), (64, 57.5), (59, 53.5), (55.6, 48), (55, 43), (54.8, 37), (54.6, 34.5)]
+# the near sleeve bent for typing, clockwise from the shoulder: the elbow out to the side, the forearm coming down
+# to the hip; the far sleeve is its mirror image
+TYPE_SLEEVE = [(53.5, 33.8), (50, 35), (46.5, 38), (43.5, 42), (41, 47), (41.5, 53), (43, 60.6), (49.5, 60.6),
+               (48.8, 55), (48.2, 50), (50, 45.5), (52.5, 42), (54, 38), (54.6, 34.5)]
 # the back of the near hand on the keys, from above: "w" the wrist in the cuff's shadow, "f" the fingers, the thumb on
 # the body side (right); the far hand is its mirror image, still lit from the left
 HAND_DOWN = ["kwwwwwk.",
@@ -28,14 +28,12 @@ HAND_DOWN = ["kwwwwwk.",
              "kLssssSk",
              "kLsfsfSk",
              ".kfkfkk."]
-# lifted off the keys: three pixels higher (less doesn't read as a keystroke), the fingers curled up under the hand so it looks shorter
+# lifted: three pixels higher (less doesn't read as a keystroke), the fingers curled under so the hand looks shorter
 HAND_UP = ["kwwwwwk.",
            "kLsssssk",
            "kLssssSk",
            ".kSSSSk."]
-HAND_X, HAND_Y = 57, 62                  # the near hand's top-left corner, just under the cuff: forward of the body,
-                                         # which from above is lower on the screen than the belt;
-                                         # the hands close together near the middle, as at a keyboard
+HAND_X, HAND_Y = 42, 61                  # the near hand's top-left corner, just under the cuff, at the hip
 FRAMES = [("down", "down"), ("up", "down"), ("down", "down"), ("down", "up")]    # (near hand, far hand)
 PROTECTED = ["buckle", "lapel-near", "lapel-far", "emblem", "eye", "mouth", "button"]
 
@@ -95,17 +93,6 @@ def look_down(out, parts):
     return out, parts
 
 
-def console_mockup(out):
-    """For review only (a mockup, not part of the sprite): a plain console in front of him at hand height, since a
-    typing pose can't be judged with nothing to type on."""
-    out = dict(out)
-    for x in range(50, 90):
-        for y in range(64, 84):
-            top = y < 68
-            out[(x, y)] = "#0a0a0e" if (x in (50, 89) or y in (64, 83)) else ("#5a6270" if top else "#2a2f38")
-    return out
-
-
 def frames():
     stand, sparts, _ = hires2.build()
     ramp = [rgbhex(t) for t in ramp7(C.DUSTER)]
@@ -128,14 +115,8 @@ if __name__ == "__main__":
     from PIL import Image
     out_dir = sys.argv[1]; os.makedirs(out_dir, exist_ok=True)
     stand, result = frames()
-    images, mock = [], []
+    images = []
     for n, (px, parts) in enumerate(result):
-        m = console_mockup(px)
-        m.update({p: c for p, c in px.items() if parts.get(p) in ("hand-near", "hand-far")})
-        im = Image.new("RGB", (140, 140), (157, 162, 170))
-        for p, c in m.items():
-            im.putpixel(p, tuple(int(c[i:i + 2], 16) for i in (1, 3, 5)))
-        mock.append(im.crop((36, 8, 104, 130)).resize((68 * 4, 122 * 4), Image.NEAREST))
         open(os.path.join(out_dir, f"drifter-2x-type-down-{n}.svg"), "w").write(
             f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140" width="560" height="560" '
             f'shape-rendering="crispEdges">{paths(px)}</svg>\n')
@@ -147,11 +128,5 @@ if __name__ == "__main__":
     for n, im in enumerate(images):
         strip.paste(im, (n * (im.width + 10), 0))
     strip.save(os.path.join(out_dir, "drifter-2x-type-down-strip.png"))
-    strip = Image.new("RGB", (len(mock) * (mock[0].width + 10), mock[0].height), (157, 162, 170))
-    for n, im in enumerate(mock):
-        strip.paste(im, (n * (im.width + 10), 0))
-    strip.save(os.path.join(out_dir, "drifter-2x-type-down-console-mockup.png"))
-    mock[0].save(os.path.join(out_dir, "drifter-2x-type-down-console-mockup.gif"), save_all=True,
-                 append_images=mock[1:], duration=180, loop=0)
     images[0].save(os.path.join(out_dir, "drifter-2x-type-down.gif"), save_all=True, append_images=images[1:],
                    duration=180, loop=0)
