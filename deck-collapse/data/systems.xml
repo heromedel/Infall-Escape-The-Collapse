@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Ship systems for Infall: Deck Collapse.
+  Each system adds cards to its captain's deck and limits how much power can be spent on its cards in one turn
+  (its level, minus damage). Edit the numbers here to rebalance; the game reads this file at start.
+
+  type          the id the rules engine and ship files use
+  name          shown on tiles and cards
+  card          the card id this system adds (see cards in src/cards.js), or "" for none
+  cardsPerLevel how many of that card each level adds
+  pointsPerLevel design points one level costs in the Ship Designer
+  minLevel / maxLevel  designer limits; minLevel 1 with required="true" means every ship has it
+  mannable      true if a crew member assigned here gives a benefit
+-->
+<systems>
+  <system type="reactor" name="Reactor" card="power" cardsPerLevel="1" pointsPerLevel="3" minLevel="2" maxLevel="8" required="true" mannable="false">
+    Adds 1 Power card per level. Damage takes power cards offline.
+  </system>
+  <system type="shields" name="Shields" card="shield" cardsPerLevel="1" pointsPerLevel="4" minLevel="1" maxLevel="4" mannable="true">
+    Adds 1 Raise Shield card per level. Up to one shield layer per working level.
+  </system>
+  <system type="engines" name="Engines" card="" cardsPerLevel="0" pointsPerLevel="2" minLevel="1" maxLevel="6" mannable="true">
+    Each working level adds 5% evasion. Spend power here to Burn for more.
+  </system>
+  <system type="piloting" name="Piloting" card="jump" cardsPerLevel="1" pointsPerLevel="2" minLevel="1" maxLevel="3" required="true" mannable="true">
+    Needed to dodge. Level 2 has Auto Pilot (half evasion unmanned), level 3 Advanced Auto Pilot (full). Adds 1 Spool Jump Drive per level.
+  </system>
+  <system type="sensors" name="Sensors" card="" cardsPerLevel="0" pointsPerLevel="1" minLevel="1" maxLevel="3" mannable="true">
+    Level 1 shows enemy crew. Level 2 shows enemy power. Level 3 shows enemy weapon cards; manned, the whole hand.
+  </system>
+  <system type="lifeSupport" name="Life Support" card="restore" cardsPerLevel="1" pointsPerLevel="1" minLevel="1" maxLevel="3" required="true" mannable="false">
+    Adds 1 Restore Environment card per level. If broken or disabled, every crew member aboard takes a wound at the end of your turn.
+  </system>
+  <system type="medBay" name="Med Bay" card="" cardsPerLevel="0" pointsPerLevel="2" minLevel="1" maxLevel="3" mannable="false">
+    Crew assigned here heal 1 wound per working level at the start of your turn.
+  </system>
+  <system type="airlock" name="Airlock Control" card="" cardsPerLevel="0" pointsPerLevel="1" minLevel="1" maxLevel="1" mannable="false">
+    Lets crew play Cycle Airlock: vent one of your systems, putting out its fire and killing anyone inside.
+  </system>
+  <system type="teleport" name="Teleport Bay" card="teleport" cardsPerLevel="1" pointsPerLevel="3" minLevel="1" maxLevel="3" mannable="false">
+    Adds 1 Teleport card per level. Boarders damage the system they stand in.
+  </system>
+  <system type="cloak" name="Cloaking" card="cloak" cardsPerLevel="1" pointsPerLevel="3" minLevel="1" maxLevel="3" mannable="false">
+    Adds 1 Cloak card per level. You cannot stay cloaked more turns in a row than its level.
+  </system>
+  <system type="mindControl" name="Mind Control" card="mindControl" cardsPerLevel="1" pointsPerLevel="3" minLevel="1" maxLevel="3" mannable="false">
+    Adds 1 Mind Control card per level.
+  </system>
+  <system type="hacking" name="Hacking" card="hack" cardsPerLevel="1" pointsPerLevel="3" minLevel="1" maxLevel="3" mannable="false">
+    Adds 1 Hack card per level. You cannot hack more turns in a row than its level.
+  </system>
+  <system type="battery" name="Backup Battery" card="battery" cardsPerLevel="1" pointsPerLevel="2" minLevel="1" maxLevel="2" mannable="false">
+    Adds 1 Backup Cell per level: temporary power for one turn.
+  </system>
+  <system type="evb" name="EVB Dock" card="suit" cardsPerLevel="1" pointsPerLevel="3" minLevel="1" maxLevel="3" mannable="false">
+    Adds 1 Launch Battlesuit card per level. Needs a crew member assigned to launch.
+  </system>
+  <system type="weapon" name="Weapon System" card="weapon" cardsPerLevel="1" pointsPerLevel="2" minLevel="1" maxLevel="4" mannable="true">
+    Adds 1 card of its weapon per level. Its level must be at least the weapon's Type.
+  </system>
+</systems>
