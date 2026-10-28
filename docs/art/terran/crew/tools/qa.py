@@ -82,6 +82,45 @@ def pair_symmetry(parts, left, right):
     return len(L ^ R) / max(len(L), len(R))
 
 
+def attached(parts, a, b):
+    """Part a touches part b along an edge (round 2 at 2x: the boots looked severed from the legs)."""
+    A = {p for p, v in parts.items() if v == a}
+    return any((x + dx, y + dy) in A for (x, y), v in parts.items() if v == b for dx, dy in NB4)
+
+
+def hand_hangs(parts, hand, arm):
+    """A relaxed hanging hand (round 2 at 2x: the hands read as sideways fists): attached to its sleeve, taller than
+    wide, hanging below the sleeve's end, and no wider than the sleeve's cuff plus a pixel either side."""
+    H = [p for p, v in parts.items() if v == hand]
+    A = [p for p, v in parts.items() if v == arm]
+    if not H or not A:
+        return ["missing"]
+    w = max(x for x, _ in H) - min(x for x, _ in H) + 1
+    h = max(y for _, y in H) - min(y for _, y in H) + 1
+    cuff_y = max(y for _, y in A)
+    cuff = [x for x, y in A if y >= cuff_y - 1]
+    bad = []
+    if not attached(parts, hand, arm):
+        bad.append("not attached to the sleeve")
+    if h < 1.2 * w:
+        bad.append(f"not hanging: {w} wide, {h} tall")
+    if max(y for _, y in H) <= cuff_y:
+        bad.append("doesn't hang below the cuff")
+    if w > max(cuff) - min(cuff) + 3:
+        bad.append(f"wider ({w}) than the cuff ({max(cuff) - min(cuff) + 1})")
+    return bad
+
+
+def boot_forward(parts, boot):
+    """A boot's toe points forward, toward the viewer, not splayed out (round 2 at 2x: duck feet): the bottom rows'
+    centre stays within 2 pixels of the shaft's centre."""
+    B = [p for p, v in parts.items() if v == boot]
+    top, bottom = min(y for _, y in B), max(y for _, y in B)
+    row = lambda y: [x for x, yy in B if yy == y] or [x for x, yy in B if yy == y + 1]
+    c = lambda xs: (min(xs) + max(xs)) / 2
+    return abs(c(row(bottom - 1)) - c(row(top + 1)))
+
+
 def shading_steps(px, parts, part):
     """The biggest brightness jumps between neighbouring pixels inside a part, ignoring its edge (round 5: shading so
     contrasty it read as embossed panels). Returns (mean step, 90th percentile step)."""
@@ -114,7 +153,8 @@ def selftest():
     inner = next(p for p, v in gparts.items() if v == "coat-near" and all((p[0] + dx, p[1] + dy) in good for dx, dy in NB4))
     bad = dict(good); del bad[inner]
     expect("hole in the silhouette", bool(holes(bad)))
-    coat = good[next(p for p, v in gparts.items() if v == "coat-near")]
+    from collections import Counter                 # a blur pulls the belt to the coat's main tone
+    coat = Counter(good[p] for p, v in gparts.items() if v == "coat-near").most_common(1)[0][0]
     bad = dict(good)
     for p, v in gparts.items():
         if v == "belt":
@@ -136,6 +176,24 @@ def selftest():
         if v == "torso":
             bad[p] = "#ff00ff"
     expect("change outside the goal's parts", bool(part_diff(good, bad, gparts, {"coat-near"})))
+    btop = min(y for (x, y), v in gparts.items() if v == "boot-near")
+    sev = {p: v for p, v in gparts.items() if not ((v == "boot-near" and p[1] == btop) or (v == "leg-near" and p[1] >= btop - 1))}
+    expect("severed boot", attached(gparts, "boot-near", "leg-near") and not attached(sev, "boot-near", "leg-near"))
+    fist = dict(gparts)
+    hy = max(y for (x, y), v in gparts.items() if v == "hand-near")
+    hx = min(x for (x, y), v in gparts.items() if v == "hand-near")
+    for p in [p for p, v in fist.items() if v == "hand-near"]:
+        del fist[p]
+    for i in range(6):
+        for j in range(2):
+            fist[(hx - 2 + i, hy + j)] = "hand-near"
+    expect("sideways fist", bool(hand_hangs(fist, "hand-near", "arm-near")))
+    duck = {p: v for p, v in gparts.items() if v != "boot-near"}
+    by = [y for (x, y), v in gparts.items() if v == "boot-near"]
+    for y in range(min(by), max(by) + 1):
+        for x in range(28, 32):
+            duck[(x - (y - min(by)), y)] = "boot-near"
+    expect("duck-foot boot", boot_forward(duck, "boot-near") > 2)
     print("QA SELF-TEST", "PASSED" if ok else "HAS PROBLEMS")
     return ok
 

@@ -83,10 +83,12 @@ def crew1(stage=5):
             (set(boots(C.BOOTS)), C.BOOTS, lambda x, y, t, s: t)]
     over[-1] = None
     over = [o for o in over if o]
-    d = [((35, y), C.SHIRT1[1], "button") for y in (20, 24)]
+    d = [((35, y), "#8a8070", "button") for y in (19, 21)]                                # a henley's two buttons
     d += [((34, 29), "#c8a860", "buckle"), ((35, 29), "#a8884a", "buckle")]
-    d += [(q, col, "emblem") for q, col in (((29, 19), "#c8a050"), ((28, 20), "#c8a050"), ((30, 20), "#a07c38"),
-                                             ((29, 21), "#a07c38"), ((29, 20), "#3a2416"))]
+    # personal emblem: a dark leather patch on the near breast with a pale scratched slash (a merc's mark, not a pin)
+    d += [(q, col, "emblem") for q, col in (((28, 19), "#2a1c14"), ((29, 19), "#2a1c14"), ((30, 19), "#b8ab90"),
+                                             ((28, 20), "#2a1c14"), ((29, 20), "#b8ab90"), ((30, 20), "#2a1c14"),
+                                             ((28, 21), "#b8ab90"), ((29, 21), "#2a1c14"), ((30, 21), "#2a1c14"))]
     d += [(q, col, "boot-near" if q[0] < 35 else "boot-far") for q, col in boot_pixels(C.BOOTS).items()]
     px = paint(mats, over, head(C.S1, C.HAIR1, C.H1), d, stage)
     hair = {h.lower() for h in C.HAIR1}

@@ -87,3 +87,10 @@ hand-built 2D sprites:
   above (the 1/2 view).
 - Square, flat-shadowed faces (round 3) read worse than the earlier ones.
 - Tracing over heromedel's render and rig gave the right angle and proportions; drawing from my own guesses did not.
+- Shading by regions (a whole band of a part one step darker) makes visible squares, not realism (round 3 at 2x,
+  heromedel). Shade by form instead: one light, cloth turning away from it, cast shadows where one thing covers
+  another, folds of different lengths and angles; shadows a little cooler and lights a little warmer.
+- Dither over a large area reads as checkerboard noise on a sprite this size (round 3 at 2x).
+- A part's shape problems (a square coat, splayed arms) are not fixed by shading: redraw the shape first (round 3).
+- Hands and boots have their own checks (`qa.hand_hangs`, `qa.attached`, `qa.boot_forward`), from round 2's
+  sideways-fist hands and severed duck-foot boots.

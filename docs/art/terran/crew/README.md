@@ -33,7 +33,17 @@ symmetric; `python3 qa.py --selftest` rebuilds the old mistakes, including the w
 | 1 | jaw tapering to a rounded chin, eyes with lids, whites and irises, a thin mouth | pass |
 | blind 1 | named him right ("a man in a long brown coat"); found: boots like flower pots, no neck, pupils to one side, a pale jaw patch, jagged sleeves, block hands, the skirt lit evenly | |
 | 2 | boots with toes turned out, a toe cap and a sole; a neck; centred eyes; a cleaner jaw; smoother sleeve edges; hands with fingers; the far skirt in shade | all pass |
-| blind 2 | boots now read as boots ("clearly boots"), the neck and eyes no longer flagged; still weak: the hands (square blocks, no thumb), boxy arms and shoulders, short legs under the coat, the jagged lower-left hem, flat coat shading | next |
+| blind 2 | boots now read as boots ("clearly boots"), the neck and eyes no longer flagged; still weak: the hands (square blocks, no thumb), boxy arms and shoulders, short legs under the coat, the jagged lower-left hem, flat coat shading | round 3 |
+| 3 (heromedel) | darker palette; a charcoal-olive henley instead of the teal dress shirt; a leather patch with a pale slash instead of the flower-like diamond | self-test fixed: a belt blurred into the coat's main tone is caught again |
+| 3 | boots: trousers tucked into the shaft (no gap), a narrow ankle, the foot a pixel wider below it, its top lit, toes at the viewer | `attached` yes, `boot_forward` 0 px off, shapes identical |
+| 3 | hands hanging from the cuff: taller than wide, thumb on the body side, finger lines down | `hand_hangs` pass on both |
+| 3 | a forehead (the fringe lifted off the brows, ragged), the face's shadow turning instead of a hard half split, brows a row higher, eyes two rows tall with a light lower lid | pass |
+| 3 | the coat and sleeves redrawn as shapes (`tools/coat3.py`): sloped round shoulders, a slight waist, a skirt flaring to a curved hem, sleeves hanging beside the body, shading by form (one light, cooler shadows, warmer lights, drop folds of different lengths and angles from the belt, cast shadows under the belt and beside the sleeves) | pass |
+| blind 3 | named right ("a man in a long brown trench coat", "a coated spacer"); boots attached, toes forward, not duck feet; hands hang (still mitten-like). Still flagged: a slightly sleepy look, the face's light/shadow split, the coat body a bit barrel-shaped, skirt panels reading as two tubes, long vertical stripes. 5/10 | |
+
+Tried and dropped in round 3: shading by regions (the skirt's lower half a step darker, then with a checker seam, then
+following the folds) made visible squares and bands (heromedel); an ordered dither over the whole coat read as
+checkerboard noise. `review/gatos-drifter-2x-round3.png`: round 2 beside round 3.
 
 **Drifter at 2x resolution (experiment, 2026-10-27):** `svg/gatos-drifter-2x.svg` (140 × 140), built by
 `tools/hires.py drifter OUT.svg` from the round 5 pixels: each pixel becomes a 2 × 2 block, then the outline thins to

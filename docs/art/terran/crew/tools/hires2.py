@@ -8,6 +8,7 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import crews as C
 import crews2
+import coat3
 import paint2
 import qa
 from hires import TONE, RAMPS, ramp7, rgbhex, hexrgb
@@ -162,63 +163,47 @@ def belt_collar(big, bp):
     return out, parts
 
 
-BOOT3 = ["...kkkkkkk......",
-         "..kLbbbbbdk.....",
-         "..kLbbbbbdk.....",
-         "..kLbbbbbdk.....",
-         "..kLbbbbbbdk....",
-         ".kLbbbbbbbdk....",
-         ".kLbbbbbbbbdk...",
-         "kLLbbbbbbbbbdk..",
-         "kLbbbLLbbbbbbdk.",
-         "kLbbLbbbbbbbbbdk",
-         "kLbbbbbbbbbbbbdk",
-         "kbbbbbbbbbbbbddk",
-         ".kdddddddddddddk",
-         ".kssssssssssssk.",
-         "..kkkkkkkkkkkk.."]
+BOOT4 = "\n".join(["..kkkkkkkk..",
+                    "..kddddddk..",
+                    "..kLbbbbdk..",
+                    "..kLbbbbdk..",
+                    "..kLbbbbdk..",
+                    ".kLbbbbbbdk.",
+                    "kLbbLLLbbbdk",
+                    "kLbLLLLLbbdk",
+                    "kLbbLLLbbbdk",
+                    "kdbbbbbbbddk",
+                    "kddddddddddk",
+                    "kssssssssssk",
+                    ".kkkkkkkkkk."]).split("\n")    # the ankle narrow, the foot wider below it, its rounded top
+                                                    # (the vamp) catching the light, a sole jutting out under it
 
 
-def boots3(big, bp):
-    """Goal (blind check: the boots read as flower pots): boots that read as boots. The toes turn slightly out (the
-    near boot's to the left, the far boot's to the right, still one shape mirrored), with a toe cap catching the light,
-    a visible sole and a dark welt line above it."""
+def boots4(big, bp):
+    """Goal (round 2 at 2x: severed boots, toes turned out like duck feet): boots seen from above and in front. The
+    shaft sits right over its trouser leg with the trousers tucked into it (no gap), the toe points at the viewer, so
+    the foot only widens a pixel either side below the shaft, with a lit toe cap. One shape for both, lit from the
+    upper left on both."""
     out, parts = dict(big), dict(bp)
-    near = [p for p, v in bp.items() if v == "boot-near"]; far = [p for p, v in bp.items() if v == "boot-far"]
-    old = near + far
-    cn = (min(x for x, _ in near) + max(x for x, _ in near) + 1) / 2
-    cf = (min(x for x, _ in far) + max(x for x, _ in far) + 1) / 2
+    old = [p for p, v in bp.items() if v in ("boot-near", "boot-far")]
     bottom = max(y for _, y in old)
-    left, right = min(x for x, _ in old), max(x for x, _ in old)
     for p in old:
         del out[p]; del parts[p]
     B = C.BOOTS
     key = {"k": B[0], "d": B[1], "b": B[2], "L": B[3], "s": "#0a0809"}
-    y0 = bottom + 1 - len(BOOT3)
-    w = len(BOOT3[0])
-    shaft = 5.5                                    # the shaft's centre column in the grid
-    for j, row in enumerate(BOOT3):
-        for i, ch in enumerate(row):
-            if ch in key:
-                # each boot's shaft stays over its own leg; the near boot is the grid mirrored (its toe turns out
-                # to the left), the far boot is as drawn (its toe turns out to the right)
-                xn = round(cn + shaft) - 1 - i
-                xf = round(cf - shaft) + i
-                out[(xn, y0 + j)] = key[ch].lower(); parts[(xn, y0 + j)] = "boot-near"
-                out[(xf, y0 + j)] = key[ch].lower(); parts[(xf, y0 + j)] = "boot-far"
-    # light from the upper left on both: on the mirrored near boot, swap its lit and shaded sides back
-    for p, v in parts.items():
-        if v == "boot-near":
-            c = out[p]
-            if c == B[3].lower():
-                out[p] = B[1].lower()
-            elif c == B[1].lower():
-                out[p] = B[3].lower()
-    # trousers reach down into the boot tops (no gap)
-    for x in range(left, right + 1):
-        for y in range(y0, y0 + 2):
-            if (x, y) not in out and (x, y - 1) in out and parts.get((x, y - 1), "").startswith("leg"):
-                out[(x, y)] = out[(x, y - 1)]; parts[(x, y)] = parts[(x, y - 1)]
+    y0 = bottom + 1 - len(BOOT4)
+    for leg, boot in (("leg-near", "boot-near"), ("leg-far", "boot-far")):
+        cells = [p for p, v in parts.items() if v == leg]
+        low = max(y for _, y in cells)
+        xs = [x for x, y in cells if y == low]
+        for y in range(low + 1, y0 + 2):                    # the trousers reach down into the boot's mouth
+            for x in xs:
+                out[(x, y)] = out[(x, low)]; parts[(x, y)] = leg
+        x0 = round((min(xs) + max(xs) + 1) / 2 - len(BOOT4[0]) / 2)
+        for j, row in enumerate(BOOT4):
+            for i, ch in enumerate(row):
+                if ch in key:
+                    out[(x0 + i, y0 + j)] = key[ch].lower(); parts[(x0 + i, y0 + j)] = boot
     return out, parts
 
 
@@ -270,30 +255,41 @@ def smooth_part_edges(big, bp, part_names):
     return out, parts
 
 
-HAND = ["..kkkk..",
-        ".kLsssk.",
-        "kLssssSk",
-        "kLsssSSk",
-        "kLSsSsSk",
-        "kLSsSsSk",
-        ".kkkkkk."]
+# a relaxed hand hanging from the sleeve, palm toward the leg, the thumb in front on the body side; "f" are the
+# finger lines, "w" the wrist in the sleeve's shadow. Drawn for the near hand; the far hand is its mirror image, still lit from the left.
+HAND = ["kwwwwk.",
+        "kLssSk.",
+        "kLsssSk",
+        "kLsssSk",
+        "kLssSSk",
+        "kLsfsk.",
+        "kLsfsk.",
+        ".kfsSk.",
+        "..kkk.."]
 
 
-def hands2(big, bp):
-    """Goal (blind check: the hands are pink blocks): hands with knuckles and three finger lines, the thumb side lit."""
+def hands3(big, bp):
+    """Goal (round 2 at 2x: the hands read as sideways fists): hands that hang. Taller than wide, from the sleeve's
+    cuff down, no wider than the cuff plus the thumb, fingers pointing at the floor."""
     S = [c.lower() for c in C.S1]
     out, parts = dict(big), dict(bp)
-    key = {"k": S[0], "S": S[1], "s": S[2], "L": S[3]}
-    for name in ("hand-near", "hand-far"):
+    key = {"k": S[0], "S": S[1], "s": S[2], "L": S[3], "f": S[1], "w": S[1]}
+    for name, arm in (("hand-near", "arm-near"), ("hand-far", "arm-far")):
+        # the far hand mirrored; swapping the lit and shaded edges keeps the light on its left
+        grid = HAND if name == "hand-near" else [r[::-1].translate(str.maketrans("LS", "SL")) for r in HAND]
         cells = [p for p, v in bp.items() if v == name]
-        x0 = (min(x for x, _ in cells) + max(x for x, _ in cells) + 1) // 2 - 4
-        y0 = min(y for _, y in cells)
         for p in cells:
             del out[p]; del parts[p]
-        for j, row in enumerate(HAND):
+        sleeve = [p for p, v in parts.items() if v == arm]
+        cuff_y = max(y for _, y in sleeve)
+        cuff = [x for x, y in sleeve if y == cuff_y]
+        body = 1 if name == "hand-near" else -1            # the side the thumb sits on, toward the body
+        width = len(HAND[0]) - 1                            # without the thumb
+        x0 = round((min(cuff) + max(cuff) + 1) / 2 - width / 2) - (0 if body == 1 else 1)
+        for j, row in enumerate(grid):
             for i, ch in enumerate(row):
                 if ch in key:
-                    out[(x0 + i, y0 + j)] = key[ch]; parts[(x0 + i, y0 + j)] = name
+                    out[(x0 + i, cuff_y + 1 + j)] = key[ch]; parts[(x0 + i, cuff_y + 1 + j)] = name
     return out, parts
 
 
@@ -310,12 +306,75 @@ def coat_light2(big, bp):
     return out, dict(bp)
 
 
+def eyes3(big, bp):
+    """Goal (round 2 at 2x, and a lash line tried in round 3: he looked sleepy, a heavy lid over the eye): open eyes.
+    Skin between the brow and the eye, then an eye two rows tall with a dark outer corner: the whites either side of
+    an iris that fills both rows, the lower lid in soft shade."""
+    S = [c.lower() for c in C.S1]
+    out, parts = dict(big), dict(bp)
+    for ex in (65, 72):
+        for x in range(ex, ex + 3):                        # the brow a row higher, skin between it and the eye
+            out[(x, 23)] = C.HAIR1[1].lower(); parts[(x, 23)] = "brow"
+            for y in (24, 25):
+                out[(x, y)] = S[2] if ex == 65 else S[1]; parts[(x, y)] = "face"
+        out[(ex, 26)] = "#e6dacb"; out[(ex + 1, 26)] = "#2a1810"; out[(ex + 2, 26)] = "#e6dacb"
+        out[(ex, 27)] = S[2]; out[(ex + 1, 27)] = "#4a2e1e"; out[(ex + 2, 27)] = S[2]    # a light lower lid
+        out[(ex - 1 if ex == 65 else ex + 3, 26)] = S[0]    # the outer corner, so the eye has an edge
+        for x in range(ex, ex + 3):
+            parts[(x, 26)] = parts[(x, 27)] = "eye"
+    return out, parts
+
+
+# the fringe's new edge over the forehead, rows 21-23 between the sideburns (x 62-77): "H" stays hair, "." becomes
+# skin. Two locks fall a little lower so the hairline is ragged, not a ruler line.
+FRINGE = {21: "HHHH.....HHHHHHH",
+          22: "HHH.......HHHHH.",
+          23: ".H.........HH..."}
+
+
+def forehead(big, bp):
+    """Goal (blind check, twice: sleepy, the hair sits right on the eyes like a hat): a forehead. The fringe lifts
+    off the brows by two to three rows, ragged, with a strip of skin above the brows; the sideburns stay."""
+    S = [c.lower() for c in C.S1]; H = [c.lower() for c in C.HAIR1]
+    out, parts = dict(big), dict(bp)
+    for y, row in FRINGE.items():
+        for i, ch in enumerate(row):
+            x = 62 + i
+            if ch == ".":
+                lit = x < 70
+                out[(x, y)] = S[3] if (lit and y == 23 and x < 66) else S[2] if lit else S[1]
+                parts[(x, y)] = "face"
+            elif y == 23 or FRINGE[y + 1][i] == ".":
+                out[(x, y)] = H[1]; parts[(x, y)] = "hair"      # the lock's tip, a step darker against the skin
+    for x in range(62, 78):                                     # the fringe casts a soft shadow on the skin below it
+        for y in (22, 23, 24):
+            if parts.get((x, y)) == "face" and parts.get((x, y - 1)) == "hair" and out[(x, y)] in (S[2], S[3]):
+                out[(x, y)] = S[1] if x >= 70 else rgbhex(ramp7(C.S1)[3])
+    return out, parts
+
+
+def face_light(big, bp):
+    """Goal (blind check: the face's shadow side is cut hard down the middle, like half a mask): the light turns
+    round the face. Where the lit tone meets the shadow tone, the shadow's first column takes the tone between them,
+    and the line steps out toward the cheek as it goes down, as a rounded face would."""
+    S = [c.lower() for c in C.S1]
+    mid = rgbhex(ramp7(C.S1)[3])
+    out = dict(big)
+    face = {p for p, v in bp.items() if v == "face"}
+    for (x, y) in sorted(face):
+        if big[(x, y)] == S[1] and big.get((x - 1, y)) in (S[2], S[3]) and (x - 1, y) in face:
+            out[(x, y)] = mid
+            if y >= 27 and (x + 1, y) in face and big.get((x + 1, y)) == S[1]:
+                out[(x + 1, y)] = mid                           # lower down the turn is wider: the cheek
+    return out, dict(bp)
+
+
 def check(name, before, bparts, after, aparts, allowed, scale=1):
     bad = qa.detail_survival(before, bparts, after, aparts, [p for p in PROTECTED if p not in allowed], scale)
     outside = qa.part_diff(before, after, aparts, allowed, scale, bparts)
     st, ho = qa.stray_pixels(after), qa.holes(after)
     ok = not bad and not outside and not st and not ho
-    print(f"{name:<34} {'PASS' if ok else 'FAIL'}" + ("" if ok else f"  details:{bad} outside:{len(outside)} stray:{len(st)} holes:{len(ho)}"))
+    print(f"{name:<34} {'PASS' if ok else 'FAIL'}" + ("" if ok else f"  details:{bad} outside:{len(outside)} stray:{st[:6]} holes:{ho[:6]}"))
     return ok
 
 
@@ -349,16 +408,26 @@ if __name__ == "__main__":
     stages.append(("5-face", s5, p5))
     s, pr = s5, p5
     for title, fn, allowed in (
-            ("6 boots that read as boots", boots3, {"boot-near", "boot-far", "leg-near", "leg-far"}),
+            ("6 boots tucked in, toes forward", boots4, {"boot-near", "boot-far", "leg-near", "leg-far"}),
             ("7 a neck", neck2, {"neck", "collar-near", "collar-far", "torso", "lapel-near", "lapel-far", "coat-near", "coat-far"}),
             ("8 centred eyes, cleaner jaw", eyes_jaw2, {"eye", "face"}),
+            ("8b a forehead", forehead, {"hair", "face"}),
+            ("8c the light turns round the face", face_light, {"face"}),
+            ("8d open eyes", eyes3, {"eye", "face", "brow"}),
             ("9 smoother sleeve edges", lambda a, b: smooth_part_edges(a, b, {"arm-near", "arm-far"}), {"arm-near", "arm-far"}),
-            ("10 hands with fingers", hands2, {"hand-near", "hand-far"}),
-            ("11 the coat's far side in shade", coat_light2, {"coat-far"})):
+            ("10 hanging hands", hands3, {"hand-near", "hand-far"}),
+            ("11 the coat's far side in shade", coat_light2, {"coat-far"}),
+            ("12 the coat and sleeves redrawn by shape", lambda a, b: coat3.redraw(a, b, [rgbhex(t) for t in ramp7(C.DUSTER)]),
+             {"coat-near", "coat-far", "arm-near", "arm-far", "hand-near", "hand-far", "lapel-near", "lapel-far",
+              "collar-near", "collar-far", "belt", "leg-near", "leg-far"}),
+            ("13 hands hanging from the new cuffs", hands3, {"hand-near", "hand-far", "coat-near", "coat-far"})):
         s2_, p2_ = fn(s, pr)
         check(title, s, pr, s2_, p2_, allowed)
         s, pr = s2_, p2_
-    print("   boot shape mismatch", round(qa.pair_symmetry(pr, "boot-near", "boot-far"), 2))
+    print("   boot shape mismatch", round(qa.pair_symmetry(pr, "boot-near", "boot-far"), 2),
+          "| toes off centre", qa.boot_forward(pr, "boot-near"), qa.boot_forward(pr, "boot-far"),
+          "| attached", qa.attached(pr, "boot-near", "leg-near"), qa.attached(pr, "boot-far", "leg-far"))
+    print("   hands", qa.hand_hangs(pr, "hand-near", "arm-near"), qa.hand_hangs(pr, "hand-far", "arm-far"))
     stages.append(("6-round2", s, pr))
     import json
     json.dump({f"{x},{y}": v for (x, y), v in pr.items()}, open(os.path.join(out_dir, "parts.json"), "w"))

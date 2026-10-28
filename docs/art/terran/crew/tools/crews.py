@@ -13,11 +13,11 @@ def head(skin, hair, rows, x0=30, y0=6):
 
 
 # 1. long-coat drifter
-S1 = ["#4a2622", "#a0604e", "#d0927a", "#ecbc9a"]
-DUSTER = ["#24130f", "#57301f", "#7c4a2b", "#a26a40"]
-SHIRT1 = ["#10262a", "#2a5054", "#3f7470", "#64a094"]
-PANTS1 = ["#11141c", "#222936", "#333d4e", "#4a566a"]
-HAIR1 = ["#120b09", "#2c1b13", "#47301f", "#664530"]
+S1 = ["#3a1e1a", "#86523f", "#b98066", "#d7a283"]
+DUSTER = ["#1a0e0a", "#3e2416", "#5c3a24", "#7e5634"]          # darker, less saturated (2026-10-27)
+SHIRT1 = ["#121410", "#24271f", "#363a2e", "#4c5140"]          # a charcoal-olive work henley, not a teal dress shirt
+PANTS1 = ["#0c0e14", "#191d27", "#262c39", "#363e4e"]
+HAIR1 = ["#0e0807", "#22150f", "#382519", "#523826"]
 H1 = ["...oooo...",
       ".ooHHhhoo.",
       "oHHhHhhhdo",
