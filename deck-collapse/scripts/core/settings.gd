@@ -5,12 +5,20 @@ const SAVE_PATH := "user://settings.cfg"
 
 ## key: { label, choices (default first), help }
 const OPTIONS := {
-	"draw_per_turn": {"label": "Cards Drawn Per Turn", "choices": ["2", "1"],
-		"help": "How many cards each captain draws at the start of a turn. 1 is slower and more about planning."},
-	"opening_power": {"label": "Opening Hand Power", "choices": ["2 Guaranteed", "Random"],
-		"help": "Guaranteed puts at least 2 Power cards in each opening hand."},
+	"draw_per_turn": {"label": "Cards Drawn Per Turn", "choices": ["1", "2"],
+		"help": "How many cards each captain draws at the start of a turn. 2 makes battles faster."},
+	"opening_power": {"label": "Opening Hand Power", "choices": ["Random", "2 Guaranteed"],
+		"help": "Random: draw a normal opening hand and use Reroute Power if you need power. 2 Guaranteed puts at least 2 Power cards in each opening hand."},
 	"sensor_fog": {"label": "Sensor Fog", "choices": ["On", "Off"],
 		"help": "On: you only see what your Sensors show. Off: you see the enemy's crew, power and hand."},
+	"hull_scale": {"label": "Hull Scale", "choices": ["Ship Value", "75%", "50%", "150%"],
+		"help": "Multiplies every ship's hull. Lower makes battles shorter."},
+	"engine_burn": {"label": "Engine Burn", "choices": ["On", "Off"],
+		"help": "On: spend power on Engines for +5% evasion each until your next turn."},
+	"jump_escape": {"label": "Jump Escape", "choices": ["On", "Off"],
+		"help": "On: Spool Jump Drive cards build charges; at 3 you escape and the battle ends."},
+	"crew_fights": {"label": "Crew Fights", "choices": ["On", "Off"],
+		"help": "On: boarders and defenders in the same system trade wounds at the end of the turn."},
 	"ai_level": {"label": "Enemy Captain", "choices": ["Normal", "Easy", "Hard"],
 		"help": "How well the enemy plays."},
 	"first_turn": {"label": "First Turn", "choices": ["Coin Flip", "You", "Enemy"],
@@ -59,6 +67,14 @@ func animation_scale() -> float:
 	match value("animation_speed"):
 		"Fast": return 0.55
 		"Slow": return 1.6
+	return 1.0
+
+
+func hull_multiplier() -> float:
+	match value("hull_scale"):
+		"75%": return 0.75
+		"50%": return 0.5
+		"150%": return 1.5
 	return 1.0
 
 

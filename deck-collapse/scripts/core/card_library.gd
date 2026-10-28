@@ -39,8 +39,6 @@ const FIXED_CARDS := {
 		"text": "The target system can't be used during the enemy's next turn."},
 	"battery": {"name": "Backup Cell", "cost": 0, "group": GROUP_POWER, "target": TARGET_NONE, "art": "battery",
 		"text": "+1 power this turn only."},
-	"suit": {"name": "Launch Battlesuit", "cost": 1, "group": GROUP_TACTIC, "target": TARGET_ENEMY_SYSTEM, "art": "suit",
-		"text": "Needs crew in the EVB Dock. A suit flies out for 3 turns, firing 2 bolts of 1 damage at the target as each of your turns ends."},
 	"repair": {"name": "Repair", "cost": 0, "group": GROUP_CREW, "target": TARGET_OWN_SYSTEM, "art": "repair",
 		"text": "A crew member in the system repairs 1 damage (2 if Veteran)."},
 	"extinguish": {"name": "Extinguish Fire", "cost": 0, "group": GROUP_CREW, "target": TARGET_OWN_SYSTEM, "art": "extinguish",
@@ -57,6 +55,8 @@ const GROUP_NAMES := {
 ## The full definition of a card instance: fixed cards come from the table, weapon cards from their system.
 ## A card instance is { uid, id, system, temporary }.
 static func definition(card: Dictionary, ship_systems: Dictionary) -> Dictionary:
+	if card.id == "suit":
+		return suit_definition(ship_systems.get(card.system, {}))
 	if card.id != "weapon":
 		var fixed: Dictionary = FIXED_CARDS[card.id].duplicate()
 		fixed.id = card.id
@@ -68,6 +68,16 @@ static func definition(card: Dictionary, ship_systems: Dictionary) -> Dictionary
 		"id": "weapon", "name": system.get("name", kind.name), "cost": weapon_type, "group": GROUP_WEAPON,
 		"target": TARGET_ENEMY_SYSTEM, "art": kind.id, "weapon_type": weapon_type, "kind": kind.id,
 		"text": weapon_text(kind, Catalog.weapon_profile(kind.id, weapon_type)),
+	}
+
+
+static func suit_definition(dock: Dictionary) -> Dictionary:
+	var suit := Catalog.suit_kind(dock.get("suit", "assault"))
+	var target := TARGET_ENEMY_SYSTEM if suit.action in ["shoot", "board"] else TARGET_NONE
+	return {
+		"id": "suit", "name": "Launch " + suit.name, "cost": suit.cost, "group": GROUP_TACTIC, "target": target,
+		"art": "suit", "suit": suit.id,
+		"text": "Needs crew in the dock. Out for %d turns. %s" % [suit.turns, suit.summary],
 	}
 
 
@@ -89,7 +99,7 @@ static func deck_list(design: ShipDesign) -> Array:
 	for system in design.systems:
 		var system_definition: Dictionary = Catalog.systems[system.type]
 		var card_id: String = system_definition.card
-		if card_id == "":
+		if card_id == "" or card_id == "jump" and Settings.value("jump_escape") == "Off":
 			continue
 		for i in system.level * system_definition.cards_per_level:
 			entries.append({"id": card_id, "system": system.id})

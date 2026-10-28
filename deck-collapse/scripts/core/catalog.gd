@@ -4,6 +4,7 @@ extends Node
 
 const SYSTEMS_FILE := "res://data/systems.xml"
 const WEAPONS_FILE := "res://data/weapons.xml"
+const SUITS_FILE := "res://data/suits.xml"
 const BUILT_IN_SHIPS_FOLDER := "res://data/ships"
 const USER_SHIPS_FOLDER := "user://ships"
 
@@ -11,6 +12,8 @@ const USER_SHIPS_FOLDER := "user://ships"
 var systems := {}
 ## Weapon kind definitions by id, in file order. Each has "types": { level: {shots, damage} }.
 var weapon_kinds := {}
+## EVB battlesuit types by id, in file order.
+var suit_kinds := {}
 ## Every ship design that can be picked: built-in first, then the player's own.
 var designs: Array[ShipDesign] = []
 
@@ -18,6 +21,7 @@ var designs: Array[ShipDesign] = []
 func _ready() -> void:
 	load_systems()
 	load_weapon_kinds()
+	load_suit_kinds()
 	reload_designs()
 
 
@@ -65,6 +69,30 @@ func load_weapon_kinds() -> void:
 				"damage": int(type_node.attrs.get("damage", 1)),
 			}
 		weapon_kinds[kind.id] = kind
+
+
+func load_suit_kinds() -> void:
+	suit_kinds.clear()
+	var root := XmlTree.parse_file(SUITS_FILE)
+	for node in XmlTree.children_named(root, "suit"):
+		var attrs: Dictionary = node.attrs
+		suit_kinds[attrs.id] = {
+			"id": attrs.id,
+			"name": attrs.get("name", attrs.id),
+			"cost": int(attrs.get("cost", 2)),
+			"turns": int(attrs.get("turns", 3)),
+			"action": attrs.get("action", "shoot"),
+			"shots": int(attrs.get("shots", 1)),
+			"damage": int(attrs.get("damage", 1)),
+			"shields": attrs.get("shields", "pop"),
+			"ion": attrs.get("ion", "false") == "true",
+			"never_misses": attrs.get("neverMisses", "false") == "true",
+			"summary": XmlTree.clean_text(node),
+		}
+
+
+func suit_kind(suit_id: String) -> Dictionary:
+	return suit_kinds.get(suit_id, suit_kinds.values()[0])
 
 
 func weapon_kind(kind_id: String) -> Dictionary:

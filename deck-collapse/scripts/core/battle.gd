@@ -11,8 +11,6 @@ const JUMP_CHARGES_NEEDED := 3
 const CLOAK_EVASION := 40
 const BURN_EVASION := 5
 const EVASION_CAP := 80
-const SUIT_TURNS := 3
-const SUIT_SHOTS := 2
 const MAX_CHAIN_COPIES := 3
 const SKILL_NAMES := ["Green", "Trained", "Veteran"]
 
@@ -32,8 +30,8 @@ var outcome := ""
 ## Side that jumped away, when the outcome is an escape.
 var escaped_side := -1
 var rng := RandomNumberGenerator.new()
-var draw_per_turn := 2
-var guaranteed_opening_power := true
+var draw_per_turn := 1
+var guaranteed_opening_power := false
 ## Events from setting up the battle and starting the first turn.
 var opening_events: Array = []
 
@@ -248,6 +246,8 @@ func why_cannot_move(side: int, member: Dictionary, system_id: String) -> String
 func why_cannot_burn(side: int) -> String:
 	if over or side != active_side:
 		return "Not your turn."
+	if Settings.value("engine_burn") == "Off":
+		return "Engine Burn is off in Settings."
 	var ship := ships[side]
 	var engines_id := ship.first_system_of_type("engines")
 	if engines_id == "":
@@ -366,6 +366,8 @@ func _start_turn(side: int, first_turn_of_battle: bool) -> void:
 		if member.owner == side:
 			member.moved = false
 			member.acted = false
+	for guardian in ships[1 - side].suits:
+		guardian.ready = true
 	_emit({"type": "turn_start", "side": side, "turn": turn_number})
 	_log("— %s's turn —" % ship.name, side)
 	_heal_in_med_bay(ship)
@@ -381,18 +383,13 @@ func _start_turn(side: int, first_turn_of_battle: bool) -> void:
 
 func _end_of_turn_effects(ship: ShipState) -> void:
 	var enemy := ships[1 - ship.side]
-	# Battlesuits fire as the turn ends.
-	for suit in ship.suits.duplicate():
-		if over:
-			break
-		_emit({"type": "suit_fires", "side": ship.side, "target": suit.target})
-		for shot_index in SUIT_SHOTS:
-			_fire_shot(ship, enemy, "", suit.target, {"shields": "pop", "damage": 1, "fire_chance": 0, "breach_chance": 0,
-				"wounds_crew": false, "ion": false, "never_misses": false, "kind": "suit"}, shot_index)
-		suit.turns_left -= 1
-		if suit.turns_left <= 0:
-			ship.suits.erase(suit)
-			_log("A battlesuit returns to its dock.", ship.side)
+	_suits_act(ship, enemy)
+	# Enemy boarding suits bore into this ship as its captain's turn ends.
+	for suit in enemy.suits:
+		if Catalog.suit_kind(suit.kind).action == "board" and not ship.is_broken(suit.target):
+			_emit({"type": "suit_bores", "side": enemy.side, "target": suit.target})
+			_log("A boarding suit tears into %s." % ship.systems[suit.target].name, enemy.side)
+			_damage_system(ship, suit.target, 1, true, "boarding suit")
 	# Fire, breaches and air: hazards hurt this captain's ship at the end of their turn.
 	for system_id in ship.system_order:
 		var system: Dictionary = ship.systems[system_id]
@@ -426,8 +423,41 @@ func _end_of_turn_effects(ship: ShipState) -> void:
 	ship.temporary_power = 0
 
 
+## The ship's battlesuits act as its captain's turn ends, then count down their time out.
+func _suits_act(ship: ShipState, enemy: ShipState) -> void:
+	for suit in ship.suits.duplicate():
+		if over:
+			break
+		var kind := Catalog.suit_kind(suit.kind)
+		match kind.action:
+			"shoot":
+				_emit({"type": "suit_fires", "side": ship.side, "dock": suit.dock, "target": suit.target, "suit": kind.id})
+				_log("%s fires at %s." % [kind.name, enemy.systems[suit.target].name], ship.side)
+				var shot := {"shields": kind.shields, "damage": kind.damage, "fire_chance": 0, "breach_chance": 0,
+					"wounds_crew": false, "ion": kind.ion, "never_misses": kind.never_misses,
+					"kind": "ion" if kind.ion else ("beam" if kind.shields == "reduce" else "suit")}
+				for shot_index in kind.shots:
+					_fire_shot(ship, enemy, suit.dock, suit.target, shot, shot_index)
+			"repair":
+				var worst := ""
+				for system_id in ship.system_order:
+					if ship.systems[system_id].damage > 0 and (worst == "" or ship.systems[system_id].damage > ship.systems[worst].damage):
+						worst = system_id
+				if worst != "":
+					ship.systems[worst].damage -= 1
+					_emit({"type": "repaired", "side": ship.side, "system": worst, "amount": 1, "crew": -1})
+					_log("%s repairs %s (+1)." % [kind.name, ship.systems[worst].name], ship.side)
+		suit.turns_left -= 1
+		if suit.turns_left <= 0:
+			ship.suits.erase(suit)
+			_emit({"type": "suit_returned", "side": ship.side, "dock": suit.dock})
+			_log("%s returns to its dock." % kind.name, ship.side)
+
+
 ## Crew of both sides in the same system on this ship trade blows.
 func _crew_fights(ship: ShipState) -> void:
+	if Settings.value("crew_fights") == "Off":
+		return
 	for system_id in ship.system_order:
 		var here := crew_in_system(ship.side, system_id)
 		var defenders := here.filter(func(m): return m.owner == ship.side and m.controlled_by < 0)
@@ -477,6 +507,10 @@ func _resolve_card(ship: ShipState, card: Dictionary, definition: Dictionary, ta
 		"weapon":
 			_fire_weapon(ship, enemy, card, target.system)
 		"jump":
+			if Settings.value("jump_escape") == "Off":
+				_log("The jump drive hums, but escape is off in Settings.", ship.side)
+				_return_to_deck(ship, card)
+				return
 			ship.jump_charge += 1
 			_emit({"type": "jump_charge", "side": ship.side, "charge": ship.jump_charge})
 			_log("Jump drive spooling: %d/%d." % [ship.jump_charge, JUMP_CHARGES_NEEDED], ship.side)
@@ -528,11 +562,16 @@ func _resolve_card(ship: ShipState, card: Dictionary, definition: Dictionary, ta
 			_emit({"type": "battery", "side": ship.side})
 			_log("Backup Cell: +1 power this turn.", ship.side)
 		"suit":
-			var pilot := _free_crew_in(ship, ship.first_system_of_type("evb"))
+			var pilot := _free_crew_in(ship, card.system)
 			pilot.acted = true
-			ship.suits.append({"target": target.system, "turns_left": SUIT_TURNS})
-			_emit({"type": "suit_launched", "side": ship.side, "target": target.system})
-			_log("Battlesuit launched toward %s." % enemy.systems[target.system].name, ship.side)
+			var kind := Catalog.suit_kind(ship.systems[card.system].suit)
+			var aim: String = target.get("system", "")
+			ship.suits.append({"kind": kind.id, "dock": card.system, "target": aim, "turns_left": kind.turns, "ready": true})
+			_emit({"type": "suit_launched", "side": ship.side, "dock": card.system, "target": aim, "suit": kind.id})
+			if aim != "":
+				_log("%s flies out toward %s." % [kind.name, enemy.systems[aim].name], ship.side)
+			else:
+				_log("%s flies out." % kind.name, ship.side)
 		"repair":
 			var worker := _free_crew_in(ship, target.system)
 			worker.acted = true
@@ -569,7 +608,7 @@ func _fire_weapon(ship: ShipState, enemy: ShipState, card: Dictionary, target_sy
 		ship.missiles -= 1
 	var shot := {"shields": kind.shields, "damage": profile.damage, "fire_chance": kind.fire_chance,
 		"breach_chance": kind.breach_chance, "wounds_crew": kind.wounds_crew, "ion": kind.ion,
-		"never_misses": kind.never_misses, "kind": kind.id}
+		"never_misses": kind.never_misses, "kind": kind.id, "interceptable": kind.uses_missile}
 	_log("Fires %s at %s." % [system.name, enemy.systems[target_system_id].name], ship.side)
 	for shot_index in profile.shots:
 		if over:
@@ -587,9 +626,15 @@ func _fire_weapon(ship: ShipState, enemy: ShipState, card: Dictionary, target_sy
 func _fire_shot(ship: ShipState, enemy: ShipState, weapon_system_id: String, target_system_id: String, shot: Dictionary, shot_index: int) -> void:
 	var event := {"type": "shot", "side": ship.side, "from": weapon_system_id, "target": target_system_id,
 		"kind": shot.kind, "index": shot_index, "result": "hit", "damage": 0}
+	if shot.get("interceptable", false):
+		for guardian in enemy.suits:
+			if Catalog.suit_kind(guardian.kind).action == "intercept" and guardian.ready:
+				guardian.ready = false
+				event.result = "intercepted"
+				_emit(event)
+				_log("A guardian suit shoots down the torpedo!", enemy.side)
+				return
 	var chance := 100 if shot.never_misses else hit_chance(ship, weapon_system_id, enemy)
-	if weapon_system_id == "" and not shot.never_misses:
-		chance = clampi(100 - evasion(enemy), 5, 100)
 	if rng.randi_range(1, 100) > chance:
 		event.result = "miss"
 		_emit(event)
@@ -762,8 +807,8 @@ func _card_requirement_problem(ship: ShipState, card: Dictionary, definition: Di
 			if ship.hack_streak >= ship.capacity_of_type("hacking"):
 				return "Hacking needs a turn to cool down."
 		"suit":
-			if _free_crew_in(ship, ship.first_system_of_type("evb")).is_empty():
-				return "Needs a free crew member in the EVB Dock."
+			if _free_crew_in(ship, card.system).is_empty():
+				return "Needs a free crew member in %s." % ship.systems[card.system].name
 		"airlock":
 			var airlock_id := ship.first_system_of_type("airlock")
 			if airlock_id == "" or ship.capacity(airlock_id) <= 0:

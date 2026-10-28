@@ -109,10 +109,10 @@ func _wanted_stations(battle: Battle, side: int) -> Array:
 				wanted.append({"ship": side, "system": system_id})
 	# A launch needs someone in the EVB Dock right after the pilot.
 	if "suit" in hand_ids:
-		var dock := ship.first_system_of_type("evb")
-		var pilot_seat := ship.first_system_of_type("piloting")
-		wanted.append({"ship": side, "system": pilot_seat})
-		wanted.append({"ship": side, "system": dock})
+		wanted.append({"ship": side, "system": ship.first_system_of_type("piloting")})
+		for card in ship.hand:
+			if card.id == "suit":
+				wanted.append({"ship": side, "system": card.system})
 	# Ordinary stations.
 	for type in STATION_PRIORITY:
 		if type == "evb" and not "suit" in hand_ids:
@@ -255,10 +255,27 @@ func _ranked_targets(battle: Battle, side: int) -> Array:
 
 
 func _launch_suit(battle: Battle, side: int) -> Dictionary:
-	for system_id in _ranked_targets(battle, side):
-		var action := _play_first(battle, side, "suit", {"system": system_id, "ship": 1 - side})
-		if not action.is_empty():
-			return action
+	var ship := battle.ships[side]
+	var enemy := battle.ships[1 - side]
+	for card in ship.hand:
+		if card.id != "suit":
+			continue
+		var definition := battle.card_definition(ship, card)
+		if definition.target == CardLibrary.TARGET_NONE:
+			var wanted := true
+			if definition.suit == "repair":
+				wanted = ship.systems.values().any(func(s): return s.damage > 0)
+			elif definition.suit == "guardian":
+				wanted = enemy.weapon_systems().any(func(id): return Catalog.weapon_kind(enemy.systems[id].kind).uses_missile)
+			if wanted and battle.why_cannot_play(side, card.uid, {}) == "":
+				return {"kind": "play", "uid": card.uid, "target": {}}
+			continue
+		var targets := _ranked_targets(battle, side)
+		if definition.suit == "ion" and not enemy.shield_layers.is_empty():
+			targets.push_front(enemy.first_system_of_type("shields"))
+		for system_id in targets:
+			if battle.why_cannot_play(side, card.uid, {"system": system_id, "ship": 1 - side}) == "":
+				return {"kind": "play", "uid": card.uid, "target": {"system": system_id, "ship": 1 - side}}
 	return {}
 
 
@@ -298,7 +315,7 @@ func _cloak(battle: Battle, side: int) -> Dictionary:
 
 
 func _jump(battle: Battle, side: int) -> Dictionary:
-	if level == "Easy":
+	if level == "Easy" or Settings.value("jump_escape") == "Off":
 		return {}
 	var ship := battle.ships[side]
 	var enemy := battle.ships[1 - side]

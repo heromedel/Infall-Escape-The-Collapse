@@ -45,6 +45,8 @@ static func from_xml(xml_text: String) -> ShipDesign:
 			system.kind = system_attrs.get("kind", "laser")
 			system.weapon_type = int(system_attrs.get("weaponType", 1))
 			system.name = system_attrs.get("name", Catalog.weapon_kind(system.kind).name)
+		elif type == "evb":
+			system.suit = system_attrs.get("suit", "assault")
 		design.systems.append(system)
 	for crew_node in XmlTree.children_named(root, "crew"):
 		var crew_attrs: Dictionary = crew_node.attrs
@@ -66,6 +68,8 @@ func to_xml() -> String:
 		if system.type == "weapon":
 			lines.append('  <system type="weapon" id="%s" name="%s" kind="%s" weaponType="%d" level="%d"/>' % [
 				XmlTree.escape(system.id), XmlTree.escape(system.name), system.kind, system.weapon_type, system.level])
+		elif system.type == "evb":
+			lines.append('  <system type="evb" id="%s" suit="%s" level="%d"/>' % [XmlTree.escape(system.id), system.suit, system.level])
 		else:
 			lines.append('  <system type="%s" level="%d"/>' % [system.type, system.level])
 	for member in crew:
@@ -100,6 +104,8 @@ func points() -> int:
 		total += int(Catalog.systems[system.type].points_per_level) * system.level
 		if system.type == "weapon":
 			total += system.weapon_type * 2
+		elif system.type == "evb":
+			total += Catalog.suit_kind(system.suit).cost * 2
 	for member in crew:
 		total += 3 + member.skill
 	return total
@@ -115,12 +121,17 @@ func problems() -> Array[String]:
 	var seen_types := {}
 	for system in systems:
 		var definition: Dictionary = Catalog.systems[system.type]
-		if system.type != "weapon":
+		if system.type == "weapon":
+			if system.level < system.weapon_type:
+				found.append("%s needs level %d or more for Type %d." % [system.name, system.weapon_type, system.weapon_type])
+		elif system.type == "evb":
+			var suit := Catalog.suit_kind(system.suit)
+			if system.level < suit.cost:
+				found.append("An EVB Dock with %s needs level %d or more." % [suit.name, suit.cost])
+		else:
 			if seen_types.has(system.type):
 				found.append("Only one %s allowed." % definition.name)
 			seen_types[system.type] = true
-		elif system.level < system.weapon_type:
-			found.append("%s needs level %d or more for Type %d." % [system.name, system.weapon_type, system.weapon_type])
 	if not systems.any(func(system): return system.type == "weapon" or system.type == "evb"):
 		found.append("Needs a weapon system or an EVB Dock to fight.")
 	if crew.is_empty():

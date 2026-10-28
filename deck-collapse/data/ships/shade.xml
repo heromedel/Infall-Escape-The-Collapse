@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Classic stealth cruiser: no shields, a cloak and good evasion. -->
+<ship name="Shade" faction="Cruiser" color="#66FF66" hull="30" missiles="0">
+  <note>No shields at all. Dodges, cloaks at the right moment and cuts with a small beam.</note>
+  <system type="reactor" level="8"/>
+  <system type="engines" level="3"/>
+  <system type="piloting" level="2"/>
+  <system type="sensors" level="1"/>
+  <system type="lifeSupport" level="1"/>
+  <system type="medBay" level="1"/>
+  <system type="airlock" level="1"/>
+  <system type="cloak" level="1"/>
+  <system type="weapon" id="needle" name="Needle Beam" kind="beam" weaponType="1" level="1"/>
+  <system type="weapon" id="twin" name="Twin Laser" kind="laser" weaponType="1" level="2"/>
+  <crew name="Rhee" skill="1" station="piloting"/>
+  <crew name="Calder" skill="0" station="engines"/>
+  <crew name="Moss" skill="0" station="twin"/>
+</ship>

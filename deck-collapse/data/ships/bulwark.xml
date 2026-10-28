@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Classic heavy missile cruiser: two torpedo launchers, a deep missile stock and a guardian suit. -->
+<ship name="Bulwark" faction="Cruiser" color="#66FF66" hull="30" missiles="14">
+  <note>Ignores shields entirely. Two launchers and a hold full of torpedoes, but they run out eventually.</note>
+  <system type="reactor" level="8"/>
+  <system type="shields" level="1"/>
+  <system type="engines" level="1"/>
+  <system type="piloting" level="1"/>
+  <system type="sensors" level="1"/>
+  <system type="lifeSupport" level="1"/>
+  <system type="medBay" level="1"/>
+  <system type="airlock" level="1"/>
+  <system type="weapon" id="ram" name="Ram Torpedo" kind="missile" weaponType="1" level="1"/>
+  <system type="weapon" id="breaker" name="Hull Breaker" kind="missile" weaponType="2" level="2"/>
+  <crew name="Grath" skill="1" station="piloting"/>
+  <crew name="Duun" skill="1" station="breaker"/>
+  <crew name="Hollis" skill="0" station="shields"/>
+</ship>

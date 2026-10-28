@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Classic boarding enemy: a fighter that sends crew across. -->
+<ship name="Boarding Fighter" faction="Enemy" color="#FF8500" hull="9" missiles="0">
+  <note>Fast and aggressive. Teleports fighters onto your ship while a light laser covers them.</note>
+  <system type="reactor" level="8"/>
+  <system type="shields" level="1"/>
+  <system type="engines" level="3"/>
+  <system type="piloting" level="1"/>
+  <system type="sensors" level="1"/>
+  <system type="lifeSupport" level="1"/>
+  <system type="medBay" level="1"/>
+  <system type="teleport" level="2"/>
+  <system type="weapon" id="laser" name="Raider Laser" kind="laser" weaponType="1" level="2"/>
+  <crew name="Skarr" skill="2" station="teleport"/>
+  <crew name="Vek" skill="1" station="teleport"/>
+  <crew name="Tash" skill="0" station="piloting"/>
+</ship>

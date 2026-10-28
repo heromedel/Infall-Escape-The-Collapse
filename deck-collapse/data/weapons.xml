@@ -18,14 +18,14 @@
   <kind id="laser" name="Pulse Laser" shields="pop" fireChance="10" breachChance="0">
     Fires quick bolts. Each shield layer stops one bolt.
     <type level="1" shots="1" damage="1"/>
-    <type level="2" shots="2" damage="1"/>
-    <type level="3" shots="3" damage="1"/>
+    <type level="2" shots="3" damage="1"/>
+    <type level="3" shots="4" damage="1"/>
   </kind>
   <kind id="heavy" name="Heavy Laser" shields="pop" fireChance="25" breachChance="10">
     One slow, hard bolt. A shield layer stops it.
-    <type level="1" shots="1" damage="1"/>
-    <type level="2" shots="1" damage="2"/>
-    <type level="3" shots="1" damage="3"/>
+    <type level="1" shots="1" damage="2"/>
+    <type level="2" shots="1" damage="3"/>
+    <type level="3" shots="2" damage="2"/>
   </kind>
   <kind id="ion" name="Ion Burst" shields="pop" ion="true">
     Ion charges pop shields; a hit system is disabled for a turn. Ion on a reactor knocks a power card loose.
@@ -35,9 +35,9 @@
   </kind>
   <kind id="missile" name="Torpedo" shields="ignore" usesMissile="true" woundsCrew="true" fireChance="20" breachChance="35">
     Ignores shields. Uses a missile. The blast wounds crew in the system.
-    <type level="1" shots="1" damage="1"/>
-    <type level="2" shots="1" damage="2"/>
-    <type level="3" shots="1" damage="3"/>
+    <type level="1" shots="1" damage="2"/>
+    <type level="2" shots="1" damage="3"/>
+    <type level="3" shots="1" damage="4"/>
   </kind>
   <kind id="beam" name="Cutter Beam" shields="reduce" neverMisses="true" woundsCrew="true" fireChance="30">
     Never misses. Each shield layer cuts 1 damage. Burns crew it sweeps.

@@ -35,7 +35,7 @@ var cloak_streak := 0
 var hacked_this_turn := false
 var hack_streak := 0
 var jump_charge := 0
-## Battlesuits flying: { target, turns_left }.
+## Battlesuits out: { kind (suit kind id), dock (system id), target, turns_left, ready }.
 var suits: Array = []
 ## Temporary copies added by chain weapons: system id -> count.
 var chain_copies := {}
@@ -47,7 +47,7 @@ func _init(owner_side: int, ship_design: ShipDesign) -> void:
 	design = ship_design
 	name = ship_design.name
 	color = Color.from_string(ship_design.color, Color.WHITE)
-	hull_max = ship_design.hull
+	hull_max = maxi(1, roundi(ship_design.hull * Settings.hull_multiplier()))
 	hull = hull_max
 	missiles = ship_design.missiles
 	for system in ship_design.systems:
@@ -59,6 +59,9 @@ func _init(owner_side: int, ship_design: ShipDesign) -> void:
 		if system.type == "weapon":
 			state.kind = system.kind
 			state.weapon_type = system.weapon_type
+		elif system.type == "evb":
+			state.suit = system.suit
+			state.name = Catalog.suit_kind(system.suit).name + " Dock"
 		systems[system.id] = state
 		system_order.append(system.id)
 
