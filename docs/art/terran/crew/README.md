@@ -62,7 +62,7 @@ down. `review/gatos-drifter-game-size-versions.png` shows the 2x drifter and the
 downscale, the downscale of the outlined one (tidied by `small.tidy_outline`: gaps closed, corner-only pixels
 dropped, one pixel everywhere), and the drifter drawn by hand at game size (`tools/tiny.py`, `svg/drifter-tiny.svg`;
 blind-checked seven times, last 6/10, still flagged: sleeves and hands read weakly, the hem corners, a heavy gap
-between the legs). Version B above (black outline added after shrinking) was rejected: "it clearly sucks".
+between the legs; then, heromedel: no nose, and the trench coat's ruffled hem flattened). Version B above (black outline added after shrinking) was rejected: "it clearly sucks".
 
 **Faster tries:** `python3 tools/review.py OUT_DIR` builds the sprite with every goal and check and writes one review
 sheet (the figure enlarged, at 2x and true size, and close-ups of the head, a hand and the boots), in about 3 seconds.
