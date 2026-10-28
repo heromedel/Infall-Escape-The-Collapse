@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Card battle version of the Tentauri Tough Little Scout (docs/ship-suggestions.md): gets in, survives, gets out. -->
+<ship name="Tough Little Scout" faction="Tentauri" color="#FF5ECA" hull="11" missiles="0">
+  <note>Two crew in a tiny shuttle with thick shields and a battery. Hard to hurt, slow to kill you.</note>
+  <system type="reactor" level="5"/>
+  <system type="shields" level="3"/>
+  <system type="engines" level="3"/>
+  <system type="piloting" level="1"/>
+  <system type="sensors" level="1"/>
+  <system type="lifeSupport" level="1"/>
+  <system type="medBay" level="1"/>
+  <system type="battery" level="1"/>
+  <system type="weapon" id="trigger-a" name="Defense Laser A" kind="laser" weaponType="1" level="2"/>
+  <system type="weapon" id="trigger-b" name="Defense Laser B" kind="laser" weaponType="1" level="2"/>
+  <crew name="Pell" skill="2" station="piloting"/>
+  <crew name="Oolu" skill="2" station="shields"/>
+</ship>

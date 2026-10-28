@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Weapon kinds for Infall: Deck Collapse.
+  A weapon system holds one kind at one Type. The Type is the weapon card's power cost, and the system's level must
+  be at least the Type. Each <type> row says what one card of that Type does.
+
+  shields       pop     each shield layer stops one shot and drops
+                reduce  damage is lowered by the number of layers; layers stay up
+                ignore  passes through shields
+  ion           true: a hit disables the system for its captain's next turn instead of damaging it
+  chain         true: firing adds a temporary copy of the card to the deck (up to 3), gone when the battle ends
+  usesMissile   true: each card fired uses one missile from the ship's stock
+  neverMisses   true: evasion does not apply
+  woundsCrew    true: every crew member in the hit system takes a wound
+  fireChance / breachChance   percent per hit
+-->
+<weapons>
+  <kind id="laser" name="Pulse Laser" shields="pop" fireChance="10" breachChance="0">
+    Fires quick bolts. Each shield layer stops one bolt.
+    <type level="1" shots="1" damage="1"/>
+    <type level="2" shots="2" damage="1"/>
+    <type level="3" shots="3" damage="1"/>
+  </kind>
+  <kind id="heavy" name="Heavy Laser" shields="pop" fireChance="25" breachChance="10">
+    One slow, hard bolt. A shield layer stops it.
+    <type level="1" shots="1" damage="1"/>
+    <type level="2" shots="1" damage="2"/>
+    <type level="3" shots="1" damage="3"/>
+  </kind>
+  <kind id="ion" name="Ion Burst" shields="pop" ion="true">
+    Ion charges pop shields; a hit system is disabled for a turn. Ion on a reactor knocks a power card loose.
+    <type level="1" shots="1" damage="0"/>
+    <type level="2" shots="2" damage="0"/>
+    <type level="3" shots="3" damage="0"/>
+  </kind>
+  <kind id="missile" name="Torpedo" shields="ignore" usesMissile="true" woundsCrew="true" fireChance="20" breachChance="35">
+    Ignores shields. Uses a missile. The blast wounds crew in the system.
+    <type level="1" shots="1" damage="1"/>
+    <type level="2" shots="1" damage="2"/>
+    <type level="3" shots="1" damage="3"/>
+  </kind>
+  <kind id="beam" name="Cutter Beam" shields="reduce" neverMisses="true" woundsCrew="true" fireChance="30">
+    Never misses. Each shield layer cuts 1 damage. Burns crew it sweeps.
+    <type level="1" shots="1" damage="1"/>
+    <type level="2" shots="1" damage="2"/>
+    <type level="3" shots="1" damage="3"/>
+  </kind>
+  <kind id="chain" name="Chain Repeater" shields="pop" chain="true" fireChance="10">
+    Each time it fires, a temporary copy joins your deck.
+    <type level="1" shots="1" damage="1"/>
+    <type level="2" shots="2" damage="1"/>
+    <type level="3" shots="2" damage="1"/>
+  </kind>
+</weapons>

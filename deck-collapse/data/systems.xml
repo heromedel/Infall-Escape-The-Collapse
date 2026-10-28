@@ -6,7 +6,7 @@
 
   type          the id the rules engine and ship files use
   name          shown on tiles and cards
-  card          the card id this system adds (see cards in src/cards.js), or "" for none
+  card          the card id this system adds (see scripts/core/card_library.gd), or "" for none
   cardsPerLevel how many of that card each level adds
   pointsPerLevel design points one level costs in the Ship Designer
   minLevel / maxLevel  designer limits; minLevel 1 with required="true" means every ship has it
@@ -20,7 +20,7 @@
     Adds 1 Raise Shield card per level. Up to one shield layer per working level.
   </system>
   <system type="engines" name="Engines" card="" cardsPerLevel="0" pointsPerLevel="2" minLevel="1" maxLevel="6" mannable="true">
-    Each working level adds 5% evasion. Spend power here to Burn for more.
+    Each working level adds 5% evasion. Spend power here to Burn: +5% each until your next turn.
   </system>
   <system type="piloting" name="Piloting" card="jump" cardsPerLevel="1" pointsPerLevel="2" minLevel="1" maxLevel="3" required="true" mannable="true">
     Needed to dodge. Level 2 has Auto Pilot (half evasion unmanned), level 3 Advanced Auto Pilot (full). Adds 1 Spool Jump Drive per level.

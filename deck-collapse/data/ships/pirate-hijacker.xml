@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Card battle version of the Terran Pirate Hijacker (docs/ship-suggestions.md): disable, then board. -->
+<ship name="Pirate Hijacker" faction="Terran Pirates" color="#FF8500" hull="13" missiles="0">
+  <note>Doomed Terrans who take ships instead of destroying them. Stuns your systems, then sends boarders.</note>
+  <system type="reactor" level="6"/>
+  <system type="shields" level="2"/>
+  <system type="engines" level="2"/>
+  <system type="piloting" level="2"/>
+  <system type="sensors" level="1"/>
+  <system type="lifeSupport" level="1"/>
+  <system type="medBay" level="2"/>
+  <system type="airlock" level="1"/>
+  <system type="teleport" level="2"/>
+  <system type="weapon" id="twinshot" name="Twinshot" kind="laser" weaponType="2" level="2"/>
+  <system type="weapon" id="sporewing" name="Sporewing" kind="ion" weaponType="1" level="2"/>
+  <crew name="Rook" skill="1" station="piloting"/>
+  <crew name="Vesna Kral" skill="1" station="twinshot"/>
+  <crew name="Dutch" skill="0" station="shields"/>
+  <crew name="Ivo Sarr" skill="2" station="teleport"/>
+  <crew name="Lenka" skill="0" station="teleport"/>
+</ship>

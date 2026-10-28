@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Card battle version of the Mecha Light Attack Frame, Hull Laser loadout (docs/ship-suggestions.md). -->
+<ship name="Light Attack Frame" faction="Mecha" color="#AA28EB" hull="11" missiles="0">
+  <note>A standard Mecha frame with a heavy hull laser. Thin shields, hits hard.</note>
+  <system type="reactor" level="5"/>
+  <system type="shields" level="1"/>
+  <system type="engines" level="1"/>
+  <system type="piloting" level="1"/>
+  <system type="sensors" level="1"/>
+  <system type="lifeSupport" level="1"/>
+  <system type="medBay" level="1"/>
+  <system type="weapon" id="hull-laser" name="DS-ST Hull Laser" kind="heavy" weaponType="2" level="3"/>
+  <crew name="Unit Kessa" skill="1" station="hull-laser"/>
+  <crew name="Unit Draal" skill="1" station="piloting"/>
+</ship>
