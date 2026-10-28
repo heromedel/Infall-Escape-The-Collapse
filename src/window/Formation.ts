@@ -26,7 +26,7 @@ export const CELL = 35;
  * the enemy squad above it, 'up' for the player squad below it. Returns each footprint's top-left corner in
  * squad pixels (the squad's own top-left is 0,0; the barrier side is its bottom for 'down', its top for 'up')
  * and the squad's size, which covers every used zone. The player side's zones are shifted right by the file's
- * shift. A footprint is centred in its zone, then snapped to the cell so rooms line up across ships.
+ * shift, and both sides' by the file's margin, which the field also keeps open on the right. A footprint is centred in its zone, then snapped to the cell so rooms line up across ships.
  */
 export interface ZoneBox {
   slot: number;
@@ -37,10 +37,11 @@ export interface ZoneBox {
 
 export function formationSlots(footprints: Footprint[], facing: 'up' | 'down', formation: FormationDefinition): { slots: Slot[]; width: number; height: number; zones: ZoneBox[] } {
   const zone = formation.zoneSize * CELL;
-  const shiftColumns = facing === 'up' ? formation.shift : 0;
+  // the player's zones are shifted right; both sides' zones are moved in by the open margin on the left
+  const shiftColumns = (facing === 'up' ? formation.shift : 0) + formation.margin;
   const used = footprints.map((_, index) => formation.zones[Math.min(index, formation.zones.length - 1)]);
   // the field spans every zone of the file, used or not: the barrier runs across the whole battlefield (GDD 3R)
-  const columnsAcross = Math.max(...formation.zones.map((z) => z.column)) + formation.zoneSize + shiftColumns;
+  const columnsAcross = Math.max(...formation.zones.map((z) => z.column)) + formation.zoneSize + shiftColumns + formation.margin;
   // a hull taller than its zone overflows away from the barrier, never into it; the squad grows to hold it
   const overflow = Math.max(0, ...footprints.map((print) => hullHeight(print) - zone));
   const rowsDeep = Math.max(...formation.zones.map((z) => z.row)) + formation.zoneSize + Math.ceil(overflow / CELL);

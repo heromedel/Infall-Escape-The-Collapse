@@ -16,6 +16,14 @@ describe('formation files', () => {
     expect(curve.shift).toBeGreaterThan(0);
     expect(curve.zones.map((zone) => zone.slot)).toEqual([1, 2, 3, 4, 5, 6]);
     expect(curve.zones[2].row).toBeGreaterThan(curve.zones[0].row);   // the centre ship sits back from the barrier
+    expect(Math.min(...curve.zones.map((zone) => zone.row))).toBeGreaterThanOrEqual(6);   // no ship crowds the barrier
+    expect(curve.margin).toBeGreaterThan(0);   // the barrier runs past the outermost ships
+  });
+  it('keeps the margin open on both sides of the field', () => {
+    const withMargin = formationSlots(three, 'up', curve);
+    const without = formationSlots(three, 'up', { ...curve, margin: 0 });
+    expect(withMargin.width).toBe(without.width + 2 * curve.margin * CELL);
+    expect(withMargin.slots[0].x).toBe(without.slots[0].x + curve.margin * CELL);
   });
   it('refuses overlapping zones and gaps in the slot numbers', () => {
     expect(() => readFormationDefinition('<formation name="Bad" zoneSize="12"><zone slot="1" column="0" row="0"/><zone slot="2" column="6" row="3"/></formation>')).toThrow(/overlap/);

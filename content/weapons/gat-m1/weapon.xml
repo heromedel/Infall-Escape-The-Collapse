@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Gat M1 "Pathfinder": the Outrider's light missile (ship-suggestions.md, Outrider step 9). Charge 9.1 s; 0.05 a shot. -->
 <weapon name="Gat M1" nickname="Pathfinder" type="Missile" effects="Damage, Breach" techType="Mechanical" race="Terran"
-        shots="1" damage="1" power="1" chargeSeconds="9.1" mawjigPerShot="0.05" breachChance="10%"
+        shots="1" damage="1" power="1" chargeSeconds="9.1" mawjigPerShot="0.05" breachChance="10%" projectileArt="missile.svg"
         description="A light missile that passes through shields."/>

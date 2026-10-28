@@ -137,7 +137,7 @@ function listenToHost(): void {
         inBattle = true;
         battleOver = false;
         showScreen('battle');
-        battleView.start(message.pictures, message.playerShipIds, message.formations);
+        battleView.start(message.pictures, message.playerShipIds, message.formations, message.projectiles);
         controls.start(message.pictures, message.playerShipIds, message.look);
         stage.replaceChildren(battleView.root);
         fitBattle();

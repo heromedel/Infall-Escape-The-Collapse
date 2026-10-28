@@ -16,5 +16,7 @@ export interface FormationDefinition {
   zoneSize: number;
   /** The player side's zones shifted right by this many columns (GDD 3R squad offset). */
   shift: number;
+  /** Open columns on each side of the zones: the barrier runs this much past the outermost ships (GDD 3R). */
+  margin: number;
   zones: FormationZone[];
 }

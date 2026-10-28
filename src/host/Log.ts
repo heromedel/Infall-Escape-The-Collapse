@@ -24,6 +24,7 @@ const HUMAN_LINES: Record<string, (fields: LogFields) => string> = {
   'content.weapon_missing': (f) => `Ship "${f.ship}" names weapon "${f.weapon}", which has no weapon file.`,
   'content.race_loaded': (f) => `Loaded race "${f.race}": XP rate ${f.xpRate}, integration ${f.integrationBars} bar(s).`,
   'content.race_refused': (f) => `Refused race file ${f.file}: ${f.reason}`,
+  'content.projectile_art_missing': (f) => `Weapon "${f.weapon}" names projectile art that isn't there or isn't an SVG: ${f.file}.`,
   'content.formation_loaded': (f) => `Loaded formation "${f.formation}": ${f.zones} zones of ${f.zoneSize} cells, player shift ${f.shift}.`,
   'content.formation_refused': (f) => `Formation file ${f.file} refused: ${f.reason}.`,
   'content.loaded': (f) => `Content loaded: ${f.ships} ships, ${f.systems} systems, ${f.weapons} weapons, ${f.races} races, ${f.formations} formations.`,

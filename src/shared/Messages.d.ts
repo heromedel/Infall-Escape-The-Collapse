@@ -27,9 +27,16 @@ export interface Look {
   showZones: boolean;
 }
 
+/** A projectile's picture: SVG text and its size, drawn nose up with its top centre on the flight path. */
+export interface ProjectileArt {
+  content: string;
+  width: number;
+  height: number;
+}
+
 export type HostToClient =
   /** Sent once when a battle starts: everything the window needs to draw each ship (the static parts). */
-  | { kind: 'BattleStarted'; pictures: Record<number, ShipPicture>; playerShipIds: number[]; formations: { player: FormationDefinition; enemy: FormationDefinition }; look: Look }
+  | { kind: 'BattleStarted'; pictures: Record<number, ShipPicture>; playerShipIds: number[]; formations: { player: FormationDefinition; enemy: FormationDefinition }; projectiles: Record<string, ProjectileArt>; look: Look }
   /** A look setting changed mid-battle (the debug console for now, the settings screen later). */
   | { kind: 'Look'; look: Look }
   /** Sent every tick while a battle runs, and once more when it ends. */

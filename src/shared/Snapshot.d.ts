@@ -8,6 +8,8 @@ export interface Snapshot {
   seconds: number;
   /** The off-screen distance between the squads (GDD 3Q). */
   distanceGm: number;
+  /** Seconds a shot takes from firing to arriving: on screen out, the gap, on screen in. */
+  shotFlightSeconds: number;
   squads: SnapshotSquad[];
   shots: SnapshotShot[];
   /** Set once the battle is decided. */

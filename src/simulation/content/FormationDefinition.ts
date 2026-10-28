@@ -22,6 +22,7 @@ export function readFormationDefinition(xmlText: string): FormationDefinition {
   };
   const zoneSize = number('zoneSize', attribute('zoneSize', head[1]), 12);
   const shift = number('shift', attribute('shift', head[1]), 0);
+  const margin = number('margin', attribute('margin', head[1]), 0);
   const zones: FormationZone[] = [];
   for (const match of xmlText.matchAll(/<zone\s([^>]*)\/?>/g)) {
     const slot = number('zone slot', attribute('slot', match[1]));
@@ -35,5 +36,5 @@ export function readFormationDefinition(xmlText: string): FormationDefinition {
       throw new FormationFileError(`formation "${name}": zones ${a.slot} and ${b.slot} overlap`);
     }
   }
-  return { name, zoneSize, shift, zones };
+  return { name, zoneSize, shift, margin, zones };
 }

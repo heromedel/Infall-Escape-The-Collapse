@@ -14,11 +14,13 @@ describe('weapon files', () => {
       const weapon = reader.readWeapon(fs.readFileSync(path.join(weaponsFolder, folder, 'weapon.xml'), 'utf8'));
       expect(weapon.chargeSeconds).toBeGreaterThan(0);
       expect(weapon.mawjigPerShot).toBeGreaterThan(0);
+      // projectile art, when named, is an SVG beside the card
+      if (weapon.projectileArt) expect(fs.existsSync(path.join(weaponsFolder, folder, weapon.projectileArt))).toBe(true);
     });
   }
   it('reads the Gat 3.1 card', () => {
     const weapon = reader.readWeapon(fs.readFileSync(path.join(weaponsFolder, 'gat-3-1', 'weapon.xml'), 'utf8'));
-    expect(weapon).toMatchObject({ name: 'Gat 3.1', nickname: 'Triblast', type: 'Laser', shots: 3, damage: 1, power: 2, chargeSeconds: 13.1, conduitDamageChance: 0.1 });
+    expect(weapon).toMatchObject({ name: 'Gat 3.1', nickname: 'Triblast', type: 'Laser', shots: 3, damage: 1, power: 2, chargeSeconds: 13.1, conduitDamageChance: 0.1, projectileArt: 'bolt.svg' });
   });
   it('refuses a chance that is not a chance', () => {
     expect(() => reader.readWeapon('<weapon name="X" type="Laser" techType="M" race="R" chargeSeconds="5" mawjigPerShot="0.02" breachChance="five"/>'))

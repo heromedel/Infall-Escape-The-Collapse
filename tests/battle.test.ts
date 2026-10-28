@@ -16,7 +16,7 @@ import { RandomSource } from '../src/simulation/RandomSource';
 import { BattleLog } from '../src/simulation/BattleLog';
 import { secondsToTicks } from '../src/simulation/Ticks';
 import { readRaceDefinition, DEFAULT_RACE } from '../src/simulation/content/RaceDefinition';
-import { DEFAULT_DISTANCE_GM } from '../src/simulation/Simulation';
+import { DEFAULT_DISTANCE_GM, ON_SCREEN_FLIGHT_SECONDS } from '../src/simulation/Simulation';
 
 const contentFolder = path.join(__dirname, '..', 'content');
 const shipReader = new ShipFileReader();
@@ -184,8 +184,8 @@ describe('the distance between the squads (GDD 3Q)', () => {
     const near = new Simulation(1, weaponsByName, raceByName, 400);
     const far = new Simulation(1, weaponsByName, raceByName, 2400);
     expect(near.distanceGm).toBe(DEFAULT_DISTANCE_GM);
-    expect(near.shotFlightTicks).toBe(secondsToTicks(1.0));
-    expect(far.shotFlightTicks).toBe(secondsToTicks(3.0));
+    expect(near.shotFlightTicks).toBe(secondsToTicks(2 * ON_SCREEN_FLIGHT_SECONDS + 0.4));
+    expect(far.shotFlightTicks).toBe(secondsToTicks(2 * ON_SCREEN_FLIGHT_SECONDS + 2.4));
   });
 });
 

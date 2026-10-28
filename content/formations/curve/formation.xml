@@ -2,14 +2,15 @@
 <!-- The curve (GDD 3H, 3S): outer ships forward, centre ships back, noses along a gentle curve. Each zone is a
      square of grid cells sized for the largest hull plus a margin (24 cells: our largest hull art is 22
      tiles tall, docs/reference/genre-battle-screen); its position is the top-left cell. Rows count away from the
-     barrier: row 0 touches the barrier strip, so a margin of 2 rows keeps every zone off it. Columns count from
-     the left, zones one column apart; the player side's zones are shifted right by shift columns (GDD 3R).
+     barrier: row 0 touches the barrier strip; the nearest zones start 6 rows back so no ship crowds it. Columns count from
+     the left, zones one column apart; the player side's zones are shifted right by shift columns (GDD 3R); margin is the open columns kept on
+     each side, so the barrier runs well past the outermost ships.
      Zones never overlap each other or the barrier; the loader refuses a file where they do. -->
-<formation name="Curve" zoneSize="24" shift="6">
-  <zone slot="1" column="0"  row="2"/>
-  <zone slot="2" column="25" row="8"/>
-  <zone slot="3" column="50" row="14"/>
-  <zone slot="4" column="75" row="8"/>
-  <zone slot="5" column="100" row="2"/>
-  <zone slot="6" column="125" row="8"/>
+<formation name="Curve" zoneSize="24" shift="6" margin="12">
+  <zone slot="1" column="0"  row="6"/>
+  <zone slot="2" column="25" row="12"/>
+  <zone slot="3" column="50" row="18"/>
+  <zone slot="4" column="75" row="12"/>
+  <zone slot="5" column="100" row="6"/>
+  <zone slot="6" column="125" row="12"/>
 </formation>

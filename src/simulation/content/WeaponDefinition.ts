@@ -28,4 +28,6 @@ export interface WeaponDefinition {
   fireChance: number;
   conduitDamageChance: number;
   description?: string;
+  /** The projectile's picture, an SVG file beside weapon.xml, drawn nose up with its top centre on the flight path. */
+  projectileArt?: string;
 }

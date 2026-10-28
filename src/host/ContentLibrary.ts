@@ -22,6 +22,7 @@ import { WeaponDefinition } from '../simulation/content/WeaponDefinition';
 import { WeaponFileReader, WeaponFileError } from '../simulation/content/WeaponFileReader';
 import { DEFAULT_RACE, RaceDefinition, readRaceDefinition } from '../simulation/content/RaceDefinition';
 import { Log } from './Log';
+import type { ProjectileArt } from '../shared/Messages';
 import { FormationDefinition, FormationFileError, readFormationDefinition } from '../simulation/content/FormationDefinition';
 
 /** A system's content: its name and, when it has one, its symbol's SVG text. */
@@ -41,6 +42,8 @@ export class ContentLibrary {
   private readonly ships = new Map<string, ShipEntry>();
   private readonly systems = new Map<string, SystemEntry>();
   private readonly weapons = new Map<string, WeaponDefinition>();
+  /** Each weapon's projectile picture by weapon name, read from the SVG its file names. */
+  private readonly projectiles = new Map<string, ProjectileArt>();
   private readonly races = new Map<string, RaceDefinition>();
   private readonly formations = new Map<string, FormationDefinition>();
 
@@ -81,6 +84,11 @@ export class ContentLibrary {
 
   weaponNames(): string[] {
     return [...this.weapons.keys()];
+  }
+
+  /** Every loaded weapon's projectile picture, by weapon name; a weapon without one draws the window's placeholder. */
+  projectileArt(): Record<string, ProjectileArt> {
+    return Object.fromEntries(this.projectiles);
   }
 
   /** The race's traits, or the plain defaults under its name when it has no file. */
@@ -139,12 +147,28 @@ export class ContentLibrary {
       try {
         const weapon = reader.readWeapon(fs.readFileSync(file, 'utf8'));
         this.weapons.set(weapon.name, weapon);
+        this.loadProjectileArt(weapon, path.join(weaponsFolder, folderName));
         this.log.event('content.weapon_loaded', { weapon: weapon.name, type: weapon.type, shots: weapon.shots, damage: weapon.damage, chargeSeconds: weapon.chargeSeconds });
       } catch (error) {
         const reason = error instanceof WeaponFileError ? error.message : `unexpected error: ${(error as Error).message}`;
         this.log.event('content.weapon_refused', { file, reason });
       }
     }
+  }
+
+  /** The projectile's SVG named by the weapon file, when it is there; a missing file is noted, not fatal. */
+  private loadProjectileArt(weapon: WeaponDefinition, folder: string): void {
+    if (!weapon.projectileArt) return;
+    const file = path.join(folder, weapon.projectileArt);
+    if (!fs.existsSync(file) || !file.toLowerCase().endsWith('.svg')) {
+      this.log.event('content.projectile_art_missing', { weapon: weapon.name, file });
+      return;
+    }
+    const content = fs.readFileSync(file, 'utf8');
+    const viewBox = /viewBox="\s*[-\d.]+\s+[-\d.]+\s+([\d.]+)\s+([\d.]+)\s*"/.exec(content);
+    const width = Number(viewBox?.[1] ?? /\swidth="([\d.]+)/.exec(content)?.[1] ?? 0);
+    const height = Number(viewBox?.[2] ?? /\sheight="([\d.]+)/.exec(content)?.[1] ?? 0);
+    this.projectiles.set(weapon.name, { content, width, height });
   }
 
   /** A ship that names a weapon with no file can't arm it; say so once per name. */

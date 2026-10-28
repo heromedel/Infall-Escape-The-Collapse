@@ -7,6 +7,7 @@
 
 import type { ShipPicture } from '../shared/ShipPicture';
 import type { Snapshot, SnapshotShip, SnapshotShot } from '../shared/Snapshot';
+import type { ProjectileArt } from '../shared/Messages';
 import { ShipDrawing } from './ShipDrawing.js';
 import { formationSlots } from './Formation.js';
 import type { FormationDefinition } from '../shared/Formation';
@@ -14,6 +15,12 @@ import type { FormationDefinition } from '../shared/Formation';
 const SVG = 'http://www.w3.org/2000/svg';
 /** The barrier strip's height: two lines with the star field between them, six cells. */
 const STRIP = 6 * 35;
+/**
+ * How fast a projectile crosses the screen, in ship pixels a second: the genre's laser bolt moves about 12 px a
+ * frame at 20 frames a second (docs/reference/genre-battle-screen). Not in the docs yet: a missile's pace; the
+ * genre's missiles are visibly slower than its lasers, so this is a guess at two thirds.
+ */
+const SPEED = { laser: 240, missile: 160 };
 /** Room above a ship's art for its tag: name, hull bar and shield pips, drawn at screen scale. */
 const LABEL_SPACE = 64;
 const TAG = { width: 170, height: 34 };
@@ -60,6 +67,9 @@ export class BattleView {
   readonly ships = new Map<number, PlacedShip>();
   playerShipIds: number[] = [];
   private readonly shotsGroup: SVGGElement;
+  /** Each shot's drawn projectile by shot id, kept between ticks so its picture's own animation keeps running. */
+  private readonly shotMarks = new Map<number, SVGGElement>();
+  private projectiles: Record<string, ProjectileArt> = {};
   private readonly targetsGroup: SVGGElement;
   /** The ring under the selected ship. */
   private readonly selectionRing: SVGRectElement;
@@ -98,9 +108,12 @@ export class BattleView {
   }
 
   /** Lays both squads out from their pictures, each in its formation curve facing the divider (GDD 3H). */
-  start(pictures: Record<number, ShipPicture>, playerShipIds: number[], formations: { player: FormationDefinition; enemy: FormationDefinition }): void {
+  start(pictures: Record<number, ShipPicture>, playerShipIds: number[], formations: { player: FormationDefinition; enemy: FormationDefinition }, projectiles: Record<string, ProjectileArt> = {}): void {
     this.root.replaceChildren();
     this.ships.clear();
+    this.shotMarks.clear();
+    this.shotsGroup.replaceChildren();
+    this.projectiles = projectiles;
     this.playerShipIds = playerShipIds;
     const enemy = Object.entries(pictures).filter(([id]) => !playerShipIds.includes(Number(id)));
     const player = Object.entries(pictures).filter(([id]) => playerShipIds.includes(Number(id)));
@@ -256,7 +269,7 @@ export class BattleView {
     this.drawTargets(snapshot);
     this.driftStars(snapshot.tick);
     if (this.distanceText) this.distanceText.textContent = `${snapshot.distanceGm} Gatometers`;
-    if (this.delayText) this.delayText.textContent = `${(0.6 + snapshot.distanceGm / 1000).toFixed(1)} s flight`;
+    if (this.delayText) this.delayText.textContent = `${snapshot.shotFlightSeconds.toFixed(1)} s flight`;
   }
 
   /** The selected ship gets a ring under its hull (heromedel, 2026-10-27). */
@@ -384,36 +397,57 @@ export class BattleView {
 
   /**
    * A shot flies one straight line from its ship to its target (GDD 3R): drawn until that line meets the near
-   * barrier line, gone across the strip (a tiny faint dash shows it crossing), drawn again from the far line.
+   * barrier line, gone across the strip (a tiny faint dash shows it crossing), drawn again from the far line. On
+   * screen it moves at its kind's pace (SPEED); when the two on-screen legs would take longer than the whole
+   * flight, it hurries so it still arrives on time. Each shot's mark is kept between ticks and moved.
    */
   private drawShots(snapshot: Snapshot): void {
-    this.shotsGroup.replaceChildren();
-    const onScreenShare = 0.3 / (0.6 + snapshot.distanceGm / 1000);
+    const seen = new Set<number>();
     for (const shot of snapshot.shots) {
       const from = this.ships.get(shot.fromShipId);
       const to = this.ships.get(shot.toShipId);
       if (!from || !to) continue;
+      seen.add(shot.id);
       const start = this.firingPoint(from);
       const end = this.tileCentre(to, shot.toTile);
       const path = this.shotPath(start, end);
       const angle = Math.atan2(end.y - start.y, end.x - start.x) * 180 / Math.PI + 90;
-      if (shot.progress < onScreenShare) {
-        const t = shot.progress / onScreenShare;
-        this.shotsGroup.appendChild(this.projectile(shot, lerp(start, path.vanish, t), angle, snapshot.tick));
-      } else if (shot.progress > 1 - onScreenShare) {
-        const t = (shot.progress - (1 - onScreenShare)) / onScreenShare;
-        this.shotsGroup.appendChild(this.projectile(shot, lerp(path.reappear, end, t), angle, snapshot.tick));
+      const outLength = Math.hypot(path.vanish.x - start.x, path.vanish.y - start.y);
+      const inLength = Math.hypot(end.x - path.reappear.x, end.y - path.reappear.y);
+      const pace = Math.max(shot.type === 'Missile' ? SPEED.missile : SPEED.laser, (outLength + inLength) / snapshot.shotFlightSeconds);
+      const outSeconds = outLength / pace;
+      const inSeconds = inLength / pace;
+      const seconds = shot.progress * snapshot.shotFlightSeconds;
+      let mark = this.shotMarks.get(shot.id);
+      if (!mark) {
+        mark = this.projectile(shot, angle);
+        this.shotMarks.set(shot.id, mark);
+        this.shotsGroup.appendChild(mark);
+      }
+      if (seconds < outSeconds) {
+        this.place(mark, lerp(start, path.vanish, seconds / outSeconds), angle, 'projectile');
+      } else if (seconds > snapshot.shotFlightSeconds - inSeconds) {
+        this.place(mark, lerp(path.reappear, end, (seconds - (snapshot.shotFlightSeconds - inSeconds)) / inSeconds), angle, 'projectile');
       } else if (this.shotsCrossingBarrier) {
-        const t = (shot.progress - onScreenShare) / (1 - 2 * onScreenShare);
-        const at = lerp(path.vanish, path.reappear, t);
-        const dash = document.createElementNS(SVG, 'line');
-        const dx = (path.reappear.x - path.vanish.x), dy = (path.reappear.y - path.vanish.y), len = Math.hypot(dx, dy) || 1;
-        dash.setAttribute('x1', String(at.x - dx / len * 3)); dash.setAttribute('y1', String(at.y - dy / len * 3));
-        dash.setAttribute('x2', String(at.x + dx / len * 3)); dash.setAttribute('y2', String(at.y + dy / len * 3));
-        dash.setAttribute('stroke', LOOK.crossing); dash.setAttribute('stroke-width', '1.2');
-        this.shotsGroup.appendChild(dash);
+        const t = (seconds - outSeconds) / (snapshot.shotFlightSeconds - outSeconds - inSeconds || 1);
+        this.place(mark, lerp(path.vanish, path.reappear, t), angle, 'crossing');
+      } else {
+        mark.setAttribute('visibility', 'hidden');
       }
     }
+    for (const [id, mark] of this.shotMarks) {
+      if (seen.has(id)) continue;
+      mark.remove();
+      this.shotMarks.delete(id);
+    }
+  }
+
+  /** Moves a shot's mark along its path, showing its picture on screen or its tiny dash while crossing the strip. */
+  private place(mark: SVGGElement, at: { x: number; y: number }, angle: number, showing: 'projectile' | 'crossing'): void {
+    mark.setAttribute('visibility', 'visible');
+    mark.setAttribute('transform', `translate(${at.x} ${at.y}) rotate(${angle})`);
+    (mark.querySelector('.projectile') as SVGElement).setAttribute('visibility', showing === 'projectile' ? 'visible' : 'hidden');
+    (mark.querySelector('.crossing') as SVGElement).setAttribute('visibility', showing === 'crossing' ? 'visible' : 'hidden');
   }
 
   /** Where the straight line from start to end meets the near barrier line and the far one. */
@@ -425,8 +459,24 @@ export class BattleView {
     return { vanish: at(nearY), reappear: at(farY) };
   }
 
-  private projectile(shot: SnapshotShot, at: { x: number; y: number }, angle: number, tick: number): SVGGElement {
-    return shot.type === 'Missile' ? missileShape(at.x, at.y, angle, LOOK.missile) : laserBolt(at.x, at.y, angle, LOOK.laser, tick + shot.id);
+  /**
+   * A shot's mark: its weapon's projectile picture (nose up, top centre on the path) turned along the path, or the
+   * placeholder shape when the weapon file names none; plus the tiny faint dash it shows while crossing the strip.
+   */
+  private projectile(shot: SnapshotShot, angle: number): SVGGElement {
+    const group = document.createElementNS(SVG, 'g');
+    group.setAttribute('pointer-events', 'none');
+    group.setAttribute('transform', `rotate(${angle})`);
+    const art = this.projectiles[shot.weaponName];
+    const picture = art ? projectilePicture(art) : shot.type === 'Missile' ? missileShape(LOOK.missile) : laserBolt(LOOK.laser);
+    picture.classList.add('projectile');
+    group.appendChild(picture);
+    const dash = document.createElementNS(SVG, 'line');
+    dash.classList.add('crossing');
+    dash.setAttribute('x1', '0'); dash.setAttribute('y1', '-3'); dash.setAttribute('x2', '0'); dash.setAttribute('y2', '3');
+    dash.setAttribute('stroke', LOOK.crossing); dash.setAttribute('stroke-width', '1.2');
+    group.appendChild(dash);
+    return group;
   }
 
   private rect(x: number, y: number, width: number, height: number, fill: string): SVGRectElement {
@@ -438,34 +488,39 @@ export class BattleView {
   }
 }
 
-/**
- * A laser bolt as the genre draws one (docs/reference/genre-battle-screen): a glowing streak with a bright
- * rounded head and a tail that thins out behind it, flickering a little, head first along its path. Placeholder
- * until each weapon file names its own projectile art.
- */
-function laserBolt(x: number, y: number, angle: number, colour: string, flicker: number): SVGGElement {
+/** A weapon's own projectile picture, drawn nose up with its top centre at the origin (its place on the path). */
+function projectilePicture(art: ProjectileArt): SVGGElement {
   const group = document.createElementNS(SVG, 'g');
-  group.setAttribute('pointer-events', 'none');
-  // drawn pointing up with the head at the origin, then turned along the path
-  group.setAttribute('transform', `translate(${x} ${y}) rotate(${angle})`);
-  const length = 34 + (flicker % 3) * 3;
-  group.innerHTML =
-    `<line x1="0" y1="0" x2="0" y2="${length}" stroke="${colour}" stroke-width="7" stroke-linecap="round" opacity="0.35"/>`
-    + `<line x1="0" y1="4" x2="0" y2="${length - 6}" stroke="${colour}" stroke-width="3" stroke-linecap="round" opacity="0.8"/>`
-    + `<circle r="4.5" fill="${colour}"/><circle r="2" fill="#ffffff"/>`;
+  group.innerHTML = art.content.replace(/<\?xml[^>]*>/, '');
+  const svg = group.querySelector('svg');
+  if (svg) {
+    svg.setAttribute('x', String(-art.width / 2)); svg.setAttribute('y', '0');
+    svg.setAttribute('width', String(art.width)); svg.setAttribute('height', String(art.height));
+  }
   return group;
 }
 
-/** A missile as the genre draws one: a slim rocket seen from above, nose first, small fins, an exhaust flame. Placeholder. */
-function missileShape(x: number, y: number, angle: number, flameColour: string): SVGGElement {
+/**
+ * A laser bolt as the genre draws one (docs/reference/genre-battle-screen): a glowing streak with a bright
+ * rounded head and a tail that thins out behind it, head first along its path. The placeholder for a weapon file
+ * that names no projectile art. Drawn pointing up with the head at the origin.
+ */
+function laserBolt(colour: string): SVGGElement {
   const group = document.createElementNS(SVG, 'g');
-  group.setAttribute('pointer-events', 'none');
-  // drawn pointing up, then turned to fly along the path
-  group.setAttribute('transform', `translate(${x} ${y}) rotate(${angle})`);
   group.innerHTML =
-    `<polygon points="0,-14 3,-8 3,6 -3,6 -3,-8" fill="#d8dde6" stroke="#6b7280" stroke-width="0.8"/>`
-    + `<polygon points="-3,2 -7,8 -3,8" fill="#8a94a3"/><polygon points="3,2 7,8 3,8" fill="#8a94a3"/>`
-    + `<polygon points="-2,8 2,8 0,16" fill="${flameColour}"/><polygon points="-1,8 1,8 0,12" fill="#fff2a8"/>`;
+    `<line x1="0" y1="4" x2="0" y2="40" stroke="${colour}" stroke-width="10" stroke-linecap="round" opacity="0.35"/>`
+    + `<line x1="0" y1="6" x2="0" y2="34" stroke="${colour}" stroke-width="5" stroke-linecap="round" opacity="0.8"/>`
+    + `<circle cy="6" r="5.5" fill="${colour}"/><circle cy="6" r="2.5" fill="#ffffff"/>`;
+  return group;
+}
+
+/** A missile as the genre draws one: a slim rocket seen from above, nose first, small fins, an exhaust flame. Placeholder, nose at the origin. */
+function missileShape(flameColour: string): SVGGElement {
+  const group = document.createElementNS(SVG, 'g');
+  group.innerHTML =
+    `<polygon points="0,0 3,6 3,20 -3,20 -3,6" fill="#d8dde6" stroke="#6b7280" stroke-width="0.8"/>`
+    + `<polygon points="-3,16 -7,22 -3,22" fill="#8a94a3"/><polygon points="3,16 7,22 3,22" fill="#8a94a3"/>`
+    + `<polygon points="-2,22 2,22 0,30" fill="${flameColour}"/><polygon points="-1,22 1,22 0,26" fill="#fff2a8"/>`;
   return group;
 }
 
