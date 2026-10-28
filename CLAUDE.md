@@ -4,6 +4,10 @@
 
 - **Hard Rule (2026-10-23):** Once we begin coding, FTL must not be mentioned anywhere in the code. No code, and no
   direct copies of anything, may be taken from FTL. This is an inspired work and will not plagiarize FTL directly.
+- **Clarified (heromedel, 2026-10-28):** the rule is against blatant copy and paste, not against likeness. The look
+  may approximate FTL's very closely and the design may be exactly the same: layout, placement, behaviour, timing,
+  the shape of a laser bolt or a GUI element. Look at the genre first (recordings, reference frames, measured
+  numbers), then build our own version of it. What is forbidden is lifting its code, its art files or its text.
 
 A design-stage project: we are writing a game design document, not building the game yet.
 
