@@ -334,3 +334,33 @@ about 16 fuel and about 10 scrap on Normal (hard-coded, from memory) and, for th
 - A single frame is now about 20% over the band 1 squad value budget (137, F6). Suggested (Ai-Generated-Proposal):
   allow it, since Mecha are meant to be tough and a tougher ship pays more; or Ship Designs gives band 1 a lighter
   loadout.
+
+## F10. Weapon systems: second systems, slots and mounts (2026-10-27)
+
+Asked by Infall: Init Coding for heromedel, about its GDD points on several weapon systems (8K and 8L on
+`Cloud-C-Init-Coding`, to be relettered at merge, since 8K here is Starting Mawjig). Sent there as opinions; recorded
+here. Nothing in the GDD or the tables is changed by this.
+
+- **heromedel (2026-10-27):** level prices stay per system (two weapon systems are different systems). The lever
+  against splitting is the install cost: each additional weapon system costs more to install than the one before,
+  enough to slightly hamper it.
+- **Install step — Ai-Generated-Proposal:** each additional weapon system costs **1.21 Mawjig** (one jump) more to
+  install than the one before: **4.84, 6.05, 7.26, 8.47, 9.68, 10.89** for the 1st to 6th system. In scrap that is
+  20, 25, 30, 35, 40, 45: the same 5-scrap rise as the reactor bands and the Mecha bar upgrades.
+
+  | Shape (heromedel's three) | Total | What the rising install adds |
+  |---|:-:|---|
+  | 2 × level 3, the standard spread | 42.35 | +1.21, about 3% |
+  | 3 × level 2 | 47.19 | +3.63 |
+  | 6 × level 1, hard to disable, low-power weapons only | 47.19 | +18.15, about 62% |
+  | 1 × level 6, the only one holding a 6-power weapon | about 59.3 | none; its cost is the climbing levels |
+
+  The penalty grows with how far a ship splits. Compounding × 1.25 lands close (54.49 for 6 × level 1) with odd
+  numbers; a step of a full buy price (+4.84 each) makes 6 × level 1 cost 101.64, which punishes the
+  hard-to-disable layout too much. Mecha ships, which need several weapon systems, pay only 1.21 to 3.63 extra for
+  2 to 4 systems. The same step could apply to a second system of any kind.
+- **Slots equal level — no change to weapon prices or fight rewards.** The tables price power, damage and charge
+  time, never slots; a level-N system has N bars, so slots only bind where power already does. What is lost early is
+  a spare unpowered weapon kept to swap in, so early players buy slightly fewer weapons: a small loosening, nothing
+  to retune. Fight rewards come from ship value (8I), which counts whatever a ship carries.
+- **Bought mount beyond the hull's — Ai-Generated-Proposal, first guess:** 4.84, the Weapon Control buy price.
