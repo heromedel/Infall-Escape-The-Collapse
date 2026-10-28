@@ -4,7 +4,8 @@ eyes, a pink nose and cheek fluff, but level, half-lowered lids (a calm, unimpre
 across a bomber jacket and a pistol holstered on his hip; the jacket has a shearling
 collar, a unit patch on the sleeve and a ribbed hem; loose pants gathered over heavy boots; a striped tail with a curl.
 
-Usage: python3 cat.py OUT_DIR      (writes cat-merc.svg and a sheet beside the Mecha and Tentauri crews)"""
+Usage: python3 cat.py OUT_DIR      (writes cat-merc.svg, the other facings, a sheet beside the Mecha and Tentauri
+                                   crews, and the four facings side by side)"""
 import os
 import sys
 from PIL import Image
@@ -47,8 +48,10 @@ KEY = {
     "e": "#b8442e",                                    # a unit patch on the sleeve, merc red
     "S": "#f6c7a0",                                    # an old scar down the cheek
     "R": "#3a4222",                                    # its ribbed hem
+    "d": "#2c331a",                                    # the seam where the sleeve's front edge meets the jacket
     "P": "#4a5466", "p": "#343b4a", "q": "#5f6a80",    # loose grey-blue pants
     "B": "#3a2a22", "b": "#5c4434",                    # leather boots, lit toe (brown, so they part from the pants)
+    "D": "#2a1e18",                                    # the far boot in the side view, a step darker
     "T": "#4a3020",                                    # a strap across the chest, and a holster on the hip
     "X": "#22222a",                                    # the pistol's grip in the holster
     "G": "#b8b8c0",                                    # the strap's buckle
@@ -56,20 +59,96 @@ KEY = {
 # the tail, hanging from behind his hip on his left (our right), curling up at the tip: (column, row) in the grid
 TAIL = [((17, 15), "#"), ((17, 16), "O"), ((18, 16), "#"), ((17, 17), "o"), ((18, 17), "#"), ((16, 17), "#"),
         ((17, 18), "O"), ((18, 18), "#"), ((17, 19), "o"), ((18, 19), "O"), ((19, 19), "#"), ((17, 20), "#"),
-        ((18, 20), "#"), ((19, 18), "O"), ((20, 18), "#"), ((19, 17), "#"), ((20, 19), "#"), ((19, 20), "#")]
+        ((18, 20), "#"), ((19, 18), "Y"), ((20, 18), "#"), ((19, 17), "#"), ((20, 19), "#"), ((19, 20), "#")]
+# from behind: the backs of the ears (the notched one now on our left), tabby stripes down the back of the head, the
+# collar all the way round, the strap coming over his left shoulder to his right hip, the patch and the holster on
+# our right, the backs of the paws, and the tail from under the jacket, swinging across his seat and curling up
+# beside his left side
+# (it's nearest to us, so it's drawn over him)
+BACK = [
+    ".....##......#.....",
+    "....#Yo#....#O#....",
+    "...#YOO#####OOo#...",
+    "...#YOOoOoOoOOo#...",
+    "...#YOOoOOOoOOo#...",
+    "...#YOOoOOOoOOo#...",
+    "...#YOOOOOOOOOo#...",
+    "...#YOOOOOOOOOo#...",
+    "...#YOOOOOOOOOo#...",
+    "....#oOOOOOOOo#....",
+    "...#CCCCCcCCCcc#...",
+    "..#CCcCCCCCCCcCC#..",
+    "..#QJJcTJJJJcJJj#..",
+    "..#QJJ#JTJJJ#JJj#..",
+    "..#QJJ#JJTJJ#Jej#..",
+    "..#jjj#RRRTR#jjj#..",
+    "..#YOo#PPpPP#oOO#..",
+    "...#qPPPPpPPXPp#...",
+    "..#qPPPPp#pPTTPp#..",
+    "..#qPPPp#.#pPPPp#..",
+    "...#ppp#...#ppp#...",
+    "..#BBBB#...#BBBB#..",
+    "..######...######..",
+]
+# facing right: his right side, so the patch, the strap's end and the holster are on our side; the near ear in front,
+# the far (notched) ear just behind it; the muzzle out to the right with the nose at its tip; the near arm hanging at
+# his side over the jacket; the legs one just behind the other; the boots' toes to the right; the tail behind him,
+# curling up
+SIDE = [
+    "......#...#........",
+    ".....#o#.#Y#.......",
+    ".....#oO#YKO#......",
+    "....#OOOOOOOO#.....",
+    "....#YOoOoOOOO#....",
+    "....#YOOOOOO##O#...",
+    "....#YOoOOOOHOWW#..",
+    "....#YOOOOOOWWWN#..",
+    "....#oOOOOOWWWW#...",
+    ".....#oOOOOWWW#....",
+    "....#CCCCCCCCC#....",
+    "...#CCCCQJJJCC#....",
+    "...#QJJCQJJdJZ#....",
+    "...#QJJJQeJdTj#....",
+    "...#QJJJQJJdJj#....",
+    "...#jRRRjjjdRj#....",
+    "...#qPPPOOoPPp#....",
+    "...#qPPXWWwPPp#....",
+    "...#qPPTPPPPPp#....",
+    "...#ppp#.#qPPPp#...",
+    "...#ppp#.#qPPp#....",
+    "...#DDDDd#BBBBBb#..",
+    "...######.#######..",
+]
+# the tails as paths of pixels from the root to the tip, outlined where they're drawn: (column, row) in the grid
+SIDE_TAIL = [(3, 17), (2, 17), (2, 16), (2, 15), (1, 14), (1, 13), (2, 12)]          # from the hip, curling up behind
+BACK_TAIL = [(9, 16), (8, 17), (7, 17), (6, 17), (5, 17), (4, 17), (3, 17), (2, 16), (1, 15), (1, 14), (2, 13)]
 FRAME, FLOOR = 35, 32
+VIEWS = {"down": (FIGURE, TAIL, None), "up": (BACK, None, BACK_TAIL), "right": (SIDE, None, SIDE_TAIL)}
 
 
-def pixels():
-    top = FLOOR + 1 - len(FIGURE)
-    left = (FRAME - len(FIGURE[0])) // 2
+def pixels(view="down"):
+    """The sprite facing `view` (down, up, right, or left: the right view mirrored)."""
+    if view == "left":
+        return {(FRAME - 1 - x, y): c for (x, y), c in pixels("right").items()}
+    grid, tail, path = VIEWS[view]
+    top = FLOOR + 1 - len(grid)
+    left = (FRAME - len(grid[0])) // 2
     out = {}
-    for (i, j), ch in TAIL:                             # behind the figure
+    for (i, j), ch in tail or []:                       # a tail drawn pixel by pixel, behind the figure
         out[(left + i, top + j)] = KEY[ch]
-    for j, row in enumerate(FIGURE):
+    for j, row in enumerate(grid):
         for i, ch in enumerate(row):
             if ch != ".":
                 out[(left + i, top + j)] = KEY[ch]
+    if path:                                           # a tail drawn along a path, striped, with its own outline
+        cells = [(left + i, top + j) for i, j in path]
+        for n, q in enumerate(cells):
+            out[q] = KEY["o" if n % 3 == 2 else "O"]
+        for (x, y) in cells:
+            for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                q = (x + dx, y + dy)
+                if q not in cells and (path is BACK_TAIL or q not in out):
+                    out[q] = KEY["#"]
     return out
 
 
@@ -88,9 +167,18 @@ def image(px, bg=(110, 114, 122, 255)):
 
 if __name__ == "__main__":
     out_dir = sys.argv[1]; os.makedirs(out_dir, exist_ok=True)
-    assert len({len(r) for r in FIGURE}) == 1, "rows of different widths"
+    for grid in (FIGURE, BACK, SIDE):
+        assert len({len(r) for r in grid}) == 1, "rows of different widths"
     px = pixels()
     open(os.path.join(out_dir, "cat-merc.svg"), "w").write(svg(px))
+    views = [(v, pixels(v)) for v in ("down", "right", "up", "left")]
+    for v, p in views[1:]:
+        open(os.path.join(out_dir, f"cat-merc-{v}.svg"), "w").write(svg(p))
+    four = Image.new("RGBA", (4 * 220 + 10 + 4 * 45, 230), (110, 114, 122, 255))
+    for n, (v, p) in enumerate(views):
+        four.alpha_composite(image(p).resize((210, 210), Image.NEAREST), (10 + n * 220, 10))
+        four.alpha_composite(image(p), (4 * 220 + n * 45, 180))
+    four.save(os.path.join(out_dir, "cat-merc-views.png"))
     here = os.path.dirname(os.path.abspath(__file__))
     art = os.path.join(here, "..", "..", "..")
     refs = [Image.open(os.path.join(art, p)).convert("RGBA").crop((0, 0, 35, 35))

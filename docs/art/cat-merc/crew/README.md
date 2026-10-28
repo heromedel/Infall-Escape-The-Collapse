@@ -23,3 +23,12 @@ outline and flat two- to three-tone shading lit from the upper left, as the othe
 Blind checks, six rounds: from "a cat in a jacket", 6/10 (the tough side missing), to "wary and stern... cute but tough,
 mostly", 7/10, with the squint, the strap and the holster. Still flagged: no visible weapon beyond the holster, the
 tail's base a little detached at the hip.
+
+**Back and side views (2026-10-28):** `svg/cat-merc-up.svg`, `-right.svg` and `-left.svg` (the right mirrored),
+beside the front in `review/cat-merc-views.png`. From behind: the backs of the ears (the notched one now on our left),
+tabby stripes down the back of the head, the collar all round, the strap over his left shoulder, the patch and the
+holster on our right, the backs of the paws, and the tail from under the jacket swinging across his seat and curling up
+beside him. From the right: his right side (patch, holster), the near ear in front of the notched far one, the muzzle
+and nose out to the right, the near arm hanging over the jacket, the far leg and boot a step darker behind the near
+one, toes forward, the tail from the hip curling up behind. Blind check: every facing reads, and the four are
+consistent (7/10); the back view's tail is still its weakest part.
