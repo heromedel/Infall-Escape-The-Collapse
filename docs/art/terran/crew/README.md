@@ -49,6 +49,13 @@ following the folds) made visible squares and bands (heromedel); an ordered dith
 checkerboard noise. `review/gatos-drifter-2x-round3.png`: round 2 beside round 3; `review/gatos-drifter-2x-round3b.png`:
 the review sheet of round 3b.
 
+**At the Mecha crew's size (round 3c, 2026-10-28):** `tools/small.py` brings the 2x drifter down to a 25-pixel-tall
+figure in a 35-pixel frame as pixel art (each pixel takes the part covering most of its cell, in that part's colour,
+snapped to the sprite's own palette). Two outline styles to compare, beside the Mecha crew in
+`review/gatos-drifter-mecha-size-outlines.png`: **A** (`svg/drifter-small-clean.svg`) keeps the figure's own edge
+with the one-pixel stair-step corners taken off; **B** (`svg/drifter-small-black.svg`) is a slightly smaller figure
+with a one-pixel black line all round, drawn without doubled corners, like the Mecha crew's.
+
 **Faster tries:** `python3 tools/review.py OUT_DIR` builds the sprite with every goal and check and writes one review
 sheet (the figure enlarged, at 2x and true size, and close-ups of the head, a hand and the boots), in about 3 seconds.
 
