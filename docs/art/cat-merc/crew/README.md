@@ -14,9 +14,8 @@ crew grid, a 35 × 35 frame like the other crews, facing down, 23 pixels tall (t
 outline and flat two- to three-tone shading lit from the upper left, as the other two sheets have.
 
 - **Cute:** a big head with big ears (pink inside), a cream muzzle, a pink nose, cheek fluff, a striped tail with a curl.
-- **Tough:** stern brows, high at the outside and low toward the nose, with a smirk (heromedel: the first squint
-  looked too sad; its brows rose toward the nose; `review/cat-merc-faces.png` compares four faces, and a blind
-  check picked this one as "smug, cocky and self-assured"), a notched ear, a scar down the cheek, a strap across the
+- **Tough:** level, half-lowered lids, calm and unimpressed, with no mouth line (heromedel picked face C from
+  `review/cat-merc-faces.png`, without its mouth, which read as a mustache; the first squint looked too sad), a notched ear, a scar down the cheek, a strap across the
   chest, a pistol holstered on the hip.
 - **Clothes:** an olive bomber jacket with a shearling collar and cuffs, a red unit patch on the sleeve and a ribbed
   hem; loose grey-blue pants gathered over brown leather boots.
