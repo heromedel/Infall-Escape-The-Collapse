@@ -26,8 +26,9 @@ tail's base a little detached at the hip.
 
 **Back and side views (2026-10-28):** `svg/cat-merc-up.svg`, `-right.svg` and `-left.svg` (the right mirrored),
 beside the front in `review/cat-merc-views.png`. From behind: the backs of the ears (the notched one now on our left),
-tabby stripes down the back of the head, the collar all round, the strap over his left shoulder, the patch on our
-right, the backs of the paws, and the tail from under the jacket sweeping down across his right calf with a curl
+tabby stripes down the back of the head, the collar all round, the strap over his left shoulder, the jacket's back
+with its ribbed hem all the way across (his arms and paws are in front of him, hidden by his body: heromedel), and the
+tail from under the jacket sweeping down across his right calf with a curl
 (heromedel: swung across his seat to his side it looked like he was scratching his butt; straight down between the
 legs read as crude); the holster is out of sight at his side. From the right: his right side (patch, holster), the
 near ear in front of the notched far one, a short muzzle under the eye with the nose at its tip (heromedel: the first

@@ -61,8 +61,8 @@ TAIL = [((17, 15), "#"), ((17, 16), "O"), ((18, 16), "#"), ((17, 17), "o"), ((18
         ((17, 18), "O"), ((18, 18), "#"), ((17, 19), "o"), ((18, 19), "O"), ((19, 19), "#"), ((17, 20), "#"),
         ((18, 20), "#"), ((19, 18), "Y"), ((20, 18), "#"), ((19, 17), "#"), ((20, 19), "#"), ((19, 20), "#")]
 # from behind: the backs of the ears (the notched one now on our left), tabby stripes down the back of the head, the
-# collar all the way round, the strap coming over his left shoulder, the patch on the sleeve on our right, the backs
-# of the paws, and the tail from under the jacket sweeping down across his right calf with a curl (it's nearest to us,
+# collar all the way round, the strap coming over his left shoulder, the jacket's back with its ribbed hem all the way
+# across (his arms and paws are in front of him, hidden by his body: heromedel), and the tail from under the jacket sweeping down across his right calf with a curl (it's nearest to us,
 # so it's drawn over him; heromedel: swung across his seat it looked like he was scratching his butt, and straight down
 # between his legs it read as crude). The holster is on his hip at the side, out of sight from here
 BACK = [
@@ -78,11 +78,11 @@ BACK = [
     "....#oOOOOOOOo#....",
     "...#CCCCCcCCCcc#...",
     "..#CCcCCCCCCCcCC#..",
-    "..#QJJcTJJJJcJJj#..",
-    "..#QJJ#JTJJJ#JJj#..",
-    "..#QJJ#JJTJJ#Jej#..",
-    "..#jjj#RRRRR#jjj#..",
-    "..#YOo#PPpPP#oOO#..",
+    "..#QJJJTJJJJJJJj#..",
+    "..#QJJJJTJJJJJJj#..",
+    "..#QJjJJJTJJJjJj#..",
+    "..#RRRRRRRRRRRRR#..",
+    "...#qPPPPpPPPPp#...",
     "...#qPPPPpPPPPp#...",
     "..#qPPPPp#pPPPPp#..",
     "..#qPPPp#.#pPPPp#..",
