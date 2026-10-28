@@ -1,4 +1,6 @@
-# GATOS (Terran) crew
+# GATOS (Terran) crew, test 2
+
+A test folder (heromedel, 2026-10-28): every experiment toward the GATOS crew so far, kept together. Not final art.
 
 **Date:** 2026-10-27
 **Status:** round 5 (experiment, not pushed), three options for heromedel. **Ai-Generated-Proposal** in every detail, built on heromedel's
