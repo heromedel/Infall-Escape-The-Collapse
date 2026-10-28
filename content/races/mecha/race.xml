@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The Mecha, HalfMechs (race-profiles.md, Mecha 9): a crew member integrating with a system powers it by one bar,
+     never above its level (Decided 2026-10-23). XP rate 2 (GDD 7H). Slow movement and toughness come later. -->
+<race name="Mecha" xpRate="2" integrationBars="1"/>

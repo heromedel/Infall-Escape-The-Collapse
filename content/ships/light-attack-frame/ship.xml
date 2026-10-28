@@ -5,7 +5,7 @@
   <center x="Point" y="Tile"/>
   <hull points="7"/>
   <power kind="SelfPowered"/>
-  <art hull="battle-cross-hull.png" offset="0,0"/>
+  <art hull="battle-cross-hull.png" offset="65,72"/>
   <mounts count="6"/>
 
   <rooms>

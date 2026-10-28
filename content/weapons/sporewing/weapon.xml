@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Sporewing: a stolen Azurethea spore missile (ship-suggestions.md, Hijacker step 9). Charge 11.5 s native, 13.8 s on
+     a Terran ship (+20% foreign tech); 0.11 a shot. Spores disable the system hit until cleared; Stun stuns crew there. -->
+<weapon name="Sporewing" type="Missile" effects="Spores, Stun" techType="Biomechanical" race="Azurethea"
+        shots="1" damage="0" power="1" chargeSeconds="11.5" mawjigPerShot="0.11"
+        description="A biomechanical warhead that chokes a system in spores and stuns the crew around it."/>

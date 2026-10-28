@@ -5,7 +5,7 @@
   <center x="Point" y="Tile"/>
   <hull points="14"/>
   <power kind="AZC" level="3"/>
-  <art hull="pirate-hijacker-hull.svg" offset="0,0"/>
+  <art hull="pirate-hijacker-hull.svg" offset="170,125"/>
   <mounts count="6"/>
 
   <rooms>

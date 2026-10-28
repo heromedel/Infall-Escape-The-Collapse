@@ -7,7 +7,7 @@
   <center x="Tile" y="Tile"/>                       <!-- 5 x 5 tiles -->
   <hull points="8"/>
   <power kind="Reactor" bars="10"/>
-  <art hull="tentauri-scout-hull.svg" offset="0,0"/>
+  <art hull="tentauri-scout-hull.svg" offset="82.5,110"/>
   <mounts count="6"/>
 
   <rooms>

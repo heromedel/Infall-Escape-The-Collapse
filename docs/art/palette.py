@@ -12,6 +12,7 @@ SENTI_POWER_YELLOW_GREEN = "#d2ff00"
 WHISPWRAITH_POWER_MAGENTA = "#ff00e6"
 LYKARIO_POWER_SILVER = "#d1dbe7"
 MALPHEN_POWER_FLESH = "#ffa480"
+CONSOLE_BLUE = "#1c242c"   # the disc behind a system symbol in the game, standing in for the console until console art exists (heromedel, 2026-10-26)
 
 # the Mecha crew palette (mecha/crew/), darkest first
 MECHA = {

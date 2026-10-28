@@ -5,7 +5,7 @@
   <center x="Tile" y="Tile"/>                       <!-- 5 x 13 tiles -->
   <hull points="30"/>
   <power kind="AZC" level="2"/>
-  <art hull="outrider-hull.svg" offset="0,0"/>
+  <art hull="outrider-hull.svg" offset="142.5,135"/>
   <mounts count="6"/>
 
   <rooms>

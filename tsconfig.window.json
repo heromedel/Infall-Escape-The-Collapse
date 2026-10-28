@@ -10,5 +10,5 @@
     "lib": ["ES2022", "DOM"],
     "types": []
   },
-  "include": ["src/window/**/*.ts"]
+  "include": ["src/window/**/*.ts", "src/shared/*.d.ts"]
 }

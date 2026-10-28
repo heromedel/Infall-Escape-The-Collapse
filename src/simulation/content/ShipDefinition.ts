@@ -53,8 +53,11 @@ export interface PowerSource {
 export interface ShipArt {
   hull?: string;
   floor?: string;
-  /** Where the hull art sits relative to the tile grid, in tiles (GDD 5J). */
-  offset: Tile;
+  /**
+   * Where the tile grid's top-left corner sits inside the hull art, in art pixels at 35 pixels a tile (GDD 5J's
+   * hull art offset). The art tools call the same numbers X0 and Y0.
+   */
+  offset: { x: number; y: number };
 }
 
 export interface StartingWeapon {
@@ -72,6 +75,11 @@ export interface StartingCrew {
 export interface ShipDefinition {
   name: string;
   race: string;
+  /**
+   * The power colour this ship shows as an enemy, by palette name, when it isn't the usual one for its race
+   * (GDD 14D). Unset: the race's own colour, or pirate orange for a Terran enemy.
+   */
+  powerColour?: string;
   /** The base ship's name when this definition came from a loadout file; otherwise the same as `name`. */
   baseShip: string;
   centering: Centering;
