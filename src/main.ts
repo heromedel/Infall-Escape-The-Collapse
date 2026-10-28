@@ -131,6 +131,15 @@ function registerDebugCommands(debug: DebugConsole, content: ContentLibrary, set
     },
   });
   debug.register({
+    name: 'zones',
+    description: 'Show Zones (debug): zones on | off. The formation zones drawn translucent; switches at once.',
+    run: ([state]) => {
+      if (state === 'on' || state === 'off') { settings.showZones = state === 'on'; host.announceLook(); }
+      else if (state !== undefined) return 'zones on | off';
+      return `Zones ${settings.showZones ? 'shown' : 'hidden'}.`;
+    },
+  });
+  debug.register({
     name: 'crossing',
     description: 'Shots Crossing Barrier setting (GDD 3R): crossing shown | hidden. The tiny dash of a shot in the strip; switches at once.',
     run: ([state]) => {

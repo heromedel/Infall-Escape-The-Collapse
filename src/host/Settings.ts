@@ -26,6 +26,8 @@ export class Settings {
   targetLines = false;
   /** Shots Crossing Barrier (GDD 3R): Shown > Hidden, the tiny faint dash of a shot crossing the strip. */
   shotsCrossingBarrier = true;
+  /** Show Zones (debug): Off > On, the formation zones drawn translucent. */
+  showZones = false;
 }
 
 export type BattleGui = 'floating' | 'card';

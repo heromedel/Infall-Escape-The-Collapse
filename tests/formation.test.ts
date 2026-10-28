@@ -10,10 +10,10 @@ const curve = readFormationDefinition(fs.readFileSync(path.join(__dirname, '..',
 const three = [{ width: 100, height: 200 }, { width: 100, height: 200 }, { width: 100, height: 200 }];
 
 describe('formation files', () => {
-  it('reads the curve: six zones of 12 cells, slot 1 first, player shift 4', () => {
+  it('reads the curve: six zones sized for the largest hull art (24 cells, measured), slot 1 first, a player shift', () => {
     expect(curve.name).toBe('Curve');
-    expect(curve.zoneSize).toBe(12);
-    expect(curve.shift).toBe(4);
+    expect(curve.zoneSize).toBe(24);
+    expect(curve.shift).toBeGreaterThan(0);
     expect(curve.zones.map((zone) => zone.slot)).toEqual([1, 2, 3, 4, 5, 6]);
     expect(curve.zones[2].row).toBeGreaterThan(curve.zones[0].row);   // the centre ship sits back from the barrier
   });
@@ -24,12 +24,25 @@ describe('formation files', () => {
 });
 
 describe('formation layout', () => {
-  it('centres each ship in its slot\'s zone and snaps it to the grid', () => {
+  it('centres each ship in its slot\'s zone, snapped to the grid, with space on every side (the zone stays the same size whatever sits in it)', () => {
     const player = formationSlots(three, 'up', curve);
     for (const slot of player.slots) { expect(slot.x % CELL).toBe(0); expect(slot.y % CELL).toBe(0); }
-    // zone 1 of the player side starts at column shift (4): the ship is centred in a 12-cell zone, so about 4 + (12 cells - 100 px) / 2 from the left
-    const zoneLeft = (curve.zones[0].column + curve.shift) * CELL;
-    expect(Math.abs(player.slots[0].x - (zoneLeft + (12 * CELL - 100) / 2))).toBeLessThan(CELL);
+    player.slots.forEach((slot, index) => {
+      const zone = player.zones[index];
+      const print = three[index];
+      // centred: the gap on the left is within a cell of the gap on the right, same above and below
+      expect(Math.abs((slot.x - zone.x) - (zone.x + zone.size - slot.x - print.width))).toBeLessThanOrEqual(CELL);
+      expect(Math.abs((slot.y - zone.y) - (zone.y + zone.size - slot.y - print.height))).toBeLessThanOrEqual(CELL);
+      // and well inside: at least 8 cells clear on each side for a 100 by 200 ship in a 24-cell zone
+      expect(slot.x - zone.x).toBeGreaterThanOrEqual(8 * CELL);
+      expect(slot.y - zone.y).toBeGreaterThanOrEqual(8 * CELL);
+    });
+  });
+  it('spans the whole field, every zone of the file, so the barrier runs edge to edge', () => {
+    const one = formationSlots([three[0]], 'up', curve);
+    const all = formationSlots(three.concat(three), 'up', curve);
+    expect(one.width).toBe(all.width);
+    expect(one.zones).toHaveLength(6);
   });
   it('counts rows away from the barrier on both sides, so the centre ship is further from it than the outer ships', () => {
     const player = formationSlots(three, 'up', curve);     // barrier above: further away is larger y

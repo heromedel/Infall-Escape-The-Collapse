@@ -64,6 +64,7 @@ const SETTING_ROWS: { label: string; key: string; kind: 'choice' | 'number' | 't
   { label: 'Target Lines', key: 'targetLines', kind: 'choice', choices: [['false', 'Off'], ['true', 'On']], command: (value) => `targetlines ${value === 'true' ? 'on' : 'off'}` },
   { label: 'Player Formation', key: 'playerFormation', kind: 'text', command: (value) => `formation player ${value}` },
   { label: 'Enemy Formation', key: 'enemyFormation', kind: 'text', command: (value) => `formation enemy ${value}` },
+  { label: 'Show Zones (debug)', key: 'showZones', kind: 'choice', choices: [['false', 'Off'], ['true', 'On']], command: (value) => `zones ${value === 'true' ? 'on' : 'off'}` },
   { label: 'Shots Crossing Barrier', key: 'shotsCrossingBarrier', kind: 'choice', choices: [['true', 'Shown'], ['false', 'Hidden']], command: (value) => `crossing ${value === 'true' ? 'shown' : 'hidden'}` },
   { label: 'Auto Pause (Turn Mode)', key: 'autoPause', kind: 'choice', choices: [['false', 'Off'], ['true', 'On']], command: (value) => `autopause ${value === 'true' ? 'on' : 'off'}` },
   { label: 'Player Power Color', key: 'playerPowerColour', kind: 'text', command: (value) => `powercolor ${value}` },

@@ -12,14 +12,16 @@ import { formationSlots } from './Formation.js';
 import type { FormationDefinition } from '../shared/Formation';
 
 const SVG = 'http://www.w3.org/2000/svg';
-/** The barrier strip's height: two lines with the star field between them. */
-const STRIP = 90;
+/** The barrier strip's height: two lines with the star field between them, six cells. */
+const STRIP = 6 * 35;
 /** Room above a ship's art for its tag: name, hull bar and shield pips, drawn at screen scale. */
 const LABEL_SPACE = 64;
 const TAG = { width: 170, height: 34 };
 const LOOK = {
   divider: '#4a6a8a',
   strip: 'rgba(28, 36, 44, 0.55)',
+  zone: 'rgba(79, 143, 255, 0.10)',
+  zoneEdge: 'rgba(79, 143, 255, 0.45)',
   star: '#9fb3c8',
   crossing: 'rgba(255, 224, 102, 0.45)',
   hullBar: '#66FF66',
@@ -65,6 +67,9 @@ export class BattleView {
   targetLines = false;
   /** Shots Crossing Barrier setting (GDD 3R): the tiny dash of a shot in the strip. */
   shotsCrossingBarrier = true;
+  /** Show Zones (debug): the formation zones drawn translucent, to check the spacing. */
+  showZones = false;
+  private zonesGroup?: SVGGElement;
   /** The strip's top and bottom, in battle pixels; the near line for the enemy is the top, for the player the bottom. */
   private stripTop = 0;
   private stripBottom = 0;
@@ -114,6 +119,8 @@ export class BattleView {
     this.height = this.stripBottom + tagRoom + playerLayout.height;
 
     this.root.appendChild(this.barrier());
+    this.zonesGroup = this.zoneBoxes([...enemyLayout.zones.map((z) => ({ ...z, y: z.y + tagRoom })), ...playerLayout.zones.map((z) => ({ ...z, y: z.y + this.stripBottom + tagRoom }))]);
+    this.root.appendChild(this.zonesGroup);
     this.root.appendChild(this.selectionRing);   // under the ships
 
     this.placeSquad(enemy, enemyLayout.slots, enemyX, tagRoom);
@@ -121,6 +128,29 @@ export class BattleView {
     this.root.appendChild(this.targetsGroup);
     this.root.appendChild(this.shotsGroup);
     this.rescaleTags();
+  }
+
+  /** The formation zones (GDD 3S) drawn translucent, numbered, for checking the spacing; shown by the Show Zones toggle. */
+  private zoneBoxes(zones: { slot: number; x: number; y: number; size: number }[]): SVGGElement {
+    const group = document.createElementNS(SVG, 'g');
+    group.setAttribute('pointer-events', 'none');
+    group.setAttribute('visibility', this.showZones ? 'visible' : 'hidden');
+    for (const zone of zones) {
+      group.appendChild(this.rect(zone.x, zone.y, zone.size, zone.size, LOOK.zone));
+      const edge = this.rect(zone.x, zone.y, zone.size, zone.size, 'none');
+      edge.setAttribute('stroke', LOOK.zoneEdge); edge.setAttribute('stroke-width', '1.5'); edge.setAttribute('stroke-dasharray', '6 6');
+      group.appendChild(edge);
+      const label = document.createElementNS(SVG, 'text');
+      label.setAttribute('x', String(zone.x + 6)); label.setAttribute('y', String(zone.y + 16)); label.setAttribute('font-size', '12'); label.setAttribute('fill', LOOK.zoneEdge);
+      label.textContent = `zone ${zone.slot}`;
+      group.appendChild(label);
+    }
+    return group;
+  }
+
+  setShowZones(show: boolean): void {
+    this.showZones = show;
+    this.zonesGroup?.setAttribute('visibility', show ? 'visible' : 'hidden');
   }
 
   /** The barrier (GDD 3R): two lines, a strip of stars that drift toward the player between them, and the labels. */

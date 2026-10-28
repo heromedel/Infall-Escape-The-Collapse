@@ -42,7 +42,7 @@ export class Host {
 
   /** Tells every client the look settings changed, so the window can switch without a new battle. */
   announceLook(): void {
-    this.sendAll({ kind: 'Look', look: { battleGui: this.settings.battleGui, autofire: this.settings.autofire, targetLines: this.settings.targetLines, shotsCrossingBarrier: this.settings.shotsCrossingBarrier } });
+    this.sendAll({ kind: 'Look', look: { battleGui: this.settings.battleGui, autofire: this.settings.autofire, targetLines: this.settings.targetLines, shotsCrossingBarrier: this.settings.shotsCrossingBarrier, showZones: this.settings.showZones } });
   }
 
   /** Pause Control (GDD 4H): Captain mode, so any client of the host's own window pauses. Who asked is logged. */

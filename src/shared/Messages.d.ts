@@ -23,6 +23,8 @@ export interface Look {
   targetLines: boolean;
   /** Show the tiny faint dash of a shot crossing the barrier strip (GDD 3R). */
   shotsCrossingBarrier: boolean;
+  /** Draw the formation zones translucent (debug). */
+  showZones: boolean;
 }
 
 export type HostToClient =

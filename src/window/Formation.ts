@@ -28,17 +28,30 @@ export const CELL = 35;
  * and the squad's size, which covers every used zone. The player side's zones are shifted right by the file's
  * shift. A footprint is centred in its zone, then snapped to the cell so rooms line up across ships.
  */
-export function formationSlots(footprints: Footprint[], facing: 'up' | 'down', formation: FormationDefinition): { slots: Slot[]; width: number; height: number } {
-  if (footprints.length === 0) return { slots: [], width: 0, height: 0 };
+export interface ZoneBox {
+  slot: number;
+  x: number;
+  y: number;
+  size: number;
+}
+
+export function formationSlots(footprints: Footprint[], facing: 'up' | 'down', formation: FormationDefinition): { slots: Slot[]; width: number; height: number; zones: ZoneBox[] } {
   const zone = formation.zoneSize * CELL;
   const shiftColumns = facing === 'up' ? formation.shift : 0;
   const used = footprints.map((_, index) => formation.zones[Math.min(index, formation.zones.length - 1)]);
-  const columnsAcross = Math.max(...used.map((z) => z.column)) + formation.zoneSize + shiftColumns;
+  // the field spans every zone of the file, used or not: the barrier runs across the whole battlefield (GDD 3R)
+  const columnsAcross = Math.max(...formation.zones.map((z) => z.column)) + formation.zoneSize + shiftColumns;
   // a hull taller than its zone overflows away from the barrier, never into it; the squad grows to hold it
   const overflow = Math.max(0, ...footprints.map((print) => hullHeight(print) - zone));
-  const rowsDeep = Math.max(...used.map((z) => z.row)) + formation.zoneSize + Math.ceil(overflow / CELL);
+  const rowsDeep = Math.max(...formation.zones.map((z) => z.row)) + formation.zoneSize + Math.ceil(overflow / CELL);
   const width = columnsAcross * CELL;
   const height = rowsDeep * CELL;
+  const zones: ZoneBox[] = formation.zones.map((z) => ({
+    slot: z.slot, size: zone,
+    x: (z.column + shiftColumns) * CELL,
+    y: facing === 'down' ? height - (z.row + formation.zoneSize) * CELL : z.row * CELL,
+  }));
+  if (footprints.length === 0) return { slots: [], width, height, zones };
   const slots = footprints.map((print, index) => {
     const z = used[index];
     const left = (z.column + shiftColumns) * CELL;
@@ -59,7 +72,7 @@ export function formationSlots(footprints: Footprint[], facing: 'up' | 'down', f
     }
     return { x, y };
   });
-  return { slots, width, height };
+  return { slots, width, height, zones };
 }
 
 function hullHeight(print: Footprint): number {

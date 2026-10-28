@@ -71,6 +71,7 @@ export class BattleControls {
     this.autofire = look.autofire;
     this.view.targetLines = look.targetLines;
     this.view.shotsCrossingBarrier = look.shotsCrossingBarrier;
+    this.view.setShowZones(look.showZones);
     this.refresh();
   }
 
