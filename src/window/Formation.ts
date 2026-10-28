@@ -9,8 +9,8 @@ import type { FormationDefinition } from '../shared/Formation';
 export interface Footprint {
   width: number;
   height: number;
-  /** Room above the hull for its tag, inside the height; not part of the hull, so it may lie outside the zone. */
-  top?: number;
+  /** Room above the hull for its tag, inside the height; not part of the hull, so it may lie outside the zone. The hull art's overhang is hull. */
+  tag?: number;
 }
 
 export interface Slot {
@@ -43,7 +43,7 @@ export function formationSlots(footprints: Footprint[], facing: 'up' | 'down', f
     const z = used[index];
     const left = (z.column + shiftColumns) * CELL;
     const hull = hullHeight(print);
-    const tag = print.top ?? 0;
+    const tag = print.tag ?? 0;
     // the hull is centred in the zone; a taller hull keeps its nose at the zone's barrier edge and overflows away
     const inset = Math.max(0, (zone - hull) / 2);
     const x = snap(left + (zone - print.width) / 2);
@@ -63,7 +63,7 @@ export function formationSlots(footprints: Footprint[], facing: 'up' | 'down', f
 }
 
 function hullHeight(print: Footprint): number {
-  return print.height - (print.top ?? 0);
+  return print.height - (print.tag ?? 0);
 }
 
 /** The nearest cell edge. */

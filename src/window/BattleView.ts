@@ -462,12 +462,12 @@ function lerp(a: { x: number; y: number }, b: { x: number; y: number }, t: numbe
 }
 
 /** The space a ship takes on screen: its tiles plus the hull art's overhang on each side, plus the labels above. */
-function footprint(picture: ShipPicture): { width: number; height: number; left: number; top: number } {
+function footprint(picture: ShipPicture): { width: number; height: number; left: number; top: number; tag: number } {
   const grid = ShipDrawing.sizeOf(picture);
   const art = picture.hullArt;
   const left = art ? Math.max(0, art.gridX) : 0;
   const right = art ? Math.max(0, art.width - art.gridX - grid.width) : 0;
   const above = art ? Math.max(0, art.gridY) : 0;
   const below = art ? Math.max(0, art.height - art.gridY - grid.height) : 0;
-  return { width: left + grid.width + right, height: LABEL_SPACE + above + grid.height + below, left, top: LABEL_SPACE + above };
+  return { width: left + grid.width + right, height: LABEL_SPACE + above + grid.height + below, left, top: LABEL_SPACE + above, tag: LABEL_SPACE };
 }
