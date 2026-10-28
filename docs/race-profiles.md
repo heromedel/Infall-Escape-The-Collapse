@@ -27,6 +27,9 @@ How races treat each other: see Relations between races at the end.
 The starting race (GDD 7C). The name is deliberate, to avoid a plain Federation clone. The fact that it sounds like
 a Spanish pun is beside the point. They are a loose alliance of humans, not cats.
 
+- **If they become cats — Proposed (2026-10-28):** if we give up and let them be cats, not Terrans, the name becomes
+  Galactic Alliance of Tabby Occupied Systems.
+
 1. **Tone and ship style — Proposed (2026-10-21):** when doing well, clean, soft Federation-like ships. When
    desperate, a grim, survivalist look built from seemingly borrowed or stolen technology.
    - **Silhouette — Proposed (2026-10-22):** classic spaceship shapes, from large shuttles to cruisers and rockets.
