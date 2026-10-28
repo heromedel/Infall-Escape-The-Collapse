@@ -1,6 +1,6 @@
 """A mercenary cat crew sprite (a new race, working name only): pixel art on the crew grid, a 35 x 35 frame, facing
 down, about human height (22 pixels, shorter than the Mecha crew's 25). Cute but tough: a big head with big glinting
-eyes, a pink nose and cheek fluff, but heavy lids slanting down toward the nose (a squint), a notched ear and a scar down the cheek; a bandolier strap
+eyes, a pink nose and cheek fluff, but stern brows (high at the outside, low toward the nose; the other way round read as sad), a smirk, a notched ear and a scar down the cheek; a bandolier strap
 across a bomber jacket and a pistol holstered on his hip; the jacket has a shearling
 collar, a unit patch on the sleeve and a ribbed hem; loose pants gathered over heavy boots; a striped tail with a curl.
 
@@ -14,11 +14,11 @@ FIGURE = [
     "....#Y#....#oO#....",
     "...#YKO#####OKO#...",
     "...#YOOoOoOoOOo#...",
-    "...#YOO#OOO#OOo#...",
+    "...#YO#OOOOO#Oo#...",
     "...#YO##OOO##Oo#...",
     "...#YSH#WWWH#Oo#...",
-    "...#YSOWWNWWOOo#...",
-    "...#YOOWwmwWOOo#...",
+    "...#YSOWWNWmOOo#...",
+    "...#YOOWWmmWOOo#...",
     "....#oOOWWWOOo#....",
     "...#CCC#####CCC#...",
     "..#CCcCJJZJJCcCC#..",
@@ -40,7 +40,7 @@ KEY = {
     "K": "#e89aa8",                                    # inside the ears
     "W": "#f3dcb8", "w": "#d6b48c",                    # the cream muzzle and paws
     "H": "#ffffff",                                    # the glint in each eye
-    "N": "#e07a8a", "m": "#a8705a",                    # nose, mouth (soft: a dark one read as a gasp)
+    "N": "#e07a8a", "m": "#a8705a",                    # nose, mouth: a smirk, up at one side (soft: dark read as a gasp)
     "C": "#e8d8b8", "c": "#bfa98a",                    # the shearling collar
     "Q": "#7d8a4c", "J": "#5f6b3a", "j": "#434c28",    # the olive bomber jacket
     "Z": "#c8a860",                                    # its zip
