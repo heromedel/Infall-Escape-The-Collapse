@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Classic heavy missile cruiser: two torpedo launchers, a deep missile stock and a guardian suit. -->
-<ship name="Bulwark" faction="Cruiser" color="#66FF66" hull="30" missiles="14">
+<ship name="Bulwark" faction="Colony Fleet" color="#66FF66" hull="30" missiles="14">
   <note>Ignores shields entirely. Two launchers and a hold full of torpedoes, but they run out eventually.</note>
   <system type="reactor" level="8"/>
   <system type="shields" level="1"/>

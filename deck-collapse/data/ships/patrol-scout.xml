@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Classic light enemy: a small patrol ship with one laser. -->
-<ship name="Patrol Scout" faction="Enemy" color="#FF8500" hull="10" missiles="0">
+<ship name="Patrol Scout" faction="Border Patrol" color="#FF8500" hull="10" missiles="0">
   <note>A light patrol ship. One shield layer and a three-bolt laser. A fair first fight.</note>
   <system type="reactor" level="7"/>
   <system type="shields" level="1"/>

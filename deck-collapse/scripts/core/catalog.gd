@@ -126,7 +126,7 @@ func save_user_design(design: ShipDesign) -> String:
 	DirAccess.make_dir_recursive_absolute(USER_SHIPS_FOLDER)
 	var path := design.source_path
 	if design.built_in or path == "" or not path.begins_with(USER_SHIPS_FOLDER):
-		path = "%s/%s.xml" % [USER_SHIPS_FOLDER, _file_name_for(design.name)]
+		path = "%s/%s.xml" % [USER_SHIPS_FOLDER, file_name_for(design.name)]
 	write_text_file(path, design.to_xml())
 	design.source_path = path
 	reload_designs()
@@ -162,7 +162,7 @@ func _xml_files_in(folder: String) -> Array[String]:
 	return paths
 
 
-func _file_name_for(ship_name: String) -> String:
+func file_name_for(ship_name: String) -> String:
 	var safe := ""
 	for character in ship_name.to_lower():
 		safe += character if (character >= "a" and character <= "z") or (character >= "0" and character <= "9") else "-"

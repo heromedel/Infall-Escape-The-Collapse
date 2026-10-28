@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Classic elite enemy: tougher hull, two shield layers, heavy guns and a guardian suit. -->
-<ship name="Heavy Gunship" faction="Enemy" color="#FF8500" hull="14" missiles="4">
+<ship name="Heavy Gunship" faction="Hunters" color="#FF8500" hull="14" missiles="4">
   <note>An elite hunter. Two shield layers, a heavy laser, a beam and a guardian suit that shoots down torpedoes.</note>
   <system type="reactor" level="10"/>
   <system type="shields" level="2"/>

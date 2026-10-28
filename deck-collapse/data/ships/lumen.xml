@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Classic energy cruiser: a small reactor helped by a battery, a beam and a light torpedo. -->
-<ship name="Lumen" faction="Cruiser" color="#66FF66" hull="30" missiles="4">
+<ship name="Lumen" faction="Colony Fleet" color="#66FF66" hull="30" missiles="4">
   <note>Short on reactor power but rich in tricks. A battery tops it up for a beam that bites through thin shields.</note>
   <system type="reactor" level="5"/>
   <system type="battery" level="2"/>

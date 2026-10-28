@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Classic all-rounder cruiser: a three-bolt laser and a torpedo, one shield layer, three crew. -->
-<ship name="Wayfarer" faction="Cruiser" color="#66FF66" hull="30" missiles="8">
+<ship name="Wayfarer" faction="Colony Fleet" color="#66FF66" hull="30" missiles="8">
   <note>The balanced all-rounder. A three-bolt laser to strip shields and a torpedo that ignores them.</note>
   <system type="reactor" level="8"/>
   <system type="shields" level="1"/>

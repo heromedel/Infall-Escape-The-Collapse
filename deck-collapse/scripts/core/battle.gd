@@ -197,6 +197,17 @@ func why_cannot_play(side: int, uid: int, target: Dictionary = {}) -> String:
 	return ""
 
 
+## Like why_cannot_play, but an aimed card also needs at least one valid target right now.
+func why_cannot_play_anywhere(side: int, uid: int) -> String:
+	var reason := why_cannot_play(side, uid)
+	if reason != "":
+		return reason
+	var definition := card_definition(ships[side], _card_in_hand(ships[side], uid))
+	if definition.target != CardLibrary.TARGET_NONE and valid_targets(side, uid).is_empty():
+		return "No valid target right now."
+	return ""
+
+
 ## Every valid target for a card, for highlighting. For crew-then-system cards, pass the chosen crew id.
 func valid_targets(side: int, uid: int, chosen_crew_id: int = -1) -> Array:
 	var ship := ships[side]
