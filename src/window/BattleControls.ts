@@ -70,6 +70,7 @@ export class BattleControls {
     this.floating = look.battleGui === 'floating';
     this.autofire = look.autofire;
     this.view.targetLines = look.targetLines;
+    this.view.shotsCrossingBarrier = look.shotsCrossingBarrier;
     this.refresh();
   }
 

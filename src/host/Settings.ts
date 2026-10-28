@@ -24,6 +24,10 @@ export class Settings {
   autofire = false;
   /** Target Lines: Off > On. A dashed line from the ship to each target room, on top of the genre's room marks. */
   targetLines = false;
+  /** Squad Offset (GDD 3R): 0.35 > 0 to 1, the player squad shifted sideways by this share of the wider squad's width. */
+  squadOffset = 0.35;
+  /** Shots Crossing Barrier (GDD 3R): Shown > Hidden, the tiny faint dash of a shot crossing the strip. */
+  shotsCrossingBarrier = true;
 }
 
 export type BattleGui = 'floating' | 'card';

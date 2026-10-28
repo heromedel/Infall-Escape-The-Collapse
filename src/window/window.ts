@@ -63,6 +63,8 @@ const SETTING_ROWS: { label: string; key: string; kind: 'choice' | 'number' | 't
   { label: 'Autofire', key: 'autofire', kind: 'choice', choices: [['false', 'Off'], ['true', 'On']], command: (value) => `autofire ${value === 'true' ? 'on' : 'off'}` },
   { label: 'Target Lines', key: 'targetLines', kind: 'choice', choices: [['false', 'Off'], ['true', 'On']], command: (value) => `targetlines ${value === 'true' ? 'on' : 'off'}` },
   { label: 'Formation Depth', key: 'formationDepth', kind: 'number', command: (value) => `formation depth ${value}` },
+  { label: 'Squad Offset', key: 'squadOffset', kind: 'number', command: (value) => `offset ${value}` },
+  { label: 'Shots Crossing Barrier', key: 'shotsCrossingBarrier', kind: 'choice', choices: [['true', 'Shown'], ['false', 'Hidden']], command: (value) => `crossing ${value === 'true' ? 'shown' : 'hidden'}` },
   { label: 'Formation Inverted', key: 'formationInverted', kind: 'choice', choices: [['false', 'Off'], ['true', 'On']], command: (value) => `formation inverted ${value === 'true' ? 'on' : 'off'}` },
   { label: 'Auto Pause (Turn Mode)', key: 'autoPause', kind: 'choice', choices: [['false', 'Off'], ['true', 'On']], command: (value) => `autopause ${value === 'true' ? 'on' : 'off'}` },
   { label: 'Player Power Color', key: 'playerPowerColour', kind: 'text', command: (value) => `powercolor ${value}` },
@@ -135,7 +137,7 @@ function listenToHost(): void {
         inBattle = true;
         battleOver = false;
         showScreen('battle');
-        battleView.start(message.pictures, message.playerShipIds, message.formation);
+        battleView.start(message.pictures, message.playerShipIds, message.formation, message.look.squadOffset);
         controls.start(message.pictures, message.playerShipIds, message.look);
         stage.replaceChildren(battleView.root);
         fitBattle();

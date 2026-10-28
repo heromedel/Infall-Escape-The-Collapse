@@ -1,7 +1,8 @@
 /**
  * Draws a running battle from what the host sends: each ship's picture once, then a snapshot every tick. Player
- * squad at the bottom, enemy at the top (GDD 3A), the divider between them standing for the off-screen distance
- * (GDD 3Q). Holds no game state: everything drawn comes from the last snapshot.
+ * squad at the bottom, enemy at the top (GDD 3A), the barrier between them standing for the off-screen distance
+ * (GDD 3Q, 3R): two lines with a strip of drifting stars, labelled in Gatometers. Holds no game state:
+ * everything drawn comes from the last snapshot.
  */
 
 import type { ShipPicture } from '../shared/ShipPicture';
@@ -10,13 +11,21 @@ import { ShipDrawing } from './ShipDrawing.js';
 import { formationSlots, FormationSettings } from './Formation.js';
 
 const SVG = 'http://www.w3.org/2000/svg';
-/** Space between the front line of each squad and the divider: the off-screen gap's on-screen edge. */
-const ROW_GAP = 120;
+/**
+ * The room in front of each squad (GDD 3R): what the largest hull in the genre's size range needs plus a slight
+ * margin, in ship pixels. Not in the docs yet: the largest hull is taken as 11 tiles tall, the margin 1 tile.
+ */
+const FRONT_ROOM = 12 * 35;
+/** The barrier strip's height: two lines with the star field between them. */
+const STRIP = 90;
 /** Room above a ship's art for its tag: name, hull bar and shield pips, drawn at screen scale. */
 const LABEL_SPACE = 64;
 const TAG = { width: 170, height: 34 };
 const LOOK = {
   divider: '#4a6a8a',
+  strip: 'rgba(28, 36, 44, 0.55)',
+  star: '#9fb3c8',
+  crossing: 'rgba(255, 224, 102, 0.45)',
   hullBar: '#66FF66',
   hullBarLow: '#FF3B3B',
   barBack: '#1d2a3a',
@@ -58,6 +67,15 @@ export class BattleView {
   private readonly selectionRing: SVGRectElement;
   /** Target Lines setting: a dashed line to each target room as well as the room mark. */
   targetLines = false;
+  /** Shots Crossing Barrier setting (GDD 3R): the tiny dash of a shot in the strip. */
+  shotsCrossingBarrier = true;
+  /** The strip's top and bottom, in battle pixels; the near line for the enemy is the top, for the player the bottom. */
+  private stripTop = 0;
+  private stripBottom = 0;
+  private stars: SVGGElement;
+  private distanceText?: SVGTextElement;
+  private delayText?: SVGTextElement;
+  private labels?: SVGGElement;
   private zoom = 1;
   private dividerY = 0;
   private width = 0;
@@ -75,10 +93,11 @@ export class BattleView {
     this.selectionRing.setAttribute('stroke-width', '2');
     this.selectionRing.setAttribute('pointer-events', 'none');
     this.selectionRing.setAttribute('visibility', 'hidden');
+    this.stars = document.createElementNS(SVG, 'g');
   }
 
   /** Lays both squads out from their pictures, each in its formation curve facing the divider (GDD 3H). */
-  start(pictures: Record<number, ShipPicture>, playerShipIds: number[], formation: FormationSettings): void {
+  start(pictures: Record<number, ShipPicture>, playerShipIds: number[], formation: FormationSettings, squadOffset: number): void {
     this.root.replaceChildren();
     this.ships.clear();
     this.playerShipIds = playerShipIds;
@@ -86,23 +105,82 @@ export class BattleView {
     const player = Object.entries(pictures).filter(([id]) => playerShipIds.includes(Number(id)));
     const enemyLayout = formationSlots(enemy.map(([, picture]) => footprint(picture)), 'down', formation);
     const playerLayout = formationSlots(player.map(([, picture]) => footprint(picture)), 'up', formation);
-    this.width = Math.max(enemyLayout.width, playerLayout.width);
-    const enemyHeight = enemyLayout.height;
-    this.dividerY = enemyHeight + ROW_GAP / 2;
-    this.height = enemyHeight + ROW_GAP + playerLayout.height;
+    // the squads are offset sideways by a share of the wider squad's width (GDD 3R): the player squad shifted right
+    const wider = Math.max(enemyLayout.width, playerLayout.width);
+    const shift = wider * squadOffset;
+    const enemyX = (wider - enemyLayout.width) / 2;
+    const playerX = (wider - playerLayout.width) / 2 + shift;
+    this.width = wider + shift;
+    // each squad's front line sits FRONT_ROOM from its barrier line, whatever the ships' sizes (GDD 3R)
+    this.stripTop = enemyLayout.height + FRONT_ROOM;
+    this.stripBottom = this.stripTop + STRIP;
+    this.dividerY = this.stripTop + STRIP / 2;
+    this.height = this.stripBottom + FRONT_ROOM + playerLayout.height;
 
-    const divider = document.createElementNS(SVG, 'line');
-    divider.setAttribute('x1', '0'); divider.setAttribute('x2', String(this.width));
-    divider.setAttribute('y1', String(this.dividerY)); divider.setAttribute('y2', String(this.dividerY));
-    divider.setAttribute('stroke', LOOK.divider); divider.setAttribute('stroke-dasharray', '8 8');
-    this.root.appendChild(divider);
+    this.root.appendChild(this.barrier());
     this.root.appendChild(this.selectionRing);   // under the ships
 
-    this.placeSquad(enemy, enemyLayout.slots, (this.width - enemyLayout.width) / 2, 0);
-    this.placeSquad(player, playerLayout.slots, (this.width - playerLayout.width) / 2, enemyHeight + ROW_GAP);
+    this.placeSquad(enemy, enemyLayout.slots, enemyX, 0);
+    this.placeSquad(player, playerLayout.slots, playerX, this.stripBottom + FRONT_ROOM);
     this.root.appendChild(this.targetsGroup);
     this.root.appendChild(this.shotsGroup);
     this.rescaleTags();
+  }
+
+  /** The barrier (GDD 3R): two lines, a strip of stars that drift toward the player between them, and the labels. */
+  private barrier(): SVGGElement {
+    const group = document.createElementNS(SVG, 'g');
+    group.setAttribute('pointer-events', 'none');
+    group.appendChild(this.rect(0, this.stripTop, this.width, STRIP, LOOK.strip));
+    for (const y of [this.stripTop, this.stripBottom]) {
+      const line = document.createElementNS(SVG, 'line');
+      line.setAttribute('x1', '0'); line.setAttribute('x2', String(this.width));
+      line.setAttribute('y1', String(y)); line.setAttribute('y2', String(y));
+      line.setAttribute('stroke', LOOK.divider); line.setAttribute('stroke-width', '1.5');
+      group.appendChild(line);
+    }
+    this.stars = document.createElementNS(SVG, 'g');
+    const count = Math.max(24, Math.round(this.width / 14));
+    for (let i = 0; i < count; i++) {
+      const star = document.createElementNS(SVG, 'circle');
+      star.setAttribute('cx', String(Math.random() * this.width));
+      star.setAttribute('cy', String(this.stripTop + 4 + Math.random() * (STRIP - 8)));
+      star.setAttribute('r', String(0.6 + Math.random() * 1.1));
+      star.setAttribute('fill', LOOK.star); star.setAttribute('opacity', String(0.25 + Math.random() * 0.5));
+      this.stars.appendChild(star);
+    }
+    group.appendChild(this.stars);
+    // the labels keep their screen size (rescaleLabels), like the ship tags
+    this.labels = document.createElementNS(SVG, 'g');
+    this.distanceText = document.createElementNS(SVG, 'text');
+    this.distanceText.setAttribute('y', '-3');
+    this.distanceText.setAttribute('text-anchor', 'middle'); this.distanceText.setAttribute('font-size', '13'); this.distanceText.setAttribute('font-family', 'system-ui, sans-serif');
+    this.distanceText.setAttribute('fill', '#cfd6e2'); this.distanceText.setAttribute('letter-spacing', '1');
+    this.labels.appendChild(this.distanceText);
+    this.delayText = document.createElementNS(SVG, 'text');
+    this.delayText.setAttribute('y', '12');
+    this.delayText.setAttribute('text-anchor', 'middle'); this.delayText.setAttribute('font-size', '10'); this.delayText.setAttribute('font-family', 'system-ui, sans-serif');
+    this.delayText.setAttribute('fill', LOOK.star);
+    this.labels.appendChild(this.delayText);
+    group.appendChild(this.labels);
+    this.rescaleLabels();
+    return group;
+  }
+
+  private rescaleLabels(): void {
+    this.labels?.setAttribute('transform', `translate(${this.width / 2} ${this.dividerY}) scale(${1 / this.zoom})`);
+  }
+
+  /** The stars drift slowly toward the player while the squads hold their distance. */
+  private driftStars(tick: number): void {
+    const shift = (tick * 0.15) % STRIP;
+    this.stars.childNodes.forEach((node) => {
+      const star = node as SVGCircleElement;
+      const base = Number(star.dataset.baseY ?? (star.dataset.baseY = star.getAttribute('cy')!));
+      let y = base + shift;
+      if (y > this.stripBottom - 4) y -= STRIP - 8;
+      star.setAttribute('cy', String(y));
+    });
   }
 
   size(): { width: number; height: number } {
@@ -113,6 +191,7 @@ export class BattleView {
   setZoom(zoom: number): void {
     this.zoom = zoom;
     this.rescaleTags();
+    this.rescaleLabels();
   }
 
   /** Tags keep screen size until neighbours would overlap; then they shrink to the ship's pitch. */
@@ -150,6 +229,9 @@ export class BattleView {
     }
     this.drawShots(snapshot);
     this.drawTargets(snapshot);
+    this.driftStars(snapshot.tick);
+    if (this.distanceText) this.distanceText.textContent = `${snapshot.distanceGm} Gatometers`;
+    if (this.delayText) this.delayText.textContent = `${(0.6 + snapshot.distanceGm / 1000).toFixed(1)} s flight`;
   }
 
   /** The selected ship gets a ring under its hull (heromedel, 2026-10-27). */
@@ -279,7 +361,10 @@ export class BattleView {
     placed.group.setAttribute('opacity', ship.isGone ? '0.35' : '1');
   }
 
-  /** A shot: on screen leaving its ship, gone across the divider, on screen again arriving (GDD 3Q). */
+  /**
+   * A shot flies one straight line from its ship to its target (GDD 3R): drawn until that line meets the near
+   * barrier line, gone across the strip (a tiny faint dash shows it crossing), drawn again from the far line.
+   */
   private drawShots(snapshot: Snapshot): void {
     this.shotsGroup.replaceChildren();
     const onScreenShare = 0.3 / (0.6 + snapshot.distanceGm / 1000);
@@ -289,28 +374,38 @@ export class BattleView {
       if (!from || !to) continue;
       const start = this.tileCentre(from, from.picture.rooms[0]?.id ?? 0);
       const end = this.tileCentre(to, shot.toRoomId);
-      const position = this.shotPosition(shot, start, end, onScreenShare);
-      if (!position) continue;
-      // a shot leaving flies toward the divider; one arriving flies away from it: the nose points along the path
-      const leaving = shot.progress < onScreenShare;
-      const direction = leaving ? Math.sign(this.dividerY - start.y) : Math.sign(end.y - this.dividerY);
-      this.shotsGroup.appendChild(shot.type === 'Missile'
-        ? missileShape(position.x, position.y, direction, LOOK.missile)
-        : laserBolt(position.x, position.y, direction, LOOK.laser, snapshot.tick + shot.id));
+      const path = this.shotPath(start, end);
+      const angle = Math.atan2(end.y - start.y, end.x - start.x) * 180 / Math.PI + 90;
+      if (shot.progress < onScreenShare) {
+        const t = shot.progress / onScreenShare;
+        this.shotsGroup.appendChild(this.projectile(shot, lerp(start, path.vanish, t), angle, snapshot.tick));
+      } else if (shot.progress > 1 - onScreenShare) {
+        const t = (shot.progress - (1 - onScreenShare)) / onScreenShare;
+        this.shotsGroup.appendChild(this.projectile(shot, lerp(path.reappear, end, t), angle, snapshot.tick));
+      } else if (this.shotsCrossingBarrier) {
+        const t = (shot.progress - onScreenShare) / (1 - 2 * onScreenShare);
+        const at = lerp(path.vanish, path.reappear, t);
+        const dash = document.createElementNS(SVG, 'line');
+        const dx = (path.reappear.x - path.vanish.x), dy = (path.reappear.y - path.vanish.y), len = Math.hypot(dx, dy) || 1;
+        dash.setAttribute('x1', String(at.x - dx / len * 3)); dash.setAttribute('y1', String(at.y - dy / len * 3));
+        dash.setAttribute('x2', String(at.x + dx / len * 3)); dash.setAttribute('y2', String(at.y + dy / len * 3));
+        dash.setAttribute('stroke', LOOK.crossing); dash.setAttribute('stroke-width', '1.2');
+        this.shotsGroup.appendChild(dash);
+      }
     }
   }
 
-  private shotPosition(shot: SnapshotShot, start: { x: number; y: number }, end: { x: number; y: number }, onScreenShare: number): { x: number; y: number } | undefined {
-    const divider = this.dividerY;
-    if (shot.progress < onScreenShare) {
-      const t = shot.progress / onScreenShare;
-      return { x: start.x, y: start.y + (divider - start.y) * t };
-    }
-    if (shot.progress > 1 - onScreenShare) {
-      const t = (shot.progress - (1 - onScreenShare)) / onScreenShare;
-      return { x: end.x, y: divider + (end.y - divider) * t };
-    }
-    return undefined;
+  /** Where the straight line from start to end meets the near barrier line and the far one. */
+  private shotPath(start: { x: number; y: number }, end: { x: number; y: number }): { vanish: { x: number; y: number }; reappear: { x: number; y: number } } {
+    const downward = end.y > start.y;
+    const nearY = downward ? this.stripTop : this.stripBottom;
+    const farY = downward ? this.stripBottom : this.stripTop;
+    const at = (y: number) => ({ x: start.x + (end.x - start.x) * ((y - start.y) / (end.y - start.y || 1)), y });
+    return { vanish: at(nearY), reappear: at(farY) };
+  }
+
+  private projectile(shot: SnapshotShot, at: { x: number; y: number }, angle: number, tick: number): SVGGElement {
+    return shot.type === 'Missile' ? missileShape(at.x, at.y, angle, LOOK.missile) : laserBolt(at.x, at.y, angle, LOOK.laser, tick + shot.id);
   }
 
   private rect(x: number, y: number, width: number, height: number, fill: string): SVGRectElement {
@@ -327,25 +422,25 @@ export class BattleView {
  * rounded head and a tail that thins out behind it, flickering a little, head first along its path. Placeholder
  * until each weapon file names its own projectile art.
  */
-function laserBolt(x: number, y: number, direction: number, colour: string, flicker: number): SVGGElement {
+function laserBolt(x: number, y: number, angle: number, colour: string, flicker: number): SVGGElement {
   const group = document.createElementNS(SVG, 'g');
   group.setAttribute('pointer-events', 'none');
+  // drawn pointing up with the head at the origin, then turned along the path
+  group.setAttribute('transform', `translate(${x} ${y}) rotate(${angle})`);
   const length = 34 + (flicker % 3) * 3;
-  const tailY = y - direction * length;
   group.innerHTML =
-    `<line x1="${x}" y1="${y}" x2="${x}" y2="${tailY}" stroke="${colour}" stroke-width="7" stroke-linecap="round" opacity="0.35"/>`
-    + `<line x1="${x}" y1="${y - direction * 4}" x2="${x}" y2="${tailY + direction * 6}" stroke="${colour}" stroke-width="3" stroke-linecap="round" opacity="0.8"/>`
-    + `<circle cx="${x}" cy="${y}" r="4.5" fill="${colour}"/>`
-    + `<circle cx="${x}" cy="${y}" r="2" fill="#ffffff"/>`;
+    `<line x1="0" y1="0" x2="0" y2="${length}" stroke="${colour}" stroke-width="7" stroke-linecap="round" opacity="0.35"/>`
+    + `<line x1="0" y1="4" x2="0" y2="${length - 6}" stroke="${colour}" stroke-width="3" stroke-linecap="round" opacity="0.8"/>`
+    + `<circle r="4.5" fill="${colour}"/><circle r="2" fill="#ffffff"/>`;
   return group;
 }
 
 /** A missile as the genre draws one: a slim rocket seen from above, nose first, small fins, an exhaust flame. Placeholder. */
-function missileShape(x: number, y: number, direction: number, flameColour: string): SVGGElement {
+function missileShape(x: number, y: number, angle: number, flameColour: string): SVGGElement {
   const group = document.createElementNS(SVG, 'g');
   group.setAttribute('pointer-events', 'none');
   // drawn pointing up, then turned to fly along the path
-  group.setAttribute('transform', `translate(${x} ${y}) rotate(${direction < 0 ? 0 : 180})`);
+  group.setAttribute('transform', `translate(${x} ${y}) rotate(${angle})`);
   group.innerHTML =
     `<polygon points="0,-14 3,-8 3,6 -3,6 -3,-8" fill="#d8dde6" stroke="#6b7280" stroke-width="0.8"/>`
     + `<polygon points="-3,2 -7,8 -3,8" fill="#8a94a3"/><polygon points="3,2 7,8 3,8" fill="#8a94a3"/>`
@@ -369,6 +464,10 @@ function reticleMark(x: number, y: number, colour: string, label: string): SVGGE
   ];
   group.innerHTML = parts.join('');
   return group;
+}
+
+function lerp(a: { x: number; y: number }, b: { x: number; y: number }, t: number): { x: number; y: number } {
+  return { x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t };
 }
 
 /** The space a ship takes on screen: its tiles plus the hull art's overhang on each side, plus the labels above. */

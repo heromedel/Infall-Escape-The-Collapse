@@ -20,6 +20,10 @@ export interface Look {
   autofire: boolean;
   /** Draw a line from the ship to each target room as well as the room mark. */
   targetLines: boolean;
+  /** The player squad's sideways shift as a share of the wider squad's width (GDD 3R). */
+  squadOffset: number;
+  /** Show the tiny faint dash of a shot crossing the barrier strip (GDD 3R). */
+  shotsCrossingBarrier: boolean;
 }
 
 export type HostToClient =

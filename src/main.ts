@@ -129,6 +129,24 @@ function registerDebugCommands(debug: DebugConsole, content: ContentLibrary, set
     },
   });
   debug.register({
+    name: 'offset',
+    description: 'Squad Offset setting (GDD 3R): offset 0.35. The player squad shifted sideways by this share of the wider squad; takes effect at the next battle.',
+    run: ([value]) => {
+      if (value !== undefined && !Number.isNaN(Number(value))) settings.squadOffset = Math.max(0, Math.min(1, Number(value)));
+      else if (value !== undefined) return 'offset <0 to 1>';
+      return `Squad offset ${settings.squadOffset}.`;
+    },
+  });
+  debug.register({
+    name: 'crossing',
+    description: 'Shots Crossing Barrier setting (GDD 3R): crossing shown | hidden. The tiny dash of a shot in the strip; switches at once.',
+    run: ([state]) => {
+      if (state === 'shown' || state === 'hidden') { settings.shotsCrossingBarrier = state === 'shown'; host.announceLook(); }
+      else if (state !== undefined) return 'crossing shown | hidden';
+      return `Shots crossing the barrier: ${settings.shotsCrossingBarrier ? 'shown' : 'hidden'}.`;
+    },
+  });
+  debug.register({
     name: 'autopause',
     description: 'Turn Mode auto pause (GDD 4I): autopause off | on [seconds].',
     run: ([state, seconds]) => {
