@@ -381,10 +381,8 @@ def check(name, before, bparts, after, aparts, allowed, scale=1):
     return ok
 
 
-if __name__ == "__main__":
-    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "mecha", "light-attack-frame", "pixel-redo", "tools"))
-    from pixel_svg import paths
-    out_dir = sys.argv[1]; os.makedirs(out_dir, exist_ok=True)
+def build():
+    """Every goal in order, each checked; returns the finished sprite, its part map and the saved stages."""
     px = crews2.crew1(); parts = dict(paint2.PARTS)
     big, bp = up2(px, parts)
     stages = [("0-blocks", big, bp)]
@@ -434,6 +432,14 @@ if __name__ == "__main__":
           "| attached", qa.attached(pr, "boot-near", "leg-near"), qa.attached(pr, "boot-far", "leg-far"))
     print("   hands", qa.hand_hangs(pr, "hand-near", "arm-near"), qa.hand_hangs(pr, "hand-far", "arm-far"))
     stages.append(("6-round2", s, pr))
+    return s, pr, stages
+
+
+if __name__ == "__main__":
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "mecha", "light-attack-frame", "pixel-redo", "tools"))
+    from pixel_svg import paths
+    out_dir = sys.argv[1]; os.makedirs(out_dir, exist_ok=True)
+    s, pr, stages = build()
     import json
     json.dump({f"{x},{y}": v for (x, y), v in pr.items()}, open(os.path.join(out_dir, "parts.json"), "w"))
     json.dump({f"{x},{y}": c for (x, y), c in s.items()}, open(os.path.join(out_dir, "pixels.json"), "w"))

@@ -40,9 +40,9 @@ def mask(poly_near):
     return {(x, y) for x in range(140) for y in range(140) if im.getpixel((x, y))}
 
 
-def sleeve_mask(far):
+def sleeve_mask(far, shape=None):
     im = Image.new("L", (140, 140))
-    pts = [(CENTRE - x if far else x, y) for x, y in SLEEVE]
+    pts = [(CENTRE - x if far else x, y) for x, y in (shape or SLEEVE)]
     ImageDraw.Draw(im).polygon([(x + .5, y + .5) for x, y in pts], fill=1)
     return {(x, y) for x in range(140) for y in range(140) if im.getpixel((x, y))}
 
@@ -63,9 +63,10 @@ def fold_pixels(folds):
     return crease
 
 
-def redraw(big, bp, old_ramp):
+def redraw(big, bp, old_ramp, sleeve=None):
     """Goal: the coat's outline and the sleeves redrawn as shapes, shaded by form. Everything that isn't coat, sleeve
-    or hand keeps its pixels; the lapels and collar keep their shapes and take the new ramp."""
+    or hand keeps its pixels; the lapels and collar keep their shapes and take the new ramp. `sleeve` is the near
+    sleeve's outline for another pose (the far one is its mirror image); by default the sleeves hang."""
     out, parts = dict(big), dict(bp)
     old = {c.lower(): i for i, c in enumerate(old_ramp)}
     remap = {c: COAT[min(7, round(i * 7 / (len(old_ramp) - 1)))] for c, i in old.items()}
@@ -73,7 +74,7 @@ def redraw(big, bp, old_ramp):
     for p, v in bp.items():
         if v in redrawn:
             del out[p]; del parts[p]
-    body, near_sleeve, far_sleeve = mask(BODY), sleeve_mask(False), sleeve_mask(True)
+    body, near_sleeve, far_sleeve = mask(BODY), sleeve_mask(False, sleeve), sleeve_mask(True, sleeve)
     belt_rows = sorted({y for (x, y), v in bp.items() if v == "belt"})
     hem = max(y for _, y in body)
     keep = {p for p, v in parts.items() if v not in ("leg-near", "leg-far")}        # the front: shirt, lapels...
@@ -120,8 +121,8 @@ def redraw(big, bp, old_ramp):
                 v += .6
             if 50 <= y <= 53 and u > .45 and (y - 50) == round((u - .45) * 6):
                 v -= 1.3                                              # the elbow's crease, on the inside
-            if y >= CUFF_Y - 1:
-                v -= .9                                               # the cuff turning under
+            if y > 45 and (x, y + 3) not in sleeve:
+                v -= .9                                               # the cuff turning under, at the sleeve's end
             out[(x, y)] = tone(v); parts[(x, y)] = name
     for p, v in parts.items():                                         # lapels and collar take the new ramp
         if v in ("lapel-near", "lapel-far", "collar-near", "collar-far") and out[p] in remap:

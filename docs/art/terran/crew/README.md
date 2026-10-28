@@ -64,6 +64,15 @@ dropped, one pixel everywhere), and the drifter drawn by hand at game size (`too
 blind-checked seven times, last 6/10, still flagged: sleeves and hands read weakly, the hem corners, a heavy gap
 between the legs; then, heromedel: no nose, and the trench coat's ruffled hem flattened). Version B above (black outline added after shrinking) was rejected: "it clearly sucks".
 
+**Typing, facing the viewer (round 3e, 2026-10-28):** `tools/type_anim.py` makes four frames from the 2x drifter, as
+the Mecha crew's "type down" row: both hands on the keys, the near hand lifted, both down, the far hand lifted
+(`svg/drifter-2x-type-down-0.svg` … `-3.svg`, `review/drifter-2x-type-down-strip.png` and `.gif`). The sleeves bend,
+the forearms come forward and in (from above they look short and slanted, with a shadow line where they cross the
+coat), the hands rest close together below the belt (forward of the body is lower on the screen), and the head dips
+a pixel with the eyes lowered. Blind check without a console: read as idle or fidgeting, since there is nothing to
+type on; so a labelled console mockup (`docs/art/mockups/drifter-typing/drifter-2x-type-down-console-mockup.png`, not part of the
+sprite) shows the frames at a console.
+
 **Faster tries:** `python3 tools/review.py OUT_DIR` builds the sprite with every goal and check and writes one review
 sheet (the figure enlarged, at 2x and true size, and close-ups of the head, a hand and the boots), in about 3 seconds.
 
