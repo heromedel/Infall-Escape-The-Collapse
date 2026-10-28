@@ -291,11 +291,12 @@ export class BattleView {
       const end = this.tileCentre(to, shot.toRoomId);
       const position = this.shotPosition(shot, start, end, onScreenShare);
       if (!position) continue;
-      const dot = document.createElementNS(SVG, 'circle');
-      dot.setAttribute('cx', String(position.x)); dot.setAttribute('cy', String(position.y));
-      dot.setAttribute('r', shot.type === 'Missile' ? '5' : '3.5');
-      dot.setAttribute('fill', shot.type === 'Missile' ? LOOK.missile : LOOK.laser);
-      this.shotsGroup.appendChild(dot);
+      // a shot leaving flies toward the divider; one arriving flies away from it: the nose points along the path
+      const leaving = shot.progress < onScreenShare;
+      const direction = leaving ? Math.sign(this.dividerY - start.y) : Math.sign(end.y - this.dividerY);
+      this.shotsGroup.appendChild(shot.type === 'Missile'
+        ? missileShape(position.x, position.y, direction, LOOK.missile)
+        : laserBolt(position.x, position.y, direction, LOOK.laser, snapshot.tick + shot.id));
     }
   }
 
@@ -319,6 +320,37 @@ export class BattleView {
     rect.setAttribute('fill', fill);
     return rect;
   }
+}
+
+/**
+ * A laser bolt as the genre draws one (docs/reference/genre-battle-screen): a glowing streak with a bright
+ * rounded head and a tail that thins out behind it, flickering a little, head first along its path. Placeholder
+ * until each weapon file names its own projectile art.
+ */
+function laserBolt(x: number, y: number, direction: number, colour: string, flicker: number): SVGGElement {
+  const group = document.createElementNS(SVG, 'g');
+  group.setAttribute('pointer-events', 'none');
+  const length = 34 + (flicker % 3) * 3;
+  const tailY = y - direction * length;
+  group.innerHTML =
+    `<line x1="${x}" y1="${y}" x2="${x}" y2="${tailY}" stroke="${colour}" stroke-width="7" stroke-linecap="round" opacity="0.35"/>`
+    + `<line x1="${x}" y1="${y - direction * 4}" x2="${x}" y2="${tailY + direction * 6}" stroke="${colour}" stroke-width="3" stroke-linecap="round" opacity="0.8"/>`
+    + `<circle cx="${x}" cy="${y}" r="4.5" fill="${colour}"/>`
+    + `<circle cx="${x}" cy="${y}" r="2" fill="#ffffff"/>`;
+  return group;
+}
+
+/** A missile as the genre draws one: a slim rocket seen from above, nose first, small fins, an exhaust flame. Placeholder. */
+function missileShape(x: number, y: number, direction: number, flameColour: string): SVGGElement {
+  const group = document.createElementNS(SVG, 'g');
+  group.setAttribute('pointer-events', 'none');
+  // drawn pointing up, then turned to fly along the path
+  group.setAttribute('transform', `translate(${x} ${y}) rotate(${direction < 0 ? 0 : 180})`);
+  group.innerHTML =
+    `<polygon points="0,-14 3,-8 3,6 -3,6 -3,-8" fill="#d8dde6" stroke="#6b7280" stroke-width="0.8"/>`
+    + `<polygon points="-3,2 -7,8 -3,8" fill="#8a94a3"/><polygon points="3,2 7,8 3,8" fill="#8a94a3"/>`
+    + `<polygon points="-2,8 2,8 0,16" fill="${flameColour}"/><polygon points="-1,8 1,8 0,12" fill="#fff2a8"/>`;
+  return group;
 }
 
 /** A target mark: a ring with a cross and the weapon's slot number beside it, in the fire mode's colour. */

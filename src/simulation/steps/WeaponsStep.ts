@@ -12,6 +12,7 @@ import { secondsToTicks } from '../Ticks';
 import { BattleLog } from '../BattleLog';
 
 const MANNED_SPEEDUP = 1.1;
+/** Not in the docs yet: the gap between a burst's shots. The genre keeps it in its engine, not its data; unmeasured, so a guess. */
 const TICKS_BETWEEN_SHOTS = secondsToTicks(0.2);
 
 /**

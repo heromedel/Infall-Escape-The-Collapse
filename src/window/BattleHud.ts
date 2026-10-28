@@ -95,6 +95,7 @@ export class BattleHud {
     this.pausedText = text(0, 48, 'PAUSED', { size: 26, anchor: 'middle', weight: 'bold' });
     this.pausedText.setAttribute('letter-spacing', '6');
     this.hintText = text(0, 0, '', { size: 13, anchor: 'middle', fill: LOOK.faint });
+    this.hintText.setAttribute('visibility', 'hidden');   // the control hints are off (heromedel, 2026-10-28): the tooltips carry them
     this.topCentre.append(this.squadText, this.pausedText, this.hintText);
 
     this.topRight = group({ 'pointer-events': 'none' });
