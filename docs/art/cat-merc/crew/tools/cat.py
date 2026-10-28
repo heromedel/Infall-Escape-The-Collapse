@@ -61,10 +61,10 @@ TAIL = [((17, 15), "#"), ((17, 16), "O"), ((18, 16), "#"), ((17, 17), "o"), ((18
         ((17, 18), "O"), ((18, 18), "#"), ((17, 19), "o"), ((18, 19), "O"), ((19, 19), "#"), ((17, 20), "#"),
         ((18, 20), "#"), ((19, 18), "Y"), ((20, 18), "#"), ((19, 17), "#"), ((20, 19), "#"), ((19, 20), "#")]
 # from behind: the backs of the ears (the notched one now on our left), tabby stripes down the back of the head, the
-# collar all the way round, the strap coming over his left shoulder to his right hip, the patch and the holster on
-# our right, the backs of the paws, and the tail from under the jacket, swinging across his seat and curling up
-# beside his left side
-# (it's nearest to us, so it's drawn over him)
+# collar all the way round, the strap coming over his left shoulder, the patch on the sleeve on our right, the backs
+# of the paws, and the tail from under the jacket sweeping down across his right calf with a curl (it's nearest to us,
+# so it's drawn over him; heromedel: swung across his seat it looked like he was scratching his butt, and straight down
+# between his legs it read as crude). The holster is on his hip at the side, out of sight from here
 BACK = [
     ".....##......#.....",
     "....#Yo#....#O#....",
@@ -81,10 +81,10 @@ BACK = [
     "..#QJJcTJJJJcJJj#..",
     "..#QJJ#JTJJJ#JJj#..",
     "..#QJJ#JJTJJ#Jej#..",
-    "..#jjj#RRRTR#jjj#..",
+    "..#jjj#RRRRR#jjj#..",
     "..#YOo#PPpPP#oOO#..",
-    "...#qPPPPpPPXPp#...",
-    "..#qPPPPp#pPTTPp#..",
+    "...#qPPPPpPPPPp#...",
+    "..#qPPPPp#pPPPPp#..",
     "..#qPPPp#.#pPPPp#..",
     "...#ppp#...#ppp#...",
     "..#BBBB#...#BBBB#..",
@@ -98,30 +98,30 @@ SIDE = [
     "......#...#........",
     ".....#o#.#Y#.......",
     ".....#oO#YKO#......",
-    "....#OOOOOOOO#.....",
-    "....#YOoOoOOOO#....",
-    "....#YOOOOOO##O#...",
-    "....#YOoOOOOHOWW#..",
-    "....#YOOOOOOWWWN#..",
-    "....#oOOOOOWWWW#...",
-    ".....#oOOOOWWW#....",
+    "....#OOoOoOOO#.....",
+    "....#YOOOOOOOO#....",
+    "....#YOOOO##OO#....",
+    "....#YOoOOH#OOO#...",
+    "....#YOOOOOOWWN#...",
+    "....#oOOOOOOWW#....",
+    ".....#oOOOOOw#.....",
     "....#CCCCCCCCC#....",
-    "...#CCCCQJJJCC#....",
-    "...#QJJCQJJdJZ#....",
-    "...#QJJJQeJdTj#....",
-    "...#QJJJQJJdJj#....",
-    "...#jRRRjjjdRj#....",
-    "...#qPPPOOoPPp#....",
-    "...#qPPXWWwPPp#....",
-    "...#qPPTPPPPPp#....",
-    "...#ppp#.#qPPPp#...",
-    "...#ppp#.#qPPp#....",
-    "...#DDDDd#BBBBBb#..",
-    "...######.#######..",
+    "...#CCQJJCCCCC#....",
+    "...#QJQJJdJJJZ#....",
+    "...#QJQeJdJJTj#....",
+    "...#QJQJJdJTJj#....",
+    "...#jRjjjdRRRj#....",
+    "...#q#Oo#PPPPp#....",
+    "...#qX##PPPPPp#....",
+    "...#qTPPPPPPPp#....",
+    "...#ppp#qPPPPp#....",
+    "...#ppp#qPPPp#.....",
+    "...#DDD#BBBBBBb#...",
+    "...#############...",
 ]
 # the tails as paths of pixels from the root to the tip, outlined where they're drawn: (column, row) in the grid
 SIDE_TAIL = [(3, 17), (2, 17), (2, 16), (2, 15), (1, 14), (1, 13), (2, 12)]          # from the hip, curling up behind
-BACK_TAIL = [(9, 16), (8, 17), (7, 17), (6, 17), (5, 17), (4, 17), (3, 17), (2, 16), (1, 15), (1, 14), (2, 13)]
+BACK_TAIL = [(9, 16), (10, 17), (11, 18), (12, 19), (13, 19), (14, 18)]   # from the waist across his right calf, curling up
 FRAME, FLOOR = 35, 32
 VIEWS = {"down": (FIGURE, TAIL, None), "up": (BACK, None, BACK_TAIL), "right": (SIDE, None, SIDE_TAIL)}
 
@@ -143,7 +143,7 @@ def pixels(view="down"):
     if path:                                           # a tail drawn along a path, striped, with its own outline
         cells = [(left + i, top + j) for i, j in path]
         for n, q in enumerate(cells):
-            out[q] = KEY["o" if n % 3 == 2 else "O"]
+            out[q] = KEY["Y" if n == len(cells) - 1 else "o" if n % 3 == 2 else "O"]     # a pale tip
         for (x, y) in cells:
             for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
                 q = (x + dx, y + dy)

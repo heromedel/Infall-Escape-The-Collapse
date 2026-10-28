@@ -26,9 +26,11 @@ tail's base a little detached at the hip.
 
 **Back and side views (2026-10-28):** `svg/cat-merc-up.svg`, `-right.svg` and `-left.svg` (the right mirrored),
 beside the front in `review/cat-merc-views.png`. From behind: the backs of the ears (the notched one now on our left),
-tabby stripes down the back of the head, the collar all round, the strap over his left shoulder, the patch and the
-holster on our right, the backs of the paws, and the tail from under the jacket swinging across his seat and curling up
-beside him. From the right: his right side (patch, holster), the near ear in front of the notched far one, the muzzle
-and nose out to the right, the near arm hanging over the jacket, the far leg and boot a step darker behind the near
-one, toes forward, the tail from the hip curling up behind. Blind check: every facing reads, and the four are
-consistent (7/10); the back view's tail is still its weakest part.
+tabby stripes down the back of the head, the collar all round, the strap over his left shoulder, the patch on our
+right, the backs of the paws, and the tail from under the jacket sweeping down across his right calf with a curl
+(heromedel: swung across his seat to his side it looked like he was scratching his butt; straight down between the
+legs read as crude); the holster is out of sight at his side. From the right: his right side (patch, holster), the
+near ear in front of the notched far one, a short muzzle under the eye with the nose at its tip (heromedel: the first
+face was oddly shaped, a tall beak-like muzzle), the arm hanging at the back of the hip with the paw there (heromedel:
+the paw on the front of the pants read as a broken kneecap), the far leg and boot a step darker behind the near one,
+toes forward, the tail from the hip curling up behind.
