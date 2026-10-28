@@ -36,3 +36,19 @@ session has them. Window 1280 by 720, Kestrel against a Rebel Rigger, paused unl
 - Right click while aiming cancels. Right click on a slot depowers the weapon; left click repowers it.
 - Subsystems sit apart from the main systems, with their own bars, and are always lit.
 - Damage shows as a floating number on the room and a red system icon; shields show as bubbles with a recharge bar.
+
+## Recording at 20 frames a second (2026-10-28)
+
+A 30 s recording of a fight against a rebel Elite Fighter at a fleet beacon, read frame by frame. The Kestrel's
+own weapons were knocked out by the fleet's battery before they fired, so this recording has the enemy's shots
+only; a second recording from a clean fight is still needed for a burst's spacing and the player's bolts.
+
+| Frame | What it shows |
+|---|---|
+| 19 | The enemy's laser bolt arriving at the player's ship, six frames 50 ms apart, enlarged three times: a short bright green streak with a brighter head and a fading tail, about 30 px long at 1280 wide, moving about 12 px a frame. |
+| 20 | The same bolt leaving the enemy's ship in the TARGET window: a green streak off the top of its hull. It left at frame 135 and arrived at frame 161, so 1.3 s from leaving to arriving with the off-screen gap in between. The next bolt left 241 frames later: a 12 s charge. |
+| 21 | The fleet battery's warning: a small crosshair on the player's hull that becomes a pulsing red ball, then the hit. Not a weapon of the ship. |
+| 22 | The battery's hit: a large white-orange fireball crossing from the left edge and bursting on the hull, with fire left in the room. |
+
+Read off the frames: a laser bolt is an elongated streak in the weapon's colour, not a dot; it is drawn on the
+firing ship's screen leaving, then on the target's screen arriving, and is not drawn in between.
