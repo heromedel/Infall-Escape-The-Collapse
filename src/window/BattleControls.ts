@@ -122,7 +122,7 @@ export class BattleControls {
     const shipId = Number(tile.dataset.shipId);
     const isPlayerShip = this.view.playerShipIds.includes(shipId);
     if (this.armedMount !== undefined && this.selectedShipId !== undefined && !isPlayerShip) {
-      this.sendOrder({ kind: 'TargetWeapon', shipId: this.selectedShipId, mount: this.armedMount, targetShipId: shipId, targetRoomId: Number(tile.dataset.roomId), autofire: this.aimMode === 'auto' });
+      this.sendOrder({ kind: 'TargetWeapon', shipId: this.selectedShipId, mount: this.armedMount, targetShipId: shipId, targetTile: { x: Number(tile.dataset.x), y: Number(tile.dataset.y) }, autofire: this.aimMode === 'auto' });
       this.armedMount = undefined;
       this.refresh();
       return;
@@ -204,8 +204,8 @@ export class BattleControls {
 
   private hovered(event: PointerEvent): void {
     const tile = (event.target as Element).closest('rect.tile') as SVGRectElement | null;
-    if (tile && this.armedMount !== undefined && tile.classList.contains('enemy')) this.view.hoverRoom(Number(tile.dataset.shipId), Number(tile.dataset.roomId));
-    else this.view.hoverRoom(undefined, undefined);
+    if (tile && this.armedMount !== undefined && tile.classList.contains('enemy')) this.view.hoverTile(tile);
+    else this.view.hoverTile(undefined);
   }
 
   /** Dragging a weapon slot onto another reorders the weapons (the genre's drag to rearrange). */
@@ -256,7 +256,7 @@ export class BattleControls {
   private clearSelection(): void {
     this.armedMount = undefined;
     this.selectedCrewId = undefined;
-    this.view.hoverRoom(undefined, undefined);
+    this.view.hoverTile(undefined);
     this.refresh();
   }
 

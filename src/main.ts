@@ -93,12 +93,14 @@ function registerDebugCommands(debug: DebugConsole, content: ContentLibrary, set
   });
   debug.register({
     name: 'formation',
-    description: 'Squad formation (GDD 3H, 3I): formation depth 0.7 | inverted on|off. Takes effect at the next battle.',
-    run: ([what, value]) => {
-      if (what === 'depth' && value !== undefined && !Number.isNaN(Number(value))) settings.formationDepth = Number(value);
-      else if (what === 'inverted' && value !== undefined) settings.formationInverted = value === 'on';
-      else if (what !== undefined) return 'formation depth <share of the tallest ship> | inverted on|off';
-      return `Formation: curve depth ${settings.formationDepth}, ${settings.formationInverted ? 'inverted (centre forward)' : 'centre back'}.`;
+    description: 'Player and Enemy Formation settings (GDD 3S): formation player|enemy <name>, or formation to list the files. Takes effect at the next battle.',
+    run: ([side, ...rest]) => {
+      const name = rest.join(' ');
+      if ((side === 'player' || side === 'enemy') && name) {
+        if (!content.formationNames().includes(name)) return `No formation named "${name}". Loaded: ${content.formationNames().join(', ')}.`;
+        if (side === 'player') settings.playerFormation = name; else settings.enemyFormation = name;
+      } else if (side !== undefined) return 'formation player|enemy <name>';
+      return `Formations: player ${settings.playerFormation}, enemy ${settings.enemyFormation}. Loaded: ${content.formationNames().join(', ')}.`;
     },
   });
   debug.register({
@@ -126,15 +128,6 @@ function registerDebugCommands(debug: DebugConsole, content: ContentLibrary, set
       if (state === 'on' || state === 'off') { settings.targetLines = state === 'on'; host.announceLook(); }
       else if (state !== undefined) return 'targetlines off | on';
       return `Target lines ${settings.targetLines ? 'on' : 'off'}.`;
-    },
-  });
-  debug.register({
-    name: 'offset',
-    description: 'Squad Offset setting (GDD 3R): offset 0.35. The player squad shifted sideways by this share of the wider squad; takes effect at the next battle.',
-    run: ([value]) => {
-      if (value !== undefined && !Number.isNaN(Number(value))) settings.squadOffset = Math.max(0, Math.min(1, Number(value)));
-      else if (value !== undefined) return 'offset <0 to 1>';
-      return `Squad offset ${settings.squadOffset}.`;
     },
   });
   debug.register({

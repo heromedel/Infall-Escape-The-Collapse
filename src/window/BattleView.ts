@@ -8,14 +8,10 @@
 import type { ShipPicture } from '../shared/ShipPicture';
 import type { Snapshot, SnapshotShip, SnapshotShot } from '../shared/Snapshot';
 import { ShipDrawing } from './ShipDrawing.js';
-import { formationSlots, FormationSettings } from './Formation.js';
+import { formationSlots } from './Formation.js';
+import type { FormationDefinition } from '../shared/Formation';
 
 const SVG = 'http://www.w3.org/2000/svg';
-/**
- * The room in front of each squad (GDD 3R): what the largest hull in the genre's size range needs plus a slight
- * margin, in ship pixels. Not in the docs yet: the largest hull is taken as 11 tiles tall, the margin 1 tile.
- */
-const FRONT_ROOM = 12 * 35;
 /** The barrier strip's height: two lines with the star field between them. */
 const STRIP = 90;
 /** Room above a ship's art for its tag: name, hull bar and shield pips, drawn at screen scale. */
@@ -97,31 +93,31 @@ export class BattleView {
   }
 
   /** Lays both squads out from their pictures, each in its formation curve facing the divider (GDD 3H). */
-  start(pictures: Record<number, ShipPicture>, playerShipIds: number[], formation: FormationSettings, squadOffset: number): void {
+  start(pictures: Record<number, ShipPicture>, playerShipIds: number[], formations: { player: FormationDefinition; enemy: FormationDefinition }): void {
     this.root.replaceChildren();
     this.ships.clear();
     this.playerShipIds = playerShipIds;
     const enemy = Object.entries(pictures).filter(([id]) => !playerShipIds.includes(Number(id)));
     const player = Object.entries(pictures).filter(([id]) => playerShipIds.includes(Number(id)));
-    const enemyLayout = formationSlots(enemy.map(([, picture]) => footprint(picture)), 'down', formation);
-    const playerLayout = formationSlots(player.map(([, picture]) => footprint(picture)), 'up', formation);
-    // the squads are offset sideways by a share of the wider squad's width (GDD 3R): the player squad shifted right
-    const wider = Math.max(enemyLayout.width, playerLayout.width);
-    const shift = wider * squadOffset;
-    const enemyX = (wider - enemyLayout.width) / 2;
-    const playerX = (wider - playerLayout.width) / 2 + shift;
-    this.width = wider + shift;
-    // each squad's front line sits FRONT_ROOM from its barrier line, whatever the ships' sizes (GDD 3R)
-    this.stripTop = enemyLayout.height + FRONT_ROOM;
+    const enemyLayout = formationSlots(enemy.map(([, picture]) => footprint(picture)), 'down', formations.enemy);
+    const playerLayout = formationSlots(player.map(([, picture]) => footprint(picture)), 'up', formations.player);
+    // a tag may hang above the enemy squad's top zone: leave it room
+    const tagRoom = LABEL_SPACE;
+    // both squads share the grid's columns from the left (GDD 3S); the player file's shift is already in its layout
+    this.width = Math.max(enemyLayout.width, playerLayout.width);
+    const enemyX = 0;
+    const playerX = 0;
+    // each squad's zones run to its barrier line (GDD 3R, 3S)
+    this.stripTop = tagRoom + enemyLayout.height;
     this.stripBottom = this.stripTop + STRIP;
     this.dividerY = this.stripTop + STRIP / 2;
-    this.height = this.stripBottom + FRONT_ROOM + playerLayout.height;
+    this.height = this.stripBottom + tagRoom + playerLayout.height;
 
     this.root.appendChild(this.barrier());
     this.root.appendChild(this.selectionRing);   // under the ships
 
-    this.placeSquad(enemy, enemyLayout.slots, enemyX, 0);
-    this.placeSquad(player, playerLayout.slots, playerX, this.stripBottom + FRONT_ROOM);
+    this.placeSquad(enemy, enemyLayout.slots, enemyX, tagRoom);
+    this.placeSquad(player, playerLayout.slots, playerX, this.stripBottom + tagRoom);
     this.root.appendChild(this.targetsGroup);
     this.root.appendChild(this.shotsGroup);
     this.rescaleTags();
@@ -212,11 +208,10 @@ export class BattleView {
     return { x: placed.offsetX - placed.print.left, y: placed.offsetY - placed.print.top, width: placed.print.width, height: placed.print.height };
   }
 
-  /** Marks every tile of a room as hovered (so a whole room lights up under the pointer), or none. */
-  hoverRoom(shipId: number | undefined, roomId: number | undefined): void {
-    this.root.querySelectorAll('rect.tile.hover-room').forEach((tile) => tile.classList.remove('hover-room'));
-    if (shipId === undefined || roomId === undefined) return;
-    this.root.querySelectorAll(`rect.tile[data-ship-id="${shipId}"][data-room-id="${roomId}"]`).forEach((tile) => tile.classList.add('hover-room'));
+  /** Marks the tile under the pointer as the one a shot would land on (GDD 3L), or none. */
+  hoverTile(tile: SVGRectElement | undefined): void {
+    this.root.querySelectorAll('rect.tile.hover-room').forEach((other) => other.classList.remove('hover-room'));
+    tile?.classList.add('hover-room');
   }
 
   /** Redraws everything that moves from the snapshot. */
@@ -245,14 +240,6 @@ export class BattleView {
     this.selectionRing.setAttribute('visibility', 'visible');
   }
 
-  /** The room's rectangle on the battle, for reticles. */
-  private roomBox(placed: PlacedShip, roomId: number): { x: number; y: number; width: number; height: number } | undefined {
-    const room = placed.picture.rooms.find((candidate) => candidate.id === roomId);
-    if (!room) return undefined;
-    const size = placed.picture.tileSize;
-    return { x: placed.offsetX + room.column * size, y: placed.offsetY + room.row * size, width: room.width * size, height: room.height * size };
-  }
-
   /** The selected ship's aimed weapons: a reticle with the slot number on each target room, red for autofire and yellow for fire once, plus a line when Target Lines is on (GDD 3L: any enemy ship). */
   private drawTargets(snapshot: Snapshot): void {
     this.targetsGroup.replaceChildren();
@@ -262,10 +249,9 @@ export class BattleView {
     ship.weapons.forEach((weapon, index) => {
       if (!weapon.target) return;
       const to = this.ships.get(weapon.target.shipId);
-      const box = to && this.roomBox(to, weapon.target.roomId);
-      if (!to || !box) return;
+      if (!to) return;
       const colour = weapon.autofire ? LOOK.targetAuto : LOOK.targetOnce;
-      const centre = { x: box.x + box.width / 2, y: box.y + box.height / 2 };
+      const centre = this.tileCentre(to, weapon.target.tile);
       if (this.targetLines) {
         const grid = ShipDrawing.sizeOf(from.picture);
         const start = { x: from.offsetX + grid.width * (index + 1) / (ship.weapons.length + 1), y: from.offsetY - from.print.top + from.print.height - grid.height / 2 };
@@ -280,12 +266,17 @@ export class BattleView {
     });
   }
 
-  /** The screen position (in battle pixels) of a ship's tile centre, for shots. */
-  private tileCentre(placed: PlacedShip, roomId: number): { x: number; y: number } {
-    const tiles = placed.picture.floorTiles.filter((tile) => tile.roomId === roomId);
-    const tile = tiles[0] ?? placed.picture.floorTiles[0];
+  /** The screen position (in battle pixels) of a ship's tile centre, by the tile's signed coordinates. */
+  private tileCentre(placed: PlacedShip, tile: { x: number; y: number }): { x: number; y: number } {
+    const at = placed.tileByCoordinate.get(`${tile.x},${tile.y}`) ?? { column: placed.picture.floorTiles[0].column, row: placed.picture.floorTiles[0].row };
     const size = placed.picture.tileSize;
-    return { x: placed.offsetX + tile.column * size + size / 2, y: placed.offsetY + tile.row * size + size / 2 };
+    return { x: placed.offsetX + at.column * size + size / 2, y: placed.offsetY + at.row * size + size / 2 };
+  }
+
+  /** A ship's own firing point: not in the docs yet, its first room's first tile until mounts have coordinates. */
+  private firingPoint(placed: PlacedShip): { x: number; y: number } {
+    const first = placed.picture.floorTiles[0];
+    return this.tileCentre(placed, { x: first.x, y: first.y });
   }
 
   private placeSquad(row: [string, ShipPicture][], slots: { x: number; y: number }[], startX: number, startY: number): void {
@@ -372,8 +363,8 @@ export class BattleView {
       const from = this.ships.get(shot.fromShipId);
       const to = this.ships.get(shot.toShipId);
       if (!from || !to) continue;
-      const start = this.tileCentre(from, from.picture.rooms[0]?.id ?? 0);
-      const end = this.tileCentre(to, shot.toRoomId);
+      const start = this.firingPoint(from);
+      const end = this.tileCentre(to, shot.toTile);
       const path = this.shotPath(start, end);
       const angle = Math.atan2(end.y - start.y, end.x - start.x) * 180 / Math.PI + 90;
       if (shot.progress < onScreenShare) {

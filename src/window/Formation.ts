@@ -1,20 +1,16 @@
 /**
- * Where each ship of a squad sits on screen (GDD 3H, Likely): a gentle curve facing the divider, the outer ships
- * forward and the centre ships back, noses along the curve, with some vertical overlap between neighbours. Curve
- * depth is a share of the squad's tallest ship, 0.7 by default; the inverted curve (centre forward) is a setting
- * (GDD 3I). Pure arithmetic, so it is tested without a window. Formation changes nothing in the simulation (3M).
+ * Where each ship of a squad sits on screen (GDD 3S): the formation file's zones on the tile grid, each ship
+ * centred in its slot's zone and snapped to the grid, rows counting away from the barrier. Pure arithmetic, so
+ * it is tested without a window. Formation changes nothing in the simulation (3M).
  */
+
+import type { FormationDefinition } from '../shared/Formation';
 
 export interface Footprint {
   width: number;
   height: number;
-}
-
-export interface FormationSettings {
-  /** Curve depth as a share of the tallest ship's height. */
-  depth: number;
-  /** Centre ships forward instead of back. */
-  inverted: boolean;
+  /** Room above the hull for its tag, inside the height; not part of the hull, so it may lie outside the zone. */
+  top?: number;
 }
 
 export interface Slot {
@@ -22,33 +18,55 @@ export interface Slot {
   y: number;
 }
 
-/** Horizontal space between neighbouring ships: the first mockups' gap plus 35 percent (GDD 3H). */
-const SHIP_GAP = 60 * 1.35;
+/** A ship tile in ship pixels; the grid cell. */
+export const CELL = 35;
 
 /**
- * Lays the footprints out left to right. `facing` says where the divider is: 'down' for the enemy squad above
- * it, 'up' for the player squad below it. Returns each footprint's top-left corner and the whole layout's size.
+ * Lays the footprints into the formation's zones, in slot order. `facing` says where the barrier is: 'down' for
+ * the enemy squad above it, 'up' for the player squad below it. Returns each footprint's top-left corner in
+ * squad pixels (the squad's own top-left is 0,0; the barrier side is its bottom for 'down', its top for 'up')
+ * and the squad's size, which covers every used zone. The player side's zones are shifted right by the file's
+ * shift. A footprint is centred in its zone, then snapped to the cell so rooms line up across ships.
  */
-export function formationSlots(footprints: Footprint[], facing: 'up' | 'down', settings: FormationSettings): { slots: Slot[]; width: number; height: number } {
+export function formationSlots(footprints: Footprint[], facing: 'up' | 'down', formation: FormationDefinition): { slots: Slot[]; width: number; height: number } {
   if (footprints.length === 0) return { slots: [], width: 0, height: 0 };
-  const tallest = Math.max(...footprints.map((print) => print.height));
-  const count = footprints.length;
-  // a lone ship has no curve: it sits on the front line
-  const depth = count > 1 ? tallest * settings.depth : 0;
-  const slots: Slot[] = [];
-  let x = 0;
-  footprints.forEach((print, index) => {
-    // t runs from -1 at the left end to 1 at the right end; 0 for a lone ship or the exact centre
-    const t = count === 1 ? 0 : (index / (count - 1)) * 2 - 1;
-    // how far back from the front line this slot sits: centre ships back, outer ships forward (or the reverse)
-    const backShare = settings.inverted ? t * t : 1 - t * t;
-    const back = depth * backShare;
-    // the front line is the divider's side: for a squad facing down, forward means a larger y
-    const y = facing === 'down' ? depth - back + (tallest - print.height) : back;
-    slots.push({ x, y });
-    x += print.width + SHIP_GAP;
+  const zone = formation.zoneSize * CELL;
+  const shiftColumns = facing === 'up' ? formation.shift : 0;
+  const used = footprints.map((_, index) => formation.zones[Math.min(index, formation.zones.length - 1)]);
+  const columnsAcross = Math.max(...used.map((z) => z.column)) + formation.zoneSize + shiftColumns;
+  // a hull taller than its zone overflows away from the barrier, never into it; the squad grows to hold it
+  const overflow = Math.max(0, ...footprints.map((print) => hullHeight(print) - zone));
+  const rowsDeep = Math.max(...used.map((z) => z.row)) + formation.zoneSize + Math.ceil(overflow / CELL);
+  const width = columnsAcross * CELL;
+  const height = rowsDeep * CELL;
+  const slots = footprints.map((print, index) => {
+    const z = used[index];
+    const left = (z.column + shiftColumns) * CELL;
+    const hull = hullHeight(print);
+    const tag = print.top ?? 0;
+    // the hull is centred in the zone; a taller hull keeps its nose at the zone's barrier edge and overflows away
+    const inset = Math.max(0, (zone - hull) / 2);
+    const x = snap(left + (zone - print.width) / 2);
+    let y: number;
+    if (facing === 'up') {
+      // barrier above: the zone's top is its barrier edge; the footprint's top (tag) sits above the hull
+      const zoneTop = z.row * CELL;
+      y = snap(zoneTop + inset) - tag;
+    } else {
+      // barrier below: the zone's bottom is its barrier edge
+      const zoneBottom = height - z.row * CELL;
+      y = snap(zoneBottom - inset - hull) - tag;
+    }
+    return { x, y };
   });
-  const width = x - SHIP_GAP;
-  const height = tallest + depth;
   return { slots, width, height };
+}
+
+function hullHeight(print: Footprint): number {
+  return print.height - (print.top ?? 0);
+}
+
+/** The nearest cell edge. */
+function snap(value: number): number {
+  return Math.round(value / CELL) * CELL;
 }

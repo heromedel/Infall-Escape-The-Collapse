@@ -118,7 +118,7 @@ export class Simulation {
       })),
       shots: this.shots.map((shot) => ({
         id: shot.id, weaponName: shot.weapon.name, type: shot.weapon.type, fromShipId: shot.fromShipId,
-        toShipId: shot.toShipId, toRoomId: shot.toRoomId, progress: shot.progress,
+        toShipId: shot.toShipId, toTile: shot.toTile, progress: shot.progress,
       })),
       result: this.result,
     };
@@ -139,7 +139,7 @@ export class Simulation {
         case 'TargetWeapon': {
           const weapon = ship.weapons.find((candidate) => candidate.mount === order.mount);
           const target = this.ship(order.targetShipId);
-          if (weapon && target && target.room(order.targetRoomId)) { weapon.target = { shipId: order.targetShipId, roomId: order.targetRoomId }; weapon.autofire = order.autofire; }
+          if (weapon && target && target.roomOfTile(order.targetTile)) { weapon.target = { shipId: order.targetShipId, tile: order.targetTile }; weapon.autofire = order.autofire; }
           break;
         }
         case 'ClearTarget': {

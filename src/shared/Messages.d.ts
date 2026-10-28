@@ -6,6 +6,7 @@
 import type { ShipPicture } from './ShipPicture';
 import type { Snapshot } from './Snapshot';
 import type { Order } from './Order';
+import type { FormationDefinition } from './Formation';
 
 export type ClientToHost =
   | { kind: 'Order'; order: Order }
@@ -20,15 +21,13 @@ export interface Look {
   autofire: boolean;
   /** Draw a line from the ship to each target room as well as the room mark. */
   targetLines: boolean;
-  /** The player squad's sideways shift as a share of the wider squad's width (GDD 3R). */
-  squadOffset: number;
   /** Show the tiny faint dash of a shot crossing the barrier strip (GDD 3R). */
   shotsCrossingBarrier: boolean;
 }
 
 export type HostToClient =
   /** Sent once when a battle starts: everything the window needs to draw each ship (the static parts). */
-  | { kind: 'BattleStarted'; pictures: Record<number, ShipPicture>; playerShipIds: number[]; formation: { depth: number; inverted: boolean }; look: Look }
+  | { kind: 'BattleStarted'; pictures: Record<number, ShipPicture>; playerShipIds: number[]; formations: { player: FormationDefinition; enemy: FormationDefinition }; look: Look }
   /** A look setting changed mid-battle (the debug console for now, the settings screen later). */
   | { kind: 'Look'; look: Look }
   /** Sent every tick while a battle runs, and once more when it ends. */

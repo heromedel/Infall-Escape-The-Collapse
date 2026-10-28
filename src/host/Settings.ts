@@ -12,9 +12,9 @@ export class Settings {
   /** Turn Mode (GDD 4I): Auto Pause Off > On, and its interval, stored in ticks and shown in seconds. */
   autoPause = false;
   autoPauseIntervalTicks = secondsToTicks(10);
-  /** Squad formation (GDD 3H, 3I): curve depth as a share of the tallest ship, and the inverted curve. */
-  formationDepth = 0.7;
-  formationInverted = false;
+  /** Player Formation and Enemy Formation (GDD 3S): formation files by name; Curve > the others loaded. */
+  playerFormation = 'Curve';
+  enemyFormation = 'Curve';
   /**
    * Battle GUI (GDD 1C, 3J): Floating > Card. Floating: the genre's placement, elements over the battle. Card:
    * one panel in the bottom-left corner. Not in the docs yet.
@@ -24,8 +24,6 @@ export class Settings {
   autofire = false;
   /** Target Lines: Off > On. A dashed line from the ship to each target room, on top of the genre's room marks. */
   targetLines = false;
-  /** Squad Offset (GDD 3R): 0.35 > 0 to 1, the player squad shifted sideways by this share of the wider squad's width. */
-  squadOffset = 0.35;
   /** Shots Crossing Barrier (GDD 3R): Shown > Hidden, the tiny faint dash of a shot crossing the strip. */
   shotsCrossingBarrier = true;
 }

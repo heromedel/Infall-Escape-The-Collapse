@@ -6,8 +6,11 @@
 
 export type Order =
   | { kind: 'SetPower'; shipId: number; systemKey: string; bars: number }
-  /** Autofire keeps the target and fires every time the weapon charges; otherwise it fires one volley and lets go. */
-  | { kind: 'TargetWeapon'; shipId: number; mount: number; targetShipId: number; targetRoomId: number; autofire: boolean }
+  /**
+   * Aim at one tile of an enemy ship (GDD 3L: a tile, not a whole room, since our rooms hold several systems).
+   * Autofire keeps the target and fires every time the weapon charges; otherwise it fires one volley and lets go.
+   */
+  | { kind: 'TargetWeapon'; shipId: number; mount: number; targetShipId: number; targetTile: { x: number; y: number }; autofire: boolean }
   | { kind: 'ClearTarget'; shipId: number; mount: number }
   /** Power a weapon: its cost in bars moves from the reactor into its weapon system (the genre's slot click). */
   | { kind: 'PowerWeapon'; shipId: number; mount: number }

@@ -43,7 +43,7 @@ export class Battle {
       for (const ship of squad.ships) pictures[ship.id] = shipPictureOf(this.content.ship(ship.name), squad.side, this.content, this.settings);
     }
     const playerShipIds = this.simulation.squads.filter((squad) => squad.side === 'player').flatMap((squad) => squad.ships.map((ship) => ship.id));
-    return { kind: 'BattleStarted', pictures, playerShipIds, formation: { depth: this.settings.formationDepth, inverted: this.settings.formationInverted }, look: { battleGui: this.settings.battleGui, autofire: this.settings.autofire, targetLines: this.settings.targetLines, squadOffset: this.settings.squadOffset, shotsCrossingBarrier: this.settings.shotsCrossingBarrier } };
+    return { kind: 'BattleStarted', pictures, playerShipIds, formations: { player: this.content.formation(this.settings.playerFormation), enemy: this.content.formation(this.settings.enemyFormation) }, look: { battleGui: this.settings.battleGui, autofire: this.settings.autofire, targetLines: this.settings.targetLines, shotsCrossingBarrier: this.settings.shotsCrossingBarrier } };
   }
 
   /**

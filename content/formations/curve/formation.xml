@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The curve (GDD 3H, 3S): outer ships forward, centre ships back, noses along a gentle curve. Each zone is a
+     rectangle of grid cells the size of the largest hull plus a margin (12 tiles square); its position is the
+     top-left cell. Rows count away from the barrier: row 0 touches the barrier strip on each side. Columns count
+     from the left; the player side's zones are shifted right by the offset of GDD 3R (shift, in columns).
+     Zones never overlap each other or the barrier; the loader refuses a file where they do. -->
+<formation name="Curve" zoneSize="12" shift="4">
+  <zone slot="1" column="0"  row="0"/>
+  <zone slot="2" column="14" row="4"/>
+  <zone slot="3" column="28" row="8"/>
+  <zone slot="4" column="42" row="4"/>
+  <zone slot="5" column="56" row="0"/>
+  <zone slot="6" column="70" row="4"/>
+</formation>

@@ -62,10 +62,9 @@ const SETTING_ROWS: { label: string; key: string; kind: 'choice' | 'number' | 't
   { label: 'Battle GUI', key: 'battleGui', kind: 'choice', choices: [['floating', 'Floating'], ['card', 'Card']], command: (value) => `gui ${value}` },
   { label: 'Autofire', key: 'autofire', kind: 'choice', choices: [['false', 'Off'], ['true', 'On']], command: (value) => `autofire ${value === 'true' ? 'on' : 'off'}` },
   { label: 'Target Lines', key: 'targetLines', kind: 'choice', choices: [['false', 'Off'], ['true', 'On']], command: (value) => `targetlines ${value === 'true' ? 'on' : 'off'}` },
-  { label: 'Formation Depth', key: 'formationDepth', kind: 'number', command: (value) => `formation depth ${value}` },
-  { label: 'Squad Offset', key: 'squadOffset', kind: 'number', command: (value) => `offset ${value}` },
+  { label: 'Player Formation', key: 'playerFormation', kind: 'text', command: (value) => `formation player ${value}` },
+  { label: 'Enemy Formation', key: 'enemyFormation', kind: 'text', command: (value) => `formation enemy ${value}` },
   { label: 'Shots Crossing Barrier', key: 'shotsCrossingBarrier', kind: 'choice', choices: [['true', 'Shown'], ['false', 'Hidden']], command: (value) => `crossing ${value === 'true' ? 'shown' : 'hidden'}` },
-  { label: 'Formation Inverted', key: 'formationInverted', kind: 'choice', choices: [['false', 'Off'], ['true', 'On']], command: (value) => `formation inverted ${value === 'true' ? 'on' : 'off'}` },
   { label: 'Auto Pause (Turn Mode)', key: 'autoPause', kind: 'choice', choices: [['false', 'Off'], ['true', 'On']], command: (value) => `autopause ${value === 'true' ? 'on' : 'off'}` },
   { label: 'Player Power Color', key: 'playerPowerColour', kind: 'text', command: (value) => `powercolor ${value}` },
 ];
@@ -137,7 +136,7 @@ function listenToHost(): void {
         inBattle = true;
         battleOver = false;
         showScreen('battle');
-        battleView.start(message.pictures, message.playerShipIds, message.formation, message.look.squadOffset);
+        battleView.start(message.pictures, message.playerShipIds, message.formations);
         controls.start(message.pictures, message.playerShipIds, message.look);
         stage.replaceChildren(battleView.root);
         fitBattle();

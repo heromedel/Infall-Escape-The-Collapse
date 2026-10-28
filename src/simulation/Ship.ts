@@ -99,7 +99,8 @@ export class Crew {
 export class Weapon {
   /** Charge in ticks, from 0 up to the ticks the definition needs. */
   chargeTicks = 0;
-  target?: { shipId: number; roomId: number };
+  /** The tile aimed at (GDD 3L): a shot lands on it and only the system on it takes system damage. */
+  target?: { shipId: number; tile: Tile };
   /** Keep the target after a volley (the genre's autofire); otherwise one volley, then the target is let go. */
   autofire = false;
   /**
@@ -233,6 +234,11 @@ export class Ship {
 
   room(id: number): Room | undefined {
     return this.rooms.find((room) => room.id === id);
+  }
+
+  /** The system whose console sits on this tile, if any. */
+  systemOnTile(tile: Tile): ShipSystem | undefined {
+    return this.systems.find((system) => sameTile(system.tile, tile));
   }
 
   systemsInRoom(room: Room): ShipSystem[] {

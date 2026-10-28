@@ -22,6 +22,7 @@ import { WeaponDefinition } from '../simulation/content/WeaponDefinition';
 import { WeaponFileReader, WeaponFileError } from '../simulation/content/WeaponFileReader';
 import { DEFAULT_RACE, RaceDefinition, readRaceDefinition } from '../simulation/content/RaceDefinition';
 import { Log } from './Log';
+import { FormationDefinition, FormationFileError, readFormationDefinition } from '../simulation/content/FormationDefinition';
 
 /** A system's content: its name and, when it has one, its symbol's SVG text. */
 export interface SystemEntry {
@@ -41,6 +42,7 @@ export class ContentLibrary {
   private readonly systems = new Map<string, SystemEntry>();
   private readonly weapons = new Map<string, WeaponDefinition>();
   private readonly races = new Map<string, RaceDefinition>();
+  private readonly formations = new Map<string, FormationDefinition>();
 
   private constructor(private readonly log: Log) {}
 
@@ -54,9 +56,10 @@ export class ContentLibrary {
     library.loadRaces(path.join(contentFolder, 'races'));
     library.loadWeapons(path.join(contentFolder, 'weapons'));
     library.loadShips(path.join(contentFolder, 'ships'));
+    library.loadFormations(path.join(contentFolder, 'formations'));
     library.noteSystemsWithoutSymbols();
     library.noteWeaponsMissing();
-    log.event('content.loaded', { ships: library.ships.size, systems: library.systems.size, weapons: library.weapons.size, races: library.races.size });
+    log.event('content.loaded', { ships: library.ships.size, systems: library.systems.size, weapons: library.weapons.size, races: library.races.size, formations: library.formations.size });
     return library;
   }
 
@@ -83,6 +86,33 @@ export class ContentLibrary {
   /** The race's traits, or the plain defaults under its name when it has no file. */
   race(name: string): RaceDefinition {
     return this.races.get(name) ?? { ...DEFAULT_RACE, name };
+  }
+
+  /** A formation by name (GDD 3S); the first loaded when the name is unknown, so a battle always has one. */
+  formation(name: string): FormationDefinition {
+    const formation = this.formations.get(name) ?? [...this.formations.values()][0];
+    if (!formation) throw new Error('No formation files are loaded (content/formations)');
+    return formation;
+  }
+
+  formationNames(): string[] {
+    return [...this.formations.keys()];
+  }
+
+  private loadFormations(formationsFolder: string): void {
+    if (!fs.existsSync(formationsFolder)) return;
+    for (const folderName of fs.readdirSync(formationsFolder).sort()) {
+      const file = path.join(formationsFolder, folderName, 'formation.xml');
+      if (!fs.existsSync(file)) continue;
+      try {
+        const formation = readFormationDefinition(fs.readFileSync(file, 'utf8'));
+        this.formations.set(formation.name, formation);
+        this.log.event('content.formation_loaded', { formation: formation.name, zones: formation.zones.length, zoneSize: formation.zoneSize, shift: formation.shift });
+      } catch (error) {
+        const reason = error instanceof FormationFileError ? error.message : `unexpected error: ${(error as Error).message}`;
+        this.log.event('content.formation_refused', { file, reason });
+      }
+    }
   }
 
   private loadRaces(racesFolder: string): void {
