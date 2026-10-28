@@ -262,3 +262,12 @@ Instead of a fixed gap between each squad's front line and the barrier, reserve 
 genre's size range needs (the biggest hull, with a slight margin) and anchor every ship at the same point on the
 far side of that space. A ship that big just fits; a small ship anchored at the same point has much more room to
 the barrier. Not done yet: saved as a battle screen step to do after the current GUI passes.
+
+### Battle formations chosen before a battle (heromedel, 2026-10-28)
+
+Before a battle begins the player could choose the squad's formation: attack, spear, block, wing, curve and so on,
+from the formation files of GDD 3S. Some surprise battles could flip the player's formation.
+
+### A larger battle area (heromedel, 2026-10-28)
+
+Advanced: a larger battle area that allows flank and pincer attacks.
