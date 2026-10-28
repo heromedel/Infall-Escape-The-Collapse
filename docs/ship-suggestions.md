@@ -352,7 +352,7 @@ Default tag: **Ai-Generated-Proposal (2026-10-22)**; not reviewed yet.
    | Crew Teleporter | 2 | yes |
 
    **Conduits — Proposed (2026-10-27, heromedel):** a ring like the Outrider's. Conduits feed systems, not mounts
-   (GDD 5H), so the Sporewing sits on its own weapon system (Weapons B, GDD 8L) in the starboard flank room by the
+   (GDD 5H), so the Sporewing sits on its own weapon system (Weapons B, GDD 8M) in the starboard flank room by the
    launcher, reached by a single spur off the ring. Cut the spur and the stolen weapon goes dark: a weak point the
    player can read from the ship's art and aim for. Replaces the earlier spur to the launcher's mount.
 
@@ -364,7 +364,7 @@ Default tag: **Ai-Generated-Proposal (2026-10-22)**; not reviewed yet.
    - Pass 4: conduit spur to the launcher, a readable weak point.
    - Pass 5: all-Terran crew (xenophobic when doomed).
    - Pass 6: checked counters and rewards (see 9).
-   - Pass 7 (2026-10-27): the Sporewing moved to its own weapon system so the spur still feeds it (GDD 5H, 8L).
+   - Pass 7 (2026-10-27): the Sporewing moved to its own weapon system so the spur still feeds it (GDD 5H, 8M).
 
    **Layout — Proposed (2026-10-26):** in the ship setup format (GDD 5F–5L; `ship-design-process.md` step 8),
    converted from the accepted floor plan (`docs/art/terran/pirate-hijacker/floor-plans/`). North is the bow; y grows
@@ -482,7 +482,7 @@ Default tag: **Ai-Generated-Proposal (2026-10-22)**; not reviewed yet.
     | Gat 2.1 "Twinshot" | 7.67 |
     | **Total** | **266.41** |
 
-    Plus the second-system surcharge on Weapon Control B (GDD 8L, about 5–10%, Eco to set). Crew are extra: 5 Terrans at 10.89 each, 54.45.
+    Plus the second-system surcharge on Weapon Control B (GDD 8M, about 5–10%, Eco to set). Crew are extra: 5 Terrans at 10.89 each, 54.45.
 11. **New rules recorded:** spores and stun cooldown and price rates in `weapon-budget-table.md`.
 
 Judgment calls for review:

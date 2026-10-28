@@ -104,7 +104,7 @@ with one ship and wins with about 3–4 very strong or 6 good ones (GDD 3K).
 
 ## From Infall: Init Coding (2026-10-27)
 
-GDD 8L (Proposed) keeps level prices per system, since two weapon systems are different systems. Each additional
+GDD 8M (Proposed) keeps level prices per system, since two weapon systems are different systems. Each additional
 weapon system on a ship costs more to install than the one before, enough to slightly hamper splitting one big
 system into several small ones. Please set the amount and the shape of the increase: compounding, an increasing
 flat step, or whatever lines up best with your tables. Also a price for a bought mount beyond the hull's; your

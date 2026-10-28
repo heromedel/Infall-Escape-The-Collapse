@@ -338,7 +338,7 @@ about 16 fuel and about 10 scrap on Normal (hard-coded, from memory) and, for th
 ## F10. Weapon systems: second systems, slots and mounts (2026-10-27)
 
 Asked by Infall: Init Coding for heromedel, about its GDD points on several weapon systems (8K and 8L on
-`Cloud-C-Init-Coding`, to be relettered at merge, since 8K here is Starting Mawjig). Sent there as opinions; recorded
+`Cloud-C-Init-Coding`, to be relettered at merge, since 8K here is Starting Mawjig; now 8L and 8M). Sent there as opinions; recorded
 here. Nothing in the GDD or the tables is changed by this.
 
 - **heromedel (2026-10-27):** level prices stay per system (two weapon systems are different systems). The lever

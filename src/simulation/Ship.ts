@@ -170,7 +170,7 @@ export class Ship {
     this.crew = this.startingCrew(firstCrewId, raceByName);
   }
 
-  /** The weapon systems: Weapons, the Mecha's Weapon Pod, and whatever a race adds with mounts (GDD 8L). */
+  /** The weapon systems: Weapons, the Mecha's Weapon Pod, and whatever a race adds with mounts (GDD 8M). */
   get weaponSystems(): ShipSystem[] {
     return this.systems.filter((system) => system.name === 'Weapons' || system.name === 'Weapon Pod');
   }
