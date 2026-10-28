@@ -56,6 +56,14 @@ snapped to the sprite's own palette). Two outline styles to compare, beside the 
 with the one-pixel stair-step corners taken off; **B** (`svg/drifter-small-black.svg`) is a slightly smaller figure
 with a one-pixel black line all round, drawn without doubled corners, like the Mecha crew's.
 
+**Round 3d (2026-10-28):** heromedel asked for the outline to be fixed on the full-size drifter first and then scaled
+down. `review/gatos-drifter-game-size-versions.png` shows the 2x drifter and the same drifter with a thick black outline
+(`small.thick_outline`, 5 px, so it comes down to one pixel), then at game size beside the Mecha crew: the plain
+downscale, the downscale of the outlined one (tidied by `small.tidy_outline`: gaps closed, corner-only pixels
+dropped, one pixel everywhere), and the drifter drawn by hand at game size (`tools/tiny.py`, `svg/drifter-tiny.svg`;
+blind-checked seven times, last 6/10, still flagged: sleeves and hands read weakly, the hem corners, a heavy gap
+between the legs). Version B above (black outline added after shrinking) was rejected: "it clearly sucks".
+
 **Faster tries:** `python3 tools/review.py OUT_DIR` builds the sprite with every goal and check and writes one review
 sheet (the figure enlarged, at 2x and true size, and close-ups of the head, a hand and the boots), in about 3 seconds.
 

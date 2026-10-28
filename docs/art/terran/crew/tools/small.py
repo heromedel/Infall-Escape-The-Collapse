@@ -92,6 +92,40 @@ def black_outline(px, parts):
     return out
 
 
+def thick_outline(px, parts, width):
+    """At full size (heromedel, round 3c): a black outline `width` pixels thick round the whole figure, so that it
+    comes down to a one-pixel line when the figure is scaled down to game size. Rounded (a disc), so the corners
+    don't thicken."""
+    ring = {}
+    r2 = (width + .5) ** 2
+    offsets = [(dx, dy) for dx in range(-width, width + 1) for dy in range(-width, width + 1) if dx * dx + dy * dy <= r2]
+    for (x, y) in px:
+        for dx, dy in offsets:
+            q = (x + dx, y + dy)
+            if q not in px:
+                ring[q] = BLACK
+    out = dict(px); out.update(ring)
+    out_parts = dict(parts); out_parts.update({q: "outline" for q in ring})
+    return out, out_parts
+
+
+def tidy_outline(px, parts):
+    """After scaling the outlined figure down: close any gap (an edge pixel with nothing outside it gets a black pixel
+    there), then drop outline pixels that touch the figure only at a corner, so the line is one pixel everywhere, with
+    no doubled corners, like the Mecha crew's."""
+    out, out_parts = dict(px), dict(parts)
+    inner = {p for p, v in parts.items() if v != "outline"}
+    for (x, y) in inner:
+        for dx, dy in NB4:
+            q = (x + dx, y + dy)
+            if q not in out:
+                out[q] = BLACK; out_parts[q] = "outline"
+    for q, v in list(out_parts.items()):
+        if v == "outline" and not any((q[0] + dx, q[1] + dy) in inner for dx, dy in NB4):
+            del out[q]; del out_parts[q]
+    return out, out_parts
+
+
 def svg(px):
     rects = "".join(f'<rect x="{x}" y="{y}" width="1" height="1" fill="{c}"/>' for (x, y), c in sorted(px.items()))
     return (f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {FRAME} {FRAME}" width="{FRAME * 4}" '
