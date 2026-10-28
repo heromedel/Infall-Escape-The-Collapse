@@ -28,6 +28,7 @@ const HUMAN_LINES: Record<string, (fields: LogFields) => string> = {
   'host.client_connected': (f) => `Client connected: ${f.client}.`,
   'battle.weapon_offline': (f) => `${f.weapon} on ${f.ship} loses power: ${f.system} can't hold it any more.`,
   'battle.weapon_power_refused': (f) => `${f.weapon} on ${f.ship} can't be powered: needs ${f.needed} more bar(s), ${f.free} free.`,
+  'program.exit': (f) => `Infall closed by ${f.by}.`,
   'host.paused': (f) => `${f.paused ? 'Paused' : 'Unpaused'} by ${f.by}.`,
   'host.order': (f) => `Order ${f.kind} for ship ${f.shipId}${f.paused ? ' (paused)' : ''}: ${plainListing({ ...f, kind: undefined, shipId: undefined, paused: undefined })}.`,
   'host.battle_ended': (f) => `The live battle ended after ${f.seconds} s: ${f.winner} wins, ${f.reason}.`,

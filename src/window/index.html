@@ -26,10 +26,22 @@
     /* the card GUI (Settings: Battle GUI card) floats over the battle's bottom-left corner */
     #dock-band { display: none; position: absolute; left: 8px; bottom: 8px; padding: 0; background: none; border: none; z-index: 1; }
     #dock { width: 356px; height: 192px; display: block; }
+    /* screens: the title, the ship viewer, the battle; the body's class says which */
+    #title { display: none; grid-row: 2; place-self: center; text-align: center; }
+    #title h1 { font-size: 44px; letter-spacing: 2px; margin: 0 0 32px; }
+    #title button { display: block; width: 260px; margin: 10px auto; padding: 12px; font: inherit; font-size: 18px; background: var(--box); color: var(--text); border: 1px solid var(--edge); border-radius: 4px; cursor: pointer; }
+    #title button:hover { border-color: var(--text); }
+    #settings { display: none; grid-row: 2; place-self: center; background: var(--box); border: 1px solid var(--edge); border-radius: 6px; padding: 20px 28px; min-width: 420px; }
+    #settings h2 { margin: 0 0 12px; font-size: 20px; }
+    #settings label { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 6px 0; border-bottom: 1px solid #263445; }
+    #settings .reply { color: var(--faint); font-size: 13px; min-height: 1.4em; margin-top: 8px; }
+    body.title #title { display: block; }
+    body.settings #settings { display: block; }
+    body.title #battle-area, body.settings #battle-area, body.title #viewer-band, body.settings #viewer-band, body.title footer, body.settings footer { display: none; }
     body.battle #viewer-band { display: none; }
     body.battle.gui-card #dock-band { display: block; }
     body.battle footer { display: none; }
-    body.battle.console-open footer { display: grid; position: fixed; left: 0; right: 0; top: 0; z-index: 2; box-shadow: 0 6px 20px #000; }
+    body.console-open footer { display: grid !important; position: fixed; left: 0; right: 0; top: 0; z-index: 2; box-shadow: 0 6px 20px #000; }
 
     /* cursors say what the next click does (the genre's crosshair for aiming) */
     .clickable, rect.door, [data-crew-id] { cursor: pointer; }
@@ -49,6 +61,19 @@
     <label>Side <select id="side-picker"><option value="player">Player</option><option value="enemy">Enemy</option></select></label>
     <span id="ship-caption"></span>
   </header>
+  <section id="title">
+    <h1>Infall: Escape The Collapse</h1>
+    <button id="title-battle">Test Battle</button>
+    <button id="title-viewer">Ship Viewer</button>
+    <button id="title-settings">Settings</button>
+    <button id="title-exit">Exit</button>
+  </section>
+  <section id="settings">
+    <h2>Settings</h2>
+    <div id="settings-rows"></div>
+    <div class="reply" id="settings-reply"></div>
+    <button id="settings-back" style="margin-top: 12px">Back</button>
+  </section>
   <div id="battle-area">
     <svg id="viewport" xmlns="http://www.w3.org/2000/svg"></svg>
     <svg id="hud" xmlns="http://www.w3.org/2000/svg"></svg>

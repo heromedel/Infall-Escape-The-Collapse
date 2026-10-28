@@ -29,16 +29,16 @@ const LOOK = {
   auto: '#FF3B3B',
   once: '#FFE066',
   damaged: '#FF3B3B',
-  subsystem: '#cfd6e2',
   enemy: '#FF8500',
 };
 
 const MARGIN = 16;
+/** Room under the bottom rows for their labels (WEAPONS, SUBSYSTEMS), as the genre writes them. */
+const LABEL_ROOM = 14;
 /** The screen bands the GUI takes above and below the battle (GDD 3J), kept clear by the camera. */
 export const GUI_BANDS = { top: 60, bottom: 130 };
 const BAR = { width: 24, height: 6, step: 8 };
 const SYSTEM_STEP = 42;
-const SUBSYSTEM_GAP = 26;
 const WEAPON_BOX = { width: 160, height: 34, gap: 8 };
 const AUTOFIRE_BOX = { width: 92, height: 34 };
 const CREW_ROW = 24;
@@ -58,7 +58,11 @@ interface ShipElements {
   root: SVGGElement;
   topLeft: SVGGElement;
   bottomLeft: SVGGElement;
+  /** The subsystems, anchored bottom-right as the genre's are. */
+  bottomRight: SVGGElement;
   weapons: SVGGElement;
+  systemsWidth: number;
+  subsystemsWidth: number;
   hullBar: SVGRectElement;
   hullText: SVGTextElement;
   shieldPips: SVGCircleElement[];
@@ -139,12 +143,18 @@ export class BattleHud {
     const width = this.hud.clientWidth;
     const height = this.hud.clientHeight;
     this.topCentre.setAttribute('transform', `translate(${width / 2} ${MARGIN})`);
-    this.hintText.setAttribute('y', String(height - MARGIN - WEAPON_BOX.height - 14 - MARGIN));
     this.topRight.setAttribute('transform', `translate(${width - MARGIN} ${MARGIN})`);
     if (!this.elements) return;
     this.elements.topLeft.setAttribute('transform', `translate(${MARGIN} ${MARGIN})`);
-    this.elements.bottomLeft.setAttribute('transform', `translate(${MARGIN} ${height - MARGIN})`);
-    this.elements.weapons.setAttribute('transform', `translate(${Math.max(360, width / 2 - this.elements.weaponsWidth / 2)} ${height - MARGIN - WEAPON_BOX.height})`);
+    const bottom = height - MARGIN - LABEL_ROOM;
+    this.elements.bottomLeft.setAttribute('transform', `translate(${MARGIN} ${bottom})`);
+    this.elements.bottomRight.setAttribute('transform', `translate(${width - MARGIN - this.elements.subsystemsWidth} ${bottom})`);
+    // the weapons sit at the centre, but never over the systems row on the left or the subsystems on the right
+    const leftEdge = MARGIN + this.elements.systemsWidth + 24;
+    const rightEdge = width - MARGIN - this.elements.subsystemsWidth - 24 - this.elements.weaponsWidth;
+    const x = Math.min(Math.max(width / 2 - this.elements.weaponsWidth / 2, leftEdge), Math.max(leftEdge, rightEdge));
+    this.elements.weapons.setAttribute('transform', `translate(${x} ${bottom - WEAPON_BOX.height})`);
+    this.hintText.setAttribute('y', String(bottom - WEAPON_BOX.height - 14));
   }
 
   // ---- building ------------------------------------------------------------------------------------------
@@ -153,8 +163,9 @@ export class BattleHud {
     const root = group();
     const topLeft = group();
     const bottomLeft = group();
+    const bottomRight = group();
     const weapons = group();
-    root.append(topLeft, bottomLeft, weapons);
+    root.append(topLeft, bottomLeft, bottomRight, weapons);
 
     // top-left: the ship's name, hull bar, shield bubbles and evasion, then the crew list
     topLeft.appendChild(text(0, 14, ship.name, { size: 13 }));
@@ -180,7 +191,7 @@ export class BattleHud {
       bottomLeft.appendChild(drawn); reactorBars.push(drawn);
     }
     bottomLeft.appendChild(text(BAR.width / 2, -2, 'free', { size: 9, anchor: 'middle', fill: LOOK.faint }));
-    const systems = this.buildSystems(bottomLeft, ship, picture);
+    const { systems, systemsWidth, subsystemsWidth } = this.buildSystems(bottomLeft, bottomRight, ship, picture);
 
     // bottom: the weapon slots
     const weaponBoxes = this.buildWeapons(weapons, ship.weapons);
@@ -195,8 +206,9 @@ export class BattleHud {
     button.append(autofireBox, autofireText, title);
     weapons.appendChild(button);
     const weaponsWidth = buttonX + AUTOFIRE_BOX.width;
+    weapons.appendChild(text(weaponsWidth / 2, WEAPON_BOX.height + 11, 'WEAPONS', { size: 9, anchor: 'middle', fill: LOOK.faint, weight: 'bold' }));
 
-    return { shipId: ship.id, root, topLeft, bottomLeft, weapons, hullBar, hullText, shieldPips, evasionText, reactorBars, systems, weaponBoxes, autofireBox, autofireText, crew, weaponsWidth, slotOrder: ship.weapons.map((weapon) => weapon.mount).join(',') };
+    return { shipId: ship.id, root, topLeft, bottomLeft, weapons, hullBar, hullText, shieldPips, evasionText, reactorBars, systems, weaponBoxes, autofireBox, autofireText, crew, weaponsWidth, bottomRight, systemsWidth, subsystemsWidth, slotOrder: ship.weapons.map((weapon) => weapon.mount).join(',') };
   }
 
   private buildCrew(into: SVGGElement, crew: SnapshotCrew[], picture: ShipPicture, top: number): ShipElements['crew'] {
@@ -224,13 +236,14 @@ export class BattleHud {
     return built;
   }
 
-  /** Powered systems first in file order, then the subsystems (those that take no bars) after a gap. */
-  private buildSystems(into: SVGGElement, ship: SnapshotShip, picture: ShipPicture): ShipElements['systems'] {
+  /** Powered systems in file order after the reactor, bottom-left; the subsystems (no bars to give) bottom-right under their own label, as the genre's. */
+  private buildSystems(left: SVGGElement, right: SVGGElement, ship: SnapshotShip, picture: ShipPicture): { systems: ShipElements['systems']; systemsWidth: number; subsystemsWidth: number } {
     const built: ShipElements['systems'] = new Map();
     const symbolOf = new Map(picture.systems.map((system) => [system.key, system]));
     const powered = ship.systems.filter((system) => system.maxBars > 0);
     const subsystems = ship.systems.filter((system) => system.maxBars === 0);
     let x = BAR.width + 16;
+    let into = left;
     const place = (system: SnapshotSystem, subsystem: boolean) => {
       const column = group({ 'data-action': 'power', 'data-system-key': system.key, class: 'clickable', transform: `translate(${x} 0)` });
       const barCount = subsystem ? system.level : system.maxBars;
@@ -252,9 +265,14 @@ export class BattleHud {
       x += SYSTEM_STEP;
     };
     for (const system of powered) place(system, false);
-    x += SUBSYSTEM_GAP;
+    const systemsWidth = x - 6;
+    left.appendChild(text(systemsWidth / 2, 11, 'SYSTEMS', { size: 9, anchor: 'middle', fill: LOOK.faint, weight: 'bold' }));
+    x = 6;
+    into = right;
     for (const system of subsystems) place(system, true);
-    return built;
+    const subsystemsWidth = Math.max(0, x - 6);
+    right.appendChild(text(subsystemsWidth / 2, 11, 'SUBSYSTEMS', { size: 9, anchor: 'middle', fill: LOOK.faint, weight: 'bold' }));
+    return { systems: built, systemsWidth, subsystemsWidth };
   }
 
   private buildWeapons(into: SVGGElement, weapons: SnapshotWeapon[]): ShipElements['weaponBoxes'] {
@@ -310,7 +328,7 @@ export class BattleHud {
       drawn.bars.forEach((bar, index) => {
         const damagedAway = index >= drawn.bars.length - barsDamagedAway;
         const lit = drawn.subsystem ? !damagedAway : index < system.bars;
-        bar.setAttribute('fill', damagedAway ? LOOK.damaged : lit ? (drawn.subsystem ? LOOK.subsystem : picture.powerColour) : LOOK.barEmpty);
+        bar.setAttribute('fill', damagedAway ? LOOK.damaged : lit ? picture.powerColour : LOOK.barEmpty);
       });
       drawn.hit.querySelector('title')!.textContent = drawn.subsystem
         ? `${system.key}: level ${system.level}, needs no power${system.damage > 0 ? `, ${system.damage} damage` : ''}${system.mannedBy !== undefined ? ', manned' : ''}.`

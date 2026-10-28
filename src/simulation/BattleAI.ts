@@ -23,9 +23,23 @@ export function battleOrders(simulation: Simulation, squad: Squad): Order[] {
   const orders: Order[] = [];
   for (const ship of squad.livingShips) {
     orders.push(...powerOrders(ship));
-    orders.push(...ship.weapons.filter((weapon) => !weapon.powered).map((weapon) => ({ kind: 'PowerWeapon' as const, shipId: ship.id, mount: weapon.mount })));
+    orders.push(...weaponPowerOrders(ship));
     orders.push(...crewOrders(ship));
     if (enemies.length > 0) orders.push(...targetOrders(ship, enemies[0]));
+  }
+  return orders;
+}
+
+/** Power up any weapon that lost its bars, once the bars are there to give (the system's spare or the reactor's free). */
+function weaponPowerOrders(ship: Ship): Order[] {
+  const orders: Order[] = [];
+  for (const weapon of ship.weapons) {
+    if (weapon.powered) continue;
+    const system = ship.weaponSystemOf(weapon);
+    if (!system) continue;
+    const spare = (ship.power.kind === 'SelfPowered' ? system.workingBars : system.bars) - ship.barsUsedByWeapons(system);
+    const reachable = spare + (ship.power.kind === 'SelfPowered' ? 0 : Math.min(ship.power.barsFree, Math.max(0, system.level - system.damage) * system.barsPerLevel - system.bars));
+    if (weapon.cost <= reachable) orders.push({ kind: 'PowerWeapon', shipId: ship.id, mount: weapon.mount });
   }
   return orders;
 }

@@ -32,7 +32,7 @@ app.whenReady().then(() => {
 
   const window = openWindow();
   host.connect(new WindowConnection(window));      // the host's own window is a client like any LAN client
-  answerWindowRequests(window, content, settings, debug);
+  answerWindowRequests(window, content, settings, debug, log);
 });
 
 app.on('window-all-closed', () => app.quit());
@@ -50,10 +50,12 @@ function openWindow(): BrowserWindow {
 }
 
 /** What the window may ask the host for outside a battle: the ship viewer and the debug console. */
-function answerWindowRequests(window: BrowserWindow, content: ContentLibrary, settings: Settings, debug: DebugConsole): void {
+function answerWindowRequests(window: BrowserWindow, content: ContentLibrary, settings: Settings, debug: DebugConsole, log: Log): void {
   ipcMain.handle('ship-names', () => content.shipNames());
   ipcMain.handle('ship-picture', (_event, name: string, side: Side) => shipPictureOf(content.ship(name), side, content, settings));
   ipcMain.handle('debug', (_event, line: string) => debug.run(line));
+  ipcMain.handle('settings', () => ({ ...settings }));
+  ipcMain.on('exit', () => { log.event('program.exit', { by: 'the title screen' }); app.quit(); });
 }
 
 function registerDebugCommands(debug: DebugConsole, content: ContentLibrary, settings: Settings, log: Log, host: Host): void {
