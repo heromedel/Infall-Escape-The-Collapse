@@ -17,12 +17,12 @@ coder can add it. No art or floor layouts: Deck Collapse has none yet.
 | `loadout.burr.pappus.xml` | Tentauri | Pappus | 1 | 132 | `ship-suggestions.md` |
 | `light-attack-frame.xml` | Mecha | Light Attack Frame (Hull Laser) | 1–3 | 132 | `ship-suggestions.md` |
 | `loadout.light-attack-frame.suit-dock.xml` | Mecha | Light Attack Frame (Suit Dock) | 2–3 | 138 | `ship-suggestions.md` |
-| `azurethea-vein-moth.xml` | Azurethea | Vein Moth | 1–2 | 130 | new |
-| `senti-relay-picket.xml` | Senti-GPH | Relay Picket | 3 | 202 | new |
-| `lykario-scrap-hound.xml` | Lykario | Scrap Hound | 1–2 | 136 | new |
-| `malphen-polyp.xml` | Malphen | Polyp | 1, in threes | 38 | new |
-| `loadout.malphen-polyp.flak.xml` | Malphen | Polyp (Flak) | 1, in threes | 41 | new |
-| `whispwraith-mote.xml` | Whispwraith | Mote | inside the collapse | 65 | new |
+| `azurethea-vein-moth.xml` | Azurethea | Vein Moth | 1–2 | 130 | `ship-suggestions.md` |
+| `senti-relay-picket.xml` | Senti-GPH | Relay Picket | 3 | 182 | `ship-suggestions.md` |
+| `loadout.outrider.scrap-hound.xml` | Lykario | Scrap Hound (a stolen Outrider) | 1–2 | 136 | `ship-suggestions.md` |
+| `malphen-polyp.xml` | Malphen | Polyp | 1, in threes | 38 | `ship-suggestions.md` |
+| `loadout.malphen-polyp.flak.xml` | Malphen | Polyp (Flak) | 1, in threes | 41 | `ship-suggestions.md` |
+| `whispwraith-mote.xml` | Whispwraith | Mote | inside the collapse | 65 | Deck Collapse only (not an Infall design yet) |
 
 Values are rough sums from `docs/reference/` (systems, reactor bars, weapons); Deck Collapse works out its own.
 Band 1's squad budget is 137, so a band 1 squad is one Pickpocket, Pappus, Vein Moth, Scrap Hound or Light
@@ -60,9 +60,9 @@ The open-stern Light Attack Frame is a floor layout change only, so it waits for
 - One ship per new race, all low tech, the first tier a player meets. Names are working names; Malphen and
   Whispwraith ship names are what others would call them.
 - Crew are named by role (Pilot, Gunner …) rather than invented personal names.
-- **Vein Moth:** the profile's two low-tech shots, a Stinger and a single-shot beam ("Lantern", a firefly's light organ; Azurethea weapons are insect parts).
+- **Vein Moth:** one weapon system at level 2, no Sensors; the profile's two low-tech shots, a Stinger and a single-shot beam ("Lantern", a firefly's light organ; Azurethea weapons are insect parts).
 - **Relay Picket:** two beams and Sensors 2; no Life Support, since Senti don't breathe. It costs more than a band 1
   budget allows, so band 3.
-- **Scrap Hound:** no Sensors (Animal Senses), Auto Pilot so the pilot can board, a stolen Twinshot.
+- **Scrap Hound:** a stolen, battered Outrider (a loadout of it, G18): no Sensors (Animal Senses), Auto Pilot so the pilot can board, a stolen Twinshot.
 - **Polyp:** a swarm ship of about 38, so three fit band 1; a flak loadout mixes shield-poppers into the swarm.
 - **Mote:** 4 bars from 2 crew: Shields (2), Engines (1) and one ion blast (1). "Hush" as a strange, alien name.
