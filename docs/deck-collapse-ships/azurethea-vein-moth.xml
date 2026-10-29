@@ -15,7 +15,7 @@
     <weapon name="Stinger" kind="missile" power="1" shots="1" damage="1" tech="biomechanical"/>   <!-- G4; existing Azurethea weapon -->
   </system>
   <system type="weapon" id="weaponsB" name="Weapons B" level="1">
-    <weapon name="Firefly" kind="beam" power="1" shots="1" damage="1" rooms="1" tech="biomechanical"/>  <!-- G4, G16: single-shot energy beam -->
+    <weapon name="Lantern" kind="beam" power="1" shots="1" damage="1" rooms="1" tech="biomechanical"/>  <!-- G4, G16: single-shot energy beam; a firefly's light organ -->
   </system>
   <crew name="Pilot" race="Azurethea" station="piloting"/>            <!-- G1: half HP, make breathable air, repair biomechanical systems faster -->
   <crew name="Gunner" race="Azurethea" station="weaponsA"/>

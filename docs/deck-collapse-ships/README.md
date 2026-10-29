@@ -13,8 +13,8 @@ coder can add it. No art or floor layouts: Deck Collapse has none yet.
 | `pirate-hijacker.xml` | Terran (pirates) | Pirate Hijacker | 4–6 | 266 + surcharge | `ship-suggestions.md` |
 | `loadout.pirate-hijacker.cutpurse.xml` | Terran (pirates) | Cutpurse | 2–3 | 130 | `ship-suggestions.md` |
 | `loadout.pirate-hijacker.pickpocket.xml` | Terran (pirates) | Pickpocket | 1 | 131 | `ship-suggestions.md` |
-| `tentauri-scout.xml` | Tentauri | Tough Little Scout | 3 | 189 | `ship-suggestions.md` |
-| `loadout.tentauri-scout.little-scout.xml` | Tentauri | Little Scout | 1 | 132 | `ship-suggestions.md` |
+| `tentauri-burr.xml` | Tentauri | Burr | 3 | 189 | `ship-suggestions.md` |
+| `loadout.burr.pappus.xml` | Tentauri | Pappus | 1 | 132 | `ship-suggestions.md` |
 | `light-attack-frame.xml` | Mecha | Light Attack Frame (Hull Laser) | 1–3 | 132 | `ship-suggestions.md` |
 | `loadout.light-attack-frame.suit-dock.xml` | Mecha | Light Attack Frame (Suit Dock) | 2–3 | 138 | `ship-suggestions.md` |
 | `azurethea-vein-moth.xml` | Azurethea | Vein Moth | 1–2 | 130 | new |
@@ -25,7 +25,7 @@ coder can add it. No art or floor layouts: Deck Collapse has none yet.
 | `whispwraith-mote.xml` | Whispwraith | Mote | inside the collapse | 65 | new |
 
 Values are rough sums from `docs/reference/` (systems, reactor bars, weapons); Deck Collapse works out its own.
-Band 1's squad budget is 137, so a band 1 squad is one Pickpocket, Little Scout, Vein Moth, Scrap Hound or Light
+Band 1's squad budget is 137, so a band 1 squad is one Pickpocket, Pappus, Vein Moth, Scrap Hound or Light
 Attack Frame (Hull Laser), or three Polyps. No non-vanilla weapon types or EVB suits in band 1 (Decided,
 `ship-design-process.md`).
 
@@ -60,7 +60,7 @@ The open-stern Light Attack Frame is a floor layout change only, so it waits for
 - One ship per new race, all low tech, the first tier a player meets. Names are working names; Malphen and
   Whispwraith ship names are what others would call them.
 - Crew are named by role (Pilot, Gunner …) rather than invented personal names.
-- **Vein Moth:** the profile's two low-tech shots, a Stinger and a single-shot beam ("Firefly", a biological name).
+- **Vein Moth:** the profile's two low-tech shots, a Stinger and a single-shot beam ("Lantern", a firefly's light organ; Azurethea weapons are insect parts).
 - **Relay Picket:** two beams and Sensors 2; no Life Support, since Senti don't breathe. It costs more than a band 1
   budget allows, so band 3.
 - **Scrap Hound:** no Sensors (Animal Senses), Auto Pilot so the pilot can board, a stolen Twinshot.

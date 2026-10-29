@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- "Little Scout": the Tentauri scout's band 1 loadout (ship-suggestions.md, 2026-10-29), a patch of the scout (G18).
+<!-- "Pappus": the Burr's band 1 loadout (ship-suggestions.md, 2026-10-29), a patch of the scout (G18).
      No Supershield, no Medbay, plain lasers: no non-vanilla weapons or new tech in band 1. -->
-<loadout ship="Tentauri Tough Little Scout" name="Tentauri Little Scout" inherit="Patch">
+<loadout ship="Burr" name="Pappus" inherit="Patch">
   <power kind="pool" level="7"/>
   <system type="supershield" removed="true"/>
   <system type="medBay" removed="true"/>

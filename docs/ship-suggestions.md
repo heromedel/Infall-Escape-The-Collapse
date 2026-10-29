@@ -4,12 +4,14 @@ Ship designs made with `ship-design-process.md`. Nothing here is decided. Prices
 `docs/reference/` and leave out crew. Tags are as in `tag-styles.md`: each design states its default tag, and
 points that differ are tagged where they appear.
 
-## Tentauri Tough Little Scout (2026-10-22)
+## Tentauri "Burr", the tough little scout (2026-10-22)
+
+Name — Proposed (2026-10-29): Burr (Tentauri ship names, race profile point 1); earlier the Tough Little Scout.
 
 Default tag: **Proposed (2026-10-22)**, from heromedel's worked example; Claude's additions are tagged.
 
 1. **Race:** Tentauri.
-2. **Band:** 1 (easy, near the start of a run). **Ai-Generated-Proposal (2026-10-29):** now band 3, by the band rule (heromedel's rule of 2026-10-29: no non-vanilla weapon types or EVB suits in band 1, `ship-design-process.md`); its Supershield and Defensive lasers are new, and at 188.81 it is over the band 1 and 2 budgets. The **Little Scout** loadout below is its band 1 version.
+2. **Band:** 1 (easy, near the start of a run). **Ai-Generated-Proposal (2026-10-29):** now band 3, by the band rule (heromedel's rule of 2026-10-29: no non-vanilla weapon types or EVB suits in band 1, `ship-design-process.md`); its Supershield and Defensive lasers are new, and at 188.81 it is over the band 1 and 2 budgets. The **Pappus** loadout below is its band 1 version.
 3. **State:** doing fine.
 4. **Race info used — Ai-Generated-Proposal (2026-10-22):** small ships of about two crew, possibly mates; few rooms with many systems (GDD 5B); go
    where they want, even unwelcome, without looking to destroy; shields and defence specialists; Zoltan-like
@@ -51,7 +53,7 @@ Default tag: **Proposed (2026-10-22)**, from heromedel's worked example; Claude'
    converted from the accepted floor plan (`docs/art/tentauri/scout/`). North is the bow; y grows toward the stern.
 
    ```
-   Ship: Tentauri Tough Little Scout
+   Ship: Burr
    Center: Tile                    (5 x 5 tiles)
    Hull: 8
    Reactor: 10
@@ -122,7 +124,7 @@ Flags for review:
 
 - The Defensive special isn't in the cost tables yet; its price here is the rule above.
 
-### Tentauri Little Scout, band 1 loadout (2026-10-29)
+### Tentauri "Pappus", band 1 loadout (2026-10-29)
 
 **Ai-Generated-Proposal (2026-10-29)**, asked by heromedel: the scout without its new tech, so the Tentauri can still
 appear in band 1 (heromedel's rule of 2026-10-29: no non-vanilla weapon types or EVB suits in band 1, `ship-design-process.md`).
@@ -136,7 +138,7 @@ appear in band 1 (heromedel's rule of 2026-10-29: no non-vanilla weapon types or
   27.83 · 2 × Coil 13.58 = **132.17**, under band 1's budget (137).
 
 ```
-Loadout: Little Scout                (loadout.tentauri-scout.little-scout.xml)
+Loadout: Pappus                      (loadout.burr.pappus.xml)
 Inherit: Patch
 Reactor: 7
 Supershield Generator   removed
