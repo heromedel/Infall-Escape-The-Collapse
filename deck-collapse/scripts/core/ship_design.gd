@@ -155,14 +155,30 @@ func value() -> float:
 func crew_value() -> float:
 	var total := 0.0
 	for member in crew:
-		total += float(Catalog.rule("economy", "crew"))
-		for skill in CrewSkills.NAMES:
-			var level := int(member.skills.get(skill, 0))
-			if level >= 1:
-				total += float(Catalog.rule("economy", "skillVeteran"))
-			if level >= 2:
-				total += float(Catalog.rule("economy", "skillMaster"))
+		total += member_value(member.skills)
 	return total
+
+
+## One crew member's hire price plus their trained skills.
+static func member_value(skills: Dictionary) -> float:
+	var total := float(Catalog.rule("economy", "crew"))
+	for skill in CrewSkills.NAMES:
+		var level := int(skills.get(skill, 0))
+		if level >= 1:
+			total += float(Catalog.rule("economy", "skillVeteran"))
+		if level >= 2:
+			total += float(Catalog.rule("economy", "skillMaster"))
+	return total
+
+
+## A system id the design doesn't use yet, from a base such as "weapon" (weapon, weapon2, weapon3 …).
+func unused_system_id(base: String) -> String:
+	var id := base
+	var n := 2
+	while not system_by_id(id).is_empty():
+		id = "%s%d" % [base, n]
+		n += 1
+	return id
 
 
 ## Everything the design costs to build: the ship, its crew, its missiles and battlesuit parts.

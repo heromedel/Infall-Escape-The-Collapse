@@ -27,9 +27,19 @@ func _ready() -> void:
 		"designer": show_designer(player_design.duplicate_design())
 		"rules": show_rules()
 		"settings": show_settings()
+		"station": _preview_station()
 		_: show_menu()
 	if _options.has("screenshot"):
 		_take_screenshot_later(_options.screenshot)
+
+
+## For testing (start=station): a run stopped at a station after an unfought battle.
+func _preview_station() -> void:
+	run = RunState.new(player_design)
+	run.record_battle(Battle.new(run.design, enemy_design, 0))
+	if run.station == null:
+		run.station = Station.new(run.design, run.rng)
+	show_run()
 
 
 func show_menu() -> void:
@@ -68,7 +78,7 @@ func show_battle() -> void:
 	battle_screen.autoplay = _options.has("autoplay")
 	battle_screen.finished.connect(func(choice: String): _on_battle_finished(choice, battle_screen.battle))
 	_swap(battle_screen)
-	battle_screen.start(player_design, enemy_design, run.battle_carry(), run)
+	battle_screen.start(run.design, enemy_design, run.battle_carry(), run)
 
 
 func _on_battle_finished(choice: String, battle: Battle) -> void:

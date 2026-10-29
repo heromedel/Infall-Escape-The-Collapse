@@ -65,7 +65,7 @@ From level 2, each level makes enemy boarders take a turn longer to force their 
 Level 1 shows enemy crew, 2 their power, 3 their weapon cards, 4 (level 3 manned) their whole hand.
 
 [color=#ffb347][b]Runs and Mawjig[/b][/color]
-After you jump, Continue Run takes your ship to a random enemy. A beaten enemy pays salvage: 2.5% of its ship's value, 30% more if you killed its crew. Each jump costs 1.21 Mawjig. Between battles you can repair hull, buy missiles and hire crew.
+After you jump, Continue Run takes your ship to a random enemy. A beaten enemy pays salvage: 2.5% of its ship's value, 30% more if you killed its crew. Each jump costs 1.21 Mawjig. Between battles is a stop; about 1 stop in 5–10 has a [b]station[/b] (Settings: Station Frequency). A station always sells hull repair, missiles and suit parts, plus two random sections of systems to install, weapons, battlesuits and named crew; weapons and battlesuits sell back for half. A bought weapon comes with its own weapon system (up to 4), or goes to the [b]cargo hold[/b] (4 slots): cargo adds no cards, and at any stop you can swap weapons and battlesuits in and out of it. [b]Upgrades[/b] raise system and reactor levels for Mawjig, at stations only unless Settings say otherwise; Undo works until you leave.
 
 [color=#ffb347][b]Controls[/b][/color]
 Click a card to play it; aimed cards then need a target. Right-click or Esc cancels. Space ends your turn. Hover anything for details. Battle logs are saved; Settings has a button to open their folder.

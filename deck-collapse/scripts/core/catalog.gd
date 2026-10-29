@@ -7,6 +7,7 @@ const WEAPONS_FILE := "res://data/weapons.xml"
 const SUITS_FILE := "res://data/suits.xml"
 const RULES_FILE := "res://data/rules.xml"
 const BUILT_IN_SHIPS_FOLDER := "res://data/ships"
+const NAMES_FOLDER := "res://data/names"
 const USER_SHIPS_FOLDER := "user://ships"
 
 ## System definitions by type, in file order.
@@ -17,6 +18,8 @@ var weapon_kinds := {}
 var suit_kinds := {}
 ## Rule numbers from rules.xml: element name -> its attributes (numbers and lists already converted).
 var rules := {}
+## Crew name lists by "race/style" (e.g. "gatos/cats"): { names: [{ name, sex, weight }], total }.
+var name_lists := {}
 ## Every ship design that can be picked: built-in first, then the player's own.
 var designs: Array[ShipDesign] = []
 
@@ -26,6 +29,7 @@ func _ready() -> void:
 	load_weapon_kinds()
 	load_suit_kinds()
 	load_rules()
+	load_names()
 	reload_designs()
 
 
@@ -112,6 +116,37 @@ func load_rules() -> void:
 			var text: String = node.attrs[key]
 			values[key] = number_list(text) if text.contains(",") else float(text)
 		rules[node.name] = values
+
+
+func load_names() -> void:
+	name_lists.clear()
+	for path in _xml_files_in(NAMES_FOLDER):
+		var root := XmlTree.parse_file(path)
+		var weights := {}
+		for rarity in XmlTree.children_named(root, "rarity"):
+			for level in XmlTree.children_named(rarity, "level"):
+				weights[level.attrs.name] = float(level.attrs.get("weight", 1))
+		var first_level: String = weights.keys()[0] if not weights.is_empty() else ""
+		var entries: Array = []
+		var total := 0.0
+		for node in XmlTree.children_named(root, "name"):
+			var weight := float(weights.get(node.attrs.get("rarity", first_level), 1.0))
+			entries.append({"name": XmlTree.clean_text(node), "sex": node.attrs.get("sex", "B"), "weight": weight})
+			total += weight
+		name_lists["%s/%s" % [root.attrs.get("race", ""), root.attrs.get("style", "")]] = {"names": entries, "total": total}
+
+
+## A name from a list, by rarity. Falls back to "Crew" if the list is missing.
+func random_name(list_id: String, rng: RandomNumberGenerator) -> String:
+	var list: Dictionary = name_lists.get(list_id, {})
+	if list.is_empty():
+		return "Crew"
+	var roll := rng.randf() * float(list.total)
+	for entry in list.names:
+		roll -= entry.weight
+		if roll <= 0.0:
+			return entry.name
+	return list.names.back().name
 
 
 ## A rule number, e.g. rule("jump", "chargesNeeded").

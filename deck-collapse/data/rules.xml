@@ -35,6 +35,16 @@
        Mawjig is not added to the salvage (F11, Likely).
        suitPart: one battlesuit launch's parts in Classic ammo, the genre's drone part (8 scrap x 0.242). -->
 
+  <!-- Stations between battles (stores, heromedel 2026-10-29). The next station comes gapMin to gapMax stops after
+       the last (Station Frequency: 1 in 5–10); each sells hull repair, missiles and suit parts, plus `sections`
+       random sections (systems, weapons, battlesuits, crew) of itemsPerSection items. Items sell back at
+       sellPercent of their price (genre). cargoSlots hold weapons and suits that aren't in the deck (genre: 4).
+       A bought weapon gets its own weapon system up to maxWeaponSystems. crewSkillChance: % that a crew member for
+       hire is a Veteran in one skill (Ai-Generated-Proposal). systemRepair: Mawjig per damage point, fire or breach
+       with Store System Repair On (Ai-Generated-Proposal: the hull repair price). -->
+  <station gapMin="5" gapMax="10" sections="2" itemsPerSection="3" sellPercent="50" cargoSlots="4"
+      maxWeaponSystems="4" crewSkillChance="30" systemRepair="0.48"/>
+
   <!-- Crew XP (GDD 7H, Decided): XP to reach Veteran, then more to reach Master, and XP per event. -->
   <xp veteran="100" master="150" dodge="6.7" shieldPopped="1.8" volley="1.5" repairPoint="5.6" combat="12.5"/>
 </rules>

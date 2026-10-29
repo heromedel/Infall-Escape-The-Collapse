@@ -13,8 +13,8 @@ the default where the GDD is silent.
 - **From source:** open this folder in Godot 4.3 and press Play (F5).
 
 The flow is **Battle**: pick your ship and an enemy, then **FIGHT**. When the enemy is beaten, keep playing to repair
-and heal, then **JUMP**. **Continue Run** then takes the same ship, as it was left, to the
-store and on to a random enemy.
+and heal, then **JUMP**. **Continue Run** then takes the same ship, as it was left, to a stop between
+battles (sometimes a station with a store) and on to a random enemy.
 
 - Click a card to play it. Aimed cards then need a glowing target. Right-click or Esc cancels.
 - Click one of your crew, then a green system, to move them. Each crew member moves once per turn.
@@ -56,6 +56,9 @@ systems, reactor bars, weapons and suits priced from `docs/reference`, plus crew
 | Crew Portraits | Cat Faces > Plain Tokens |
 | Animation Speed | Normal > Fast > Slow |
 | Sound | On > Off |
+| Station Frequency | 1 in 5-10 > Every Stop |
+| Upgrade at Stations Only | On > Off |
+| Store System Repair | Off > On |
 | Designer Budget | Off > 200 Mawjig > 250 Mawjig > 300 Mawjig |
 
 ## Rules this prototype fills in
@@ -94,6 +97,13 @@ These are gaps in the GDD, filled with the genre in mind. Each one is a setting 
 - **Fire:** spreads to the neighbouring tile, burns out when its system is broken, may choke out once the air is gone.
 - **Mawjig (docs/reference):** a wreck pays 2.5% of its value (+30% for killing the crew); a jump costs 1.21; hull
   repair 0.48 a point; missiles 1.45; crew 10.89.
+- **Stations (heromedel):** the stop between battles has a station 1 in 5–10 stops (`rules.xml` station). A station
+  always sells hull repair, missiles and suit parts, plus 2 random sections of 3 from systems, weapons, battlesuits
+  and crew (genre). Weapons and battlesuits sell for half (genre). A bought weapon comes with its own weapon system at
+  its Type, up to 4; otherwise it goes to the 4-slot cargo hold, which adds no cards and can be swapped at any stop.
+  Upgrades raise systems and the reactor by the `systems.xml` step prices, with Undo until you leave. Store crew
+  are named from `data/names/` (Federation-Home-Planet's name-list format): cat names with Cat Faces, human names
+  with Plain Tokens. The run changes its own copy of the ship, never the saved design.
 - **Crew Fights:** boarders and defenders in the same system trade 1 wound each at the end of the turn.
 - **Crew act once per turn:** each crew member can do one crew card per turn.
 - **Reactor hits:** ion and Hack on a Reactor knock one Power Cell loose (GDD C6) instead of shutting it down.
@@ -128,7 +138,8 @@ They're in `data/ships/` and are meant to be edited.
 | `scripts/core/` | Rules (`battle.gd`), enemy AI (`battle_ai.gd`), cards, ships, settings, XML loading |
 | `scripts/ui/` | Screens, cards, system tiles, effects |
 | `scripts/audio/sound_bank.gd` | Sound effects, synthesized at start-up |
-| `tools/` | Headless tests: AI vs AI balance (`simulate.tscn`), one logged battle (`one_battle.tscn`), the human click path (`ui_test.tscn`), card gallery screenshot |
+| `data/names/*.xml` | Crew names for hire, by race and style |
+| `tools/` | Headless tests: AI vs AI balance (`simulate.tscn`), one logged battle (`one_battle.tscn`), the human click path (`ui_test.tscn`), stations, cargo and upgrades (`station_test.tscn`), card gallery screenshot |
 
 ## Planned (from discussion)
 
@@ -152,6 +163,14 @@ godot --headless --path . res://tools/one_battle.tscn -- a=0 b=1 seed=5
 
 ```bash
 godot --path . -- start=battle player=Wayfarer enemy="Heavy Gunship" autoplay
+```
+
+```bash
+godot --headless --path . res://tools/station_test.tscn
+```
+
+```bash
+godot --path . -- start=station player=Wayfarer
 ```
 
 ## Export
