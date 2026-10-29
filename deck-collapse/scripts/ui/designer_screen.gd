@@ -245,19 +245,6 @@ func _system_row(system: Dictionary, color: Color) -> Control:
 		name_edit.custom_minimum_size = Vector2(120, 0)
 		name_edit.text_changed.connect(func(text): system.name = text; _refresh_summary())
 		row.add_child(name_edit)
-	elif system.type == "evb":
-		var suits := OptionButton.new()
-		var suit_ids := Catalog.suit_kinds.keys()
-		for suit_id in suit_ids:
-			suits.add_item("%s (cost %d)" % [Catalog.suit_kinds[suit_id].name, Catalog.suit_kinds[suit_id].cost])
-		suits.select(suit_ids.find(system.suit))
-		suits.tooltip_text = Catalog.suit_kind(system.suit).summary
-		suits.item_selected.connect(func(index):
-			system.suit = suit_ids[index]
-			system.level = maxi(system.level, Catalog.suit_kind(system.suit).cost)
-			_rebuild_systems()
-			_refresh_summary())
-		row.add_child(suits)
 	var spacer := Control.new()
 	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	row.add_child(spacer)
@@ -266,13 +253,52 @@ func _system_row(system: Dictionary, color: Color) -> Control:
 		var remove := UiKit.button("✕", func(): _remove_system(system), 15)
 		remove.tooltip_text = "Remove this system"
 		row.add_child(remove)
-	if system.type == "weapon":
+	if system.type == "weapon" or system.type == "evb":
 		var box := UiKit.vbox(4)
 		panel.remove_child(row)
 		box.add_child(row)
-		_add_weapon_rows(box, system)
+		if system.type == "weapon":
+			_add_weapon_rows(box, system)
+		else:
+			_add_suit_rows(box, system)
 		panel.add_child(box)
 	return panel
+
+
+## An EVB Dock's suit types (each adds speed Launch cards), then a picker to load another.
+func _add_suit_rows(box: VBoxContainer, system: Dictionary) -> void:
+	box.add_child(UiKit.label("   Suits get %d turns of air (level + 1)." % CardLibrary.suit_air(system.level), 12, UiKit.MUTED))
+	for slot in system.suits.size():
+		var suit := Catalog.suit_kind(system.suits[slot])
+		var row := UiKit.hbox(8)
+		var text := UiKit.label("   %s · %d power · %d card%s · %s" % [suit.name, suit.cost, suit.speed, "" if suit.speed == 1 else "s",
+			Money.text(suit.price)], 13, UiKit.TEXT)
+		text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		text.tooltip_text = suit.summary
+		text.mouse_filter = Control.MOUSE_FILTER_PASS
+		row.add_child(text)
+		if suit.cost > system.level:
+			row.add_child(UiKit.label("needs power %d" % suit.cost, 12, UiKit.ACCENT))
+		row.add_child(UiKit.button("✕", func():
+			system.suits.remove_at(slot)
+			_rebuild_systems()
+			_refresh_summary(), 13))
+		box.add_child(row)
+	if system.suits.size() >= Weapons.SLOTS_PER_SYSTEM:
+		box.add_child(UiKit.label("   All %d slots are full." % Weapons.SLOTS_PER_SYSTEM, 12, UiKit.MUTED))
+		return
+	var picker := OptionButton.new()
+	picker.add_item("+ Load a suit type…")
+	var ids: Array = Catalog.suit_kinds.keys()
+	for suit_id in ids:
+		var suit := Catalog.suit_kind(suit_id)
+		picker.add_item("%s · %d power · %s" % [suit.name, suit.cost, Money.text(suit.price)])
+	picker.item_selected.connect(func(index):
+		if index > 0:
+			system.suits.append(ids[index - 1])
+			_rebuild_systems()
+			_refresh_summary())
+	box.add_child(picker)
 
 
 ## A weapon system's weapons (each adds speed cards), then ways to add one: premade, or designed.
@@ -342,6 +368,16 @@ func _rebuild_crew() -> void:
 		station.select(maxi(0, ids.find(member.station)))
 		station.item_selected.connect(func(index): member.station = ids[index])
 		row.add_child(station)
+		var race := OptionButton.new()
+		var race_ids: Array = Catalog.races.keys()
+		for race_id in race_ids:
+			race.add_item(Catalog.races[race_id].name)
+		race.select(maxi(0, race_ids.find(Catalog.race(member.get("race", "")).id)))
+		race.tooltip_text = Catalog.race(member.get("race", "")).summary
+		race.item_selected.connect(func(index):
+			member.race = race_ids[index]
+			race.tooltip_text = Catalog.races[race_ids[index]].summary)
+		row.add_child(race)
 		var spacer := Control.new()
 		spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		row.add_child(spacer)
@@ -418,7 +454,7 @@ func _add_system(type: String) -> void:
 		system.weapons = []
 	elif type == "evb":
 		system.id = _unique_id("dock")
-		system.suit = "assault"
+		system.suits = ["assault"]
 		system.level = Catalog.suit_kind("assault").cost
 	design.systems.append(system)
 	Sounds.play("click")

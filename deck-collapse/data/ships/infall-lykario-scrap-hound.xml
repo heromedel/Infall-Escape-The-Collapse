@@ -2,7 +2,7 @@
 <!-- Lykario "Scrap Hound": a low-tech raider, bands 1-2, any Lykario cluster. New design (2026-10-29),
      Ai-Generated-Proposal, from race profile Lykario 6, 9 and 10 (stolen basic tech, crew teleporters, autopilot while
      boarding). Gap references are listed in README.md. -->
-<ship name="Scrap Hound" race="Lykario" faction="Lykario" color="#D1DBE7" hull="9" missiles="0">
+<ship bands="1-2" name="Scrap Hound" race="Lykario" faction="Lykario" color="#D1DBE7" hull="9" missiles="0">
   <note>A stolen Terran-built hull. The pack sends two hunters across while the autopilot flies, and it needs no Sensors: Animal Senses find the crew of the other ship.</note>
   <power kind="pool" level="7"/>                                     <!-- G2: whatever the stolen ship used; here the genre's pool -->
   <system type="piloting" level="2"/>                                <!-- Auto Pilot, so the pilot can board too -->

@@ -14,7 +14,7 @@ var missiles := 0
 ## Battlesuit parts: one per launch, used when Ammo is Classic.
 var suit_parts := 0
 ## Each system: { "id", "type", "level" }; a weapon system also has "name", "weapons" (see Weapons) and "max_slots";
-## an EVB Dock has "suit".
+## an EVB Dock has "suits": the suit type ids it holds (up to 4).
 var systems: Array = []
 ## Each crew member: { "name", "skills" (see CrewSkills), "station" (a system id) }.
 var crew: Array = []
@@ -24,6 +24,8 @@ var unsupported: Array = []
 ## Where the design was loaded from, so saving a user design overwrites the same file.
 var source_path := ""
 var built_in := false
+## The difficulty bands this ship turns up in as an enemy, e.g. [1, 3] (default all).
+var bands: Array = [1, Weapons.MAX_BAND]
 
 
 static func from_xml(xml_text: String) -> ShipDesign:
@@ -38,6 +40,8 @@ static func from_xml(xml_text: String) -> ShipDesign:
 	design.hull = int(attrs.get("hull", design.hull))
 	design.missiles = int(attrs.get("missiles", 0))
 	design.suit_parts = int(attrs.get("suitParts", 0))
+	var band_range := String(attrs.get("bands", "1-%d" % Weapons.MAX_BAND)).split("-")
+	design.bands = [int(band_range[0]), int(band_range[band_range.size() - 1])]
 	for note_node in XmlTree.children_named(root, "note"):
 		design.note = XmlTree.clean_text(note_node)
 	var power_nodes := XmlTree.children_named(root, "power")
@@ -54,7 +58,11 @@ static func from_xml(xml_text: String) -> ShipDesign:
 			system.max_slots = int(system_attrs.get("maxSlots", Weapons.SLOTS_PER_SYSTEM))
 			system.weapons = _read_weapons(system_node, system)
 		elif type == "evb":
-			system.suit = system_attrs.get("suit", "assault")
+			# Suit types as <suit ref="assault"/> children; an older file names one with suit="...".
+			system.suits = XmlTree.children_named(system_node, "suit").map(func(n): return n.attrs.get("ref", n.attrs.get("id", "")))
+			if system.suits.is_empty() and system_attrs.has("suit"):
+				system.suits = [system_attrs.suit]
+			system.suits = system.suits.filter(func(id): return Catalog.suit_kinds.has(id))
 		design.systems.append(system)
 	for node in root.children:
 		if not node.name in ["note", "system", "crew", "power"]:
@@ -73,8 +81,8 @@ static func from_xml(xml_text: String) -> ShipDesign:
 
 
 ## Ship Design's files give power as <power kind level> (gap G2). For now every kind runs as a plain reactor with
-## about the power it would give: pool its level; AZC the levels of its 2 × level biggest drawing systems; self
-## the systems' own power; crew bars per crew member. Any kind but pool is kept in the file, so a saved design has
+## about the power it would give: pool its level; AZC 5 bars per level (race-profiles.md, Terrans, Conversion);
+## self the systems' own power; crew bars per crew member. Any kind but pool is kept in the file, so a saved design has
 ## both its reactor and its <power>; then the reactor is used as it is.
 func _add_vanilla_reactor(power_node: Dictionary, root: Dictionary) -> void:
 	var kind: String = power_node.attrs.get("kind", "pool")
@@ -85,15 +93,7 @@ func _add_vanilla_reactor(power_node: Dictionary, root: Dictionary) -> void:
 	var level := int(power_node.attrs.get("level", 2))
 	match kind:
 		"AZC":
-			var drawing: Array = []
-			for system_node in XmlTree.children_named(root, "system"):
-				if system_node.attrs.get("draws", "true") != "false":
-					drawing.append(int(system_node.attrs.get("level", 1)))
-			drawing.sort()
-			drawing.reverse()
-			level = 0
-			for bars in drawing.slice(0, 2 * int(power_node.attrs.get("level", 1))):
-				level += bars
+			level = 5 * int(power_node.attrs.get("level", 1))
 		"self":
 			level = 0
 			for system_node in XmlTree.children_named(root, "system"):
@@ -125,8 +125,9 @@ static func _read_weapons(system_node: Dictionary, system: Dictionary) -> Array:
 
 func to_xml() -> String:
 	var lines: Array[String] = ['<?xml version="1.0" encoding="UTF-8"?>']
-	lines.append('<ship name="%s" faction="%s" color="%s" hull="%d" missiles="%d" suitParts="%d">' % [
-		XmlTree.escape(name), XmlTree.escape(faction), color, hull, missiles, suit_parts])
+	var band_text := "" if bands == [1, Weapons.MAX_BAND] else ' bands="%d-%d"' % bands
+	lines.append('<ship name="%s" faction="%s" color="%s" hull="%d" missiles="%d" suitParts="%d"%s>' % [
+		XmlTree.escape(name), XmlTree.escape(faction), color, hull, missiles, suit_parts, band_text])
 	if note != "":
 		lines.append("  <note>%s</note>" % XmlTree.escape(note))
 	for system in systems:
@@ -137,7 +138,10 @@ func to_xml() -> String:
 				lines.append(Weapons.to_xml(weapon))
 			lines.append("  </system>")
 		elif system.type == "evb":
-			lines.append('  <system type="evb" id="%s" suit="%s" level="%d"/>' % [XmlTree.escape(system.id), system.suit, system.level])
+			lines.append('  <system type="evb" id="%s" level="%d">' % [XmlTree.escape(system.id), system.level])
+			for suit_id in system.suits:
+				lines.append('    <suit ref="%s"/>' % suit_id)
+			lines.append("  </system>")
 		else:
 			lines.append('  <system type="%s" level="%d"/>' % [system.type, system.level])
 	for member in crew:
@@ -211,7 +215,8 @@ func value() -> float:
 			for weapon in system.weapons:
 				total += float(weapon.price)
 		elif system.type == "evb":
-			total += float(Catalog.suit_kind(system.suit).price)
+			for suit_id in system.suits:
+				total += float(Catalog.suit_kind(suit_id).price)
 	return total
 
 
@@ -247,6 +252,10 @@ func uses_missile_weapons() -> bool:
 	return systems.any(func(system): return system.type == "weapon" and system.weapons.any(func(w): return w.uses_missile))
 
 
+func in_band(band: int) -> bool:
+	return band >= int(bands[0]) and band <= int(bands[1])
+
+
 ## A system id the design doesn't use yet, from a base such as "weapon" (weapon, weapon2, weapon3 …).
 func unused_system_id(base: String) -> String:
 	var id := base
@@ -280,14 +289,17 @@ func problems() -> Array[String]:
 				if weapon.power > definition.max_level:
 					found.append("%s needs %d power, more than a weapon system can give." % [weapon.name, weapon.power])
 		elif system.type == "evb":
-			var suit := Catalog.suit_kind(system.suit)
-			if system.level < suit.cost:
-				found.append("An EVB Dock with %s needs level %d or more." % [suit.name, suit.cost])
+			if system.suits.size() > Weapons.SLOTS_PER_SYSTEM:
+				found.append("An EVB Dock holds at most %d suit types." % Weapons.SLOTS_PER_SYSTEM)
+			for suit_id in system.suits:
+				var suit := Catalog.suit_kind(suit_id)
+				if suit.cost > definition.max_level:
+					found.append("%s needs %d power, more than an EVB Dock can give." % [suit.name, suit.cost])
 		else:
 			if seen_types.has(system.type):
 				found.append("Only one %s allowed." % definition.name)
 			seen_types[system.type] = true
-	if not systems.any(func(system): return system.type == "weapon" and not system.weapons.is_empty() or system.type == "evb"):
+	if not systems.any(func(system): return system.type == "weapon" and not system.weapons.is_empty() or system.type == "evb" and not system.suits.is_empty()):
 		found.append("Needs a weapon or an EVB Dock to fight.")
 	if crew.is_empty():
 		found.append("Needs at least 1 crew member.")

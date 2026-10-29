@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Mecha Light Attack Frame, Hull Laser loadout (ship-suggestions.md, 2026-10-23). Bands 1-3, Border clusters of a
      doing-fine Mecha region; band 3 fields it as half of the Light Attack Pair. Gap references are listed in README.md. -->
-<ship name="Light Attack Frame" race="Mecha" faction="Mecha" color="#AA28EB" hull="7" missiles="0">
+<ship bands="1-3" name="Light Attack Frame" race="Mecha" faction="Mecha" color="#AA28EB" hull="7" missiles="0">
   <note>No reactor: every system carries its own power. The pod's laser needs a HalfMech integrated with it, so stun or kill that crew member and the laser goes quiet.</note>
   <power kind="self"/>                                              <!-- G2: each system's own power, below -->
   <system type="piloting" level="1"/>

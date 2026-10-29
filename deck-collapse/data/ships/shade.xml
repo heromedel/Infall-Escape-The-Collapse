@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Classic stealth cruiser: no shields, a cloak and good evasion. -->
-<ship name="Shade" faction="Colony Fleet" color="#66FF66" hull="30" missiles="0">
+<ship bands="3-8" name="Shade" faction="Colony Fleet" color="#66FF66" hull="30" missiles="0">
   <note>No shields at all. Dodges, cloaks at the right moment and cuts with a small beam.</note>
   <system type="reactor" level="8"/>
   <system type="engines" level="3"/>

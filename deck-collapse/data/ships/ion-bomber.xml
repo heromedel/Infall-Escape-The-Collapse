@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Classic support enemy: ion and laser together. -->
-<ship name="Ion Bomber" faction="Raiders" color="#FF8500" hull="9" missiles="4">
+<ship bands="1-5" name="Ion Bomber" faction="Raiders" color="#FF8500" hull="9" missiles="4">
   <note>Ions your shields down, then follows with a laser and the odd torpedo.</note>
   <system type="reactor" level="8"/>
   <system type="shields" level="1"/>

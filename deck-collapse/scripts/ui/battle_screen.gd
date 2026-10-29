@@ -30,6 +30,7 @@ var _aimed_bolts: Array = []
 var _teleport_from_bay := false
 ## A battlesuit of yours picked to recall: its index in your ship's suits, or -1.
 var _selected_suit := -1
+var _suit_layer: SuitLayer
 var _moving_crew := -1
 var _hover_info := ""
 
@@ -111,7 +112,6 @@ func _build() -> void:
 			tile.crew_clicked.connect(_on_crew_clicked)
 			tile.burn_clicked.connect(func(_t): _act(func(): return battle.burn_engines(PLAYER)))
 			tile.treat_clicked.connect(func(_t): _act(func(): return battle.treat(PLAYER)))
-			tile.suit_clicked.connect(_on_suit_clicked)
 			tile.hovered.connect(_on_tile_hovered)
 			tile.crew_hovered.connect(_on_crew_hovered)
 			_tile_rows[side].add_child(tile)
@@ -190,6 +190,17 @@ func _build() -> void:
 	_stage.set_anchors_preset(Control.PRESET_FULL_RECT)
 	_stage.z_index = 90
 	add_child(_stage)
+	_suit_layer = SuitLayer.new()
+	_suit_layer.battle = battle
+	_suit_layer.tiles = _tiles
+	_suit_layer.player_side = PLAYER
+	_suit_layer.z_index = 85
+	_suit_layer.suit_clicked.connect(_on_suit_clicked)
+	_suit_layer.recall_clicked.connect(func(index):
+		_selected_suit = -1
+		_suit_layer.selected = -1
+		_act(func(): return battle.recall_suit(PLAYER, index)))
+	add_child(_suit_layer)
 	_fx = FxLayer.new()
 	_fx.z_index = 100
 	add_child(_fx)
@@ -230,7 +241,6 @@ func _refresh() -> void:
 			tile.selected_crew_id = _moving_crew if _moving_crew >= 0 else _targeting_crew
 			tile.choosable_crew = []
 			tile.bolts_aimed = _aimed_bolts.count(system_id) if side != PLAYER else 0
-			tile.selected_suit = [PLAYER, _selected_suit] if _selected_suit >= 0 else []
 			for target in targets:
 				var aim_system: String = target.get("to_system", target.get("system", "")) if _teleport_from_bay else target.get("system", "")
 				var aim_ship := int(target.get("to_ship", target.get("ship", -1))) if _teleport_from_bay else int(target.get("ship", -1))
@@ -496,8 +506,9 @@ func _on_crew_clicked(tile: SystemTile, crew_id: int) -> void:
 	_refresh()
 
 
-## Clicking one of your battlesuits picks it; clicking it again recalls it. Enemy suits just explain themselves.
-func _on_suit_clicked(tile: SystemTile, side: int, index: int) -> void:
+## Clicking one of your battlesuits picks it and shows its RECALL button; clicking it again unpicks it. Enemy suits
+## just explain themselves.
+func _on_suit_clicked(side: int, index: int) -> void:
 	var suit: Dictionary = battle.ships[side].suits[index]
 	var kind := Catalog.suit_kind(suit.kind)
 	var pilot := battle.crew_by_id(suit.pilot)
@@ -509,14 +520,15 @@ func _on_suit_clicked(tile: SystemTile, side: int, index: int) -> void:
 		return
 	if _selected_suit == index:
 		_selected_suit = -1
-		_act(func(): return battle.recall_suit(PLAYER, index))
+		_suit_layer.selected = -1
 		return
 	_cancel_selection()
 	_selected_suit = index
+	_suit_layer.selected = index
 	Sounds.play("click")
-	_hover_info = "[center][b]%s[/b], flown by %s: %d turn%s of air left. [color=#ffb347]Click it again to recall it[/color] (it docks as your turn ends).[/center]" % [
-		kind.name, pilot_name, suit.turns_left, "" if suit.turns_left == 1 else "s"]
-	_refresh()
+	_hover_info = "[center][b]%s[/b], flown by %s: %d turn%s of air left%s. Press [color=#ffb347]RECALL[/color] to bring it home (it docks as your turn ends).[/center]" % [
+		kind.name, pilot_name, suit.turns_left, "" if suit.turns_left == 1 else "s", ", damaged" if suit.damaged else ""]
+	_refresh_info()
 
 
 func _on_card_hovered(card: Dictionary, is_hovered: bool) -> void:
@@ -550,7 +562,8 @@ func _on_tile_hovered(tile: SystemTile, is_hovered: bool) -> void:
 		summary = "Power %d a turn. " % system.level + " ".join(system.weapons.map(func(w): return "[b]%s[/b]: %s (%d card%s)." % [
 			w.name, Weapons.summary(w), w.speed, "" if w.speed == 1 else "s"]))
 	elif system.type == "evb":
-		summary = Catalog.suit_kind(system.suit).summary
+		summary = "Power %d a turn; suits get %d turns of air. " % [system.level, CardLibrary.suit_air(system.level)] + " ".join(
+			system.suits.map(func(id): return "[b]%s[/b]: %s" % [Catalog.suit_kind(id).name, Catalog.suit_kind(id).summary]))
 	lines.append(summary)
 	var hazards: Array[String] = []
 	if system.on_fire:
@@ -589,11 +602,14 @@ func _on_crew_hovered(tile: SystemTile, crew_id: int) -> void:
 	panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var box := UiKit.vbox(6)
 	panel.add_child(box)
-	var health := Battle.WOUNDS_TO_DIE - int(member.wounds)
+	var race := Catalog.race(member.race)
 	box.add_child(UiKit.label(member.name, 17, UiKit.TEXT, UiKit.display_bold_font))
-	var status: Array[String] = ["%s crew" % ("Your" if member.owner == PLAYER else "Enemy"), "health %d/%d" % [health, Battle.WOUNDS_TO_DIE]]
+	var status: Array[String] = ["%s %s" % ["Your" if member.owner == PLAYER else "Enemy", race.name],
+		"health %s/%d" % [str(snappedf(member.max_health - member.wounds, 0.1)), member.max_health]]
 	if member.controlled_by >= 0:
 		status.append("mind controlled")
+	if member.stunned:
+		status.append("stunned")
 	if member.leaving_to != "":
 		status.append("forcing doors (%d turn%s)" % [member.leaving_turns, "" if member.leaving_turns == 1 else "s"])
 	if member.owner == battle.active_side:
@@ -629,6 +645,8 @@ func _cancel_selection() -> void:
 		_aimed_bolts.clear()
 		_teleport_from_bay = false
 		_selected_suit = -1
+		if _suit_layer:
+			_suit_layer.selected = -1
 		_moving_crew = -1
 		Sounds.play("click", -6.0)
 		_refresh()
@@ -799,7 +817,7 @@ func _play_event(event: Dictionary) -> void:
 			_fx.float_text(_headers[event.side].global_position + Vector2(_headers[event.side].size.x - 300, 40), "-1 POWER CELL", UiKit.ION, 18)
 		"wounded":
 			Sounds.play("wound")
-			_fx.float_text(_crew_point(event.crew), "-1", UiKit.DANGER, 18)
+			_fx.float_text(_crew_point(event.crew), "-%s" % str(snappedf(float(event.get("amount", 1.0)), 0.1)), UiKit.DANGER, 18)
 		"crew_died":
 			Sounds.play("death")
 			_fx.explosion(_crew_point(event.crew), UiKit.DANGER, 0.5)
@@ -812,6 +830,9 @@ func _play_event(event: Dictionary) -> void:
 			_fx.sparkle(_tile_center(event.side, event.system), UiKit.GOOD)
 			_fx.float_text(_tile_center(event.side, event.system), "REPAIRED +%d" % event.amount, UiKit.GOOD, 18)
 			await _wait(0.2)
+		"fire_fought":
+			Sounds.play("repair")
+			_fx.float_text(_tile_center(event.side, event.system), "FIRE BEATEN BACK", UiKit.SHIELD, 18)
 		"treat":
 			Sounds.play("repair", -4.0, 1.2)
 			_fx.float_text(_tile_center(event.side, event.system), "TREATING", UiKit.GOOD, 18)
@@ -963,11 +984,11 @@ func _advance_shown(event: Dictionary) -> void:
 		"ionized", "hacked":
 			_show_on_tile(event.side, event.system, {"disabled_turns": 1})
 		"wounded":
-			_show_crew_wounds(event.crew, _shown_wounds(event.crew) + 1)
+			_show_crew_wounds(event.crew, _shown_wounds(event.crew) + float(event.get("amount", 1.0)))
 		"crew_died":
-			_show_crew_wounds(event.crew, Battle.WOUNDS_TO_DIE)
+			_show_crew_wounds(event.crew, 999.0)
 		"healed":
-			_show_crew_wounds(event.crew, maxi(0, _shown_wounds(event.crew) - int(event.amount)))
+			_show_crew_wounds(event.crew, maxf(0.0, _shown_wounds(event.crew) - float(event.amount)))
 		"enemy_beaten":
 			if event.outcome == Battle.OUTCOME_DESTROYED:
 				var loser := 1 - int(event.winner)
@@ -978,10 +999,10 @@ func _advance_shown(event: Dictionary) -> void:
 						tile.shown.on_fire = false
 
 
-func _shown_wounds(crew_id: int) -> int:
+func _shown_wounds(crew_id: int) -> float:
 	for tile in _tiles[PLAYER].values():
 		if not tile.shown_crew.is_empty():
-			return int(tile.shown_crew.get(crew_id, 0))
+			return float(tile.shown_crew.get(crew_id, 0.0))
 	for member in battle.crew:
 		if member.id == crew_id:
 			return member.wounds
@@ -1050,7 +1071,8 @@ func _animate_shot(event: Dictionary) -> void:
 		Sounds.play("beam")
 		await _fx.beam(from, to, Color("#ff5a5f"))
 	else:
-		Sounds.play({"laser": "laser", "chain": "laser", "suit": "laser", "heavy": "heavy", "ion": "ion", "missile": "missile"}.get(kind, "laser"), -2.0, randf_range(0.92, 1.08))
+		Sounds.play({"laser": "laser", "chain": "laser", "suit": "laser", "heavy": "heavy", "ion": "ion", "missile": "missile",
+			"spore": "missile", "mind": "hack", "flak": "heavy"}.get(kind, "laser"), -2.0, randf_range(0.92, 1.08))
 		if event.result == "intercepted":
 			await _fx.shoot(from, from.lerp(to, 0.7), kind, color, false)
 		else:
@@ -1136,7 +1158,7 @@ func _show_on_tile(side: int, system_id: String, changes: Dictionary) -> void:
 			tile.shown[key] = changes[key]
 
 
-func _show_crew_wounds(crew_id: int, wounds: int) -> void:
+func _show_crew_wounds(crew_id: int, wounds: float) -> void:
 	for side in 2:
 		for tile in _tiles[side].values():
 			if not tile.shown_crew.is_empty():

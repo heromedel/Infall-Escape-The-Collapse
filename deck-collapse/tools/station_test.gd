@@ -12,10 +12,36 @@ var problems: Array[String] = []
 func _ready() -> void:
 	for design in Catalog.designs.filter(func(d): return d.built_in):
 		_check(design)
-	print("Station test: %d ships, %d problems" % [Catalog.designs.filter(func(d): return d.built_in).size(), problems.size()])
+	_check_events()
+	print("Station test: %d ships, %d events, %d problems" % [Catalog.designs.filter(func(d): return d.built_in).size(),
+		Catalog.events.size(), problems.size()])
 	for problem in problems:
 		print("  ", problem)
 	get_tree().quit()
+
+
+## Every choice of every event, many times over, on a run whose ship has every race aboard and every system.
+func _check_events() -> void:
+	if Catalog.events.size() < 1:
+		problems.append("No events loaded.")
+	for event in Catalog.events:
+		for i in 20:
+			var run := RunState.new(Catalog.designs[0])
+			run.record_battle(Battle.new(run.design, Catalog.designs[1], 0, 3))
+			for race_id in Catalog.races:
+				run.carry.crew.append({"name": race_id, "race": race_id, "skills": CrewSkills.empty(), "wounds": 0, "system": "reactor"})
+			var choices: Array = run.event_choices(event.choices)
+			if choices.is_empty():
+				problems.append("%s shows no choices." % event.id)
+				continue
+			var shown: Dictionary = choices[i % choices.size()]
+			var result := run.resolve_event_choice(shown.choice, shown.crew)
+			if String(result.text).contains("{crew}"):
+				problems.append("%s left {crew} in its text." % event.id)
+			for follow in run.event_choices(result.outcome.choices):
+				run.resolve_event_choice(follow.choice, shown.crew)
+			if result.battle and run.beacon.get("enemy") == null:
+				problems.append("%s leads to a battle with no enemy." % event.id)
 
 
 func _check(design: ShipDesign) -> void:

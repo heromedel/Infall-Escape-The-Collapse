@@ -6,6 +6,8 @@ const SYSTEMS_FILE := "res://data/systems.xml"
 const WEAPONS_FILE := "res://data/weapons.xml"
 const SUITS_FILE := "res://data/suits.xml"
 const RULES_FILE := "res://data/rules.xml"
+const RACES_FILE := "res://data/races.xml"
+const EVENTS_FILE := "res://data/events.xml"
 const BUILT_IN_SHIPS_FOLDER := "res://data/ships"
 const NAMES_FOLDER := "res://data/names"
 const USER_SHIPS_FOLDER := "user://ships"
@@ -20,6 +22,11 @@ var weapons := {}
 var suit_kinds := {}
 ## Rule numbers from rules.xml: element name -> its attributes (numbers and lists already converted).
 var rules := {}
+## Events for stops without a store (see data/events.xml): [{ id, name, text, choices }].
+var events: Array = []
+## Crew races by id (see data/races.xml); race_aliases maps other names to an id.
+var races := {}
+var race_aliases := {}
 ## Crew name lists by "race/style" (e.g. "gatos/cats"): { names: [{ name, sex, weight }], total }.
 var name_lists := {}
 ## Every ship design that can be picked: built-in first, then the player's own.
@@ -31,7 +38,9 @@ func _ready() -> void:
 	load_weapons()
 	load_suit_kinds()
 	load_rules()
+	load_races()
 	load_names()
+	load_events()
 	reload_designs()
 
 
@@ -90,7 +99,7 @@ func load_suit_kinds() -> void:
 			"id": attrs.id,
 			"name": attrs.get("name", attrs.id),
 			"cost": int(attrs.get("cost", 2)),
-			"turns": int(attrs.get("turns", 3)),
+			"speed": int(attrs.get("speed", 1)),
 			"action": attrs.get("action", "shoot"),
 			"shots": int(attrs.get("shots", 1)),
 			"damage": int(attrs.get("damage", 1)),
@@ -98,27 +107,23 @@ func load_suit_kinds() -> void:
 			"ion": attrs.get("ion", "false") == "true",
 			"never_misses": attrs.get("neverMisses", "false") == "true",
 			"price": float(attrs.get("price", 0)),
-			"sortie": _suit_sortie(attrs),
+			"sortie": _suit_sortie_per_turn(attrs),
 			"summary": XmlTree.clean_text(node),
 		}
 
 
-## Mawjig for one launch: every shot over all its turns (mawjig-cost-table.md), or the file's sortie.
-static func _suit_sortie(attrs: Dictionary) -> float:
-	var turns := int(attrs.get("turns", 3))
-	var per_turn := 0.0
+## Mawjig for one turn out, the shots it fires that turn (mawjig-cost-table.md), or the file's sortie per turn.
+## A launch pays for every turn of air the dock gives it (Ammo.suit_mawjig).
+static func _suit_sortie_per_turn(attrs: Dictionary) -> float:
 	match attrs.get("action", ""):
 		"shoot":
 			var damage := int(attrs.get("damage", 1))
 			var base := 0.03 if attrs.get("shields", "pop") == "reduce" else 0.02
 			var per_shot := base * (1.0 + 0.5 * maxi(0, damage - 1)) + (0.02 if attrs.get("ion", "false") == "true" else 0.0)
-			per_turn = per_shot * int(attrs.get("shots", 1))
+			return per_shot * int(attrs.get("shots", 1))
 		"intercept":
-			per_turn = 0.02
-		_:
-			return float(attrs.get("sortie", 0))
-	var cents := roundi(per_turn * turns * 100.0)
-	return (cents + (1 if cents % 10 == 0 else 0)) / 100.0
+			return 0.02
+	return float(attrs.get("sortie", 0))
 
 
 func load_rules() -> void:
@@ -129,6 +134,63 @@ func load_rules() -> void:
 			var text: String = node.attrs[key]
 			values[key] = number_list(text) if text.contains(",") else float(text)
 		rules[node.name] = values
+
+
+func load_races() -> void:
+	races.clear()
+	race_aliases.clear()
+	for node in XmlTree.children_named(XmlTree.parse_file(RACES_FILE), "race"):
+		var attrs: Dictionary = node.attrs
+		races[attrs.id] = {
+			"id": attrs.id,
+			"name": attrs.get("name", attrs.id),
+			"hp": float(attrs.get("hp", 100)),
+			"attack": float(attrs.get("attack", 100)),
+			"move_limit": int(attrs.get("moveLimit", 0)),
+			"first_strike": attrs.get("firstStrike", "false") == "true",
+			"fire_immune": attrs.get("fireImmune", "false") == "true",
+			"breathes": attrs.get("breathes", "true") == "true",
+			"summary": XmlTree.clean_text(node),
+		}
+		race_aliases[String(attrs.id).to_lower()] = attrs.id
+		for alias in String(attrs.get("aliases", "")).split(",", false):
+			race_aliases[alias.strip_edges().to_lower()] = attrs.id
+
+
+## A race by id or alias; unknown or empty names are Terran.
+func race(race_name: String) -> Dictionary:
+	return races.get(race_aliases.get(race_name.to_lower(), "Terran"), races.values()[0])
+
+
+func load_events() -> void:
+	events = XmlTree.children_named(XmlTree.parse_file(EVENTS_FILE), "event").map(func(node): return {
+		"id": node.attrs.get("id", ""), "name": node.attrs.get("name", ""),
+		"text": _paragraphs(XmlTree.children_named(node, "text")[0] if not XmlTree.children_named(node, "text").is_empty() else {}),
+		"choices": _event_choices(node)})
+
+
+static func _event_choices(node: Dictionary) -> Array:
+	return XmlTree.children_named(node, "choice").map(func(choice): return {
+		"text": choice.attrs.get("text", ""), "requires": choice.attrs.get("requires", ""),
+		"outcomes": XmlTree.children_named(choice, "outcome").map(func(outcome): return {
+			"weight": float(outcome.attrs.get("weight", 1)), "text": _paragraphs(outcome), "effects": outcome.attrs,
+			"choices": _event_choices(outcome)})})
+
+
+## A node's text with each paragraph's lines joined and blank lines kept as paragraph breaks.
+static func _paragraphs(node: Dictionary) -> String:
+	var paragraphs: Array[String] = []
+	var current: Array[String] = []
+	for line in String(node.get("text", "")).split("\n"):
+		var trimmed := line.strip_edges()
+		if trimmed == "" and not current.is_empty():
+			paragraphs.append(" ".join(current))
+			current.clear()
+		elif trimmed != "":
+			current.append(trimmed)
+	if not current.is_empty():
+		paragraphs.append(" ".join(current))
+	return "\n\n".join(paragraphs)
 
 
 func load_names() -> void:

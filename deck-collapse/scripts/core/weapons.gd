@@ -9,6 +9,8 @@ extends RefCounted
 const COOLDOWN_PER_CARD := 36.0
 const MAX_SPEED := 5
 const SLOTS_PER_SYSTEM := 4
+## Difficulty bands run 1 to 8 (GDD: about 8 bands, each about 10 clusters deep).
+const MAX_BAND := 8
 ## Old ship files named a weapon by kind and Type; these are the weapons they become.
 const LEGACY := {
 	"laser": ["spark-laser", "triad-laser", "storm-laser"], "heavy": ["heavy-laser", "heavy-laser", "twin-heavy"],
@@ -32,6 +34,9 @@ static func from_attributes(attrs: Dictionary, base: Dictionary = {}) -> Diction
 	for key in FLAGS:
 		var field: String = FLAGS[key]
 		weapon[field] = attrs.get(key, "true" if weapon.get(field, false) else "false") == "true"
+	var bands := String(attrs.get("bands", "%d-%d" % [weapon.get("band_min", 1), weapon.get("band_max", MAX_BAND)])).split("-")
+	weapon.band_min = int(bands[0])
+	weapon.band_max = int(bands[bands.size() - 1])
 	return finish(weapon, int(attrs.get("speed", weapon.get("speed", 0))))
 
 
@@ -51,6 +56,11 @@ static func finish(weapon: Dictionary, speed: int = 0) -> Dictionary:
 	return weapon
 
 
+## Whether a weapon may turn up (in stores and enemy loadouts) in this band. New ideas come in slowly.
+static func allowed_in_band(weapon: Dictionary, band: int) -> bool:
+	return band >= int(weapon.get("band_min", 1)) and band <= int(weapon.get("band_max", MAX_BAND))
+
+
 ## Only the attributes that make the weapon, for ship files.
 static func to_xml(weapon: Dictionary, depth: int = 2) -> String:
 	var parts: Array[String] = []
@@ -67,6 +77,8 @@ static func to_xml(weapon: Dictionary, depth: int = 2) -> String:
 			parts.append('%s="true"' % key)
 	if weapon.get("tech", "") != "":
 		parts.append('tech="%s"' % XmlTree.escape(weapon.tech))
+	if weapon.get("band_min", 1) != 1 or weapon.get("band_max", MAX_BAND) != MAX_BAND:
+		parts.append('bands="%d-%d"' % [weapon.band_min, weapon.band_max])
 	return "%s<weapon %s/>" % ["  ".repeat(depth), " ".join(parts)]
 
 
@@ -195,14 +207,16 @@ static func card_text(weapon: Dictionary) -> String:
 	return " ".join(lines)
 
 
-## What a weapon looks like on cards and in shots: laser, heavy, ion, missile, beam, chain or flak.
+## What a weapon looks like on cards and in shots: laser, heavy, ion, missile, beam, chain, flak, spore or mind.
 static func art(weapon: Dictionary) -> String:
+	if weapon.spores:
+		return "spore"
+	if weapon.mind:
+		return "mind"
 	if weapon.chain:
 		return "chain"
 	if weapon.kind == "laser" and weapon.damage >= 2:
 		return "heavy"
-	if weapon.kind == "flak":
-		return "laser"
 	return weapon.kind
 
 

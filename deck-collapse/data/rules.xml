@@ -12,14 +12,19 @@
        Uses the crew member's Repair skill. -->
   <crewDraw repair="10,15,20"/>
 
-  <!-- Each point of damage to a system has this % chance to wound each crew member standing in it.
-       Weapons marked woundsCrew (torpedoes, beams) always wound. -->
-  <crewHit chancePerDamage="25"/>
+  <!-- Crew damage in health pips (heromedel 2026-10-29; a Terran has 10 pips at Default toughness).
+       weaponPerDamage: every crew member in a hit system loses this many pips per point of damage (as in the
+       genre, every point of weapon damage hurts everyone in the room).
+       noAir: per turn in a system with no air. fight: per hit in a crew fight, times the race's attack ÷ 100.
+       treat: healed per Med Bay level when treated. Fire: 1 pip per fire pip, per turn. -->
+  <crewDamage weaponPerDamage="1" noAir="1" fight="2" treat="2"/>
 
-  <!-- As each turn ends, a fire may spread to a neighbouring system (the next tile left or right).
-       Each Airlock Control level lowers the chance. A fire burns out when its system is broken, and may burn out
-       when the air has run out. -->
-  <fire spreadChance="30" spreadPerAirlockLevel="-10" spreadMinimum="5" burnOutWithoutAir="50"/>
+  <!-- Fire (heromedel 2026-10-29): a fire has 1 to maxPips pips and grows by 1 each turn. Each turn it hurts
+       everyone inside 1 pip per fire pip, damages its system by 1, and uses half its pips (rounded down) of the
+       system's air; it goes out when the air is gone (breaches and venting take it all) or its system is broken.
+       A Repair puts out repairPips. As each turn ends it may spread to a neighbouring system as a 1-pip fire;
+       each Airlock Control level lowers the chance. -->
+  <fire maxPips="4" repairPips="2" spreadChance="30" spreadPerAirlockLevel="-10" spreadMinimum="5"/>
 
   <!-- Turns an enemy boarder needs to move out of the system they're in to another, by your Airlock Control level
        (0 = none; level 1 doesn't slow them, heromedel). Teleporting and venting aren't slowed. -->
@@ -44,6 +49,16 @@
        with Store System Repair On (Ai-Generated-Proposal: the hull repair price). -->
   <station gapMin="5" gapMax="10" sections="2" itemsPerSection="3" sellPercent="50" cargoSlots="4"
       maxWeaponSystems="4" crewSkillChance="30" systemRepair="0.48"/>
+
+  <!-- Difficulty bands (GDD: about 8 bands, each about 10 clusters deep). The band rises every stopsPerBand stops.
+       Enemies are picked from ships allowed in the band (bands="1-3" on a ship), and stations only stock
+       weapons allowed in it. hullRepair: Mawjig per hull point by band (mawjig-cost-table.md). -->
+  <bands stopsPerBand="10" hullRepair="0.48,0.48,0.48,0.73,0.73,0.73,0.97,0.97"/>
+
+  <!-- Beacons (heromedel 2026-10-29): each jump reaches a beacon; eventChance % of them hold an event (data/events.xml),
+       the rest a hostile ship. Event sizes: mawjigLow/Medium, hullLow, missilesLow; wound is health pips lost.
+       Ai-Generated-Proposal numbers (low Mawjig = one jump's cost). -->
+  <beacons eventChance="50" mawjigLow="1.21" mawjigMedium="2.42" hullLow="3" missilesLow="2" wound="3"/>
 
   <!-- Battlesuits (heromedel 2026-10-29): strayHit is the % chance per bolt that a suit drifting beside the firing
        weapon (or beside the target of its own side's missed bolt) is hit; guardianHit the % chance a guardian suit

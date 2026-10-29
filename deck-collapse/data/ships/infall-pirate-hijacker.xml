@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Terran Pirate Hijacker (ship-suggestions.md, 2026-10-22). Band 5 (bands 4-6), doomed Terran clusters and borders.
      It wants your ship intact: spores your engines and piloting, then boards. Gap references are listed in README.md. -->
-<ship name="Terran Pirate Hijacker" race="Terran" faction="Pirates" color="#FF8500" hull="14" missiles="6">
+<ship bands="4-6" name="Terran Pirate Hijacker" race="Terran" faction="Pirates" color="#FF8500" hull="14" missiles="6">
   <note>A rusty Terran cruiser with a stolen Azurethea spore launcher bolted on. Cut the launcher's conduit spur and the stolen weapon goes dark.</note>
   <power kind="AZC" level="3"/>                                     <!-- G2: 7 drawing systems, one is off at a time -->
   <system type="piloting" level="2" draws="false"/>

@@ -57,7 +57,10 @@ const GROUP_NAMES := {
 ## A card instance is { uid, id, system, temporary }.
 static func definition(card: Dictionary, ship_systems: Dictionary) -> Dictionary:
 	if card.id == "suit":
-		return suit_definition(ship_systems.get(card.system, {}))
+		var dock: Dictionary = ship_systems.get(card.system, {})
+		var suits: Array = dock.get("suits", ["assault"])
+		return suit_definition(suits[mini(int(card.get("slot", 0)), suits.size() - 1)] if not suits.is_empty() else "assault",
+			int(dock.get("level", 1)))
 	if card.id != "weapon":
 		var fixed: Dictionary = FIXED_CARDS[card.id].duplicate()
 		fixed.id = card.id
@@ -77,14 +80,21 @@ static func weapon_of(card: Dictionary, ship_systems: Dictionary) -> Dictionary:
 	return weapons[slot] if slot < weapons.size() else Catalog.weapon("")
 
 
-static func suit_definition(dock: Dictionary) -> Dictionary:
-	var suit := Catalog.suit_kind(dock.get("suit", "assault"))
+## A Launch card for a suit type from a dock of this level (its air is level + 1 turns).
+static func suit_definition(suit_id: String, dock_level: int) -> Dictionary:
+	var suit := Catalog.suit_kind(suit_id)
+	var air := suit_air(dock_level)
 	return {
 		"id": "suit", "name": "Launch " + suit.name, "cost": suit.cost, "group": GROUP_TACTIC, "target": TARGET_NONE,
-		"art": "suit", "suit": suit.id, "mawjig": Ammo.suit_mawjig(suit.id),
-		"text": "A crew member in the dock flies it out. %s It has %d turns of air, then its pilot suffocates: click it to recall." % [
-			suit.summary, suit.turns],
+		"art": "suit", "suit": suit.id, "mawjig": Ammo.suit_mawjig(suit.id, air),
+		"text": "A crew member in the dock flies it out. %s %d turns of air, then its pilot suffocates: click it to recall." % [
+			suit.summary, air],
 	}
+
+
+## Turns of air (and ammo) a suit gets from a dock of this level.
+static func suit_air(dock_level: int) -> int:
+	return dock_level + 1
 
 
 ## The cards a ship design puts into its deck, as (card id, system id) pairs before uids are given.
@@ -96,6 +106,12 @@ static func deck_list(design: ShipDesign) -> Array:
 			for slot in system.weapons.size():
 				for i in system.weapons[slot].speed:
 					entries.append({"id": "weapon", "system": system.id, "slot": slot})
+			continue
+		if system.type == "evb":
+			# Each suit type adds as many Launch cards as its speed.
+			for slot in system.suits.size():
+				for i in Catalog.suit_kind(system.suits[slot]).speed:
+					entries.append({"id": "suit", "system": system.id, "slot": slot})
 			continue
 		if system.type == "airlock":
 			for i in AIRLOCK_BASE_CARDS + system.level - 1:

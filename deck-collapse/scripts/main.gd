@@ -28,6 +28,7 @@ func _ready() -> void:
 		"rules": show_rules()
 		"settings": show_settings()
 		"station": _preview_station()
+		"event": _preview_event(int(_options.get("event", "0")))
 		_: show_menu()
 	if _options.has("screenshot"):
 		_take_screenshot_later(_options.screenshot)
@@ -40,6 +41,14 @@ func _preview_station() -> void:
 	if run.station == null:
 		run.station = Station.new(run.design, run.rng)
 	show_run()
+
+
+## For testing (start=event event=N): a run arriving at event N of data/events.xml.
+func _preview_event(index: int) -> void:
+	run = RunState.new(player_design)
+	run.record_battle(Battle.new(run.design, enemy_design, 0))
+	run.beacon = {"kind": "event", "event": Catalog.events[clampi(index, 0, Catalog.events.size() - 1)]}
+	_show_beacon()
 
 
 func show_menu() -> void:
@@ -85,18 +94,37 @@ func _on_battle_finished(choice: String, battle: Battle) -> void:
 	match choice:
 		"continue":
 			run.record_battle(battle)
-			show_run()
+			_show_beacon()
 		"rematch": show_battle()
 		"setup": show_setup()
 		_: show_menu()
+
+
+## After a jump: an event plays first; otherwise the stop (a station, a hostile ship to fight, or nothing).
+func _show_beacon() -> void:
+	if run.beacon.kind == "event":
+		var event_screen := EventScreen.new()
+		event_screen.run = run
+		event_screen.done.connect(func(battle: bool):
+			if battle:
+				enemy_design = run.beacon.enemy
+				show_battle()
+			else:
+				show_run())
+		_swap(event_screen)
+	else:
+		show_run()
 
 
 func show_run() -> void:
 	var run_screen := RunScreen.new()
 	run_screen.run = run
 	run_screen.next_battle.connect(func():
-		enemy_design = _random_enemy()
+		enemy_design = run.beacon.enemy
 		show_battle())
+	run_screen.jumped.connect(func():
+		run.jump()
+		_show_beacon())
 	run_screen.end_run.connect(show_menu)
 	_swap(run_screen)
 
@@ -134,10 +162,6 @@ func _swap(next_screen: Control) -> void:
 	_screen.modulate.a = 0.0
 	create_tween().tween_property(_screen, "modulate:a", 1.0, 0.25)
 
-
-func _random_enemy() -> ShipDesign:
-	var choices := Catalog.designs.filter(func(d): return d.built_in and d.name != player_design.name)
-	return choices[randi() % choices.size()]
 
 
 func _design_named(ship_name: String) -> ShipDesign:

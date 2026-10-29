@@ -10,8 +10,6 @@ signal tile_clicked(tile: SystemTile)
 signal crew_clicked(tile: SystemTile, crew_id: int)
 signal burn_clicked(tile: SystemTile)
 signal treat_clicked(tile: SystemTile)
-## A battlesuit marker was clicked: the suit's ship side and its index in that ship's suits.
-signal suit_clicked(tile: SystemTile, side: int, index: int)
 signal hovered(tile: SystemTile, is_hovered: bool)
 ## The crew token under the mouse changed: a crew id, or -1 when the mouse left all tokens.
 signal crew_hovered(tile: SystemTile, crew_id: int)
@@ -30,7 +28,7 @@ var flash := 0.0
 ## While an action animates, what the tile shows instead of the battle's final state, so a hit appears when the
 ## shot lands: { damage, on_fire, breached, disabled_turns }. Empty: show the battle as it is.
 var shown := {}
-## While an action animates, each crew member's shown wounds by crew id (3 = shown dead). Shared by all tiles.
+## While an action animates, each crew member's shown wounds (health pips lost) by crew id. Shared by all tiles.
 var shown_crew := {}
 ## The ship is a wreck: drawn dark with its systems gone.
 var wrecked := false
@@ -38,12 +36,8 @@ var wrecked := false
 var sweep := 0
 ## While aiming a multi-target weapon: how many of its bolts are aimed here.
 var bolts_aimed := 0
-## The battlesuit the captain selected (to recall): [side, index], or [] for none.
-var selected_suit: Array = []
 
 var _token_rects := {}
-## Battlesuit markers drawn on this tile: [{ rect, side, index }].
-var _suit_rects: Array = []
 var _burn_rect := Rect2()
 var _hover := false
 var _time := 0.0
@@ -95,10 +89,6 @@ func _gui_input(event: InputEvent) -> void:
 	if not (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT):
 		return
 	accept_event()
-	for marker in _suit_rects:
-		if marker.rect.has_point(event.position):
-			suit_clicked.emit(self, marker.side, marker.index)
-			return
 	if _burn_rect.has_point(event.position):
 		var system_type: String = battle.ships[ship_side].systems[system_id].type
 		if system_type == "medBay":
@@ -153,16 +143,29 @@ func _draw() -> void:
 	UiKit.draw_text_centered(self, UiKit.display_font, title, Rect2(4, 4, TILE_SIZE.x - 8, 18),
 		UiKit.fit_size(UiKit.display_font, title, TILE_SIZE.x - 10, 14, 9), UiKit.TEXT)
 
-	# Symbol
-	var icon_center := Vector2(TILE_SIZE.x / 2.0, 48)
-	draw_circle(icon_center, 24, Color(state_color, 0.10))
-	draw_arc(icon_center, 24, 0, TAU, 32, Color(state_color, 0.35), 1.5, true)
-	IconPainter.paint(self, IconPainter.system_art(system), icon_center, 30, state_color)
+	# Symbol, or for a weapon system or EVB Dock the weapons or suit types it holds, one per row.
+	var contents := _contents(system)
+	if contents.is_empty():
+		var icon_center := Vector2(TILE_SIZE.x / 2.0, 48)
+		draw_circle(icon_center, 24, Color(state_color, 0.10))
+		draw_arc(icon_center, 24, 0, TAU, 32, Color(state_color, 0.35), 1.5, true)
+		IconPainter.paint(self, IconPainter.system_art(system), icon_center, 30, state_color)
+	else:
+		for i in contents.size():
+			var entry: Dictionary = contents[i]
+			var top := 24.0 + i * 13.5
+			IconPainter.paint(self, entry.art, Vector2(25, top + 6.5), 12, state_color)
+			UiKit.draw_text_centered(self, UiKit.body_font, entry.name, Rect2(32, top, TILE_SIZE.x - 58, 13),
+				UiKit.fit_size(UiKit.body_font, entry.name, TILE_SIZE.x - 58, 12, 9), UiKit.TEXT)
+			UiKit.draw_text_centered(self, UiKit.display_bold_font, str(entry.power), Rect2(TILE_SIZE.x - 26, top, 12, 13), 11, UiKit.ACCENT)
 
 	# Hazard badges
 	var badge_x := TILE_SIZE.x - 14.0
 	if system.on_fire:
 		_draw_flame(Vector2(badge_x, 32))
+		var pips := int(system.get("fire", 1))
+		if pips > 1:
+			UiKit.draw_text_centered(self, UiKit.display_bold_font, str(pips), Rect2(badge_x - 4, 36, 14, 12), 11, UiKit.FIRE)
 		badge_x -= 18
 	if system.breached:
 		_draw_breach(Vector2(badge_x, 32))
@@ -214,7 +217,6 @@ func _draw() -> void:
 	# Crew
 	draw_line(Vector2(10, 114), Vector2(TILE_SIZE.x - 10, 114), Color(UiKit.LINE, 0.8), 1.0)
 	_draw_crew(ship)
-	_draw_suits()
 	if sweep != 0:
 		# The beam's path: a bright line across the tile, arrowed the way it sweeps.
 		var y := 48.0
@@ -231,6 +233,16 @@ func _draw() -> void:
 		draw_line(Vector2(14, 14), TILE_SIZE - Vector2(14, 14), Color(UiKit.DANGER, 0.45), 3.0)
 		draw_line(Vector2(TILE_SIZE.x - 14, 14), Vector2(14, TILE_SIZE.y - 14), Color(UiKit.DANGER, 0.45), 3.0)
 		UiKit.draw_text_centered(self, UiKit.display_bold_font, "WRECKED", Rect2(0, TILE_SIZE.y / 2.0 - 14, TILE_SIZE.x, 28), 18, UiKit.DANGER)
+
+
+## A weapon system's weapons or an EVB Dock's suit types: [{ name, art, power }], or [] for other systems.
+func _contents(system: Dictionary) -> Array:
+	match system.type:
+		"weapon":
+			return system.weapons.map(func(w): return {"name": w.name, "art": Weapons.art(w), "power": w.power})
+		"evb":
+			return system.suits.map(func(id): return {"name": Catalog.suit_kind(id).name, "art": "suit", "power": Catalog.suit_kind(id).cost})
+	return []
 
 
 func _draw_crew(ship: ShipState) -> void:
@@ -262,11 +274,14 @@ func _draw_token(member: Dictionary, center: Vector2) -> void:
 		draw_arc(center, TOKEN_RADIUS + 4, 0, TAU, 24, Color(UiKit.ACCENT, 0.6 + 0.4 * sin(_time * 6.0)), 2, true)
 	draw_circle(center, TOKEN_RADIUS, Color(owner_color.darkened(0.6), alpha))
 	draw_circle(center, TOKEN_RADIUS - 3, Color(owner_color.darkened(0.25), alpha))
-	# Health ring: three segments, lost ones in red.
-	for segment in 3:
-		var start := -PI / 2.0 + segment * TAU / 3.0 + 0.12
-		var lost: bool = segment >= Battle.WOUNDS_TO_DIE - _wounds_of(member)
-		draw_arc(center, TOKEN_RADIUS - 1, start, start + TAU / 3.0 - 0.24, 8, Color(UiKit.DANGER if lost else UiKit.GOOD, alpha), 2.5, true)
+	# Health ring: one segment per health pip, lost ones in red.
+	var pips := maxi(1, int(member.max_health))
+	var left := float(member.max_health) - _wounds_of(member)
+	var gap := 0.08 if pips > 8 else 0.12
+	for segment in pips:
+		var start := -PI / 2.0 + segment * TAU / pips + gap
+		var lost: bool = segment >= ceili(left)
+		draw_arc(center, TOKEN_RADIUS - 1, start, start + TAU / pips - gap * 2.0, 4, Color(UiKit.DANGER if lost else UiKit.GOOD, alpha), 2.5, true)
 	if Settings.value("crew_portraits") == "Cat Faces":
 		CrewFace.draw(self, center + Vector2(0, 0.5), member.name, 1.5, alpha)
 	else:
@@ -291,48 +306,15 @@ func _draw_token(member: Dictionary, center: Vector2) -> void:
 			draw_arc(center, TOKEN_RADIUS + 3, angle, angle + 0.4, 4, UiKit.ACCENT, 2.0, true)
 
 
-## Battlesuits beside this tile: the other ship's suits drifting by this system, and this ship's own suits that
-## stay home (guardian, repair) by their dock. Each is a suit outline with its pilot's face inside.
-func _draw_suits() -> void:
-	_suit_rects.clear()
-	var slot := 0
-	for side in 2:
-		var suits: Array = battle.ships[side].suits
-		for index in suits.size():
-			var suit: Dictionary = suits[index]
-			var beside: bool = side != ship_side and suit.target == system_id or side == ship_side and suit.target == "" and suit.dock == system_id
-			if not beside:
-				continue
-			var center := Vector2(TILE_SIZE.x - 16, 62 - slot * 26)
-			slot += 1
-			var rect := Rect2(center - Vector2(11, 12), Vector2(22, 24))
-			_suit_rects.append({"rect": rect, "side": side, "index": index})
-			var owner_color: Color = battle.ships[side].color
-			if selected_suit == [side, index]:
-				draw_circle(center, 16, Color(UiKit.ACCENT, 0.35 + 0.2 * sin(_time * 8.0)))
-			draw_style_box(UiKit.box(owner_color.darkened(0.55), owner_color, 9, 2), rect)
-			draw_line(center + Vector2(-11, 2), center + Vector2(-15, 8), owner_color, 2.0)
-			draw_line(center + Vector2(11, 2), center + Vector2(15, 8), owner_color, 2.0)
-			var pilot := battle.crew_by_id(suit.pilot)
-			if not pilot.is_empty() and Settings.value("crew_portraits") == "Cat Faces":
-				CrewFace.draw(self, center + Vector2(0, -1), pilot.name, 1.2)
-			elif not pilot.is_empty():
-				UiKit.draw_text_centered(self, UiKit.display_bold_font, _initials(pilot.name), rect, 10, Color.WHITE)
-			if suit.recalling:
-				UiKit.draw_text_centered(self, UiKit.display_bold_font, "↩", Rect2(center + Vector2(4, 4), Vector2(14, 12)), 11, UiKit.ACCENT)
-			elif suit.turns_left <= 0:
-				draw_arc(center, 13, 0, TAU, 20, Color(UiKit.DANGER, 0.6 + 0.4 * sin(_time * 6.0)), 2.0, true)
-
-
 ## Crew standing here: everyone alive, or while animating, everyone not yet shown dead.
 func _crew_here() -> Array:
 	if shown_crew.is_empty():
 		return battle.crew_in_system(ship_side, system_id)
-	return battle.crew.filter(func(m): return m.ship == ship_side and m.system == system_id and _wounds_of(m) < Battle.WOUNDS_TO_DIE)
+	return battle.crew.filter(func(m): return m.ship == ship_side and m.system == system_id and _wounds_of(m) < m.max_health)
 
 
-func _wounds_of(member: Dictionary) -> int:
-	return int(shown_crew.get(member.id, member.wounds))
+func _wounds_of(member: Dictionary) -> float:
+	return float(shown_crew.get(member.id, member.wounds))
 
 
 func _state_color(ship: ShipState, system: Dictionary) -> Color:
@@ -364,14 +346,13 @@ func _status_text(ship: ShipState, system: Dictionary) -> String:
 		"piloting":
 			return "Jump %d/%d" % [ship.jump_charge, battle.jump_charges_needed()]
 		"weapon":
-			var weapons: Array = system.weapons
-			var text: String = weapons[0].name if weapons.size() == 1 else "%d weapons" % weapons.size()
-			if ship.uses_missile_weapons() and Ammo.missiles_use_stock() and weapons.any(func(w): return w.uses_missile):
-				text += " · %d left" % ship.missiles
+			var text := "Power %d" % system.level
+			if Ammo.missiles_use_stock() and system.weapons.any(func(w): return w.uses_missile):
+				text += " · %d missiles" % ship.missiles
 			return text
 		"evb":
 			var out := ship.suits.filter(func(s): return s.dock == system.id).size()
-			return "%d suit%s out" % [out, "" if out == 1 else "s"] if out > 0 else "Docked"
+			return "Power %d · air %d" % [system.level, CardLibrary.suit_air(system.level)] + (" · %d out" % out if out > 0 else "")
 		"cloak":
 			return "CLOAKED" if ship.cloaked else "Level %d" % system.level
 		"medBay":

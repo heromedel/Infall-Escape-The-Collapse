@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- SC-1 "Outrider", the Terran starting scout (ship-suggestions.md, 2026-10-22). Player ship; met as an enemy, a
      Terran ship shows pirate orange (GDD 14D). Gap references are listed in README.md. -->
-<ship name="SC-1 Outrider" race="Terran" faction="GATOS" color="#66FF66" hull="30" missiles="8">
+<ship bands="2-8" name="SC-1 Outrider" race="Terran" faction="GATOS" color="#66FF66" hull="30" missiles="8">
   <note>A well-equipped light battle scout: a 3-shot laser to strip shields and a light missile that ignores them. Sensors 2 for map range.</note>
   <power kind="AZC" level="2"/>                                     <!-- G2: powers 4 drawing systems at full; one is off at a time -->
   <system type="piloting" level="1" draws="false"/>

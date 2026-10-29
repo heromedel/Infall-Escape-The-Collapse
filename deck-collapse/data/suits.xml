@@ -1,43 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  EVB battlesuit types for Infall: Deck Collapse. An EVB Dock holds one suit type; each level adds one
-  Launch card. A launch needs a free crew member in the dock, who flies out in the suit, costs the suit's power,
-  and the dock's level must be at least that cost. The suit drifts beside a random enemy system each turn and
-  acts there; the player doesn't aim it. It has "turns" turns of air and ammo; after that it stops and its pilot
-  takes a wound each turn until it is recalled (click it). Stray shots and guardian suits can wound the pilot.
+  EVB battlesuit types for Infall: Deck Collapse. An EVB Dock holds up to 4 suit types, like a weapon system holds
+  weapons (heromedel 2026-10-29). Each suit type adds "speed" Launch cards. The dock's level is the power it can
+  spend on launches each turn, and a suit's turns of air and ammo: level + 1. A launch needs a free crew member in
+  the dock, who flies out in the suit, and costs the suit's power. The suit drifts beside a random enemy system
+  each turn and acts there; the player doesn't aim it. When its air is gone it stops, and its pilot takes a wound
+  each turn until it is recalled (click it, then Recall). The first hit damages a suit and wounds its pilot: it
+  can't act and heads home. A second hit destroys it and its pilot (race-profiles.md, Mecha, 2026-10-23, Likely).
 
   action  shoot      fires at the system it is beside as each of its captain's turns ends (shots, damage, shields, ion)
           intercept  stays by its own ship: shoots down the first enemy torpedo each enemy turn, and fires at an
                      enemy suit each turn
           repair     stays by its own ship: repairs 1 damage on the most damaged system as each turn ends
           board      clings to the system it reached: it and the hull take 1 damage as each enemy turn ends
-  sortie  Mawjig per launch when Ammo uses Mawjig, for every shot over all its turns (mawjig-cost-table.md:
+  speed   Launch cards it adds to the deck (Ai-Generated-Proposal values)
+  sortie  Mawjig per turn out when Ammo uses Mawjig; a launch pays for every turn of air (mawjig-cost-table.md:
           laser 0.02, beam 0.03, ion +0.02 per shot; heromedel: a 2-shot suit out for 3 turns pays 6 shots).
-          Worked out by the game for shooting and guardian suits; given here for the others (repair: 3 × 0.11).
+          Worked out by the game for shooting and guardian suits; given here for the others (repair: 0.11 a repair).
   price   Mawjig, priced as the matching drone (docs/reference/drone-prices.md, x 0.242)
 -->
 <suits>
-  <suit id="assault" name="Assault Suit" cost="2" turns="3" action="shoot" shots="2" damage="1" shields="pop" price="12.11">
+  <suit id="assault" name="Assault Suit" cost="2" speed="2" action="shoot" shots="2" damage="1" shields="pop" price="12.11">
     Fires 2 bolts at the system it drifts beside as each of your turns ends.
   </suit>
   <!-- The Mecha laser battlesuit (Ship Design's G17): one HalfMech in a suit with a 1-damage arm laser.
        Priced as the assault suit's smaller sibling (Ai-Generated-Proposal). -->
-  <suit id="laser" name="Laser Suit" cost="1" turns="3" action="shoot" shots="1" damage="1" shields="pop" price="9.68">
+  <suit id="laser" name="Laser Suit" cost="1" speed="2" action="shoot" shots="1" damage="1" shields="pop" price="9.68">
     Fires a laser bolt at the system it drifts beside as each of your turns ends.
   </suit>
-  <suit id="ion" name="Ion Suit" cost="2" turns="3" action="shoot" shots="1" damage="0" shields="pop" ion="true" price="12.11">
+  <suit id="ion" name="Ion Suit" cost="2" speed="2" action="shoot" shots="1" damage="0" shields="pop" ion="true" price="12.11">
     Fires an ion charge at the system it drifts beside as each of your turns ends.
   </suit>
-  <suit id="cutter" name="Cutter Suit" cost="2" turns="3" action="shoot" shots="1" damage="2" shields="reduce" neverMisses="true" price="12.11">
+  <suit id="cutter" name="Cutter Suit" cost="2" speed="2" action="shoot" shots="1" damage="2" shields="reduce" neverMisses="true" price="12.11">
     Sweeps a 2 damage beam over the system it drifts beside as each of your turns ends. Shield layers cut its damage.
   </suit>
-  <suit id="guardian" name="Guardian Suit" cost="2" turns="3" action="intercept" price="12.11">
+  <suit id="guardian" name="Guardian Suit" cost="2" speed="1" action="intercept" price="12.11">
     Stays by your ship: shoots down the first enemy torpedo each enemy turn, and fires at enemy battlesuits.
   </suit>
-  <suit id="repair" name="Repair Suit" cost="1" turns="3" action="repair" sortie="0.33" price="7.26">
+  <suit id="repair" name="Repair Suit" cost="1" speed="1" action="repair" sortie="0.11" price="7.26">
     Repairs 1 damage on your most damaged system as each of your turns ends.
   </suit>
-  <suit id="boarder" name="Boarding Suit" cost="3" turns="3" action="board" sortie="0.15" price="16.94">
+  <suit id="boarder" name="Boarding Suit" cost="3" speed="1" action="board" sortie="0.05" price="16.94">
     Bores into the system it reaches. It and the hull take 1 damage as each enemy turn ends.
   </suit>
 </suits>

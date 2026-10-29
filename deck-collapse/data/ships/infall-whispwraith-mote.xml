@@ -2,7 +2,7 @@
 <!-- Whispwraith "Mote": low tech, met only inside the collapse (Swallowed clusters, the ??? victory path). New design
      (2026-10-29), Ai-Generated-Proposal, from the Whispwraith profile (2 power bars per Whispwraith, ion weapons; low
      tech: ion blasts, one or two crew). "Mote" is a working name. Gap references are listed in README.md. -->
-<ship name="Mote" race="Whispwraith" faction="Whispwraith" color="#FF00E6" hull="10" missiles="0">
+<ship bands="7-8" name="Mote" race="Whispwraith" faction="Whispwraith" color="#FF00E6" hull="10" missiles="0">
   <note>Smooth and round, silent. Its power is its crew: two Whispwraith give four bars. Its own air is toxic to other races, and oxygen is toxic to them.</note>
   <power kind="crew" barsPerCrew="2"/>                               <!-- G2 -->
   <system type="piloting" level="1"/>

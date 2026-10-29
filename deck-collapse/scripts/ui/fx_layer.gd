@@ -31,9 +31,9 @@ func shoot(from: Vector2, to: Vector2, kind: String, color: Color, missed: bool)
 	var speed := Settings.animation_scale()
 	var life := 0.42 * speed
 	match kind:
-		"missile": life = 0.75 * speed
-		"heavy": life = 0.5 * speed
-		"ion": life = 0.55 * speed
+		"missile", "spore": life = 0.75 * speed
+		"heavy", "flak": life = 0.5 * speed
+		"ion", "mind": life = 0.55 * speed
 	var target := to
 	if missed:
 		var away := (to - from).normalized()
@@ -176,5 +176,27 @@ func _draw_projectile(effect: Dictionary, t: float) -> void:
 			var body = PackedVector2Array([position + direction * 9.0, position + direction.orthogonal() * 4.0 - direction * 6.0,
 				position - direction.orthogonal() * 4.0 - direction * 6.0])
 			draw_colored_polygon(body, Color("#e8ecf6"))
+		"shot_spore":
+			# A drifting green cloud with seeds trailing behind it.
+			var wobble := Vector2(sin(effect.age * 18.0), cos(effect.age * 14.0)) * 3.0
+			for i in 5:
+				var behind: Vector2 = position.lerp(from, 0.04 * i) + Vector2.from_angle(i * 1.7 + effect.age * 6.0) * 5.0
+				draw_circle(behind + wobble, 7.0 - i, Color("#7dffb0", 0.35 - i * 0.05))
+			draw_circle(position + wobble, 8.0, Color("#3fcf7a", 0.75))
+			draw_circle(position + wobble, 4.0, Color("#d6ffe4"))
+		"shot_mind":
+			# Expanding purple rings travelling with the pulse.
+			for i in 3:
+				var ring := fmod(effect.age * 3.0 + i / 3.0, 1.0)
+				draw_arc(position, 4.0 + ring * 14.0, 0, TAU, 20, Color(UiKit.MIND, 1.0 - ring), 2.0, true)
+			draw_circle(position, 4.0, Color("#f0dcff"))
+		"shot_flak":
+			# A spread of debris chunks.
+			var direction = (position - previous).normalized()
+			for i in 5:
+				var spread: Vector2 = direction.orthogonal() * (i - 2) * 6.0 * (0.3 + t)
+				var chunk: Vector2 = position + spread - direction * (i % 2) * 6.0
+				draw_rect(Rect2(chunk - Vector2(2.5, 2.5), Vector2(5, 5)), Color("#c9b79a"))
+				draw_rect(Rect2(chunk - Vector2(1, 1), Vector2(2, 2)), Color.WHITE)
 		_:
 			draw_circle(position, 5.0, color)

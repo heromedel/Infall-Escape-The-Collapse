@@ -52,6 +52,7 @@ systems, reactor bars, weapons and suits priced from `docs/reference`, plus crew
 | Jump Escape | On > Off |
 | Multi Target Lasers | On > Off |
 | EVB Refund | No > Yes |
+| Crew Toughness | Default 10 > Tough 12 > Weak 8 |
 | Crew Fights | On > Off |
 | Sensor Fog | On > Off |
 | Enemy Captain | Normal > Easy > Hard |
@@ -103,41 +104,57 @@ These are gaps in the GDD, filled with the genre in mind. Each one is a setting 
   crewed only by races that don't breathe (Senti) needs no Life Support.
 - **Teleport (heromedel):** one card: click your Teleport Bay, then any system on either ship, and everyone of yours
   in the bay goes there; or click another system, and your crew there come back to the bay.
-- **EVB battlesuits (heromedel):** a crew member in the dock flies out in the suit. It drifts beside a random enemy
-  system each turn and acts there (guardian and repair suits stay home). It has 3 turns of air and ammo; after that
-  it stops and its pilot takes a wound each turn until you click it and recall it (it docks as the turn ends).
-  Bolts fired from the weapon a suit is beside, and your own misses at the system it's beside, may hit it (15%);
-  guardian suits shoot enemy suits (50%). A launch pays Mawjig for every shot over its turns. Suits stop and come
-  home once the enemy is beaten. EVB Refund: Yes pays back unused turns.
+- **EVB Dock (heromedel):** holds up to 4 suit types, like a weapon system holds weapons; each adds Launch cards by
+  its speed. Its level is the power it can spend on launches each turn, and a suit's turns of air: level + 1.
+  A crew member in the dock flies out in the suit, which drifts beside a random enemy system each turn and acts
+  there (guardian and repair suits stay home). When its air is gone, its pilot takes a wound each turn until you
+  recall it (click it, then RECALL; it docks as the turn ends). The first hit damages a suit and wounds its pilot:
+  it can't act and heads home; a second hit destroys it and its pilot (race-profiles.md, Mecha, Likely). Bolts
+  fired from the weapon a suit is beside, and your own misses at the system it's beside, may hit it (15%);
+  guardian suits shoot enemy suits (50%). A launch pays Mawjig for every shot over its turns. EVB Refund: Yes pays
+  back unused turns.
 - **Beams (Infall docs: rooms swept):** a beam sweeps its rooms in a row, left or right of the aimed system as the
   captain picks. Shield layers cut its damage and stay up, as in the genre.
 - **Multi Target Lasers (docs/ideas.md, heromedel):** a special of some lasers; with the setting On (default) each of
   their shots can aim at its own system, Off they fire like ordinary lasers.
 - **Broken systems (heromedel):** a broken system's cards can't be drawn; they stay in the deck until it is repaired.
-- **Crew hits:** each point of damage to a system has a 25% chance to wound each crew member inside.
+- **Crew health (heromedel):** crew have health pips: Crew Toughness (Default 10, Tough 12, Weak 8) × their race's
+  health ÷ 100, rounded down (`data/races.xml`): Terran/GATOS, Tentauri, Whispwraith 10; Azurethea, Lykario 7;
+  Senti 5; Mecha 12; Malphen 15. Damage in pips (`rules.xml` crewDamage): every crew member in a hit system loses 1
+  per point of damage (as in the genre, no roll); no air 1 a turn; fire 1 per fire pip a turn; crew-fight hits 2 ×
+  the race's attack; Treat heals 2 per Med Bay level.
+- **Races (race-profiles.md point 9, heromedel):** Mecha have 125% health and attack and move at most 3 systems at
+  a time; Lykario strike first in a fight (an enemy they kill deals them no damage); Senti are immune to fire and
+  need no air. Pick a crew member's race in the designer.
 - **Airlock Control (as Doors):** boarders need 0/0/1/2/3 turns to move from one system to another at Airlock Control
   level 0–4 (level 1 doesn't slow them). Teleporting and venting aren't slowed. Each level slows fire spreading.
   Airlock Control adds 3 Cycle Airlock cards, plus 1 per level above 1. Cycle Airlock costs 1 power and needs a
   working Airlock Control, not crew: the fire goes out, the air is gone, and everyone inside takes a wound.
-- **Fire:** spreads to the neighbouring tile, burns out when its system is broken, may choke out once the air is gone.
+- **Fire (heromedel):** a fire has 1–4 pips and grows a pip each turn. Each turn it hurts everyone inside 1 pip per
+  fire pip, damages its system by 1 and uses half its pips (rounded down) of the system's air; it goes out when the
+  air is gone (breaches and venting take it all) or the system is broken. A Repair puts out 2 fire pips. It may
+  spread to the system beside it as a 1-pip fire.
 - **Mawjig (docs/reference):** a wreck pays 2.5% of its value (+30% for killing the crew); a jump costs 1.21; hull
   repair 0.48 a point; missiles 1.45; crew 10.89.
-- **Stations (heromedel):** the stop between battles has a station 1 in 5–10 stops (`rules.xml` station). A station
-  always sells hull repair, missiles and suit parts, plus 2 random sections of 3 from systems, weapons, battlesuits
-  and crew (genre). Weapons and battlesuits sell for half (genre). A bought weapon goes into a free weapon slot, or
-  the 4-slot cargo hold, which adds no cards and can be swapped at any stop.
-  Upgrades raise systems and the reactor by the `systems.xml` step prices, with Undo until you leave. Store crew
-  are named from `data/names/` (Federation-Home-Planet's name-list format): cat names with Cat Faces, human names
-  with Plain Tokens. The run changes its own copy of the ship, never the saved design.
-- **Crew Fights:** boarders and defenders in the same system trade 1 wound each at the end of the turn.
+- **Beacons and bands (heromedel):** after a battle, and with each JUMP (1.21 Mawjig), you reach a beacon: half the
+  time an event (`data/events.xml`, by Infall: Lori), otherwise a hostile ship to fight. Some events lead to a
+  fight; the others leave you at a quiet beacon to jump on. The difficulty band rises every 10 jumps (GDD: about 8
+  bands, each about 10 clusters deep); enemies come from ships allowed in the band (`bands="1-3"` on a ship),
+  stations only stock weapons allowed in it (`bands` on a weapon: new ideas like multi-target lasers start at band
+  2), and hull repair costs 0.48, 0.73 or 0.97 a point by band (mawjig-cost-table.md). Ship and weapon band ranges
+  are Ai-Generated-Proposal.
+- **Stations (heromedel):** a beacon has a station 1 in 5–10 jumps (`rules.xml` station). A station
+- **Crew Fights:** boarders and defenders in the same system trade blows at the end of the turn.
+- **Mind control (heromedel):** the Mind Control card holds a mind for the system's level + 1 turns; a mind-control
+  weapon for its weapon system's level.
 - **Crew act once per turn:** each crew member can do one crew card per turn.
 - **Med Bay (heromedel):** TREAT on its tile costs 1 power; as the turn ends, everyone in it heals by its level.
 - **Reactor hits:** ion and Hack on a Reactor knock one Power Cell loose (GDD C6) instead of shutting it down.
 - **Evasion:** 5% per working Engines level, plus a few percent for a pilot and an engineer by skill. It needs
   Piloting manned, or Auto Pilot at level 2 or 3 (GDD C12).
 - **Cloak** adds +40% evasion until your next turn (GDD C14).
-- **EVB battlesuits** replace drones (GDD C8, C9). Each dock holds one suit type from `data/suits.xml`: assault,
-  laser, ion, cutter, guardian, repair and boarding.
+- **EVB battlesuits** replace drones (GDD C8, C9). Suit types are in `data/suits.xml`: assault, laser, ion, cutter,
+  guardian, repair and boarding.
 
 ## Ships
 
@@ -150,7 +167,7 @@ templates (hull 9–14), translated into Infall systems:
 - Airlock Control replaces doors and the EVB Dock replaces drones.
 
 The `infall-*.xml` ships are Ship Design's, one per race (`docs/deck-collapse-ships` on Cloud-C-ShipDesign,
-Ai-Generated-Proposal). The game reads their weapons as written; their power runs as a plain reactor for now (G2),
+Ai-Generated-Proposal). The game reads their weapons as written; their power runs as a plain reactor for now (G2; an AZC is 5 bars per level),
 and the parts it doesn't have yet (Supershield, growth organ, servicing core, AAA, floor plans …) are kept and
 listed with their gap numbers.
 
@@ -161,7 +178,9 @@ They're in `data/ships/` and are meant to be edited.
 | Path | What it is |
 |---|---|
 | `data/systems.xml` | Every system: its card, cards per level, design points, level limits |
-| `data/weapons.xml` | Weapon kinds and what each Type does |
+| `data/weapons.xml` | Weapon families and every weapon (power, shots, damage, speed, specials, bands) |
+| `data/races.xml` | Crew races: health, attack and traits |
+| `data/events.xml` | Events at beacons |
 | `data/suits.xml` | EVB battlesuit types |
 | `data/rules.xml` | Jump charges, crew draw and hit chances, fire, airlock and economy numbers |
 | `data/ships/*.xml` | Built-in ships |
@@ -202,6 +221,10 @@ godot --headless --path . res://tools/station_test.tscn
 
 ```bash
 godot --path . -- start=station player=Wayfarer
+```
+
+```bash
+godot --path . -- start=event event=2 player=Wayfarer
 ```
 
 ## Export

@@ -14,7 +14,8 @@ const SECTION_NAMES := {SECTION_SYSTEMS: "Systems", SECTION_WEAPONS: "Weapons", 
 var sections: Array = []
 
 
-func _init(design: ShipDesign, rng: RandomNumberGenerator) -> void:
+## band: the run's difficulty band; weapons only turn up in the bands they're allowed in.
+func _init(design: ShipDesign, rng: RandomNumberGenerator, band: int = 1) -> void:
 	var choices: Array = [SECTION_WEAPONS, SECTION_SUITS, SECTION_CREW]
 	if not _installable_systems(design).is_empty():
 		choices.append(SECTION_SYSTEMS)
@@ -22,10 +23,10 @@ func _init(design: ShipDesign, rng: RandomNumberGenerator) -> void:
 	var count := int(Catalog.rule("station", "sections", 2))
 	var per_section := int(Catalog.rule("station", "itemsPerSection", 3))
 	for section_id in choices.slice(0, count):
-		sections.append({"id": section_id, "items": _roll_items(section_id, design, per_section, rng)})
+		sections.append({"id": section_id, "items": _roll_items(section_id, design, per_section, rng, band)})
 
 
-func _roll_items(section_id: String, design: ShipDesign, count: int, rng: RandomNumberGenerator) -> Array:
+func _roll_items(section_id: String, design: ShipDesign, count: int, rng: RandomNumberGenerator, band: int) -> Array:
 	var items: Array = []
 	match section_id:
 		SECTION_SYSTEMS:
@@ -36,7 +37,7 @@ func _roll_items(section_id: String, design: ShipDesign, count: int, rng: Random
 				items.append({"kind": "system", "type": type, "name": definition.name, "detail": definition.summary,
 					"price": float(definition.prices[0])})
 		SECTION_WEAPONS:
-			var ids: Array = Catalog.weapons.keys()
+			var ids: Array = Catalog.weapons.keys().filter(func(id): return Weapons.allowed_in_band(Catalog.weapons[id], band))
 			_shuffle(ids, rng)
 			for weapon_id in ids.slice(0, count):
 				var weapon := Catalog.weapon(weapon_id)
@@ -49,7 +50,8 @@ func _roll_items(section_id: String, design: ShipDesign, count: int, rng: Random
 			for suit_id in suits.slice(0, count):
 				var suit := Catalog.suit_kind(suit_id)
 				items.append({"kind": "suit", "suit": suit_id, "name": suit.name,
-					"detail": "Needs an EVB Dock of level %d. %s" % [suit.cost, suit.summary], "price": float(suit.price)})
+					"detail": "%d power to launch, %d card%s. %s" % [suit.cost, suit.speed, "" if suit.speed == 1 else "s", suit.summary],
+					"price": float(suit.price)})
 		SECTION_CREW:
 			for i in count:
 				var member := _crew_for_hire(rng)

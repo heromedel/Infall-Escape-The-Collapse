@@ -70,7 +70,7 @@ func _crew_move(battle: Battle, side: int) -> Dictionary:
 				break
 		if chosen.is_empty():
 			for member in unassigned:
-				var fits: bool = member.wounds >= 2 if station.get("wounded_only", false) else true
+				var fits: bool = Battle.health_fraction(member) < 0.5 if station.get("wounded_only", false) else true
 				if member.ship == ship_side and not member.moved and fits:
 					chosen = member
 					break
@@ -94,7 +94,7 @@ func _wanted_stations(battle: Battle, side: int) -> Array:
 	# Badly hurt crew go to the Med Bay.
 	if med_bay != "" and ship.capacity(med_bay) > 0:
 		for member in battle.living_crew_of(side):
-			if member.wounds >= 2 and member.ship == side:
+			if Battle.health_fraction(member) < 0.5 and member.ship == side:
 				wanted.append({"ship": side, "system": med_bay, "wounded_only": true})
 	# Boarders on our ship get met.
 	for member in battle.living_crew():
@@ -224,8 +224,22 @@ func _fire_weapons(battle: Battle, side: int) -> Dictionary:
 				var rooms := battle.beam_rooms(ship, card)
 				if rooms > 1:
 					target.direction = _best_sweep(battle, side, system_id, rooms)
+				var bolts := battle.bolts_to_aim(ship, card)
+				if bolts > 1 and level != "Easy":
+					target.systems = _split_bolts(battle, side, kind, bolts)
 				return {"kind": "play", "uid": card.uid, "target": target}
 	return {}
+
+
+## Aims a multi-target weapon's bolts across the best targets: the first, the second, then the first again ...
+func _split_bolts(battle: Battle, side: int, kind: String, bolts: int) -> Array:
+	var targets := _weapon_targets(battle, side, kind).filter(func(id): return not battle.ships[1 - side].is_broken(id))
+	if targets.is_empty():
+		targets = _weapon_targets(battle, side, kind)
+	var aims: Array = []
+	for i in bolts:
+		aims.append(targets[i % mini(2, targets.size())])
+	return aims
 
 
 ## The direction a beam aimed here should sweep: the way that crosses more working systems and enemy crew.
@@ -302,7 +316,7 @@ func _recall_suits(battle: Battle, side: int) -> Dictionary:
 	for index in ship.suits.size():
 		var suit: Dictionary = ship.suits[index]
 		var pilot := battle.crew_by_id(suit.pilot)
-		if suit.turns_left <= 0 or not pilot.is_empty() and pilot.wounds >= 2:
+		if suit.turns_left <= 0 or not pilot.is_empty() and Battle.health_fraction(pilot) < 0.5:
 			if battle.why_cannot_recall(side, index) == "":
 				return {"kind": "recall", "suit": index}
 	return {}
@@ -312,7 +326,7 @@ func _teleport(battle: Battle, side: int) -> Dictionary:
 	var ship := battle.ships[side]
 	# Bring hurt boarders home to the bay.
 	for member in battle.living_crew_of(side):
-		if member.ship != side and member.wounds >= 2:
+		if member.ship != side and Battle.health_fraction(member) < 0.5:
 			var action := _play_first(battle, side, "teleport", {"system": member.system, "ship": member.ship})
 			if not action.is_empty():
 				return action
@@ -321,7 +335,7 @@ func _teleport(battle: Battle, side: int) -> Dictionary:
 		return {}
 	# Send whoever waits in the bay, if enough crew stay home to run the ship.
 	var home_crew := battle.living_crew_of(side).filter(func(m): return m.ship == side and m.controlled_by < 0)
-	var senders := battle.teleport_senders(side).filter(func(m): return m.wounds == 0)
+	var senders := battle.teleport_senders(side).filter(func(m): return Battle.health_fraction(m) >= 0.7)
 	if senders.is_empty() or home_crew.size() - senders.size() < 1:
 		return {}
 	var enemy := battle.ships[1 - side]

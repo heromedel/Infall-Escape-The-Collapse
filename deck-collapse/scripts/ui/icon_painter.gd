@@ -156,6 +156,25 @@ static func paint(canvas: CanvasItem, art: String, center: Vector2, size: float,
 			canvas.draw_circle(p.call(0.6, -0.6), s * 0.25, light)
 			for spark in [[0.95, -0.35], [0.35, -0.95], [0.9, -0.85]]:
 				canvas.draw_line(p.call(0.6, -0.6), p.call(spark[0], spark[1]), light, width * 0.6)
+		"spore":
+			# A seed pod bursting into spores.
+			canvas.draw_circle(center, s * 0.38, color)
+			canvas.draw_circle(center, s * 0.2, light)
+			for i in 7:
+				var angle := i * TAU / 7.0 + 0.3
+				canvas.draw_circle(center + Vector2.from_angle(angle) * s * (0.62 + 0.18 * (i % 2)), s * 0.1, Color(light, 0.9))
+		"mind":
+			# A head outline with pulse rings.
+			canvas.draw_arc(center, s * 0.35, 0, TAU, 24, color, width)
+			for r in [0.6, 0.85]:
+				canvas.draw_arc(center, s * r, -0.9, 0.9, 12, Color(light, 0.8), width * 0.7)
+				canvas.draw_arc(center, s * r, PI - 0.9, PI + 0.9, 12, Color(light, 0.8), width * 0.7)
+			canvas.draw_circle(center, s * 0.12, light)
+		"flak":
+			for chunk in [[-0.5, 0.4], [0.1, 0.0], [0.55, -0.45], [-0.1, -0.5], [0.45, 0.45]]:
+				var at: Vector2 = p.call(chunk[0], chunk[1])
+				canvas.draw_rect(Rect2(at - Vector2(s, s) * 0.14, Vector2(s, s) * 0.28), color)
+				canvas.draw_rect(Rect2(at - Vector2(s, s) * 0.05, Vector2(s, s) * 0.1), light)
 		"chain":
 			for i in 3:
 				var link_center: Vector2 = p.call(-0.55 + i * 0.55, 0.45 - i * 0.45)

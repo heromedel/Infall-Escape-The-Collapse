@@ -135,7 +135,7 @@ func _system_line(system: Dictionary, color: Color) -> Control:
 	if system.type == "weapon":
 		text = "%s · %s" % [system.name, ", ".join(system.weapons.map(func(w): return w.name))]
 	elif system.type == "evb":
-		text = "EVB Dock · " + Catalog.suit_kind(system.suit).name
+		text = "EVB Dock · " + ", ".join(system.suits.map(func(id): return Catalog.suit_kind(id).name))
 	row.add_child(UiKit.label("%s  [%d]" % [text, system.level], 14, UiKit.TEXT))
 	return row
 

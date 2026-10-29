@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Classic boarding cruiser: a teleporter, tough crew, light guns. -->
-<ship name="Gauntlet" faction="Colony Fleet" color="#66FF66" hull="30" missiles="6">
+<ship bands="3-8" name="Gauntlet" faction="Colony Fleet" color="#66FF66" hull="30" missiles="6">
   <note>Wins by boarding. Four hardened crew, a Teleport Bay and just enough guns to keep the enemy busy.</note>
   <system type="reactor" level="7"/>
   <system type="shields" level="1"/>

@@ -74,9 +74,9 @@
       prices="8.47,12.11">
     Adds 1 Backup Cell per level: temporary power for one turn.
   </system>
-  <system type="evb" name="EVB Dock" card="suit" cardsPerLevel="1" minLevel="1" maxLevel="3" mannable="false"
+  <system type="evb" name="EVB Dock" card="suit" cardsPerLevel="0" minLevel="1" maxLevel="3" mannable="false"
       prices="14.52,2.42,4.84">
-    Holds one battlesuit type (data/suits.xml). Adds 1 Launch card per level; its level must be at least the suit's cost. Needs a crew member assigned to launch.
+    Holds up to 4 battlesuit types (data/suits.xml); each adds Launch cards by its speed. Its level is the power it can spend on launches each turn, and a suit's turns of air (level + 1). Needs a crew member in the dock to launch.
   </system>
   <system type="weapon" name="Weapon System" card="weapon" cardsPerLevel="0" minLevel="1" maxLevel="8" mannable="true"
       prices="4.84,9.68,6.05,8.47,12.11,18.15,21.78,24.21" crewDraw="10,15,20">

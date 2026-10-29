@@ -2,7 +2,7 @@
 <!-- Azurethea "Vein Moth": a low-tech explorer, bands 1-2, met along the quiet lanes of a doing-fine Azurethea region.
      New design (2026-10-29), Ai-Generated-Proposal, from race profile Azurethea 6, 9 and 10 (low tech: single-system
      targeting shots, stinger missiles or single-shot energy beams). Gap references are listed in README.md. -->
-<ship name="Vein Moth" race="Azurethea" faction="Azurethea" color="#4F8FFF" hull="10" missiles="4">
+<ship bands="1-2" name="Vein Moth" race="Azurethea" faction="Azurethea" color="#4F8FFF" hull="10" missiles="4">
   <note>A winged explorer. It rarely starts a fight and readily accepts surrender; when it does fight, it picks one system and keeps hitting it.</note>
   <power kind="pool" level="7"/>                                     <!-- G2: biological energy, the genre's pool -->
   <system type="piloting" level="1"/>

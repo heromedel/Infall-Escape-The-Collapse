@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Classic ion cruiser: a big reactor, a heavy ion weapon and an EVB Dock with an assault suit. -->
-<ship name="Lattice" faction="Colony Fleet" color="#66FF66" hull="30" missiles="0">
+<ship bands="3-8" name="Lattice" faction="Colony Fleet" color="#66FF66" hull="30" missiles="0">
   <note>Stuns rather than smashes. Heavy ion locks enemy systems down while an assault suit chips away.</note>
   <system type="reactor" level="10"/>
   <system type="shields" level="1"/>

@@ -4,6 +4,7 @@ class_name RunScreen
 extends Control
 
 signal next_battle
+signal jumped
 signal end_run
 
 var run: RunState
@@ -38,7 +39,9 @@ func _rebuild() -> void:
 	var buttons := UiKit.hbox(12)
 	buttons.alignment = BoxContainer.ALIGNMENT_CENTER
 	var problems := run.design.problems()
-	var go := UiKit.primary_button("NEXT BATTLE (random enemy)", func(): next_battle.emit(), 20)
+	var hostile: bool = run.beacon.kind == "hostile"
+	var go := UiKit.primary_button("FIGHT: %s" % run.beacon.enemy.name if hostile else "JUMP  (%s)" % Money.text(
+		float(Catalog.rule("economy", "jumpCost", 0))), func(): next_battle.emit() if hostile else jumped.emit(), 20)
 	go.custom_minimum_size.y = 50
 	go.disabled = not problems.is_empty()
 	go.tooltip_text = "\n".join(problems)
@@ -50,12 +53,18 @@ func _rebuild() -> void:
 func _header() -> Control:
 	var box := UiKit.vbox(4)
 	var top := UiKit.hbox(12)
-	var title := UiKit.heading("STATION" if run.station else "BETWEEN BATTLES", 30)
+	var place := "STATION" if run.station else ("HOSTILE CONTACT" if run.beacon.kind == "hostile" else "QUIET BEACON")
+	var title := UiKit.heading("%s  ·  JUMP %d  ·  BAND %d" % [place, run.stops, run.band()], 30)
 	title.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	top.add_child(title)
 	top.add_child(UiKit.heading(Money.text(run.mawjig), 30, UiKit.ACCENT))
 	box.add_child(top)
 	var result: Dictionary = run.last_result
+	if run.beacon.kind == "hostile":
+		box.add_child(UiKit.label("A hostile ship waits here: %s. Get ready, then fight." % run.beacon.enemy.name, 16, UiKit.DANGER))
+	if int(result.get("stop", -1)) != run.stops:
+		box.add_child(UiKit.label("Battles won: %d" % run.battles_won, 15, UiKit.MUTED))
+		return box
 	var summary := "Battle %d against %s: " % [run.battles_fought, result.get("enemy", "?")]
 	match result.get("outcome", ""):
 		Battle.OUTCOME_DESTROYED: summary += "destroyed it."
@@ -110,8 +119,9 @@ func _ship_column() -> Control:
 			damaged.append("%s (%s)" % [_system_name(run.design.system_by_id(system_id)), ", ".join(notes)])
 	box.add_child(_wrapped("Systems: " + (", ".join(damaged) if not damaged.is_empty() else "all working"), 14,
 		UiKit.DANGER if not damaged.is_empty() else UiKit.MUTED))
-	var crew_names: Array = run.carry.get("crew", []).map(func(m): return "%s (%d/%d)" % [m.name,
-		Battle.WOUNDS_TO_DIE - int(m.wounds), Battle.WOUNDS_TO_DIE])
+	var crew_names: Array = run.carry.get("crew", []).map(func(m):
+		var full := Battle.max_health_for(m.get("race", ""))
+		return "%s, %s (%d/%d)" % [m.name, Catalog.race(m.get("race", "")).name, ceili(full - float(m.wounds)), full])
 	box.add_child(_wrapped("Crew: " + ", ".join(crew_names), 14, UiKit.MUTED))
 
 	for system in run.weapon_systems():
@@ -128,6 +138,18 @@ func _ship_column() -> Control:
 					func(): run.sell_weapon(system.id, slot), reason)
 			box.add_child(row)
 
+	for dock in run.design.systems.filter(func(s): return s.type == "evb"):
+		box.add_child(UiKit.heading("EVB DOCK  ·  power %d  ·  %d / %d suit types" % [dock.level, dock.suits.size(),
+			Weapons.SLOTS_PER_SYSTEM], 16, UiKit.TEXT))
+		for slot in dock.suits.size():
+			var suit_id: String = dock.suits[slot]
+			var row := _row(Catalog.suit_kind(suit_id).name, _cargo_detail({"kind": "suit", "suit": suit_id}))
+			_add_action(row, "To cargo", func(): run.store_suit(dock.id, slot), "The cargo hold is full." if run.cargo_full() else "")
+			if run.station:
+				_add_action(row, "Sell %s" % Money.text(RunState.sell_price({"kind": "suit", "suit": suit_id})), func():
+					run.design.system_by_id(dock.id).suits.remove_at(slot)
+					run.mawjig = Money.round_amount(run.mawjig + RunState.sell_price({"kind": "suit", "suit": suit_id})), "")
+			box.add_child(row)
 	box.add_child(UiKit.heading("CARGO  %d / %d" % [run.cargo.size(), run.cargo_slots()], 16, UiKit.TEXT))
 	if run.cargo.is_empty():
 		box.add_child(UiKit.label("Empty. Weapons and battlesuits here add no cards.", 13, UiKit.FAINT))
@@ -146,7 +168,7 @@ func _cargo_detail(item: Dictionary) -> String:
 	if item.kind == "weapon":
 		return _weapon_detail(item.weapon)
 	var suit := Catalog.suit_kind(item.suit)
-	return "Needs an EVB Dock of level %d. %s" % [suit.cost, suit.summary]
+	return "%d power to launch, %d card%s. %s" % [suit.cost, suit.speed, "" if suit.speed == 1 else "s", suit.summary]
 
 
 # ---------------------------------------------------------------- the station
@@ -182,7 +204,7 @@ func _station_column() -> Control:
 			if item.kind == "weapon":
 				detail = "Goes into a free weapon slot, or cargo. " + detail
 			elif item.kind == "suit":
-				detail = "Goes to cargo; swap it into an EVB Dock from there. " + detail
+				detail = "Goes into a free EVB Dock slot, or cargo. " + detail
 			elif item.kind == "system":
 				detail = "Installed at level 1. " + detail
 			var title: String = item.name
@@ -231,7 +253,7 @@ func _system_name(system: Dictionary) -> String:
 	if system.type == "weapon":
 		return system.get("name", "Weapon")
 	if system.type == "evb":
-		return Catalog.suit_kind(system.suit).name + " Dock"
+		return "EVB Dock"
 	return Catalog.systems[system.type].name
 
 

@@ -3,7 +3,7 @@
      Abandoned clusters. New design (2026-10-29), Ai-Generated-Proposal, from the Malphen profile (low tech: fleshy
      missiles and flak, the growth organ) and ship-design-process.md (weaker ships for band 1, Malphen swarms).
      The name is what other races call it; Malphen don't speak. Gap references are listed in README.md. -->
-<ship name="Polyp" race="Malphen" faction="Malphen" color="#FFA480" hull="5" missiles="4">
+<ship bands="1-2" name="Polyp" race="Malphen" faction="Malphen" color="#FFA480" hull="5" missiles="4">
   <note>A living ship with one crew it grew. Kill the crew and it grows another unless its growth organ is destroyed first.</note>
   <power kind="pool" level="4"/>                                     <!-- G2: biomechanical pool -->
   <system type="piloting" level="1"/>

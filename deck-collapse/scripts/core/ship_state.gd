@@ -15,8 +15,8 @@ var suit_parts := 0
 var mawjig := 0.0
 
 ## System id -> { id, type, name, level, damage, on_fire, breached, air, spored, disabled_turns }, plus "weapons"
-## for a weapon system and "suit" for an EVB Dock.
-## "air": pips of air in the system, up to air_max. "spored": overgrown, offline until a Repair clears it.
+## for a weapon system and "suits" (suit type ids) for an EVB Dock.
+## "fire": pips of fire (0–4; on_fire while above 0). "air": pips of air in the system, up to air_max. "spored": overgrown, offline until a Repair clears it.
 var systems := {}
 ## System ids in display order.
 var system_order: Array = []
@@ -66,14 +66,14 @@ func _init(owner_side: int, ship_design: ShipDesign) -> void:
 	for system in ship_design.systems:
 		var state := {
 			"id": system.id, "type": system.type, "level": system.level, "damage": 0,
-			"on_fire": false, "breached": false, "air": 0, "spored": false, "disabled_turns": 0,
+			"on_fire": false, "fire": 0, "breached": false, "air": 0, "spored": false, "disabled_turns": 0,
 			"name": system.get("name", Catalog.systems[system.type].name),
 		}
 		if system.type == "weapon":
 			state.weapons = system.weapons.duplicate(true)
 		elif system.type == "evb":
-			state.suit = system.suit
-			state.name = Catalog.suit_kind(system.suit).name + " Dock"
+			state.suits = system.suits.duplicate()
+			state.name = "EVB Dock"
 		systems[system.id] = state
 		system_order.append(system.id)
 		if system.type == "lifeSupport":

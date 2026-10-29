@@ -20,7 +20,7 @@ func _ready() -> void:
 	ship.systems["gallery"] = gallery_weapons
 	for slot in gallery_weapons.weapons.size():
 		definitions.append(CardLibrary.definition({"id": "weapon", "system": "gallery", "slot": slot}, ship.systems))
-	definitions.append(CardLibrary.definition({"id": "suit", "system": "dock"}, ship.systems))
+	definitions.append(CardLibrary.suit_definition("assault", 2))
 	var x := 12.0
 	var y := 12.0
 	for definition in definitions:

@@ -2,7 +2,7 @@
 <!-- Senti-GPH "Relay Picket": a low-tech guard for a relay or broadcast station, band 3, doing-fine Senti clusters.
      New design (2026-10-29), Ai-Generated-Proposal, from race profile Senti-GPH 6, 9 and 10 (low: beams, good sensors,
      a small AAA). Gap references are listed in README.md. -->
-<ship name="Relay Picket" race="Senti-GPH" faction="Senti-GPH" color="#D2FF00" hull="10" missiles="0">
+<ship bands="3-4" name="Relay Picket" race="Senti-GPH" faction="Senti-GPH" color="#D2FF00" hull="10" missiles="0">
   <note>Holographic crew broadcast by an Armoured Avatar Array: damage the AAA and avatars drop out until it is repaired. No Life Support, since Senti don't breathe; ion disrupts them.</note>
   <power kind="AZC" level="2"/>                                     <!-- G2: Terran-like core, maybe slightly worse -->
   <system type="piloting" level="1" draws="false"/>

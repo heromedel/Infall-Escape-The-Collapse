@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Crew races for Infall: Deck Collapse (docs/race-profiles.md, point 9 of each race; heromedel 2026-10-29).
+  Health is on the genre's 100 scale and shown as pips: Crew Toughness (Default 10, Tough 12, Weak 8 pips for a
+  100-health race) times hp ÷ 100, rounded down.
+
+  hp           health, 100 = a Terran (the genre's humans)
+  attack       crew-fight damage, 100 = normal
+  moveLimit    the farthest a crew member can move along the row of systems in one move (0 = no limit)
+  firstStrike  true: in a crew fight they strike first, and an enemy they kill deals them no damage that round
+  fireImmune   true: fire doesn't hurt them
+  breathes     false: they need no air (a ship crewed only by them needs no Life Support)
+  aliases      other names ship files use for the race
+-->
+<races>
+  <race id="Terran" name="Terran" hp="100" attack="100" aliases="GATOS,Human">As the genre's humans: they learn skills faster (not in yet).</race>
+  <race id="Azurethea" name="Azurethea" hp="75" attack="100">Reduced health (heromedel). They make breathable air and survive briefly in space (not in yet).</race>
+  <race id="Mecha" name="Mecha" hp="125" attack="125" moveLimit="3" aliases="HalfMech">Physically tough, hard hitters, slow movers: 125% health and attack, and they move at most 3 systems at a time (heromedel).</race>
+  <race id="Tentauri" name="Tentauri" hp="100" attack="100">Can run several systems at once (not in yet).</race>
+  <race id="Senti-GPH" name="Senti-GPH" hp="50" attack="100" fireImmune="true" breathes="false" aliases="Senti">Half health, immune to fire, need no air.</race>
+  <race id="Lykario" name="Lykario" hp="75" attack="100" firstStrike="true">Quick attacks and reduced health: they strike first in a fight.</race>
+  <race id="Malphen" name="Malphen" hp="150" attack="100">High health, like the genre's rock people. They heal slowly aboard biomechanical ships (not in yet).</race>
+  <race id="Whispwraith" name="Whispwraith" hp="100" attack="100">Breathe their own air; oxygen is toxic to them (not in yet).</race>
+</races>

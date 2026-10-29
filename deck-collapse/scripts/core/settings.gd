@@ -25,6 +25,8 @@ const OPTIONS := {
 		"help": "On: each bolt of a multi-bolt laser can aim at a different system. Off: every bolt hits the same system, as in the genre."},
 	"evb_refund": {"label": "EVB Refund", "choices": ["No", "Yes"],
 		"help": "Yes: a battlesuit recalled early pays back the Mawjig for the turns it didn't use."},
+	"crew_toughness": {"label": "Crew Toughness", "choices": ["Default 10", "Tough 12", "Weak 8"],
+		"help": "Health pips for a Terran crew member; other races have more or less in proportion (rounded down)."},
 	"crew_fights": {"label": "Crew Fights", "choices": ["On", "Off"],
 		"help": "On: boarders and defenders in the same system trade wounds at the end of the turn."},
 	"station_frequency": {"label": "Station Frequency", "choices": ["1 in 5-10", "Every Stop"],
@@ -92,6 +94,11 @@ func hull_multiplier() -> float:
 		"50%": return 0.5
 		"150%": return 1.5
 	return 1.0
+
+
+## Health pips of a 100-health crew member.
+func crew_toughness() -> int:
+	return int(value("crew_toughness").get_slice(" ", 1))
 
 
 func budget_limit() -> int:
