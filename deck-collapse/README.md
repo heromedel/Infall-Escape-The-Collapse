@@ -65,8 +65,8 @@ These are gaps in the GDD, filled with the genre in mind. Each one is a setting 
 - **Aftermath (heromedel):** after the enemy is beaten you keep playing until you jump; everything carries over.
   With no enemy left the Jig Drive charges at once if Engines and Piloting work, as in the genre.
 - **Ammo (heromedel):** by default every volley and battlesuit launch costs Mawjig (`mawjig-cost-table.md`), for
-  enemies too. A run starts with 12.11 (GDD 8K, Proposed). Enemy purse is provisional: 2.5% of the ship's value,
-  pending Infall: Eco. Classic ammo uses missile and battlesuit-part stocks instead.
+  enemies too. A run starts with 12.11 (GDD 8K, Proposed). An enemy carries its own wreck reward (2.5% of its value)
+  to pay for its shots; unspent Mawjig isn't added to salvage (economy-findings F11). Classic ammo uses missile and battlesuit-part stocks instead.
 - **Crew XP (GDD 7H):** 100 XP to Veteran, 150 more to Master; 6.7 per dodge, 1.8 per shield layer popped, 1.5 per
   volley, 5.6 per point repaired, 12.5 per crew fight. XP carries through a run.
 - **Crew skills (genre):** six skills, untrained, Veteran or Master. Manned Shields, weapons and Engines may draw an

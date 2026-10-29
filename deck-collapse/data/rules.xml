@@ -28,8 +28,9 @@
   <economy rewardPercent="2.5" crewKillBonus="30" hullRepair="0.48" missile="1.45" suitPart="1.94" crew="10.89"
       skillVeteran="0.25" skillMaster="0.37" jumpCost="1.21" startingMawjig="12.11" enemyPursePercent="2.5"/>
   <!-- startingMawjig: a run's purse (GDD 8K, Proposed).
-       enemyPursePercent: PROVISIONAL, asked of Infall: Eco. An enemy ship carries this % of its ship value to pay for
-       its shots, the same as its wreck reward. F4's 0.64 ammo per fight left enemies dry in 23% of card battles.
+       enemyPursePercent: an enemy ship carries its own wreck reward to pay for its shots, this % of its ship value
+       (economy-findings F11, Proposed, heromedel 2026-10-28; no band adjustment yet, as band 1 is x1.0). Unspent
+       Mawjig is not added to the salvage (F11, Likely).
        suitPart: one battlesuit launch's parts in Classic ammo, the genre's drone part (8 scrap x 0.242). -->
 
   <!-- Crew XP (GDD 7H, Decided): XP to reach Veteran, then more to reach Master, and XP per event. -->
