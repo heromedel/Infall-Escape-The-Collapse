@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Senti-GPH "Quiet Ledger": a doomed-Senti crew killer, bands 5-6. Ai-Generated-Proposal (2026-10-29). Uses only
+     Deck Collapse's current rules. -->
+<ship bands="5-6" name="Quiet Ledger" race="Senti-GPH" faction="Senti-GPH" color="#D2FF00" hull="14" missiles="0">
+  <note>Burns some systems and breaches others, then teleports its holograms into the rooms nobody can live in: fire and lost air don't touch them. Hacks the Med Bay or Airlock Control so the crew can't heal or vent.</note>
+  <power kind="AZC" level="3"/>
+  <system type="piloting" level="2"/>
+  <system type="sensors" level="2"/>
+  <system type="shields" level="2"/>
+  <system type="engines" level="2"/>
+  <system type="hacking" level="2"/>
+  <system type="teleport" level="2"/>                                <!-- stands in for an upgraded AAA broadcasting avatars aboard (race profile 9) -->
+  <system type="weapon" id="weapons" name="Weapons" level="4">
+    <weapon name="3B 01 F1" kind="beam" power="2" shots="1" damage="1" rooms="3" fire="100" tech="digital"/>
+    <weapon name="2L 01 B1" kind="laser" power="2" shots="2" damage="1" breach="60" tech="digital"/>          <!-- breaches drain a system's air -->
+  </system>
+  <crew name="Pilot" race="Senti-GPH" station="piloting"/>
+  <crew name="Gunner" race="Senti-GPH" station="weapons"/>
+  <crew name="Avatar" race="Senti-GPH" station="teleport"/>
+  <crew name="Avatar" race="Senti-GPH" station="teleport"/>
+</ship>

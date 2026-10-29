@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Senti-GPH "Census Picket": a doomed-Senti crew killer, bands 3-4. Ai-Generated-Proposal (2026-10-29), asked by
+     heromedel: Senti ships whose goal is to kill the crew. Doomed Senti have no qualms about killing living people
+     while still storing their data (race profile 4). Uses only Deck Collapse's current rules. -->
+<ship bands="3-4" name="Census Picket" race="Senti-GPH" faction="Senti-GPH" color="#D2FF00" hull="10" missiles="0">
+  <note>Sets the other ship on fire and sweeps its crew with beams. Its own crew are holograms: fire can't hurt them and they need no air, so it carries no Life Support.</note>
+  <power kind="AZC" level="2"/>
+  <system type="piloting" level="1"/>
+  <system type="sensors" level="2"/>
+  <system type="shields" level="1"/>
+  <system type="engines" level="1"/>
+  <system type="hacking" level="1"/>                                 <!-- hack the Med Bay so the burned can't heal -->
+  <system type="weapon" id="weapons" name="Weapons" level="3">
+    <weapon name="2B 01 F1" kind="beam" power="2" shots="1" damage="1" rooms="2" fire="100" tech="digital"/>  <!-- a fire beam: every hit system burns -->
+    <weapon name="1B 02 V1" kind="beam" power="1" shots="1" damage="2" rooms="1" tech="digital"/>             <!-- beams wound every crew member they sweep -->
+  </system>
+  <crew name="Pilot" race="Senti-GPH" station="piloting"/>
+  <crew name="Gunner" race="Senti-GPH" station="weapons"/>
+</ship>

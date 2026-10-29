@@ -66,3 +66,27 @@ The open-stern Light Attack Frame is a floor layout change only, so it waits for
 - **Scrap Hound:** a stolen, battered Outrider (a loadout of it, G18): no Sensors (Animal Senses), Auto Pilot so the pilot can board, a stolen Twinshot.
 - **Polyp:** a swarm ship of about 38, so three fit band 1; a flak loadout mixes shield-poppers into the swarm.
 - **Mote:** 4 bars from 2 crew: Shields (2), Engines (1) and one ion blast (1). "Hush" as a strange, alien name.
+
+## Senti crew killers (2026-10-29)
+
+**Ai-Generated-Proposal (2026-10-29)**, asked by heromedel: Senti-GPH ships whose goal is killing the crew, not the
+ship, to be tested in Deck Collapse. Doomed Senti have no qualms about killing living people, while still storing
+their data (race profile 4). Their own crew are holograms: half health, immune to fire, no air needed, so fire,
+breaches and venting are weapons they can use without fear.
+
+| File | Ship | Bands | How it kills crew | Rules used |
+|---|---|---|---|---|
+| `senti-crew-killers/senti-census-picket.xml` | Census Picket | 3–4 | a fire beam sets each swept system burning; a beam wounds everyone it sweeps; Hacking keeps the Med Bay down | Deck Collapse's current rules |
+| `senti-crew-killers/senti-quiet-ledger.xml` | Quiet Ledger | 5–6 | fire in some systems, breaches in others, then holograms teleport into rooms nobody else can live in | Deck Collapse's current rules |
+| `senti-crew-killers/senti-final-archive.xml` | Final Archive | 7–8 | an anti-bio beam and bio bombs hurt crew only, so the ship is kept | G20, G21 |
+
+New gaps:
+
+| Ref | Gap | What the file asks for |
+|---|---|---|
+| G20 | Crew-only damage | `crewDamage`: health pips each crew member in a hit system loses, on top of (or instead of, with `damage="0"`) system damage; the genre's anti-bio beam |
+| G21 | Bombs | `kind="bomb"`: teleported straight into a system, so it ignores shields and evasion; no missile used (Mawjig per shot) |
+
+Judgment calls: fire and breaches in separate systems (a breach drains the air a fire needs); teleport standing in
+for an upgraded AAA broadcasting avatars aboard; the weapon codes follow the Senti number codes, with F for fire,
+B for breach and X for anti-bio as suggestions; band 7–8 for the bio weapons, since a bio bomb is new to the genre.
