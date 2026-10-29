@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Light Attack Frame, Suit Dock loadout (ship-suggestions.md, 2026-10-23), a patch of the frame (G18, GDD 5J).
+<!-- Light Attack Frame, Suit Dock loadout (ship-suggestions.md, 2026-10-23), bands 2-3 (no EVB suits in band 1), a patch of the frame (G18, GDD 5J).
      One crew member flies a laser battlesuit that pops a shield layer for its partner's Hull Laser. -->
 <loadout ship="Light Attack Frame" name="Light Attack Frame (Suit Dock)" inherit="Patch">
   <system id="pod" removed="true"/>

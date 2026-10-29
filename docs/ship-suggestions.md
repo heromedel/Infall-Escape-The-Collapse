@@ -9,7 +9,7 @@ points that differ are tagged where they appear.
 Default tag: **Proposed (2026-10-22)**, from heromedel's worked example; Claude's additions are tagged.
 
 1. **Race:** Tentauri.
-2. **Band:** 1 (easy, near the start of a run).
+2. **Band:** 1 (easy, near the start of a run). **Ai-Generated-Proposal (2026-10-29):** now band 3, by the band rule (heromedel's rule of 2026-10-29: no non-vanilla weapon types or EVB suits in band 1, `ship-design-process.md`); its Supershield and Defensive lasers are new, and at 188.81 it is over the band 1 and 2 budgets. The **Little Scout** loadout below is its band 1 version.
 3. **State:** doing fine.
 4. **Race info used — Ai-Generated-Proposal (2026-10-22):** small ships of about two crew, possibly mates; few rooms with many systems (GDD 5B); go
    where they want, even unwelcome, without looking to destroy; shields and defence specialists; Zoltan-like
@@ -121,6 +121,28 @@ Default tag: **Proposed (2026-10-22)**, from heromedel's worked example; Claude'
 Flags for review:
 
 - The Defensive special isn't in the cost tables yet; its price here is the rule above.
+
+### Tentauri Little Scout, band 1 loadout (2026-10-29)
+
+**Ai-Generated-Proposal (2026-10-29)**, asked by heromedel: the scout without its new tech, so the Tentauri can still
+appear in band 1 (heromedel's rule of 2026-10-29: no non-vanilla weapon types or EVB suits in band 1, `ship-design-process.md`).
+
+- **Drops** the Supershield Generator and the Medbay; the reactor drops to 7 bars (Weapons 2, Engines 2, Shields 2,
+  Life Support 1).
+- **Weapons:** two **Coil** lasers (a name from the race profile's examples): a plain 1-shot, 1-damage laser,
+  1 power, 9.0 s, 6.79, as the genre's basic laser. One per weapon system, as before.
+- **Shield check:** both Coils fired together still beat one layer: the first takes the layer, the second lands.
+- **Price:** Shields 54.46 · Engines 2.42 · Sensors 9.68 · Doors 14.52 · Weapon systems 9.68 · Reactor, 7 bars
+  27.83 · 2 × Coil 13.58 = **132.17**, under band 1's budget (137).
+
+```
+Loadout: Little Scout                (loadout.tentauri-scout.little-scout.xml)
+Inherit: Patch
+Reactor: 7
+Supershield Generator   removed
+Medbay                  removed
+Weapons: Coil (Weapons A, mount 3), Coil (Weapons B, mount 4)
+```
 
 ## SC-1 "Outrider": Terran starting scout (2026-10-22)
 
@@ -506,7 +528,7 @@ Judgment calls for review:
 
 | | Cutpurse (new) | Hijacker (existing, unchanged) |
 |---|---|---|
-| Bands | 1–3 | 4–6 |
+| Bands | 2–3 (was 1–3; see the Pickpocket below) | 4–6 |
 | Hull | 9 | 14 |
 | AZC level | 2 (4 systems at once) | 3 (6 systems at once) |
 | Piloting | 1 | 2 |
@@ -597,7 +619,7 @@ Weapons, the other at Piloting.
 
 | Tier | Ships |
 |---|---|
-| Low (bands 1–3) | Bands 1–2: 1 × Cutpurse. Band 3: 1–2 × Cutpurse (2 = 260.92, under 414) |
+| Low (bands 1–3) | Band 1: 1 × Pickpocket. Band 2: 1 × Cutpurse. Band 3: 1–2 × Cutpurse or Pickpocket (two = about 262, under 414) |
 | Mid (bands 4–6) | 1–2 × Hijacker |
 | High (bands 7–8) | [heavy pirate ship] · [Hijacker high-band loadout] (placeholders) |
 
@@ -615,6 +637,40 @@ Conduct, only where it differs from the Hijacker:
 - **Can a bands 1–3 pirate afford a crew teleporter?** Yes, at level 1 (21.78), by dropping the gun, Medbay, Doors
   and Sensors.
 - The stun-lock targeting rule is needed for any squad with more than one Sporewing.
+
+### Pirate Pickpocket, band 1 loadout (2026-10-29)
+
+**Ai-Generated-Proposal (2026-10-29)**, asked by heromedel: the Cutpurse without the stolen spore launcher, so
+pirates still appear in band 1 (heromedel's rule of 2026-10-29: no non-vanilla weapon types or EVB suits in band 1, `ship-design-process.md`). The Sporewing's spores and stun are new, so the Cutpurse moves to bands 2–3.
+
+- **Same as the Cutpurse** (hull 9, AZC level 2, Shields 1, Piloting 1, Engines 1, Life Support 1, Crew Teleporter 1,
+  3 Terrans; no Doors, so fire is still its weakness), but its gun is the Gat 2.1 "Twinshot" on Weapons A (a 2-shot
+  laser, as the genre's Dual Shot) and Weapons B is gone.
+- **Shield check:** the Twinshot's two shots beat one layer: 1 damage per volley.
+- **Price:** Shields 54.46 · Weapon Control A level 1 4.84 · Crew Teleporter level 1 21.78 · AZC level 2 42.36 ·
+  Twinshot 7.67 = **131.11**, under band 1's budget (137).
+
+```
+Loadout: Pickpocket                  (loadout.pirate-hijacker.pickpocket.xml)
+Inherit: Patch
+Hull: 9
+Hull Art: faired-over port bay
+Reactor: AZC level 2
+Piloting           Level 1
+Sensors            removed
+Doors              removed
+Shields            Level 1 (2 bars)
+Engines            Level 1
+Weapons A          Level 1
+Weapons B          removed
+Medbay             removed
+Crew Teleporter    Level 1
+Mount 3: (-2.8,-1.6)   Slide: Left
+Conduits:                            the spur to Weapons B comes out
+    (2,-1,Remove) (2,-2,Remove) (1,-2,N,S)
+Weapons: Gat 2.1 "Twinshot" (Weapons A, mount 3)
+Crew: 3 Terrans
+```
 
 ## Mecha Light Attack Frame, two loadouts (2026-10-23)
 
@@ -806,9 +862,9 @@ that a squad is mainly a list of ships with counts per tier (`rough-example-squa
 below are the extra this brief asked for.
 
 - **Ships:** 1 × Light Attack Frame, Hull Laser loadout; 1 × Light Attack Frame, Suit Dock loadout.
-- **Shows up in:** Border clusters of a doing-fine Mecha region, band 3 (bands 1–2 field a single frame).
+- **Shows up in:** Border clusters of a doing-fine Mecha region, band 3 (bands 1–2 field a single frame). **Ai-Generated-Proposal (2026-10-29):** the Suit Dock loadout is bands 2–3 only (heromedel's rule of 2026-10-29: no non-vanilla weapon types or EVB suits in band 1, `ship-design-process.md`); band 1 fields the Hull Laser loadout, whose hull bonus is the genre's own (its Hull Smasher lasers).
 - **Size by band:** set by the squad value budgets in `mawjig-cost-table.md`. Bands 1–2 (budgets 137 and 173): one
-  frame, either loadout, alone, or a pair of weaker ships or loadouts that fits the budget (not designed yet).
+  frame alone (band 1: the Hull Laser loadout only; band 2: either), or a pair of weaker ships or loadouts that fits the budget (not designed yet).
   Band 3 (414): the pair (269.69), or 2 Hull Laser + 1 Suit Dock (401.41).
 - **How the two fight together:** the Suit Dock launches its suit at once, at the target's shield room, to keep the
   layer down. The Hull Laser fires at rooms without systems, for double damage, to gut the hull. Both pick the

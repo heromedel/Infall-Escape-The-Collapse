@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Tentauri Tough Little Scout (ship-suggestions.md, 2026-10-22). Band 1, doing-fine Tentauri clusters.
+<!-- Tentauri Tough Little Scout (ship-suggestions.md, 2026-10-22). Band 3 (was band 1; see the Little Scout loadout), doing-fine Tentauri clusters.
      Gets in, survives, gets out. Gap references (G1, G2 ...) are listed in README.md. -->
 <ship name="Tentauri Tough Little Scout" race="Tentauri" faction="Tentauri" color="#FF5ECA" hull="8" missiles="0">
   <note>Two crew, two rooms, good shields and a Supershield; two defence lasers that shoot down torpedoes when not aimed.</note>
