@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Prices in Mawjig from docs/reference/system-prices.md. "buy" installs level 1; "upgrades" are the step prices for each level after. -->
+<system id="evb-dock" name="EVB Dock" behaviour="evb_dock" max_level="8" draws_power="yes" manned="no" buy="14.52" upgrades="2.42,4.84,7.26,10.89,14.52,19.36,24.21" icon="evb_dock" hotkey="E" order="35">
+	<description>Extra Vehicular Battle Dock. A crew member suits up in a battlesuit and flies out to fight the enemy, until the suit's air runs low. Each launch uses a new suit.</description>
+	<level>Launches a suit</level>
+	<level>Launches a suit; suits carry more air</level>
+	<level>Suits carry more air</level>
+	<level>Suits carry more air</level>
+	<level>Suits carry more air</level>
+	<level>Suits carry more air</level>
+	<level>Suits carry more air</level>
+	<level>Suits carry more air</level>
+</system>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Prices in Mawjig from docs/reference/system-prices.md. "buy" installs level 1; "upgrades" are the step prices for each level after. -->
+<system id="weapon-pod" name="Weapon Pod" behaviour="weapons" max_level="4" draws_power="yes" manned="yes" buy="4.84" upgrades="9.68,6.05,8.47" icon="weapons" hotkey="W" order="31">
+	<description>A self-powered Mecha weapon system. It carries little power of its own; a Mecha crew member integrating with it adds a bar.</description>
+	<level>1 power for weapons</level>
+	<level>2 power for weapons</level>
+	<level>3 power for weapons</level>
+	<level>4 power for weapons</level>
+</system>

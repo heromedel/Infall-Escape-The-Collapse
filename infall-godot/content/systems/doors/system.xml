@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Prices in Mawjig from docs/reference/system-prices.md. "buy" installs level 1; "upgrades" are the step prices for each level after. -->
+<system id="doors" name="Doors" behaviour="doors" max_level="3" draws_power="no" manned="yes" buy="14.52" upgrades="8.47,12.11" icon="doors" hotkey="" order="62">
+	<description>Lets the ship open and close its doors from the bridge, including the airlocks, and makes doors harder for boarders to break.</description>
+	<level>Remote doors</level>
+	<level>Reinforced doors</level>
+	<level>Blast doors</level>
+</system>

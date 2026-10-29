@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The more vulnerable open-stern frame: Engines and Life Support share one stern room. -->
+<loadout id="openstern" ship="light-attack-frame" name="Light Attack Frame" class="Open Stern" inherit="patch">
+	<room id="4" from="-2,2" to="2,2" name="Stern"/>
+	<room id="5" removed="yes"/>
+	<door id="4" removed="yes"/>
+</loadout>

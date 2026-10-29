@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Built from parts (GDD 8E): charge time and price from docs/reference/weapon-budget-table.md, cost per volley from mawjig-cost-table.md. -->
+<weapon id="gat-i1" name="Gat I1" nickname="Static" race="terran" tech="mechanical" type="laser" power="1" shots="1" damage="0" charge="9.5" cost="0.04" price="6.06" colour="#7fd3ff" ion="1" crew_damage="0">
+	<description>An ion bolt: no hull damage, but it knocks power out of the system it hits, and out of shields.</description>
+</weapon>

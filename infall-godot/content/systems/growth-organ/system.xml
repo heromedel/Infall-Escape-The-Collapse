@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Prices in Mawjig from docs/reference/system-prices.md. "buy" installs level 1; "upgrades" are the step prices for each level after. -->
+<system id="growth-organ" name="Growth Organ" behaviour="medbay" max_level="3" draws_power="yes" manned="no" buy="12.11" upgrades="8.47,10.89" icon="growth_organ" hotkey="D" order="52">
+	<description>A Malphen ship's own tissue knitting its crew back together.</description>
+	<level>Mends slowly</level>
+	<level>Mends quickly</level>
+	<level>Mends very quickly</level>
+</system>

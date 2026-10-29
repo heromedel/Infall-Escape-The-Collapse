@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Crew traits from docs/race-profiles.md point 9; power colour from docs/art/palette.md; crew price from system-prices.md. -->
+<race id="azurethea" name="Azurethea" singular="Azurethea" health="50" speed="1.0" xp_rate="1.0" repair="1.0" biomech_repair="1.6" melee="0.6" power_colour="#4F8FFF" crew_price="12.11" portrait="moth" tech="biomechanical" makes_air="yes">
+	<description>A peaceful, butterfly-like people of part-organic ships, who would rather disable a ship than destroy it.</description>
+	<traits>Half health. Breathe out breathable air wherever they stand. Repair biomechanical systems quickly. Poor fighters.</traits>
+	<names>Lumen, Vesper, Iridel, Celestine, Opaline, Thessaly, Azura, Morwen, Lyrisse, Selka, Nimue, Halcyon, Oriel, Sapphiel, Faelen, Ysolde</names>
+</race>

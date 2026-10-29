@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Crew traits from docs/race-profiles.md point 9; power colour from docs/art/palette.md; crew price from system-prices.md. -->
+<race id="terran" name="GATOS" singular="GATOS crew" health="100" speed="1.0" xp_rate="1.1" repair="1.0" biomech_repair="0.6" melee="1.0" power_colour="#66FF66" crew_price="10.89" portrait="cat" tech="mechanical">
+	<description>The Galactic Alliance of Tabby Occupied Systems: a loose alliance of cat crews, more gangs than federation. Clean, easy, humane technology when times are good.</description>
+	<traits>Quick learners: gain skills 10% faster.</traits>
+	<names>Ginger, Sable, Marlowe, Juniper, Pepper, Saffron, Tibbs, Calloway, Mittens, Rusty, Cleo, Oscar, Nala, Smokey, Jasper, Luna, Milo, Hazel, Bastet, Clementine, Biscuit, Socks, Tom Avery, Marmalade, Pounce, Willa, Captain Fluff, Ozzie, Pumpkin, Shadow, Nutmeg, Tabitha, Felix Okoro, Ronan, Moxie, Kit Delacroix, Bramble, Wren, Thistle, Lionel</names>
+</race>

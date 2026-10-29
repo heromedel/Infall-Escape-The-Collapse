@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Prices in Mawjig from docs/reference/system-prices.md. "buy" installs level 1; "upgrades" are the step prices for each level after. -->
+<system id="supershield" name="Supershield Generator" behaviour="supershield" max_level="3" draws_power="yes" manned="no" buy="19.36" upgrades="9.68,12.11" icon="supershield" hotkey="Z" order="15">
+	<description>A Tentauri shell of energy outside the ship's shields. It blocks anything, missiles and teleporters too, until it runs out, and it slowly grows back.</description>
+	<level>Regrows a layer every 20 s, up to 5</level>
+	<level>Regrows a layer every 15 s, up to 5</level>
+	<level>Regrows a layer every 10 s, up to 5</level>
+</system>

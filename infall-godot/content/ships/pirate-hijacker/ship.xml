@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Terran Pirate Hijacker, doomed GATOS turned pirate, bands 4-6 (docs/ship-suggestions.md). It wants your ship
+     intact: spores on your engines and piloting, then boarders. -->
+<ship id="pirate-hijacker" name="Pirate Hijacker" class="Hijacker" race="terran" faction="pirate" style="pirate" center_x="Point" center_y="Tile" hull="14" value="267.61">
+	<reactor type="core" level="3"/>
+	<art hull="pirate-hijacker-hull-2x.png" scale="0.5" center="240,352.5"/>
+	<description>A classic GATOS cruiser gone dark and scorched, with a stolen Azurethea launcher refitted into a starboard hardpoint.</description>
+
+	<room id="0" from="-1,-6" to="1,-5" name="Bridge"/>
+	<room id="1" from="-1,-4" to="1,-4" name="Doors room"/>
+	<room id="2" from="-2,-3" to="-1,-2" name="Shields room"/>
+	<room id="3" from="1,-3" to="2,-2" name="Weapons room"/>
+	<room id="4" from="-2,-1" to="-2,0" name="Port flank"/>
+	<room id="5" from="-1,-1" to="1,0" name="Core room"/>
+	<room id="6" from="2,-1" to="2,0" name="Starboard flank"/>
+	<room id="7" from="-2,1" to="-1,2" name="Medbay"/>
+	<room id="8" from="1,1" to="2,2" name="Teleporter room"/>
+	<room id="9" from="-2,3" to="2,4" name="Aft hall"/>
+	<room id="10" from="-2,5" to="2,6" name="Engine room"/>
+
+	<system id="piloting" tile="-1,-6" level="2" wall="north"/>
+	<system id="sensors" tile="1,-6" level="1" wall="north"/>
+	<system id="doors" tile="-1,-4" level="2" wall="west"/>
+	<system id="shields" tile="-2,-3" level="4" wall="west"/>
+	<system id="weapons" tile="2,-3" level="3" wall="east"/>
+	<system id="azc" tile="1,-1" level="3" wall="none"/>
+	<system id="medbay" tile="-2,2" level="2" wall="west"/>
+	<system id="crew-teleporter" tile="2,2" level="2" wall="east"/>
+	<system id="engines" tile="-1,6" level="3" wall="south"/>
+	<system id="life-support" tile="1,6" level="1" wall="south"/>
+
+	<door id="0" tile="1,-5" facing="south"/>
+	<door id="1" tile="1,-4" facing="south"/>
+	<door id="2" tile="-1,-2" facing="east"/>
+	<door id="3" tile="-2,-2" facing="south"/>
+	<door id="4" tile="2,-2" facing="south"/>
+	<door id="5" tile="-1,-1" facing="west"/>
+	<door id="6" tile="1,0" facing="east"/>
+	<door id="7" tile="-1,-2" facing="south"/>
+	<door id="8" tile="-1,0" facing="south"/>
+	<door id="9" tile="1,0" facing="south"/>
+	<door id="10" tile="-1,2" facing="east"/>
+	<door id="11" tile="-1,2" facing="south"/>
+	<door id="12" tile="1,2" facing="south"/>
+	<door id="13" tile="-1,4" facing="south"/>
+	<door id="14" tile="1,4" facing="south"/>
+	<door id="15" tile="-2,3" facing="west"/>
+	<door id="16" tile="-2,4" facing="west"/>
+	<door id="17" tile="2,3" facing="east"/>
+	<door id="18" tile="2,4" facing="east"/>
+
+	<conduits>
+		(-1,-6,S,E) (1,-6,S,W) (-1,-5,N,S) (1,-5,N,S) (-1,-4,N,S) (1,-4,N,S)
+		(-2,-3,S,E,W) (-1,-3,N,W) (1,-3,N,S) (-2,-2) (-1,-2,E,W) (1,-2)
+		(2,-2,E,W) (-2,-1,N,S) (1,-1,N,S) (-2,0,N,S) (1,0,N,E) (2,0,S,W)
+		(-2,1,N,S) (2,1,N,S) (-2,2,N,S) (2,2,N,S) (-2,3,N,S) (2,3,N,S)
+		(-2,4,N,S) (2,4,N,S) (-2,5,N,E) (-1,5,S,W) (1,5,S,E) (2,5,N,W)
+		(-1,6,N,E) (1,6,N,W)
+	</conduits>
+
+	<mount id="1" x="178" y="180" slide="left"/>
+	<mount id="2" x="302" y="180" slide="right"/>
+	<mount id="3" x="116" y="296" slide="left"/>
+	<mount id="4" x="364" y="296" slide="right"/>
+	<mount id="5" x="84" y="618" slide="left"/>
+	<mount id="6" x="396" y="618" slide="right"/>
+
+	<weapons>
+		<weapon id="gat-2-1" mount="3"/>
+		<weapon id="sporewing" mount="4"/>
+	</weapons>
+	<crew>
+		<member race="terran" count="5"/>
+	</crew>
+</ship>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Built from parts (GDD 8E): charge time and price from docs/reference/weapon-budget-table.md, cost per volley from mawjig-cost-table.md. -->
+<weapon id="gat-2-1" name="Gat 2.1" nickname="Twinshot" race="terran" tech="mechanical" type="laser" power="1" shots="2" damage="1" charge="11.1" cost="0.04" price="7.67" colour="#ff6a3c" conduit="10" art="twinshot.png" art_scale="0.675" art_anchor="80,120">
+	<description>A compact GATOS turret block with two parallel barrels. Good for keeping pressure on shields.</description>
+</weapon>

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Prices in Mawjig from docs/reference/system-prices.md. "buy" installs level 1; "upgrades" are the step prices for each level after. -->
+<system id="piloting" name="Piloting" behaviour="piloting" max_level="3" draws_power="no" manned="yes" buy="0" upgrades="4.84,12.11" icon="piloting" hotkey="" order="60">
+	<description>Steers the ship. A crew member must be at the console for the ship to dodge or to jump. Higher levels fly the ship on autopilot when no one is there.</description>
+	<level>Needs a pilot</level>
+	<level>Autopilot: half evasion</level>
+	<level>Autopilot: most of the evasion</level>
+</system>

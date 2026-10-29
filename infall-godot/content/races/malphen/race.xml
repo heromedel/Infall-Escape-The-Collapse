@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Crew traits from docs/race-profiles.md point 9; power colour from docs/art/palette.md; crew price from system-prices.md. -->
+<race id="malphen" name="Malphen" singular="Malphen" health="150" speed="1.0" xp_rate="1.0" repair="1.0" biomech_repair="1.4" melee="1.2" power_colour="#FFA480" crew_price="13.31" portrait="malphen" tech="biomechanical" heals_slowly="yes">
+	<description>A tumor race. Their ships are living things and their crew are parts the ship grows. They do not speak.</description>
+	<traits>High health, and they slowly mend on their own.</traits>
+	<names>Nodule, Cyst, Bloom, Polyp, Burr, Gall, Knot, Tuber, Welt, Swell, Clot, Sprout</names>
+</race>

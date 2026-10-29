@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Cutpurse: the bands 1-3 loadout of the Hijacker (docs/ship-suggestions.md). A patch: rooms and doors are
+     unchanged; the Doors and Medbay rooms stand empty. -->
+<loadout id="cutpurse" ship="pirate-hijacker" name="Pirate Cutpurse" inherit="patch" class="Cutpurse" hull="9" value="130.46">
+	<reactor type="core" level="2"/>
+	<art hull="pirate-cutpurse-hull-2x.png" scale="0.5" center="240,352.5"/>
+	<system id="piloting" tile="-1,-6" level="1" wall="north"/>
+	<system id="sensors" removed="yes"/>
+	<system id="doors" removed="yes"/>
+	<system id="shields" tile="-2,-3" level="2" wall="west"/>
+	<system id="engines" tile="-1,6" level="1" wall="south"/>
+	<system id="weapons" tile="2,-3" level="1" wall="east"/>
+	<system id="medbay" removed="yes"/>
+	<system id="crew-teleporter" tile="2,2" level="1" wall="east"/>
+	<mount id="3" x="158" y="296" slide="left"/>
+	<weapons>
+		<weapon id="sporewing" mount="4"/>
+	</weapons>
+	<crew>
+		<member race="terran" count="3"/>
+	</crew>
+	<conduits>
+		(-1,-2,Remove) (-2,-2,N,S) (-2,-3,S,E) (1,-2,N,S,E)
+	</conduits>
+</loadout>

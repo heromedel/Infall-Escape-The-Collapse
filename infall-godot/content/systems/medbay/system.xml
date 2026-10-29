@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Prices in Mawjig from docs/reference/system-prices.md. "buy" installs level 1; "upgrades" are the step prices for each level after. -->
+<system id="medbay" name="Medbay" behaviour="medbay" max_level="3" draws_power="yes" manned="no" buy="12.11" upgrades="8.47,10.89" icon="medbay" hotkey="D" order="50">
+	<description>Heals crew members standing in its room.</description>
+	<level>Heals slowly</level>
+	<level>Heals quickly</level>
+	<level>Heals very quickly</level>
+</system>

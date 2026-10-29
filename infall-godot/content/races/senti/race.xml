@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Crew traits from docs/race-profiles.md point 9; power colour from docs/art/palette.md; crew price from system-prices.md. -->
+<race id="senti" name="Senti-GPH" singular="Senti" health="50" speed="1.0" xp_rate="0.1" repair="1.1" biomech_repair="0.6" melee="0.8" power_colour="#D2FF00" crew_price="15.73" portrait="senti" tech="mechanical" breathes="no" fire_immune="yes">
+	<description>Sentient Generative Pretrained Holograms: holographic people made of information, who preserve everything they meet.</description>
+	<traits>Half health. Don't breathe and can't burn. Learn very poorly on their own.</traits>
+	<names>Index, Ledger, Cache, Relay-9, Archive, Vector-2, Quorum, Codex, Parity, Lattice, Checksum, Kernel, Syntax, Echo-4</names>
+</race>

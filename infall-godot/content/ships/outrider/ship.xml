@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SC-1 Outrider, the GATOS starting scout (docs/ship-suggestions.md). Layout converted from Arty's accepted floor
+     plan; north is the bow and y grows toward the stern. Shields are given in bars: level 2 bars is one layer. -->
+<ship id="outrider" name="SC-1 Outrider" class="Scout Cruiser" race="terran" faction="gatos" style="terran" center="Tile" hull="30" value="181.42">
+	<reactor type="core" level="2"/>
+	<art hull="outrider-hull-2x.png" scale="0.5" center="230,362.5"/>
+	<description>A shuttle-shaped scout cruiser in white and pale grey with blue trim. It rides out ahead of the colony ship, an all-rounder with good sensors. Its power runs through a conduit wheel around an armoured core, so no single cut leaves a system dark.</description>
+
+	<room id="0" from="-1,-6" to="1,-5" name="Bridge"/>
+	<room id="1" from="-1,-4" to="1,-3" name="Sensors and doors"/>
+	<room id="2" from="-2,-2" to="-1,-1" name="Medbay"/>
+	<room id="3" from="0,-2" to="0,-1" name="Corridor"/>
+	<room id="4" from="1,-2" to="2,-1" name="Starboard forward"/>
+	<room id="5" from="-2,0" to="-2,1" name="Port airlock"/>
+	<room id="6" from="-1,0" to="1,2" name="Core room"/>
+	<room id="7" from="2,0" to="2,1" name="Starboard airlock"/>
+	<room id="8" from="-1,3" to="1,4" name="Aft hall"/>
+	<room id="9" from="-1,5" to="1,6" name="Engine room"/>
+
+	<system id="shields" tile="-1,-6" level="2" wall="north"/>
+	<system id="piloting" tile="0,-6" level="1" wall="north"/>
+	<system id="weapons" tile="1,-6" level="3" wall="north"/>
+	<system id="sensors" tile="-1,-4" level="2" wall="west"/>
+	<system id="doors" tile="-1,-3" level="1" wall="west"/>
+	<system id="medbay" tile="-2,-2" level="1" wall="west"/>
+	<system id="azc" tile="0,1" level="2" wall="none"/>
+	<system id="life-support" tile="-1,6" level="1" wall="south"/>
+	<system id="engines" tile="0,6" level="2" wall="south"/>
+
+	<door id="0" tile="0,-5" facing="south"/>
+	<door id="1" tile="0,-3" facing="south"/>
+	<door id="2" tile="1,-3" facing="south"/>
+	<door id="3" tile="-1,-2" facing="east"/>
+	<door id="4" tile="0,-1" facing="south"/>
+	<door id="5" tile="1,-1" facing="south"/>
+	<door id="6" tile="-1,0" facing="west"/>
+	<door id="7" tile="1,0" facing="east"/>
+	<door id="8" tile="0,2" facing="south"/>
+	<door id="9" tile="0,4" facing="south"/>
+	<door id="10" tile="-2,0" facing="west"/>
+	<door id="11" tile="-2,1" facing="west"/>
+	<door id="12" tile="2,0" facing="east"/>
+	<door id="13" tile="2,1" facing="east"/>
+
+	<!-- The conduit wheel: a rim through every system room and four spokes from the AZC (GDD 5H). -->
+	<conduits>
+		(-1,-6,S,E) (0,-6,E,W) (1,-6,S,W) (-1,-5,N,S,E) (0,-5,S,W) (1,-5,N,S)
+		(-1,-4,N,S) (0,-4,N,S) (1,-4,N,S) (-1,-3,N,S,W) (0,-3,N,S) (1,-3,N,S,E)
+		(-2,-2,S,E,W) (-1,-2,N,W) (0,-2,N,S) (1,-2,N,S,E) (-2,-1,N,S) (0,-1,N,S)
+		(1,-1,N,S) (-2,0,N,S) (0,0,N,S) (1,0,N,S) (-2,1,N,E) (-1,1,S,E,W)
+		(0,1) (1,1,N,S,W) (-1,2,N,S) (0,2,N,S) (1,2,N,S) (-1,3,N,S)
+		(0,3,N,S) (1,3,N,S) (-1,4,N,S) (0,4,N,S) (1,4,N,S) (-1,5,N,S)
+		(0,5,N,S) (1,5,N,S) (-1,6,N,E) (0,6,N,E,W) (1,6,N,W)
+	</conduits>
+
+	<!-- Mounts are art pixels on the 1x hull; odd port, even starboard. -->
+	<mount id="1" x="162" y="120" slide="left"/>
+	<mount id="2" x="298" y="120" slide="right"/>
+	<mount id="3" x="140" y="266" slide="left"/>
+	<mount id="4" x="320" y="266" slide="right"/>
+	<mount id="5" x="36" y="566" slide="left"/>
+	<mount id="6" x="424" y="566" slide="right"/>
+
+	<weapons>
+		<weapon id="gat-3-1" mount="3"/>
+		<weapon id="gat-m1" mount="4"/>
+	</weapons>
+	<crew>
+		<member race="terran" station="piloting"/>
+		<member race="terran" station="weapons"/>
+		<member race="terran" station="engines"/>
+	</crew>
+</ship>

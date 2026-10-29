@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Built from parts (GDD 8E): charge time and price from docs/reference/weapon-budget-table.md, cost per volley from mawjig-cost-table.md. -->
+<weapon id="coil" name="Coil" race="tentauri" tech="biomechanical" type="laser" power="1" shots="2" damage="1" charge="11.0" cost="0.04" price="7.61" colour="#ff7ad5" >
+	<description>Two quick shots from a tightened coil.</description>
+</weapon>

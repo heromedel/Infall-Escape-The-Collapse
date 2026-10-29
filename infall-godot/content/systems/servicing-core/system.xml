@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Prices in Mawjig from docs/reference/system-prices.md. "buy" installs level 1; "upgrades" are the step prices for each level after. -->
+<system id="servicing-core" name="Cybernetic Servicing Core" behaviour="medbay" max_level="3" draws_power="yes" manned="no" buy="12.11" upgrades="8.47,10.89" icon="servicing_core" hotkey="D" order="51">
+	<description>The Mecha's Medbay: it services Mecha crew in their suits and works as a Medbay for any other race standing in its room.</description>
+	<level>Services slowly</level>
+	<level>Services quickly</level>
+	<level>Services very quickly</level>
+</system>
