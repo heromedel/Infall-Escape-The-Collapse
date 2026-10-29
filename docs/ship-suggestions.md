@@ -6,7 +6,7 @@ points that differ are tagged where they appear.
 
 ## Tentauri "Burr", the tough little scout (2026-10-22)
 
-Name — Proposed (2026-10-29): Burr (Tentauri ship names, race profile point 1); earlier the Tough Little Scout.
+**Name — Proposed (2026-10-29):** Burr (Tentauri ship names, race profile point 1); earlier the Tough Little Scout.
 
 Default tag: **Proposed (2026-10-22)**, from heromedel's worked example; Claude's additions are tagged.
 
