@@ -36,16 +36,13 @@ func _roll_items(section_id: String, design: ShipDesign, count: int, rng: Random
 				items.append({"kind": "system", "type": type, "name": definition.name, "detail": definition.summary,
 					"price": float(definition.prices[0])})
 		SECTION_WEAPONS:
-			var kinds: Array = Catalog.weapon_kinds.keys()
-			for i in count:
-				var kind_id: String = kinds[rng.randi() % kinds.size()]
-				var types: Array = Catalog.weapon_kinds[kind_id].types.keys()
-				var weapon_type: int = types[rng.randi() % types.size()]
-				var kind := Catalog.weapon_kind(kind_id)
-				var profile := Catalog.weapon_profile(kind_id, weapon_type)
-				items.append({"kind": "weapon", "weapon_kind": kind_id, "weapon_type": weapon_type,
-					"name": "%s T%d" % [kind.name, weapon_type], "detail": CardLibrary.weapon_text(kind, profile),
-					"price": float(profile.price)})
+			var ids: Array = Catalog.weapons.keys()
+			_shuffle(ids, rng)
+			for weapon_id in ids.slice(0, count):
+				var weapon := Catalog.weapon(weapon_id)
+				items.append({"kind": "weapon", "weapon": weapon, "name": weapon.name,
+					"detail": "%d card%s in your deck. %s" % [weapon.speed, "" if weapon.speed == 1 else "s", Weapons.card_text(weapon)],
+					"price": float(weapon.price)})
 		SECTION_SUITS:
 			var suits: Array = Catalog.suit_kinds.keys()
 			_shuffle(suits, rng)
@@ -64,13 +61,13 @@ func _roll_items(section_id: String, design: ShipDesign, count: int, rng: Random
 	return items
 
 
-## Systems the design doesn't have yet that a station can install. Weapons and the Reactor are bought other ways,
-## and systems every ship comes with (price 0) aren't for sale.
+## Systems the design doesn't have yet that a station can install: a weapon system only if it has none (weapons
+## are bought on their own), never the Reactor, and not systems every ship comes with (price 0).
 static func _installable_systems(design: ShipDesign) -> Array:
 	var types: Array = []
 	for type in Catalog.systems:
 		var definition: Dictionary = Catalog.systems[type]
-		if type in ["weapon", "reactor"] or design.has_system(type) or definition.prices.is_empty() or float(definition.prices[0]) <= 0.0:
+		if type == "reactor" or design.has_system(type) or definition.prices.is_empty() or float(definition.prices[0]) <= 0.0:
 			continue
 		types.append(type)
 	return types

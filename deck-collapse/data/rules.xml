@@ -45,6 +45,11 @@
   <station gapMin="5" gapMax="10" sections="2" itemsPerSection="3" sellPercent="50" cargoSlots="4"
       maxWeaponSystems="4" crewSkillChance="30" systemRepair="0.48"/>
 
+  <!-- Battlesuits (heromedel 2026-10-29): strayHit is the % chance per bolt that a suit drifting beside the firing
+       weapon (or beside the target of its own side's missed bolt) is hit; guardianHit the % chance a guardian suit
+       hits an enemy suit each turn. A hit wounds the pilot. Ai-Generated-Proposal numbers. -->
+  <suits strayHit="15" guardianHit="50"/>
+
   <!-- Crew XP (GDD 7H, Decided): XP to reach Veteran, then more to reach Master, and XP per event. -->
   <xp veteran="100" master="150" dodge="6.7" shieldPopped="1.8" volley="1.5" repairPoint="5.6" combat="12.5"/>
 </rules>

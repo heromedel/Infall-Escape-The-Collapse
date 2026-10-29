@@ -16,9 +16,10 @@ func _ready() -> void:
 	var definitions: Array = []
 	for card_id in CardLibrary.FIXED_CARDS:
 		definitions.append(CardLibrary.definition({"id": card_id, "system": ""}, ship.systems))
-	for kind in Catalog.weapon_kinds:
-		ship.systems["w_" + kind] = {"name": Catalog.weapon_kinds[kind].name, "kind": kind, "weapon_type": 2, "type": "weapon"}
-		definitions.append(CardLibrary.definition({"id": "weapon", "system": "w_" + kind}, ship.systems))
+	var gallery_weapons := {"type": "weapon", "name": "Gallery", "weapons": Catalog.weapons.values().slice(0, 8)}
+	ship.systems["gallery"] = gallery_weapons
+	for slot in gallery_weapons.weapons.size():
+		definitions.append(CardLibrary.definition({"id": "weapon", "system": "gallery", "slot": slot}, ship.systems))
 	definitions.append(CardLibrary.definition({"id": "suit", "system": "dock"}, ship.systems))
 	var x := 12.0
 	var y := 12.0

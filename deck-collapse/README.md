@@ -26,8 +26,9 @@ battles (sometimes a station with a store) and on to a random enemy.
 
 ## Ship Designer
 
-Pick systems and levels, the reactor, weapons (kind, Type, name), EVB battlesuit types, hull, missiles and crew
-(name, starting station, and six skills). The deck the design builds is shown live, with the ship's worth in Mawjig:
+Pick systems and levels, the reactor, weapons, EVB battlesuit types, hull, missiles and crew (name, starting
+station, and six skills). A weapon system holds up to 4 weapons: pick premade ones or **Design a weapon…** from its
+parts (kind, power, shots, damage, speed, specials), seeing its price and cards as you go. The deck the design builds is shown live, with the ship's worth in Mawjig:
 systems, reactor bars, weapons and suits priced from `docs/reference`, plus crew and missiles.
 
 - Parts of a ship file the game doesn't support yet (unknown systems, floor plans and so on) are listed in the
@@ -50,6 +51,7 @@ systems, reactor bars, weapons and suits priced from `docs/reference`, plus crew
 | Auto Burn | On > Off |
 | Jump Escape | On > Off |
 | Multi Target Lasers | On > Off |
+| EVB Refund | No > Yes |
 | Crew Fights | On > Off |
 | Sensor Fog | On > Off |
 | Enemy Captain | Normal > Easy > Hard |
@@ -84,43 +86,58 @@ These are gaps in the GDD, filled with the genre in mind. Each one is a setting 
   system may draw a Repair. Crew evasion is 5/7/10%. Manned Sensors and Airlock Control work a level higher.
 - **Shields (heromedel):** may draw an extra Raise Shield each turn even unmanned, 10% per working level, plus the crew
   chance when manned.
-- **Repair (heromedel):** one Repair card fixes one thing, in order: fire, breach, then damage (a repair Veteran fixes 2
-  damage). The repairer stays in that system for the rest of the turn. No repairs in a system with enemies in it.
-  Other crew can still move once after acting, and man the system they move to. Extinguish Fire is gone.
-- **Air (heromedel):** every system shows an air bubble; crew in a system without air take a wound as their turn
-  ends. Breaches and venting take a system's air. Each Life Support level holds 1 pip of air; while it is broken or
-  offline each turn uses a pip, and once they're gone no system has air. Working Life Support refills a pip each
-  turn; Restore Environment (on a system) refills one and brings back a vented system's air, only while Life
-  Support works.
-- **Med Bay (heromedel):** TREAT on its tile costs 1 power; as the turn ends, everyone in it heals by its level.
-- **Beams (Infall docs: rooms swept):** a Cutter Beam sweeps 2–3 systems in a row (`weapons.xml` rooms), left or
-  right of the aimed one as the captain picks. Shield layers cut its damage and stay up, as in the genre.
-- **Multi Target Lasers (docs/ideas.md, heromedel):** On by default; each bolt of a multi-bolt laser can aim at its
-  own system.
+- **Weapons (Infall docs, heromedel):** each weapon is its own entry (`data/weapons.xml`): kind (laser, flak, ion,
+  missile, beam), power, shots, damage, speed, rooms swept for beams, and specials (multi-target, fire, breach,
+  pierce, chain, defensive, spores, stun, mind control). A weapon adds **speed** cards to the deck (36 ÷ its
+  weapon-budget-table cooldown by default; fixed once made). Price comes from `weapon-budget-table.md`, Mawjig per
+  card from `mawjig-cost-table.md`. A weapon system holds up to 4 weapons; its level is the power they can use a
+  turn. Genre-style ships carry genre-style weapons (single-target lasers, sweeping beams); Infall weapons come from
+  Ship Design's ships, plus a few new ones marked in the file.
+- **Repair (heromedel):** one Repair card fixes one thing, in order: fire, breach, spores, then 1 damage. Repair skill
+  only makes Repair cards come more often. The repairer stays in that system for the rest of the turn. No repairs
+  in a system with enemies in it. Other crew can still move once after acting, and man the system they move to.
+- **Air (heromedel):** each system holds up to Life Support's level in air pips (bubbles down its tile's left edge).
+  Working Life Support adds a pip to every unbreached system as your turn starts; while it is down, every system
+  loses one as your turn ends. Breached and vented systems have none. Crew in a system with no air take a wound as
+  the turn ends. Restore Environment adds a pip to every unbreached system, only while Life Support works. A ship
+  crewed only by races that don't breathe (Senti) needs no Life Support.
+- **Teleport (heromedel):** one card: click your Teleport Bay, then any system on either ship, and everyone of yours
+  in the bay goes there; or click another system, and your crew there come back to the bay.
+- **EVB battlesuits (heromedel):** a crew member in the dock flies out in the suit. It drifts beside a random enemy
+  system each turn and acts there (guardian and repair suits stay home). It has 3 turns of air and ammo; after that
+  it stops and its pilot takes a wound each turn until you click it and recall it (it docks as the turn ends).
+  Bolts fired from the weapon a suit is beside, and your own misses at the system it's beside, may hit it (15%);
+  guardian suits shoot enemy suits (50%). A launch pays Mawjig for every shot over its turns. Suits stop and come
+  home once the enemy is beaten. EVB Refund: Yes pays back unused turns.
+- **Beams (Infall docs: rooms swept):** a beam sweeps its rooms in a row, left or right of the aimed system as the
+  captain picks. Shield layers cut its damage and stay up, as in the genre.
+- **Multi Target Lasers (docs/ideas.md, heromedel):** a special of some lasers; with the setting On (default) each of
+  their shots can aim at its own system, Off they fire like ordinary lasers.
 - **Broken systems (heromedel):** a broken system's cards can't be drawn; they stay in the deck until it is repaired.
 - **Crew hits:** each point of damage to a system has a 25% chance to wound each crew member inside.
 - **Airlock Control (as Doors):** boarders need 0/0/1/2/3 turns to move from one system to another at Airlock Control
   level 0–4 (level 1 doesn't slow them). Teleporting and venting aren't slowed. Each level slows fire spreading.
-  Cycle Airlock costs 1 power and needs a working Airlock Control, not crew: the fire goes out, everyone inside
-  takes a wound, and the system has no air until its captain's next turn.
+  Airlock Control adds 3 Cycle Airlock cards, plus 1 per level above 1. Cycle Airlock costs 1 power and needs a
+  working Airlock Control, not crew: the fire goes out, the air is gone, and everyone inside takes a wound.
 - **Fire:** spreads to the neighbouring tile, burns out when its system is broken, may choke out once the air is gone.
 - **Mawjig (docs/reference):** a wreck pays 2.5% of its value (+30% for killing the crew); a jump costs 1.21; hull
   repair 0.48 a point; missiles 1.45; crew 10.89.
 - **Stations (heromedel):** the stop between battles has a station 1 in 5–10 stops (`rules.xml` station). A station
   always sells hull repair, missiles and suit parts, plus 2 random sections of 3 from systems, weapons, battlesuits
-  and crew (genre). Weapons and battlesuits sell for half (genre). A bought weapon comes with its own weapon system at
-  its Type, up to 4; otherwise it goes to the 4-slot cargo hold, which adds no cards and can be swapped at any stop.
+  and crew (genre). Weapons and battlesuits sell for half (genre). A bought weapon goes into a free weapon slot, or
+  the 4-slot cargo hold, which adds no cards and can be swapped at any stop.
   Upgrades raise systems and the reactor by the `systems.xml` step prices, with Undo until you leave. Store crew
   are named from `data/names/` (Federation-Home-Planet's name-list format): cat names with Cat Faces, human names
   with Plain Tokens. The run changes its own copy of the ship, never the saved design.
 - **Crew Fights:** boarders and defenders in the same system trade 1 wound each at the end of the turn.
 - **Crew act once per turn:** each crew member can do one crew card per turn.
+- **Med Bay (heromedel):** TREAT on its tile costs 1 power; as the turn ends, everyone in it heals by its level.
 - **Reactor hits:** ion and Hack on a Reactor knock one Power Cell loose (GDD C6) instead of shutting it down.
 - **Evasion:** 5% per working Engines level, plus a few percent for a pilot and an engineer by skill. It needs
   Piloting manned, or Auto Pilot at level 2 or 3 (GDD C12).
 - **Cloak** adds +40% evasion until your next turn (GDD C14).
 - **EVB battlesuits** replace drones (GDD C8, C9). Each dock holds one suit type from `data/suits.xml`: assault,
-  ion, cutter, guardian (shoots down torpedoes), repair and boarding.
+  laser, ion, cutter, guardian, repair and boarding.
 
 ## Ships
 
@@ -129,8 +146,13 @@ templates (hull 9–14), translated into Infall systems:
 
 - Reactor level = starting power.
 - A shield level = one layer.
-- Each weapon is its own weapon system, and its Type is its power cost.
+- One weapon system holding the ship's weapons, its level the power they had.
 - Airlock Control replaces doors and the EVB Dock replaces drones.
+
+The `infall-*.xml` ships are Ship Design's, one per race (`docs/deck-collapse-ships` on Cloud-C-ShipDesign,
+Ai-Generated-Proposal). The game reads their weapons as written; their power runs as a plain reactor for now (G2),
+and the parts it doesn't have yet (Supershield, growth organ, servicing core, AAA, floor plans …) are kept and
+listed with their gap numbers.
 
 They're in `data/ships/` and are meant to be edited.
 

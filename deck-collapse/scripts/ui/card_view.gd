@@ -127,7 +127,7 @@ func _draw() -> void:
 func _type_line() -> String:
 	var group_name: String = CardLibrary.GROUP_NAMES.get(definition.get("group", ""), "")
 	if definition.get("id", "") == "weapon":
-		return "%s · %s %d" % [Catalog.weapon_kind(definition.kind).name, "Type", definition.weapon_type]
+		return Weapons.summary(definition.weapon)
 	match definition.get("target", ""):
 		CardLibrary.TARGET_ENEMY_SYSTEM: return group_name + " · Target enemy"
 		CardLibrary.TARGET_OWN_SYSTEM: return group_name + " · Target yours"

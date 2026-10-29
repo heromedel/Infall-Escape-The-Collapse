@@ -11,8 +11,10 @@
   <system type="medBay" level="1"/>
   <system type="airlock" level="1"/>
   <system type="evb" id="dock" suit="assault" level="2"/>
-  <system type="weapon" id="ion" name="Heavy Ion" kind="ion" weaponType="2" level="2"/>
+  <system type="weapon" id="weapons" name="Weapons" level="2">
+    <weapon ref="twin-ion"/>
+  </system>
   <crew name="Ossa-3" station="piloting" piloting="1"/>
   <crew name="Ossa-7" station="dock"/>
-  <crew name="Ossa-9" station="ion"/>
+  <crew name="Ossa-9" station="weapons"/>
 </ship>

@@ -13,7 +13,8 @@ const SYSTEM_ART := {
 
 static func system_art(system: Dictionary) -> String:
 	if system.type == "weapon":
-		return system.get("kind", "laser")
+		var weapons: Array = system.get("weapons", [])
+		return Weapons.art(weapons[0]) if not weapons.is_empty() else "laser"
 	return SYSTEM_ART.get(system.type, "reactor")
 
 

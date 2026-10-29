@@ -11,10 +11,12 @@
   <system type="medBay" level="1"/>
   <system type="airlock" level="1"/>
   <system type="teleport" level="1"/>
-  <system type="weapon" id="spike" name="Spike Laser" kind="laser" weaponType="1" level="1"/>
-  <system type="weapon" id="charge" name="Breach Charge" kind="missile" weaponType="1" level="1"/>
+  <system type="weapon" id="weapons" name="Weapons" level="2">
+    <weapon ref="spark-laser"/>
+    <weapon ref="torpedo"/>
+  </system>
   <crew name="Krell" station="teleport" combat="2" repair="1"/>
   <crew name="Vash" station="teleport" combat="1"/>
   <crew name="Toor" station="piloting" piloting="1"/>
-  <crew name="Ima" station="spike"/>
+  <crew name="Ima" station="weapons"/>
 </ship>

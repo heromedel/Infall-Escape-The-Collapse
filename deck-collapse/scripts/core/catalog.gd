@@ -12,8 +12,10 @@ const USER_SHIPS_FOLDER := "user://ships"
 
 ## System definitions by type, in file order.
 var systems := {}
-## Weapon kind definitions by id, in file order. Each has "types": { level: {shots, damage} }.
-var weapon_kinds := {}
+## Weapon families (laser, flak, ion, missile, beam) by id: what each does with shields and crew.
+var weapon_families := {}
+## Premade weapons by id, in file order (see Weapons for a weapon's fields).
+var weapons := {}
 ## EVB battlesuit types by id, in file order.
 var suit_kinds := {}
 ## Rule numbers from rules.xml: element name -> its attributes (numbers and lists already converted).
@@ -26,7 +28,7 @@ var designs: Array[ShipDesign] = []
 
 func _ready() -> void:
 	load_systems()
-	load_weapon_kinds()
+	load_weapons()
 	load_suit_kinds()
 	load_rules()
 	load_names()
@@ -57,35 +59,26 @@ func load_systems() -> void:
 		}
 
 
-func load_weapon_kinds() -> void:
-	weapon_kinds.clear()
+func load_weapons() -> void:
+	weapon_families.clear()
+	weapons.clear()
 	var root := XmlTree.parse_file(WEAPONS_FILE)
-	for node in XmlTree.children_named(root, "kind"):
+	for node in XmlTree.children_named(root, "family"):
 		var attrs: Dictionary = node.attrs
-		var kind := {
+		weapon_families[attrs.id] = {
 			"id": attrs.id,
 			"name": attrs.get("name", attrs.id),
 			"shields": attrs.get("shields", "pop"),
 			"ion": attrs.get("ion", "false") == "true",
-			"chain": attrs.get("chain", "false") == "true",
 			"uses_missile": attrs.get("usesMissile", "false") == "true",
 			"never_misses": attrs.get("neverMisses", "false") == "true",
-			"multi_target": attrs.get("multiTarget", "false") == "true",
 			"wounds_crew": attrs.get("woundsCrew", "false") == "true",
-			"fire_chance": int(attrs.get("fireChance", 0)),
-			"breach_chance": int(attrs.get("breachChance", 0)),
+			"base": float(attrs.get("base", 0.02)),
 			"summary": XmlTree.clean_text(node),
-			"types": {},
 		}
-		for type_node in XmlTree.children_named(node, "type"):
-			kind.types[int(type_node.attrs.level)] = {
-				"shots": int(type_node.attrs.get("shots", 1)),
-				"damage": int(type_node.attrs.get("damage", 1)),
-				"rooms": int(type_node.attrs.get("rooms", 1)),
-				"price": float(type_node.attrs.get("price", 0)),
-				"ammo": float(type_node.attrs.get("ammo", 0)),
-			}
-		weapon_kinds[kind.id] = kind
+	for node in XmlTree.children_named(root, "weapon"):
+		var weapon := Weapons.from_attributes(node.attrs)
+		weapons[weapon.id] = weapon
 
 
 func load_suit_kinds() -> void:
@@ -105,9 +98,27 @@ func load_suit_kinds() -> void:
 			"ion": attrs.get("ion", "false") == "true",
 			"never_misses": attrs.get("neverMisses", "false") == "true",
 			"price": float(attrs.get("price", 0)),
-			"sortie": float(attrs.get("sortie", 0)),
+			"sortie": _suit_sortie(attrs),
 			"summary": XmlTree.clean_text(node),
 		}
+
+
+## Mawjig for one launch: every shot over all its turns (mawjig-cost-table.md), or the file's sortie.
+static func _suit_sortie(attrs: Dictionary) -> float:
+	var turns := int(attrs.get("turns", 3))
+	var per_turn := 0.0
+	match attrs.get("action", ""):
+		"shoot":
+			var damage := int(attrs.get("damage", 1))
+			var base := 0.03 if attrs.get("shields", "pop") == "reduce" else 0.02
+			var per_shot := base * (1.0 + 0.5 * maxi(0, damage - 1)) + (0.02 if attrs.get("ion", "false") == "true" else 0.0)
+			per_turn = per_shot * int(attrs.get("shots", 1))
+		"intercept":
+			per_turn = 0.02
+		_:
+			return float(attrs.get("sortie", 0))
+	var cents := roundi(per_turn * turns * 100.0)
+	return (cents + (1 if cents % 10 == 0 else 0)) / 100.0
 
 
 func load_rules() -> void:
@@ -174,14 +185,13 @@ func suit_kind(suit_id: String) -> Dictionary:
 	return suit_kinds.get(suit_id, suit_kinds.values()[0])
 
 
-func weapon_kind(kind_id: String) -> Dictionary:
-	return weapon_kinds.get(kind_id, weapon_kinds.values()[0])
+func weapon_family(family_id: String) -> Dictionary:
+	return weapon_families.get(family_id, weapon_families.values()[0])
 
 
-## What one card of this weapon does: { shots, damage }.
-func weapon_profile(kind_id: String, weapon_type: int) -> Dictionary:
-	var types: Dictionary = weapon_kind(kind_id).types
-	return types.get(weapon_type, types.values()[0])
+## A copy of a premade weapon, or of the first one if the id is unknown.
+func weapon(weapon_id: String) -> Dictionary:
+	return weapons.get(weapon_id, weapons.values()[0]).duplicate()
 
 
 func reload_designs() -> void:

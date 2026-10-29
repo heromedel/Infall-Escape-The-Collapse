@@ -11,8 +11,10 @@
   <system type="medBay" level="1"/>
   <system type="airlock" level="1"/>
   <system type="mindControl" level="1"/>
-  <system type="weapon" id="repeater" name="Chain Repeater" kind="chain" weaponType="2" level="2"/>
-  <system type="weapon" id="stunner" name="Ion Stunner" kind="ion" weaponType="1" level="1"/>
+  <system type="weapon" id="weapons" name="Weapons" level="3">
+    <weapon ref="chain-repeater"/>
+    <weapon ref="ion-burst"/>
+  </system>
   <crew name="Vael" station="piloting" piloting="1"/>
-  <crew name="Nix" station="repeater"/>
+  <crew name="Nix" station="weapons"/>
 </ship>

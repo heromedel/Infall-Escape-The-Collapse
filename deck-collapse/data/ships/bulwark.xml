@@ -10,9 +10,11 @@
   <system type="lifeSupport" level="1"/>
   <system type="medBay" level="1"/>
   <system type="airlock" level="1"/>
-  <system type="weapon" id="ram" name="Ram Torpedo" kind="missile" weaponType="1" level="1"/>
-  <system type="weapon" id="breaker" name="Hull Breaker" kind="missile" weaponType="2" level="2"/>
+  <system type="weapon" id="weapons" name="Weapons" level="4">
+    <weapon ref="torpedo"/>
+    <weapon ref="lance-torpedo"/>
+  </system>
   <crew name="Grath" station="piloting" piloting="1"/>
-  <crew name="Duun" station="breaker" weapons="1"/>
+  <crew name="Duun" station="weapons" weapons="1"/>
   <crew name="Hollis" station="shields"/>
 </ship>

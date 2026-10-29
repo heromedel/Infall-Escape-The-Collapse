@@ -14,21 +14,26 @@ const GROUP_TACTIC := "tactic"
 const TARGET_NONE := "none"
 const TARGET_ENEMY_SYSTEM := "enemy_system"
 const TARGET_OWN_SYSTEM := "own_system"
-## Pick a crew member, then a system for them (Teleport, Mind Control).
+## Pick a crew member, then a system for them (Mind Control).
 const TARGET_CREW_THEN_SYSTEM := "crew_then_system"
+## Teleport: your Teleport Bay then any system (send everyone in the bay there), or any other system (bring your
+## crew there back to the bay). Target: { system, ship } and, when sending, { to_system, to_ship }.
+const TARGET_TELEPORT := "teleport"
 
-## Crew card ids: every crew member adds one of each (the airlock one only with Airlock Control).
-const CREW_CARDS := ["repair", "airlock"]
+## Crew card ids: every crew member adds one of each.
+const CREW_CARDS := ["repair"]
+## Airlock Control adds this many Cycle Airlock cards at level 1, and one more per level above it.
+const AIRLOCK_BASE_CARDS := 3
 
 const FIXED_CARDS := {
 	"power": {"name": "Power Cell", "cost": 0, "group": GROUP_POWER, "target": TARGET_NONE, "art": "power",
 		"text": "Put into your power row. Spend it to play cards; it recharges each turn."},
 	"shield": {"name": "Raise Shield", "cost": 1, "group": GROUP_DEFENSE, "target": TARGET_NONE, "art": "shield",
 		"text": "Raise 1 shield layer. Its power stays under it until the layer is hit."},
-	"restore": {"name": "Restore Environment", "cost": 1, "group": GROUP_CREW, "target": TARGET_OWN_SYSTEM, "art": "restore",
-		"text": "Refill 1 pip of air, and bring the air back to a vented system. Needs a working Life Support."},
-	"teleport": {"name": "Teleport", "cost": 1, "group": GROUP_TACTIC, "target": TARGET_CREW_THEN_SYSTEM, "art": "teleport",
-		"text": "Send one of your crew to any system on either ship. Boarders damage their system and the hull each enemy turn."},
+	"restore": {"name": "Restore Environment", "cost": 1, "group": GROUP_CREW, "target": TARGET_NONE, "art": "restore",
+		"text": "Every system that isn't breached gains 1 pip of air. Needs a working Life Support."},
+	"teleport": {"name": "Teleport", "cost": 1, "group": GROUP_TACTIC, "target": TARGET_TELEPORT, "art": "teleport",
+		"text": "Click your Teleport Bay, then any system on either ship: everyone of yours in the bay goes there. Or click another system: your crew there come back to the bay."},
 	"cloak": {"name": "Cloak", "cost": 1, "group": GROUP_DEFENSE, "target": TARGET_NONE, "art": "cloak",
 		"text": "+40% evasion until your next turn."},
 	"mindControl": {"name": "Mind Control", "cost": 1, "group": GROUP_TACTIC, "target": TARGET_CREW_THEN_SYSTEM, "art": "mind",
@@ -38,9 +43,9 @@ const FIXED_CARDS := {
 	"battery": {"name": "Backup Cell", "cost": 0, "group": GROUP_POWER, "target": TARGET_NONE, "art": "battery",
 		"text": "+1 power this turn only."},
 	"repair": {"name": "Repair", "cost": 0, "group": GROUP_CREW, "target": TARGET_OWN_SYSTEM, "art": "repair",
-		"text": "Your crew here fix the worst problem first: they put out the fire, patch the breach, or repair 1 damage (a Veteran 2). They stay to finish the job. A Master has time for one more."},
+		"text": "Your crew here fix the worst problem first: the fire, then the breach, then the spores, then 1 damage. They stay until the turn ends."},
 	"airlock": {"name": "Cycle Airlock", "cost": 1, "group": GROUP_CREW, "target": TARGET_OWN_SYSTEM, "art": "airlock",
-		"text": "Needs a working Airlock Control. Vent a system: its fire goes out, everyone in it takes a wound, and it has no air until your next turn."},
+		"text": "Needs a working Airlock Control. Vent a system: its fire goes out, its air is gone, and everyone in it takes a wound."},
 }
 
 const GROUP_NAMES := {
@@ -57,60 +62,53 @@ static func definition(card: Dictionary, ship_systems: Dictionary) -> Dictionary
 		var fixed: Dictionary = FIXED_CARDS[card.id].duplicate()
 		fixed.id = card.id
 		return fixed
-	var system: Dictionary = ship_systems.get(card.system, {})
-	var kind := Catalog.weapon_kind(system.get("kind", "laser"))
-	var weapon_type: int = system.get("weapon_type", 1)
+	var weapon := weapon_of(card, ship_systems)
 	return {
-		"id": "weapon", "name": system.get("name", kind.name), "cost": weapon_type, "group": GROUP_WEAPON,
-		"target": TARGET_ENEMY_SYSTEM, "art": kind.id, "weapon_type": weapon_type, "kind": kind.id,
-		"mawjig": Ammo.weapon_mawjig(kind.id, weapon_type),
-		"text": weapon_text(kind, Catalog.weapon_profile(kind.id, weapon_type)),
+		"id": "weapon", "name": weapon.name, "cost": weapon.power, "group": GROUP_WEAPON,
+		"target": TARGET_ENEMY_SYSTEM, "art": Weapons.art(weapon), "weapon": weapon, "kind": weapon.kind,
+		"mawjig": Ammo.weapon_mawjig(weapon), "text": Weapons.card_text(weapon),
 	}
+
+
+## The weapon a weapon card fires: the one in its system's slot.
+static func weapon_of(card: Dictionary, ship_systems: Dictionary) -> Dictionary:
+	var weapons: Array = ship_systems.get(card.system, {}).get("weapons", [])
+	var slot := int(card.get("slot", 0))
+	return weapons[slot] if slot < weapons.size() else Catalog.weapon("")
 
 
 static func suit_definition(dock: Dictionary) -> Dictionary:
 	var suit := Catalog.suit_kind(dock.get("suit", "assault"))
-	var target := TARGET_ENEMY_SYSTEM if suit.action in ["shoot", "board"] else TARGET_NONE
 	return {
-		"id": "suit", "name": "Launch " + suit.name, "cost": suit.cost, "group": GROUP_TACTIC, "target": target,
+		"id": "suit", "name": "Launch " + suit.name, "cost": suit.cost, "group": GROUP_TACTIC, "target": TARGET_NONE,
 		"art": "suit", "suit": suit.id, "mawjig": Ammo.suit_mawjig(suit.id),
-		"text": "Needs crew in the dock. Out for %d turns. %s" % [suit.turns, suit.summary],
+		"text": "A crew member in the dock flies it out. %s It has %d turns of air, then its pilot suffocates: click it to recall." % [
+			suit.summary, suit.turns],
 	}
-
-
-static func weapon_text(kind: Dictionary, profile: Dictionary) -> String:
-	var lines: Array[String] = []
-	if int(profile.get("rooms", 1)) > 1:
-		lines.append("%d damage to each of %d systems in a row (aim left or right)." % [profile.damage, profile.rooms])
-		lines.append(kind.summary)
-		return " ".join(lines)
-	if kind.ion:
-		lines.append("%d ion charge%s." % [profile.shots, "" if profile.shots == 1 else "s"])
-	elif profile.shots > 1:
-		lines.append("%d bolts, %d damage each." % [profile.shots, profile.damage])
-	else:
-		lines.append("%d damage." % profile.damage)
-	lines.append(kind.summary)
-	if kind.get("multi_target", false) and profile.shots > 1 and Settings.value("multi_target_lasers") == "On":
-		lines.append("Each bolt can aim at a different system.")
-	return " ".join(lines)
 
 
 ## The cards a ship design puts into its deck, as (card id, system id) pairs before uids are given.
 static func deck_list(design: ShipDesign) -> Array:
 	var entries: Array = []
 	for system in design.systems:
+		if system.type == "weapon":
+			# Each weapon adds as many cards as its speed.
+			for slot in system.weapons.size():
+				for i in system.weapons[slot].speed:
+					entries.append({"id": "weapon", "system": system.id, "slot": slot})
+			continue
+		if system.type == "airlock":
+			for i in AIRLOCK_BASE_CARDS + system.level - 1:
+				entries.append({"id": "airlock", "system": system.id})
+			continue
 		var system_definition: Dictionary = Catalog.systems[system.type]
 		var card_id: String = system_definition.card
 		if card_id == "":
 			continue
 		for i in system.level * system_definition.cards_per_level:
 			entries.append({"id": card_id, "system": system.id})
-	var has_airlock := design.has_system("airlock")
 	for member in design.crew:
 		for card_id in CREW_CARDS:
-			if card_id == "airlock" and not has_airlock:
-				continue
 			entries.append({"id": card_id, "system": ""})
 	return entries
 
@@ -121,7 +119,7 @@ static func deck_summary(design: ShipDesign) -> Array:
 	var order: Array = []
 	for entry in deck_list(design):
 		# Weapon and suit cards differ by system; other cards are the same whichever system added them.
-		var key: String = entry.id + ("|" + entry.system if entry.id in ["weapon", "suit"] else "")
+		var key: String = entry.id + ("|%s|%d" % [entry.system, entry.get("slot", 0)] if entry.id in ["weapon", "suit"] else "")
 		if not counts.has(key):
 			counts[key] = {"entry": entry, "count": 0}
 			order.append(key)

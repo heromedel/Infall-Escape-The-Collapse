@@ -26,6 +26,10 @@ var _targeting_uid := -1
 var _targeting_crew := -1
 ## Systems already aimed at, one per bolt, while aiming a multi-target weapon.
 var _aimed_bolts: Array = []
+## Teleport: the bay has been clicked; the next system clicked is where its crew go.
+var _teleport_from_bay := false
+## A battlesuit of yours picked to recall: its index in your ship's suits, or -1.
+var _selected_suit := -1
 var _moving_crew := -1
 var _hover_info := ""
 
@@ -107,6 +111,7 @@ func _build() -> void:
 			tile.crew_clicked.connect(_on_crew_clicked)
 			tile.burn_clicked.connect(func(_t): _act(func(): return battle.burn_engines(PLAYER)))
 			tile.treat_clicked.connect(func(_t): _act(func(): return battle.treat(PLAYER)))
+			tile.suit_clicked.connect(_on_suit_clicked)
 			tile.hovered.connect(_on_tile_hovered)
 			tile.crew_hovered.connect(_on_crew_hovered)
 			_tile_rows[side].add_child(tile)
@@ -225,8 +230,11 @@ func _refresh() -> void:
 			tile.selected_crew_id = _moving_crew if _moving_crew >= 0 else _targeting_crew
 			tile.choosable_crew = []
 			tile.bolts_aimed = _aimed_bolts.count(system_id) if side != PLAYER else 0
+			tile.selected_suit = [PLAYER, _selected_suit] if _selected_suit >= 0 else []
 			for target in targets:
-				if target.has("system") and int(target.ship) == side and target.system == system_id:
+				var aim_system: String = target.get("to_system", target.get("system", "")) if _teleport_from_bay else target.get("system", "")
+				var aim_ship := int(target.get("to_ship", target.get("ship", -1))) if _teleport_from_bay else int(target.get("ship", -1))
+				if aim_system != "" and aim_ship == side and aim_system == system_id:
 					tile.highlight = "target"
 				elif not target.has("system") and target.has("crew"):
 					tile.choosable_crew.append(target.crew)
@@ -330,6 +338,10 @@ func _instruction() -> String:
 				return "[b]%s[/b]: click a glowing [color=#ffb347]enemy system[/color] to aim. Right-click to cancel." % definition.name
 			CardLibrary.TARGET_OWN_SYSTEM:
 				return "[b]%s[/b]: click one of [color=#ffb347]your systems[/color]. Right-click to cancel." % definition.name
+			CardLibrary.TARGET_TELEPORT:
+				if _teleport_from_bay:
+					return "[b]Teleport[/b]: click the system on either ship to send the bay's crew to. Right-click to cancel."
+				return "[b]Teleport[/b]: click your [color=#ffb347]Teleport Bay[/color] to send its crew, or a system with your crew in it to bring them back. Right-click to cancel."
 			CardLibrary.TARGET_CREW_THEN_SYSTEM:
 				if _targeting_crew < 0:
 					return "[b]%s[/b]: click a ringed [color=#ffb347]crew member[/color]. Right-click to cancel." % definition.name
@@ -368,6 +380,7 @@ func _on_card_clicked(card: Dictionary) -> void:
 	_targeting_uid = card.uid
 	_targeting_crew = -1
 	_aimed_bolts.clear()
+	_teleport_from_bay = false
 	if battle.valid_targets(PLAYER, card.uid).is_empty():
 		_targeting_uid = -1
 		_refuse("No valid target for %s right now." % definition.name, _hand.card_center(card.uid))
@@ -392,6 +405,18 @@ func _on_tile_clicked(tile: SystemTile) -> void:
 				_refuse("Pick a crew member first.", tile.global_position + tile.size / 2.0)
 				return
 			target.crew = _targeting_crew
+		if definition.target == CardLibrary.TARGET_TELEPORT:
+			var bay := battle.ships[PLAYER].first_system_of_type("teleport")
+			if _teleport_from_bay:
+				target = {"system": bay, "ship": PLAYER, "to_system": tile.system_id, "to_ship": tile.ship_side}
+			elif tile.ship_side == PLAYER and tile.system_id == bay:
+				if battle.teleport_senders(PLAYER).is_empty():
+					_refuse("Nobody of yours is free in the Teleport Bay.", tile.global_position + tile.size / 2.0)
+					return
+				_teleport_from_bay = true
+				Sounds.play("click")
+				_refresh()
+				return
 		var reason := battle.why_cannot_play(PLAYER, _targeting_uid, target)
 		if reason != "":
 			_refuse(reason, tile.global_position + tile.size / 2.0)
@@ -411,6 +436,7 @@ func _on_tile_clicked(tile: SystemTile) -> void:
 		_targeting_uid = -1
 		_targeting_crew = -1
 		_aimed_bolts.clear()
+		_teleport_from_bay = false
 		_act(func(): return battle.play_card(PLAYER, uid, target))
 		return
 	if _moving_crew >= 0:
@@ -470,6 +496,29 @@ func _on_crew_clicked(tile: SystemTile, crew_id: int) -> void:
 	_refresh()
 
 
+## Clicking one of your battlesuits picks it; clicking it again recalls it. Enemy suits just explain themselves.
+func _on_suit_clicked(tile: SystemTile, side: int, index: int) -> void:
+	var suit: Dictionary = battle.ships[side].suits[index]
+	var kind := Catalog.suit_kind(suit.kind)
+	var pilot := battle.crew_by_id(suit.pilot)
+	var pilot_name: String = pilot.get("name", "?")
+	if side != PLAYER or _busy or battle.active_side != PLAYER:
+		_hover_info = "[center][b]%s[/b], flown by %s. %d turn%s of air left.[/center]" % [kind.name, pilot_name,
+			suit.turns_left, "" if suit.turns_left == 1 else "s"]
+		_refresh_info()
+		return
+	if _selected_suit == index:
+		_selected_suit = -1
+		_act(func(): return battle.recall_suit(PLAYER, index))
+		return
+	_cancel_selection()
+	_selected_suit = index
+	Sounds.play("click")
+	_hover_info = "[center][b]%s[/b], flown by %s: %d turn%s of air left. [color=#ffb347]Click it again to recall it[/color] (it docks as your turn ends).[/center]" % [
+		kind.name, pilot_name, suit.turns_left, "" if suit.turns_left == 1 else "s"]
+	_refresh()
+
+
 func _on_card_hovered(card: Dictionary, is_hovered: bool) -> void:
 	if not is_hovered:
 		_hover_info = ""
@@ -498,7 +547,8 @@ func _on_tile_hovered(tile: SystemTile, is_hovered: bool) -> void:
 	lines.append(title)
 	var summary: String = definition.summary
 	if system.type == "weapon":
-		summary = CardLibrary.weapon_text(Catalog.weapon_kind(system.kind), Catalog.weapon_profile(system.kind, system.weapon_type))
+		summary = "Power %d a turn. " % system.level + " ".join(system.weapons.map(func(w): return "[b]%s[/b]: %s (%d card%s)." % [
+			w.name, Weapons.summary(w), w.speed, "" if w.speed == 1 else "s"]))
 	elif system.type == "evb":
 		summary = Catalog.suit_kind(system.suit).summary
 	lines.append(summary)
@@ -507,14 +557,13 @@ func _on_tile_hovered(tile: SystemTile, is_hovered: bool) -> void:
 		hazards.append("[color=#ff7a2a]On fire: 1 system damage and a wound to everyone inside each turn.[/color]")
 	if system.breached:
 		hazards.append("[color=#ff4d5e]Breached: no air; everyone inside takes a wound each turn. A Repair seals it.[/color]")
-	elif system.get("vented", false):
-		hazards.append("[color=#9fd8ff]Vented: no air until its captain's next turn (or Restore Environment).[/color]")
-	elif not battle.room_has_air(ship, tile.system_id):
+	if system.get("spored", false):
+		hazards.append("[color=#7dffb0]Spores: offline until a Repair clears them.[/color]")
+	if not system.breached and not battle.room_has_air(ship, tile.system_id):
 		hazards.append("[color=#9fd8ff]No air: everyone inside takes a wound each turn.[/color]")
 	if battle.has_hostiles(tile.ship_side, tile.system_id):
 		hazards.append("[color=#ff4d5e]Enemies inside: it can't be repaired.[/color]")
-	if system.type == "lifeSupport":
-		hazards.append("Air %d/%d." % [ship.air, ship.air_max])
+	hazards.append("Air %d/%d." % [system.air, ship.air_max])
 	var draw_chance := battle.bonus_draw_chance(ship, tile.system_id)
 	if draw_chance > 0.0:
 		hazards.append("Extra card chance %d%% a turn." % roundi(draw_chance))
@@ -578,6 +627,8 @@ func _cancel_selection() -> void:
 		_targeting_uid = -1
 		_targeting_crew = -1
 		_aimed_bolts.clear()
+		_teleport_from_bay = false
+		_selected_suit = -1
 		_moving_crew = -1
 		Sounds.play("click", -6.0)
 		_refresh()
@@ -671,6 +722,7 @@ func _run_ai_turns() -> void:
 			"burn": events = battle.burn_engines(side)
 			"reroute": events = battle.reroute_power(side)
 			"treat": events = battle.treat(side)
+			"recall": events = battle.recall_suit(side, action.suit)
 			"jump": events = battle.jump(side)
 			_: events = battle.end_turn(side)
 		if events.any(func(e): return e.type == "refused"):
@@ -800,11 +852,6 @@ func _play_event(event: Dictionary) -> void:
 		"burn":
 			Sounds.play("power", -4.0, 1.3)
 			_fx.float_text(_tile_center(event.side, event.system), "+5% EVASION", UiKit.ACCENT, 18)
-		"air":
-			var life_support := battle.ships[event.side].first_system_of_type("lifeSupport")
-			if life_support != "":
-				_fx.float_text(_tile_center(event.side, life_support) + Vector2(0, -40), "AIR %d/%d" % [event.air,
-					battle.ships[event.side].air_max], Color("#cfe2ff"), 18)
 		"jump_charge":
 			Sounds.play("power", 0.0, 0.7)
 			_fx.float_text(_shield_point(event.side), "JUMP %d/%d" % [event.charge, battle.jump_charges_needed()], UiKit.ACCENT, 24)
@@ -836,6 +883,32 @@ func _play_event(event: Dictionary) -> void:
 		"suit_launched":
 			Sounds.play("teleport", -3.0, 1.4)
 			_fx.sparkle(_tile_center(event.side, event.dock), UiKit.GROUP_COLORS.tactic, 20)
+		"suit_hit":
+			Sounds.play("wound")
+			var at := _tile_center(1 - int(event.side), event.target) if event.target != "" else _tile_center(event.side, event.dock)
+			_fx.explosion(at + Vector2(40, 0), UiKit.DANGER, 0.5)
+			_fx.float_text(at + Vector2(40, -20), "SUIT HIT", UiKit.DANGER, 18)
+		"suit_lost":
+			Sounds.play("explosion", -4.0, 1.2)
+			_refresh()
+		"suit_shot":
+			Sounds.play("laser", -4.0, 1.2)
+			if event.target != "":
+				await _fx.shoot(_tile_center(event.side, event.dock), _tile_center(1 - int(event.target_side), event.target) + Vector2(40, 0),
+					"laser", battle.ships[event.side].color, not event.hit)
+		"suit_recalling":
+			Sounds.play("click")
+			_fx.float_text(_tile_center(event.side, event.dock), "RECALLING", UiKit.ACCENT, 18)
+		"suit_returned":
+			_refresh()
+		"spored":
+			_fx.sparkle(_tile_center(event.side, event.system), Color("#7dffb0"), 22)
+			_fx.float_text(_tile_center(event.side, event.system), "SPORES", Color("#7dffb0"), 20)
+		"spores_cleared":
+			Sounds.play("repair")
+			_fx.float_text(_tile_center(event.side, event.system), "SPORES CLEARED", Color("#7dffb0"), 18)
+		"stunned":
+			_fx.float_text(_crew_point(event.crew), "STUNNED", UiKit.ION, 16)
 		"suit_bores":
 			_fx.sparkle(_tile_center(1 - event.side, event.target), UiKit.GROUP_COLORS.tactic, 10)
 		"crew_fight":
@@ -1203,7 +1276,7 @@ func _show_overlay(title: String, text: String, color: Color, can_resume: bool) 
 func _current_targets() -> Array:
 	if _targeting_uid < 0:
 		return []
-	return battle.valid_targets(PLAYER, _targeting_uid, _targeting_crew)
+	return battle.valid_targets(PLAYER, _targeting_uid, _targeting_crew, _teleport_from_bay)
 
 
 func _card_in_hand(uid: int) -> Dictionary:

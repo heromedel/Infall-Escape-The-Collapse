@@ -78,8 +78,8 @@
       prices="14.52,2.42,4.84">
     Holds one battlesuit type (data/suits.xml). Adds 1 Launch card per level; its level must be at least the suit's cost. Needs a crew member assigned to launch.
   </system>
-  <system type="weapon" name="Weapon System" card="weapon" cardsPerLevel="1" minLevel="1" maxLevel="4" mannable="true"
-      prices="4.84,9.68,6.05,8.47" crewDraw="10,15,20">
-    Adds 1 card of its weapon per level. Its level must be at least the weapon's Type. Crew here may draw an extra card of this weapon each turn.
+  <system type="weapon" name="Weapon System" card="weapon" cardsPerLevel="0" minLevel="1" maxLevel="8" mannable="true"
+      prices="4.84,9.68,6.05,8.47,12.11,18.15,21.78,24.21" crewDraw="10,15,20">
+    Holds up to 4 weapons. Its level is the power its weapons can use each turn. Each weapon adds cards by its speed. Crew here may draw an extra weapon card each turn.
   </system>
 </systems>

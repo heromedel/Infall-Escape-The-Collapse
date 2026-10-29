@@ -114,17 +114,19 @@ func _ship_column() -> Control:
 		Battle.WOUNDS_TO_DIE - int(m.wounds), Battle.WOUNDS_TO_DIE])
 	box.add_child(_wrapped("Crew: " + ", ".join(crew_names), 14, UiKit.MUTED))
 
-	box.add_child(UiKit.heading("WEAPONS  %d / %d" % [run.weapon_systems().size(), run.max_weapon_systems()], 16, UiKit.TEXT))
 	for system in run.weapon_systems():
-		var row := _row("%s · Lv %d" % [system.name, system.level], CardLibrary.weapon_text(
-			Catalog.weapon_kind(system.kind), Catalog.weapon_profile(system.kind, system.weapon_type)))
-		var reason := run.why_cannot_remove_weapon(system.id)
-		_add_action(row, "To cargo", func(): run.store_weapon(system.id),
-			reason if reason != "" else ("The cargo hold is full." if run.cargo_full() else ""))
-		if run.station:
-			_add_action(row, "Sell %s" % Money.text(RunState.sell_price(RunState._weapon_item(system))),
-				func(): run.sell_weapon_system(system.id), reason)
-		box.add_child(row)
+		box.add_child(UiKit.heading("%s  ·  power %d  ·  %d / %d slots" % [system.name.to_upper(), system.level,
+			system.weapons.size(), system.get("max_slots", Weapons.SLOTS_PER_SYSTEM)], 16, UiKit.TEXT))
+		var reason := run.why_cannot_remove_weapon()
+		for slot in system.weapons.size():
+			var weapon: Dictionary = system.weapons[slot]
+			var row := _row("%s · %s" % [weapon.name, Weapons.summary(weapon)], _weapon_detail(weapon))
+			_add_action(row, "To cargo", func(): run.store_weapon(system.id, slot),
+				reason if reason != "" else ("The cargo hold is full." if run.cargo_full() else ""))
+			if run.station:
+				_add_action(row, "Sell %s" % Money.text(RunState.sell_price({"kind": "weapon", "weapon": weapon})),
+					func(): run.sell_weapon(system.id, slot), reason)
+			box.add_child(row)
 
 	box.add_child(UiKit.heading("CARGO  %d / %d" % [run.cargo.size(), run.cargo_slots()], 16, UiKit.TEXT))
 	if run.cargo.is_empty():
@@ -142,8 +144,7 @@ func _ship_column() -> Control:
 
 func _cargo_detail(item: Dictionary) -> String:
 	if item.kind == "weapon":
-		return "Type %d. %s" % [item.weapon_type, CardLibrary.weapon_text(Catalog.weapon_kind(item.weapon_kind),
-			Catalog.weapon_profile(item.weapon_kind, item.weapon_type))]
+		return _weapon_detail(item.weapon)
 	var suit := Catalog.suit_kind(item.suit)
 	return "Needs an EVB Dock of level %d. %s" % [suit.cost, suit.summary]
 
@@ -179,8 +180,7 @@ func _station_column() -> Control:
 		for item in section.items:
 			var detail: String = item.detail
 			if item.kind == "weapon":
-				detail = "Type %d: comes with its own weapon system at level %d (cargo if you have %d). %s" % [
-					item.weapon_type, item.weapon_type, run.max_weapon_systems(), detail]
+				detail = "Goes into a free weapon slot, or cargo. " + detail
 			elif item.kind == "suit":
 				detail = "Goes to cargo; swap it into an EVB Dock from there. " + detail
 			elif item.kind == "system":
@@ -219,6 +219,11 @@ func _upgrade_column() -> Control:
 
 
 # ---------------------------------------------------------------- pieces
+
+func _weapon_detail(weapon: Dictionary) -> String:
+	return "%d power, %d card%s in the deck (speed). %s" % [weapon.power, weapon.speed, "" if weapon.speed == 1 else "s",
+		Weapons.card_text(weapon)]
+
 
 func _system_name(system: Dictionary) -> String:
 	if system.is_empty():

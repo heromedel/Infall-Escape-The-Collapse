@@ -57,8 +57,8 @@ func _add_card_fan() -> void:
 			design = d
 	var ship := ShipState.new(0, design)
 	var picks := [
-		{"id": "weapon", "system": "triad"}, {"id": "shield", "system": ""}, {"id": "power", "system": ""},
-		{"id": "weapon", "system": "lance"}, {"id": "repair", "system": ""},
+		{"id": "weapon", "system": "weapons", "slot": 0}, {"id": "shield", "system": ""}, {"id": "power", "system": ""},
+		{"id": "weapon", "system": "weapons", "slot": 1}, {"id": "repair", "system": ""},
 	]
 	var holder := Control.new()
 	holder.mouse_filter = Control.MOUSE_FILTER_IGNORE

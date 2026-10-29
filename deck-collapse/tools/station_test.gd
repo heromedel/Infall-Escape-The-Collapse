@@ -1,5 +1,6 @@
 ## Headless test of the stop between battles: buys everything a station offers, moves weapons and suits through
-## cargo, sells, upgrades and undoes, then starts a battle with the changed ship to check it still flies.
+## cargo, sells, upgrades and undoes, then starts a battle with the changed ship to check it still flies. Also
+## checks every built-in ship can fly and survives being saved and reloaded unchanged.
 ## Run: godot --headless --path . res://tools/station_test.tscn
 extends Node
 
@@ -18,6 +19,14 @@ func _ready() -> void:
 
 
 func _check(design: ShipDesign) -> void:
+	# Saving and reloading a design must keep it the same.
+	var copy := design.duplicate_design().duplicate_design()
+	if copy.to_xml() != design.duplicate_design().to_xml():
+		problems.append("%s changes when saved and reloaded." % design.name)
+	if copy.systems.filter(func(s): return s.type == "reactor").size() != 1:
+		problems.append("%s doesn't have exactly one reactor after reloading." % design.name)
+	if not design.problems().is_empty():
+		problems.append("%s can't fly: %s" % [design.name, ", ".join(design.problems())])
 	var enemy: ShipDesign = Catalog.designs[0]
 	var run := RunState.new(design)
 	run.record_battle(Battle.new(run.design, enemy, 0, 7))
@@ -37,18 +46,23 @@ func _check(design: ShipDesign) -> void:
 			if not targets.is_empty():
 				run.use_cargo(index, targets[0].target)
 		for system in run.weapon_systems():
-			run.store_weapon(system.id)
-			break
+			if not system.weapons.is_empty():
+				run.store_weapon(system.id, 0)
+				break
 		if not run.cargo.is_empty():
 			run.sell_cargo(0)
 	if run.design.problems().size() > 0:
 		problems.append("%s: %s" % [design.name, ", ".join(run.design.problems())])
 	if run.cargo.size() > run.cargo_slots():
 		problems.append("%s: cargo over %d" % [design.name, run.cargo_slots()])
-	if run.weapon_systems().size() > run.max_weapon_systems():
-		problems.append("%s: %d weapon systems" % [design.name, run.weapon_systems().size()])
+	for system in run.weapon_systems():
+		if system.weapons.size() > Weapons.SLOTS_PER_SYSTEM:
+			problems.append("%s: %d weapons in %s" % [design.name, system.weapons.size(), system.name])
+	var weapon_count := 0
+	for system in run.weapon_systems():
+		weapon_count += system.weapons.size()
 	print("%-18s systems %2d  weapons %d  cargo %d  crew %d  Mawjig %.2f" % [design.name, run.design.systems.size(),
-		run.weapon_systems().size(), run.cargo.size(), run.carry.crew.size(), run.mawjig])
+		weapon_count, run.cargo.size(), run.carry.crew.size(), run.mawjig])
 	var battle := Battle.new(run.design, enemy, 0, 9, run.battle_carry())
 	var ai := BattleAI.new("Normal", 3)
 	var steps := 0

@@ -91,7 +91,7 @@ func _draw() -> void:
 		tags.append("JUMP %d/%d" % [ship.jump_charge, battle.jump_charges_needed()])
 	if not ship.suits.is_empty():
 		tags.append("%d SUIT%s OUT" % [ship.suits.size(), "" if ship.suits.size() == 1 else "S"])
-	if Ammo.missiles_use_stock() and ship.weapon_systems().any(func(id): return Catalog.weapon_kind(ship.systems[id].kind).uses_missile):
+	if Ammo.missiles_use_stock() and ship.uses_missile_weapons():
 		tags.append("%d MISSILES" % ship.missiles)
 	if Ammo.suits_use_parts() and ship.has_type("evb"):
 		tags.append("%d SUIT PARTS" % ship.suit_parts)

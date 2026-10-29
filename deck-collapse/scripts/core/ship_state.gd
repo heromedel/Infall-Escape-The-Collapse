@@ -14,8 +14,9 @@ var suit_parts := 0
 ## Mawjig aboard, spent on shots and launches when the Ammo setting charges for them.
 var mawjig := 0.0
 
-## System id -> { id, type, name, level, damage, on_fire, breached, vented, disabled_turns, kind, weapon_type }.
-## "vented": its air was let out through the airlock; it has none until its captain's next turn.
+## System id -> { id, type, name, level, damage, on_fire, breached, air, spored, disabled_turns }, plus "weapons"
+## for a weapon system and "suit" for an EVB Dock.
+## "air": pips of air in the system, up to air_max. "spored": overgrown, offline until a Repair clears it.
 var systems := {}
 ## System ids in display order.
 var system_order: Array = []
@@ -39,14 +40,16 @@ var cloak_streak := 0
 var hacked_this_turn := false
 var hack_streak := 0
 var jump_charge := 0
-## Air reserve: one pip per Life Support level. Used up while Life Support is down (see Battle._use_air).
-var air := 0
+## Most air pips a system can hold: the Life Support level (see Battle._refill_air and _use_air).
 var air_max := 0
-## Battlesuits out: { kind (suit kind id), dock (system id), target, turns_left, ready }.
+## Battlesuits out: { kind (suit kind id), dock (system id), pilot (crew id), target (the enemy system it drifts
+## beside, or "" for suits that stay by their own ship), turns_left (air and ammo), recalling, ready }.
 var suits: Array = []
 ## Temporary copies added by chain weapons: system id -> count.
 var chain_copies := {}
 var cards_played_this_turn := 0
+## Torpedoes this ship's defensive weapons have shot down this enemy turn.
+var defenses_used := 0
 ## The Med Bay was powered this turn (Treat): it heals everyone in it as the turn ends.
 var treated := false
 
@@ -63,12 +66,11 @@ func _init(owner_side: int, ship_design: ShipDesign) -> void:
 	for system in ship_design.systems:
 		var state := {
 			"id": system.id, "type": system.type, "level": system.level, "damage": 0,
-			"on_fire": false, "breached": false, "vented": false, "disabled_turns": 0,
+			"on_fire": false, "breached": false, "air": 0, "spored": false, "disabled_turns": 0,
 			"name": system.get("name", Catalog.systems[system.type].name),
 		}
 		if system.type == "weapon":
-			state.kind = system.kind
-			state.weapon_type = system.weapon_type
+			state.weapons = system.weapons.duplicate(true)
 		elif system.type == "evb":
 			state.suit = system.suit
 			state.name = Catalog.suit_kind(system.suit).name + " Dock"
@@ -76,7 +78,8 @@ func _init(owner_side: int, ship_design: ShipDesign) -> void:
 		system_order.append(system.id)
 		if system.type == "lifeSupport":
 			air_max += system.level
-	air = air_max
+	for system_id in systems:
+		systems[system_id].air = air_max
 
 
 ## How much power this system's cards can use this turn: its level minus damage, or 0 while disabled.
@@ -84,7 +87,7 @@ func capacity(system_id: String) -> int:
 	if not systems.has(system_id):
 		return 0
 	var system: Dictionary = systems[system_id]
-	if system.disabled_turns > 0 and system.type != "reactor":
+	if system.disabled_turns > 0 and system.type != "reactor" or system.spored:
 		return 0
 	return maxi(0, system.level - system.damage)
 
@@ -134,6 +137,19 @@ func shield_capacity() -> int:
 
 func weapon_systems() -> Array:
 	return system_order.filter(func(system_id): return systems[system_id].type == "weapon")
+
+
+## How many working defensive weapons the ship has (each shoots down one torpedo per enemy turn).
+func defensive_weapons() -> int:
+	var count := 0
+	for system_id in weapon_systems():
+		if capacity(system_id) > 0:
+			count += systems[system_id].weapons.filter(func(w): return w.defensive).size()
+	return count
+
+
+func uses_missile_weapons() -> bool:
+	return weapon_systems().any(func(id): return systems[id].weapons.any(func(w): return w.uses_missile))
 
 
 func count_cards_everywhere(card_id: String) -> int:

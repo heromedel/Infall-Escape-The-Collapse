@@ -10,9 +10,11 @@
   <system type="lifeSupport" level="1"/>
   <system type="medBay" level="1"/>
   <system type="airlock" level="1"/>
-  <system type="weapon" id="triad" name="Triad Laser" kind="laser" weaponType="2" level="2"/>
-  <system type="weapon" id="lance" name="Lance Torpedo" kind="missile" weaponType="1" level="1"/>
+  <system type="weapon" id="weapons" name="Weapons" level="3">
+    <weapon ref="triad-laser"/>
+    <weapon ref="torpedo"/>
+  </system>
   <crew name="Mara Okafor" station="piloting" piloting="1"/>
-  <crew name="Jun Halvorsen" station="triad"/>
+  <crew name="Jun Halvorsen" station="weapons"/>
   <crew name="Teo Brandt" station="shields"/>
 </ship>

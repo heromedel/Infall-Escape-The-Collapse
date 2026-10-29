@@ -120,7 +120,7 @@ func _human_turn(screen: BattleScreen) -> void:
 	var piloting := battle.ships[0].first_system_of_type("piloting")
 	if battle.aftermath and battle.manning_skill(battle.ships[0], piloting) < 0:
 		for member in battle.living_crew_of(0):
-			if not member.moved and member.ship == 0 and member.controlled_by < 0:
+			if not member.moved and member.ship == 0 and member.controlled_by < 0 and member.system != "":
 				screen._on_crew_clicked(screen._tiles[0][member.system], member.id)
 				screen._on_tile_clicked(screen._tiles[0][piloting])
 				await _settle(screen)
@@ -128,7 +128,7 @@ func _human_turn(screen: BattleScreen) -> void:
 	# Move one crew member somewhere new, by clicking them and then a tile.
 	if not battle.over and not battle.aftermath:
 		for member in battle.living_crew_of(0):
-			if member.moved or member.ship != 0 or member.controlled_by >= 0:
+			if member.moved or member.ship != 0 or member.controlled_by >= 0 or member.system == "":
 				continue
 			var tile: SystemTile = screen._tiles[0][member.system]
 			screen._on_crew_clicked(tile, member.id)

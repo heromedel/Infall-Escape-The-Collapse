@@ -10,9 +10,11 @@
   <system type="medBay" level="1"/>
   <system type="airlock" level="1"/>
   <system type="cloak" level="1"/>
-  <system type="weapon" id="needle" name="Needle Beam" kind="beam" weaponType="1" level="1"/>
-  <system type="weapon" id="twin" name="Twin Laser" kind="laser" weaponType="1" level="2"/>
+  <system type="weapon" id="weapons" name="Weapons" level="2">
+    <weapon ref="cutter-beam"/>
+    <weapon ref="twin-laser"/>
+  </system>
   <crew name="Rhee" station="piloting" piloting="1"/>
   <crew name="Calder" station="engines"/>
-  <crew name="Moss" station="twin"/>
+  <crew name="Moss" station="weapons"/>
 </ship>

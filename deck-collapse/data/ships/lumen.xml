@@ -11,10 +11,12 @@
   <system type="lifeSupport" level="1"/>
   <system type="medBay" level="1"/>
   <system type="airlock" level="1"/>
-  <system type="weapon" id="halo" name="Halo Beam" kind="beam" weaponType="2" level="2"/>
-  <system type="weapon" id="spark" name="Spark Torpedo" kind="missile" weaponType="1" level="1"/>
+  <system type="weapon" id="weapons" name="Weapons" level="4">
+    <weapon ref="halberd-beam"/>
+    <weapon ref="torpedo"/>
+  </system>
   <crew name="Ael" station="piloting" piloting="1"/>
   <crew name="Iru" station="shields"/>
-  <crew name="Senn" station="halo"/>
+  <crew name="Senn" station="weapons"/>
   <crew name="Oto" station="engines"/>
 </ship>

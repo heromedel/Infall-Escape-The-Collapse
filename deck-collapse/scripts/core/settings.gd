@@ -23,6 +23,8 @@ const OPTIONS := {
 		"help": "On: once your Jig Drive is spooled you can jump away mid-battle. Off: you can only jump after the enemy is beaten."},
 	"multi_target_lasers": {"label": "Multi Target Lasers", "choices": ["On", "Off"],
 		"help": "On: each bolt of a multi-bolt laser can aim at a different system. Off: every bolt hits the same system, as in the genre."},
+	"evb_refund": {"label": "EVB Refund", "choices": ["No", "Yes"],
+		"help": "Yes: a battlesuit recalled early pays back the Mawjig for the turns it didn't use."},
 	"crew_fights": {"label": "Crew Fights", "choices": ["On", "Off"],
 		"help": "On: boarders and defenders in the same system trade wounds at the end of the turn."},
 	"station_frequency": {"label": "Station Frequency", "choices": ["1 in 5-10", "Every Stop"],

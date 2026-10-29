@@ -14,7 +14,7 @@ var battles_won := 0
 var battles_fought := 0
 ## The last battle's result, for the screen between battles: { outcome, reward, jump_cost, enemy }.
 var last_result := {}
-## Weapons and battlesuit types kept out of the deck: { kind: "weapon", weapon_kind, weapon_type, name } or
+## Weapons and battlesuit types kept out of the deck: { kind: "weapon", weapon (see Weapons), name } or
 ## { kind: "suit", suit, name }.
 var cargo: Array = []
 ## The station at this stop, or null when the stop has none.
@@ -82,14 +82,15 @@ static func snapshot(battle: Battle) -> Dictionary:
 	var systems := {}
 	for system_id in ship.systems:
 		var system: Dictionary = ship.systems[system_id]
-		systems[system_id] = {"damage": system.damage, "on_fire": system.on_fire, "breached": system.breached}
+		systems[system_id] = {"damage": system.damage, "on_fire": system.on_fire, "breached": system.breached,
+			"air": system.air}
 	var survivors: Array = []
 	for member in battle.living_crew_of(0):
 		if member.ship == 0:
 			survivors.append({"name": member.name, "skills": member.skills.duplicate(), "xp": member.xp.duplicate(),
 				"wounds": member.wounds, "system": member.system})
 	return {"hull": ship.hull, "hull_max": ship.hull_max, "missiles": ship.missiles, "suit_parts": ship.suit_parts,
-		"air": ship.air, "systems": systems, "crew": survivors}
+		"systems": systems, "crew": survivors}
 
 
 # ---------------------------------------------------------------- the stop between battles
@@ -118,7 +119,7 @@ func battle_carry() -> Dictionary:
 
 
 func uses_missiles() -> bool:
-	return Ammo.missiles_use_stock() and design.systems.any(func(s): return s.type == "weapon" and Catalog.weapon_kind(s.kind).uses_missile)
+	return Ammo.missiles_use_stock() and design.uses_missile_weapons()
 
 
 func uses_suit_parts() -> bool:
@@ -179,7 +180,7 @@ func repair_all_systems() -> void:
 	if not can_afford(price):
 		return
 	for system_id in carry.get("systems", {}):
-		carry.systems[system_id] = {"damage": 0, "on_fire": false, "breached": false}
+		carry.systems[system_id].merge({"damage": 0, "on_fire": false, "breached": false}, true)
 	_pay(price)
 
 
@@ -194,8 +195,8 @@ func why_cannot_buy(item: Dictionary) -> String:
 			if carry.get("crew", []).size() >= 8:
 				return "At most 8 crew."
 		"weapon":
-			if weapon_systems().size() >= max_weapon_systems() and cargo_full():
-				return "No room: all weapon systems and the cargo hold are full."
+			if free_weapon_system() == "" and cargo_full():
+				return "No room: every weapon slot and the cargo hold are full."
 		"suit":
 			if cargo_full():
 				return "The cargo hold is full."
@@ -205,8 +206,8 @@ func why_cannot_buy(item: Dictionary) -> String:
 	return ""
 
 
-## Buys an item: a system is installed at level 1, a weapon gets its own weapon system (or goes to cargo when
-## the ship has the most weapon systems it can), a battlesuit type goes to cargo, crew join at the first system.
+## Buys an item: a system is installed at level 1, a weapon goes into a free weapon slot (or cargo when there is
+## none), a battlesuit type goes to cargo, crew join at the first system.
 func buy(item: Dictionary) -> void:
 	if why_cannot_buy(item) != "":
 		return
@@ -215,13 +216,16 @@ func buy(item: Dictionary) -> void:
 			var system := {"id": design.unused_system_id(item.type), "type": item.type, "level": 1}
 			if item.type == "evb":
 				system.suit = _cheapest_suit()
+			elif item.type == "weapon":
+				system.name = "Weapons"
+				system.weapons = []
 			design.systems.append(system)
 		"weapon":
-			var weapon := {"kind": "weapon", "weapon_kind": item.weapon_kind, "weapon_type": item.weapon_type, "name": item.name}
-			if weapon_systems().size() < max_weapon_systems():
-				_install_weapon(weapon)
+			var system_id := free_weapon_system()
+			if system_id != "":
+				design.system_by_id(system_id).weapons.append(item.weapon.duplicate())
 			else:
-				cargo.append(weapon)
+				cargo.append({"kind": "weapon", "weapon": item.weapon.duplicate(), "name": item.name})
 		"suit":
 			cargo.append({"kind": "suit", "suit": item.suit, "name": item.name})
 		"crew":
@@ -236,7 +240,7 @@ func buy(item: Dictionary) -> void:
 static func sell_price(item: Dictionary) -> float:
 	var price := 0.0
 	match item.kind:
-		"weapon": price = float(Catalog.weapon_profile(item.weapon_kind, item.weapon_type).price)
+		"weapon": price = float(item.weapon.price)
 		"suit": price = float(Catalog.suit_kind(item.suit).price)
 	return Money.round_amount(price * float(Catalog.rule("station", "sellPercent", 50)) / 100.0)
 
@@ -246,13 +250,12 @@ func sell_cargo(index: int) -> void:
 	cargo.remove_at(index)
 
 
-## Sells an installed weapon with its weapon system. The ship must keep something to fight with.
-func sell_weapon_system(system_id: String) -> void:
-	if why_cannot_remove_weapon(system_id) != "":
+## Sells a fitted weapon from its slot. The ship must keep something to fight with.
+func sell_weapon(system_id: String, slot: int) -> void:
+	if why_cannot_remove_weapon() != "":
 		return
-	var weapon := _weapon_item(design.system_by_id(system_id))
-	_remove_system(system_id)
-	mawjig = Money.round_amount(mawjig + sell_price(weapon))
+	var weapon: Dictionary = design.system_by_id(system_id).weapons.pop_at(slot)
+	mawjig = Money.round_amount(mawjig + sell_price({"kind": "weapon", "weapon": weapon}))
 
 
 # ---------------------------------------------------------------- cargo
@@ -265,40 +268,47 @@ func cargo_full() -> bool:
 	return cargo.size() >= cargo_slots()
 
 
-func max_weapon_systems() -> int:
-	return int(Catalog.rule("station", "maxWeaponSystems", 4))
-
-
 func weapon_systems() -> Array:
 	return design.systems.filter(func(s): return s.type == "weapon")
 
 
-func why_cannot_remove_weapon(system_id: String) -> String:
-	var others := design.systems.filter(func(s): return s.id != system_id and (s.type == "weapon" or s.type == "evb"))
-	if others.is_empty():
-		return "Keep at least one weapon or EVB Dock."
+## The first weapon system with a free slot, or "".
+func free_weapon_system() -> String:
+	for system in weapon_systems():
+		if system.weapons.size() < system.get("max_slots", Weapons.SLOTS_PER_SYSTEM):
+			return system.id
 	return ""
 
 
-## Moves an installed weapon (and its weapon system) into the cargo hold.
-func store_weapon(system_id: String) -> void:
-	if cargo_full() or why_cannot_remove_weapon(system_id) != "":
+## A weapon can leave the ship only if another weapon or an EVB Dock remains to fight with.
+func why_cannot_remove_weapon() -> String:
+	var fitted := 0
+	for system in weapon_systems():
+		fitted += system.weapons.size()
+	if fitted <= 1 and not design.has_system("evb"):
+		return "Keep at least one weapon or an EVB Dock."
+	return ""
+
+
+## Moves a fitted weapon into the cargo hold.
+func store_weapon(system_id: String, slot: int) -> void:
+	if cargo_full() or why_cannot_remove_weapon() != "":
 		return
-	cargo.append(_weapon_item(design.system_by_id(system_id)))
-	_remove_system(system_id)
+	var weapon: Dictionary = design.system_by_id(system_id).weapons.pop_at(slot)
+	cargo.append({"kind": "weapon", "weapon": weapon, "name": weapon.name})
 
 
-## Where a cargo item can go: "" means a new weapon system; otherwise the id of a weapon system or EVB Dock it
-## would swap into. Returns [{ target, label }].
+## Where a cargo item can go, as [{ target, label }]. A weapon's target is a weapon system id (a free slot) or
+## "system id/slot" (swap with the weapon there); a battlesuit's is an EVB Dock id it would swap into.
 func cargo_targets(index: int) -> Array:
 	var item: Dictionary = cargo[index]
 	var targets: Array = []
 	if item.kind == "weapon":
-		if weapon_systems().size() < max_weapon_systems():
-			targets.append({"target": "", "label": "Install"})
 		for system in weapon_systems():
-			if system.level >= item.weapon_type:
-				targets.append({"target": system.id, "label": "Swap for %s" % system.name})
+			if system.weapons.size() < system.get("max_slots", Weapons.SLOTS_PER_SYSTEM):
+				targets.append({"target": system.id, "label": "Fit in %s" % system.name})
+			for slot in system.weapons.size():
+				targets.append({"target": "%s/%d" % [system.id, slot], "label": "Swap for %s" % system.weapons[slot].name})
 	else:
 		for system in design.systems:
 			if system.type == "evb" and system.level >= Catalog.suit_kind(item.suit).cost and system.suit != item.suit:
@@ -306,36 +316,22 @@ func cargo_targets(index: int) -> Array:
 	return targets
 
 
-## Takes a cargo item out of the hold: into a new weapon system, or swapped with what a system holds now.
+## Takes a cargo item out of the hold: into a free weapon slot, or swapped with what a slot or dock holds now.
 func use_cargo(index: int, target: String) -> void:
 	var item: Dictionary = cargo[index]
 	cargo.remove_at(index)
-	if target == "":
-		_install_weapon(item)
-		return
-	var system := design.system_by_id(target)
-	if item.kind == "weapon":
-		cargo.insert(index, _weapon_item(system))
-		system.kind = item.weapon_kind
-		system.weapon_type = item.weapon_type
-		system.name = item.name
-	else:
+	var parts := target.split("/")
+	var system := design.system_by_id(parts[0])
+	if item.kind == "suit":
 		cargo.insert(index, {"kind": "suit", "suit": system.suit, "name": Catalog.suit_kind(system.suit).name})
 		system.suit = item.suit
-
-
-func _install_weapon(weapon: Dictionary) -> void:
-	design.systems.append({"id": design.unused_system_id("weapon"), "type": "weapon", "level": weapon.weapon_type,
-		"kind": weapon.weapon_kind, "weapon_type": weapon.weapon_type, "name": weapon.name})
-
-
-static func _weapon_item(system: Dictionary) -> Dictionary:
-	return {"kind": "weapon", "weapon_kind": system.kind, "weapon_type": system.weapon_type, "name": system.name}
-
-
-func _remove_system(system_id: String) -> void:
-	design.systems.erase(design.system_by_id(system_id))
-	carry.get("systems", {}).erase(system_id)
+	elif parts.size() == 1:
+		system.weapons.append(item.weapon)
+	else:
+		var slot := int(parts[1])
+		var old: Dictionary = system.weapons[slot]
+		system.weapons[slot] = item.weapon
+		cargo.insert(index, {"kind": "weapon", "weapon": old, "name": old.name})
 
 
 static func _cheapest_suit() -> String:

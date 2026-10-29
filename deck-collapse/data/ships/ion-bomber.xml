@@ -9,10 +9,12 @@
   <system type="sensors" level="1"/>
   <system type="lifeSupport" level="1"/>
   <system type="medBay" level="1"/>
-  <system type="weapon" id="ion" name="Ion Blaster" kind="ion" weaponType="1" level="2"/>
-  <system type="weapon" id="laser" name="Bomber Laser" kind="laser" weaponType="1" level="1"/>
-  <system type="weapon" id="torpedo" name="Bomber Torpedo" kind="missile" weaponType="1" level="1"/>
+  <system type="weapon" id="weapons" name="Weapons" level="3">
+    <weapon ref="ion-burst"/>
+    <weapon ref="spark-laser"/>
+    <weapon ref="torpedo"/>
+  </system>
   <crew name="Unit K-2" station="piloting"/>
-  <crew name="Unit K-5" station="ion"/>
+  <crew name="Unit K-5" station="weapons"/>
   <crew name="Unit K-8" station="shields"/>
 </ship>

@@ -9,8 +9,10 @@
   <system type="sensors" level="1"/>
   <system type="lifeSupport" level="1"/>
   <system type="medBay" level="1"/>
-  <system type="weapon" id="burst" name="Patrol Laser" kind="laser" weaponType="2" level="2"/>
+  <system type="weapon" id="weapons" name="Weapons" level="2">
+    <weapon ref="burst-laser"/>
+  </system>
   <crew name="Sgt. Vohr" station="piloting" piloting="1"/>
-  <crew name="Pvt. Lenn" station="burst"/>
+  <crew name="Pvt. Lenn" station="weapons"/>
   <crew name="Pvt. Adair" station="shields"/>
 </ship>

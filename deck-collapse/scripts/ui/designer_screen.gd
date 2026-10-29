@@ -102,7 +102,7 @@ func _build_systems_column() -> Control:
 	spacer.custom_minimum_size = Vector2(0, 8)
 	box.add_child(spacer)
 	box.add_child(UiKit.heading("CREW", 20, UiKit.ACCENT))
-	box.add_child(_hint("Each crew member adds Repair and (with Airlock Control) Cycle Airlock. Their station is where they start."))
+	box.add_child(_hint("Each crew member adds a Repair card. Their station is where they start."))
 	_crew_box = UiKit.vbox(6)
 	box.add_child(_crew_box)
 	return panel
@@ -233,7 +233,7 @@ func _system_row(system: Dictionary, color: Color) -> Control:
 	icon.icon_size = 24
 	icon.custom_minimum_size = Vector2(30, 30)
 	row.add_child(icon)
-	var name_label := UiKit.label("Weapon" if system.type == "weapon" else definition.name, 16, UiKit.TEXT, UiKit.display_font)
+	var name_label := UiKit.label(definition.name, 16, UiKit.TEXT, UiKit.display_font)
 	name_label.custom_minimum_size = Vector2(118, 0)
 	name_label.clip_text = true
 	name_label.tooltip_text = definition.summary
@@ -245,21 +245,6 @@ func _system_row(system: Dictionary, color: Color) -> Control:
 		name_edit.custom_minimum_size = Vector2(120, 0)
 		name_edit.text_changed.connect(func(text): system.name = text; _refresh_summary())
 		row.add_child(name_edit)
-		var kinds := OptionButton.new()
-		var kind_ids := Catalog.weapon_kinds.keys()
-		for kind_id in kind_ids:
-			kinds.add_item(Catalog.weapon_kinds[kind_id].name)
-		kinds.select(kind_ids.find(system.kind))
-		kinds.tooltip_text = Catalog.weapon_kind(system.kind).summary
-		kinds.item_selected.connect(func(index):
-			system.kind = kind_ids[index]
-			_rebuild_systems()
-			_refresh_summary())
-		row.add_child(kinds)
-		kinds.custom_minimum_size = Vector2(130, 0)
-		row.add_child(_stepper("Type", system.weapon_type, 1, 3, func(v):
-			system.weapon_type = v
-			system.level = maxi(system.level, v)))
 	elif system.type == "evb":
 		var suits := OptionButton.new()
 		var suit_ids := Catalog.suit_kinds.keys()
@@ -281,7 +266,58 @@ func _system_row(system: Dictionary, color: Color) -> Control:
 		var remove := UiKit.button("✕", func(): _remove_system(system), 15)
 		remove.tooltip_text = "Remove this system"
 		row.add_child(remove)
+	if system.type == "weapon":
+		var box := UiKit.vbox(4)
+		panel.remove_child(row)
+		box.add_child(row)
+		_add_weapon_rows(box, system)
+		panel.add_child(box)
 	return panel
+
+
+## A weapon system's weapons (each adds speed cards), then ways to add one: premade, or designed.
+func _add_weapon_rows(box: VBoxContainer, system: Dictionary) -> void:
+	for weapon in system.weapons:
+		var row := UiKit.hbox(8)
+		var text := UiKit.label("   %s · %s · %d card%s · %s" % [weapon.name, Weapons.summary(weapon), weapon.speed,
+			"" if weapon.speed == 1 else "s", Money.text(weapon.price)], 13, UiKit.TEXT)
+		text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		text.clip_text = true
+		text.tooltip_text = Weapons.card_text(weapon)
+		text.mouse_filter = Control.MOUSE_FILTER_PASS
+		row.add_child(text)
+		if weapon.power > system.level:
+			row.add_child(UiKit.label("needs power %d" % weapon.power, 12, UiKit.ACCENT))
+		row.add_child(UiKit.button("✕", func():
+			system.weapons.erase(weapon)
+			_rebuild_systems()
+			_refresh_summary(), 13))
+		box.add_child(row)
+	var slots: int = system.get("max_slots", Weapons.SLOTS_PER_SYSTEM)
+	if system.weapons.size() >= slots:
+		box.add_child(UiKit.label("   All %d slots are full." % slots, 12, UiKit.MUTED))
+		return
+	var add_row := UiKit.hbox(8)
+	var picker := OptionButton.new()
+	picker.add_item("+ Add a weapon…")
+	var ids: Array = Catalog.weapons.keys()
+	for weapon_id in ids:
+		var weapon := Catalog.weapon(weapon_id)
+		picker.add_item("%s · %s · %s" % [weapon.name, Weapons.summary(weapon), Money.text(weapon.price)])
+	picker.item_selected.connect(func(index):
+		if index > 0:
+			system.weapons.append(Catalog.weapon(ids[index - 1]))
+			_rebuild_systems()
+			_refresh_summary())
+	add_row.add_child(picker)
+	add_row.add_child(UiKit.button("Design a weapon…", func():
+		var designer := WeaponDesigner.new()
+		designer.made.connect(func(weapon):
+			system.weapons.append(weapon)
+			_rebuild_systems()
+			_refresh_summary())
+		add_child(designer), 13))
+	box.add_child(add_row)
 
 
 func _rebuild_crew() -> void:
@@ -358,7 +394,8 @@ func _refresh_deck() -> void:
 	var ship := ShipState.new(0, design)
 	for entry in summary:
 		total += entry.count
-		var card := {"uid": 0, "id": entry.entry.id, "system": entry.entry.system, "temporary": false}
+		var card := {"uid": 0, "id": entry.entry.id, "system": entry.entry.system, "temporary": false,
+			"slot": int(entry.entry.get("slot", 0))}
 		var holder := Control.new()
 		holder.custom_minimum_size = CardView.BASE_SIZE * 0.5
 		var view := CardView.new().setup(card, CardLibrary.definition(card, ship.systems))
@@ -377,9 +414,8 @@ func _add_system(type: String) -> void:
 	var system := {"type": type, "level": definition.min_level, "id": type}
 	if type == "weapon":
 		system.id = _unique_id("weapon")
-		system.kind = "laser"
-		system.weapon_type = 1
-		system.name = "Pulse Laser"
+		system.name = "Weapons"
+		system.weapons = []
 	elif type == "evb":
 		system.id = _unique_id("dock")
 		system.suit = "assault"
@@ -417,7 +453,7 @@ func _new_blank() -> void:
 	for type in ["reactor", "shields", "engines", "piloting", "sensors", "lifeSupport", "medBay"]:
 		var level: int = 6 if type == "reactor" else 1
 		design.systems.append({"type": type, "level": level, "id": type})
-	design.systems.append({"type": "weapon", "id": "weapon-1", "kind": "laser", "weapon_type": 2, "level": 2, "name": "Pulse Laser"})
+	design.systems.append({"type": "weapon", "id": "weapon-1", "level": 2, "name": "Weapons", "weapons": [Catalog.weapon("burst-laser")]})
 	var pilot_skills := CrewSkills.empty()
 	pilot_skills.piloting = 1
 	design.crew = [{"name": "Ada", "skills": pilot_skills, "station": "piloting"},

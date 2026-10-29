@@ -1,60 +1,86 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Weapon kinds for Infall: Deck Collapse.
-  A weapon system holds one kind at one Type. The Type is the weapon card's power cost, and the system's level must
-  be at least the Type. Each <type> row says what one card of that Type does.
+  Weapons for Infall: Deck Collapse. Each weapon is its own entry, written the way the Infall docs and Ship Design's
+  ship files write them (deck-collapse-ships README, gap G4). A weapon system holds up to 4 weapons; its level is the
+  power its weapons may use each turn.
 
-  shields       pop     each shield layer stops one shot and drops
-                reduce  damage is lowered by the number of layers; layers stay up
-                ignore  passes through shields
-  ion           true: a hit disables the system for its captain's next turn instead of damaging it
-  chain         true: firing adds a temporary copy of the card to the deck (up to 3), gone when the battle ends
-  usesMissile   true: each card fired uses one missile from the ship's stock
-  neverMisses   true: evasion does not apply
-  woundsCrew    true: every crew member in the hit system takes a wound
-  fireChance / breachChance   percent per hit
-  multiTarget   true: with Multi Target Lasers On, each bolt can aim at a different system (docs/ideas.md, heromedel)
-  rooms         beams: how many systems in a row the beam sweeps, from the aimed one to the left or right
-                (the docs' rooms swept; Ai-Generated-Proposal counts until floor plans exist)
-  price         Mawjig to buy one weapon of this Type, from docs/reference/weapon-budget-table.md (power = Type)
-  ammo          Mawjig to fire one card of it, when Ammo is set to use Mawjig (docs/reference/mawjig-cost-table.md:
-                base per shot by type, half the base again per damage above 1, plus effects; per shot x shots)
+  <family>   what a kind of weapon does with shields and crew. kind="laser" on a weapon picks its family.
+    shields       pop     each shield layer stops one shot and drops
+                  reduce  damage is lowered by the number of layers; layers stay up (beams)
+                  ignore  passes through shields
+    usesMissile / woundsCrew / neverMisses / ion   as named
+    base          Mawjig per shot at 1 damage (mawjig-cost-table.md); beams per system swept
+
+  <weapon>   one weapon. Missing numbers default to 1.
+    kind          its family
+    power         the card's power cost
+    shots         shots per card
+    damage        damage per shot (0 for ion, spores, mind control)
+    speed         how many cards it adds to the deck (1 slow … 5 fast). Default: 36 ÷ its cooldown from
+                  weapon-budget-table.md, rounded. Once a weapon is made, its speed is fixed.
+    rooms         beams: systems swept in a row
+    fire, breach  percent chance per hit
+    pierce        shield layers it passes
+    multiTarget   true: with Multi Target Lasers On, each shot can aim at its own system (docs/ideas.md)
+    chain         true: firing adds a temporary copy of the card to the deck (up to 3)
+    defensive     true: once per enemy turn, while its system works, shoots down an incoming torpedo
+    spores        true: a hit system is overgrown, offline until a Repair clears it (GDD 8G; G5)
+    stun          true: crew in the hit system lose their next turn
+    mind          true: a hit takes over one crew member in the system for a turn
+    tech          its maker's tech (kept for later; GDD 8D)
+  Price and Mawjig per card come from weapon-budget-table.md and mawjig-cost-table.md (see Weapons.price, .ammo).
+
+  Sources: genre-style weapons follow the genre's numbers, renamed. Infall weapons are from Ship Design's ship files
+  (Cloud-C-ShipDesign, docs/deck-collapse-ships) and the cost tables' worked examples. Weapons marked
+  Ai-Generated-Proposal are new.
 -->
 <weapons>
-  <kind id="laser" name="Pulse Laser" shields="pop" multiTarget="true" fireChance="10" breachChance="0">
-    Fires quick bolts. Each shield layer stops one bolt.
-    <type level="1" shots="1" damage="1" price="6.87" ammo="0.02"/>
-    <type level="2" shots="3" damage="1" price="12.34" ammo="0.06"/>
-    <type level="3" shots="4" damage="1" price="16.83" ammo="0.08"/>
-  </kind>
-  <kind id="heavy" name="Heavy Laser" shields="pop" multiTarget="true" fireChance="25" breachChance="10">
-    One slow, hard bolt. A shield layer stops it.
-    <type level="1" shots="1" damage="2" price="7.81" ammo="0.04"/>
-    <type level="2" shots="1" damage="3" price="12.39" ammo="0.05"/>
-    <type level="3" shots="2" damage="2" price="16.94" ammo="0.08"/>
-  </kind>
-  <kind id="ion" name="Ion Burst" shields="pop" ion="true">
-    Pops shields. A hit system is disabled for a turn; a hit reactor loses a power card.
-    <type level="1" shots="1" damage="0" price="6.07" ammo="0.04"/>
-    <type level="2" shots="2" damage="0" price="10.49" ammo="0.08"/>
-    <type level="3" shots="3" damage="0" price="14.81" ammo="0.12"/>
-  </kind>
-  <kind id="missile" name="Torpedo" shields="ignore" usesMissile="true" woundsCrew="true" fireChance="20" breachChance="35">
-    Ignores shields. Uses a missile. The blast wounds crew in the system.
-    <type level="1" shots="1" damage="2" price="7.97" ammo="0.09"/>
-    <type level="2" shots="1" damage="3" price="12.54" ammo="0.12"/>
-    <type level="3" shots="1" damage="4" price="16.99" ammo="0.14"/>
-  </kind>
-  <kind id="beam" name="Cutter Beam" shields="reduce" neverMisses="true" woundsCrew="true" fireChance="30">
-    Never misses. Each shield layer cuts 1 damage; layers stay up. Burns crew in every system it sweeps.
-    <type level="1" shots="1" damage="1" rooms="2" price="6.75" ammo="0.04"/>
-    <type level="2" shots="1" damage="2" rooms="2" price="11.41" ammo="0.05"/>
-    <type level="3" shots="1" damage="3" rooms="3" price="15.94" ammo="0.07"/>
-  </kind>
-  <kind id="chain" name="Chain Repeater" shields="pop" chain="true" multiTarget="true" fireChance="10">
-    Each time it fires, a temporary copy joins your deck.
-    <type level="1" shots="1" damage="1" price="6.46" ammo="0.02"/>
-    <type level="2" shots="2" damage="1" price="11.22" ammo="0.04"/>
-    <type level="3" shots="2" damage="1" price="15.31" ammo="0.04"/>
-  </kind>
+  <family id="laser" name="Laser" shields="pop" base="0.02">Fast bolts. Each shield layer stops one.</family>
+  <family id="flak" name="Flak" shields="pop" base="0.01">A spread of debris. Each piece can stop on a shield layer.</family>
+  <family id="ion" name="Ion" shields="pop" ion="true" base="0.02">A hit system goes offline for a turn; a hit reactor loses a Power Cell.</family>
+  <family id="missile" name="Missile" shields="ignore" usesMissile="true" woundsCrew="true" base="0.05">Ignores shields. The blast wounds crew in the system.</family>
+  <family id="beam" name="Beam" shields="reduce" neverMisses="true" woundsCrew="true" base="0.03">Never misses. Each shield layer cuts 1 damage and stays up. Burns crew it sweeps.</family>
+
+  <!-- Genre-style weapons (built-in genre ships use these). Speeds follow the genre's cooldowns. -->
+  <weapon id="spark-laser" name="Spark Laser" kind="laser" power="1" shots="1" damage="1" speed="4" fire="10"/>
+  <weapon id="twin-laser" name="Twin Laser" kind="laser" power="1" shots="2" damage="1" speed="4"/>
+  <weapon id="burst-laser" name="Burst Laser" kind="laser" power="2" shots="2" damage="1" speed="3" fire="10"/>
+  <weapon id="triad-laser" name="Triad Laser" kind="laser" power="2" shots="3" damage="1" speed="3" fire="10"/>
+  <weapon id="storm-laser" name="Storm Laser" kind="laser" power="4" shots="5" damage="1" speed="2" fire="10"/>
+  <weapon id="heavy-laser" name="Heavy Laser" kind="laser" power="1" shots="1" damage="2" speed="4" fire="10" breach="10"/>
+  <weapon id="twin-heavy" name="Twin Heavy Laser" kind="laser" power="3" shots="2" damage="2" speed="3" fire="30" breach="20"/>
+  <weapon id="chain-repeater" name="Chain Repeater" kind="laser" power="2" shots="2" damage="1" speed="2" chain="true" fire="10"/>
+  <weapon id="ion-burst" name="Ion Burst" kind="ion" power="1" shots="1" damage="0" speed="4"/>
+  <weapon id="twin-ion" name="Twin Ion" kind="ion" power="2" shots="2" damage="0" speed="3"/>
+  <weapon id="ion-storm" name="Ion Storm" kind="ion" power="3" shots="3" damage="0" speed="3"/>
+  <weapon id="torpedo" name="Torpedo" kind="missile" power="1" shots="1" damage="2" speed="3" fire="20" breach="35"/>
+  <weapon id="lance-torpedo" name="Lance Torpedo" kind="missile" power="3" shots="1" damage="3" speed="3" fire="10" breach="20"/>
+  <weapon id="breach-torpedo" name="Breach Torpedo" kind="missile" power="3" shots="1" damage="4" speed="2" fire="30" breach="70"/>
+  <weapon id="cutter-beam" name="Cutter Beam" kind="beam" power="1" shots="1" damage="1" rooms="1" speed="3" fire="30"/>
+  <weapon id="pike-beam" name="Pike Beam" kind="beam" power="2" shots="1" damage="1" rooms="4" speed="2" fire="30"/>
+  <weapon id="cleaver-beam" name="Cleaver Beam" kind="beam" power="2" shots="1" damage="2" rooms="2" speed="2" fire="30"/>
+  <weapon id="halberd-beam" name="Halberd Beam" kind="beam" power="3" shots="1" damage="2" rooms="3" speed="2" fire="30"/>
+  <weapon id="glaive-beam" name="Glaive Beam" kind="beam" power="4" shots="1" damage="3" rooms="3" speed="1" fire="30"/>
+
+  <!-- Infall weapons, from Ship Design's ships and the docs. -->
+  <weapon id="gat-2-1-twinshot" name="Gat 2.1 Twinshot" kind="laser" power="1" shots="2" damage="1" tech="mechanical"/>
+  <weapon id="gat-3-1-triblast" name="Gat 3.1 Triblast" kind="laser" power="2" shots="3" damage="1" tech="mechanical"/>
+  <weapon id="gat-m1-pathfinder" name="Gat M1 Pathfinder" kind="missile" power="1" shots="1" damage="1" breach="10" tech="mechanical"/>
+  <weapon id="stinger" name="Stinger" kind="missile" power="1" shots="1" damage="1" tech="biomechanical"/>
+  <weapon id="firefly" name="Firefly" kind="beam" power="1" shots="1" damage="1" rooms="1" tech="biomechanical"/>
+  <weapon id="sporewing" name="Sporewing" kind="missile" power="1" shots="1" damage="0" spores="true" stun="true" tech="biomechanical"/>
+  <weapon id="tentauri-defense-laser" name="Tentauri Defense Laser" kind="laser" power="1" shots="1" damage="1" defensive="true" tech="biomechanical"/>
+  <weapon id="ds-st-hull-laser" name="DS-ST Hull Laser" kind="laser" power="2" shots="2" damage="1" breach="20" tech="mechanical"/>
+  <weapon id="bone-flak" name="Bone Flak" kind="flak" power="1" shots="2" damage="1" tech="biomechanical"/>
+  <weapon id="flesh-mortar" name="Flesh Mortar" kind="missile" power="1" shots="1" damage="1" tech="biomechanical"/>
+  <weapon id="hush" name="Hush" kind="ion" power="1" shots="1" damage="0"/>
+  <weapon id="senti-2b-01-v1" name="2B 01 V1" kind="beam" power="1" shots="1" damage="1" rooms="2" tech="digital"/>
+  <weapon id="senti-1b-02-v1" name="1B 02 V1" kind="beam" power="2" shots="1" damage="2" rooms="1" tech="digital"/>
+  <!-- After the cost table's worked example, a 3-shot multi-target breach laser (breach chance lowered). Ai-Generated-Proposal. -->
+  <weapon id="gat-3-2-scatter" name="Gat 3.2 Scatter" kind="laser" power="2" shots="3" damage="1" breach="30" multiTarget="true" tech="mechanical"/>
+  <!-- Ai-Generated-Proposal: heromedel's idea of an Azurethea laser that spores or takes over minds instead of damaging. -->
+  <weapon id="sporelash" name="Sporelash" kind="laser" power="1" shots="1" damage="0" spores="true" tech="biomechanical"/>
+  <weapon id="thrallwing" name="Thrallwing" kind="laser" power="2" shots="1" damage="0" mind="true" tech="biomechanical"/>
+  <!-- Ai-Generated-Proposal: a multi-target Terran laser for player ships. -->
+  <weapon id="gat-2-2-splitter" name="Gat 2.2 Splitter" kind="laser" power="1" shots="2" damage="1" multiTarget="true" tech="mechanical"/>
 </weapons>

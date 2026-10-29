@@ -24,10 +24,9 @@ static func suits_use_parts() -> bool:
 
 
 ## Mawjig to fire one card of this weapon (0 when this mode doesn't charge it).
-static func weapon_mawjig(kind_id: String, weapon_type: int) -> float:
-	var kind := Catalog.weapon_kind(kind_id)
-	if mode() == ALL_MAWJIG or mode() == MISSILES_MAWJIG and kind.uses_missile:
-		return float(Catalog.weapon_profile(kind_id, weapon_type).get("ammo", 0.0))
+static func weapon_mawjig(weapon: Dictionary) -> float:
+	if mode() == ALL_MAWJIG or mode() == MISSILES_MAWJIG and weapon.uses_missile:
+		return float(weapon.ammo)
 	return 0.0
 
 

@@ -133,7 +133,7 @@ func _system_line(system: Dictionary, color: Color) -> Control:
 	row.add_child(icon)
 	var text: String = Catalog.systems[system.type].name
 	if system.type == "weapon":
-		text = "%s · %s T%d" % [system.name, Catalog.weapon_kind(system.kind).name, system.weapon_type]
+		text = "%s · %s" % [system.name, ", ".join(system.weapons.map(func(w): return w.name))]
 	elif system.type == "evb":
 		text = "EVB Dock · " + Catalog.suit_kind(system.suit).name
 	row.add_child(UiKit.label("%s  [%d]" % [text, system.level], 14, UiKit.TEXT))
