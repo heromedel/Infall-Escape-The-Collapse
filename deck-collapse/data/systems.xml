@@ -44,15 +44,15 @@
   </system>
   <system type="lifeSupport" name="Life Support" card="restore" cardsPerLevel="1" minLevel="1" maxLevel="3" required="true" mannable="false"
       prices="0,6.05,12.11">
-    Adds 1 Restore Environment card per level. Each level holds 1 pip of air. While it is broken or offline, each turn uses a pip; once the air is gone, everyone aboard takes a wound each turn. Working, it refills a pip each turn.
+    Adds 1 Restore Environment card per level. Each level holds 1 pip of air. While it is broken or offline, each turn uses a pip; once the air is gone, no system has air. Working, it refills a pip each turn.
   </system>
   <system type="medBay" name="Med Bay" card="" cardsPerLevel="0" minLevel="1" maxLevel="3" mannable="false"
       prices="12.11,8.47,10.89">
-    Crew here heal 1 wound per working level at the start of your turn.
+    Press TREAT on its tile (1 power) to run it this turn: as your turn ends, everyone in it heals 1 wound per working level.
   </system>
   <system type="airlock" name="Airlock Control" card="" cardsPerLevel="0" minLevel="1" maxLevel="3" mannable="true"
       prices="14.52,8.47,12.11" mannedLevel="1">
-    Lets crew play Cycle Airlock. From level 2, each level makes boarders take a turn longer to move out of a system; each level slows fire spreading. Manned: +1 level.
+    Lets you play Cycle Airlock. From level 2, each level makes boarders take a turn longer to move out of a system; each level slows fire spreading. Manned: +1 level.
   </system>
   <system type="teleport" name="Teleport Bay" card="teleport" cardsPerLevel="1" minLevel="1" maxLevel="3" mannable="false"
       prices="21.78,7.26,14.52">

@@ -13,11 +13,11 @@ Bring the enemy's [b]hull to 0[/b] or kill their whole crew. A destroyed ship is
 Every system puts cards in your deck: the Reactor adds [b]Power Cells[/b], Shields add [b]Raise Shield[/b], each weapon system adds its weapon cards, Life Support adds [b]Restore Environment[/b], and so on. Every crew member adds [b]Repair[/b] and, with Airlock Control, [b]Cycle Airlock[/b]. Cards are never discarded: when a card leaves play it is shuffled back into your deck. A [b]broken[/b] system's cards can't be drawn until it is repaired.
 
 [color=#ffb347][b]A turn[/b][/color]
-1. Start of turn: cloaks and burns end, the Med Bay heals.
+1. Start of turn: cloaks and burns end, vented systems get their air back, Life Support refills a pip of air.
 2. Your power recharges.
 3. Draw a card, plus any extra cards your crew earn (below).
 4. Play cards and move crew, in any order.
-5. End of turn: unspent power burns in Engines (Auto Burn), the Jig Drive charges, fires burn and spread, breaches choke, air runs down if Life Support is down, boarders sabotage.
+5. End of turn: unspent power burns in Engines (Auto Burn), the Jig Drive charges, fires burn and spread, crew in systems without air take a wound, air runs down if Life Support is down, boarders sabotage, and a treated Med Bay heals.
 
 [color=#ffb347][b]Jumping[/b][/color]
 The Jig Drive needs {charges} charges. At the end of each turn you burn at least 1 power in Engines, it gains a charge per working Engines level, as long as Engines and Piloting work. Press [b]JUMP[/b] when it is full; jumping needs a pilot in Piloting, or Auto Pilot (level 2+).
@@ -32,7 +32,7 @@ A system's level is how much power its cards can use in one turn. Damage lowers 
 Engines dodge only when powered: burn power in them (click BURN on the Engines tile, or leave power unspent with Auto Burn). In Classic mode, 1 burn gives 5%, 2 give 10%, up to the Engines level. A pilot is needed to dodge at all (unless Auto Pilot), and a pilot and an engineer each add 5/7/10% while the engines run. Cloaking adds 40%.
 
 [color=#ffb347][b]Shooting[/b][/color]
-Play a weapon card, then click an enemy system. Each shot can miss against the target's evasion. A hit damages the system and the hull, and may wound the crew inside.
+Play a weapon card, then click an enemy system (clicking your own ship cancels). Each shot can miss against the target's evasion. A hit damages the system and the hull, and may wound the crew inside. With [b]Multi Target Lasers[/b] On, you click a system for each bolt of a multi-bolt laser. A [b]beam[/b] sweeps several systems in a row: click the left or right half of the first one to choose which way.
 • Lasers, chain repeaters and ion: each shield layer stops one shot and drops.
 • Torpedoes ignore shields but use missiles; beams never miss, but each shield layer cuts their damage.
 
@@ -49,11 +49,11 @@ Click one of your crew, then a green system, to move them (once per turn). Hover
 • A manned Sensors or Airlock Control works one level higher; its top level is only reached manned.
 • [b]Repair[/b] needs a free crew member in the system and no enemies in it. It fixes one thing: the fire first, then the breach, then damage. The repairer stays in that system for the rest of the turn. Each crew member does one Repair per turn (a repair Master can do two).
 • Crew who did anything else can still move once, and they man the system they move to.
-A crew member dies at their third wound; the Med Bay heals them.
+A crew member dies at their third wound. Press [b]TREAT[/b] on the Med Bay tile (1 power) and everyone in it heals by its level as your turn ends.
 [b]Experience:[/b] crew learn by doing. Dodging trains the pilot and engineer, popped shield layers the shield crew, firing the gunners, repairing the repair skill and fighting the combat skill. 100 XP makes a Veteran, 150 more a Master. Hover a crew member to see their progress.
 
 [color=#ffb347][b]Hazards[/b][/color]
-[b]Fire[/b] damages its system and wounds everyone inside at the end of your turn, and may spread to the system beside it. It burns out when its system is broken, and may choke out once the air is gone. [b]Breaches[/b] (a red hole on the tile) wound everyone inside each turn; a Repair seals them. [b]Air:[/b] each Life Support level holds 1 pip of air. While Life Support is broken or offline, each turn uses a pip; once the air is gone, all your crew take a wound each turn. Working Life Support refills a pip each turn, and [b]Restore Environment[/b] refills one any time. Venting a system through the airlock (no crew needed, just a working Airlock Control) puts out its fire but kills anyone in it.
+[b]Fire[/b] damages its system and wounds everyone inside at the end of your turn, and may spread to the system beside it. It burns out when its system is broken, and may choke out once the air is gone. [b]Air:[/b] every system has an air bubble on its tile; crew in a system without air take a wound as your turn ends. A [b]breach[/b] (a red hole) lets the air out until a Repair seals it. Life Support holds 1 pip of air per level (the bubbles on its tile). While it is broken or offline, each turn uses a pip; once they're gone, no system has air. Working Life Support refills a pip each turn; [b]Restore Environment[/b] refills one faster and brings the air back to a vented system, but needs Life Support working. [b]Cycle Airlock[/b] (1 power, a working Airlock Control) vents a system: its fire goes out, everyone in it takes a wound, and it has no air until your next turn.
 
 [color=#ffb347][b]Airlock Control[/b][/color]
 From level 2, each level makes enemy boarders take a turn longer to force their way from one system to another (teleporting isn't slowed). Each level makes fire spread less often.

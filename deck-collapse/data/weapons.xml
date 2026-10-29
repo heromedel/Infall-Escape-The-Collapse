@@ -13,18 +13,21 @@
   neverMisses   true: evasion does not apply
   woundsCrew    true: every crew member in the hit system takes a wound
   fireChance / breachChance   percent per hit
+  multiTarget   true: with Multi Target Lasers On, each bolt can aim at a different system (docs/ideas.md, heromedel)
+  rooms         beams: how many systems in a row the beam sweeps, from the aimed one to the left or right
+                (the docs' rooms swept; Ai-Generated-Proposal counts until floor plans exist)
   price         Mawjig to buy one weapon of this Type, from docs/reference/weapon-budget-table.md (power = Type)
   ammo          Mawjig to fire one card of it, when Ammo is set to use Mawjig (docs/reference/mawjig-cost-table.md:
                 base per shot by type, half the base again per damage above 1, plus effects; per shot x shots)
 -->
 <weapons>
-  <kind id="laser" name="Pulse Laser" shields="pop" fireChance="10" breachChance="0">
+  <kind id="laser" name="Pulse Laser" shields="pop" multiTarget="true" fireChance="10" breachChance="0">
     Fires quick bolts. Each shield layer stops one bolt.
     <type level="1" shots="1" damage="1" price="6.87" ammo="0.02"/>
     <type level="2" shots="3" damage="1" price="12.34" ammo="0.06"/>
     <type level="3" shots="4" damage="1" price="16.83" ammo="0.08"/>
   </kind>
-  <kind id="heavy" name="Heavy Laser" shields="pop" fireChance="25" breachChance="10">
+  <kind id="heavy" name="Heavy Laser" shields="pop" multiTarget="true" fireChance="25" breachChance="10">
     One slow, hard bolt. A shield layer stops it.
     <type level="1" shots="1" damage="2" price="7.81" ammo="0.04"/>
     <type level="2" shots="1" damage="3" price="12.39" ammo="0.05"/>
@@ -43,12 +46,12 @@
     <type level="3" shots="1" damage="4" price="16.99" ammo="0.14"/>
   </kind>
   <kind id="beam" name="Cutter Beam" shields="reduce" neverMisses="true" woundsCrew="true" fireChance="30">
-    Never misses. Each shield layer cuts 1 damage. Burns crew it sweeps.
-    <type level="1" shots="1" damage="1" price="6.75" ammo="0.04"/>
-    <type level="2" shots="1" damage="2" price="11.41" ammo="0.05"/>
-    <type level="3" shots="1" damage="3" price="15.94" ammo="0.07"/>
+    Never misses. Each shield layer cuts 1 damage; layers stay up. Burns crew in every system it sweeps.
+    <type level="1" shots="1" damage="1" rooms="2" price="6.75" ammo="0.04"/>
+    <type level="2" shots="1" damage="2" rooms="2" price="11.41" ammo="0.05"/>
+    <type level="3" shots="1" damage="3" rooms="3" price="15.94" ammo="0.07"/>
   </kind>
-  <kind id="chain" name="Chain Repeater" shields="pop" chain="true" fireChance="10">
+  <kind id="chain" name="Chain Repeater" shields="pop" chain="true" multiTarget="true" fireChance="10">
     Each time it fires, a temporary copy joins your deck.
     <type level="1" shots="1" damage="1" price="6.46" ammo="0.02"/>
     <type level="2" shots="2" damage="1" price="11.22" ammo="0.04"/>

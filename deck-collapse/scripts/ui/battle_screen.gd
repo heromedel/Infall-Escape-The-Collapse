@@ -24,6 +24,8 @@ var run: RunState
 var _busy := false
 var _targeting_uid := -1
 var _targeting_crew := -1
+## Systems already aimed at, one per bolt, while aiming a multi-target weapon.
+var _aimed_bolts: Array = []
 var _moving_crew := -1
 var _hover_info := ""
 
@@ -104,6 +106,7 @@ func _build() -> void:
 			tile.tile_clicked.connect(_on_tile_clicked)
 			tile.crew_clicked.connect(_on_crew_clicked)
 			tile.burn_clicked.connect(func(_t): _act(func(): return battle.burn_engines(PLAYER)))
+			tile.treat_clicked.connect(func(_t): _act(func(): return battle.treat(PLAYER)))
 			tile.hovered.connect(_on_tile_hovered)
 			tile.crew_hovered.connect(_on_crew_hovered)
 			_tile_rows[side].add_child(tile)
@@ -221,6 +224,7 @@ func _refresh() -> void:
 			tile.highlight = ""
 			tile.selected_crew_id = _moving_crew if _moving_crew >= 0 else _targeting_crew
 			tile.choosable_crew = []
+			tile.bolts_aimed = _aimed_bolts.count(system_id) if side != PLAYER else 0
 			for target in targets:
 				if target.has("system") and int(target.ship) == side and target.system == system_id:
 					tile.highlight = "target"
@@ -316,6 +320,13 @@ func _instruction() -> String:
 		var definition := battle.card_definition(battle.ships[PLAYER], card)
 		match definition.target:
 			CardLibrary.TARGET_ENEMY_SYSTEM:
+				var ship := battle.ships[PLAYER]
+				var bolts := battle.bolts_to_aim(ship, card)
+				if bolts > 1:
+					return "[b]%s[/b]: click an [color=#ffb347]enemy system[/color] for bolt %d of %d (the same one again is fine). Right-click to cancel." % [
+						definition.name, _aimed_bolts.size() + 1, bolts]
+				if battle.beam_rooms(ship, card) > 1:
+					return "[b]%s[/b]: click an [color=#ffb347]enemy system[/color]. Click its left or right half to sweep the beam that way. Right-click to cancel." % definition.name
 				return "[b]%s[/b]: click a glowing [color=#ffb347]enemy system[/color] to aim. Right-click to cancel." % definition.name
 			CardLibrary.TARGET_OWN_SYSTEM:
 				return "[b]%s[/b]: click one of [color=#ffb347]your systems[/color]. Right-click to cancel." % definition.name
@@ -356,6 +367,7 @@ func _on_card_clicked(card: Dictionary) -> void:
 		return
 	_targeting_uid = card.uid
 	_targeting_crew = -1
+	_aimed_bolts.clear()
 	if battle.valid_targets(PLAYER, card.uid).is_empty():
 		_targeting_uid = -1
 		_refuse("No valid target for %s right now." % definition.name, _hand.card_center(card.uid))
@@ -371,6 +383,10 @@ func _on_tile_clicked(tile: SystemTile) -> void:
 	if _targeting_uid >= 0:
 		var card := _card_in_hand(_targeting_uid)
 		var definition := battle.card_definition(battle.ships[PLAYER], card)
+		if definition.target == CardLibrary.TARGET_ENEMY_SYSTEM and tile.ship_side == PLAYER:
+			# Clicking your own ship while aiming at the enemy changes your mind.
+			_cancel_selection()
+			return
 		if definition.target == CardLibrary.TARGET_CREW_THEN_SYSTEM:
 			if _targeting_crew < 0:
 				_refuse("Pick a crew member first.", tile.global_position + tile.size / 2.0)
@@ -380,9 +396,21 @@ func _on_tile_clicked(tile: SystemTile) -> void:
 		if reason != "":
 			_refuse(reason, tile.global_position + tile.size / 2.0)
 			return
+		var ship := battle.ships[PLAYER]
+		if battle.beam_rooms(ship, card) > 1:
+			target.direction = _sweep_direction(tile)
+		var bolts := battle.bolts_to_aim(ship, card)
+		if bolts > 1:
+			_aimed_bolts.append(tile.system_id)
+			if _aimed_bolts.size() < bolts:
+				Sounds.play("click")
+				_refresh()
+				return
+			target.systems = _aimed_bolts.duplicate()
 		var uid := _targeting_uid
 		_targeting_uid = -1
 		_targeting_crew = -1
+		_aimed_bolts.clear()
 		_act(func(): return battle.play_card(PLAYER, uid, target))
 		return
 	if _moving_crew >= 0:
@@ -478,7 +506,11 @@ func _on_tile_hovered(tile: SystemTile, is_hovered: bool) -> void:
 	if system.on_fire:
 		hazards.append("[color=#ff7a2a]On fire: 1 system damage and a wound to everyone inside each turn.[/color]")
 	if system.breached:
-		hazards.append("[color=#ff4d5e]Breached: everyone inside takes a wound each turn. A Repair seals it.[/color]")
+		hazards.append("[color=#ff4d5e]Breached: no air; everyone inside takes a wound each turn. A Repair seals it.[/color]")
+	elif system.get("vented", false):
+		hazards.append("[color=#9fd8ff]Vented: no air until its captain's next turn (or Restore Environment).[/color]")
+	elif not battle.room_has_air(ship, tile.system_id):
+		hazards.append("[color=#9fd8ff]No air: everyone inside takes a wound each turn.[/color]")
 	if battle.has_hostiles(tile.ship_side, tile.system_id):
 		hazards.append("[color=#ff4d5e]Enemies inside: it can't be repaired.[/color]")
 	if system.type == "lifeSupport":
@@ -545,9 +577,35 @@ func _cancel_selection() -> void:
 	if _targeting_uid >= 0 or _moving_crew >= 0:
 		_targeting_uid = -1
 		_targeting_crew = -1
+		_aimed_bolts.clear()
 		_moving_crew = -1
 		Sounds.play("click", -6.0)
 		_refresh()
+
+
+## Which way a beam clicked on this tile sweeps: left half -1, right half 1.
+func _sweep_direction(tile: SystemTile) -> int:
+	return -1 if tile.get_local_mouse_position().x < SystemTile.TILE_SIZE.x / 2.0 else 1
+
+
+## While aiming a sweeping beam, the tiles under the mouse's sweep show the beam's path.
+func _process(_delta: float) -> void:
+	if battle == null:
+		return
+	var enemy_side := 1 - PLAYER
+	var swept: Array = []
+	var direction := 0
+	if _targeting_uid >= 0 and not _busy:
+		var card := _card_in_hand(_targeting_uid)
+		var rooms := battle.beam_rooms(battle.ships[PLAYER], card) if not card.is_empty() else 1
+		if rooms > 1:
+			for system_id in _tiles[enemy_side]:
+				var tile: SystemTile = _tiles[enemy_side][system_id]
+				if tile.get_global_rect().has_point(get_global_mouse_position()):
+					direction = _sweep_direction(tile)
+					swept = battle.sweep_systems(enemy_side, system_id, direction, rooms)
+	for system_id in _tiles[enemy_side]:
+		_tiles[enemy_side][system_id].sweep = direction if system_id in swept else 0
 
 
 func _refuse(reason: String, at: Vector2) -> void:
@@ -612,6 +670,7 @@ func _run_ai_turns() -> void:
 			"move": events = battle.move_crew(side, action.crew, action.system)
 			"burn": events = battle.burn_engines(side)
 			"reroute": events = battle.reroute_power(side)
+			"treat": events = battle.treat(side)
 			"jump": events = battle.jump(side)
 			_: events = battle.end_turn(side)
 		if events.any(func(e): return e.type == "refused"):
@@ -701,6 +760,13 @@ func _play_event(event: Dictionary) -> void:
 			_fx.sparkle(_tile_center(event.side, event.system), UiKit.GOOD)
 			_fx.float_text(_tile_center(event.side, event.system), "REPAIRED +%d" % event.amount, UiKit.GOOD, 18)
 			await _wait(0.2)
+		"treat":
+			Sounds.play("repair", -4.0, 1.2)
+			_fx.float_text(_tile_center(event.side, event.system), "TREATING", UiKit.GOOD, 18)
+		"aired":
+			Sounds.play("shield_up", -6.0, 1.3)
+			_fx.sparkle(_tile_center(event.side, event.system), Color("#9fd8ff"), 16)
+			_fx.float_text(_tile_center(event.side, event.system), "AIR BACK", Color("#9fd8ff"), 18)
 		"extinguished", "restored":
 			Sounds.play("repair")
 			_fx.sparkle(_tile_center(event.side, event.system), UiKit.SHIELD)

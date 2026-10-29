@@ -80,5 +80,6 @@ static func perform(battle: Battle, side: int, action: Dictionary) -> Array:
 		"move": return battle.move_crew(side, action.crew, action.system)
 		"burn": return battle.burn_engines(side)
 		"reroute": return battle.reroute_power(side)
+		"treat": return battle.treat(side)
 		"jump": return battle.jump(side)
 	return battle.end_turn(side)

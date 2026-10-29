@@ -49,6 +49,7 @@ systems, reactor bars, weapons and suits priced from `docs/reference`, plus crew
 | Engine Efficiency | Classic > Extra Burn |
 | Auto Burn | On > Off |
 | Jump Escape | On > Off |
+| Multi Target Lasers | On > Off |
 | Crew Fights | On > Off |
 | Sensor Fog | On > Off |
 | Enemy Captain | Normal > Easy > Hard |
@@ -86,14 +87,22 @@ These are gaps in the GDD, filled with the genre in mind. Each one is a setting 
 - **Repair (heromedel):** one Repair card fixes one thing, in order: fire, breach, then damage (a repair Veteran fixes 2
   damage). The repairer stays in that system for the rest of the turn. No repairs in a system with enemies in it.
   Other crew can still move once after acting, and man the system they move to. Extinguish Fire is gone.
-- **Air (heromedel):** each Life Support level holds 1 pip of air. While Life Support is broken or offline, each turn
-  uses a pip; once the air is gone, everyone aboard takes a wound each turn. Working Life Support refills a pip each
-  turn; Restore Environment refills one, even while Life Support is down.
+- **Air (heromedel):** every system shows an air bubble; crew in a system without air take a wound as their turn
+  ends. Breaches and venting take a system's air. Each Life Support level holds 1 pip of air; while it is broken or
+  offline each turn uses a pip, and once they're gone no system has air. Working Life Support refills a pip each
+  turn; Restore Environment (on a system) refills one and brings back a vented system's air, only while Life
+  Support works.
+- **Med Bay (heromedel):** TREAT on its tile costs 1 power; as the turn ends, everyone in it heals by its level.
+- **Beams (Infall docs: rooms swept):** a Cutter Beam sweeps 2–3 systems in a row (`weapons.xml` rooms), left or
+  right of the aimed one as the captain picks. Shield layers cut its damage and stay up, as in the genre.
+- **Multi Target Lasers (docs/ideas.md, heromedel):** On by default; each bolt of a multi-bolt laser can aim at its
+  own system.
 - **Broken systems (heromedel):** a broken system's cards can't be drawn; they stay in the deck until it is repaired.
 - **Crew hits:** each point of damage to a system has a 25% chance to wound each crew member inside.
 - **Airlock Control (as Doors):** boarders need 0/0/1/2/3 turns to move from one system to another at Airlock Control
   level 0–4 (level 1 doesn't slow them). Teleporting and venting aren't slowed. Each level slows fire spreading.
-  Cycle Airlock needs a working Airlock Control, not crew.
+  Cycle Airlock costs 1 power and needs a working Airlock Control, not crew: the fire goes out, everyone inside
+  takes a wound, and the system has no air until its captain's next turn.
 - **Fire:** spreads to the neighbouring tile, burns out when its system is broken, may choke out once the air is gone.
 - **Mawjig (docs/reference):** a wreck pays 2.5% of its value (+30% for killing the crew); a jump costs 1.21; hull
   repair 0.48 a point; missiles 1.45; crew 10.89.

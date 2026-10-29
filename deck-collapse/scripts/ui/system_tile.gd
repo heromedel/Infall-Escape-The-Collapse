@@ -9,6 +9,7 @@ const TOKEN_RADIUS := 12.0
 signal tile_clicked(tile: SystemTile)
 signal crew_clicked(tile: SystemTile, crew_id: int)
 signal burn_clicked(tile: SystemTile)
+signal treat_clicked(tile: SystemTile)
 signal hovered(tile: SystemTile, is_hovered: bool)
 ## The crew token under the mouse changed: a crew id, or -1 when the mouse left all tokens.
 signal crew_hovered(tile: SystemTile, crew_id: int)
@@ -31,6 +32,10 @@ var shown := {}
 var shown_crew := {}
 ## The ship is a wreck: drawn dark with its systems gone.
 var wrecked := false
+## While aiming a sweeping beam: -1 or 1 if the beam would cross this tile (the way it sweeps), else 0.
+var sweep := 0
+## While aiming a multi-target weapon: how many of its bolts are aimed here.
+var bolts_aimed := 0
 
 var _token_rects := {}
 var _burn_rect := Rect2()
@@ -85,7 +90,11 @@ func _gui_input(event: InputEvent) -> void:
 		return
 	accept_event()
 	if _burn_rect.has_point(event.position):
-		burn_clicked.emit(self)
+		var system_type: String = battle.ships[ship_side].systems[system_id].type
+		if system_type == "medBay":
+			treat_clicked.emit(self)
+		else:
+			burn_clicked.emit(self)
 		return
 	for crew_id in _token_rects:
 		if _token_rects[crew_id].has_point(event.position):
@@ -150,6 +159,7 @@ func _draw() -> void:
 		badge_x -= 18
 	if system.disabled_turns > 0:
 		IconPainter.paint(self, "power", Vector2(14, 32), 18, UiKit.ION)
+	_draw_air_pip(Vector2(14, 62), battle.room_has_air(ship, system_id) and not system.breached)
 
 	# Level pips: working, spent this turn, damaged.
 	var spent := int(ship.spent.get(system_id, 0)) if ship_side == battle.active_side else 0
@@ -173,14 +183,22 @@ func _draw() -> void:
 		else:
 			draw_rect(pip, ship_color)
 
-	# Status line
+	# Status line, or a button for Engines (BURN) and the Med Bay (TREAT).
 	var status := _status_text(ship, system)
 	_burn_rect = Rect2()
-	if system.type == "engines" and ship_side == viewer_side and battle.why_cannot_burn(viewer_side) == "":
+	var button_text := ""
+	if ship_side == viewer_side and system.type == "engines" and battle.why_cannot_burn(viewer_side) == "":
+		button_text = "BURN +5%"
+	elif ship_side == viewer_side and system.type == "medBay" and battle.why_cannot_treat(viewer_side) == "":
+		button_text = "TREAT +%d" % ship.capacity(system_id)
+	if button_text != "":
 		_burn_rect = Rect2(14, 92, TILE_SIZE.x - 28, 18)
 		var pulse := 0.5 + 0.5 * sin(_time * 4.0)
-		draw_style_box(UiKit.box(Color(UiKit.ACCENT, 0.15 + pulse * 0.1), UiKit.ACCENT, 9, 1), _burn_rect)
-		UiKit.draw_text_centered(self, UiKit.display_font, "BURN +5%", _burn_rect, 12, UiKit.ACCENT)
+		var button_color := UiKit.ACCENT if system.type == "engines" else UiKit.GOOD
+		draw_style_box(UiKit.box(Color(button_color, 0.15 + pulse * 0.1), button_color, 9, 1), _burn_rect)
+		UiKit.draw_text_centered(self, UiKit.display_font, button_text, _burn_rect, 12, button_color)
+	elif system.type == "lifeSupport" and system.disabled_turns == 0 and system.damage < system.level:
+		_draw_air_reserve(ship)
 	else:
 		UiKit.draw_text_centered(self, UiKit.body_font, status, Rect2(4, 92, TILE_SIZE.x - 8, 18),
 			UiKit.fit_size(UiKit.body_font, status, TILE_SIZE.x - 8, 12, 9), UiKit.MUTED if system.disabled_turns == 0 else UiKit.ION)
@@ -188,6 +206,16 @@ func _draw() -> void:
 	# Crew
 	draw_line(Vector2(10, 114), Vector2(TILE_SIZE.x - 10, 114), Color(UiKit.LINE, 0.8), 1.0)
 	_draw_crew(ship)
+	if sweep != 0:
+		# The beam's path: a bright line across the tile, arrowed the way it sweeps.
+		var y := 48.0
+		draw_line(Vector2(0, y), Vector2(TILE_SIZE.x, y), Color(UiKit.DANGER, 0.85), 4.0)
+		var tip := Vector2(TILE_SIZE.x - 8 if sweep > 0 else 8, y)
+		draw_colored_polygon(PackedVector2Array([tip + Vector2(6 * sweep, 0), tip + Vector2(-4 * sweep, -6), tip + Vector2(-4 * sweep, 6)]), UiKit.DANGER)
+	if bolts_aimed > 0:
+		var badge := Vector2(TILE_SIZE.x - 16, 62)
+		draw_circle(badge, 10, UiKit.ACCENT)
+		UiKit.draw_text_centered(self, UiKit.display_bold_font, "×%d" % bolts_aimed, Rect2(badge - Vector2(10, 9), Vector2(20, 18)), 12, Color("#1a1220"))
 	if wrecked:
 		# A destroyed ship: scorched over, its systems gone.
 		draw_style_box(UiKit.box(Color(0.12, 0.02, 0.03, 0.72), Color(UiKit.DANGER, 0.7), 10, 2), rect)
@@ -301,7 +329,7 @@ func _status_text(ship: ShipState, system: Dictionary) -> String:
 		"cloak":
 			return "CLOAKED" if ship.cloaked else "Level %d" % system.level
 		"medBay":
-			return "Heals %d" % ship.capacity(system.id)
+			return "Treated" if ship.treated else "Unpowered"
 		"lifeSupport":
 			return "Air %d/%d" % [ship.air, ship.air_max]
 		"sensors", "airlock":
@@ -320,6 +348,30 @@ func _draw_flame(at: Vector2) -> void:
 	draw_colored_polygon(outer, UiKit.FIRE)
 	var inner := PackedVector2Array([at + Vector2(0, -3 * flicker), at + Vector2(3, 3), at + Vector2(0, 6), at + Vector2(-3, 3)])
 	draw_colored_polygon(inner, Color("#ffe27a"))
+
+
+## A system's air: a pale bubble while it has air, a dark crossed-out one while it has none.
+func _draw_air_pip(at: Vector2, has_air: bool) -> void:
+	if has_air:
+		draw_circle(at, 5, Color("#9fd8ff", 0.85))
+		draw_circle(at + Vector2(-1.5, -1.5), 1.5, Color(1, 1, 1, 0.9))
+	else:
+		draw_circle(at, 5, Color("#0a0d16"))
+		draw_arc(at, 5, 0, TAU, 14, UiKit.DANGER, 1.5, true)
+		draw_line(at + Vector2(-3.5, 3.5), at + Vector2(3.5, -3.5), UiKit.DANGER, 1.5)
+
+
+## Life Support's air reserve: one bubble per pip, empty ones dark.
+func _draw_air_reserve(ship: ShipState) -> void:
+	var count := maxi(1, ship.air_max)
+	var start := TILE_SIZE.x / 2.0 - (count - 1) * 8.0
+	for i in count:
+		var at := Vector2(start + i * 16.0, 101)
+		if i < ship.air:
+			draw_circle(at, 6, Color("#9fd8ff", 0.9))
+			draw_circle(at + Vector2(-2, -2), 1.8, Color(1, 1, 1, 0.9))
+		else:
+			draw_arc(at, 6, 0, TAU, 16, Color("#9fd8ff", 0.5), 1.5, true)
 
 
 ## A hull breach: a jagged red hole open to space.

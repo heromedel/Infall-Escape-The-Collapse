@@ -14,7 +14,8 @@ var suit_parts := 0
 ## Mawjig aboard, spent on shots and launches when the Ammo setting charges for them.
 var mawjig := 0.0
 
-## System id -> { id, type, name, level, damage, on_fire, breached, disabled_turns, kind, weapon_type }
+## System id -> { id, type, name, level, damage, on_fire, breached, vented, disabled_turns, kind, weapon_type }.
+## "vented": its air was let out through the airlock; it has none until its captain's next turn.
 var systems := {}
 ## System ids in display order.
 var system_order: Array = []
@@ -46,6 +47,8 @@ var suits: Array = []
 ## Temporary copies added by chain weapons: system id -> count.
 var chain_copies := {}
 var cards_played_this_turn := 0
+## The Med Bay was powered this turn (Treat): it heals everyone in it as the turn ends.
+var treated := false
 
 
 func _init(owner_side: int, ship_design: ShipDesign) -> void:
@@ -60,7 +63,7 @@ func _init(owner_side: int, ship_design: ShipDesign) -> void:
 	for system in ship_design.systems:
 		var state := {
 			"id": system.id, "type": system.type, "level": system.level, "damage": 0,
-			"on_fire": false, "breached": false, "disabled_turns": 0,
+			"on_fire": false, "breached": false, "vented": false, "disabled_turns": 0,
 			"name": system.get("name", Catalog.systems[system.type].name),
 		}
 		if system.type == "weapon":

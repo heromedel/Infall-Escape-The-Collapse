@@ -4,7 +4,7 @@ class_name BattleAI
 extends RefCounted
 
 ## Action shapes: { kind: "play", uid, target } · { kind: "move", crew, system } · { kind: "burn" } ·
-## { kind: "reroute" } · { kind: "jump" } · { kind: "end" }
+## { kind: "reroute" } · { kind: "treat" } · { kind: "jump" } · { kind: "end" }
 var level := "Normal"
 var _rng := RandomNumberGenerator.new()
 
@@ -36,6 +36,7 @@ func next_action(battle: Battle, side: int) -> Dictionary:
 		func(): return _launch_suit(battle, side),
 		func(): return _teleport(battle, side),
 		func(): return _cloak(battle, side),
+		func(): return _treat(battle, side),
 		func(): return _jump(battle, side),
 		func(): return _burn(battle, side),
 	]
@@ -131,10 +132,13 @@ func _crew_cards(battle: Battle, side: int) -> Dictionary:
 		var action := _play_first(battle, side, "repair", {"system": system_id, "ship": side})
 		if not action.is_empty():
 			return action
-	if battle.life_support_down(ship):
-		var action := _play_first(battle, side, "restore", {})
-		if not action.is_empty():
-			return action
+	# Bring the air back where our crew are choking, or top up a low reserve.
+	for system_id in ship.system_order:
+		var ours_inside := battle.crew_in_system(side, system_id).any(func(m): return m.owner == side)
+		if ours_inside and ship.systems[system_id].vented or ship.air * 2 <= ship.air_max:
+			var action := _play_first(battle, side, "restore", {"system": system_id, "ship": side})
+			if not action.is_empty():
+				return action
 	# Vent a burning or boarded system nobody of ours is in.
 	for system_id in ship.system_order:
 		var system: Dictionary = ship.systems[system_id]
@@ -214,9 +218,28 @@ func _fire_weapons(battle: Battle, side: int) -> Dictionary:
 			if beam_damage <= enemy.shield_layers.size():
 				continue
 		for system_id in _weapon_targets(battle, side, kind):
-			if battle.why_cannot_play(side, card.uid, {"system": system_id, "ship": 1 - side}) == "":
-				return {"kind": "play", "uid": card.uid, "target": {"system": system_id, "ship": 1 - side}}
+			var target := {"system": system_id, "ship": 1 - side}
+			if battle.why_cannot_play(side, card.uid, target) == "":
+				var rooms := battle.beam_rooms(ship, card)
+				if rooms > 1:
+					target.direction = _best_sweep(battle, side, system_id, rooms)
+				return {"kind": "play", "uid": card.uid, "target": target}
 	return {}
+
+
+## The direction a beam aimed here should sweep: the way that crosses more working systems and enemy crew.
+func _best_sweep(battle: Battle, side: int, system_id: String, rooms: int) -> int:
+	var enemy := battle.ships[1 - side]
+	var best_direction := 1
+	var best_score := -1
+	for direction in [1, -1]:
+		var score := 0
+		for swept in battle.sweep_systems(1 - side, system_id, direction, rooms):
+			score += (0 if enemy.is_broken(swept) else 2) + battle.crew_in_system(1 - side, swept).size()
+		if score > best_score:
+			best_score = score
+			best_direction = direction
+	return best_direction
 
 
 func _weapon_targets(battle: Battle, side: int, kind: String) -> Array:
@@ -329,6 +352,17 @@ func _jump(battle: Battle, side: int) -> Dictionary:
 	var losing := float(ship.hull) / ship.hull_max < 0.3 and float(enemy.hull) / enemy.hull_max > 0.5
 	if losing and battle.why_cannot_jump(side) == "":
 		return {"kind": "jump"}
+	return {}
+
+
+## Power the Med Bay when wounded crew of ours are in it.
+func _treat(battle: Battle, side: int) -> Dictionary:
+	var ship := battle.ships[side]
+	var med_bay := ship.first_system_of_type("medBay")
+	if med_bay == "" or battle.why_cannot_treat(side) != "":
+		return {}
+	if battle.crew_in_system(side, med_bay).any(func(m): return m.owner == side and m.wounds > 0):
+		return {"kind": "treat"}
 	return {}
 
 

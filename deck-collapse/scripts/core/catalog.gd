@@ -70,6 +70,7 @@ func load_weapon_kinds() -> void:
 			"chain": attrs.get("chain", "false") == "true",
 			"uses_missile": attrs.get("usesMissile", "false") == "true",
 			"never_misses": attrs.get("neverMisses", "false") == "true",
+			"multi_target": attrs.get("multiTarget", "false") == "true",
 			"wounds_crew": attrs.get("woundsCrew", "false") == "true",
 			"fire_chance": int(attrs.get("fireChance", 0)),
 			"breach_chance": int(attrs.get("breachChance", 0)),
@@ -80,6 +81,7 @@ func load_weapon_kinds() -> void:
 			kind.types[int(type_node.attrs.level)] = {
 				"shots": int(type_node.attrs.get("shots", 1)),
 				"damage": int(type_node.attrs.get("damage", 1)),
+				"rooms": int(type_node.attrs.get("rooms", 1)),
 				"price": float(type_node.attrs.get("price", 0)),
 				"ammo": float(type_node.attrs.get("ammo", 0)),
 			}

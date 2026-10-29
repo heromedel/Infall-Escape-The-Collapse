@@ -25,8 +25,8 @@ const FIXED_CARDS := {
 		"text": "Put into your power row. Spend it to play cards; it recharges each turn."},
 	"shield": {"name": "Raise Shield", "cost": 1, "group": GROUP_DEFENSE, "target": TARGET_NONE, "art": "shield",
 		"text": "Raise 1 shield layer. Its power stays under it until the layer is hit."},
-	"restore": {"name": "Restore Environment", "cost": 1, "group": GROUP_CREW, "target": TARGET_NONE, "art": "restore",
-		"text": "Refill 1 pip of air from the reserve tanks. Works while Life Support is down."},
+	"restore": {"name": "Restore Environment", "cost": 1, "group": GROUP_CREW, "target": TARGET_OWN_SYSTEM, "art": "restore",
+		"text": "Refill 1 pip of air, and bring the air back to a vented system. Needs a working Life Support."},
 	"teleport": {"name": "Teleport", "cost": 1, "group": GROUP_TACTIC, "target": TARGET_CREW_THEN_SYSTEM, "art": "teleport",
 		"text": "Send one of your crew to any system on either ship. Boarders damage their system and the hull each enemy turn."},
 	"cloak": {"name": "Cloak", "cost": 1, "group": GROUP_DEFENSE, "target": TARGET_NONE, "art": "cloak",
@@ -38,9 +38,9 @@ const FIXED_CARDS := {
 	"battery": {"name": "Backup Cell", "cost": 0, "group": GROUP_POWER, "target": TARGET_NONE, "art": "battery",
 		"text": "+1 power this turn only."},
 	"repair": {"name": "Repair", "cost": 0, "group": GROUP_CREW, "target": TARGET_OWN_SYSTEM, "art": "repair",
-		"text": "A crew member in the system fixes one thing: its fire, else its breach, else 1 damage (a repair Veteran 2). They stay there this turn. A Master can act again."},
-	"airlock": {"name": "Cycle Airlock", "cost": 0, "group": GROUP_CREW, "target": TARGET_OWN_SYSTEM, "art": "airlock",
-		"text": "Needs a working Airlock Control. Vent a system: its fire goes out and everyone in it dies."},
+		"text": "Your crew here fix the worst problem first: they put out the fire, patch the breach, or repair 1 damage (a Veteran 2). They stay to finish the job. A Master has time for one more."},
+	"airlock": {"name": "Cycle Airlock", "cost": 1, "group": GROUP_CREW, "target": TARGET_OWN_SYSTEM, "art": "airlock",
+		"text": "Needs a working Airlock Control. Vent a system: its fire goes out, everyone in it takes a wound, and it has no air until your next turn."},
 }
 
 const GROUP_NAMES := {
@@ -80,6 +80,10 @@ static func suit_definition(dock: Dictionary) -> Dictionary:
 
 static func weapon_text(kind: Dictionary, profile: Dictionary) -> String:
 	var lines: Array[String] = []
+	if int(profile.get("rooms", 1)) > 1:
+		lines.append("%d damage to each of %d systems in a row (aim left or right)." % [profile.damage, profile.rooms])
+		lines.append(kind.summary)
+		return " ".join(lines)
 	if kind.ion:
 		lines.append("%d ion charge%s." % [profile.shots, "" if profile.shots == 1 else "s"])
 	elif profile.shots > 1:
@@ -87,6 +91,8 @@ static func weapon_text(kind: Dictionary, profile: Dictionary) -> String:
 	else:
 		lines.append("%d damage." % profile.damage)
 	lines.append(kind.summary)
+	if kind.get("multi_target", false) and profile.shots > 1 and Settings.value("multi_target_lasers") == "On":
+		lines.append("Each bolt can aim at a different system.")
 	return " ".join(lines)
 
 

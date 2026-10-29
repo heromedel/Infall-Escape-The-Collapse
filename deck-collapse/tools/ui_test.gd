@@ -51,7 +51,7 @@ func _play_battle(player: ShipDesign, enemy: ShipDesign) -> void:
 		var second := BattleScreen.new()
 		second.size = Vector2(1600, 900)
 		add_child(second)
-		second.start(player, enemy, run.battle_carry(), run)
+		second.start(run.design, enemy, run.battle_carry(), run)
 		await get_tree().process_frame
 		if second.battle.ships[0].hull != run.hull():
 			problems.append("Carried hull %d became %d." % [run.hull(), second.battle.ships[0].hull])
@@ -102,9 +102,12 @@ func _human_turn(screen: BattleScreen) -> void:
 							screen._cancel_selection()
 							continue
 						target = second[0]
-				if screen._targeting_uid == card.uid and target.has("system"):
+				# A multi-target weapon takes a click per bolt.
+				var clicks := 0
+				while screen._targeting_uid == card.uid and target.has("system") and clicks < 6:
 					screen._on_tile_clicked(screen._tiles[int(target.ship)][target.system])
 					await _settle(screen)
+					clicks += 1
 			if battle.ships[0].hand.size() < before:
 				played = true
 				break
