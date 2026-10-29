@@ -17,15 +17,17 @@
   sortie  Mawjig per turn out when Ammo uses Mawjig; a launch pays for every turn of air (mawjig-cost-table.md:
           laser 0.02, beam 0.03, ion +0.02 per shot; heromedel: a 2-shot suit out for 3 turns pays 6 shots).
           Worked out by the game for shooting and guardian suits; given here for the others (repair: 0.11 a repair).
+  launch  Mawjig paid once per launch on top (boarding: 0.08, missile 0.05 + breach 0.03, drone-prices.md; each
+          turn's hit inside 0.02, so 3 turns cost 0.14 in all; Infall: Eco 2026-10-29)
   price   Mawjig, priced as the matching drone (docs/reference/drone-prices.md, x 0.242)
 -->
 <suits>
   <suit id="assault" name="Assault Suit" cost="2" speed="2" action="shoot" shots="2" damage="1" shields="pop" price="12.11">
     Fires 2 bolts at the system it drifts beside as each of your turns ends.
   </suit>
-  <!-- The Mecha laser battlesuit (Ship Design's G17): one HalfMech in a suit with a 1-damage arm laser.
-       Priced as the assault suit's smaller sibling (Ai-Generated-Proposal). -->
-  <suit id="laser" name="Laser Suit" cost="1" speed="2" action="shoot" shots="1" damage="1" shields="pop" price="9.68">
+  <!-- The Mecha laser battlesuit (Ship Design's G17): one HalfMech in a suit with a 1-damage arm laser. Price from
+       Infall: Eco (2026-10-29): the 2-power laser suit's 12.11 less one power bar at 4.09 (weapon-budget-table.md). -->
+  <suit id="laser" name="Laser Suit" cost="1" speed="2" action="shoot" shots="1" damage="1" shields="pop" price="8.02">
     Fires a laser bolt at the system it drifts beside as each of your turns ends.
   </suit>
   <suit id="ion" name="Ion Suit" cost="2" speed="2" action="shoot" shots="1" damage="0" shields="pop" ion="true" price="12.11">
@@ -40,7 +42,7 @@
   <suit id="repair" name="Repair Suit" cost="1" speed="1" action="repair" sortie="0.11" price="7.26">
     Repairs 1 damage on your most damaged system as each of your turns ends.
   </suit>
-  <suit id="boarder" name="Boarding Suit" cost="3" speed="1" action="board" sortie="0.05" price="16.94">
+  <suit id="boarder" name="Boarding Suit" cost="3" speed="1" action="board" launch="0.08" sortie="0.02" price="16.94">
     Bores into the system it reaches. It and the hull take 1 damage as each enemy turn ends.
   </suit>
 </suits>

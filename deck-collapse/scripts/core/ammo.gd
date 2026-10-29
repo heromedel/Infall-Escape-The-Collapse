@@ -35,5 +35,6 @@ static func weapon_mawjig(weapon: Dictionary) -> float:
 static func suit_mawjig(suit_id: String, turns: int) -> float:
 	if mode() != ALL_MAWJIG:
 		return 0.0
-	var cents := roundi(float(Catalog.suit_kind(suit_id).get("sortie", 0.0)) * turns * 100.0)
+	var suit := Catalog.suit_kind(suit_id)
+	var cents := roundi((float(suit.get("launch", 0.0)) + float(suit.get("sortie", 0.0)) * turns) * 100.0)
 	return (cents + (1 if cents % 10 == 0 and cents > 0 else 0)) / 100.0

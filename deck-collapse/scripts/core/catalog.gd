@@ -108,6 +108,7 @@ func load_suit_kinds() -> void:
 			"never_misses": attrs.get("neverMisses", "false") == "true",
 			"price": float(attrs.get("price", 0)),
 			"sortie": _suit_sortie_per_turn(attrs),
+			"launch": float(attrs.get("launch", 0)),
 			"summary": XmlTree.clean_text(node),
 		}
 
