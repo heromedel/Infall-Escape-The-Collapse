@@ -48,11 +48,11 @@ particular can field many small, weak ships early.
 
 **Introducing tech by band (heromedel, 2026-10-29):**
 
-- **Likely:** things are introduced slowly. Any race may populate band 1, but its band 1 ships still show only
+- **Decided:** things are introduced slowly. Any race may populate band 1, but its band 1 ships still show only
   what a new player can read.
-- **Likely:** no non-vanilla weapon types in band 1 (types the genre doesn't have, e.g. multi-shot lasers), and more
-  complicated tech maybe even later. EVB suits are likely not met in band 1.
-- **Proposed:** EVB suits that cause fire, or anything complicated to deal with or new, maybe not even in band 2.
+- **Decided:** no non-vanilla weapon types in band 1 (types the genre doesn't have, e.g. multi-target lasers), and
+  more complicated tech maybe even later. EVB suits are not met in band 1.
+- **Likely:** EVB suits that cause fire, or anything complicated to deal with or new, maybe not even in band 2.
 
 **Proposed (2026-10-23):** a design can have several loadouts on purpose:
 
