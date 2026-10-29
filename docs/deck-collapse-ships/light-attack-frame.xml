@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mecha Light Attack Frame, Hull Laser loadout (ship-suggestions.md, 2026-10-23). Bands 1-3, Border clusters of a
+     doing-fine Mecha region; band 3 fields it as half of the Light Attack Pair. Gap references are listed in README.md. -->
+<ship name="Light Attack Frame" race="Mecha" faction="Mecha" color="#AA28EB" hull="7" missiles="0">
+  <note>No reactor: every system carries its own power. The pod's laser needs a HalfMech integrated with it, so stun or kill that crew member and the laser goes quiet.</note>
+  <power kind="self"/>                                              <!-- G2: each system's own power, below -->
+  <system type="piloting" level="1"/>
+  <system type="airlock" level="1"/>
+  <system type="shields" level="1" ownPower="2"/>
+  <system type="engines" level="1" ownPower="1"/>
+  <system type="lifeSupport" level="1" ownPower="1"/>
+  <system type="servicingCore" level="1" ownPower="1"/>             <!-- G14: the Mecha Medbay -->
+  <system type="weapon" id="pod" name="Weapon Pod" level="2" ownPower="1" maxSlots="1">   <!-- G3 -->
+    <weapon name="DS-ST Hull Laser" kind="laser" power="2" shots="2" damage="1" breach="20" hullBonus="true" mount="4"/>  <!-- G4, G8 -->
+  </system>
+  <crew name="Pilot" race="Mecha" station="piloting"/>
+  <crew name="Gunner" race="Mecha" station="pod" integrates="true"/>   <!-- G1: integration adds one bar, never above the level -->
+  <!-- G19: suggested floor layout = ship-suggestions.md (content/ships/light-attack-frame/ on Cloud-C-Init-Coding), with the
+       open-stern alternate as layout-only loadouts. -->
+</ship>

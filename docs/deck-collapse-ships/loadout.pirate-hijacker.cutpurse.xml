@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- "Cutpurse": the Hijacker's bands 1-3 loadout (ship-suggestions.md, 2026-10-23), a patch of the Hijacker (G18, GDD 5J).
+     A small-time thief: the spore launcher, a level 1 teleporter and three crew. No Doors or Medbay, so fire is its weakness. -->
+<loadout ship="Terran Pirate Hijacker" name="Cutpurse" inherit="Patch" hull="9" missiles="4">
+  <power kind="AZC" level="2"/>
+  <system type="piloting" level="1"/>
+  <system type="sensors" removed="true"/>
+  <system type="airlock" removed="true"/>
+  <system type="shields" level="1"/>
+  <system type="engines" level="1"/>
+  <system type="medBay" removed="true"/>
+  <system type="teleport" level="1"/>
+  <system id="weaponsA" removed="true"/>
+  <crew>                                                             <!-- crew are given whole -->
+    <member name="Captain" race="Terran" station="piloting"/>
+    <member name="Gunner" race="Terran" station="weaponsB"/>
+    <member name="Boarder" race="Terran" station="teleport" combat="1"/>
+  </crew>
+</loadout>

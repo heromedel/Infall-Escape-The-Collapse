@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Polyp, flak loadout (2026-10-29, Ai-Generated-Proposal): an alternate loadout (ship-design-process.md), so a swarm
+     mixes shield-poppers with missile ships. A patch of the Polyp (G18). -->
+<loadout ship="Polyp" name="Polyp (Flak)" inherit="Patch" missiles="0">
+  <system type="weapon" id="weapons" name="Weapons" level="1">
+    <weapon name="Bone Flak" kind="flak" power="1" shots="2" damage="1"/>   <!-- G6: two projectiles -->
+  </system>
+</loadout>
