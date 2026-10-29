@@ -158,7 +158,7 @@ func _build() -> void:
 	small_row.add_child(_reroute_button)
 	_jump_button = UiKit.button("Jump", _on_jump, 14)
 	_jump_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_jump_button.tooltip_text = "Jump away once Spool Jig Drive cards have charged the drive. Needs Piloting working and manned (or Auto Pilot)."
+	_jump_button.tooltip_text = "Jump away once the Jig Drive is charged: it charges each turn you burn power in Engines. Needs Piloting working and manned (or Auto Pilot)."
 	small_row.add_child(_jump_button)
 	var menu_button := UiKit.button("Menu", _on_menu, 14)
 	small_row.add_child(menu_button)
@@ -329,7 +329,7 @@ func _instruction() -> String:
 	if battle.aftermath:
 		if battle.why_cannot_jump(PLAYER) == "":
 			return "[color=#66ff66]Jig Drive ready.[/color] Finish repairs and healing, then press [b]JUMP[/b] to leave."
-		return "The enemy is beaten. Repair, put out fires, send the wounded to the Med Bay, and play [b]Spool Jig Drive[/b] cards (%d/%d) to leave." % [ship.jump_charge, battle.jump_charges_needed()]
+		return "The enemy is beaten. Repair, send the wounded to the Med Bay, and get Engines and Piloting working to charge the Jig Drive (%d/%d)." % [ship.jump_charge, battle.jump_charges_needed()]
 	if ship.hand.any(func(c): return c.id == "power"):
 		return "Play [color=#ffc247]Power Cells[/color] to build up power, then spend it on your cards. Click your crew to move them between systems."
 	if ship.available_power() == 0 and ship.power_row.is_empty():
@@ -478,7 +478,14 @@ func _on_tile_hovered(tile: SystemTile, is_hovered: bool) -> void:
 	if system.on_fire:
 		hazards.append("[color=#ff7a2a]On fire: 1 system damage and a wound to everyone inside each turn.[/color]")
 	if system.breached:
-		hazards.append("[color=#4fb8ff]Breached: everyone inside takes a wound each turn.[/color]")
+		hazards.append("[color=#ff4d5e]Breached: everyone inside takes a wound each turn. A Repair seals it.[/color]")
+	if battle.has_hostiles(tile.ship_side, tile.system_id):
+		hazards.append("[color=#ff4d5e]Enemies inside: it can't be repaired.[/color]")
+	if system.type == "lifeSupport":
+		hazards.append("Air %d/%d." % [ship.air, ship.air_max])
+	var draw_chance := battle.bonus_draw_chance(ship, tile.system_id)
+	if draw_chance > 0.0:
+		hazards.append("Extra card chance %d%% a turn." % roundi(draw_chance))
 	if definition.mannable:
 		hazards.append("Crew here give a bonus.")
 	if not hazards.is_empty():
@@ -671,7 +678,7 @@ func _play_event(event: Dictionary) -> void:
 			Sounds.play("fire")
 			_fx.float_text(_tile_center(event.side, event.system) + Vector2(0, -30), "FIRE!", UiKit.FIRE, 22)
 		"breached":
-			_fx.float_text(_tile_center(event.side, event.system) + Vector2(0, -50), "BREACH", UiKit.SHIELD, 20)
+			_fx.float_text(_tile_center(event.side, event.system) + Vector2(0, -50), "BREACH", UiKit.DANGER, 20)
 		"ionized", "hacked":
 			Sounds.play("ion" if event.type == "ionized" else "hack")
 			_fx.sparkle(_tile_center(event.side, event.system), UiKit.ION, 18)
@@ -697,6 +704,8 @@ func _play_event(event: Dictionary) -> void:
 		"extinguished", "restored":
 			Sounds.play("repair")
 			_fx.sparkle(_tile_center(event.side, event.system), UiKit.SHIELD)
+			_fx.float_text(_tile_center(event.side, event.system), "FIRE OUT" if event.type == "extinguished" else "BREACH SEALED",
+				UiKit.SHIELD, 18)
 			await _wait(0.2)
 		"vented":
 			Sounds.play("miss")
@@ -725,6 +734,11 @@ func _play_event(event: Dictionary) -> void:
 		"burn":
 			Sounds.play("power", -4.0, 1.3)
 			_fx.float_text(_tile_center(event.side, event.system), "+5% EVASION", UiKit.ACCENT, 18)
+		"air":
+			var life_support := battle.ships[event.side].first_system_of_type("lifeSupport")
+			if life_support != "":
+				_fx.float_text(_tile_center(event.side, life_support) + Vector2(0, -40), "AIR %d/%d" % [event.air,
+					battle.ships[event.side].air_max], Color("#cfe2ff"), 18)
 		"jump_charge":
 			Sounds.play("power", 0.0, 0.7)
 			_fx.float_text(_shield_point(event.side), "JUMP %d/%d" % [event.charge, battle.jump_charges_needed()], UiKit.ACCENT, 24)

@@ -32,6 +32,9 @@ func open(battle: Battle) -> void:
 	for side in 2:
 		write({"type": "ship_xml", "side": side, "xml": battle.ships[side].design.to_xml()},
 			"%s design recorded." % battle.ships[side].name, battle.turn_number)
+		for part in battle.ships[side].design.unsupported_parts():
+			write({"type": "unsupported", "side": side, "part": part},
+				"%s has a part this game doesn't support yet: %s" % [battle.ships[side].name, part], battle.turn_number)
 
 
 ## Writes one battle event as its two lines.

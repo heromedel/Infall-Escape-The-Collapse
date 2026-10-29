@@ -16,6 +16,7 @@
   Manning (numbers by skill: untrained, Veteran, Master; from the genre, from memory):
   mannedEvasion   evasion % a crew member here adds while the Engines are burning
   crewDraw        % chance, each turn, to draw an extra card of this system's own (the system "recharging faster")
+  unmannedDraw    % chance per working level to draw an extra card of its own even unmanned (crewDraw adds to it)
   mannedLevel     levels added while manned; the system's top level is only reached when manned
   evasionByLevel  Engines: evasion % for 1, 2, 3… levels of power
 -->
@@ -25,17 +26,17 @@
     Adds 1 Power card per level. Damage takes power cards offline.
   </system>
   <system type="shields" name="Shields" card="shield" cardsPerLevel="1" minLevel="1" maxLevel="4" mannable="true"
-      prices="54.46,12.11,24.21,43.56" crewDraw="10,15,20">
-    Adds 1 Raise Shield card per level. Up to one shield layer per working level. Crew here may draw an extra Raise Shield each turn.
+      prices="54.46,12.11,24.21,43.56" crewDraw="10,15,20" unmannedDraw="10">
+    Adds 1 Raise Shield card per level. Up to one shield layer per working level. May draw an extra Raise Shield each turn (10% per working level, more when manned).
   </system>
-  <system type="engines" name="Engines" card="jump" cardsPerLevel="1" minLevel="1" maxLevel="8" mannable="true"
-      prices="0,2.42,3.63,7.26,9.68,14.52,19.36,29.04" mannedEvasion="5,7,10" crewDraw="10,15,20"
+  <system type="engines" name="Engines" card="" cardsPerLevel="0" minLevel="1" maxLevel="8" mannable="true"
+      prices="0,2.42,3.63,7.26,9.68,14.52,19.36,29.04" mannedEvasion="5,7,10"
       evasionByLevel="5,10,15,20,25,28,31,35">
-    Burn power here for evasion. Adds 1 Spool Jig Drive per level. Crew here add evasion and may draw an extra Spool Jig Drive.
+    Burn power here for evasion. Each turn you burn, the Jig Drive charges by the working level. Crew here add evasion.
   </system>
-  <system type="piloting" name="Piloting" card="jump" cardsPerLevel="1" minLevel="1" maxLevel="3" required="true" mannable="true"
+  <system type="piloting" name="Piloting" card="" cardsPerLevel="0" minLevel="1" maxLevel="3" required="true" mannable="true"
       prices="0,4.84,12.11" mannedEvasion="5,7,10">
-    Needed to dodge and to jump. Level 2 has Auto Pilot (half evasion unmanned), level 3 Advanced Auto Pilot (full). Adds 1 Spool Jig Drive per level.
+    Needed to dodge and to jump. Level 2 has Auto Pilot (half evasion unmanned), level 3 Advanced Auto Pilot (full). The Jig Drive only charges while it works.
   </system>
   <system type="sensors" name="Sensors" card="" cardsPerLevel="0" minLevel="1" maxLevel="3" mannable="true"
       prices="9.68,6.05,9.68" mannedLevel="1">
@@ -43,7 +44,7 @@
   </system>
   <system type="lifeSupport" name="Life Support" card="restore" cardsPerLevel="1" minLevel="1" maxLevel="3" required="true" mannable="false"
       prices="0,6.05,12.11">
-    Adds 1 Restore Environment card per level. If broken or offline, every crew member aboard takes a wound at the end of your turn.
+    Adds 1 Restore Environment card per level. Each level holds 1 pip of air. While it is broken or offline, each turn uses a pip; once the air is gone, everyone aboard takes a wound each turn. Working, it refills a pip each turn.
   </system>
   <system type="medBay" name="Med Bay" card="" cardsPerLevel="0" minLevel="1" maxLevel="3" mannable="false"
       prices="12.11,8.47,10.89">
@@ -51,7 +52,7 @@
   </system>
   <system type="airlock" name="Airlock Control" card="" cardsPerLevel="0" minLevel="1" maxLevel="3" mannable="true"
       prices="14.52,8.47,12.11" mannedLevel="1">
-    Lets crew play Cycle Airlock. Each level slows boarders leaving a system by a turn and slows fire spreading. Manned: +1 level.
+    Lets crew play Cycle Airlock. From level 2, each level makes boarders take a turn longer to move out of a system; each level slows fire spreading. Manned: +1 level.
   </system>
   <system type="teleport" name="Teleport Bay" card="teleport" cardsPerLevel="1" minLevel="1" maxLevel="3" mannable="false"
       prices="21.78,7.26,14.52">

@@ -20,6 +20,7 @@ var _crew_box: VBoxContainer
 var _deck_grid: GridContainer
 var _deck_title: Label
 var _worth_label: Label
+var _unsupported_label: Label
 var _problems_label: Label
 var _status_label: Label
 var _identity_box: VBoxContainer
@@ -101,7 +102,7 @@ func _build_systems_column() -> Control:
 	spacer.custom_minimum_size = Vector2(0, 8)
 	box.add_child(spacer)
 	box.add_child(UiKit.heading("CREW", 20, UiKit.ACCENT))
-	box.add_child(_hint("Each crew member adds Repair, Extinguish Fire and (with Airlock Control) Cycle Airlock. Their station is where they start."))
+	box.add_child(_hint("Each crew member adds Repair and (with Airlock Control) Cycle Airlock. Their station is where they start."))
 	_crew_box = UiKit.vbox(6)
 	box.add_child(_crew_box)
 	return panel
@@ -177,6 +178,9 @@ func _rebuild_identity() -> void:
 	_problems_label = UiKit.label("", 14, UiKit.DANGER)
 	_problems_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	_identity_box.add_child(_problems_label)
+	_unsupported_label = UiKit.label("", 13, UiKit.ACCENT)
+	_unsupported_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	_identity_box.add_child(_unsupported_label)
 
 	var buttons := GridContainer.new()
 	buttons.columns = 2
@@ -340,6 +344,9 @@ func _refresh_summary() -> void:
 	if budget > 0 and cost > budget:
 		problems.append("Over the %d Mawjig budget (Settings)." % budget)
 	_problems_label.text = "\n".join(problems.map(func(p): return "• " + p))
+	var unsupported := design.unsupported_parts()
+	_unsupported_label.text = "" if unsupported.is_empty() else "Not in this game yet (kept in the file, ignored in battle):\n" \
+		+ "\n".join(unsupported.map(func(p): return "• " + p))
 	_refresh_deck()
 
 

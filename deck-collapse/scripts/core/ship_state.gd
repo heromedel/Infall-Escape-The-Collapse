@@ -38,6 +38,9 @@ var cloak_streak := 0
 var hacked_this_turn := false
 var hack_streak := 0
 var jump_charge := 0
+## Air reserve: one pip per Life Support level. Used up while Life Support is down (see Battle._use_air).
+var air := 0
+var air_max := 0
 ## Battlesuits out: { kind (suit kind id), dock (system id), target, turns_left, ready }.
 var suits: Array = []
 ## Temporary copies added by chain weapons: system id -> count.
@@ -68,6 +71,9 @@ func _init(owner_side: int, ship_design: ShipDesign) -> void:
 			state.name = Catalog.suit_kind(system.suit).name + " Dock"
 		systems[system.id] = state
 		system_order.append(system.id)
+		if system.type == "lifeSupport":
+			air_max += system.level
+	air = air_max
 
 
 ## How much power this system's cards can use this turn: its level minus damage, or 0 while disabled.

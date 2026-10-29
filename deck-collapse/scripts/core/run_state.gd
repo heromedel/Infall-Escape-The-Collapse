@@ -57,7 +57,7 @@ static func snapshot(battle: Battle) -> Dictionary:
 			survivors.append({"name": member.name, "skills": member.skills.duplicate(), "xp": member.xp.duplicate(),
 				"wounds": member.wounds, "system": member.system})
 	return {"hull": ship.hull, "hull_max": ship.hull_max, "missiles": ship.missiles, "suit_parts": ship.suit_parts,
-		"systems": systems, "crew": survivors}
+		"air": ship.air, "systems": systems, "crew": survivors}
 
 
 # ---------------------------------------------------------------- the store between battles

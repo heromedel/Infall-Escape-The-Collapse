@@ -4,10 +4,11 @@
   Lists by skill read untrained, Veteran, Master. Edit to rebalance; the game reads this file at start.
 -->
 <rules>
-  <!-- Spool Jig Drive cards each add one charge; at this many charges the ship can jump. -->
-  <jump chargesNeeded="6"/>
+  <!-- The Jig Drive gains a charge per working Engines level at the end of each turn that Engines and Piloting
+       work and at least 1 power was burned in the Engines (heromedel, 2026-10-29). At this many it can jump. -->
+  <jump chargesNeeded="24"/>
 
-  <!-- Crew in a damaged system may draw an extra Repair card each turn; in a burning one, an extra Extinguish Fire.
+  <!-- Crew in a damaged, breached or burning system may draw an extra Repair card each turn.
        Uses the crew member's Repair skill. -->
   <crewDraw repair="10,15,20"/>
 
@@ -17,11 +18,12 @@
 
   <!-- As each turn ends, a fire may spread to a neighbouring system (the next tile left or right).
        Each Airlock Control level lowers the chance. A fire burns out when its system is broken, and may burn out
-       when Life Support is down. -->
+       when the air has run out. -->
   <fire spreadChance="30" spreadPerAirlockLevel="-10" spreadMinimum="5" burnOutWithoutAir="50"/>
 
-  <!-- Turns an enemy boarder needs to leave the system they're in, by your Airlock Control level (0 = none). -->
-  <airlock boarderExitTurns="0,1,2,3,3"/>
+  <!-- Turns an enemy boarder needs to move out of the system they're in to another, by your Airlock Control level
+       (0 = none; level 1 doesn't slow them, heromedel). Teleporting and venting aren't slowed. -->
+  <airlock boarderExitTurns="0,0,1,2,3"/>
 
   <!-- Mawjig (docs/reference/mawjig-cost-table.md, band 1). A wreck pays rewardPercent of the ship's value;
        killing the crew pays crewKillBonus % more. -->

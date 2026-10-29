@@ -50,6 +50,27 @@ static func clean_text(node: Dictionary) -> String:
 	return " ".join(text.split(" ", false))
 
 
+## Writes a node and its children back out as XML lines, indented by depth.
+static func to_xml(node: Dictionary, depth: int = 1) -> String:
+	var indent := "  ".repeat(depth)
+	var attrs := ""
+	for key in node.attrs:
+		attrs += ' %s="%s"' % [key, escape(node.attrs[key])]
+	var text := clean_text(node)
+	var children: Array = node.get("children", [])
+	if children.is_empty() and text == "":
+		return "%s<%s%s/>" % [indent, node.name, attrs]
+	if children.is_empty():
+		return "%s<%s%s>%s</%s>" % [indent, node.name, attrs, escape(text), node.name]
+	var lines: Array[String] = ["%s<%s%s>" % [indent, node.name, attrs]]
+	if text != "":
+		lines.append(indent + "  " + escape(text))
+	for child in children:
+		lines.append(to_xml(child, depth + 1))
+	lines.append("%s</%s>" % [indent, node.name])
+	return "\n".join(lines)
+
+
 ## Escapes text so it can go inside an XML attribute or element.
 static func escape(text: String) -> String:
 	return text.xml_escape(true)

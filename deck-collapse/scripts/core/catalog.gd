@@ -46,6 +46,7 @@ func load_systems() -> void:
 			"prices": number_list(attrs.get("prices", "")),
 			"manned_evasion": number_list(attrs.get("mannedEvasion", "")),
 			"crew_draw": number_list(attrs.get("crewDraw", "")),
+			"unmanned_draw": float(attrs.get("unmannedDraw", 0)),
 			"manned_level": int(attrs.get("mannedLevel", 0)),
 			"evasion_by_level": number_list(attrs.get("evasionByLevel", "")),
 			"summary": XmlTree.clean_text(node),

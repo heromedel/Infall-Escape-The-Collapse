@@ -17,6 +17,9 @@ var suit_parts := 0
 var systems: Array = []
 ## Each crew member: { "name", "skills" (see CrewSkills), "station" (a system id) }.
 var crew: Array = []
+## Parts of the ship file this game doesn't support yet (systems it doesn't know, floor plans and so on), kept as
+## XML nodes so saving the design writes them back unchanged. See unsupported_parts().
+var unsupported: Array = []
 ## Where the design was loaded from, so saving a user design overwrites the same file.
 var source_path := ""
 var built_in := false
@@ -40,7 +43,7 @@ static func from_xml(xml_text: String) -> ShipDesign:
 		var system_attrs: Dictionary = system_node.attrs
 		var type: String = system_attrs.get("type", "")
 		if not Catalog.systems.has(type):
-			push_warning("Ship '%s' has an unknown system type '%s'; skipped." % [design.name, type])
+			design.unsupported.append(system_node)
 			continue
 		var system := {"type": type, "level": int(system_attrs.get("level", 1))}
 		system.id = system_attrs.get("id", type)
@@ -51,6 +54,9 @@ static func from_xml(xml_text: String) -> ShipDesign:
 		elif type == "evb":
 			system.suit = system_attrs.get("suit", "assault")
 		design.systems.append(system)
+	for node in root.children:
+		if not node.name in ["note", "system", "crew"]:
+			design.unsupported.append(node)
 	for crew_node in XmlTree.children_named(root, "crew"):
 		var crew_attrs: Dictionary = crew_node.attrs
 		design.crew.append({
@@ -79,8 +85,36 @@ func to_xml() -> String:
 		var skills := CrewSkills.to_attributes(member.skills)
 		lines.append('  <crew name="%s" station="%s"%s/>' % [
 			XmlTree.escape(member.name), XmlTree.escape(member.station), "" if skills == "" else " " + skills])
+	for node in unsupported:
+		lines.append(XmlTree.to_xml(node))
 	lines.append("</ship>")
 	return "\n".join(lines) + "\n"
+
+
+## The unsupported parts as readable lines, with the GDD reference and note the ship's designer left on them,
+## e.g. "System 'fabricator' (level 2): GDD 6F · Builds drones mid-battle."
+func unsupported_parts() -> Array[String]:
+	var found: Array[String] = []
+	for node in unsupported:
+		var attrs: Dictionary = node.attrs
+		var label: String = node.name.capitalize()
+		if attrs.has("type"):
+			label += " '%s'" % attrs.type
+		elif attrs.has("name"):
+			label += " '%s'" % attrs.name
+		if attrs.has("level"):
+			label += " (level %s)" % attrs.level
+		var details: Array[String] = []
+		for key in attrs:
+			if key.to_lower() in ["gdd", "ref", "reference", "note", "notes"]:
+				details.append(String(attrs[key]))
+		var text := XmlTree.clean_text(node)
+		if text != "":
+			details.append(text)
+		for child in XmlTree.children_named(node, "note"):
+			details.append(XmlTree.clean_text(child))
+		found.append(label + (": " + " · ".join(details) if not details.is_empty() else ""))
+	return found
 
 
 func duplicate_design() -> ShipDesign:

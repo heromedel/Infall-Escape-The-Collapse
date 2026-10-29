@@ -18,17 +18,15 @@ const TARGET_OWN_SYSTEM := "own_system"
 const TARGET_CREW_THEN_SYSTEM := "crew_then_system"
 
 ## Crew card ids: every crew member adds one of each (the airlock one only with Airlock Control).
-const CREW_CARDS := ["repair", "extinguish", "airlock"]
+const CREW_CARDS := ["repair", "airlock"]
 
 const FIXED_CARDS := {
 	"power": {"name": "Power Cell", "cost": 0, "group": GROUP_POWER, "target": TARGET_NONE, "art": "power",
 		"text": "Put into your power row. Spend it to play cards; it recharges each turn."},
 	"shield": {"name": "Raise Shield", "cost": 1, "group": GROUP_DEFENSE, "target": TARGET_NONE, "art": "shield",
 		"text": "Raise 1 shield layer. Its power stays under it until the layer is hit."},
-	"jump": {"name": "Spool Jig Drive", "cost": 1, "group": GROUP_TACTIC, "target": TARGET_NONE, "art": "jump",
-		"text": "Add 1 charge to the Jig Drive. Fully charged (6), you can JUMP away. Needs a working, manned Piloting."},
-	"restore": {"name": "Restore Environment", "cost": 1, "group": GROUP_CREW, "target": TARGET_OWN_SYSTEM, "art": "restore",
-		"text": "Seal the breach in one of your systems. Crew there recover 1 wound."},
+	"restore": {"name": "Restore Environment", "cost": 1, "group": GROUP_CREW, "target": TARGET_NONE, "art": "restore",
+		"text": "Refill 1 pip of air from the reserve tanks. Works while Life Support is down."},
 	"teleport": {"name": "Teleport", "cost": 1, "group": GROUP_TACTIC, "target": TARGET_CREW_THEN_SYSTEM, "art": "teleport",
 		"text": "Send one of your crew to any system on either ship. Boarders damage their system and the hull each enemy turn."},
 	"cloak": {"name": "Cloak", "cost": 1, "group": GROUP_DEFENSE, "target": TARGET_NONE, "art": "cloak",
@@ -40,11 +38,9 @@ const FIXED_CARDS := {
 	"battery": {"name": "Backup Cell", "cost": 0, "group": GROUP_POWER, "target": TARGET_NONE, "art": "battery",
 		"text": "+1 power this turn only."},
 	"repair": {"name": "Repair", "cost": 0, "group": GROUP_CREW, "target": TARGET_OWN_SYSTEM, "art": "repair",
-		"text": "A crew member in the system repairs 1 damage; a repair Veteran 2. A Master can act again."},
-	"extinguish": {"name": "Extinguish Fire", "cost": 0, "group": GROUP_CREW, "target": TARGET_OWN_SYSTEM, "art": "extinguish",
-		"text": "A crew member in the system puts out its fire."},
+		"text": "A crew member in the system fixes one thing: its fire, else its breach, else 1 damage (a repair Veteran 2). They stay there this turn. A Master can act again."},
 	"airlock": {"name": "Cycle Airlock", "cost": 0, "group": GROUP_CREW, "target": TARGET_OWN_SYSTEM, "art": "airlock",
-		"text": "Needs crew in Airlock Control. Vent a system: its fire goes out and everyone in it dies."},
+		"text": "Needs a working Airlock Control. Vent a system: its fire goes out and everyone in it dies."},
 }
 
 const GROUP_NAMES := {

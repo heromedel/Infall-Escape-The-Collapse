@@ -98,15 +98,15 @@ func _wanted_stations(battle: Battle, side: int) -> Array:
 	for member in battle.living_crew():
 		if member.owner != side and member.ship == side:
 			wanted.append({"ship": side, "system": member.system})
-	# Fires and damage get a worker when we hold the card for it.
-	for system_id in ship.system_order:
-		var system: Dictionary = ship.systems[system_id]
-		if system.on_fire and "extinguish" in hand_ids:
-			wanted.append({"ship": side, "system": system_id})
-	for type in STATION_PRIORITY + ["lifeSupport", "reactor", "battery", "cloak", "hacking", "mindControl"]:
+	# Fires, breaches and damage get a worker when we hold a Repair.
+	if "repair" in hand_ids:
 		for system_id in ship.system_order:
-			if ship.systems[system_id].type == type and ship.systems[system_id].damage > 0 and "repair" in hand_ids:
+			if ship.systems[system_id].on_fire:
 				wanted.append({"ship": side, "system": system_id})
+		for type in ["lifeSupport"] + STATION_PRIORITY + ["reactor", "battery", "cloak", "hacking", "mindControl"]:
+			for system_id in ship.system_order:
+				if ship.systems[system_id].type == type and Battle.needs_repair(ship.systems[system_id]):
+					wanted.append({"ship": side, "system": system_id})
 	# A launch needs someone in the EVB Dock right after the pilot.
 	if "suit" in hand_ids:
 		wanted.append({"ship": side, "system": ship.first_system_of_type("piloting")})
@@ -116,8 +116,6 @@ func _wanted_stations(battle: Battle, side: int) -> Array:
 	# Ordinary stations.
 	for type in STATION_PRIORITY:
 		if type == "evb" and not "suit" in hand_ids:
-			continue
-		if type == "airlock" and not "airlock" in hand_ids:
 			continue
 		if type == "medBay":
 			continue
@@ -129,11 +127,14 @@ func _wanted_stations(battle: Battle, side: int) -> Array:
 
 func _crew_cards(battle: Battle, side: int) -> Dictionary:
 	var ship := battle.ships[side]
-	for card_id in ["extinguish", "repair", "restore"]:
-		for system_id in _systems_by_importance(ship):
-			var action := _play_first(battle, side, card_id, {"system": system_id, "ship": side})
-			if not action.is_empty():
-				return action
+	for system_id in _systems_by_importance(ship):
+		var action := _play_first(battle, side, "repair", {"system": system_id, "ship": side})
+		if not action.is_empty():
+			return action
+	if battle.life_support_down(ship):
+		var action := _play_first(battle, side, "restore", {})
+		if not action.is_empty():
+			return action
 	# Vent a burning or boarded system nobody of ours is in.
 	for system_id in ship.system_order:
 		var system: Dictionary = ship.systems[system_id]
@@ -314,21 +315,20 @@ func _cloak(battle: Battle, side: int) -> Dictionary:
 	return {}
 
 
-## Spool and jump: in the aftermath to leave (repairs come earlier in the step order), mid-battle only to flee.
+## Jump: in the aftermath to leave (repairs come earlier in the step order), mid-battle only to flee.
+## The Jig Drive charges by itself on turns the Engines burn.
 func _jump(battle: Battle, side: int) -> Dictionary:
 	if battle.aftermath:
 		if battle.why_cannot_jump(side) == "":
 			return {"kind": "jump"}
-		return _play_first(battle, side, "jump", {})
+		return {}
 	if level == "Easy" or Settings.value("jump_escape") == "Off":
 		return {}
 	var ship := battle.ships[side]
 	var enemy := battle.ships[1 - side]
 	var losing := float(ship.hull) / ship.hull_max < 0.3 and float(enemy.hull) / enemy.hull_max > 0.5
-	if losing or ship.jump_charge > 0 and float(ship.hull) / ship.hull_max < 0.4:
-		if battle.why_cannot_jump(side) == "":
-			return {"kind": "jump"}
-		return _play_first(battle, side, "jump", {})
+	if losing and battle.why_cannot_jump(side) == "":
+		return {"kind": "jump"}
 	return {}
 
 

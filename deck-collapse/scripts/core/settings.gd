@@ -27,6 +27,8 @@ const OPTIONS := {
 		"help": "How well the enemy plays."},
 	"first_turn": {"label": "First Turn", "choices": ["Coin Flip", "You", "Enemy"],
 		"help": "Who takes the first turn. The captain going first skips their first draw."},
+	"crew_portraits": {"label": "Crew Portraits", "choices": ["Cat Faces", "Plain Tokens"],
+		"help": "Cat Faces: crew tokens show the GATOS cat concept's face, with variants (a concept, not decided). Plain Tokens: initials."},
 	"animation_speed": {"label": "Animation Speed", "choices": ["Normal", "Fast", "Slow"],
 		"help": "How fast cards and shots move."},
 	"sound": {"label": "Sound", "choices": ["On", "Off"], "help": "Sound effects."},

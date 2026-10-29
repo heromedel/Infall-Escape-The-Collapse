@@ -230,8 +230,17 @@ func _draw_token(member: Dictionary, center: Vector2) -> void:
 		var start := -PI / 2.0 + segment * TAU / 3.0 + 0.12
 		var lost: bool = segment >= Battle.WOUNDS_TO_DIE - _wounds_of(member)
 		draw_arc(center, TOKEN_RADIUS - 1, start, start + TAU / 3.0 - 0.24, 8, Color(UiKit.DANGER if lost else UiKit.GOOD, alpha), 2.5, true)
-	var initials := _initials(member.name)
-	UiKit.draw_text_centered(self, UiKit.display_bold_font, initials, Rect2(center - Vector2(12, 9), Vector2(24, 18)), 11, Color(Color.WHITE, alpha))
+	if Settings.value("crew_portraits") == "Cat Faces":
+		CrewFace.draw(self, center + Vector2(0, 0.5), member.name, 1.5, alpha)
+	else:
+		var initials := _initials(member.name)
+		UiKit.draw_text_centered(self, UiKit.display_bold_font, initials, Rect2(center - Vector2(12, 9), Vector2(24, 18)), 11, Color(Color.WHITE, alpha))
+	if member.get("locked", false):
+		# Repairing: a small wrench badge; they stay here this turn.
+		var badge := center + Vector2(TOKEN_RADIUS - 1, -TOKEN_RADIUS + 1)
+		draw_circle(badge, 5, UiKit.GOOD.darkened(0.5))
+		draw_line(badge + Vector2(-2.5, 2.5), badge + Vector2(2, -2), Color.WHITE, 1.5)
+		draw_circle(badge + Vector2(2, -2), 1.6, Color.WHITE)
 	# Pips under the token: their skill for the system they're in (Veteran 1, Master 2).
 	var skill := CrewSkills.level(member.skills, battle.ships[ship_side].systems[system_id].type)
 	for s in skill:
@@ -270,7 +279,7 @@ func _status_text(ship: ShipState, system: Dictionary) -> String:
 	if system.disabled_turns > 0 and system.type != "reactor":
 		return "OFFLINE"
 	if system.damage >= system.level:
-		return "BROKEN"
+		return "BROKEN · air %d/%d" % [ship.air, ship.air_max] if system.type == "lifeSupport" else "BROKEN"
 	match system.type:
 		"reactor":
 			return "%d/%d cells online" % [ship.online_power_cards(), ship.power_row.size()] if ship.power_row.size() > 0 else "No cells yet"
@@ -293,6 +302,8 @@ func _status_text(ship: ShipState, system: Dictionary) -> String:
 			return "CLOAKED" if ship.cloaked else "Level %d" % system.level
 		"medBay":
 			return "Heals %d" % ship.capacity(system.id)
+		"lifeSupport":
+			return "Air %d/%d" % [ship.air, ship.air_max]
 		"sensors", "airlock":
 			var level := battle.effective_level(ship, system.id)
 			var manned := level > ship.capacity(system.id)
@@ -311,11 +322,20 @@ func _draw_flame(at: Vector2) -> void:
 	draw_colored_polygon(inner, Color("#ffe27a"))
 
 
+## A hull breach: a jagged red hole open to space.
 func _draw_breach(at: Vector2) -> void:
-	draw_circle(at, 7, Color("#0a0d16"))
-	draw_arc(at, 7, 0, TAU, 16, UiKit.SHIELD, 1.5, true)
-	draw_polyline(PackedVector2Array([at + Vector2(-5, -3), at + Vector2(-1, 0), at + Vector2(-3, 4)]), UiKit.SHIELD, 1.5)
-	draw_polyline(PackedVector2Array([at + Vector2(5, -4), at + Vector2(1, 1), at + Vector2(4, 5)]), UiKit.SHIELD, 1.5)
+	var pulse := 0.75 + 0.25 * sin(_time * 5.0)
+	var rim := PackedVector2Array()
+	for i in 10:
+		var angle := i * TAU / 10.0
+		rim.append(at + Vector2.from_angle(angle) * (8.0 if i % 2 == 0 else 5.5))
+	draw_colored_polygon(rim, Color(UiKit.DANGER, pulse))
+	var hole := PackedVector2Array()
+	for i in 10:
+		var angle := i * TAU / 10.0 + 0.3
+		hole.append(at + Vector2.from_angle(angle) * (4.5 if i % 2 == 0 else 3.0))
+	draw_colored_polygon(hole, Color("#05060c"))
+	draw_circle(at + Vector2(1, -1), 0.8, Color(1, 1, 1, 0.7))
 
 
 func _initials(full_name: String) -> String:
