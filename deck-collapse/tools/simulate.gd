@@ -26,6 +26,8 @@ func _ready() -> void:
 	var battle_count := 0
 	var outcomes := {}
 	var stalls := 0
+	var purse_dry := [0, 0]
+	var purse_left := [0.0, 0.0]
 	print("Ships: ", designs.map(func(d): return "%s (%.0f M)" % [d.name, d.total_cost()]))
 	for a in designs:
 		for b in designs:
@@ -53,6 +55,10 @@ func _ready() -> void:
 				else:
 					pair_wins[2] += 1
 				outcomes[battle.outcome] = outcomes.get(battle.outcome, 0) + 1
+				for side in 2:
+					purse_left[side] += battle.ships[side].mawjig
+					if battle.ships[side].mawjig < 0.05:
+						purse_dry[side] += 1
 				turn_totals += battle.turn_number
 				battle_count += 1
 				var decisive := battle.outcome != Battle.OUTCOME_ESCAPED
@@ -61,6 +67,8 @@ func _ready() -> void:
 			print("%-22s vs %-22s  %2d - %2d  (other %d)" % [a.name, b.name, pair_wins[0], pair_wins[1], pair_wins[2]])
 	print("Average captain turns per battle: %.1f" % (float(turn_totals) / battle_count))
 	print("Outcomes: ", outcomes, "  stalls: ", stalls)
+	print("Mawjig left on average: side 0 %.2f, side 1 %.2f; battles ending with a purse under 0.05: %s" % [
+		purse_left[0] / battle_count, purse_left[1] / battle_count, purse_dry])
 	for ship_name in wins:
 		print("  %-22s wins %d" % [ship_name, wins[ship_name]])
 	get_tree().quit()

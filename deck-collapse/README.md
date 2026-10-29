@@ -13,7 +13,7 @@ the default where the GDD is silent.
 - **From source:** open this folder in Godot 4.3 and press Play (F5).
 
 The flow is **Battle**: pick your ship and an enemy, then **FIGHT**. When the enemy is beaten, keep playing to repair
-and heal, spool the jump drive and **JUMP**. **Continue Run** then takes the same ship, as it was left, to the
+and heal, spool the Jig Drive and **JUMP**. **Continue Run** then takes the same ship, as it was left, to the
 store and on to a random enemy.
 
 - Click a card to play it. Aimed cards then need a glowing target. Right-click or Esc cancels.
@@ -41,6 +41,7 @@ systems, reactor bars, weapons and suits priced from `docs/reference`, plus crew
 | Cards Drawn Per Turn | 1 > 2 |
 | Opening Hand Power | Random > 2 Guaranteed |
 | Hull Scale | Ship Value > 75% > 50% > 150% |
+| Ammo | All Use Mawjig > Classic > Limited Missiles Only > Missiles Use Mawjig |
 | Engine Efficiency | Classic > Extra Burn |
 | Auto Burn | On > Off |
 | Jump Escape | On > Off |
@@ -59,9 +60,15 @@ These are gaps in the GDD, filled with the genre in mind. Each one is a setting 
 - **Engines (heromedel):** in Classic, Engines give 0% evasion until power is burned in them, then the genre's
   evasion for that many levels (5, 10, 15, 20, 25, 28, 31, 35%). Pilot and engineer bonuses (5/7/10% by skill) count
   only while they run. Auto Burn sends unspent power to Engines when you end your turn.
-- **Jump (heromedel):** Engines and Piloting each add 1 Spool Jump Drive per level; 6 charges to jump; needs Piloting
+- **Jump (heromedel):** Engines and Piloting each add 1 Spool Jig Drive per level; 6 charges to jump; needs Piloting
   working and manned or at Auto Pilot. Jump Escape: On allows jumping away mid-battle.
 - **Aftermath (heromedel):** after the enemy is beaten you keep playing until you jump; everything carries over.
+  With no enemy left the Jig Drive charges at once if Engines and Piloting work, as in the genre.
+- **Ammo (heromedel):** by default every volley and battlesuit launch costs Mawjig (`mawjig-cost-table.md`), for
+  enemies too. A run starts with 12.11 (GDD 8K, Proposed). Enemy purse is provisional: 2.5% of the ship's value,
+  pending Infall: Eco. Classic ammo uses missile and battlesuit-part stocks instead.
+- **Crew XP (GDD 7H):** 100 XP to Veteran, 150 more to Master; 6.7 per dodge, 1.8 per shield layer popped, 1.5 per
+  volley, 5.6 per point repaired, 12.5 per crew fight. XP carries through a run.
 - **Crew skills (genre):** six skills, untrained, Veteran or Master. Manned Shields, weapons and Engines may draw an
   extra card of their own each turn (10/15/20%); crew in damaged or burning systems may draw Repair or Extinguish.
   Manned Sensors and Airlock Control work a level higher.

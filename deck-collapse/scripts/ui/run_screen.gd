@@ -44,7 +44,8 @@ func _rebuild() -> void:
 		Battle.OUTCOME_CREW_LOST: summary += "killed its crew."
 		_: summary += "no salvage."
 	_body.add_child(UiKit.label(summary, 17, UiKit.TEXT))
-	_body.add_child(UiKit.label("Salvage +%s   ·   Jump -%s   ·   Battles won: %d" % [Money.text(result.get("reward", 0.0)),
+	_body.add_child(UiKit.label("Shots -%s   ·   Salvage +%s   ·   Jump -%s   ·   Battles won: %d" % [
+		Money.text(result.get("spent", 0.0)), Money.text(result.get("reward", 0.0)),
 		Money.text(result.get("jump_cost", 0.0)), run.battles_won], 15, UiKit.MUTED))
 
 	# The ship as it is.
@@ -55,6 +56,8 @@ func _rebuild() -> void:
 	var status := "Hull %d / %d" % [run.hull(), run.hull_max()]
 	if run.uses_missiles():
 		status += "   ·   %d missiles" % int(run.carry.get("missiles", 0))
+	if run.uses_suit_parts():
+		status += "   ·   %d suit parts" % int(run.carry.get("suit_parts", 0))
 	ship_box.add_child(UiKit.label(status, 16, UiKit.TEXT, UiKit.body_bold_font))
 	var damaged: Array[String] = []
 	for system_id in run.carry.get("systems", {}):
@@ -93,6 +96,8 @@ func _rebuild() -> void:
 		func(): run.repair_hull(missing))
 	if run.uses_missiles():
 		_add_purchase(shop, "Buy 1 missile", run.missile_price(), true, func(): run.buy_missile())
+	if run.uses_suit_parts():
+		_add_purchase(shop, "Buy 1 suit part", run.suit_part_price(), true, func(): run.buy_suit_part())
 	_add_purchase(shop, "Hire a crew member", run.crew_price(), run.carry.get("crew", []).size() < 8,
 		func(): run.hire_crew(HIRE_NAMES[randi() % HIRE_NAMES.size()]))
 	_body.add_child(shop)

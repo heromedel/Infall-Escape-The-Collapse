@@ -12,6 +12,8 @@ var viewer_side := 0
 var shown_hull := -1
 var shown_layers := -1
 var hull_flash := 0.0
+## A big stamp across the bar once the ship is beaten ("DESTROYED", "DERELICT", "FLED"), or "".
+var stamp := ""
 var shield_flash := 0.0
 var _time := 0.0
 
@@ -89,8 +91,12 @@ func _draw() -> void:
 		tags.append("JUMP %d/%d" % [ship.jump_charge, battle.jump_charges_needed()])
 	if not ship.suits.is_empty():
 		tags.append("%d SUIT%s OUT" % [ship.suits.size(), "" if ship.suits.size() == 1 else "S"])
-	if ship.weapon_systems().any(func(id): return Catalog.weapon_kind(ship.systems[id].kind).uses_missile):
+	if Ammo.missiles_use_stock() and ship.weapon_systems().any(func(id): return Catalog.weapon_kind(ship.systems[id].kind).uses_missile):
 		tags.append("%d MISSILES" % ship.missiles)
+	if Ammo.suits_use_parts() and ship.has_type("evb"):
+		tags.append("%d SUIT PARTS" % ship.suit_parts)
+	if Ammo.mode() in [Ammo.ALL_MAWJIG, Ammo.MISSILES_MAWJIG]:
+		tags.append("%s MAWJIG" % Money.text(ship.mawjig, false))
 	draw_string(UiKit.body_font, Vector2(info_x, 52), "  ·  ".join(tags), HORIZONTAL_ALIGNMENT_LEFT, 360, 13, UiKit.ACCENT)
 
 	# Power row (hidden for the enemy without level 2 sensors)
@@ -125,6 +131,16 @@ func _draw() -> void:
 	var counts_x := size.x - 110.0
 	draw_string(UiKit.display_font, Vector2(counts_x, 28), "DECK  %d" % ship.deck.size(), HORIZONTAL_ALIGNMENT_LEFT, -1, 14, UiKit.MUTED)
 	draw_string(UiKit.display_font, Vector2(counts_x, 50), "HAND  %d" % ship.hand.size(), HORIZONTAL_ALIGNMENT_LEFT, -1, 14, UiKit.MUTED)
+	if stamp != "":
+		_draw_stamp(rect)
+
+
+func _draw_stamp(rect: Rect2) -> void:
+	draw_rect(rect, Color(0.05, 0.0, 0.0, 0.55))
+	var color := UiKit.DANGER if stamp != "FLED" else UiKit.ACCENT
+	var box := Rect2(rect.size.x / 2.0 - 190, 8, 380, rect.size.y - 16)
+	draw_style_box(UiKit.box(Color(color, 0.12), color, 6, 3), box)
+	UiKit.draw_text_centered(self, UiKit.display_bold_font, stamp, box, 34, color)
 
 
 func _draw_hexagon(center: Vector2, radius: float, fill: Color, line: Color) -> void:

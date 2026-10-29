@@ -28,8 +28,10 @@ func record_battle(battle: Battle) -> void:
 		battles_won += 1
 		reward = wreck_reward(enemy.design, battle.outcome)
 	var jump_cost := float(Catalog.rule("economy", "jumpCost", 0))
-	mawjig = Money.round_amount(maxf(0.0, mawjig + reward - jump_cost))
+	var spent_in_battle := mawjig - battle.ships[0].mawjig
+	mawjig = Money.round_amount(maxf(0.0, battle.ships[0].mawjig + reward - jump_cost))
 	last_result = {"outcome": battle.outcome, "reward": reward, "jump_cost": jump_cost, "enemy": enemy.name,
+		"spent": spent_in_battle,
 		"won": battle.winner == 0 and battle.outcome != Battle.OUTCOME_ESCAPED}
 	carry = snapshot(battle)
 
@@ -52,9 +54,10 @@ static func snapshot(battle: Battle) -> Dictionary:
 	var survivors: Array = []
 	for member in battle.living_crew_of(0):
 		if member.ship == 0:
-			survivors.append({"name": member.name, "skills": member.skills.duplicate(), "wounds": member.wounds,
-				"system": member.system})
-	return {"hull": ship.hull, "hull_max": ship.hull_max, "missiles": ship.missiles, "systems": systems, "crew": survivors}
+			survivors.append({"name": member.name, "skills": member.skills.duplicate(), "xp": member.xp.duplicate(),
+				"wounds": member.wounds, "system": member.system})
+	return {"hull": ship.hull, "hull_max": ship.hull_max, "missiles": ship.missiles, "suit_parts": ship.suit_parts,
+		"systems": systems, "crew": survivors}
 
 
 # ---------------------------------------------------------------- the store between battles
@@ -110,5 +113,28 @@ func hire_crew(crew_name: String) -> bool:
 	return true
 
 
+## The battle's starting state: the carried ship plus the Mawjig purse it fires with.
+func battle_carry() -> Dictionary:
+	var state := carry.duplicate(true)
+	state.mawjig = mawjig
+	return state
+
+
+func suit_part_price() -> float:
+	return float(Catalog.rule("economy", "suitPart", 0))
+
+
+func buy_suit_part() -> bool:
+	if not can_afford(suit_part_price()):
+		return false
+	carry.suit_parts = int(carry.get("suit_parts", 0)) + 1
+	mawjig = Money.round_amount(mawjig - suit_part_price())
+	return true
+
+
 func uses_missiles() -> bool:
-	return design.systems.any(func(s): return s.type == "weapon" and Catalog.weapon_kind(s.kind).uses_missile)
+	return Ammo.missiles_use_stock() and design.systems.any(func(s): return s.type == "weapon" and Catalog.weapon_kind(s.kind).uses_missile)
+
+
+func uses_suit_parts() -> bool:
+	return Ammo.suits_use_parts() and design.has_system("evb")

@@ -162,6 +162,8 @@ func _rebuild_identity() -> void:
 	_identity_box.add_child(swatches)
 	_identity_box.add_child(_stepper_row("Hull", design.hull, 4, 60, func(v): design.hull = v))
 	_identity_box.add_child(_stepper_row("Missiles", design.missiles, 0, 30, func(v): design.missiles = v))
+	_identity_box.add_child(_stepper_row("Suit parts", design.suit_parts, 0, 30, func(v): design.suit_parts = v))
+	_identity_box.add_child(_hint("Missiles and suit parts are used up only with the Classic or Limited Missiles ammo settings; with Mawjig ammo, shots cost Mawjig instead."))
 	_identity_box.add_child(UiKit.label("Note", 14, UiKit.MUTED))
 	var note := TextEdit.new()
 	note.text = design.note
@@ -329,8 +331,9 @@ func _refresh_summary() -> void:
 	var budget := Settings.budget_limit()
 	_worth_label.text = "WORTH %s" % Money.text(cost) + ("" if budget == 0 else "  /  %d" % budget)
 	_worth_label.add_theme_color_override("font_color", UiKit.DANGER if budget > 0 and cost > budget else UiKit.TEXT)
-	_worth_label.tooltip_text = "Ship %s + crew %s + missiles %s. A wreck of it pays %s." % [Money.text(design.value()),
-		Money.text(design.crew_value()), Money.text(design.missiles * float(Catalog.rule("economy", "missile"))),
+	_worth_label.tooltip_text = "Ship %s + crew %s + missiles and suit parts %s. A wreck of it pays %s." % [Money.text(design.value()),
+		Money.text(design.crew_value()), Money.text(design.missiles * float(Catalog.rule("economy", "missile"))
+			+ design.suit_parts * float(Catalog.rule("economy", "suitPart"))),
 		Money.text(design.value() * float(Catalog.rule("economy", "rewardPercent")) / 100.0)]
 	_worth_label.mouse_filter = Control.MOUSE_FILTER_PASS
 	var problems := design.problems()

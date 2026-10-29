@@ -14,42 +14,44 @@
   woundsCrew    true: every crew member in the hit system takes a wound
   fireChance / breachChance   percent per hit
   price         Mawjig to buy one weapon of this Type, from docs/reference/weapon-budget-table.md (power = Type)
+  ammo          Mawjig to fire one card of it, when Ammo is set to use Mawjig (docs/reference/mawjig-cost-table.md:
+                base per shot by type, half the base again per damage above 1, plus effects; per shot x shots)
 -->
 <weapons>
   <kind id="laser" name="Pulse Laser" shields="pop" fireChance="10" breachChance="0">
     Fires quick bolts. Each shield layer stops one bolt.
-    <type level="1" shots="1" damage="1" price="6.87"/>
-    <type level="2" shots="3" damage="1" price="12.34"/>
-    <type level="3" shots="4" damage="1" price="16.83"/>
+    <type level="1" shots="1" damage="1" price="6.87" ammo="0.02"/>
+    <type level="2" shots="3" damage="1" price="12.34" ammo="0.06"/>
+    <type level="3" shots="4" damage="1" price="16.83" ammo="0.08"/>
   </kind>
   <kind id="heavy" name="Heavy Laser" shields="pop" fireChance="25" breachChance="10">
     One slow, hard bolt. A shield layer stops it.
-    <type level="1" shots="1" damage="2" price="7.81"/>
-    <type level="2" shots="1" damage="3" price="12.39"/>
-    <type level="3" shots="2" damage="2" price="16.94"/>
+    <type level="1" shots="1" damage="2" price="7.81" ammo="0.04"/>
+    <type level="2" shots="1" damage="3" price="12.39" ammo="0.05"/>
+    <type level="3" shots="2" damage="2" price="16.94" ammo="0.08"/>
   </kind>
   <kind id="ion" name="Ion Burst" shields="pop" ion="true">
     Pops shields. A hit system is disabled for a turn; a hit reactor loses a power card.
-    <type level="1" shots="1" damage="0" price="6.07"/>
-    <type level="2" shots="2" damage="0" price="10.49"/>
-    <type level="3" shots="3" damage="0" price="14.81"/>
+    <type level="1" shots="1" damage="0" price="6.07" ammo="0.04"/>
+    <type level="2" shots="2" damage="0" price="10.49" ammo="0.08"/>
+    <type level="3" shots="3" damage="0" price="14.81" ammo="0.12"/>
   </kind>
   <kind id="missile" name="Torpedo" shields="ignore" usesMissile="true" woundsCrew="true" fireChance="20" breachChance="35">
     Ignores shields. Uses a missile. The blast wounds crew in the system.
-    <type level="1" shots="1" damage="2" price="7.97"/>
-    <type level="2" shots="1" damage="3" price="12.54"/>
-    <type level="3" shots="1" damage="4" price="16.99"/>
+    <type level="1" shots="1" damage="2" price="7.97" ammo="0.09"/>
+    <type level="2" shots="1" damage="3" price="12.54" ammo="0.12"/>
+    <type level="3" shots="1" damage="4" price="16.99" ammo="0.14"/>
   </kind>
   <kind id="beam" name="Cutter Beam" shields="reduce" neverMisses="true" woundsCrew="true" fireChance="30">
     Never misses. Each shield layer cuts 1 damage. Burns crew it sweeps.
-    <type level="1" shots="1" damage="1" price="6.75"/>
-    <type level="2" shots="1" damage="2" price="11.41"/>
-    <type level="3" shots="1" damage="3" price="15.94"/>
+    <type level="1" shots="1" damage="1" price="6.75" ammo="0.04"/>
+    <type level="2" shots="1" damage="2" price="11.41" ammo="0.05"/>
+    <type level="3" shots="1" damage="3" price="15.94" ammo="0.07"/>
   </kind>
   <kind id="chain" name="Chain Repeater" shields="pop" chain="true" fireChance="10">
     Each time it fires, a temporary copy joins your deck.
-    <type level="1" shots="1" damage="1" price="6.46"/>
-    <type level="2" shots="2" damage="1" price="11.22"/>
-    <type level="3" shots="2" damage="1" price="15.31"/>
+    <type level="1" shots="1" damage="1" price="6.46" ammo="0.02"/>
+    <type level="2" shots="2" damage="1" price="11.22" ammo="0.04"/>
+    <type level="3" shots="2" damage="1" price="15.31" ammo="0.04"/>
   </kind>
 </weapons>

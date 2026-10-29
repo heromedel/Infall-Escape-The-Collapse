@@ -24,6 +24,13 @@ var selected_crew_id := -1
 var choosable_crew: Array = []
 ## Damage flash, set by the battle screen's effects.
 var flash := 0.0
+## While an action animates, what the tile shows instead of the battle's final state, so a hit appears when the
+## shot lands: { damage, on_fire, breached, disabled_turns }. Empty: show the battle as it is.
+var shown := {}
+## While an action animates, each crew member's shown wounds by crew id (3 = shown dead). Shared by all tiles.
+var shown_crew := {}
+## The ship is a wreck: drawn dark with its systems gone.
+var wrecked := false
 
 var _token_rects := {}
 var _burn_rect := Rect2()
@@ -99,6 +106,9 @@ func _draw() -> void:
 		return
 	var ship := battle.ships[ship_side]
 	var system: Dictionary = ship.systems[system_id]
+	if not shown.is_empty():
+		system = system.duplicate()
+		system.merge(shown, true)
 	var rect := Rect2(Vector2.ZERO, TILE_SIZE)
 	var ship_color := ship.color
 	var state_color := _state_color(ship, system)
@@ -178,14 +188,21 @@ func _draw() -> void:
 	# Crew
 	draw_line(Vector2(10, 114), Vector2(TILE_SIZE.x - 10, 114), Color(UiKit.LINE, 0.8), 1.0)
 	_draw_crew(ship)
+	if wrecked:
+		# A destroyed ship: scorched over, its systems gone.
+		draw_style_box(UiKit.box(Color(0.12, 0.02, 0.03, 0.72), Color(UiKit.DANGER, 0.7), 10, 2), rect)
+		draw_line(Vector2(14, 14), TILE_SIZE - Vector2(14, 14), Color(UiKit.DANGER, 0.45), 3.0)
+		draw_line(Vector2(TILE_SIZE.x - 14, 14), Vector2(14, TILE_SIZE.y - 14), Color(UiKit.DANGER, 0.45), 3.0)
+		UiKit.draw_text_centered(self, UiKit.display_bold_font, "WRECKED", Rect2(0, TILE_SIZE.y / 2.0 - 14, TILE_SIZE.x, 28), 18, UiKit.DANGER)
 
 
 func _draw_crew(ship: ShipState) -> void:
 	_token_rects.clear()
 	var view := battle.sensor_view(viewer_side)
-	var members := battle.crew_in_system(ship_side, system_id).filter(func(m):
+	var here := _crew_here()
+	var members := here.filter(func(m):
 		return m.owner == viewer_side or view.crew or ship_side == viewer_side and m.owner != viewer_side)
-	var hidden := battle.crew_in_system(ship_side, system_id).size() - members.size()
+	var hidden := here.size() - members.size()
 	var per_row := 4
 	for i in members.size():
 		var member: Dictionary = members[i]
@@ -211,7 +228,7 @@ func _draw_token(member: Dictionary, center: Vector2) -> void:
 	# Health ring: three segments, lost ones in red.
 	for segment in 3:
 		var start := -PI / 2.0 + segment * TAU / 3.0 + 0.12
-		var lost: bool = segment >= Battle.WOUNDS_TO_DIE - member.wounds
+		var lost: bool = segment >= Battle.WOUNDS_TO_DIE - _wounds_of(member)
 		draw_arc(center, TOKEN_RADIUS - 1, start, start + TAU / 3.0 - 0.24, 8, Color(UiKit.DANGER if lost else UiKit.GOOD, alpha), 2.5, true)
 	var initials := _initials(member.name)
 	UiKit.draw_text_centered(self, UiKit.display_bold_font, initials, Rect2(center - Vector2(12, 9), Vector2(24, 18)), 11, Color(Color.WHITE, alpha))
@@ -226,6 +243,17 @@ func _draw_token(member: Dictionary, center: Vector2) -> void:
 		for dash in 8:
 			var angle := _time * 2.0 + dash * TAU / 8.0
 			draw_arc(center, TOKEN_RADIUS + 3, angle, angle + 0.4, 4, UiKit.ACCENT, 2.0, true)
+
+
+## Crew standing here: everyone alive, or while animating, everyone not yet shown dead.
+func _crew_here() -> Array:
+	if shown_crew.is_empty():
+		return battle.crew_in_system(ship_side, system_id)
+	return battle.crew.filter(func(m): return m.ship == ship_side and m.system == system_id and _wounds_of(m) < Battle.WOUNDS_TO_DIE)
+
+
+func _wounds_of(member: Dictionary) -> int:
+	return int(shown_crew.get(member.id, member.wounds))
 
 
 func _state_color(ship: ShipState, system: Dictionary) -> Color:
@@ -255,7 +283,7 @@ func _status_text(ship: ShipState, system: Dictionary) -> String:
 		"weapon":
 			var kind := Catalog.weapon_kind(system.kind)
 			var text := "%s · T%d" % [kind.name, system.weapon_type]
-			if kind.uses_missile:
+			if kind.uses_missile and Ammo.missiles_use_stock():
 				text += " · %d left" % ship.missiles
 			return text
 		"evb":

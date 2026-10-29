@@ -13,12 +13,14 @@ const OPTIONS := {
 		"help": "On: you only see what your Sensors show. Off: you see the enemy's crew, power and hand."},
 	"hull_scale": {"label": "Hull Scale", "choices": ["Ship Value", "75%", "50%", "150%"],
 		"help": "Multiplies every ship's hull. Lower makes battles shorter."},
+	"ammo": {"label": "Ammo", "choices": ["All Use Mawjig", "Classic", "Limited Missiles Only", "Missiles Use Mawjig"],
+		"help": "All Use Mawjig: every shot and battlesuit launch costs Mawjig. Classic: limited missiles and battlesuit parts, other weapons free. Limited Missiles Only: only torpedoes are limited. Missiles Use Mawjig: torpedoes cost Mawjig, the rest are free."},
 	"engine_efficiency": {"label": "Engine Efficiency", "choices": ["Classic", "Extra Burn"],
 		"help": "Classic: Engines give 0% evasion until you burn power in them, +5% per burn up to their level. Extra Burn: each Engines level gives 5% on its own and burns add more."},
 	"auto_burn": {"label": "Auto Burn", "choices": ["On", "Off"],
 		"help": "On: power you leave unspent when you end your turn goes into Engines automatically."},
 	"jump_escape": {"label": "Jump Escape", "choices": ["On", "Off"],
-		"help": "On: once your jump drive is spooled you can jump away mid-battle. Off: you can only jump after the enemy is beaten."},
+		"help": "On: once your Jig Drive is spooled you can jump away mid-battle. Off: you can only jump after the enemy is beaten."},
 	"crew_fights": {"label": "Crew Fights", "choices": ["On", "Off"],
 		"help": "On: boarders and defenders in the same system trade wounds at the end of the turn."},
 	"ai_level": {"label": "Enemy Captain", "choices": ["Normal", "Easy", "Hard"],
@@ -29,7 +31,7 @@ const OPTIONS := {
 		"help": "How fast cards and shots move."},
 	"sound": {"label": "Sound", "choices": ["On", "Off"], "help": "Sound effects."},
 	"budget": {"label": "Designer Budget", "choices": ["Off", "200 Mawjig", "250 Mawjig", "300 Mawjig"],
-		"help": "A design point limit in the Ship Designer."},
+		"help": "A Mawjig limit on what a ship in the Ship Designer may cost."},
 }
 
 var values := {}

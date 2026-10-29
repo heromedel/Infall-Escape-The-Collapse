@@ -4,7 +4,7 @@
   Lists by skill read untrained, Veteran, Master. Edit to rebalance; the game reads this file at start.
 -->
 <rules>
-  <!-- Spool Jump Drive cards each add one charge; at this many charges the ship can jump. -->
+  <!-- Spool Jig Drive cards each add one charge; at this many charges the ship can jump. -->
   <jump chargesNeeded="6"/>
 
   <!-- Crew in a damaged system may draw an extra Repair card each turn; in a burning one, an extra Extinguish Fire.
@@ -25,6 +25,13 @@
 
   <!-- Mawjig (docs/reference/mawjig-cost-table.md, band 1). A wreck pays rewardPercent of the ship's value;
        killing the crew pays crewKillBonus % more. -->
-  <economy rewardPercent="2.5" crewKillBonus="30" hullRepair="0.48" missile="1.45" crew="10.89"
-      skillVeteran="0.25" skillMaster="0.37" jumpCost="1.21" startingMawjig="5"/>
+  <economy rewardPercent="2.5" crewKillBonus="30" hullRepair="0.48" missile="1.45" suitPart="1.94" crew="10.89"
+      skillVeteran="0.25" skillMaster="0.37" jumpCost="1.21" startingMawjig="12.11" enemyPursePercent="2.5"/>
+  <!-- startingMawjig: a run's purse (GDD 8K, Proposed).
+       enemyPursePercent: PROVISIONAL, asked of Infall: Eco. An enemy ship carries this % of its ship value to pay for
+       its shots, the same as its wreck reward. F4's 0.64 ammo per fight left enemies dry in 23% of card battles.
+       suitPart: one battlesuit launch's parts in Classic ammo, the genre's drone part (8 scrap x 0.242). -->
+
+  <!-- Crew XP (GDD 7H, Decided): XP to reach Veteran, then more to reach Master, and XP per event. -->
+  <xp veteran="100" master="150" dodge="6.7" shieldPopped="1.8" volley="1.5" repairPoint="5.6" combat="12.5"/>
 </rules>

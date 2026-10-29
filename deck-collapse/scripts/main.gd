@@ -68,7 +68,7 @@ func show_battle() -> void:
 	battle_screen.autoplay = _options.has("autoplay")
 	battle_screen.finished.connect(func(choice: String): _on_battle_finished(choice, battle_screen.battle))
 	_swap(battle_screen)
-	battle_screen.start(player_design, enemy_design, run.carry, run)
+	battle_screen.start(player_design, enemy_design, run.battle_carry(), run)
 
 
 func _on_battle_finished(choice: String, battle: Battle) -> void:

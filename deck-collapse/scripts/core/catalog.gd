@@ -76,6 +76,7 @@ func load_weapon_kinds() -> void:
 				"shots": int(type_node.attrs.get("shots", 1)),
 				"damage": int(type_node.attrs.get("damage", 1)),
 				"price": float(type_node.attrs.get("price", 0)),
+				"ammo": float(type_node.attrs.get("ammo", 0)),
 			}
 		weapon_kinds[kind.id] = kind
 
@@ -97,6 +98,7 @@ func load_suit_kinds() -> void:
 			"ion": attrs.get("ion", "false") == "true",
 			"never_misses": attrs.get("neverMisses", "false") == "true",
 			"price": float(attrs.get("price", 0)),
+			"sortie": float(attrs.get("sortie", 0)),
 			"summary": XmlTree.clean_text(node),
 		}
 

@@ -108,6 +108,13 @@ func _draw() -> void:
 		footer_text = "TEMPORARY"
 	if footer_text != "":
 		UiKit.draw_text_centered(self, UiKit.body_font, footer_text, Rect2(10, BASE_SIZE.y - 22, BASE_SIZE.x - 20, 14), 10, UiKit.MUTED)
+	var mawjig := float(definition.get("mawjig", 0.0))
+	if mawjig > 0.0:
+		# Mawjig to fire it, under the Ammo setting: a small amber tag in the art window's corner.
+		var tag_text := Money.text(mawjig, false)
+		var tag := Rect2(BASE_SIZE.x - 66, 112, 50, 16)
+		draw_style_box(UiKit.box(Color("#1a1204", 0.9), UiKit.ACCENT, 8, 1), tag)
+		UiKit.draw_text_centered(self, UiKit.display_bold_font, tag_text + " M", tag, 11, UiKit.ACCENT)
 	if count_badge > 1:
 		var badge_center := Vector2(BASE_SIZE.x - 18, 18)
 		draw_circle(badge_center, 14, Color("#0b0f1a"))

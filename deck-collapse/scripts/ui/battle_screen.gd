@@ -158,7 +158,7 @@ func _build() -> void:
 	small_row.add_child(_reroute_button)
 	_jump_button = UiKit.button("Jump", _on_jump, 14)
 	_jump_button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	_jump_button.tooltip_text = "Jump away once Spool Jump Drive cards have charged the drive. Needs Piloting working and manned (or Auto Pilot)."
+	_jump_button.tooltip_text = "Jump away once Spool Jig Drive cards have charged the drive. Needs Piloting working and manned (or Auto Pilot)."
 	small_row.add_child(_jump_button)
 	var menu_button := UiKit.button("Menu", _on_menu, 14)
 	small_row.add_child(menu_button)
@@ -234,6 +234,7 @@ func _refresh() -> void:
 	_hand.show_hand(battle.ships[PLAYER].hand, battle, PLAYER,
 		func(card): return battle.why_cannot_play_anywhere(PLAYER, card.uid) if battle.active_side == PLAYER else "not your turn", _targeting_uid)
 	_refresh_enemy_hand()
+	_refresh_beaten_enemy()
 	var my_turn := battle.active_side == PLAYER and not battle.over
 	_turn_label.text = "YOUR TURN" if my_turn else ("ENEMY TURN" if not battle.over else "BATTLE OVER")
 	if battle.aftermath and not battle.over:
@@ -251,6 +252,20 @@ func _refresh() -> void:
 	else:
 		_jump_button.remove_theme_color_override("font_color")
 	_refresh_info()
+
+
+## Once the enemy is beaten its bar is stamped, its hand is gone, and a destroyed ship's systems show as wrecked.
+## A ship whose crew is lost keeps its systems, since your boarders may still be aboard.
+func _refresh_beaten_enemy() -> void:
+	if not battle.aftermath:
+		return
+	var loser := 1 - battle.winner
+	_headers[loser].stamp = {Battle.OUTCOME_DESTROYED: "DESTROYED", Battle.OUTCOME_CREW_LOST: "DERELICT",
+		Battle.OUTCOME_ESCAPED: "FLED"}.get(battle.outcome, "BEATEN")
+	for tile in _tiles[loser].values():
+		tile.wrecked = battle.outcome == Battle.OUTCOME_DESTROYED
+	_enemy_hand_row.visible = false
+	_enemy_hand_label.text = "ENEMY %s" % _headers[loser].stamp
 
 
 func _refresh_enemy_hand() -> void:
@@ -313,8 +328,8 @@ func _instruction() -> String:
 	var ship := battle.ships[PLAYER]
 	if battle.aftermath:
 		if battle.why_cannot_jump(PLAYER) == "":
-			return "[color=#66ff66]Jump drive ready.[/color] Finish repairs and healing, then press [b]JUMP[/b] to leave."
-		return "The enemy is beaten. Repair, put out fires, send the wounded to the Med Bay, and play [b]Spool Jump Drive[/b] cards (%d/%d) to leave." % [ship.jump_charge, battle.jump_charges_needed()]
+			return "[color=#66ff66]Jig Drive ready.[/color] Finish repairs and healing, then press [b]JUMP[/b] to leave."
+		return "The enemy is beaten. Repair, put out fires, send the wounded to the Med Bay, and play [b]Spool Jig Drive[/b] cards (%d/%d) to leave." % [ship.jump_charge, battle.jump_charges_needed()]
 	if ship.hand.any(func(c): return c.id == "power"):
 		return "Play [color=#ffc247]Power Cells[/color] to build up power, then spend it on your cards. Click your crew to move them between systems."
 	if ship.available_power() == 0 and ship.power_row.is_empty():
@@ -504,7 +519,7 @@ func _on_crew_hovered(tile: SystemTile, crew_id: int) -> void:
 	grid.add_theme_constant_override("h_separation", 6)
 	grid.add_theme_constant_override("v_separation", 6)
 	for skill in CrewSkills.NAMES:
-		grid.add_child(SkillChip.new().setup(skill, int(member.skills.get(skill, 0)), false))
+		grid.add_child(SkillChip.new().setup(skill, int(member.skills.get(skill, 0)), false, float(member.xp.get(skill, 0.0))))
 	box.add_child(grid)
 	add_child(panel)
 	_crew_popup = panel
@@ -619,6 +634,7 @@ func _exit_tree() -> void:
 
 
 func _play_event(event: Dictionary) -> void:
+	_advance_shown(event)
 	match event.type:
 		"log":
 			_add_log(event.text, event.side)
@@ -717,11 +733,18 @@ func _play_event(event: Dictionary) -> void:
 			_fx.float_text(_shield_point(event.side), "JUMP!", UiKit.ACCENT, 36)
 			await _wait(0.8)
 		"enemy_beaten":
+			await _animate_enemy_beaten(event)
 			Sounds.play("victory")
 			_refresh()
 			var title: String = {Battle.OUTCOME_DESTROYED: "ENEMY DESTROYED", Battle.OUTCOME_CREW_LOST: "ENEMY CREW LOST",
 				Battle.OUTCOME_ESCAPED: "ENEMY FLED"}.get(event.outcome, "ENEMY BEATEN")
 			await _fx.banner(title, UiKit.GOOD)
+		"crew_level_up":
+			Sounds.play("power", 0.0, 1.4)
+			_fx.sparkle(_crew_point(event.crew), UiKit.ACCENT, 20)
+			_fx.float_text(_crew_point(event.crew), "%s %s!" % [CrewSkills.LEVEL_NAMES[event.level].to_upper(),
+				CrewSkills.LABELS[event.skill].to_upper()], UiKit.ACCENT, 18)
+			await _wait(0.3)
 		"fire_out":
 			_fx.float_text(_tile_center(event.side, event.system), "FIRE OUT", Color("#cfd6e8"), 18)
 		"crew_leaving":
@@ -744,6 +767,72 @@ func _play_event(event: Dictionary) -> void:
 		"battle_over":
 			await _wait(0.6)
 			_show_result(event)
+
+
+## The enemy goes down: a destroyed ship shakes and blows apart system by system; any ship's hand fades away.
+func _animate_enemy_beaten(event: Dictionary) -> void:
+	var loser := 1 - int(event.winner)
+	var fade := create_tween()
+	fade.tween_property(_enemy_hand_row, "modulate:a", 0.0, 0.4)
+	if event.outcome != Battle.OUTCOME_DESTROYED:
+		await fade.finished
+		_enemy_hand_row.modulate.a = 1.0
+		return
+	for system_id in battle.ships[loser].system_order:
+		var tile: SystemTile = _tiles[loser][system_id]
+		tile.flash = 1.0
+		_shake(tile, 7.0)
+		_fx.explosion(_tile_center(loser, system_id), UiKit.FIRE, 1.2)
+		Sounds.play("explosion", -4.0, randf_range(0.8, 1.1))
+		await _wait(0.09)
+	for i in 3:
+		_shake(_headers[loser], 9.0)
+		_shake(self, 6.0)
+		await _wait(0.12)
+	_enemy_hand_row.modulate.a = 1.0
+
+
+## Moves the tiles' held look on by this event, so each hit, fire, wound or repair shows as it plays.
+func _advance_shown(event: Dictionary) -> void:
+	match event.type:
+		"damage":
+			_show_on_tile(event.side, event.system, {"damage": event.system_damage})
+		"repaired":
+			_show_on_tile(event.side, event.system, {"damage": -int(event.amount)})
+		"fire_started":
+			_show_on_tile(event.side, event.system, {"on_fire": true})
+		"fire_out", "extinguished", "vented":
+			_show_on_tile(event.side, event.system, {"on_fire": false})
+		"breached":
+			_show_on_tile(event.side, event.system, {"breached": true})
+		"restored":
+			_show_on_tile(event.side, event.system, {"breached": false})
+		"ionized", "hacked":
+			_show_on_tile(event.side, event.system, {"disabled_turns": 1})
+		"wounded":
+			_show_crew_wounds(event.crew, _shown_wounds(event.crew) + 1)
+		"crew_died":
+			_show_crew_wounds(event.crew, Battle.WOUNDS_TO_DIE)
+		"healed":
+			_show_crew_wounds(event.crew, maxi(0, _shown_wounds(event.crew) - int(event.amount)))
+		"enemy_beaten":
+			if event.outcome == Battle.OUTCOME_DESTROYED:
+				var loser := 1 - int(event.winner)
+				for system_id in _tiles[loser]:
+					var tile: SystemTile = _tiles[loser][system_id]
+					if not tile.shown.is_empty():
+						tile.shown.damage = battle.ships[loser].systems[system_id].level
+						tile.shown.on_fire = false
+
+
+func _shown_wounds(crew_id: int) -> int:
+	for tile in _tiles[PLAYER].values():
+		if not tile.shown_crew.is_empty():
+			return int(tile.shown_crew.get(crew_id, 0))
+	for member in battle.crew:
+		if member.id == crew_id:
+			return member.wounds
+	return 0
 
 
 func _animate_card_played(event: Dictionary) -> void:
@@ -859,13 +948,47 @@ func _hold_shown_values() -> void:
 	for side in 2:
 		_headers[side].shown_hull = battle.ships[side].hull
 		_headers[side].shown_layers = battle.ships[side].shield_layers.size()
+		for system_id in _tiles[side]:
+			var system: Dictionary = battle.ships[side].systems[system_id]
+			_tiles[side][system_id].shown = {"damage": system.damage, "on_fire": system.on_fire,
+				"breached": system.breached, "disabled_turns": system.disabled_turns}
+	var wounds := {}
+	for member in battle.crew:
+		wounds[member.id] = member.wounds
+	for side in 2:
+		for tile in _tiles[side].values():
+			tile.shown_crew = wounds
 
 
 func _release_shown_values() -> void:
 	for header in _headers:
 		header.shown_hull = -1
 		header.shown_layers = -1
+	for side in 2:
+		for tile in _tiles[side].values():
+			tile.shown = {}
+			tile.shown_crew = {}
 
+
+## Moves a tile's shown state on by one event, so the change appears as the event plays.
+func _show_on_tile(side: int, system_id: String, changes: Dictionary) -> void:
+	var tile: SystemTile = _tiles[side].get(system_id)
+	if tile == null or tile.shown.is_empty():
+		return
+	var system: Dictionary = battle.ships[side].systems[system_id]
+	for key in changes:
+		if key == "damage":
+			tile.shown.damage = clampi(int(tile.shown.damage) + int(changes.damage), 0, system.level)
+		else:
+			tile.shown[key] = changes[key]
+
+
+func _show_crew_wounds(crew_id: int, wounds: int) -> void:
+	for side in 2:
+		for tile in _tiles[side].values():
+			if not tile.shown_crew.is_empty():
+				tile.shown_crew[crew_id] = wounds
+				return
 
 func _flash_target(side: int, system_id: String) -> void:
 	var tile: SystemTile = _tiles[side][system_id]

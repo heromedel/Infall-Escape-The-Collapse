@@ -39,6 +39,8 @@ var guaranteed_opening_power := false
 var opening_events: Array = []
 
 var _events: Array = []
+## True while a turn's end-of-turn effects run, so a win then doesn't also start a turn (the turn change follows).
+var _finishing_turn := false
 var _next_uid := 1
 var _next_crew_id := 1
 
@@ -63,10 +65,15 @@ func _init(design_a: ShipDesign, design_b: ShipDesign, first_side: int, seed_val
 			var station: String = member.get("system", member.get("station", ""))
 			if not ship.systems.has(station):
 				station = ship.system_order[0]
+			var xp: Dictionary = member.get("xp", {}).duplicate()
+			for skill in CrewSkills.NAMES:
+				xp[skill] = maxf(float(xp.get(skill, 0.0)), xp_for_level(int(member.skills.get(skill, 0))))
 			crew.append({"id": _next_crew_id, "owner": side, "name": member.name, "skills": member.skills.duplicate(),
-				"wounds": int(member.get("wounds", 0)), "ship": side, "system": station, "moved": false, "acted": false,
-				"controlled_by": -1, "leaving_to": "", "leaving_turns": 0})
+				"xp": xp, "wounds": int(member.get("wounds", 0)), "ship": side, "system": station, "moved": false,
+				"acted": false, "controlled_by": -1, "leaving_to": "", "leaving_turns": 0})
 			_next_crew_id += 1
+		ship.mawjig = Money.round_amount(design.value() * float(Catalog.rule("economy", "enemyPursePercent", 0)) / 100.0) \
+			if side == 1 else float(carry.get("mawjig", Catalog.rule("economy", "startingMawjig", 0)))
 		if side == 0 and not carry.is_empty():
 			_apply_carry(ship, carry)
 	for ship in ships:
@@ -81,6 +88,7 @@ func _init(design_a: ShipDesign, design_b: ShipDesign, first_side: int, seed_val
 func _apply_carry(ship: ShipState, carry: Dictionary) -> void:
 	ship.hull = clampi(int(carry.get("hull", ship.hull)), 1, ship.hull_max)
 	ship.missiles = int(carry.get("missiles", ship.missiles))
+	ship.suit_parts = int(carry.get("suit_parts", ship.suit_parts))
 	var systems: Dictionary = carry.get("systems", {})
 	for system_id in systems:
 		if ship.systems.has(system_id):
@@ -109,6 +117,8 @@ func play_card(side: int, uid: int, target: Dictionary = {}) -> Array:
 	_emit({"type": "card_played", "side": side, "card": card, "definition": definition, "target": target})
 	_resolve_card(ship, card, definition, target)
 	_check_battle_end()
+	# A repair in the aftermath may get the Engines or Piloting working again.
+	_fill_jump_drive_if_clear(ship)
 	return _events
 
 
@@ -189,7 +199,7 @@ func reroute_power(side: int) -> Array:
 	return _events
 
 
-## Jumps away once the jump drive is fully spooled. Mid-battle this is an escape; in the aftermath it ends the battle.
+## Jumps away once the Jig Drive is fully spooled. Mid-battle this is an escape; in the aftermath it ends the battle.
 func jump(side: int) -> Array:
 	_events = []
 	var reason := why_cannot_jump(side)
@@ -226,13 +236,15 @@ func _finish_turn(side: int) -> void:
 		while why_cannot_burn(side) == "":
 			burn_engines_quietly(side)
 	_emit({"type": "turn_end", "side": side})
+	_finishing_turn = true
 	_end_of_turn_effects(ships[side])
 	_check_battle_end()
+	_finishing_turn = false
 	if over:
 		return
 	turn_number += 1
 	# In the aftermath the beaten side takes no more turns.
-	_start_turn(side if aftermath else 1 - side, false)
+	_start_turn(winner if aftermath else 1 - side, false)
 	_check_battle_end()
 
 
@@ -354,7 +366,7 @@ func why_cannot_jump(side: int) -> String:
 		return "Not your turn."
 	var ship := ships[side]
 	if ship.jump_charge < jump_charges_needed():
-		return "The jump drive needs %d/%d charges." % [ship.jump_charge, jump_charges_needed()]
+		return "The Jig Drive needs %d/%d charges." % [ship.jump_charge, jump_charges_needed()]
 	if not aftermath and Settings.value("jump_escape") == "Off":
 		return "Escaping mid-battle is off in Settings."
 	return _piloting_problem(ship)
@@ -505,6 +517,7 @@ func _start_turn(side: int, first_turn_of_battle: bool) -> void:
 	_emit({"type": "turn_start", "side": side, "turn": turn_number})
 	_log("— %s's turn —" % ship.name, side)
 	_heal_in_med_bay(ship)
+	_fill_jump_drive_if_clear(ship)
 	# 2. Recharge power.
 	for entry in ship.power_row:
 		if not entry.held:
@@ -531,7 +544,7 @@ func _boarders_break_out(side: int) -> void:
 
 
 ## Crew working a system may draw an extra card for it each turn, standing in for the genre's faster recharge
-## when manned: weapons their weapon, Shields a Raise Shield, Engines a Spool Jump Drive. Crew in a damaged or
+## when manned: weapons their weapon, Shields a Raise Shield, Engines a Spool Jig Drive. Crew in a damaged or
 ## burning system may draw a Repair or Extinguish Fire. Chances by skill are in systems.xml and rules.xml.
 func _crew_bonus_draws(ship: ShipState) -> void:
 	for system_id in ship.system_order:
@@ -690,6 +703,8 @@ func _crew_fights(ship: ShipState) -> void:
 			hits_on_boarders += _combat_hits(member)
 		for member in boarders:
 			hits_on_defenders += _combat_hits(member)
+		for member in defenders + boarders:
+			_gain_xp(member, "combat", float(Catalog.rule("xp", "combat", 0)))
 		for i in hits_on_defenders:
 			_wound(defenders[rng.randi() % defenders.size()], "boarders")
 		for i in hits_on_boarders:
@@ -739,7 +754,7 @@ func _resolve_card(ship: ShipState, card: Dictionary, definition: Dictionary, ta
 		"jump":
 			ship.jump_charge = mini(jump_charges_needed(), ship.jump_charge + 1)
 			_emit({"type": "jump_charge", "side": ship.side, "charge": ship.jump_charge})
-			_log("Jump drive spooling: %d/%d." % [ship.jump_charge, jump_charges_needed()], ship.side)
+			_log("Jig Drive spooling: %d/%d." % [ship.jump_charge, jump_charges_needed()], ship.side)
 		"restore":
 			var system: Dictionary = ship.systems[target.system]
 			system.breached = false
@@ -799,6 +814,7 @@ func _resolve_card(ship: ShipState, card: Dictionary, definition: Dictionary, ta
 			var repair_skill := int(worker.skills.repair)
 			var amount := mini(system.damage, 2 if repair_skill >= 1 else 1)
 			system.damage -= amount
+			_gain_xp(worker, "repair", float(Catalog.rule("xp", "repairPoint", 0)) * amount)
 			# A repair Master is quick enough to do another crew card this turn.
 			if repair_skill >= 2:
 				worker.acted = false
@@ -829,11 +845,13 @@ func _fire_weapon(ship: ShipState, enemy: ShipState, card: Dictionary, target_sy
 	var kind := Catalog.weapon_kind(system.kind)
 	var profile := Catalog.weapon_profile(system.kind, system.weapon_type)
 	if kind.uses_missile:
-		ship.missiles -= 1
+		if Ammo.missiles_use_stock():
+			ship.missiles -= 1
 	var shot := {"shields": kind.shields, "damage": profile.damage, "fire_chance": kind.fire_chance,
 		"breach_chance": kind.breach_chance, "wounds_crew": kind.wounds_crew, "ion": kind.ion,
 		"never_misses": kind.never_misses, "kind": kind.id, "interceptable": kind.uses_missile}
 	_log("Fires %s at %s." % [system.name, enemy.systems[target_system_id].name], ship.side)
+	_gain_xp_in(ship, card.system, "weapons", "volley")
 	for shot_index in profile.shots:
 		if over:
 			break
@@ -863,6 +881,10 @@ func _fire_shot(ship: ShipState, enemy: ShipState, weapon_system_id: String, tar
 		event.result = "miss"
 		_emit(event)
 		_log("Miss!", ship.side)
+		# A dodge teaches the pilot and engineer, but not while cloaked (the cloak did the work).
+		if not enemy.cloaked:
+			_gain_xp_in(enemy, enemy.first_system_of_type("piloting"), "piloting", "dodge")
+			_gain_xp_in(enemy, enemy.first_system_of_type("engines"), "engines", "dodge")
 		return
 	var damage: int = shot.damage
 	match shot.shields:
@@ -871,6 +893,7 @@ func _fire_shot(ship: ShipState, enemy: ShipState, weapon_system_id: String, tar
 				event.result = "shield"
 				_emit(event)
 				_pop_shield(enemy)
+				_gain_xp_in(enemy, enemy.first_system_of_type("shields"), "shields", "shieldPopped")
 				return
 		"reduce":
 			damage -= enemy.shield_layers.size()
@@ -918,6 +941,36 @@ func _damage_system(ship: ShipState, system_id: String, amount: int, hurts_hull:
 	elif system.damage > before:
 		_log("%s is damaged by %s." % [system.name, cause], ship.side)
 	_collapse_extra_shields(ship)
+
+
+## XP needed in total to reach a skill level (GDD 7H: 100 to Veteran, 150 more to Master).
+static func xp_for_level(level: int) -> float:
+	var veteran := float(Catalog.rule("xp", "veteran", 100))
+	match level:
+		1: return veteran
+		2: return veteran + float(Catalog.rule("xp", "master", 150))
+	return 0.0
+
+
+## The ship's own free crew manning a system each gain XP for an event (an xp rule name, e.g. "dodge").
+func _gain_xp_in(ship: ShipState, system_id: String, skill: String, xp_event: String) -> void:
+	if system_id == "":
+		return
+	for member in crew_in_system(ship.side, system_id):
+		if member.owner == ship.side and member.controlled_by < 0:
+			_gain_xp(member, skill, float(Catalog.rule("xp", xp_event, 0)))
+
+
+func _gain_xp(member: Dictionary, skill: String, amount: float) -> void:
+	if member.wounds >= WOUNDS_TO_DIE or amount <= 0.0:
+		return
+	member.xp[skill] = float(member.xp.get(skill, 0.0)) + amount
+	var level := int(member.skills.get(skill, 0))
+	while level < CrewSkills.MAX_LEVEL and member.xp[skill] >= xp_for_level(level + 1):
+		level += 1
+		member.skills[skill] = level
+		_emit({"type": "crew_level_up", "crew": member.id, "skill": skill, "level": level})
+		_log("%s is now a %s in %s!" % [member.name, CrewSkills.LEVEL_NAMES[level], CrewSkills.LABELS[skill]], member.owner)
 
 
 func _wound_all_in(ship_side: int, system_id: String, cause: String) -> void:
@@ -1019,17 +1072,20 @@ func _system_name_for_card(card: Dictionary) -> String:
 
 
 func _card_requirement_problem(ship: ShipState, card: Dictionary, definition: Dictionary) -> String:
+	var mawjig := mawjig_cost(ship, card)
+	if mawjig > 0.0 and ship.mawjig + 0.0001 < mawjig:
+		return "Needs %s (you have %s)." % [Money.text(mawjig), Money.text(ship.mawjig)]
 	match card.id:
 		"weapon":
 			var kind := Catalog.weapon_kind(ship.systems[card.system].kind)
-			if kind.uses_missile and ship.missiles <= 0:
+			if kind.uses_missile and Ammo.missiles_use_stock() and ship.missiles <= 0:
 				return "Out of missiles."
 		"shield":
 			if ship.shield_layers.size() >= ship.shield_capacity():
 				return "Shields are at full strength."
 		"jump":
 			if ship.jump_charge >= jump_charges_needed():
-				return "The jump drive is fully spooled."
+				return "The Jig Drive is fully spooled."
 			var piloting := _piloting_problem(ship)
 			if piloting != "":
 				return piloting
@@ -1046,6 +1102,8 @@ func _card_requirement_problem(ship: ShipState, card: Dictionary, definition: Di
 		"suit":
 			if _free_crew_in(ship, card.system).is_empty():
 				return "Needs a free crew member in %s." % ship.systems[card.system].name
+			if Ammo.suits_use_parts() and ship.suit_parts <= 0:
+				return "Out of battlesuit parts."
 		"airlock":
 			var airlock_id := ship.first_system_of_type("airlock")
 			if airlock_id == "" or ship.capacity(airlock_id) <= 0:
@@ -1151,6 +1209,23 @@ func _pay(ship: ShipState, card: Dictionary, definition: Dictionary) -> void:
 	if system_id != "":
 		ship.spent[system_id] = int(ship.spent.get(system_id, 0)) + maxi(1, definition.cost)
 	_spend_power(ship, definition.cost)
+	var mawjig := mawjig_cost(ship, card)
+	if mawjig > 0.0:
+		ship.mawjig = Money.round_amount(ship.mawjig - mawjig)
+		_emit({"type": "mawjig_spent", "side": ship.side, "amount": mawjig})
+	if card.id == "suit" and Ammo.suits_use_parts():
+		ship.suit_parts -= 1
+
+
+## Mawjig a card costs to play under the Ammo setting: weapons per volley, battlesuits per launch.
+func mawjig_cost(ship: ShipState, card: Dictionary) -> float:
+	match card.id:
+		"weapon":
+			var system: Dictionary = ship.systems[card.system]
+			return Ammo.weapon_mawjig(system.kind, system.weapon_type)
+		"suit":
+			return Ammo.suit_mawjig(ship.systems[card.system].suit)
+	return 0.0
 
 
 func _spend_power(ship: ShipState, amount: int) -> void:
@@ -1274,11 +1349,31 @@ func _begin_aftermath(winning_side: int, how: String) -> void:
 					_emit({"type": "crew_died", "crew": member.id, "cause": "lost with the wreck"})
 					_log("%s goes down with the wreck." % member.name, winning_side)
 	ships[loser].suits.clear()
+	ships[loser].hand.clear()
+	if how == OUTCOME_DESTROYED:
+		# A wreck's systems are all gone.
+		for system_id in ships[loser].systems:
+			ships[loser].systems[system_id].damage = ships[loser].systems[system_id].level
+			ships[loser].systems[system_id].on_fire = false
 	_emit({"type": "enemy_beaten", "winner": winning_side, "outcome": how})
-	_log("%s wins! Repair, regroup, and spool the jump drive to leave." % ships[winning_side].name, winning_side)
-	if active_side != winning_side:
+	_log("%s wins! Repair and regroup, then jump when ready." % ships[winning_side].name, winning_side)
+	_fill_jump_drive_if_clear(ships[winning_side])
+	# The beaten side's turn ends at once; mid end-of-turn, the turn change follows anyway.
+	if active_side != winning_side and not _finishing_turn:
 		turn_number += 1
 		_start_turn(winning_side, false)
+
+
+## With no enemy left, the Jig Drive charges at once, as in the genre, if Engines and Piloting work.
+## (Battles in hazards would skip this; there are none yet.)
+func _fill_jump_drive_if_clear(ship: ShipState) -> void:
+	if not aftermath or ship.jump_charge >= jump_charges_needed():
+		return
+	if ship.capacity_of_type("engines") <= 0 or ship.capacity_of_type("piloting") <= 0:
+		return
+	ship.jump_charge = jump_charges_needed()
+	_emit({"type": "jump_charge", "side": ship.side, "charge": ship.jump_charge})
+	_log("No enemy left: the Jig Drive charges fully.", ship.side)
 
 
 # ---------------------------------------------------------------- events and log

@@ -10,6 +10,9 @@ var color := Color.WHITE
 var hull_max := 0
 var hull := 0
 var missiles := 0
+var suit_parts := 0
+## Mawjig aboard, spent on shots and launches when the Ammo setting charges for them.
+var mawjig := 0.0
 
 ## System id -> { id, type, name, level, damage, on_fire, breached, disabled_turns, kind, weapon_type }
 var systems := {}
@@ -28,7 +31,7 @@ var shield_layers: Array = []
 var spent := {}
 ## Power from Backup Cells, lost at the end of the turn.
 var temporary_power := 0
-## Engine burns this turn (each +10% evasion until the captain's next turn).
+## Engine burns this turn (evasion until the captain's next turn).
 var burns := 0
 var cloaked := false
 var cloak_streak := 0
@@ -50,6 +53,7 @@ func _init(owner_side: int, ship_design: ShipDesign) -> void:
 	hull_max = maxi(1, roundi(ship_design.hull * Settings.hull_multiplier()))
 	hull = hull_max
 	missiles = ship_design.missiles
+	suit_parts = ship_design.suit_parts
 	for system in ship_design.systems:
 		var state := {
 			"id": system.id, "type": system.type, "level": system.level, "damage": 0,

@@ -8,25 +8,26 @@
           intercept  shoots down the first enemy torpedo each enemy turn
           repair     repairs 1 damage on its ship's most damaged system as each of its captain's turns ends
           board      clings to the target system: it and the hull take 1 damage as each enemy turn ends
+  sortie  Mawjig per launch when Ammo uses Mawjig (docs: a laser suit sortie is 0.21; repair is 3 repairs at 0.11)
   price   Mawjig, priced as the matching drone (docs/reference/drone-prices.md, x 0.242)
 -->
 <suits>
-  <suit id="assault" name="Assault Suit" cost="2" turns="3" action="shoot" shots="2" damage="1" shields="pop" price="12.11">
+  <suit id="assault" name="Assault Suit" cost="2" turns="3" action="shoot" shots="2" damage="1" shields="pop" sortie="0.21" price="12.11">
     Fires 2 bolts at its target as each of your turns ends.
   </suit>
-  <suit id="ion" name="Ion Suit" cost="2" turns="3" action="shoot" shots="1" damage="0" shields="pop" ion="true" price="12.11">
+  <suit id="ion" name="Ion Suit" cost="2" turns="3" action="shoot" shots="1" damage="0" shields="pop" ion="true" sortie="0.21" price="12.11">
     Fires an ion charge at its target as each of your turns ends.
   </suit>
-  <suit id="cutter" name="Cutter Suit" cost="2" turns="3" action="shoot" shots="1" damage="2" shields="reduce" neverMisses="true" price="12.11">
+  <suit id="cutter" name="Cutter Suit" cost="2" turns="3" action="shoot" shots="1" damage="2" shields="reduce" neverMisses="true" sortie="0.21" price="12.11">
     Sweeps a 2 damage beam over its target as each of your turns ends. Shield layers cut its damage.
   </suit>
-  <suit id="guardian" name="Guardian Suit" cost="2" turns="3" action="intercept" price="12.11">
+  <suit id="guardian" name="Guardian Suit" cost="2" turns="3" action="intercept" sortie="0.21" price="12.11">
     Shoots down the first enemy torpedo each enemy turn.
   </suit>
-  <suit id="repair" name="Repair Suit" cost="1" turns="3" action="repair" price="7.26">
+  <suit id="repair" name="Repair Suit" cost="1" turns="3" action="repair" sortie="0.33" price="7.26">
     Repairs 1 damage on your most damaged system as each of your turns ends.
   </suit>
-  <suit id="boarder" name="Boarding Suit" cost="3" turns="3" action="board" price="16.94">
+  <suit id="boarder" name="Boarding Suit" cost="3" turns="3" action="board" sortie="0.21" price="16.94">
     Bores into the target system. It and the hull take 1 damage as each enemy turn ends.
   </suit>
 </suits>

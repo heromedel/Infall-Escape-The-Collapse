@@ -11,6 +11,8 @@ var color := DEFAULT_COLOR
 var note := ""
 var hull := 16
 var missiles := 0
+## Battlesuit parts: one per launch, used when Ammo is Classic.
+var suit_parts := 0
 ## Each system: { "id", "type", "level", and for weapons "name", "kind", "weapon_type" }.
 var systems: Array = []
 ## Each crew member: { "name", "skills" (see CrewSkills), "station" (a system id) }.
@@ -31,6 +33,7 @@ static func from_xml(xml_text: String) -> ShipDesign:
 	design.color = attrs.get("color", DEFAULT_COLOR)
 	design.hull = int(attrs.get("hull", design.hull))
 	design.missiles = int(attrs.get("missiles", 0))
+	design.suit_parts = int(attrs.get("suitParts", 0))
 	for note_node in XmlTree.children_named(root, "note"):
 		design.note = XmlTree.clean_text(note_node)
 	for system_node in XmlTree.children_named(root, "system"):
@@ -60,8 +63,8 @@ static func from_xml(xml_text: String) -> ShipDesign:
 
 func to_xml() -> String:
 	var lines: Array[String] = ['<?xml version="1.0" encoding="UTF-8"?>']
-	lines.append('<ship name="%s" faction="%s" color="%s" hull="%d" missiles="%d">' % [
-		XmlTree.escape(name), XmlTree.escape(faction), color, hull, missiles])
+	lines.append('<ship name="%s" faction="%s" color="%s" hull="%d" missiles="%d" suitParts="%d">' % [
+		XmlTree.escape(name), XmlTree.escape(faction), color, hull, missiles, suit_parts])
 	if note != "":
 		lines.append("  <note>%s</note>" % XmlTree.escape(note))
 	for system in systems:
@@ -128,9 +131,10 @@ func crew_value() -> float:
 	return total
 
 
-## Everything the design costs to build: the ship, its crew and its missiles.
+## Everything the design costs to build: the ship, its crew, its missiles and battlesuit parts.
 func total_cost() -> float:
-	return value() + crew_value() + missiles * float(Catalog.rule("economy", "missile"))
+	return value() + crew_value() + missiles * float(Catalog.rule("economy", "missile")) \
+		+ suit_parts * float(Catalog.rule("economy", "suitPart"))
 
 
 ## Problems that stop the design from being flown, as readable sentences. Empty means it can fly.
@@ -163,6 +167,8 @@ func problems() -> Array[String]:
 	if hull < 4:
 		found.append("Hull must be at least 4.")
 	var uses_missiles := systems.any(func(system): return system.type == "weapon" and system.kind == "missile")
-	if uses_missiles and missiles <= 0:
-		found.append("Torpedoes need missiles in stock.")
+	if uses_missiles and missiles <= 0 and Ammo.missiles_use_stock():
+		found.append("Torpedoes need missiles in stock (Ammo setting).")
+	if has_system("evb") and suit_parts <= 0 and Ammo.suits_use_parts():
+		found.append("Battlesuits need suit parts in stock (Ammo setting).")
 	return found

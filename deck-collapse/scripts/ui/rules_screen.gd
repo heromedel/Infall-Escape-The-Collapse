@@ -7,10 +7,10 @@ signal back
 const RULES := """[font_size=30][b]How to Play[/b][/font_size]
 
 [color=#ffb347][b]The goal[/b][/color]
-Bring the enemy's [b]hull to 0[/b] or kill their whole crew. Then the battle goes on for you alone: repair, fight fires, heal, spool the jump drive and [b]JUMP[/b] to leave. In a run, your ship carries into the next battle exactly as you left it.
+Bring the enemy's [b]hull to 0[/b] or kill their whole crew. A destroyed ship is stamped DESTROYED and its systems wreck; a crewless one is DERELICT. Then the battle goes on for you alone: with no enemy left the Jig Drive charges at once if Engines and Piloting work, so you can [b]JUMP[/b] right away or stay to repair, fight fires and heal first. In a run, your ship carries into the next battle exactly as you left it.
 
 [color=#ffb347][b]Your deck is your ship[/b][/color]
-Every system puts cards in your deck: the Reactor adds [b]Power Cells[/b], Shields add [b]Raise Shield[/b], each weapon system adds its weapon cards, Engines and Piloting add [b]Spool Jump Drive[/b], and so on. Every crew member adds [b]Repair[/b], [b]Extinguish Fire[/b] and, with Airlock Control, [b]Cycle Airlock[/b]. Cards are never discarded: when a card leaves play it is shuffled back into your deck.
+Every system puts cards in your deck: the Reactor adds [b]Power Cells[/b], Shields add [b]Raise Shield[/b], each weapon system adds its weapon cards, Engines and Piloting add [b]Spool Jig Drive[/b], and so on. Every crew member adds [b]Repair[/b], [b]Extinguish Fire[/b] and, with Airlock Control, [b]Cycle Airlock[/b]. Cards are never discarded: when a card leaves play it is shuffled back into your deck.
 
 [color=#ffb347][b]A turn[/b][/color]
 1. Start of turn: cloaks and burns end, the Med Bay heals.
@@ -33,6 +33,9 @@ Play a weapon card, then click an enemy system. Each shot can miss against the t
 • Lasers, chain repeaters and ion: each shield layer stops one shot and drops.
 • Torpedoes ignore shields but use missiles; beams never miss, but each shield layer cuts their damage.
 
+[color=#ffb347][b]Ammo and Mawjig[/b][/color]
+By default every shot and battlesuit launch costs Mawjig: the amount is on the card (for example 0.06 M for a three-bolt laser). Enemies pay for theirs too. Settings has other Ammo modes: Classic (limited missiles and battlesuit parts, other weapons free), Limited Missiles Only, and Missiles Use Mawjig.
+
 [color=#ffb347][b]Shields[/b][/color]
 [b]Raise Shield[/b] costs 1 power; that power cell stays under the layer until the layer is hit. You can hold one layer per working Shields level.
 
@@ -43,6 +46,7 @@ Click one of your crew, then a green system, to move them (once per turn). Hover
 • A manned Sensors or Airlock Control works one level higher; its top level is only reached manned.
 • Crew cards need a free crew member in the system; each crew member does one per turn (a repair Master can do two).
 A crew member dies at their third wound; the Med Bay heals them.
+[b]Experience:[/b] crew learn by doing. Dodging trains the pilot and engineer, popped shield layers the shield crew, firing the gunners, repairing the repair skill and fighting the combat skill. 100 XP makes a Veteran, 150 more a Master. Hover a crew member to see their progress.
 
 [color=#ffb347][b]Hazards[/b][/color]
 [b]Fire[/b] damages its system and wounds everyone inside at the end of your turn, and may spread to the system beside it. It burns out when its system is broken, and may choke out while Life Support is down. [b]Breaches[/b] wound everyone inside; Restore Environment seals them. If [b]Life Support[/b] is broken or offline, all your crew take a wound each turn. Venting a system through the airlock puts out its fire but kills anyone in it.

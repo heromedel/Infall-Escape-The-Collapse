@@ -25,8 +25,8 @@ const FIXED_CARDS := {
 		"text": "Put into your power row. Spend it to play cards; it recharges each turn."},
 	"shield": {"name": "Raise Shield", "cost": 1, "group": GROUP_DEFENSE, "target": TARGET_NONE, "art": "shield",
 		"text": "Raise 1 shield layer. Its power stays under it until the layer is hit."},
-	"jump": {"name": "Spool Jump Drive", "cost": 1, "group": GROUP_TACTIC, "target": TARGET_NONE, "art": "jump",
-		"text": "Add 1 charge to the jump drive. Fully charged (6), you can JUMP away. Needs a working, manned Piloting."},
+	"jump": {"name": "Spool Jig Drive", "cost": 1, "group": GROUP_TACTIC, "target": TARGET_NONE, "art": "jump",
+		"text": "Add 1 charge to the Jig Drive. Fully charged (6), you can JUMP away. Needs a working, manned Piloting."},
 	"restore": {"name": "Restore Environment", "cost": 1, "group": GROUP_CREW, "target": TARGET_OWN_SYSTEM, "art": "restore",
 		"text": "Seal the breach in one of your systems. Crew there recover 1 wound."},
 	"teleport": {"name": "Teleport", "cost": 1, "group": GROUP_TACTIC, "target": TARGET_CREW_THEN_SYSTEM, "art": "teleport",
@@ -67,6 +67,7 @@ static func definition(card: Dictionary, ship_systems: Dictionary) -> Dictionary
 	return {
 		"id": "weapon", "name": system.get("name", kind.name), "cost": weapon_type, "group": GROUP_WEAPON,
 		"target": TARGET_ENEMY_SYSTEM, "art": kind.id, "weapon_type": weapon_type, "kind": kind.id,
+		"mawjig": Ammo.weapon_mawjig(kind.id, weapon_type),
 		"text": weapon_text(kind, Catalog.weapon_profile(kind.id, weapon_type)),
 	}
 
@@ -76,7 +77,7 @@ static func suit_definition(dock: Dictionary) -> Dictionary:
 	var target := TARGET_ENEMY_SYSTEM if suit.action in ["shoot", "board"] else TARGET_NONE
 	return {
 		"id": "suit", "name": "Launch " + suit.name, "cost": suit.cost, "group": GROUP_TACTIC, "target": target,
-		"art": "suit", "suit": suit.id,
+		"art": "suit", "suit": suit.id, "mawjig": Ammo.suit_mawjig(suit.id),
 		"text": "Needs crew in the dock. Out for %d turns. %s" % [suit.turns, suit.summary],
 	}
 
