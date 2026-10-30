@@ -10,6 +10,8 @@ var _rng := RandomNumberGenerator.new()
 
 ## Station order when nothing urgent needs a crew member.
 const STATION_PRIORITY := ["piloting", "weapon", "shields", "engines", "evb", "sensors", "teleport", "airlock", "medBay"]
+## Captain turns (both sides) with no hull damage before an AI calls it a stalemate and jumps away.
+const STALEMATE_TURNS := 30
 ## Enemy systems worth breaking, best first.
 const TARGET_PRIORITY := ["shields", "weapon", "piloting", "engines", "teleport", "evb", "cloak", "hacking",
 	"lifeSupport", "mindControl", "medBay", "sensors", "reactor", "battery", "airlock"]
@@ -367,8 +369,9 @@ func _jump(battle: Battle, side: int) -> Dictionary:
 		return {}
 	var ship := battle.ships[side]
 	var enemy := battle.ships[1 - side]
-	# A ship that can't hurt the enemy's hull or crew has nothing to stay for (it would never end the fight).
-	if not _can_hurt(ship) and battle.why_cannot_jump(side) == "":
+	# A ship that can't hurt the enemy, or a fight where no hull has been hit for a long while, has nothing to stay for.
+	var stalemate := battle.turn_number - battle.last_hull_damage_turn > STALEMATE_TURNS
+	if (stalemate or not _can_hurt(ship)) and battle.why_cannot_jump(side) == "":
 		return {"kind": "jump"}
 	if level == "Easy":
 		return {}

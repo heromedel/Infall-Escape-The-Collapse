@@ -36,6 +36,8 @@ var escaped_side := -1
 var rng := RandomNumberGenerator.new()
 var draw_per_turn := 1
 var guaranteed_opening_power := false
+## The last turn either hull took damage (to spot a stalemate).
+var last_hull_damage_turn := 1
 ## Events from setting up the battle and starting the first turn.
 var opening_events: Array = []
 
@@ -1325,6 +1327,7 @@ func _damage_system(ship: ShipState, system_id: String, amount: int, hurts_hull:
 	system.damage = mini(system.level, system.damage + amount)
 	if hurts_hull:
 		ship.hull = maxi(0, ship.hull - amount)
+		last_hull_damage_turn = turn_number
 	_emit({"type": "damage", "side": ship.side, "system": system_id, "amount": amount, "hull": amount if hurts_hull else 0,
 		"system_damage": system.damage - before, "cause": cause})
 	if hurts_hull:
