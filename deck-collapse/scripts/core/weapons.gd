@@ -19,7 +19,7 @@ const LEGACY := {
 }
 const FLAGS := {"multiTarget": "multi_target", "chain": "chain", "defensive": "defensive", "spores": "spores",
 	"stun": "stun", "mind": "mind"}
-const NUMBERS := {"power": 1, "shots": 1, "damage": 1, "rooms": 1, "fire": 0, "breach": 0, "pierce": 0}
+const NUMBERS := {"power": 1, "shots": 1, "damage": 1, "rooms": 1, "fire": 0, "breach": 0, "pierce": 0, "crewDamage": 0}
 
 
 ## A weapon from XML attributes, on top of an optional premade one (attributes override it).
@@ -48,6 +48,7 @@ static func finish(weapon: Dictionary, speed: int = 0) -> Dictionary:
 	weapon.uses_missile = family.uses_missile
 	weapon.wounds_crew = family.wounds_crew
 	weapon.never_misses = family.never_misses
+	weapon.bomb = family.bomb
 	if weapon.kind != "beam":
 		weapon.rooms = 1
 	weapon.speed = clampi(speed if speed > 0 else roundi(COOLDOWN_PER_CARD / cooldown(weapon)), 1, MAX_SPEED)
@@ -99,9 +100,11 @@ static func cooldown(weapon: Dictionary) -> float:
 		seconds += 2.0 * shots
 	if weapon.mind:
 		seconds += 4.0 * shots  # judgment: mind control is worth more than a stun
+	seconds += 2.0 * weapon.crewDamage * shots * (weapon.rooms if weapon.kind == "beam" else 1)  # judgment: as damage
 	seconds += 3.0 * shots * weapon.fire / 100.0 + 1.0 * shots * weapon.breach / 100.0 + 1.4 * weapon.pierce
 	match weapon.kind:
 		"beam": seconds += 5.0
+		"bomb": seconds += 5.0
 		"flak": seconds -= 3.0
 	if weapon.multi_target:
 		seconds += 1.0
@@ -122,9 +125,11 @@ static func price(weapon: Dictionary) -> float:
 		total += 1.21 * shots * per_ten
 	if weapon.mind:
 		total += 2.42 * shots * per_ten  # judgment: twice a stun
+	total += 1.16 * weapon.crewDamage * shots * (weapon.rooms if weapon.kind == "beam" else 1) * per_ten  # judgment: as damage
 	total += 1.15 * shots * (weapon.fire + weapon.breach) / 100.0 * per_ten + 0.75 * weapon.pierce
 	match weapon.kind:
 		"beam": total += 0.24
+		"bomb": total += 5.54
 		"flak": total += 1.38
 	if weapon.defensive:
 		total += 5.32
@@ -147,6 +152,8 @@ static func ammo(weapon: Dictionary) -> float:
 		per_shot += 0.02
 	if weapon.mind:
 		per_shot += 0.08
+	if weapon.crewDamage > 0:
+		per_shot += 0.05  # mawjig-cost-table.md: Kill (bio)
 	var volley: float = per_shot * weapon.shots * (weapon.rooms if weapon.kind == "beam" else 1)
 	if weapon.multi_target:
 		volley *= 1.25
@@ -162,6 +169,8 @@ static func summary(weapon: Dictionary) -> String:
 		parts.append("%d shot%s" % [weapon.shots, "" if weapon.shots == 1 else "s"])
 		if weapon.damage > 0:
 			parts.append("%d damage" % weapon.damage)
+	if weapon.crewDamage > 0:
+		parts.append("%d to crew" % weapon.crewDamage)
 	for special in specials(weapon):
 		parts.append(special)
 	return " · ".join(parts)
@@ -202,6 +211,8 @@ static func card_text(weapon: Dictionary) -> String:
 		lines.append("Takes over one crew member there for a turn.")
 	if weapon.defensive:
 		lines.append("While its system works, it shoots down one enemy torpedo each enemy turn.")
+	if weapon.crewDamage > 0:
+		lines.append("Everyone in the hit system loses %d health." % weapon.crewDamage)
 	if weapon.chain:
 		lines.append("Each time it fires, a temporary copy joins your deck.")
 	return " ".join(lines)
@@ -209,6 +220,8 @@ static func card_text(weapon: Dictionary) -> String:
 
 ## What a weapon looks like on cards and in shots: laser, heavy, ion, missile, beam, chain, flak, spore or mind.
 static func art(weapon: Dictionary) -> String:
+	if weapon.kind == "bomb":
+		return "bomb"
 	if weapon.spores:
 		return "spore"
 	if weapon.mind:

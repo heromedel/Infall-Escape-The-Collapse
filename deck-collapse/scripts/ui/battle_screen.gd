@@ -1072,7 +1072,7 @@ func _animate_shot(event: Dictionary) -> void:
 		await _fx.beam(from, to, Color("#ff5a5f"))
 	else:
 		Sounds.play({"laser": "laser", "chain": "laser", "suit": "laser", "heavy": "heavy", "ion": "ion", "missile": "missile",
-			"spore": "missile", "mind": "hack", "flak": "heavy"}.get(kind, "laser"), -2.0, randf_range(0.92, 1.08))
+			"spore": "missile", "mind": "hack", "flak": "heavy", "bomb": "teleport"}.get(kind, "laser"), -2.0, randf_range(0.92, 1.08))
 		if event.result == "intercepted":
 			await _fx.shoot(from, from.lerp(to, 0.7), kind, color, false)
 		else:

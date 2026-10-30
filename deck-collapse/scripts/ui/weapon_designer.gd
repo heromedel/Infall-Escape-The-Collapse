@@ -10,6 +10,7 @@ const NUMBER_PARTS := [
 	["power", "Power", 1, 4, 1], ["shots", "Shots", 1, 6, 1], ["damage", "Damage", 0, 4, 1],
 	["speed", "Speed (cards)", 1, Weapons.MAX_SPEED, 1], ["rooms", "Systems swept", 1, 4, 1],
 	["fire", "Fire %", 0, 100, 10], ["breach", "Breach %", 0, 100, 10], ["pierce", "Pierce", 0, 3, 1],
+	["crewDamage", "Crew damage", 0, 4, 1],
 ]
 const FLAG_PARTS := [["multi_target", "Multi-target"], ["chain", "Chain"], ["defensive", "Defensive"],
 	["spores", "Spores"], ["stun", "Stun"], ["mind", "Mind control"]]

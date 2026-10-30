@@ -32,6 +32,7 @@ func shoot(from: Vector2, to: Vector2, kind: String, color: Color, missed: bool)
 	var life := 0.42 * speed
 	match kind:
 		"missile", "spore": life = 0.75 * speed
+		"bomb": life = 0.45 * speed
 		"heavy", "flak": life = 0.5 * speed
 		"ion", "mind": life = 0.55 * speed
 	var target := to
@@ -176,6 +177,13 @@ func _draw_projectile(effect: Dictionary, t: float) -> void:
 			var body = PackedVector2Array([position + direction * 9.0, position + direction.orthogonal() * 4.0 - direction * 6.0,
 				position - direction.orthogonal() * 4.0 - direction * 6.0])
 			draw_colored_polygon(body, Color("#e8ecf6"))
+		"shot_bomb":
+			# Teleported in: a shimmer at the target that condenses into the bomb.
+			var grow: float = clampf((t - 0.3) / 0.7, 0.0, 1.0)
+			draw_arc(to, 18.0 * (1.0 - grow) + 6.0, 0, TAU, 20, Color(UiKit.MIND, 0.8 * (1.0 - grow)), 2.0, true)
+			draw_circle(to, 7.0 * grow, Color("#2a2f3c"))
+			draw_arc(to, 7.0 * grow, 0, TAU, 16, color, 2.0, true)
+			draw_circle(to + Vector2(4, -6) * grow, 2.0 * grow, UiKit.FIRE)
 		"shot_spore":
 			# A drifting green cloud with seeds trailing behind it.
 			var wobble := Vector2(sin(effect.age * 18.0), cos(effect.age * 14.0)) * 3.0

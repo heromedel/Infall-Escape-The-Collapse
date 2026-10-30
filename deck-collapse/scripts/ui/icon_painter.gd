@@ -156,6 +156,12 @@ static func paint(canvas: CanvasItem, art: String, center: Vector2, size: float,
 			canvas.draw_circle(p.call(0.6, -0.6), s * 0.25, light)
 			for spark in [[0.95, -0.35], [0.35, -0.95], [0.9, -0.85]]:
 				canvas.draw_line(p.call(0.6, -0.6), p.call(spark[0], spark[1]), light, width * 0.6)
+		"bomb":
+			# A round bomb with a lit fuse.
+			canvas.draw_circle(center + Vector2(-s * 0.1, s * 0.1), s * 0.55, color)
+			canvas.draw_circle(center + Vector2(-s * 0.25, -s * 0.05), s * 0.15, light)
+			canvas.draw_line(center + Vector2(s * 0.25, -s * 0.3), center + Vector2(s * 0.6, -s * 0.7), light, width)
+			canvas.draw_circle(center + Vector2(s * 0.65, -s * 0.75), s * 0.12, UiKit.FIRE)
 		"spore":
 			# A seed pod bursting into spores.
 			canvas.draw_circle(center, s * 0.38, color)

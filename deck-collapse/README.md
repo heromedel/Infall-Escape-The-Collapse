@@ -113,6 +113,10 @@ These are gaps in the GDD, filled with the genre in mind. Each one is a setting 
   fired from the weapon a suit is beside, and your own misses at the system it's beside, may hit it (15%);
   guardian suits shoot enemy suits (50%). A launch pays Mawjig for every shot over its turns. EVB Refund: Yes pays
   back unused turns.
+- **Bombs (genre; mawjig-cost-table.md):** teleported into a system: they ignore shields and evasion, can't be shot
+  down, and damage the system but not the hull. A missile each with Classic ammo; 0.05 Mawjig each plus effects.
+- **Crew damage (Ship Design's G20):** a weapon's `crewDamage` costs every crew member in a hit system that many
+  pips on top of its damage; a beam with no damage (the genre's anti-bio beam) is stopped by any shield layer.
 - **Beams (Infall docs: rooms swept):** a beam sweeps its rooms in a row, left or right of the aimed system as the
   captain picks. Shield layers cut its damage and stay up, as in the genre.
 - **Multi Target Lasers (docs/ideas.md, heromedel):** a special of some lasers; with the setting On (default) each of
@@ -170,6 +174,11 @@ The `infall-*.xml` ships are Ship Design's, one per race (`docs/deck-collapse-sh
 Ai-Generated-Proposal). The game reads their weapons as written; their power runs as a plain reactor for now (G2; an AZC is 5 bars per level),
 and the parts it doesn't have yet (Supershield, growth organ, servicing core, AAA, floor plans …) are kept and
 listed with their gap numbers.
+
+**Loadouts** (GDD 5J; Ship Design's G18): a `<loadout ship="…">` file patches a ship already loaded: its attributes
+replace the ship's, `<power>` replaces the power, each `<system>` matches by id (else type) and changes it or is
+added (`removed="true"` drops it), and `<crew>` with `<member>`s replaces the crew whole. The Pickpocket, Cutpurse,
+Light Attack Frame (Suit Dock) and Polyp (Flak) are loadouts.
 
 They're in `data/ships/` and are meant to be edited.
 

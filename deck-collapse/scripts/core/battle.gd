@@ -1189,7 +1189,8 @@ func _fire_weapon(ship: ShipState, enemy: ShipState, card: Dictionary, target: D
 		ship.missiles -= 1
 	var shot := {"shields": weapon.shields, "damage": weapon.damage, "fire_chance": weapon.fire,
 		"breach_chance": weapon.breach, "wounds_crew": weapon.wounds_crew, "ion": weapon.ion,
-		"never_misses": weapon.never_misses, "kind": Weapons.art(weapon), "interceptable": weapon.uses_missile,
+		"never_misses": weapon.never_misses, "kind": Weapons.art(weapon), "interceptable": weapon.uses_missile and not weapon.bomb,
+		"bomb": weapon.bomb, "crew_damage": weapon.crewDamage,
 		"pierce": weapon.pierce, "spores": weapon.spores, "stun": weapon.stun, "mind": weapon.mind,
 		"mind_turns": int(ship.systems[card.system].level)}
 	_log("Fires %s at %s." % [weapon.name, enemy.systems[target_system_id].name], ship.side)
@@ -1261,12 +1262,13 @@ func _fire_shot(ship: ShipState, enemy: ShipState, weapon_system_id: String, tar
 				_gain_xp_in(enemy, enemy.first_system_of_type("shields"), "shields", "shieldPopped")
 				return
 		"reduce":
-			damage -= layers
-			if damage <= 0:
+			# Each layer cuts 1 damage; a beam that does no damage at all is stopped by any layer.
+			if layers > 0 and damage <= layers:
 				event.result = "shield"
 				_emit(event)
 				_log("The beam splashes off the shields.", ship.side)
 				return
+			damage = maxi(0, damage - layers)
 	event.damage = damage
 	_emit(event)
 	var system: Dictionary = enemy.systems[target_system_id]
@@ -1274,12 +1276,14 @@ func _fire_shot(ship: ShipState, enemy: ShipState, weapon_system_id: String, tar
 		_disable_system(enemy, target_system_id, "ionized")
 		return
 	_shot_effects(ship, enemy, target_system_id, shot)
-	if damage <= 0:
-		return
-	_damage_system(enemy, target_system_id, damage, true, shot.kind)
-	# As in the genre, every point of damage hurts everyone in the system.
-	for member in crew_in_system(enemy.side, target_system_id):
-		_wound(member, "caught in the blast", damage * float(Catalog.rule("crewDamage", "weaponPerDamage", 1)))
+	if damage > 0:
+		# Bombs damage the system but not the hull (genre).
+		_damage_system(enemy, target_system_id, damage, not shot.get("bomb", false), shot.kind)
+	# As in the genre, every point of damage hurts everyone in the system; crewDamage (G20) hurts them on its own.
+	var crew_hurt := damage * float(Catalog.rule("crewDamage", "weaponPerDamage", 1)) + float(shot.get("crew_damage", 0))
+	if crew_hurt > 0.0:
+		for member in crew_in_system(enemy.side, target_system_id):
+			_wound(member, "bio" if damage <= 0 else "caught in the blast", crew_hurt)
 	if not system.on_fire and rng.randi_range(1, 100) <= shot.fire_chance:
 		_ignite(system)
 		_emit({"type": "fire_started", "side": enemy.side, "system": target_system_id})

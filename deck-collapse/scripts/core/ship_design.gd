@@ -123,6 +123,56 @@ static func _read_weapons(system_node: Dictionary, system: Dictionary) -> Array:
 	return found
 
 
+## A loadout (GDD 5J; Ship Design's G18): a patch of a base ship. Its attributes replace the ship's; <power> replaces
+## the power; each <system> matches the base's by id, else by type, and changes it (removed="true" drops it, child
+## weapons or suits replace the base's) or is added; <crew> with <member>s replaces the crew whole.
+static func from_loadout(loadout: Dictionary, base: ShipDesign) -> ShipDesign:
+	var root := XmlTree.parse(base.to_xml())
+	for key in loadout.attrs:
+		if not key in ["ship", "inherit"]:
+			root.attrs[key] = loadout.attrs[key]
+	var children: Array = root.children
+	var power_patch := XmlTree.children_named(loadout, "power")
+	if not power_patch.is_empty():
+		children = children.filter(func(n): return n.name != "power" and not (n.name == "system" and n.attrs.get("type", "") == "reactor"))
+		children.append(power_patch[0])
+	for patch in XmlTree.children_named(loadout, "system"):
+		var target := _matching_system(children, patch)
+		if patch.attrs.get("removed", "false") == "true":
+			children.erase(target)
+		elif target.is_empty():
+			children.append(patch)
+		else:
+			for key in patch.attrs:
+				target.attrs[key] = patch.attrs[key]
+			if not patch.children.is_empty():
+				target.children = patch.children
+	for crew_patch in XmlTree.children_named(loadout, "crew"):
+		var members := XmlTree.children_named(crew_patch, "member")
+		if not members.is_empty():
+			children = children.filter(func(n): return n.name != "crew")
+			for member in members:
+				children.append({"name": "crew", "attrs": member.attrs, "text": "", "children": []})
+	root.children = children
+	return from_xml(XmlTree.to_xml(root, 0))
+
+
+static func _matching_system(children: Array, patch: Dictionary) -> Dictionary:
+	for node in children:
+		if node.name != "system":
+			continue
+		if patch.attrs.has("id"):
+			if node.attrs.get("id", node.attrs.get("type", "")) == patch.attrs.id:
+				return node
+		elif node.attrs.get("type", "") == patch.attrs.get("type", "") and not node.attrs.has("id"):
+			return node
+	if not patch.attrs.has("id"):
+		for node in children:
+			if node.name == "system" and node.attrs.get("type", "") == patch.attrs.get("type", ""):
+				return node
+	return {}
+
+
 func to_xml() -> String:
 	var lines: Array[String] = ['<?xml version="1.0" encoding="UTF-8"?>']
 	var band_text := "" if bands == [1, Weapons.MAX_BAND] else ' bands="%d-%d"' % bands

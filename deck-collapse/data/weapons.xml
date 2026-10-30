@@ -10,6 +10,8 @@
                   ignore  passes through shields
     usesMissile / woundsCrew / neverMisses / ion   as named
     base          Mawjig per shot at 1 damage (mawjig-cost-table.md); beams per system swept
+    bomb          true: teleported into the system (genre; mawjig-cost-table.md "can't be shot down"): never misses,
+                  can't be intercepted, damages the system but not the hull; uses a missile with Classic ammo
 
   <weapon>   one weapon. Missing numbers default to 1.
     kind          its family
@@ -26,7 +28,9 @@
     defensive     true: once per enemy turn, while its system works, shoots down an incoming torpedo
     spores        true: a hit system is overgrown, offline until a Repair clears it (GDD 8G; G5)
     stun          true: crew in the hit system lose their next turn
-    mind          true: a hit takes over one crew member in the system for a turn
+    mind          true: a hit takes over one crew member in the system (for its weapon system's level in turns)
+    crewDamage    health pips every crew member in a hit system loses, on top of damage (G20; the genre's anti-bio
+                  beam has damage 0 and only this)
     tech          its maker's tech (kept for later; GDD 8D)
     bands         the difficulty bands it can turn up in (stores, enemies), e.g. "2-8". New ideas such as multi-target
                   lasers start later so concepts come in slowly (heromedel 2026-10-29). Default 1-8. The band
@@ -42,6 +46,7 @@
   <family id="flak" name="Flak" shields="pop" base="0.01">A spread of debris. Each piece can stop on a shield layer.</family>
   <family id="ion" name="Ion" shields="pop" ion="true" base="0.02">A hit system goes offline for a turn; a hit reactor loses a Power Cell.</family>
   <family id="missile" name="Missile" shields="ignore" usesMissile="true" woundsCrew="true" base="0.05">Ignores shields. The blast wounds crew in the system.</family>
+  <family id="bomb" name="Bomb" shields="ignore" usesMissile="true" neverMisses="true" bomb="true" base="0.05">Teleported into the system: ignores shields and evasion and can't be shot down. Damages the system, not the hull.</family>
   <family id="beam" name="Beam" shields="reduce" neverMisses="true" woundsCrew="true" base="0.03">Never misses. Each shield layer cuts 1 damage and stays up. Burns crew it sweeps.</family>
 
   <!-- Genre-style weapons (built-in genre ships use these). Speeds follow the genre's cooldowns. -->
@@ -64,6 +69,14 @@
   <weapon id="cleaver-beam" name="Cleaver Beam" kind="beam" power="2" shots="1" damage="2" rooms="2" speed="2" fire="30" bands="2-8"/>
   <weapon id="halberd-beam" name="Halberd Beam" kind="beam" power="3" shots="1" damage="2" rooms="3" speed="2" fire="30" bands="3-8"/>
   <weapon id="glaive-beam" name="Glaive Beam" kind="beam" power="4" shots="1" damage="3" rooms="3" speed="1" fire="30" bands="4-8"/>
+
+  <!-- Genre-style bombs (the genre's bombs, renamed): 1 missile each in Classic ammo, no hull damage. -->
+  <weapon id="spark-bomb" name="Spark Bomb" kind="bomb" power="1" shots="1" damage="1" speed="3" fire="10" bands="2-8"/>
+  <weapon id="hull-cracker" name="Hull Cracker" kind="bomb" power="1" shots="1" damage="0" speed="4" breach="100" bands="2-8"/>
+  <weapon id="hull-cracker-ii" name="Hull Cracker II" kind="bomb" power="2" shots="1" damage="1" speed="2" breach="100" bands="4-8"/>
+  <weapon id="firebrand-bomb" name="Firebrand Bomb" kind="bomb" power="2" shots="1" damage="0" speed="2" fire="100" bands="3-8"/>
+  <weapon id="daze-bomb" name="Daze Bomb" kind="bomb" power="1" shots="1" damage="0" speed="2" stun="true" bands="3-8"/>
+  <weapon id="cleansing-beam" name="Cleansing Beam" kind="beam" power="2" shots="1" damage="0" rooms="3" speed="2" crewDamage="3" bands="4-8"/>
 
   <!-- Infall weapons, from Ship Design's ships and the docs. -->
   <weapon id="gat-2-1-twinshot" name="Gat 2.1 Twinshot" kind="laser" power="1" shots="2" damage="1" tech="mechanical"/>

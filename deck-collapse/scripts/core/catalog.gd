@@ -82,6 +82,7 @@ func load_weapons() -> void:
 			"uses_missile": attrs.get("usesMissile", "false") == "true",
 			"never_misses": attrs.get("neverMisses", "false") == "true",
 			"wounds_crew": attrs.get("woundsCrew", "false") == "true",
+			"bomb": attrs.get("bomb", "false") == "true",
 			"base": float(attrs.get("base", 0.02)),
 			"summary": XmlTree.clean_text(node),
 		}
@@ -259,18 +260,34 @@ func weapon(weapon_id: String) -> Dictionary:
 
 func reload_designs() -> void:
 	designs.clear()
-	for path in _xml_files_in(BUILT_IN_SHIPS_FOLDER):
-		var design := ShipDesign.from_xml(FileAccess.get_file_as_string(path))
-		if design:
-			design.built_in = true
-			design.source_path = path
-			designs.append(design)
+	_load_designs_from(BUILT_IN_SHIPS_FOLDER, true)
 	DirAccess.make_dir_recursive_absolute(USER_SHIPS_FOLDER)
-	for path in _xml_files_in(USER_SHIPS_FOLDER):
-		var design := ShipDesign.from_xml(FileAccess.get_file_as_string(path))
-		if design:
-			design.source_path = path
-			designs.append(design)
+	_load_designs_from(USER_SHIPS_FOLDER, false)
+
+
+## Ship files first, then loadout files (GDD 5J; Ship Design's G18), which patch a ship already loaded.
+func _load_designs_from(folder: String, built_in: bool) -> void:
+	var loadouts: Array = []
+	for path in _xml_files_in(folder):
+		var text := FileAccess.get_file_as_string(path)
+		if XmlTree.parse(text).get("name", "") == "loadout":
+			loadouts.append([path, text])
+			continue
+		_add_design(ShipDesign.from_xml(text), path, built_in)
+	for entry in loadouts:
+		var root := XmlTree.parse(entry[1])
+		var bases := designs.filter(func(d): return d.name == root.attrs.get("ship", ""))
+		if bases.is_empty():
+			push_warning("Loadout %s patches '%s', which isn't loaded." % [entry[0], root.attrs.get("ship", "")])
+			continue
+		_add_design(ShipDesign.from_loadout(root, bases[0]), entry[0], built_in)
+
+
+func _add_design(design: ShipDesign, path: String, built_in: bool) -> void:
+	if design:
+		design.built_in = built_in
+		design.source_path = path
+		designs.append(design)
 
 
 ## Saves a player design into the user ships folder and returns the path written.
