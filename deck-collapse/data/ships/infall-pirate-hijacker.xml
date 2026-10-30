@@ -24,4 +24,16 @@
   <crew name="Boarder" race="Terran" station="teleport" combat="1"/>
   <crew name="Engineer" race="Terran" station="engines"/>
   <!-- G19: suggested floor layout and conduits = ship-suggestions.md (content/ships/pirate-hijacker/ship.xml on Cloud-C-Init-Coding). -->
+  <!-- The captain's plan (Ai-Generated-Proposal example, from this ship's note: it wants your ship intact).
+       weight: the chance (0–0.9) the captain follows a line when it picks a target; leave it out for 0.75. Weights
+       above 0.9 are lowered to 0.9. Easy captains halve them, Hard add 0.1. A failed roll only means the captain
+       chooses as usual. when: always (default), enemyWeaponsDown, enemyShieldsDown, enemyWounded.
+       weapon: only this weapon (by name) follows the line. -->
+  <ai plan="crew-kill">
+    <target system="engines" weapon="Sporewing" weight="0.8"/>
+    <target system="piloting" weapon="Sporewing"/>
+    <target system="weapon" weapon="Gat 2.1 Twinshot" weight="0.8"/>
+    <target system="lifeSupport" when="enemyWeaponsDown" weapon="Gat 2.1 Twinshot" weight="0.8"/>
+    <target system="medBay" when="enemyWounded" weight="0.5"/>
+  </ai>
 </ship>

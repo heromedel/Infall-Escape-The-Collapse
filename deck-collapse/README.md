@@ -126,7 +126,7 @@ These are gaps in the GDD, filled with the genre in mind. Each one is a setting 
   health ÷ 100, rounded down (`data/races.xml`): Terran/GATOS, Tentauri, Whispwraith 10; Azurethea, Lykario 7;
   Senti 5; Mecha 12; Malphen 15. Damage in pips (`rules.xml` crewDamage): every crew member in a hit system loses 1
   per point of damage (as in the genre, no roll); no air 1 a turn; fire 1 per fire pip a turn; crew-fight hits 2 ×
-  the race's attack; Treat heals 2 per Med Bay level.
+  the race's attack; Treat heals 1 per Med Bay level.
 - **Races (race-profiles.md point 9, heromedel):** Mecha have 125% health and attack and move at most 3 systems at
   a time; Lykario strike first in a fight (an enemy they kill deals them no damage); Senti are immune to fire and
   need no air. Pick a crew member's race in the designer.
@@ -174,6 +174,14 @@ The `infall-*.xml` ships are Ship Design's, one per race (`docs/deck-collapse-sh
 Ai-Generated-Proposal). The game reads their weapons as written; their power runs as a plain reactor for now (G2; an AZC is 5 bars per level),
 and the parts it doesn't have yet (Supershield, growth organ, servicing core, AAA, floor plans …) are kept and
 listed with their gap numbers.
+
+**Captain plans** (heromedel 2026-10-30): an `<ai plan="destroy|crew-kill">` section in a ship file. Each
+`<target system="…" when="…" weapon="…" weight="…"/>` line is tried in order when the captain aims a weapon: if its
+condition holds (`always`, `enemyWeaponsDown`, `enemyShieldsDown`, `enemyWounded`) and the line names no weapon or
+this one, it rolls its weight and on a success aims at that system. Weight defaults to 0.75 (followed 3 times in
+4), can't go above 0.9, and Easy captains halve it while Hard add 0.1. A failed roll only means the captain
+chooses as usual. A crew-kill plan also aims at rooms with crew and hacks the Med Bay first. The Terran Pirate
+Hijacker has the example plan.
 
 **Loadouts** (GDD 5J; Ship Design's G18): a `<loadout ship="…">` file patches a ship already loaded: its attributes
 replace the ship's, `<power>` replaces the power, each `<system>` matches by id (else type) and changes it or is

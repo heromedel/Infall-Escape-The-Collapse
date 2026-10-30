@@ -16,8 +16,8 @@
        weaponPerDamage: every crew member in a hit system loses this many pips per point of damage (as in the
        genre, every point of weapon damage hurts everyone in the room).
        noAir: per turn in a system with no air. fight: per hit in a crew fight, times the race's attack ÷ 100.
-       treat: healed per Med Bay level when treated. Fire: 1 pip per fire pip, per turn. -->
-  <crewDamage weaponPerDamage="1" noAir="1" fight="2" treat="2"/>
+       treat: healed per Med Bay level when treated (heromedel 2026-10-30: 1). Fire: 1 pip per fire pip, per turn. -->
+  <crewDamage weaponPerDamage="1" noAir="1" fight="2" treat="1"/>
 
   <!-- Fire (heromedel 2026-10-29): a fire has 1 to maxPips pips and grows by 1 each turn. Each turn it hurts
        everyone inside 1 pip per fire pip, damages its system by 1, and uses half its pips (rounded down) of the

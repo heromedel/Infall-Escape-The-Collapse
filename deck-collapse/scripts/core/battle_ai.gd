@@ -10,6 +10,11 @@ var _rng := RandomNumberGenerator.new()
 
 ## Station order when nothing urgent needs a crew member.
 const STATION_PRIORITY := ["piloting", "weapon", "shields", "engines", "evb", "sensors", "teleport", "airlock", "medBay"]
+## A plan line's chance to be followed when it leaves out weight (heromedel: 3 times out of 4), and the most any
+## line can have after the captain's level adjusts it, so captains stay a little unpredictable.
+const DEFAULT_PLAN_WEIGHT := 0.75
+const MAX_PLAN_WEIGHT := 0.9
+
 ## Captain turns (both sides) with no hull damage before an AI calls it a stalemate and jumps away.
 const STALEMATE_TURNS := 30
 ## Enemy systems worth breaking, best first.
@@ -180,6 +185,9 @@ func _hack(battle: Battle, side: int) -> Dictionary:
 		return {}
 	var enemy := battle.ships[1 - side]
 	var targets: Array = []
+	if battle.ships[side].design.ai.plan == "crew-kill" and enemy.has_type("medBay"):
+		# Keep their wounded from healing.
+		targets.append(enemy.first_system_of_type("medBay"))
 	if not enemy.shield_layers.is_empty() and _has_weapon_cards(battle, side):
 		targets.append(enemy.first_system_of_type("shields"))
 	targets.append_array(_ranked_targets(battle, side))
@@ -220,7 +228,9 @@ func _fire_weapons(battle: Battle, side: int) -> Dictionary:
 		var layers := maxi(0, enemy.shield_layers.size() - int(weapon.pierce))
 		if kind == "beam" and layers > 0 and level != "Easy" and weapon.damage <= layers:
 			continue
-		for system_id in _weapon_targets(battle, side, kind):
+		var planned := _plan_target(battle, side, weapon)
+		var candidates: Array = ([planned] if planned != "" else []) + _weapon_targets(battle, side, kind)
+		for system_id in candidates:
 			var target := {"system": system_id, "ship": 1 - side}
 			if battle.why_cannot_play(side, card.uid, target) == "":
 				var rooms := battle.beam_rooms(ship, card)
@@ -231,6 +241,46 @@ func _fire_weapons(battle: Battle, side: int) -> Dictionary:
 					target.systems = _split_bolts(battle, side, kind, bolts)
 				return {"kind": "play", "uid": card.uid, "target": target}
 	return {}
+
+
+## The ship's plan (its file's <ai> lines, in order): each line whose condition holds and whose system the enemy has
+## working rolls its weight; the first that succeeds names the system to aim this weapon at. A failed roll only means
+## the captain chooses as usual, which may pick the same system.
+func _plan_target(battle: Battle, side: int, weapon: Dictionary) -> String:
+	var enemy := battle.ships[1 - side]
+	for line in battle.ships[side].design.ai.targets:
+		if line.weapon != "" and line.weapon != weapon.name:
+			continue
+		if not _plan_condition(battle, side, line.when):
+			continue
+		var system_id := ""
+		for id in enemy.system_order:
+			if enemy.systems[id].type == line.system and not enemy.is_broken(id):
+				system_id = id
+				break
+		if system_id != "" and _rng.randf() < plan_weight(line.weight):
+			return system_id
+	return ""
+
+
+## A plan line's weight for this captain: Easy halves it, Hard adds 0.1; never above MAX_PLAN_WEIGHT.
+func plan_weight(weight: float) -> float:
+	match level:
+		"Easy": weight *= 0.5
+		"Hard": weight += 0.1
+	return clampf(weight, 0.0, MAX_PLAN_WEIGHT)
+
+
+func _plan_condition(battle: Battle, side: int, condition: String) -> bool:
+	var enemy := battle.ships[1 - side]
+	match condition:
+		"enemyWeaponsDown":
+			return enemy.weapon_systems().all(func(id): return enemy.capacity(id) <= 0)
+		"enemyShieldsDown":
+			return enemy.shield_layers.is_empty()
+		"enemyWounded":
+			return battle.living_crew_of(1 - side).any(func(m): return m.ship == 1 - side and m.wounds > 0)
+	return true
 
 
 ## Aims a multi-target weapon's bolts across the best targets: the first, the second, then the first again ...
@@ -269,8 +319,8 @@ func _weapon_targets(battle: Battle, side: int, kind: String) -> Array:
 	if kind in ["ion", "missile"] and shields_id != "" and not enemy.shield_layers.is_empty():
 		ranked.erase(shields_id)
 		ranked.push_front(shields_id)
-	if kind == "beam":
-		# Beams burn crew: aim where the most enemy crew stand among the top targets.
+	if kind == "beam" or battle.ships[side].design.ai.plan == "crew-kill":
+		# Beams burn crew, and a crew-kill captain wants them dead: aim where the most enemy crew stand.
 		ranked.sort_custom(func(a, b): return battle.crew_in_system(1 - side, a).size() > battle.crew_in_system(1 - side, b).size())
 	return ranked
 

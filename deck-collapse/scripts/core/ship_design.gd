@@ -18,6 +18,9 @@ var suit_parts := 0
 var systems: Array = []
 ## Each crew member: { "name", "skills" (see CrewSkills), "station" (a system id) }.
 var crew: Array = []
+## The enemy captain's plan for this ship (see BattleAI): { plan: "destroy" | "crew-kill", targets: [{ system,
+## weapon, when, weight }] }. Empty targets: the captain plays as usual.
+var ai := {"plan": "destroy", "targets": []}
 ## Parts of the ship file this game doesn't support yet (systems it doesn't know, floor plans and so on), kept as
 ## XML nodes so saving the design writes them back unchanged. See unsupported_parts().
 var unsupported: Array = []
@@ -45,6 +48,10 @@ static func from_xml(xml_text: String) -> ShipDesign:
 	for note_node in XmlTree.children_named(root, "note"):
 		design.note = XmlTree.clean_text(note_node)
 	var power_nodes := XmlTree.children_named(root, "power")
+	for ai_node in XmlTree.children_named(root, "ai"):
+		design.ai = {"plan": ai_node.attrs.get("plan", "destroy"), "targets": XmlTree.children_named(ai_node, "target").map(
+			func(n): return {"system": n.attrs.get("system", ""), "weapon": n.attrs.get("weapon", ""),
+				"when": n.attrs.get("when", "always"), "weight": _plan_line_weight(n.attrs, design.name)})}
 	for system_node in XmlTree.children_named(root, "system"):
 		var system_attrs: Dictionary = system_node.attrs
 		var type: String = system_attrs.get("type", "")
@@ -65,7 +72,7 @@ static func from_xml(xml_text: String) -> ShipDesign:
 			system.suits = system.suits.filter(func(id): return Catalog.suit_kinds.has(id))
 		design.systems.append(system)
 	for node in root.children:
-		if not node.name in ["note", "system", "crew", "power"]:
+		if not node.name in ["note", "system", "crew", "power", "ai"]:
 			design.unsupported.append(node)
 	for crew_node in XmlTree.children_named(root, "crew"):
 		var crew_attrs: Dictionary = crew_node.attrs
@@ -104,6 +111,14 @@ func _add_vanilla_reactor(power_node: Dictionary, root: Dictionary) -> void:
 	systems.push_front({"id": "reactor", "type": "reactor", "level": level})
 	if kind != "pool":
 		power_node.attrs.gdd = "G2: runs as a plain reactor of level %d for now" % level
+
+
+## A plan line's weight from its file, lowered to the most a line may have (with a warning) if set higher.
+static func _plan_line_weight(attrs: Dictionary, ship_name: String) -> float:
+	var weight := float(attrs.get("weight", BattleAI.DEFAULT_PLAN_WEIGHT))
+	if weight > BattleAI.MAX_PLAN_WEIGHT:
+		push_warning("%s: a plan line's weight %s is lowered to %s." % [ship_name, weight, BattleAI.MAX_PLAN_WEIGHT])
+	return minf(weight, BattleAI.MAX_PLAN_WEIGHT)
 
 
 ## The weapons in a weapon system's file entry. An old entry (kind and weaponType on the system) becomes the
@@ -147,6 +162,9 @@ static func from_loadout(loadout: Dictionary, base: ShipDesign) -> ShipDesign:
 				target.attrs[key] = patch.attrs[key]
 			if not patch.children.is_empty():
 				target.children = patch.children
+	for ai_patch in XmlTree.children_named(loadout, "ai"):
+		children = children.filter(func(n): return n.name != "ai")
+		children.append(ai_patch)
 	for crew_patch in XmlTree.children_named(loadout, "crew"):
 		var members := XmlTree.children_named(crew_patch, "member")
 		if not members.is_empty():
@@ -200,6 +218,17 @@ func to_xml() -> String:
 		lines.append('  <crew name="%s"%s station="%s"%s/>' % [XmlTree.escape(member.name),
 			"" if race == "" else ' race="%s"' % XmlTree.escape(race), XmlTree.escape(member.station),
 			"" if skills == "" else " " + skills])
+	if ai.plan != "destroy" or not ai.targets.is_empty():
+		lines.append('  <ai plan="%s">' % ai.plan)
+		for line in ai.targets:
+			var parts: Array[String] = ['system="%s"' % line.system]
+			if line.when != "always":
+				parts.append('when="%s"' % line.when)
+			if line.weapon != "":
+				parts.append('weapon="%s"' % XmlTree.escape(line.weapon))
+			parts.append('weight="%s"' % str(line.weight))
+			lines.append("    <target %s/>" % " ".join(parts))
+		lines.append("  </ai>")
 	for node in unsupported:
 		lines.append(XmlTree.to_xml(node))
 	lines.append("</ship>")
