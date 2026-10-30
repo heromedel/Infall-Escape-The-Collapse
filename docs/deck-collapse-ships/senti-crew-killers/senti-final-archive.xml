@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Senti-GPH "Final Archive": a doomed-Senti crew killer, bands 7-8. Ai-Generated-Proposal (2026-10-29). Needs two
      new Deck Collapse rules, G20 (crewDamage) and G21 (bomb family); see ../README.md. -->
-<ship bands="7-8" name="Final Archive" race="Senti-GPH" faction="Senti-GPH" color="#D2FF00" hull="18" missiles="0">
+<ship bands="7-8" name="Final Archive" race="Senti-GPH" faction="Senti-GPH" color="#D2FF00" hull="18" missiles="4">
   <note>Kills the crew and keeps the ship. An anti-bio beam sweeps four systems without scratching them, and bio bombs are broadcast straight into a room. Its holograms finish whoever is left.</note>
   <power kind="AZC" level="4"/>
   <system type="piloting" level="2"/>
@@ -12,7 +12,7 @@
   <system type="teleport" level="2"/>
   <system type="weapon" id="weapons" name="Weapons" level="6">
     <weapon name="4B 00 X1" kind="beam" power="3" shots="1" damage="0" rooms="4" crewDamage="3" tech="digital"/>   <!-- G20: the genre's anti-bio beam -->
-    <weapon name="BB 00 X1" kind="bomb" power="2" shots="1" damage="0" crewDamage="4" tech="digital"/>             <!-- G20, G21: a bio bomb -->
+    <weapon name="BB 00 X1" kind="bomb" power="2" shots="1" damage="0" crewDamage="4" tech="digital"/>             <!-- G20, G21: a bio bomb; uses a missile -->
     <weapon name="3B 01 F1" kind="beam" power="2" shots="1" damage="1" rooms="3" fire="100" tech="digital"/>
   </system>
   <crew name="Pilot" race="Senti-GPH" station="piloting"/>

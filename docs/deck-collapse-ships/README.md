@@ -85,7 +85,7 @@ New gaps:
 | Ref | Gap | What the file asks for |
 |---|---|---|
 | G20 | Crew-only damage | `crewDamage`: health pips each crew member in a hit system loses, on top of (or instead of, with `damage="0"`) system damage; the genre's anti-bio beam |
-| G21 | Bombs | `kind="bomb"`: teleported straight into a system, so it ignores shields and evasion; no missile used (Mawjig per shot) |
+| G21 | Bombs | `kind="bomb"`: teleported straight into a system, so it ignores shields and can't be shot down; uses one missile per shot, as every genre bomb does (`ftl-baseline.md`). Senti use beams and lasers far more, but an occasional bomb is fine (heromedel, 2026-10-30) |
 
 Judgment calls: fire and breaches in separate systems (a breach drains the air a fire needs); teleport standing in
 for an upgraded AAA broadcasting avatars aboard; the weapon codes follow the Senti number codes, with F for fire,
