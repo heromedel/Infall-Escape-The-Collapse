@@ -46,7 +46,7 @@ The open-stern Light Attack Frame is a floor layout change only, so it waits for
 | G9 | Conduit damage | `conduitDamage` percent; matters once conduits and floor layouts exist (G19) | GDD 5H; Terran weapons |
 | G10 | Foreign tech | `tech` on a weapon; on another tech type's system it charges 20% slower | GDD 8D |
 | G11 | Supershield Generator | an extra energy layer that recharges over time, capacity 5, blocks teleporting | `system-prices.md` |
-| G12 | AAA | Senti avatar array: hosts one avatar per level (suggestion); damage drops avatars until repaired | Senti profile 6 |
+| G12 | AAA | Senti avatar array; built in Deck Collapse (2026-10-30, heromedel's design): replaces the Med Bay on Senti ships, hosts 3 Senti per working level, brings dead Senti back. The three crew killers carry one (Census Picket level 1, Quiet Ledger and Final Archive level 2), and every plan line aimed at a Med Bay has an AAA twin for Senti targets | Senti profile 6 |
 | G13 | Growth organ | Malphen clone bay: grows a dead crew member back unless the organ is destroyed | Malphen profile 1, 6 |
 | G14 | Cybernetic Servicing Core | the Mecha Medbay (heals any race); where Mecha upgrade their mechs | Mecha profile 9 |
 | G15 | Atmosphere | Life Support can make a race's own air (`atmosphere`); Senti ships may skip Life Support | Whispwraith and Senti profiles |

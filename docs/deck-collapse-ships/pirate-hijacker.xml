@@ -33,8 +33,10 @@
     <target unless="ownCrewIn" system="weapon" weapon="Gat 2.1 Twinshot" weight="0.8"/>
     <target system="lifeSupport" when="enemyWeaponsDown" unless="ownBoardersAboard" weapon="Gat 2.1 Twinshot" weight="0.8"/>   <!-- G26, G27 -->
     <target system="medBay" when="enemyWounded" unless="ownCrewIn" weight="0.5"/>                                         <!-- G27 -->
+    <target system="aaa" when="enemyWounded" unless="ownCrewIn" weight="0.5"/>   <!-- Senti ships: the AAA replaces the Med Bay -->
     <board system="weapon" when="enemyShieldsDown" weight="0.8"/>   <!-- G23 -->
     <board system="medBay" when="enemyWounded" weight="0.6"/>
+    <board system="aaa" when="enemyWounded" weight="0.6"/>   <!-- Senti ships: the AAA replaces the Med Bay -->
     <board system="piloting"/>
   </ai>
 </ship>

@@ -10,6 +10,7 @@
   <system type="shields" level="1"/>
   <system type="engines" level="1"/>
   <system type="hacking" level="1"/>                                 <!-- hack the Med Bay so the burned can't heal -->
+  <system type="aaa" level="1"/>                                       <!-- hosts 3 Senti per level; brings the dead back -->
   <system type="weapon" id="weapons" name="Weapons" level="3">
     <weapon name="2B 01 F1" kind="beam" power="2" shots="1" damage="1" rooms="2" fire="100" tech="digital"/>  <!-- a fire beam: every hit system burns -->
     <weapon name="1B 02 V1" kind="beam" power="1" shots="1" damage="2" rooms="1" tech="digital"/>             <!-- beams wound every crew member they sweep -->
@@ -23,8 +24,10 @@
     <target system="teleport" when="enemyBoardersAboard" weapon="1B 02 V1" weight="0.85"/>   <!-- G28 -->
     <hack system="teleport" when="enemyBoardersAboard" weight="0.9"/>                        <!-- G24, G28 -->
     <target system="medBay" weapon="2B 01 F1" weight="0.85"/>
+    <target system="aaa" weapon="2B 01 F1" weight="0.85"/>   <!-- Senti ships: the AAA replaces the Med Bay -->
     <target system="lifeSupport" weapon="2B 01 F1" when="enemyMedBayDown" weight="0.8"/>   <!-- G25 -->
     <hack system="medBay" weight="0.9"/>                                                     <!-- G24 -->
+    <hack system="aaa" weight="0.9"/>   <!-- Senti ships: the AAA replaces the Med Bay -->
     <hack system="lifeSupport" when="enemyMedBayDown"/>
   </ai>
 </ship>
