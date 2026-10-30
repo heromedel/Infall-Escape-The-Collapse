@@ -10,6 +10,9 @@
   firstStrike  true: in a crew fight they strike first, and an enemy they kill deals them no damage that round
   fireImmune   true: fire doesn't hurt them
   breathes     false: they need no air (a ship crewed only by them needs no Life Support)
+  broadcast    true: bound to the ship's Avatar Array (AAA): broadcast again after dying, and limited by it (Senti)
+  avoidsBoarders  true: an AI captain moves them away from enemy boarders instead of sending them to fight
+               (heromedel 2026-10-30, Senti; they still fight boarders who come into their system)
   aliases      other names ship files use for the race
 -->
 <races>
@@ -17,7 +20,7 @@
   <race id="Azurethea" name="Azurethea" hp="75" attack="100">Reduced health (heromedel). They make breathable air and survive briefly in space (not in yet).</race>
   <race id="Mecha" name="Mecha" hp="125" attack="125" moveLimit="3" aliases="HalfMech">Physically tough, hard hitters, slow movers: 125% health and attack, and they move at most 3 systems at a time (heromedel).</race>
   <race id="Tentauri" name="Tentauri" hp="100" attack="100">Can run several systems at once (not in yet).</race>
-  <race id="Senti-GPH" name="Senti-GPH" hp="50" attack="100" fireImmune="true" breathes="false" aliases="Senti">Half health, immune to fire, need no air.</race>
+  <race id="Senti-GPH" name="Senti-GPH" hp="50" attack="100" fireImmune="true" breathes="false" broadcast="true" avoidsBoarders="true" aliases="Senti">Half health, immune to fire, need no air. They keep away from boarders, and an Avatar Array broadcasts them again after they die.</race>
   <race id="Lykario" name="Lykario" hp="75" attack="100" firstStrike="true">Quick attacks and reduced health: they strike first in a fight.</race>
   <race id="Malphen" name="Malphen" hp="150" attack="100">High health, like the genre's rock people. They heal slowly aboard biomechanical ships (not in yet).</race>
   <race id="Whispwraith" name="Whispwraith" hp="100" attack="100">Breathe their own air; oxygen is toxic to them (not in yet).</race>

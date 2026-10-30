@@ -186,7 +186,13 @@ func burn_engines_quietly(side: int) -> void:
 	_log("Engines burn: evasion now %d%%." % evasion(ship), side)
 
 
-## Powers the Med Bay for this turn (1 power): as the turn ends it heals everyone in it by its working level.
+## The system TREAT runs: the Med Bay, or on a ship without one its Avatar Array.
+static func treating_system(ship: ShipState) -> String:
+	var med_bay_id := ship.first_system_of_type("medBay")
+	return med_bay_id if med_bay_id != "" else ship.first_system_of_type("aaa")
+
+
+## Powers the Med Bay (or Avatar Array) for this turn (1 power): as the turn ends it heals by its working level.
 func treat(side: int) -> Array:
 	_events = []
 	var reason := why_cannot_treat(side)
@@ -194,12 +200,13 @@ func treat(side: int) -> Array:
 		_emit({"type": "refused", "side": side, "reason": reason})
 		return _events
 	var ship := ships[side]
-	var med_bay_id := ship.first_system_of_type("medBay")
+	var med_bay_id := treating_system(ship)
 	_spend_power(ship, 1)
 	ship.spent[med_bay_id] = int(ship.spent.get(med_bay_id, 0)) + 1
 	ship.treated = true
 	_emit({"type": "treat", "side": side, "system": med_bay_id})
-	_log("Med Bay powered: it treats everyone inside as the turn ends.", side)
+	_log("%s powered: it treats %s as the turn ends." % [ship.systems[med_bay_id].name,
+		"everyone inside" if ship.systems[med_bay_id].type == "medBay" else "every Senti aboard"], side)
 	return _events
 
 
@@ -207,13 +214,14 @@ func why_cannot_treat(side: int) -> String:
 	if over or side != active_side:
 		return "Not your turn."
 	var ship := ships[side]
-	var med_bay_id := ship.first_system_of_type("medBay")
+	var med_bay_id := treating_system(ship)
 	if med_bay_id == "":
 		return "No Med Bay."
+	var name: String = ship.systems[med_bay_id].name
 	if ship.treated:
-		return "The Med Bay is already running this turn."
+		return "The %s is already running this turn." % name
 	if ship.system_room(med_bay_id) < 1:
-		return "The Med Bay isn't working." if ship.capacity(med_bay_id) < 1 else "The Med Bay can't take more power this turn."
+		return "The %s isn't working." % name if ship.capacity(med_bay_id) < 1 else "The %s can't take more power this turn." % name
 	if ship.available_power() < 1:
 		return "No power left."
 	return ""
@@ -505,8 +513,9 @@ static func health_fraction(member: Dictionary) -> float:
 	return clampf(1.0 - member.wounds / maxf(1.0, member.max_health), 0.0, 1.0)
 
 
+## Crew alive and here: the dead, and Senti stored in their Avatar Array, aren't.
 func living_crew() -> Array:
-	return crew.filter(func(member): return not is_dead(member))
+	return crew.filter(func(member): return not is_dead(member) and not member.get("stored", false))
 
 
 func crew_by_id(crew_id: int) -> Dictionary:
@@ -739,6 +748,8 @@ func _end_of_turn_effects(ship: ShipState) -> void:
 			member.stunned = false
 	if ship.treated:
 		_heal_in_med_bay(ship)
+	_broadcast_avatars(ship, true)
+	_broadcast_avatars(enemy, false)
 	# Ion and hacks wear off after the turn they blocked.
 	for system_id in ship.system_order:
 		var system: Dictionary = ship.systems[system_id]
@@ -757,7 +768,7 @@ func _fires_burn(ship: ShipState) -> void:
 	for system_id in burning:
 		var system: Dictionary = ship.systems[system_id]
 		system.air = maxi(0, system.air - system.fire / 2)
-		if ship.is_broken(system_id) or ship.air_max > 0 and not room_has_air(ship, system_id):
+		if ship.is_broken(system_id) or not room_has_air(ship, system_id):
 			_put_out(system, system.fire)
 			_emit({"type": "fire_out", "side": ship.side, "system": system_id})
 			_log("The fire in %s %s." % [system.name, "burns out" if ship.is_broken(system_id) else "runs out of air"], ship.side)
@@ -771,7 +782,7 @@ func _fires_burn(ship: ShipState) -> void:
 			var neighbour_index: int = index + offset
 			if neighbour_index >= 0 and neighbour_index < ship.system_order.size():
 				var neighbour: String = ship.system_order[neighbour_index]
-				if not ship.systems[neighbour].on_fire and not ship.is_broken(neighbour):
+				if not ship.systems[neighbour].on_fire and not ship.is_broken(neighbour) and room_has_air(ship, neighbour):
 					neighbours.append(neighbour)
 		if neighbours.is_empty():
 			continue
@@ -801,10 +812,11 @@ func life_support_down(ship: ShipState) -> bool:
 
 ## Whether a system has air: not breached, not vented this turn, and the ship has air left (Life Support working,
 ## or pips in reserve). Crew in a system without air take a wound as their captain's turn ends.
-## A ship with no Life Support (a crew that doesn't breathe) has no air to lose.
+## A ship with no Life Support (a crew that doesn't breathe) has no atmosphere at all: Air 0/0 everywhere, so
+## boarders who breathe choke there (heromedel 2026-10-30).
 func room_has_air(ship: ShipState, system_id: String) -> bool:
 	if ship.air_max == 0:
-		return true
+		return false
 	var system: Dictionary = ship.systems[system_id]
 	return not system.breached and system.air > 0
 
@@ -1016,19 +1028,65 @@ func _combat_hits(member: Dictionary) -> int:
 	return 1
 
 
+## The Avatar Array (race profiles, Senti-GPH 6): it hosts avatarsPerLevel Senti per working level (level minus
+## damage). Extra ones blink out, stored, until it's repaired; stored ones come back into it while it works, those
+## who died after their rebroadcast turns (counted down as their own captain's turn ends) with full health.
+func _broadcast_avatars(ship: ShipState, own_turn: bool) -> void:
+	var array_id := ship.first_system_of_type("aaa")
+	if array_id == "":
+		return
+	var array: Dictionary = ship.systems[array_id]
+	var room := int(Catalog.rule("aaa", "avatarsPerLevel", 3)) * maxi(0, array.level - array.damage)
+	var hosted := living_crew_of(ship.side).filter(func(m): return Catalog.race(m.race).broadcast)
+	# Too many for a damaged array: the last ones (not suit pilots) blink out.
+	for i in range(hosted.size() - 1, -1, -1):
+		if hosted.size() <= room:
+			break
+		var member: Dictionary = hosted[i]
+		if member.system == "" and member.ship == ship.side:
+			continue
+		member.stored = true
+		member.rebroadcast_turns = 0
+		hosted.remove_at(i)
+		_emit({"type": "avatar_stored", "crew": member.id, "ship": member.ship, "system": member.system})
+		_log("%s blinks out: the damaged %s can't broadcast them." % [member.name, array.name], ship.side)
+	if ship.capacity(array_id) <= 0:
+		return
+	for member in crew:
+		if member.owner != ship.side or not member.get("stored", false):
+			continue
+		if own_turn and member.rebroadcast_turns > 0:
+			member.rebroadcast_turns -= 1
+		if member.rebroadcast_turns > 0 or hosted.size() >= room:
+			continue
+		member.stored = false
+		if is_dead(member):
+			member.wounds = 0.0
+		member.ship = ship.side
+		member.system = array_id
+		member.controlled_by = -1
+		member.leaving_to = ""
+		hosted.append(member)
+		_emit({"type": "avatar_broadcast", "crew": member.id, "ship": ship.side, "system": array_id})
+		_log("%s is broadcast back into the %s." % [member.name, array.name], ship.side)
+
+
 func _heal_in_med_bay(ship: ShipState) -> void:
-	var med_bay_id := ship.first_system_of_type("medBay")
+	var med_bay_id := treating_system(ship)
 	if med_bay_id == "":
 		return
 	var healing := ship.capacity(med_bay_id) * float(Catalog.rule("crewDamage", "treat", 2))
 	if healing <= 0:
 		return
-	for member in crew_in_system(ship.side, med_bay_id):
+	# A Med Bay treats everyone inside it; an Avatar Array every Senti aboard, wherever they stand.
+	var patients := crew_in_system(ship.side, med_bay_id) if ship.systems[med_bay_id].type == "medBay" \
+		else living_crew().filter(func(m): return m.ship == ship.side and Catalog.race(m.race).broadcast)
+	for member in patients:
 		if member.owner == ship.side and member.wounds > 0:
 			var healed := minf(healing, member.wounds)
 			member.wounds -= healed
 			_emit({"type": "healed", "crew": member.id, "amount": healed})
-			_log("%s is patched up in the Med Bay." % member.name, ship.side)
+			_log("%s is patched up in the %s." % [member.name, ship.systems[med_bay_id].name], ship.side)
 
 
 # ---------------------------------------------------------------- cards
@@ -1047,7 +1105,7 @@ func _resolve_card(ship: ShipState, card: Dictionary, definition: Dictionary, ta
 			_log("Shield layer raised (%d up)." % ship.shield_layers.size(), ship.side)
 			return
 		"weapon":
-			_fire_weapon(ship, enemy, card, target)
+			_fire_weapon(ship, ships[int(target.get("ship", enemy.side))], card, target)
 		"restore":
 			for system_id in ship.system_order:
 				var system: Dictionary = ship.systems[system_id]
@@ -1200,7 +1258,7 @@ func _fire_weapon(ship: ShipState, enemy: ShipState, card: Dictionary, target: D
 		"bomb": weapon.bomb, "crew_damage": weapon.crewDamage,
 		"pierce": weapon.pierce, "spores": weapon.spores, "stun": weapon.stun, "mind": weapon.mind,
 		"mind_turns": int(ship.systems[card.system].level)}
-	_log("Fires %s at %s." % [weapon.name, enemy.systems[target_system_id].name], ship.side)
+	_log("Fires %s at %s%s." % [weapon.name, "our own " if enemy == ship else "", enemy.systems[target_system_id].name], ship.side)
 	_gain_xp_in(ship, card.system, "weapons", "volley")
 	var aims: Array = target.get("systems", [])
 	if weapon.rooms > 1:
@@ -1225,7 +1283,13 @@ func _fire_weapon(ship: ShipState, enemy: ShipState, card: Dictionary, target: D
 ## One shot: roll to hit, meet the shields, then hit the system.
 func _fire_shot(ship: ShipState, enemy: ShipState, weapon_system_id: String, target_system_id: String, shot: Dictionary, shot_index: int) -> void:
 	var event := {"type": "shot", "side": ship.side, "from": weapon_system_id, "target": target_system_id,
-		"kind": shot.kind, "index": shot_index, "result": "hit", "damage": 0}
+		"kind": shot.kind, "index": shot_index, "result": "hit", "damage": 0, "own": enemy == ship}
+	if enemy == ship:
+		# At our own ship: nothing intercepts it and nothing dodges it, and it comes in under our shields.
+		event.damage = shot.damage
+		_emit(event)
+		_shot_hits(ship, enemy, target_system_id, shot, shot.damage)
+		return
 	if shot.get("interceptable", false):
 		for guardian in enemy.suits:
 			if Catalog.suit_kind(guardian.kind).action == "intercept" and guardian.ready:
@@ -1278,6 +1342,11 @@ func _fire_shot(ship: ShipState, enemy: ShipState, weapon_system_id: String, tar
 			damage = maxi(0, damage - layers)
 	event.damage = damage
 	_emit(event)
+	_shot_hits(ship, enemy, target_system_id, shot, damage)
+
+
+## What a shot that got through does to the system it hit: ion, specials, damage, crew wounds, fire and breach.
+func _shot_hits(ship: ShipState, enemy: ShipState, target_system_id: String, shot: Dictionary, damage: int) -> void:
 	var system: Dictionary = enemy.systems[target_system_id]
 	if shot.ion:
 		_disable_system(enemy, target_system_id, "ionized")
@@ -1291,7 +1360,8 @@ func _fire_shot(ship: ShipState, enemy: ShipState, weapon_system_id: String, tar
 	if crew_hurt > 0.0:
 		for member in crew_in_system(enemy.side, target_system_id):
 			_wound(member, "bio" if damage <= 0 else "caught in the blast", crew_hurt)
-	if not system.on_fire and rng.randi_range(1, 100) <= shot.fire_chance:
+	# Fire needs air (genre): none starts in a breached or airless system.
+	if not system.on_fire and room_has_air(enemy, target_system_id) and rng.randi_range(1, 100) <= shot.fire_chance:
 		_ignite(system)
 		_emit({"type": "fire_started", "side": enemy.side, "system": target_system_id})
 		_log("Fire breaks out in %s!" % system.name, ship.side)
@@ -1315,7 +1385,7 @@ func _shot_effects(ship: ShipState, enemy: ShipState, system_id: String, shot: D
 			_emit({"type": "stunned", "crew": member.id})
 			_log("%s is stunned." % member.name, ship.side)
 	if shot.get("mind", false):
-		var victims := crew_in_system(enemy.side, system_id).filter(func(m): return m.owner == enemy.side and m.controlled_by < 0)
+		var victims := crew_in_system(enemy.side, system_id).filter(func(m): return m.owner != ship.side and m.controlled_by < 0)
 		if not victims.is_empty():
 			var victim: Dictionary = victims[rng.randi() % victims.size()]
 			# A mind-control weapon holds a mind for as many turns as its weapon system's level.
@@ -1390,6 +1460,12 @@ func _wound(member: Dictionary, cause: String, amount: float = 1.0) -> void:
 	if is_dead(member):
 		_emit({"type": "crew_died", "crew": member.id, "cause": cause})
 		_log("%s is killed (%s)." % [member.name, cause], member.owner)
+		var home := ships[member.owner]
+		var array_id := home.first_system_of_type("aaa")
+		if Catalog.race(member.race).broadcast and array_id != "":
+			member.stored = true
+			member.rebroadcast_turns = int(Catalog.by_skill(Catalog.rule("aaa", "rebroadcastTurns", [4, 3, 2]), home.systems[array_id].level - 1))
+			_log("%s's avatar is stored; the %s can broadcast it again in %d turns." % [member.name, home.systems[array_id].name, member.rebroadcast_turns], member.owner)
 	else:
 		_emit({"type": "wounded", "crew": member.id, "cause": cause, "amount": amount})
 
@@ -1515,12 +1591,26 @@ func _card_requirement_problem(ship: ShipState, card: Dictionary, definition: Di
 	return ""
 
 
+## Firing a weapon at your own ship (heromedel 2026-10-30): any weapon but a beam, at one of your systems, all
+## bolts at it. The shot leaves the ship and comes back down: it never misses and passes your own shields.
+func own_fire_problem(ship: ShipState, card: Dictionary, target: Dictionary) -> String:
+	if weapon_of(ship, card).kind == "beam":
+		return "Beams can't fire on your own ship."
+	if not ship.systems.has(target.get("system", "")):
+		return "Pick one of your systems."
+	if not target.get("systems", []).is_empty():
+		return "Aim every bolt at the same system of your own."
+	return ""
+
+
 func _target_problem(ship: ShipState, card: Dictionary, definition: Dictionary, target: Dictionary) -> String:
 	var enemy := ships[1 - ship.side]
 	match definition.target:
 		CardLibrary.TARGET_NONE:
 			return ""
 		CardLibrary.TARGET_ENEMY_SYSTEM:
+			if int(target.get("ship", enemy.side)) == ship.side and card.id == "weapon":
+				return own_fire_problem(ship, card, target)
 			if int(target.get("ship", enemy.side)) != enemy.side or not enemy.systems.has(target.get("system", "")):
 				return "Pick an enemy system."
 			var aims: Array = target.get("systems", [])
@@ -1741,6 +1831,14 @@ func _shuffle(cards: Array) -> void:
 
 # ---------------------------------------------------------------- the end
 
+## Whether a ship with no crew left still has Senti stored in a working Avatar Array, to be broadcast back.
+func _avatars_waiting(ship: ShipState) -> bool:
+	var array_id := ship.first_system_of_type("aaa")
+	if array_id == "" or ship.is_broken(array_id):
+		return false
+	return crew.any(func(m): return m.owner == ship.side and m.get("stored", false))
+
+
 func _check_battle_end() -> void:
 	if over:
 		return
@@ -1749,7 +1847,7 @@ func _check_battle_end() -> void:
 		var lost := ""
 		if ship.hull <= 0:
 			lost = OUTCOME_DESTROYED
-		elif living_crew_of(side).is_empty():
+		elif living_crew_of(side).is_empty() and not _avatars_waiting(ship):
 			lost = OUTCOME_CREW_LOST
 		if lost != "" and not (aftermath and side != winner):
 			_log("%s %s." % [ship.name, "is destroyed" if lost == OUTCOME_DESTROYED else "has lost all hands"])

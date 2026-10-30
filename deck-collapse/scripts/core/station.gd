@@ -70,6 +70,9 @@ static func _installable_systems(design: ShipDesign) -> Array:
 		var definition: Dictionary = Catalog.systems[type]
 		if type == "reactor" or design.has_system(type) or definition.prices.is_empty() or float(definition.prices[0]) <= 0.0:
 			continue
+		# An Avatar Array only helps a crew it can broadcast (Senti).
+		if type == "aaa" and not design.crew.any(func(m): return Catalog.race(m.get("race", "")).broadcast):
+			continue
 		types.append(type)
 	return types
 

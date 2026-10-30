@@ -101,7 +101,9 @@ These are gaps in the GDD, filled with the genre in mind. Each one is a setting 
   Working Life Support adds a pip to every unbreached system as your turn starts; while it is down, every system
   loses one as your turn ends. Breached and vented systems have none. Crew in a system with no air take a wound as
   the turn ends. Restore Environment adds a pip to every unbreached system, only while Life Support works. A ship
-  crewed only by races that don't breathe (Senti) needs no Life Support.
+  crewed only by races that don't breathe (Senti) needs no Life Support; a ship without it has no atmosphere at all
+  (Air 0/0), so boarders who breathe choke there (heromedel 2026-10-30). Fire needs air: none starts or spreads in
+  a breached or airless system. A system with no air left has a cold tint.
 - **Teleport (heromedel):** one card: click your Teleport Bay, then any system on either ship, and everyone of yours
   in the bay goes there; or click another system, and your crew there come back to the bay.
 - **EVB Dock (heromedel):** holds up to 4 suit types, like a weapon system holds weapons; each adds Launch cards by
@@ -130,7 +132,17 @@ These are gaps in the GDD, filled with the genre in mind. Each one is a setting 
   the race's attack; Treat heals 1 per Med Bay level.
 - **Races (race-profiles.md point 9, heromedel):** Mecha have 125% health and attack and move at most 3 systems at
   a time; Lykario strike first in a fight (an enemy they kill deals them no damage); Senti are immune to fire and
-  need no air. Pick a crew member's race in the designer.
+  need no air, and an AI captain moves them away from boarders instead of sending them to fight (they still fight
+  boarders who come to them). Pick a crew member's race in the designer.
+- **Avatar Array (AAA; race-profiles.md Senti-GPH 6 and 9; numbers Ai-Generated-Proposal):** the Senti's system in
+  place of a Med Bay, levels 1–3. It broadcasts 3 Senti per working level; damage blinks the extra ones out (stored,
+  not dead) until it's repaired. A Senti who dies is broadcast back into it after 4, 3 or 2 turns by level while it
+  works, whole and with their skills; a ship with Senti stored in an unbroken array hasn't lost its crew. TREAT on it
+  (1 power) heals every Senti aboard 1 per working level. Senti stored when a battle ends come back after it.
+- **Firing on your own ship (heromedel 2026-10-30):** any weapon but a beam can aim at one of your own systems,
+  after a confirmation. The shot goes out and arcs back down: it never misses, passes your shields, and does
+  everything it would do to the enemy (bombs still spare the hull). Enemy captains use it only with crew-only weapons
+  on systems holding your boarders.
 - **Airlock Control (as Doors):** boarders need 0/0/1/2/3 turns to move from one system to another at Airlock Control
   level 0–4 (level 1 doesn't slow them). Teleporting and venting aren't slowed. Each level slows fire spreading.
   Airlock Control adds 3 Cycle Airlock cards, plus 1 per level above 1. Cycle Airlock costs 1 power and needs a
@@ -179,7 +191,7 @@ templates (hull 9–14), translated into Infall systems:
 
 The `infall-*.xml` ships are Ship Design's, one per race (`docs/deck-collapse-ships` on Cloud-C-ShipDesign,
 Ai-Generated-Proposal). The game reads their weapons as written; their power runs as a plain reactor for now (G2; an AZC is 5 bars per level),
-and the parts it doesn't have yet (Supershield, growth organ, servicing core, AAA, floor plans …) are kept and
+and the parts it doesn't have yet (Supershield, growth organ, servicing core, floor plans …) are kept and
 listed with their gap numbers.
 
 **Captain plans** (heromedel 2026-10-30): an `<ai plan="destroy|crew-kill">` section in a ship file, with lines of

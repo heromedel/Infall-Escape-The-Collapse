@@ -407,8 +407,12 @@ func _on_tile_clicked(tile: SystemTile) -> void:
 		var card := _card_in_hand(_targeting_uid)
 		var definition := battle.card_definition(battle.ships[PLAYER], card)
 		if definition.target == CardLibrary.TARGET_ENEMY_SYSTEM and tile.ship_side == PLAYER:
-			# Clicking your own ship while aiming at the enemy changes your mind.
-			_cancel_selection()
+			# A weapon (not a beam) can fire on your own ship, after a confirmation; otherwise clicking your own ship
+			# while aiming at the enemy changes your mind.
+			if card.id == "weapon" and _aimed_bolts.is_empty() and battle.why_cannot_play(PLAYER, _targeting_uid, target) == "":
+				_confirm_own_fire(_targeting_uid, target)
+			else:
+				_cancel_selection()
 			return
 		if definition.target == CardLibrary.TARGET_CREW_THEN_SYSTEM:
 			if _targeting_crew < 0:
@@ -825,6 +829,11 @@ func _play_event(event: Dictionary) -> void:
 			await _wait(0.35)
 		"healed":
 			_fx.float_text(_crew_point(event.crew), "+%d" % event.amount, UiKit.GOOD, 18)
+		"avatar_broadcast":
+			_fx.float_text(_tile_center(event.ship, event.system), "BROADCAST", UiKit.ACCENT, 18)
+		"avatar_stored":
+			if event.system != "":
+				_fx.float_text(_tile_center(event.ship, event.system), "STORED", UiKit.MUTED, 16)
 		"repaired":
 			Sounds.play("repair")
 			_fx.sparkle(_tile_center(event.side, event.system), UiKit.GOOD)
@@ -987,6 +996,8 @@ func _advance_shown(event: Dictionary) -> void:
 			_show_crew_wounds(event.crew, _shown_wounds(event.crew) + float(event.get("amount", 1.0)))
 		"crew_died":
 			_show_crew_wounds(event.crew, 999.0)
+		"avatar_broadcast":
+			_show_crew_wounds(event.crew, 0.0)
 		"healed":
 			_show_crew_wounds(event.crew, maxf(0.0, _shown_wounds(event.crew) - float(event.amount)))
 		"enemy_beaten":
@@ -1058,7 +1069,7 @@ func _animate_card_played(event: Dictionary) -> void:
 
 func _animate_shot(event: Dictionary) -> void:
 	var attacker: int = event.side
-	var defender := 1 - attacker
+	var defender := attacker if event.get("own", false) else 1 - attacker
 	var from := _tile_center(attacker, event.from) if event.from != "" else _shield_point(attacker)
 	var to := _tile_center(defender, event.target)
 	var kind: String = event.kind
@@ -1075,6 +1086,11 @@ func _animate_shot(event: Dictionary) -> void:
 			"spore": "missile", "mind": "hack", "flak": "heavy", "bomb": "teleport"}.get(kind, "laser"), -2.0, randf_range(0.92, 1.08))
 		if event.result == "intercepted":
 			await _fx.shoot(from, from.lerp(to, 0.7), kind, color, false)
+		elif event.get("own", false) and kind != "bomb":
+			# Fired at our own ship: out toward the enemy, then arcing back down onto our system.
+			var apex := from.lerp(_shield_point(1 - attacker), 0.35) + Vector2(0, -140)
+			await _fx.shoot(from, apex, kind, color, false)
+			await _fx.shoot(apex, to, kind, color, false)
 		else:
 			await _fx.shoot(from, to, kind, color, event.result == "miss")
 	match event.result:
@@ -1248,6 +1264,41 @@ func _show_result(event: Dictionary) -> void:
 ## True once the battle is over and the player's ship and crew made it out.
 func player_survived() -> bool:
 	return battle.over and battle.ships[PLAYER].hull > 0 and not battle.living_crew_of(PLAYER).is_empty()
+
+
+## Asks before a weapon fires on the player's own system.
+func _confirm_own_fire(uid: int, target: Dictionary) -> void:
+	var ship := battle.ships[PLAYER]
+	var weapon := battle.weapon_of(ship, _card_in_hand(uid))
+	var dim := ColorRect.new()
+	dim.z_index = 105
+	dim.color = Color(0, 0, 0, 0.55)
+	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
+	add_child(dim)
+	var center := CenterContainer.new()
+	center.set_anchors_preset(Control.PRESET_FULL_RECT)
+	dim.add_child(center)
+	var panel := UiKit.panel(Color("#0f1424"), UiKit.DANGER, 12)
+	center.add_child(panel)
+	var box := UiKit.vbox(12)
+	panel.add_child(UiKit.margin(box, 16))
+	box.add_child(UiKit.heading("FIRE ON YOUR OWN SHIP?", 24, UiKit.DANGER))
+	var body := UiKit.label("%s will hit your own %s: it never misses, passes your shields, and hurts everyone inside." % [
+		weapon.name, ship.systems[target.system].name], 15, UiKit.TEXT)
+	body.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	body.custom_minimum_size.x = 420
+	box.add_child(body)
+	var buttons := UiKit.hbox(10)
+	buttons.alignment = BoxContainer.ALIGNMENT_CENTER
+	buttons.add_child(UiKit.button("Cancel", func():
+		dim.queue_free()
+		_cancel_selection(), 17))
+	buttons.add_child(UiKit.primary_button("Fire", func():
+		dim.queue_free()
+		_targeting_uid = -1
+		_aimed_bolts.clear()
+		_act(func(): return battle.play_card(PLAYER, uid, target)), 17))
+	box.add_child(buttons)
 
 
 func _show_overlay(title: String, text: String, color: Color, can_resume: bool) -> void:

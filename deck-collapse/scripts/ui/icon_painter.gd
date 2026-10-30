@@ -7,7 +7,7 @@ extends RefCounted
 const SYSTEM_ART := {
 	"reactor": "reactor", "shields": "shield", "engines": "engines", "piloting": "piloting", "sensors": "sensors",
 	"lifeSupport": "life", "medBay": "med", "airlock": "airlock", "teleport": "teleport", "cloak": "cloak",
-	"mindControl": "mind", "hacking": "hack", "battery": "battery", "evb": "suit",
+	"mindControl": "mind", "hacking": "hack", "battery": "battery", "evb": "suit", "aaa": "array",
 }
 
 
@@ -224,6 +224,12 @@ static func paint(canvas: CanvasItem, art: String, center: Vector2, size: float,
 			canvas.draw_rect(Rect2(p.call(-0.28, -0.85), Vector2(s * 0.56, s * 1.7)), color)
 			canvas.draw_rect(Rect2(p.call(-0.85, -0.28), Vector2(s * 1.7, s * 0.56)), color)
 			canvas.draw_rect(Rect2(p.call(-0.14, -0.7), Vector2(s * 0.28, s * 1.4)), light)
+		"array":
+			# An emitter broadcasting: a base, a lens and three rising arcs.
+			_polygon(canvas, p, [[-0.6, 0.95], [0.6, 0.95], [0.25, 0.45], [-0.25, 0.45]], color)
+			canvas.draw_circle(p.call(0, 0.25), s * 0.22, light)
+			for i in 3:
+				canvas.draw_arc(p.call(0, 0.25), s * (0.45 + i * 0.27), -PI * 0.8, -PI * 0.2, 12, color, width, true)
 		_:
 			canvas.draw_circle(center, s * 0.6, color)
 

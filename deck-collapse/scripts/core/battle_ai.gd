@@ -22,7 +22,7 @@ const MAX_PLAN_WEIGHT := 0.9
 const STALEMATE_TURNS := 30
 ## Enemy systems worth breaking, best first.
 const TARGET_PRIORITY := ["shields", "weapon", "piloting", "engines", "teleport", "evb", "cloak", "hacking",
-	"lifeSupport", "mindControl", "medBay", "sensors", "reactor", "battery", "airlock"]
+	"lifeSupport", "mindControl", "medBay", "aaa", "sensors", "reactor", "battery", "airlock"]
 
 
 func _init(ai_level: String = "Normal", seed_value: int = 0) -> void:
@@ -74,13 +74,15 @@ func _crew_move(battle: Battle, side: int) -> Dictionary:
 		var ship_side: int = station.ship
 		var system_id: String = station.system
 		var chosen := {}
+		var hostile := battle.has_hostiles(ship_side, system_id)
 		for member in unassigned:
-			if member.ship == ship_side and member.system == system_id:
+			if member.ship == ship_side and member.system == system_id and not (hostile and _avoids_boarders(member)):
 				chosen = member
 				break
 		if chosen.is_empty():
 			for member in unassigned:
 				var fits: bool = Battle.health_fraction(member) < 0.5 if station.get("wounded_only", false) else true
+				fits = fits and not (hostile and _avoids_boarders(member))
 				if member.ship == ship_side and not member.moved and fits:
 					chosen = member
 					break
@@ -88,11 +90,26 @@ func _crew_move(battle: Battle, side: int) -> Dictionary:
 			continue
 		unassigned.erase(chosen)
 		assignment[chosen.id] = system_id
+	# Crew who keep away from boarders step out of a boarded system to the nearest one without them.
+	for member in unassigned:
+		if _avoids_boarders(member) and member.ship == side and battle.has_hostiles(side, member.system):
+			var row: Array = ship.system_order
+			var here: int = row.find(member.system)
+			var nearest := ""
+			for id in row:
+				if not battle.has_hostiles(side, id) and (nearest == "" or absi(row.find(id) - here) < absi(row.find(nearest) - here)):
+					nearest = id
+			if nearest != "":
+				assignment[member.id] = nearest
 	for member in free:
 		if assignment.has(member.id) and member.system != assignment[member.id]:
 			if battle.why_cannot_move(side, member, assignment[member.id]) == "":
 				return {"kind": "move", "crew": member.id, "system": assignment[member.id]}
 	return {}
+
+
+static func _avoids_boarders(member: Dictionary) -> bool:
+	return Catalog.race(member.get("race", "")).get("avoids_boarders", false)
 
 
 ## Where crew should be this turn, most urgent first: { ship, system, wounded_only? }.
@@ -240,6 +257,11 @@ func _fire_weapons(battle: Battle, side: int) -> Dictionary:
 		var layers := maxi(0, enemy.shield_layers.size() - int(weapon.pierce))
 		if kind == "beam" and layers > 0 and level != "Easy" and weapon.damage <= layers:
 			continue
+		var home := _own_boarded_target(battle, side, weapon)
+		if home != "":
+			var at_home := {"system": home, "ship": side}
+			if battle.why_cannot_play(side, card.uid, at_home) == "":
+				return {"kind": "play", "uid": card.uid, "target": at_home}
 		var planned := _plan_pick(battle, side, "targets", weapon.name, func(id): return not enemy.is_broken(id))
 		var on_purpose := planned != "" and _picked_when == "ownCrewIn"
 		var candidates: Array = ([planned] if planned != "" else []) + _weapon_targets(battle, side, kind)
@@ -327,6 +349,19 @@ func _plan_condition(battle: Battle, side: int, condition: String, system_id: St
 
 static func _all_down(ship: ShipState, type: String) -> bool:
 	return ship.system_order.all(func(id): return ship.systems[id].type != type or ship.capacity(id) <= 0)
+
+
+## A crew-only weapon (crew damage, no system damage; not a beam) fires on our own ship at a system holding enemy
+## boarders and, if this captain spares its own crew this time, none of ours (heromedel 2026-10-30).
+func _own_boarded_target(battle: Battle, side: int, weapon: Dictionary) -> String:
+	if weapon.kind == "beam" or weapon.damage > 0 or int(weapon.crewDamage) <= 0:
+		return ""
+	var spare := _spares_own_crew(battle, side)
+	for system_id in battle.ships[side].system_order:
+		var inside := battle.crew_in_system(side, system_id)
+		if inside.any(func(m): return m.owner != side) and not (spare and inside.any(func(m): return m.owner == side)):
+			return system_id
+	return ""
 
 
 ## Whether this captain keeps its shots off its own crew this time: a ship whose plan has spareOwnCrew="false" never
@@ -526,10 +561,12 @@ static func _suit_hurts(suit_id: String) -> bool:
 ## Power the Med Bay when wounded crew of ours are in it.
 func _treat(battle: Battle, side: int) -> Dictionary:
 	var ship := battle.ships[side]
-	var med_bay := ship.first_system_of_type("medBay")
+	var med_bay := Battle.treating_system(ship)
 	if med_bay == "" or battle.why_cannot_treat(side) != "":
 		return {}
-	if battle.crew_in_system(side, med_bay).any(func(m): return m.owner == side and m.wounds > 0):
+	var patients := battle.crew_in_system(side, med_bay) if ship.systems[med_bay].type == "medBay" \
+		else battle.living_crew_of(side).filter(func(m): return m.ship == side and Catalog.race(m.race).broadcast)
+	if patients.any(func(m): return m.owner == side and m.wounds > 0):
 		return {"kind": "treat"}
 	return {}
 

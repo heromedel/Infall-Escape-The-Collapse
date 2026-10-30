@@ -241,10 +241,15 @@ static func snapshot(battle: Battle) -> Dictionary:
 		systems[system_id] = {"damage": system.damage, "on_fire": system.on_fire, "fire": system.fire,
 			"breached": system.breached, "air": system.air}
 	var survivors: Array = []
-	for member in battle.living_crew_of(0):
-		if member.ship == 0:
+	# Senti stored in a working Avatar Array come back after the battle, the dead ones whole.
+	var array_id := ship.first_system_of_type("aaa")
+	var stored := battle.crew.filter(func(m): return m.owner == 0 and m.get("stored", false)) \
+		if array_id != "" and not ship.is_broken(array_id) else []
+	for member in battle.living_crew_of(0) + stored:
+		if member.ship == 0 or member.get("stored", false):
 			survivors.append({"name": member.name, "race": member.race, "skills": member.skills.duplicate(), "xp": member.xp.duplicate(),
-				"wounds": member.wounds, "system": member.system})
+				"wounds": 0.0 if Battle.is_dead(member) else member.wounds,
+				"system": array_id if member.get("stored", false) else member.system})
 	return {"hull": ship.hull, "hull_max": ship.hull_max, "missiles": ship.missiles, "suit_parts": ship.suit_parts,
 		"systems": systems, "crew": survivors}
 

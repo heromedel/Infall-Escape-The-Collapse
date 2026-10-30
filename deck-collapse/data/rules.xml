@@ -51,6 +51,10 @@
   <station gapMin="5" gapMax="10" sections="2" itemsPerSection="3" sellPercent="50" cargoSlots="4"
       maxWeaponSystems="4" crewSkillChance="30" systemRepair="0.48"/>
 
+  <!-- The Avatar Array (systems.xml aaa, heromedel 2026-10-30, Ai-Generated-Proposal). avatarsPerLevel: Senti it
+       broadcasts per working level. rebroadcastTurns: turns, by level 1..3, before a Senti who died returns. -->
+  <aaa avatarsPerLevel="3" rebroadcastTurns="4,3,2"/>
+
   <!-- Enemy captains (heromedel 2026-10-30). spareOwnCrew: the % chance, at Easy, Normal and Hard, that a captain
        aims away from rooms holding its own crew. If every room it could hit holds them, Easy and Normal fire anyway and
        Hard holds the card. A ship's plan can opt out with <ai spareOwnCrew="false">; a line with when="ownCrewIn"

@@ -5,6 +5,8 @@ extends Control
 
 const TILE_SIZE := Vector2(118, 158)
 const TOKEN_RADIUS := 12.0
+## The wash over a tile with no air left.
+const NO_AIR_TINT := Color("#7fa6c8")
 
 signal tile_clicked(tile: SystemTile)
 signal crew_clicked(tile: SystemTile, crew_id: int)
@@ -91,7 +93,7 @@ func _gui_input(event: InputEvent) -> void:
 	accept_event()
 	if _burn_rect.has_point(event.position):
 		var system_type: String = battle.ships[ship_side].systems[system_id].type
-		if system_type == "medBay":
+		if system_type == "medBay" or system_type == "aaa" and Battle.treating_system(battle.ships[ship_side]) == system_id:
 			treat_clicked.emit(self)
 		else:
 			burn_clicked.emit(self)
@@ -135,6 +137,9 @@ func _draw() -> void:
 			border = UiKit.GOOD.lerp(Color.WHITE, 0.3 * (0.5 + 0.5 * sin(_time * 6.0)))
 			fill = Color("#10261a")
 	draw_style_box(UiKit.box(fill, border, 10, 2 if highlight != "" else 1), rect)
+	# No air left (breached, vented, or an airless ship): a cold wash over the tile.
+	if (0 if system.breached else int(system.air)) == 0:
+		draw_style_box(UiKit.box(Color(NO_AIR_TINT, 0.16), Color(0, 0, 0, 0), 10, 0), rect)
 	if flash > 0.0:
 		draw_style_box(UiKit.box(Color(UiKit.DANGER, flash * 0.45), Color(UiKit.DANGER, flash), 10, 2), rect)
 
@@ -202,7 +207,7 @@ func _draw() -> void:
 	var button_text := ""
 	if ship_side == viewer_side and system.type == "engines" and battle.why_cannot_burn(viewer_side) == "":
 		button_text = "BURN +5%"
-	elif ship_side == viewer_side and system.type == "medBay" and battle.why_cannot_treat(viewer_side) == "":
+	elif ship_side == viewer_side and Battle.treating_system(ship) == system_id and battle.why_cannot_treat(viewer_side) == "":
 		button_text = "TREAT +%d" % ship.capacity(system_id)
 	if button_text != "":
 		_burn_rect = Rect2(14, 92, TILE_SIZE.x - 28, 18)
@@ -357,6 +362,10 @@ func _status_text(ship: ShipState, system: Dictionary) -> String:
 			return "CLOAKED" if ship.cloaked else "Level %d" % system.level
 		"medBay":
 			return "Treated" if ship.treated else "Unpowered"
+		"aaa":
+			var hosts := int(Catalog.rule("aaa", "avatarsPerLevel", 3)) * maxi(0, system.level - system.damage)
+			var waiting := battle.crew.filter(func(m): return m.owner == ship_side and m.get("stored", false)).size()
+			return "Hosts %d" % hosts + (" · %d stored" % waiting if waiting > 0 else "")
 		"lifeSupport":
 			return "Air up to %d" % ship.air_max
 		"sensors", "airlock":
@@ -377,11 +386,9 @@ func _draw_flame(at: Vector2) -> void:
 	draw_colored_polygon(inner, Color("#ffe27a"))
 
 
-## A system's air pips, down the left edge: pale bubbles for air, dark rings for pips gone. With none left, the
-## last ring is crossed out in red.
+## A system's air pips, down the left edge: pale bubbles for air, dark rings for pips gone. With none left (or no
+## atmosphere at all, Air 0/0), the last ring is crossed out in red.
 func _draw_air_pips(ship: ShipState, system: Dictionary) -> void:
-	if ship.air_max == 0:
-		return
 	var air: int = 0 if system.breached else system.air
 	for i in maxi(1, ship.air_max):
 		var at := Vector2(12, 62 - i * 12)

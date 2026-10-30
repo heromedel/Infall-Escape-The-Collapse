@@ -50,6 +50,13 @@
       prices="12.11,8.47,10.89">
     Press TREAT on its tile (1 power) to run it this turn: as your turn ends, everyone in it heals 1 wound per working level.
   </system>
+  <system type="aaa" name="Avatar Array" card="" cardsPerLevel="0" minLevel="1" maxLevel="3" mannable="false"
+      prices="12.11,8.47,10.89">
+    The Senti's Armoured Avatar Array (race profiles, Senti-GPH 6 and 9). It broadcasts 3 Senti per working level;
+    damage blinks the extra ones out (stored, not dead) until it's repaired. A Senti who dies is broadcast again into it
+    after 4, 3 or 2 turns by level while it works. TREAT (1 power) heals every Senti aboard 1 wound per working level as
+    your turn ends. Ai-Generated-Proposal (heromedel 2026-10-30): numbers in rules.xml aaa; prices as the Med Bay's.
+  </system>
   <system type="airlock" name="Airlock Control" card="" cardsPerLevel="0" minLevel="1" maxLevel="3" mannable="true"
       prices="14.52,8.47,12.11" mannedLevel="1">
     Lets you play Cycle Airlock. From level 2, each level makes boarders take a turn longer to move out of a system; each level slows fire spreading. Manned: +1 level.

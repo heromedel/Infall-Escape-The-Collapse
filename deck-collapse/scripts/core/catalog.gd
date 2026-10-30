@@ -152,6 +152,8 @@ func load_races() -> void:
 			"first_strike": attrs.get("firstStrike", "false") == "true",
 			"fire_immune": attrs.get("fireImmune", "false") == "true",
 			"breathes": attrs.get("breathes", "true") == "true",
+			"broadcast": attrs.get("broadcast", "false") == "true",
+			"avoids_boarders": attrs.get("avoidsBoarders", "false") == "true",
 			"summary": XmlTree.clean_text(node),
 		}
 		race_aliases[String(attrs.id).to_lower()] = attrs.id
