@@ -110,7 +110,7 @@ ship's plan.
 | Polyp, Polyp (Flak) | destroy | the missile on the guns; the flak pops shields for the swarm |
 | Relay Picket | destroy | the guns, to protect its station |
 | Mote | destroy | ion the shields, then the guns |
-| Census Picket | crew-kill | burn the Med Bay, then Life Support; hack whichever still works |
+| Census Picket | crew-kill | while boarded, shoot and hack the enemy teleporter; otherwise burn the Med Bay, then Life Support, and hack whichever still works |
 | Quiet Ledger | crew-kill | breach Life Support, burn the Med Bay, hack Airlock Control so they can't vent fires; holograms hold the airless rooms |
 | Final Archive | crew-kill | bio bomb the Med Bay where the hurt gather, burn Life Support; the anti-bio beam sweeps the crowded systems |
 
@@ -124,3 +124,4 @@ Features the plans use that Deck Collapse doesn't have yet, written as if they e
 | G25 | Conditions on enemy systems | `when="enemyMedBayDown"`, `when="enemyLifeSupportDown"` |
 | G26 | Our boarders aboard | `ownBoardersAboard`: any of our crew is aboard the enemy ship |
 | G27 | Negative conditions | `unless="…"` skips a line while the condition holds; `ownCrewIn`: our own crew are in the target system (so a ship never shoots its own boarders) |
+| G28 | Being boarded | `when="enemyBoardersAboard"`: enemy crew are aboard our ship (the Census Picket turns on the enemy teleporter first) |

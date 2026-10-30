@@ -18,7 +18,10 @@
   <crew name="Gunner" race="Senti-GPH" station="weapons"/>
   <!-- Captain plan, Ai-Generated-Proposal (2026-10-30). Lines marked G22-G27 use features Deck Collapse doesn't have yet (README.md). -->
   <ai plan="crew-kill">
-    <!-- Burn the Med Bay so nobody heals, then the Life Support; hack whichever is still working. -->
+    <!-- Boarded first: while enemy crew are aboard, cut off their teleporter so no more come and none go back to heal.
+         Otherwise burn the Med Bay so nobody heals, then the Life Support; hack whichever is still working. -->
+    <target system="teleport" when="enemyBoardersAboard" weapon="1B 02 V1" weight="0.85"/>   <!-- G28 -->
+    <hack system="teleport" when="enemyBoardersAboard" weight="0.9"/>                        <!-- G24, G28 -->
     <target system="medBay" weapon="2B 01 F1" weight="0.85"/>
     <target system="lifeSupport" weapon="2B 01 F1" when="enemyMedBayDown" weight="0.8"/>   <!-- G25 -->
     <hack system="medBay" weight="0.9"/>                                                     <!-- G24 -->
