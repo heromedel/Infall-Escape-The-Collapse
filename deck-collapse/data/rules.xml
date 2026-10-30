@@ -51,6 +51,12 @@
   <station gapMin="5" gapMax="10" sections="2" itemsPerSection="3" sellPercent="50" cargoSlots="4"
       maxWeaponSystems="4" crewSkillChance="30" systemRepair="0.48"/>
 
+  <!-- Enemy captains (heromedel 2026-10-30). spareOwnCrew: the % chance, at Easy, Normal and Hard, that a captain
+       aims away from rooms holding its own crew. If every room it could hit holds them, Easy and Normal fire anyway and
+       Hard holds the card. A ship's plan can opt out with <ai spareOwnCrew="false">; a line with when="ownCrewIn"
+       aims at its own crew on purpose. -->
+  <ai spareOwnCrew="50,75,100"/>
+
   <!-- Weapon rarity (genre: 0 never turns up at random, 1 common to 5 rare). weights: how likely a store is to offer
        a weapon of each rarity 0..5 against the others it may stock. Ai-Generated-Proposal. -->
   <rarity weights="0,5,4,3,2,1"/>

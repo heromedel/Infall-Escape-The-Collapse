@@ -194,11 +194,16 @@ four kinds, each tried in order:
 
 A line whose `when` holds and whose `unless` doesn't rolls its weight, and on a success the captain uses its system.
 Conditions: `always`, `enemyWeaponsDown`, `enemyShieldsDown`, `enemyMedBayDown`, `enemyLifeSupportDown` (G25; a ship
-without the system counts it as down), `enemyWounded`, `ownBoardersAboard` (G26), `ownCrewIn` (our crew are in the
+without the system counts it as down), `enemyWounded`, `ownBoardersAboard` (G26), `enemyBoardersAboard` (G28), `ownCrewIn` (our crew are in the
 line's system, G27). Weight defaults to 0.75 (followed 3 times in 4), can't go above 0.9, and Easy captains halve it
 while Hard add 0.1. A failed roll only means the captain chooses as usual. A crew-kill plan also aims at rooms with
 crew and hacks the Med Bay first. Every Infall ship has Ship Design's plan (Cloud-C-ShipDesign, 2026-10-30). With a
 Teleport card in hand, an AI keeps a boarder in its Teleport Bay until two are across.
+
+**Sparing its own crew** (heromedel 2026-10-30): a captain aims away from rooms holding its own crew 50% of the time
+on Easy, 75% on Normal and always on Hard (`rules.xml` ai); beams sweep away from them and split bolts skip them.
+If every room it could hit holds its crew, Easy and Normal fire anyway and Hard holds the card. `<ai
+spareOwnCrew="false">` lets a ship fire on them freely; a line with `when="ownCrewIn"` aims at them on purpose.
 
 **Loadouts** (GDD 5J; Ship Design's G18): a `<loadout ship="…">` file patches a ship already loaded: its attributes
 replace the ship's, `<power>` replaces the power, each `<system>` matches by id (else type) and changes it or is

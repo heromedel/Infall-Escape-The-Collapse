@@ -7,6 +7,9 @@ extends RefCounted
 ## { kind: "reroute" } · { kind: "treat" } · { kind: "recall", suit } · { kind: "jump" } · { kind: "end" }
 var level := "Normal"
 var _rng := RandomNumberGenerator.new()
+## The when of the plan line _plan_pick last followed ("" if none), so a line aimed at our own crew on purpose
+## (when="ownCrewIn") isn't steered away from them.
+var _picked_when := ""
 
 ## Station order when nothing urgent needs a crew member.
 const STATION_PRIORITY := ["piloting", "weapon", "shields", "engines", "evb", "sensors", "teleport", "airlock", "medBay"]
@@ -238,16 +241,25 @@ func _fire_weapons(battle: Battle, side: int) -> Dictionary:
 		if kind == "beam" and layers > 0 and level != "Easy" and weapon.damage <= layers:
 			continue
 		var planned := _plan_pick(battle, side, "targets", weapon.name, func(id): return not enemy.is_broken(id))
+		var on_purpose := planned != "" and _picked_when == "ownCrewIn"
 		var candidates: Array = ([planned] if planned != "" else []) + _weapon_targets(battle, side, kind)
+		# Keep shots off our own crew aboard the enemy, as often as this captain's level manages (rules.xml <ai>).
+		var spare := _spares_own_crew(battle, side)
+		if spare:
+			var clear := candidates.filter(func(id): return on_purpose and id == planned or not _own_crew_in(battle, side, id))
+			if clear.is_empty() and level == "Hard":
+				continue
+			if not clear.is_empty():
+				candidates = clear
 		for system_id in candidates:
 			var target := {"system": system_id, "ship": 1 - side}
 			if battle.why_cannot_play(side, card.uid, target) == "":
 				var rooms := battle.beam_rooms(ship, card)
 				if rooms > 1:
-					target.direction = _best_sweep(battle, side, system_id, rooms)
+					target.direction = _best_sweep(battle, side, system_id, rooms, spare)
 				var bolts := battle.bolts_to_aim(ship, card)
 				if bolts > 1 and level != "Easy":
-					target.systems = _split_bolts(battle, side, kind, bolts)
+					target.systems = _split_bolts(battle, side, kind, bolts, spare)
 				return {"kind": "play", "uid": card.uid, "target": target}
 	return {}
 
@@ -272,7 +284,9 @@ func _plan_pick(battle: Battle, side: int, kind: String, who: String, usable: Ca
 		if line.unless != "" and _plan_condition(battle, side, line.unless, system_id):
 			continue
 		if _rng.randf() < plan_weight(line.weight):
+			_picked_when = line.when
 			return system_id
+	_picked_when = ""
 	return ""
 
 
@@ -301,8 +315,10 @@ func _plan_condition(battle: Battle, side: int, condition: String, system_id: St
 			return battle.living_crew_of(1 - side).any(func(m): return m.ship == 1 - side and m.wounds > 0)
 		"ownBoardersAboard":
 			return battle.living_crew_of(side).any(func(m): return m.ship == 1 - side)
+		"enemyBoardersAboard":
+			return battle.living_crew_of(1 - side).any(func(m): return m.ship == side)
 		"ownCrewIn":
-			return battle.crew_in_system(1 - side, system_id).any(func(m): return m.owner == side)
+			return _own_crew_in(battle, side, system_id)
 		"always", "":
 			return true
 	push_warning("Unknown plan condition '%s'." % condition)
@@ -313,9 +329,25 @@ static func _all_down(ship: ShipState, type: String) -> bool:
 	return ship.system_order.all(func(id): return ship.systems[id].type != type or ship.capacity(id) <= 0)
 
 
+## Whether this captain keeps its shots off its own crew this time: a ship whose plan has spareOwnCrew="false" never
+## does; otherwise the level's chance in rules.xml <ai spareOwnCrew> (Easy, Normal, Hard).
+func _spares_own_crew(battle: Battle, side: int) -> bool:
+	if not battle.ships[side].design.ai.get("spare_own_crew", true):
+		return false
+	var chance := Catalog.by_skill(Catalog.rule("ai", "spareOwnCrew", [50, 75, 100]), ["Easy", "Normal", "Hard"].find(level))
+	return _rng.randf() * 100.0 < chance
+
+
+func _own_crew_in(battle: Battle, side: int, system_id: String) -> bool:
+	return battle.crew_in_system(1 - side, system_id).any(func(m): return m.owner == side)
+
+
 ## Aims a multi-target weapon's bolts across the best targets: the first, the second, then the first again ...
-func _split_bolts(battle: Battle, side: int, kind: String, bolts: int) -> Array:
+func _split_bolts(battle: Battle, side: int, kind: String, bolts: int, spare: bool = false) -> Array:
 	var targets := _weapon_targets(battle, side, kind).filter(func(id): return not battle.ships[1 - side].is_broken(id))
+	var clear := targets.filter(func(id): return not _own_crew_in(battle, side, id))
+	if spare and not clear.is_empty():
+		targets = clear
 	if targets.is_empty():
 		targets = _weapon_targets(battle, side, kind)
 	var aims: Array = []
@@ -324,15 +356,19 @@ func _split_bolts(battle: Battle, side: int, kind: String, bolts: int) -> Array:
 	return aims
 
 
-## The direction a beam aimed here should sweep: the way that crosses more working systems and enemy crew.
-func _best_sweep(battle: Battle, side: int, system_id: String, rooms: int) -> int:
+## The direction a beam aimed here should sweep: the way that crosses more working systems and enemy crew (and, when
+## sparing our own crew, none of them).
+func _best_sweep(battle: Battle, side: int, system_id: String, rooms: int, spare: bool = false) -> int:
 	var enemy := battle.ships[1 - side]
 	var best_direction := 1
 	var best_score := -1
 	for direction in [1, -1]:
 		var score := 0
 		for swept in battle.sweep_systems(1 - side, system_id, direction, rooms):
-			score += (0 if enemy.is_broken(swept) else 2) + battle.crew_in_system(1 - side, swept).size()
+			var crew := battle.crew_in_system(1 - side, swept)
+			score += (0 if enemy.is_broken(swept) else 2) + crew.filter(func(m): return m.owner != side).size()
+			if spare and crew.any(func(m): return m.owner == side):
+				score -= 100
 		if score > best_score:
 			best_score = score
 			best_direction = direction

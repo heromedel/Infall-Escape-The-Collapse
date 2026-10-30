@@ -30,7 +30,8 @@
        weight: the chance (0-0.9) the captain follows a line; leave it out for 0.75. Weights above 0.9 are lowered to
        0.9. Easy captains halve them, Hard add 0.1. A failed roll only means the captain chooses as usual.
        when / unless: always (default), enemyWeaponsDown, enemyShieldsDown, enemyMedBayDown, enemyLifeSupportDown,
-       enemyWounded, ownBoardersAboard, ownCrewIn (our crew are in the line's system). -->
+       enemyWounded, ownBoardersAboard, enemyBoardersAboard, ownCrewIn (our crew are in the line's system).
+       spareOwnCrew="false" on <ai>: fire on rooms holding our own crew freely (default: spare them by level). -->
   <ai plan="crew-kill">
     <!-- Wants your ship intact: spores the engines and piloting, silences the guns, then boards.
          The first five lines are Deck Collapse's own example; Life Support is never cut while our boarders are aboard. -->

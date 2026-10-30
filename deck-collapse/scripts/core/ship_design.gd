@@ -21,7 +21,8 @@ var crew: Array = []
 ## The enemy captain's plan for this ship (see BattleAI): { plan: "destroy" | "crew-kill", and its lines by kind:
 ## targets (weapon aim), suits (where a battlesuit goes), boards (where boarders teleport), hacks }. Each line is
 ## { system, weapon (targets) or suit (suits), when, unless, weight }. No lines: the captain plays as usual.
-var ai := {"plan": "destroy", "targets": [], "suits": [], "boards": [], "hacks": []}
+## spare_own_crew: false lets the captain fire on rooms holding its own crew as freely as any other.
+var ai := {"plan": "destroy", "spare_own_crew": true, "targets": [], "suits": [], "boards": [], "hacks": []}
 ## Each plan line kind: its tag in the file, and the attribute that limits who follows it.
 const PLAN_LINES := {"targets": ["target", "weapon"], "suits": ["suit", "suit"], "boards": ["board", ""], "hacks": ["hack", ""]}
 ## Parts of the ship file this game doesn't support yet (systems it doesn't know, floor plans and so on), kept as
@@ -52,7 +53,7 @@ static func from_xml(xml_text: String) -> ShipDesign:
 		design.note = XmlTree.clean_text(note_node)
 	var power_nodes := XmlTree.children_named(root, "power")
 	for ai_node in XmlTree.children_named(root, "ai"):
-		design.ai = {"plan": ai_node.attrs.get("plan", "destroy")}
+		design.ai = {"plan": ai_node.attrs.get("plan", "destroy"), "spare_own_crew": ai_node.attrs.get("spareOwnCrew", "true") != "false"}
 		for kind in PLAN_LINES:
 			design.ai[kind] = XmlTree.children_named(ai_node, PLAN_LINES[kind][0]).map(
 				func(n): return {"system": n.attrs.get("system", ""), "weapon": n.attrs.get("weapon", ""),
@@ -224,8 +225,9 @@ func to_xml() -> String:
 		lines.append('  <crew name="%s"%s station="%s"%s/>' % [XmlTree.escape(member.name),
 			"" if race == "" else ' race="%s"' % XmlTree.escape(race), XmlTree.escape(member.station),
 			"" if skills == "" else " " + skills])
-	if ai.plan != "destroy" or PLAN_LINES.keys().any(func(kind): return not ai[kind].is_empty()):
-		lines.append('  <ai plan="%s">' % ai.plan)
+	var spare: bool = ai.get("spare_own_crew", true)
+	if ai.plan != "destroy" or not spare or PLAN_LINES.keys().any(func(kind): return not ai[kind].is_empty()):
+		lines.append('  <ai plan="%s"%s>' % [ai.plan, "" if spare else ' spareOwnCrew="false"'])
 		for kind in PLAN_LINES:
 			for line in ai[kind]:
 				var parts: Array[String] = ['system="%s"' % line.system]
