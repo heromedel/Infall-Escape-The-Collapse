@@ -17,4 +17,10 @@
   <crew name="Gunner" race="Mecha" station="pod" integrates="true"/>   <!-- G1: integration adds one bar, never above the level -->
   <!-- G19: suggested floor layout = ship-suggestions.md (content/ships/light-attack-frame/ on Cloud-C-Init-Coding), with the
        open-stern alternate as layout-only loadouts. -->
+  <!-- Captain plan, Ai-Generated-Proposal (2026-10-30). Lines marked G22-G27 use the plan lines for those gaps (README.md); Deck Collapse has them now. -->
+  <ai plan="destroy">
+    <!-- Guts the hull: the Hull Laser goes for the guns once the shield is down, otherwise the shield. -->
+    <target system="weapon" weapon="DS-ST Hull Laser" when="enemyShieldsDown" weight="0.85"/>
+    <target system="shields" weapon="DS-ST Hull Laser" weight="0.75"/>
+  </ai>
 </ship>

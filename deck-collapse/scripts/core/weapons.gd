@@ -34,6 +34,7 @@ static func from_attributes(attrs: Dictionary, base: Dictionary = {}) -> Diction
 	for key in FLAGS:
 		var field: String = FLAGS[key]
 		weapon[field] = attrs.get(key, "true" if weapon.get(field, false) else "false") == "true"
+	weapon.rarity = int(attrs.get("rarity", weapon.get("rarity", 1)))
 	var bands := String(attrs.get("bands", "%d-%d" % [weapon.get("band_min", 1), weapon.get("band_max", MAX_BAND)])).split("-")
 	weapon.band_min = int(bands[0])
 	weapon.band_max = int(bands[bands.size() - 1])
@@ -62,6 +63,11 @@ static func allowed_in_band(weapon: Dictionary, band: int) -> bool:
 	return band >= int(weapon.get("band_min", 1)) and band <= int(weapon.get("band_max", MAX_BAND))
 
 
+## How often a store offers the weapon among the others it may stock: its rarity's weight (rules.xml, <rarity>).
+static func store_weight(weapon: Dictionary) -> float:
+	return Catalog.by_skill(Catalog.rule("rarity", "weights", [0, 5, 4, 3, 2, 1]), int(weapon.get("rarity", 1)))
+
+
 ## Only the attributes that make the weapon, for ship files.
 static func to_xml(weapon: Dictionary, depth: int = 2) -> String:
 	var parts: Array[String] = []
@@ -78,6 +84,8 @@ static func to_xml(weapon: Dictionary, depth: int = 2) -> String:
 			parts.append('%s="true"' % key)
 	if weapon.get("tech", "") != "":
 		parts.append('tech="%s"' % XmlTree.escape(weapon.tech))
+	if int(weapon.get("rarity", 1)) != 1:
+		parts.append('rarity="%d"' % weapon.rarity)
 	if weapon.get("band_min", 1) != 1 or weapon.get("band_max", MAX_BAND) != MAX_BAND:
 		parts.append('bands="%d-%d"' % [weapon.band_min, weapon.band_max])
 	return "%s<weapon %s/>" % ["  ".repeat(depth), " ".join(parts)]
@@ -112,9 +120,12 @@ static func cooldown(weapon: Dictionary) -> float:
 
 
 ## Store price in Mawjig, from weapon-budget-table.md: power, plus the damage and effect rates over its cooldown
-## (a faster weapon is worth more), plus specials. Its cooldown here is the one its speed stands for.
+## (a faster weapon is worth more), plus specials. The cooldown is the table's exact one; a weapon given more or fewer
+## cards than its cooldown suggests counts as that much faster or slower.
 static func price(weapon: Dictionary) -> float:
-	var per_ten := 10.0 / (COOLDOWN_PER_CARD / float(weapon.speed))
+	var seconds := cooldown(weapon)
+	var suggested := clampi(roundi(COOLDOWN_PER_CARD / seconds), 1, MAX_SPEED)
+	var per_ten := 10.0 / (seconds * suggested / float(weapon.speed))
 	var shots := float(weapon.shots)
 	var total: float = 1.41 + 4.09 * weapon.power + 1.16 * damage_per_card(weapon) * per_ten
 	if weapon.ion:

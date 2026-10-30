@@ -24,16 +24,23 @@
   <crew name="Boarder" race="Terran" station="teleport" combat="1"/>
   <crew name="Engineer" race="Terran" station="engines"/>
   <!-- G19: suggested floor layout and conduits = ship-suggestions.md (content/ships/pirate-hijacker/ship.xml on Cloud-C-Init-Coding). -->
-  <!-- The captain's plan (Ai-Generated-Proposal example, from this ship's note: it wants your ship intact).
-       weight: the chance (0–0.9) the captain follows a line when it picks a target; leave it out for 0.75. Weights
-       above 0.9 are lowered to 0.9. Easy captains halve them, Hard add 0.1. A failed roll only means the captain
-       chooses as usual. when: always (default), enemyWeaponsDown, enemyShieldsDown, enemyWounded.
-       weapon: only this weapon (by name) follows the line. -->
+  <!-- Captain plan, Ai-Generated-Proposal (2026-10-30). Lines marked G22-G27 use the plan lines for those gaps (README.md); Deck Collapse has them now.
+       Lines: <target> aims a weapon (weapon: only this weapon, by name), <suit> sends a battlesuit (suit: only this
+       suit type), <board> picks where boarders teleport, <hack> what to hack. Each is followed in order.
+       weight: the chance (0-0.9) the captain follows a line; leave it out for 0.75. Weights above 0.9 are lowered to
+       0.9. Easy captains halve them, Hard add 0.1. A failed roll only means the captain chooses as usual.
+       when / unless: always (default), enemyWeaponsDown, enemyShieldsDown, enemyMedBayDown, enemyLifeSupportDown,
+       enemyWounded, ownBoardersAboard, ownCrewIn (our crew are in the line's system). -->
   <ai plan="crew-kill">
+    <!-- Wants your ship intact: spores the engines and piloting, silences the guns, then boards.
+         The first five lines are Deck Collapse's own example; Life Support is never cut while our boarders are aboard. -->
     <target system="engines" weapon="Sporewing" weight="0.8"/>
     <target system="piloting" weapon="Sporewing"/>
     <target system="weapon" weapon="Gat 2.1 Twinshot" weight="0.8"/>
-    <target system="lifeSupport" when="enemyWeaponsDown" weapon="Gat 2.1 Twinshot" weight="0.8"/>
-    <target system="medBay" when="enemyWounded" weight="0.5"/>
+    <target system="lifeSupport" when="enemyWeaponsDown" unless="ownBoardersAboard" weapon="Gat 2.1 Twinshot" weight="0.8"/>   <!-- G26, G27 -->
+    <target system="medBay" when="enemyWounded" unless="ownCrewIn" weight="0.5"/>                                         <!-- G27 -->
+    <board system="weapon" when="enemyShieldsDown" weight="0.8"/>   <!-- G23 -->
+    <board system="medBay" when="enemyWounded" weight="0.6"/>
+    <board system="piloting"/>
   </ai>
 </ship>

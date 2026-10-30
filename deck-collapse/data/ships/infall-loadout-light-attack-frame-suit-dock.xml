@@ -8,4 +8,10 @@
     <member name="Pilot" race="Mecha" station="piloting"/>
     <member name="Suit Pilot" race="Mecha" station="dock"/>
   </crew>
+  <!-- Captain plan, Ai-Generated-Proposal (2026-10-30). Lines marked G22-G27 use the plan lines for those gaps (README.md); Deck Collapse has them now. -->
+  <ai plan="destroy">
+    <!-- The suit's job is popping the shield layer for its partner's Hull Laser. Replaces the frame's plan. -->
+    <suit system="shields" suit="laser" weight="0.85"/>              <!-- G22 -->
+    <suit system="weapon" suit="laser" when="enemyShieldsDown"/>
+  </ai>
 </loadout>

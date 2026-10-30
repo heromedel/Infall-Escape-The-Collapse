@@ -122,6 +122,12 @@ func _wanted_stations(battle: Battle, side: int) -> Array:
 		for card in ship.hand:
 			if card.id == "suit":
 				wanted.append({"ship": side, "system": card.system})
+	# A Teleport card needs a boarder waiting in the bay right after the pilot, until two are across.
+	var bay := ship.first_system_of_type("teleport")
+	var across := battle.living_crew_of(side).filter(func(m): return m.ship != side).size()
+	if "teleport" in hand_ids and bay != "" and across < 2:
+		wanted.append({"ship": side, "system": ship.first_system_of_type("piloting")})
+		wanted.append({"ship": side, "system": bay})
 	# Ordinary stations.
 	for type in STATION_PRIORITY:
 		if type == "evb" and not "suit" in hand_ids:
@@ -185,6 +191,9 @@ func _hack(battle: Battle, side: int) -> Dictionary:
 		return {}
 	var enemy := battle.ships[1 - side]
 	var targets: Array = []
+	var planned := _plan_pick(battle, side, "hacks", "", func(id): return enemy.systems[id].disabled_turns <= 0)
+	if planned != "":
+		targets.append(planned)
 	if battle.ships[side].design.ai.plan == "crew-kill" and enemy.has_type("medBay"):
 		# Keep their wounded from healing.
 		targets.append(enemy.first_system_of_type("medBay"))
@@ -228,7 +237,7 @@ func _fire_weapons(battle: Battle, side: int) -> Dictionary:
 		var layers := maxi(0, enemy.shield_layers.size() - int(weapon.pierce))
 		if kind == "beam" and layers > 0 and level != "Easy" and weapon.damage <= layers:
 			continue
-		var planned := _plan_target(battle, side, weapon)
+		var planned := _plan_pick(battle, side, "targets", weapon.name, func(id): return not enemy.is_broken(id))
 		var candidates: Array = ([planned] if planned != "" else []) + _weapon_targets(battle, side, kind)
 		for system_id in candidates:
 			var target := {"system": system_id, "ship": 1 - side}
@@ -243,22 +252,26 @@ func _fire_weapons(battle: Battle, side: int) -> Dictionary:
 	return {}
 
 
-## The ship's plan (its file's <ai> lines, in order): each line whose condition holds and whose system the enemy has
-## working rolls its weight; the first that succeeds names the system to aim this weapon at. A failed roll only means
-## the captain chooses as usual, which may pick the same system.
-func _plan_target(battle: Battle, side: int, weapon: Dictionary) -> String:
+## The ship's plan (its file's <ai> lines of one kind, in order): each line for this weapon or suit (who; lines that
+## name none are for all), whose when holds, whose unless doesn't, and whose system the enemy has usable rolls its
+## weight; the first that succeeds names the system. A failed roll only means the captain chooses as usual, which may
+## pick the same system.
+func _plan_pick(battle: Battle, side: int, kind: String, who: String, usable: Callable) -> String:
 	var enemy := battle.ships[1 - side]
-	for line in battle.ships[side].design.ai.targets:
-		if line.weapon != "" and line.weapon != weapon.name:
-			continue
-		if not _plan_condition(battle, side, line.when):
+	var who_key: String = ShipDesign.PLAN_LINES[kind][1]
+	for line in battle.ships[side].design.ai.get(kind, []):
+		if who_key != "" and line[who_key] != "" and line[who_key] != who:
 			continue
 		var system_id := ""
 		for id in enemy.system_order:
-			if enemy.systems[id].type == line.system and not enemy.is_broken(id):
+			if enemy.systems[id].type == line.system and usable.call(id):
 				system_id = id
 				break
-		if system_id != "" and _rng.randf() < plan_weight(line.weight):
+		if system_id == "" or not _plan_condition(battle, side, line.when, system_id):
+			continue
+		if line.unless != "" and _plan_condition(battle, side, line.unless, system_id):
+			continue
+		if _rng.randf() < plan_weight(line.weight):
 			return system_id
 	return ""
 
@@ -271,16 +284,33 @@ func plan_weight(weight: float) -> float:
 	return clampf(weight, 0.0, MAX_PLAN_WEIGHT)
 
 
-func _plan_condition(battle: Battle, side: int, condition: String) -> bool:
+## Whether a plan line's when (or unless) holds, for a line aiming at the enemy's system_id. A ship with none of a
+## system counts it as down.
+func _plan_condition(battle: Battle, side: int, condition: String, system_id: String) -> bool:
 	var enemy := battle.ships[1 - side]
 	match condition:
 		"enemyWeaponsDown":
 			return enemy.weapon_systems().all(func(id): return enemy.capacity(id) <= 0)
 		"enemyShieldsDown":
 			return enemy.shield_layers.is_empty()
+		"enemyMedBayDown":
+			return _all_down(enemy, "medBay")
+		"enemyLifeSupportDown":
+			return _all_down(enemy, "lifeSupport")
 		"enemyWounded":
 			return battle.living_crew_of(1 - side).any(func(m): return m.ship == 1 - side and m.wounds > 0)
+		"ownBoardersAboard":
+			return battle.living_crew_of(side).any(func(m): return m.ship == 1 - side)
+		"ownCrewIn":
+			return battle.crew_in_system(1 - side, system_id).any(func(m): return m.owner == side)
+		"always", "":
+			return true
+	push_warning("Unknown plan condition '%s'." % condition)
 	return true
+
+
+static func _all_down(ship: ShipState, type: String) -> bool:
+	return ship.system_order.all(func(id): return ship.systems[id].type != type or ship.capacity(id) <= 0)
 
 
 ## Aims a multi-target weapon's bolts across the best targets: the first, the second, then the first again ...
@@ -357,8 +387,13 @@ func _launch_suit(battle: Battle, side: int) -> Dictionary:
 			wanted = ship.systems.values().any(func(s): return s.damage > 0)
 		elif definition.suit == "guardian":
 			wanted = enemy.uses_missile_weapons() or not enemy.suits.is_empty()
-		if wanted and battle.why_cannot_play(side, card.uid, {}) == "":
-			return {"kind": "play", "uid": card.uid, "target": {}}
+		var target := {}
+		if Catalog.suit_kind(definition.suit).action in ["shoot", "board"]:
+			var planned := _plan_pick(battle, side, "suits", definition.suit, func(id): return not enemy.is_broken(id))
+			if planned != "":
+				target = {"system": planned, "ship": 1 - side}
+		if wanted and battle.why_cannot_play(side, card.uid, target) == "":
+			return {"kind": "play", "uid": card.uid, "target": target}
 	return {}
 
 
@@ -392,8 +427,9 @@ func _teleport(battle: Battle, side: int) -> Dictionary:
 		return {}
 	var enemy := battle.ships[1 - side]
 	var bay := ship.first_system_of_type("teleport")
-	for system_id in _ranked_targets(battle, side):
-		if enemy.is_broken(system_id):
+	var planned := _plan_pick(battle, side, "boards", "", func(_id): return true)
+	for system_id in ([planned] if planned != "" else []) + _ranked_targets(battle, side):
+		if enemy.is_broken(system_id) and system_id != planned:
 			continue
 		var action := _play_first(battle, side, "teleport", {"system": bay, "ship": side, "to_system": system_id, "to_ship": 1 - side})
 		if not action.is_empty():

@@ -30,13 +30,14 @@
        (0 = none; level 1 doesn't slow them, heromedel). Teleporting and venting aren't slowed. -->
   <airlock boarderExitTurns="0,0,1,2,3"/>
 
-  <!-- Mawjig (docs/reference/mawjig-cost-table.md, band 1). A wreck pays rewardPercent of the ship's value;
-       killing the crew pays crewKillBonus % more. -->
-  <economy rewardPercent="2.5" crewKillBonus="30" hullRepair="0.48" missile="1.45" suitPart="1.94" crew="10.89"
+  <!-- Mawjig (docs/reference/mawjig-cost-table.md). A wreck pays rewardPercent of the ship's value times the band
+       adjustment; killing the crew pays crewKillBonus % more. bandStep: the adjustment rises this % each band, x1.0 in
+       band 1 to x1.7 in band 8 (cost table, Fight rewards, Proposed; economy-findings F1). -->
+  <economy rewardPercent="2.5" crewKillBonus="30" bandStep="10" hullRepair="0.48" missile="1.45" suitPart="1.94" crew="10.89"
       skillVeteran="0.25" skillMaster="0.37" jumpCost="1.21" startingMawjig="12.11" enemyPursePercent="2.5"/>
   <!-- startingMawjig: a run's purse (GDD 8K, Proposed).
        enemyPursePercent: an enemy ship carries its own wreck reward to pay for its shots, this % of its ship value
-       (economy-findings F11, Proposed, heromedel 2026-10-28; no band adjustment yet, as band 1 is x1.0). Unspent
+       (economy-findings F11, Proposed, heromedel 2026-10-28), times the band adjustment. Unspent
        Mawjig is not added to the salvage (F11, Likely).
        suitPart: one battlesuit launch's parts in Classic ammo, the genre's drone part (8 scrap x 0.242). -->
 
@@ -49,6 +50,10 @@
        with Store System Repair On (Ai-Generated-Proposal: the hull repair price). -->
   <station gapMin="5" gapMax="10" sections="2" itemsPerSection="3" sellPercent="50" cargoSlots="4"
       maxWeaponSystems="4" crewSkillChance="30" systemRepair="0.48"/>
+
+  <!-- Weapon rarity (genre: 0 never turns up at random, 1 common to 5 rare). weights: how likely a store is to offer
+       a weapon of each rarity 0..5 against the others it may stock. Ai-Generated-Proposal. -->
+  <rarity weights="0,5,4,3,2,1"/>
 
   <!-- Difficulty bands (GDD: about 8 bands, each about 10 clusters deep). The band rises every stopsPerBand stops.
        Enemies are picked from ships allowed in the band (bands="1-3" on a ship), and stations only stock

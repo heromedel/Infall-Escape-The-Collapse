@@ -44,7 +44,7 @@ func record_battle(battle: Battle) -> void:
 	var reward := 0.0
 	if battle.winner == 0 and battle.outcome in [Battle.OUTCOME_DESTROYED, Battle.OUTCOME_CREW_LOST]:
 		battles_won += 1
-		reward = wreck_reward(enemy.design, battle.outcome)
+		reward = wreck_reward(enemy.design, battle.outcome, band())
 	var jump_cost := float(Catalog.rule("economy", "jumpCost", 0))
 	var spent_in_battle := mawjig - battle.ships[0].mawjig
 	mawjig = Money.round_amount(maxf(0.0, battle.ships[0].mawjig + reward - jump_cost))
@@ -218,12 +218,18 @@ func stops_to_next_station() -> int:
 	return 1 if Settings.value("station_frequency") == "Every Stop" else _stops_to_station
 
 
-## A beaten enemy's Mawjig: a share of its ship's value, more if its crew was killed and the ship left whole.
-static func wreck_reward(enemy_design: ShipDesign, outcome: String) -> float:
-	var reward := enemy_design.value() * float(Catalog.rule("economy", "rewardPercent", 0)) / 100.0
+## A beaten enemy's Mawjig: a share of its ship's value times the band's adjustment, more if its crew was killed and
+## the ship left whole.
+static func wreck_reward(enemy_design: ShipDesign, outcome: String, at_band: int = 1) -> float:
+	var reward := enemy_design.value() * float(Catalog.rule("economy", "rewardPercent", 0)) / 100.0 * band_adjustment(at_band)
 	if outcome == Battle.OUTCOME_CREW_LOST:
 		reward *= 1.0 + float(Catalog.rule("economy", "crewKillBonus", 0)) / 100.0
 	return Money.round_amount(reward)
+
+
+## Rewards rise each band (mawjig-cost-table.md, Fight rewards): x1.0 in band 1, then bandStep % more per band.
+static func band_adjustment(at_band: int) -> float:
+	return 1.0 + float(Catalog.rule("economy", "bandStep", 0)) / 100.0 * (at_band - 1)
 
 
 ## The player's ship as the battle left it. Crew aboard the enemy ship when you jump are left behind.

@@ -64,7 +64,7 @@ func start(player: ShipDesign, enemy: ShipDesign, carry: Dictionary = {}, the_ru
 	match Settings.value("first_turn"):
 		"You": first = PLAYER
 		"Enemy": first = ENEMY
-	battle = Battle.new(player, enemy, first, 0, carry)
+	battle = Battle.new(player, enemy, first, 0, carry, run.band() if run else 1)
 	enemy_captain = BattleAI.new(Settings.value("ai_level"))
 	_player_autopilot = BattleAI.new("Normal")
 	_log_file.open(battle)
@@ -1236,7 +1236,7 @@ func _show_result(event: Dictionary) -> void:
 	lines.append("Turns: %d   ·   Your hull: %d/%d   ·   Crew: %d" % [battle.turn_number, mine.hull, mine.hull_max, battle.living_crew_of(PLAYER).size()])
 	if run:
 		if survived:
-			var reward := RunState.wreck_reward(enemy.design, event.outcome) if battle.winner == PLAYER and event.outcome != Battle.OUTCOME_ESCAPED else 0.0
+			var reward := RunState.wreck_reward(enemy.design, event.outcome, run.band()) if battle.winner == PLAYER and event.outcome != Battle.OUTCOME_ESCAPED else 0.0
 			var jump_cost := float(Catalog.rule("economy", "jumpCost", 0))
 			lines.append("Salvage: +%s   ·   Jump: -%s   ·   Mawjig after: %s" % [Money.text(reward, false), Money.text(jump_cost, false),
 				Money.text(maxf(0.0, run.mawjig + reward - jump_cost))])

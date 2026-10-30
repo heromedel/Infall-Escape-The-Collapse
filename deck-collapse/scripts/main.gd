@@ -37,7 +37,7 @@ func _ready() -> void:
 ## For testing (start=station): a run stopped at a station after an unfought battle.
 func _preview_station() -> void:
 	run = RunState.new(player_design)
-	run.record_battle(Battle.new(run.design, enemy_design, 0))
+	run.record_battle(Battle.new(run.design, enemy_design, 0, 0, {}, run.band()))
 	if run.station == null:
 		run.station = Station.new(run.design, run.rng)
 	show_run()
@@ -46,7 +46,7 @@ func _preview_station() -> void:
 ## For testing (start=event event=N): a run arriving at event N of data/events.xml.
 func _preview_event(index: int) -> void:
 	run = RunState.new(player_design)
-	run.record_battle(Battle.new(run.design, enemy_design, 0))
+	run.record_battle(Battle.new(run.design, enemy_design, 0, 0, {}, run.band()))
 	run.beacon = {"kind": "event", "event": Catalog.events[clampi(index, 0, Catalog.events.size() - 1)]}
 	_show_beacon()
 

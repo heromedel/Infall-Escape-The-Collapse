@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Azurethea "Vein Moth": a low-tech explorer, bands 1-2, met along the quiet lanes of a doing-fine Azurethea region.
      New design (2026-10-29), Ai-Generated-Proposal, from race profile Azurethea 6, 9 and 10 (low tech: single-system
-     targeting shots, stinger missiles or single-shot energy beams). Gap references are listed in README.md. -->
+     targeting shots, stinger missiles or single-shot energy beams). Infall version: ship-suggestions.md. Gap references are listed in README.md. -->
 <ship bands="1-2" name="Vein Moth" race="Azurethea" faction="Azurethea" color="#4F8FFF" hull="10" missiles="4">
   <note>A winged explorer. It rarely starts a fight and readily accepts surrender; when it does fight, it picks one system and keeps hitting it.</note>
-  <power kind="pool" level="7"/>                                     <!-- G2: biological energy, the genre's pool -->
+  <power kind="pool" level="8"/>                                     <!-- G2: biological energy, the genre's pool -->
   <system type="piloting" level="1"/>
   <system type="shields" level="1"/>
   <system type="engines" level="2"/>
-  <system type="sensors" level="1"/>
   <system type="lifeSupport" level="1"/>
   <system type="medBay" level="1"/>
-  <system type="weapon" id="weaponsA" name="Weapons A" level="1">     <!-- G3 -->
+  <system type="weapon" id="weapons" name="Weapons" level="2">        <!-- G3: one system, 2 slots -->
     <weapon name="Stinger" kind="missile" power="1" shots="1" damage="1" tech="biomechanical"/>   <!-- G4; existing Azurethea weapon -->
-  </system>
-  <system type="weapon" id="weaponsB" name="Weapons B" level="1">
-    <weapon name="Firefly" kind="beam" power="1" shots="1" damage="1" rooms="1" tech="biomechanical"/>  <!-- G4, G16: single-shot energy beam -->
+    <weapon name="Lantern" kind="beam" power="1" shots="1" damage="1" rooms="1" tech="biomechanical"/>  <!-- G4, G16: single-shot energy beam; a firefly's light organ -->
   </system>
   <crew name="Pilot" race="Azurethea" station="piloting"/>            <!-- G1: half HP, make breathable air, repair biomechanical systems faster -->
-  <crew name="Gunner" race="Azurethea" station="weaponsA"/>
+  <crew name="Gunner" race="Azurethea" station="weapons"/>
+  <!-- Captain plan, Ai-Generated-Proposal (2026-10-30). Lines marked G22-G27 use the plan lines for those gaps (README.md); Deck Collapse has them now. -->
+  <ai plan="destroy">
+    <!-- Picks one system and keeps hitting it: both weapons on the guns, then on Piloting. -->
+    <target system="weapon" weapon="Stinger" weight="0.85"/>
+    <target system="weapon" weapon="Lantern" weight="0.85"/>
+    <target system="piloting" weapon="Stinger" when="enemyWeaponsDown" weight="0.8"/>
+    <target system="piloting" weapon="Lantern" when="enemyWeaponsDown" weight="0.8"/>
+  </ai>
 </ship>

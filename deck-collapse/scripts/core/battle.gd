@@ -50,7 +50,7 @@ var _next_crew_id := 1
 
 ## carry: the state side 0 brings from its last battle (see RunState.carry): hull, missiles, system damage,
 ## fires, breaches, and the surviving crew with their wounds and positions. Empty for a fresh ship.
-func _init(design_a: ShipDesign, design_b: ShipDesign, first_side: int, seed_value: int = 0, carry: Dictionary = {}) -> void:
+func _init(design_a: ShipDesign, design_b: ShipDesign, first_side: int, seed_value: int = 0, carry: Dictionary = {}, band: int = 1) -> void:
 	rng.seed = seed_value if seed_value != 0 else int(Time.get_ticks_usec())
 	draw_per_turn = int(Settings.value("draw_per_turn"))
 	guaranteed_opening_power = Settings.value("opening_power") == "2 Guaranteed"
@@ -77,7 +77,7 @@ func _init(design_a: ShipDesign, design_b: ShipDesign, first_side: int, seed_val
 				"ship": side, "system": station, "moved": false,
 				"acted": false, "locked": false, "stunned": false, "controlled_by": -1, "controlled_turns": 0, "leaving_to": "", "leaving_turns": 0})
 			_next_crew_id += 1
-		ship.mawjig = Money.round_amount(design.value() * float(Catalog.rule("economy", "enemyPursePercent", 0)) / 100.0) \
+		ship.mawjig = Money.round_amount(design.value() * float(Catalog.rule("economy", "enemyPursePercent", 0)) / 100.0 * RunState.band_adjustment(band)) \
 			if side == 1 else float(carry.get("mawjig", Catalog.rule("economy", "startingMawjig", 0)))
 		if side == 0 and not carry.is_empty():
 			_apply_carry(ship, carry)
@@ -868,7 +868,10 @@ func _suits_act(ship: ShipState, enemy: ShipState) -> void:
 					"kind": "ion" if kind.ion else ("beam" if kind.shields == "reduce" else "suit")}
 				for shot_index in kind.shots:
 					_fire_shot(ship, enemy, suit.dock, suit.target, shot, shot_index)
-				suit.target = _drift_target(enemy)
+				var held: String = suit.get("held", "")
+				suit.target = held if held != "" and not enemy.is_broken(held) else _drift_target(enemy)
+				if suit.target != held:
+					suit.held = ""
 			"intercept":
 				# Guardians also shoot at enemy suits flying near their ship.
 				var prey := enemy.suits.filter(func(s): return s.target != "" and not s.recalling)
@@ -1101,10 +1104,12 @@ func _resolve_card(ship: ShipState, card: Dictionary, definition: Dictionary, ta
 			pilot.moved = true
 			pilot.system = ""
 			var kind := Catalog.suit_kind(definition.suit)
-			var aim := _drift_target(enemy) if kind.action in ["shoot", "board"] else ""
+			# A captain's plan may send the suit to one system (a suit line); it stays there while the system works.
+			var held: String = target.get("system", "") if enemy.systems.has(target.get("system", "")) else ""
+			var aim := (held if held != "" else _drift_target(enemy)) if kind.action in ["shoot", "board"] else ""
 			var air := CardLibrary.suit_air(ship.systems[card.system].level)
 			ship.suits.append({"id": _next_uid, "kind": kind.id, "dock": card.system, "pilot": pilot.id, "target": aim,
-				"turns_left": air, "air": air, "recalling": false, "damaged": false, "ready": true})
+				"held": held, "turns_left": air, "air": air, "recalling": false, "damaged": false, "ready": true})
 			_next_uid += 1
 			_emit({"type": "suit_launched", "side": ship.side, "dock": card.system, "target": aim, "suit": kind.id, "crew": pilot.id})
 			if aim != "":

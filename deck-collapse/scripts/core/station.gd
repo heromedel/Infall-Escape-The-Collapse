@@ -38,8 +38,7 @@ func _roll_items(section_id: String, design: ShipDesign, count: int, rng: Random
 					"price": float(definition.prices[0])})
 		SECTION_WEAPONS:
 			var ids: Array = Catalog.weapons.keys().filter(func(id): return Weapons.allowed_in_band(Catalog.weapons[id], band))
-			_shuffle(ids, rng)
-			for weapon_id in ids.slice(0, count):
+			for weapon_id in _weighted_picks(ids, count, rng, func(id): return Weapons.store_weight(Catalog.weapons[id])):
 				var weapon := Catalog.weapon(weapon_id)
 				items.append({"kind": "weapon", "weapon": weapon, "name": weapon.name,
 					"detail": "%d card%s in your deck. %s" % [weapon.speed, "" if weapon.speed == 1 else "s", Weapons.card_text(weapon)],
@@ -90,6 +89,26 @@ static func _skills_text(skills: Dictionary) -> String:
 		if int(skills.get(skill, 0)) > 0:
 			trained.append("%s %s" % [CrewSkills.LEVEL_NAMES[int(skills[skill])], CrewSkills.LABELS[skill]])
 	return "Untrained." if trained.is_empty() else ", ".join(trained) + "."
+
+
+## Up to count different values, each pick weighted by weight_of (weight 0: never picked).
+static func _weighted_picks(values: Array, count: int, rng: RandomNumberGenerator, weight_of: Callable) -> Array:
+	var left := values.filter(func(value): return weight_of.call(value) > 0.0)
+	var picks: Array = []
+	while picks.size() < count and not left.is_empty():
+		var total := 0.0
+		for value in left:
+			total += weight_of.call(value)
+		var roll := rng.randf() * total
+		var chosen = left[left.size() - 1]
+		for value in left:
+			roll -= weight_of.call(value)
+			if roll < 0.0:
+				chosen = value
+				break
+		picks.append(chosen)
+		left.erase(chosen)
+	return picks
 
 
 static func _shuffle(values: Array, rng: RandomNumberGenerator) -> void:

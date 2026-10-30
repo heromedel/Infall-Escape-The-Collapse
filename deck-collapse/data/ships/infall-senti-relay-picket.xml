@@ -16,4 +16,11 @@
   </system>
   <crew name="Pilot" race="Senti-GPH" station="piloting"/>            <!-- G1, G15: half HP, no oxygen, immune to fire -->
   <crew name="Gunner" race="Senti-GPH" station="weapons"/>
+  <!-- Captain plan, Ai-Generated-Proposal (2026-10-30). Lines marked G22-G27 use the plan lines for those gaps (README.md); Deck Collapse has them now. -->
+  <ai plan="destroy">
+    <!-- A station guard: silence the guns that threaten the station. -->
+    <target system="weapon" weapon="1B 02 V1" weight="0.8"/>
+    <target system="weapon" weapon="2B 01 V1" weight="0.75"/>
+    <target system="engines" weapon="1B 02 V1" when="enemyWeaponsDown" weight="0.6"/>
+  </ai>
 </ship>

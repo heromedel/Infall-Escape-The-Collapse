@@ -18,9 +18,12 @@ var suit_parts := 0
 var systems: Array = []
 ## Each crew member: { "name", "skills" (see CrewSkills), "station" (a system id) }.
 var crew: Array = []
-## The enemy captain's plan for this ship (see BattleAI): { plan: "destroy" | "crew-kill", targets: [{ system,
-## weapon, when, weight }] }. Empty targets: the captain plays as usual.
-var ai := {"plan": "destroy", "targets": []}
+## The enemy captain's plan for this ship (see BattleAI): { plan: "destroy" | "crew-kill", and its lines by kind:
+## targets (weapon aim), suits (where a battlesuit goes), boards (where boarders teleport), hacks }. Each line is
+## { system, weapon (targets) or suit (suits), when, unless, weight }. No lines: the captain plays as usual.
+var ai := {"plan": "destroy", "targets": [], "suits": [], "boards": [], "hacks": []}
+## Each plan line kind: its tag in the file, and the attribute that limits who follows it.
+const PLAN_LINES := {"targets": ["target", "weapon"], "suits": ["suit", "suit"], "boards": ["board", ""], "hacks": ["hack", ""]}
 ## Parts of the ship file this game doesn't support yet (systems it doesn't know, floor plans and so on), kept as
 ## XML nodes so saving the design writes them back unchanged. See unsupported_parts().
 var unsupported: Array = []
@@ -49,9 +52,12 @@ static func from_xml(xml_text: String) -> ShipDesign:
 		design.note = XmlTree.clean_text(note_node)
 	var power_nodes := XmlTree.children_named(root, "power")
 	for ai_node in XmlTree.children_named(root, "ai"):
-		design.ai = {"plan": ai_node.attrs.get("plan", "destroy"), "targets": XmlTree.children_named(ai_node, "target").map(
-			func(n): return {"system": n.attrs.get("system", ""), "weapon": n.attrs.get("weapon", ""),
-				"when": n.attrs.get("when", "always"), "weight": _plan_line_weight(n.attrs, design.name)})}
+		design.ai = {"plan": ai_node.attrs.get("plan", "destroy")}
+		for kind in PLAN_LINES:
+			design.ai[kind] = XmlTree.children_named(ai_node, PLAN_LINES[kind][0]).map(
+				func(n): return {"system": n.attrs.get("system", ""), "weapon": n.attrs.get("weapon", ""),
+					"suit": n.attrs.get("suit", ""), "when": n.attrs.get("when", "always"), "unless": n.attrs.get("unless", ""),
+					"weight": _plan_line_weight(n.attrs, design.name)})
 	for system_node in XmlTree.children_named(root, "system"):
 		var system_attrs: Dictionary = system_node.attrs
 		var type: String = system_attrs.get("type", "")
@@ -218,16 +224,19 @@ func to_xml() -> String:
 		lines.append('  <crew name="%s"%s station="%s"%s/>' % [XmlTree.escape(member.name),
 			"" if race == "" else ' race="%s"' % XmlTree.escape(race), XmlTree.escape(member.station),
 			"" if skills == "" else " " + skills])
-	if ai.plan != "destroy" or not ai.targets.is_empty():
+	if ai.plan != "destroy" or PLAN_LINES.keys().any(func(kind): return not ai[kind].is_empty()):
 		lines.append('  <ai plan="%s">' % ai.plan)
-		for line in ai.targets:
-			var parts: Array[String] = ['system="%s"' % line.system]
-			if line.when != "always":
-				parts.append('when="%s"' % line.when)
-			if line.weapon != "":
-				parts.append('weapon="%s"' % XmlTree.escape(line.weapon))
-			parts.append('weight="%s"' % str(line.weight))
-			lines.append("    <target %s/>" % " ".join(parts))
+		for kind in PLAN_LINES:
+			for line in ai[kind]:
+				var parts: Array[String] = ['system="%s"' % line.system]
+				var who: String = PLAN_LINES[kind][1]
+				if who != "" and line[who] != "":
+					parts.append('%s="%s"' % [who, XmlTree.escape(line[who])])
+				for key in ["when", "unless"]:
+					if not line[key] in ["", "always"]:
+						parts.append('%s="%s"' % [key, line[key]])
+				parts.append('weight="%s"' % str(line.weight))
+				lines.append("    <%s %s/>" % [PLAN_LINES[kind][0], " ".join(parts)])
 		lines.append("  </ai>")
 	for node in unsupported:
 		lines.append(XmlTree.to_xml(node))

@@ -112,7 +112,8 @@ These are gaps in the GDD, filled with the genre in mind. Each one is a setting 
   it can't act and heads home; a second hit destroys it and its pilot (race-profiles.md, Mecha, Likely). Bolts
   fired from the weapon a suit is beside, and your own misses at the system it's beside, may hit it (15%);
   guardian suits shoot enemy suits (50%). A launch pays Mawjig for every shot over its turns. EVB Refund: Yes pays
-  back unused turns.
+  back unused turns. A pilot out in a suit is in no room, so breaches, low air and fire can't reach them while the
+  suit has air.
 - **Bombs (genre; mawjig-cost-table.md):** teleported into a system: they ignore shields and evasion, can't be shot
   down, and damage the system but not the hull. A missile each with Classic ammo; 0.05 Mawjig each plus effects.
 - **Crew damage (Ship Design's G20):** a weapon's `crewDamage` costs every crew member in a hit system that many
@@ -138,8 +139,14 @@ These are gaps in the GDD, filled with the genre in mind. Each one is a setting 
   fire pip, damages its system by 1 and uses half its pips (rounded down) of the system's air; it goes out when the
   air is gone (breaches and venting take it all) or the system is broken. A Repair puts out 2 fire pips. It may
   spread to the system beside it as a 1-pip fire.
-- **Mawjig (docs/reference):** a wreck pays 2.5% of its value (+30% for killing the crew); a jump costs 1.21; hull
-  repair 0.48 a point; missiles 1.45; crew 10.89.
+- **Mawjig (docs/reference):** a wreck pays 2.5% of its value (+30% for killing the crew) times the band
+  adjustment, x1.0 in band 1 rising 0.1 a band to x1.7 in band 8 (mawjig-cost-table.md, Fight rewards; economy-findings
+  F1); an enemy's purse rises the same way. A jump costs 1.21; hull repair 0.48 a point; missiles 1.45; crew 10.89.
+- **Weapon prices (weapon-budget-table.md):** power, plus damage and effects over the weapon's exact cooldown; a
+  weapon given more or fewer cards than its cooldown suggests is priced as that much faster or slower.
+- **Weapon rarity (genre):** each weapon has a rarity, 1 common to 5 rare (0: never in stores at random). A store
+  picks its weapons weighted 5, 4, 3, 2, 1 by rarity (`rules.xml` rarity; the weights and the weapons' rarities are
+  Ai-Generated-Proposal).
 - **Beacons and bands (heromedel):** after a battle, and with each JUMP (1.21 Mawjig), you reach a beacon: half the
   time an event (`data/events.xml`, by Infall: Lori), otherwise a hostile ship to fight. Some events lead to a
   fight; the others leave you at a quiet beacon to jump on. The difficulty band rises every 10 jumps (GDD: about 8
@@ -175,18 +182,28 @@ Ai-Generated-Proposal). The game reads their weapons as written; their power run
 and the parts it doesn't have yet (Supershield, growth organ, servicing core, AAA, floor plans …) are kept and
 listed with their gap numbers.
 
-**Captain plans** (heromedel 2026-10-30): an `<ai plan="destroy|crew-kill">` section in a ship file. Each
-`<target system="…" when="…" weapon="…" weight="…"/>` line is tried in order when the captain aims a weapon: if its
-condition holds (`always`, `enemyWeaponsDown`, `enemyShieldsDown`, `enemyWounded`) and the line names no weapon or
-this one, it rolls its weight and on a success aims at that system. Weight defaults to 0.75 (followed 3 times in
-4), can't go above 0.9, and Easy captains halve it while Hard add 0.1. A failed roll only means the captain
-chooses as usual. A crew-kill plan also aims at rooms with crew and hacks the Med Bay first. The Terran Pirate
-Hijacker has the example plan.
+**Captain plans** (heromedel 2026-10-30): an `<ai plan="destroy|crew-kill">` section in a ship file, with lines of
+four kinds, each tried in order:
+
+| Line | When it's used | Limited to |
+|---|---|---|
+| `<target system when unless weapon weight/>` | aiming a weapon | `weapon`: that weapon, by name |
+| `<suit system when unless suit weight/>` | launching a battlesuit: it goes there and stays while the system works (G22) | `suit`: that suit type |
+| `<board system when unless weight/>` | teleporting boarders (G23) | |
+| `<hack system when unless weight/>` | hacking (G24) | |
+
+A line whose `when` holds and whose `unless` doesn't rolls its weight, and on a success the captain uses its system.
+Conditions: `always`, `enemyWeaponsDown`, `enemyShieldsDown`, `enemyMedBayDown`, `enemyLifeSupportDown` (G25; a ship
+without the system counts it as down), `enemyWounded`, `ownBoardersAboard` (G26), `ownCrewIn` (our crew are in the
+line's system, G27). Weight defaults to 0.75 (followed 3 times in 4), can't go above 0.9, and Easy captains halve it
+while Hard add 0.1. A failed roll only means the captain chooses as usual. A crew-kill plan also aims at rooms with
+crew and hacks the Med Bay first. Every Infall ship has Ship Design's plan (Cloud-C-ShipDesign, 2026-10-30). With a
+Teleport card in hand, an AI keeps a boarder in its Teleport Bay until two are across.
 
 **Loadouts** (GDD 5J; Ship Design's G18): a `<loadout ship="…">` file patches a ship already loaded: its attributes
 replace the ship's, `<power>` replaces the power, each `<system>` matches by id (else type) and changes it or is
 added (`removed="true"` drops it), and `<crew>` with `<member>`s replaces the crew whole. The Pickpocket, Cutpurse,
-Light Attack Frame (Suit Dock) and Polyp (Flak) are loadouts.
+Light Attack Frame (Suit Dock), Polyp (Flak), Pappus (of the Burr) and Scrap Hound (of the SC-1 Outrider) are loadouts.
 
 They're in `data/ships/` and are meant to be edited.
 
@@ -195,7 +212,7 @@ They're in `data/ships/` and are meant to be edited.
 | Path | What it is |
 |---|---|
 | `data/systems.xml` | Every system: its card, cards per level, design points, level limits |
-| `data/weapons.xml` | Weapon families and every weapon (power, shots, damage, speed, specials, bands) |
+| `data/weapons.xml` | Weapon families and every weapon (power, shots, damage, speed, specials, rarity, bands) |
 | `data/races.xml` | Crew races: health, attack and traits |
 | `data/events.xml` | Events at beacons |
 | `data/suits.xml` | EVB battlesuit types |
@@ -212,7 +229,7 @@ They're in `data/ships/` and are meant to be edited.
 
 - Crew portraits use the GATOS cat concept (face C, Cloud-C-Art), a concept that isn't decided; the art rules still say the
   GATOS are human. The variants beyond face C are Ai-Generated-Proposal. Other races' faces later.
-- EVB battlesuits (and an EVA system) could make crew immune to breaches and low air until the suit's air runs out.
+- An EVA system could make crew aboard immune to breaches and low air for a while, as suits already do.
 - Augments: none are listed in the Infall docs yet. A Nano Machines style heal would fit the Malphen (suggestion).
 
 - The designer could set the order systems sit in; later, floor plans, with systems laid out by the plan instead

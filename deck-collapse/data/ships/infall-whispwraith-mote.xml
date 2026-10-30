@@ -14,4 +14,10 @@
   </system>
   <crew name="One" race="Whispwraith" station="piloting"/>            <!-- G1: heal in their own air, teleport themselves (mid tech) -->
   <crew name="Other" race="Whispwraith" station="weapons"/>
+  <!-- Captain plan, Ai-Generated-Proposal (2026-10-30). Lines marked G22-G27 use the plan lines for those gaps (README.md); Deck Collapse has them now. -->
+  <ai plan="destroy">
+    <!-- Ion the shields, then the guns. -->
+    <target system="shields" weapon="Hush" weight="0.8"/>
+    <target system="weapon" weapon="Hush" when="enemyShieldsDown"/>
+  </ai>
 </ship>

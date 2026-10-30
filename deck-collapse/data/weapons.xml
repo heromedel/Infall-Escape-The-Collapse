@@ -32,6 +32,9 @@
     crewDamage    health pips every crew member in a hit system loses, on top of damage (G20; the genre's anti-bio
                   beam has damage 0 and only this)
     tech          its maker's tech (kept for later; GDD 8D)
+    rarity        how often stores offer it, as the genre rates its weapons: 1 common to 5 rare; 0 never at random
+                  (only from ships, events or set stock). Default 1. Weights are in rules.xml <rarity>. The values
+                  here are Ai-Generated-Proposal, after the genre's rarities for the weapons it has.
     bands         the difficulty bands it can turn up in (stores, enemies), e.g. "2-8". New ideas such as multi-target
                   lasers start later so concepts come in slowly (heromedel 2026-10-29). Default 1-8. The band
                   numbers here are Ai-Generated-Proposal.
@@ -53,50 +56,50 @@
   <weapon id="spark-laser" name="Spark Laser" kind="laser" power="1" shots="1" damage="1" speed="4" fire="10"/>
   <weapon id="twin-laser" name="Twin Laser" kind="laser" power="1" shots="2" damage="1" speed="4"/>
   <weapon id="burst-laser" name="Burst Laser" kind="laser" power="2" shots="2" damage="1" speed="3" fire="10"/>
-  <weapon id="triad-laser" name="Triad Laser" kind="laser" power="2" shots="3" damage="1" speed="3" fire="10"/>
-  <weapon id="storm-laser" name="Storm Laser" kind="laser" power="4" shots="5" damage="1" speed="2" fire="10" bands="3-8"/>
+  <weapon id="triad-laser" name="Triad Laser" kind="laser" power="2" shots="3" damage="1" speed="3" fire="10" rarity="2"/>
+  <weapon id="storm-laser" name="Storm Laser" kind="laser" power="4" shots="5" damage="1" speed="2" fire="10" bands="3-8" rarity="4"/>
   <weapon id="heavy-laser" name="Heavy Laser" kind="laser" power="1" shots="1" damage="2" speed="4" fire="10" breach="10"/>
-  <weapon id="twin-heavy" name="Twin Heavy Laser" kind="laser" power="3" shots="2" damage="2" speed="3" fire="30" breach="20" bands="2-8"/>
-  <weapon id="chain-repeater" name="Chain Repeater" kind="laser" power="2" shots="2" damage="1" speed="2" chain="true" fire="10" bands="2-8"/>
+  <weapon id="twin-heavy" name="Twin Heavy Laser" kind="laser" power="3" shots="2" damage="2" speed="3" fire="30" breach="20" bands="2-8" rarity="3"/>
+  <weapon id="chain-repeater" name="Chain Repeater" kind="laser" power="2" shots="2" damage="1" speed="2" chain="true" fire="10" bands="2-8" rarity="3"/>
   <weapon id="ion-burst" name="Ion Burst" kind="ion" power="1" shots="1" damage="0" speed="4"/>
-  <weapon id="twin-ion" name="Twin Ion" kind="ion" power="2" shots="2" damage="0" speed="3" bands="2-8"/>
-  <weapon id="ion-storm" name="Ion Storm" kind="ion" power="3" shots="3" damage="0" speed="3" bands="3-8"/>
+  <weapon id="twin-ion" name="Twin Ion" kind="ion" power="2" shots="2" damage="0" speed="3" bands="2-8" rarity="2"/>
+  <weapon id="ion-storm" name="Ion Storm" kind="ion" power="3" shots="3" damage="0" speed="3" bands="3-8" rarity="3"/>
   <weapon id="torpedo" name="Torpedo" kind="missile" power="1" shots="1" damage="2" speed="3" fire="20" breach="35"/>
-  <weapon id="lance-torpedo" name="Lance Torpedo" kind="missile" power="3" shots="1" damage="3" speed="3" fire="10" breach="20" bands="2-8"/>
-  <weapon id="breach-torpedo" name="Breach Torpedo" kind="missile" power="3" shots="1" damage="4" speed="2" fire="30" breach="70" bands="3-8"/>
+  <weapon id="lance-torpedo" name="Lance Torpedo" kind="missile" power="3" shots="1" damage="3" speed="3" fire="10" breach="20" bands="2-8" rarity="2"/>
+  <weapon id="breach-torpedo" name="Breach Torpedo" kind="missile" power="3" shots="1" damage="4" speed="2" fire="30" breach="70" bands="3-8" rarity="3"/>
   <weapon id="cutter-beam" name="Cutter Beam" kind="beam" power="1" shots="1" damage="1" rooms="1" speed="3" fire="30"/>
-  <weapon id="pike-beam" name="Pike Beam" kind="beam" power="2" shots="1" damage="1" rooms="4" speed="2" fire="30" bands="2-8"/>
-  <weapon id="cleaver-beam" name="Cleaver Beam" kind="beam" power="2" shots="1" damage="2" rooms="2" speed="2" fire="30" bands="2-8"/>
-  <weapon id="halberd-beam" name="Halberd Beam" kind="beam" power="3" shots="1" damage="2" rooms="3" speed="2" fire="30" bands="3-8"/>
-  <weapon id="glaive-beam" name="Glaive Beam" kind="beam" power="4" shots="1" damage="3" rooms="3" speed="1" fire="30" bands="4-8"/>
+  <weapon id="pike-beam" name="Pike Beam" kind="beam" power="2" shots="1" damage="1" rooms="4" speed="2" fire="30" bands="2-8" rarity="2"/>
+  <weapon id="cleaver-beam" name="Cleaver Beam" kind="beam" power="2" shots="1" damage="2" rooms="2" speed="2" fire="30" bands="2-8" rarity="2"/>
+  <weapon id="halberd-beam" name="Halberd Beam" kind="beam" power="3" shots="1" damage="2" rooms="3" speed="2" fire="30" bands="3-8" rarity="3"/>
+  <weapon id="glaive-beam" name="Glaive Beam" kind="beam" power="4" shots="1" damage="3" rooms="3" speed="1" fire="30" bands="4-8" rarity="5"/>
 
   <!-- Genre-style bombs (the genre's bombs, renamed): 1 missile each in Classic ammo, no hull damage. -->
-  <weapon id="spark-bomb" name="Spark Bomb" kind="bomb" power="1" shots="1" damage="1" speed="3" fire="10" bands="2-8"/>
-  <weapon id="hull-cracker" name="Hull Cracker" kind="bomb" power="1" shots="1" damage="0" speed="4" breach="100" bands="2-8"/>
-  <weapon id="hull-cracker-ii" name="Hull Cracker II" kind="bomb" power="2" shots="1" damage="1" speed="2" breach="100" bands="4-8"/>
-  <weapon id="firebrand-bomb" name="Firebrand Bomb" kind="bomb" power="2" shots="1" damage="0" speed="2" fire="100" bands="3-8"/>
-  <weapon id="daze-bomb" name="Daze Bomb" kind="bomb" power="1" shots="1" damage="0" speed="2" stun="true" bands="3-8"/>
-  <weapon id="cleansing-beam" name="Cleansing Beam" kind="beam" power="2" shots="1" damage="0" rooms="3" speed="2" crewDamage="3" bands="4-8"/>
+  <weapon id="spark-bomb" name="Spark Bomb" kind="bomb" power="1" shots="1" damage="1" speed="3" fire="10" bands="2-8" rarity="2"/>
+  <weapon id="hull-cracker" name="Hull Cracker" kind="bomb" power="1" shots="1" damage="0" speed="4" breach="100" bands="2-8" rarity="2"/>
+  <weapon id="hull-cracker-ii" name="Hull Cracker II" kind="bomb" power="2" shots="1" damage="1" speed="2" breach="100" bands="4-8" rarity="3"/>
+  <weapon id="firebrand-bomb" name="Firebrand Bomb" kind="bomb" power="2" shots="1" damage="0" speed="2" fire="100" bands="3-8" rarity="3"/>
+  <weapon id="daze-bomb" name="Daze Bomb" kind="bomb" power="1" shots="1" damage="0" speed="2" stun="true" bands="3-8" rarity="3"/>
+  <weapon id="cleansing-beam" name="Cleansing Beam" kind="beam" power="2" shots="1" damage="0" rooms="3" speed="2" crewDamage="3" bands="4-8" rarity="4"/>
 
   <!-- Infall weapons, from Ship Design's ships and the docs. -->
   <weapon id="gat-2-1-twinshot" name="Gat 2.1 Twinshot" kind="laser" power="1" shots="2" damage="1" tech="mechanical"/>
-  <weapon id="gat-3-1-triblast" name="Gat 3.1 Triblast" kind="laser" power="2" shots="3" damage="1" tech="mechanical"/>
+  <weapon id="gat-3-1-triblast" name="Gat 3.1 Triblast" kind="laser" power="2" shots="3" damage="1" tech="mechanical" rarity="2"/>
   <weapon id="gat-m1-pathfinder" name="Gat M1 Pathfinder" kind="missile" power="1" shots="1" damage="1" breach="10" tech="mechanical"/>
   <weapon id="stinger" name="Stinger" kind="missile" power="1" shots="1" damage="1" tech="biomechanical"/>
   <weapon id="firefly" name="Firefly" kind="beam" power="1" shots="1" damage="1" rooms="1" tech="biomechanical"/>
-  <weapon id="sporewing" name="Sporewing" kind="missile" power="1" shots="1" damage="0" spores="true" stun="true" tech="biomechanical" bands="2-8"/>
-  <weapon id="tentauri-defense-laser" name="Tentauri Defense Laser" kind="laser" power="1" shots="1" damage="1" defensive="true" tech="biomechanical" bands="2-8"/>
-  <weapon id="ds-st-hull-laser" name="DS-ST Hull Laser" kind="laser" power="2" shots="2" damage="1" breach="20" tech="mechanical"/>
-  <weapon id="bone-flak" name="Bone Flak" kind="flak" power="1" shots="2" damage="1" tech="biomechanical"/>
+  <weapon id="sporewing" name="Sporewing" kind="missile" power="1" shots="1" damage="0" spores="true" stun="true" tech="biomechanical" bands="2-8" rarity="3"/>
+  <weapon id="tentauri-defense-laser" name="Tentauri Defense Laser" kind="laser" power="1" shots="1" damage="1" defensive="true" tech="biomechanical" bands="2-8" rarity="3"/>
+  <weapon id="ds-st-hull-laser" name="DS-ST Hull Laser" kind="laser" power="2" shots="2" damage="1" breach="20" tech="mechanical" rarity="2"/>
+  <weapon id="bone-flak" name="Bone Flak" kind="flak" power="1" shots="2" damage="1" tech="biomechanical" rarity="2"/>
   <weapon id="flesh-mortar" name="Flesh Mortar" kind="missile" power="1" shots="1" damage="1" tech="biomechanical"/>
   <weapon id="hush" name="Hush" kind="ion" power="1" shots="1" damage="0"/>
-  <weapon id="senti-2b-01-v1" name="2B 01 V1" kind="beam" power="1" shots="1" damage="1" rooms="2" tech="digital"/>
-  <weapon id="senti-1b-02-v1" name="1B 02 V1" kind="beam" power="2" shots="1" damage="2" rooms="1" tech="digital"/>
+  <weapon id="senti-2b-01-v1" name="2B 01 V1" kind="beam" power="1" shots="1" damage="1" rooms="2" tech="digital" rarity="2"/>
+  <weapon id="senti-1b-02-v1" name="1B 02 V1" kind="beam" power="2" shots="1" damage="2" rooms="1" tech="digital" rarity="2"/>
   <!-- After the cost table's worked example, a 3-shot multi-target breach laser (breach chance lowered). Ai-Generated-Proposal. -->
-  <weapon id="gat-3-2-scatter" name="Gat 3.2 Scatter" kind="laser" power="2" shots="3" damage="1" breach="30" multiTarget="true" tech="mechanical" bands="2-8"/>
+  <weapon id="gat-3-2-scatter" name="Gat 3.2 Scatter" kind="laser" power="2" shots="3" damage="1" breach="30" multiTarget="true" tech="mechanical" bands="2-8" rarity="3"/>
   <!-- Ai-Generated-Proposal: heromedel's idea of an Azurethea laser that spores or takes over minds instead of damaging. -->
-  <weapon id="sporelash" name="Sporelash" kind="laser" power="1" shots="1" damage="0" spores="true" tech="biomechanical" bands="2-8"/>
-  <weapon id="thrallwing" name="Thrallwing" kind="laser" power="2" shots="1" damage="0" mind="true" tech="biomechanical" bands="3-8"/>
+  <weapon id="sporelash" name="Sporelash" kind="laser" power="1" shots="1" damage="0" spores="true" tech="biomechanical" bands="2-8" rarity="3"/>
+  <weapon id="thrallwing" name="Thrallwing" kind="laser" power="2" shots="1" damage="0" mind="true" tech="biomechanical" bands="3-8" rarity="4"/>
   <!-- Ai-Generated-Proposal: a multi-target Terran laser for player ships. -->
-  <weapon id="gat-2-2-splitter" name="Gat 2.2 Splitter" kind="laser" power="1" shots="2" damage="1" multiTarget="true" tech="mechanical" bands="2-8"/>
+  <weapon id="gat-2-2-splitter" name="Gat 2.2 Splitter" kind="laser" power="1" shots="2" damage="1" multiTarget="true" tech="mechanical" bands="2-8" rarity="3"/>
 </weapons>
