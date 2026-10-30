@@ -22,9 +22,9 @@
   <ai plan="crew-kill">
     <!-- Breach the Life Support so the air drains, burn the Med Bay, then send the holograms into the rooms nobody
          else can live in. Hack the Airlock Control so the crew can't vent the fires out. -->
-    <target system="lifeSupport" weapon="2L 01 B1" weight="0.85"/>
-    <target system="medBay" weapon="3B 01 F1" weight="0.85"/>
-    <target system="airlock" weapon="2L 01 B1" when="enemyLifeSupportDown" weight="0.6"/>  <!-- G25 -->
+    <target unless="ownCrewIn" system="lifeSupport" weapon="2L 01 B1" weight="0.85"/>
+    <target unless="ownCrewIn" system="medBay" weapon="3B 01 F1" weight="0.85"/>
+    <target unless="ownCrewIn" system="airlock" weapon="2L 01 B1" when="enemyLifeSupportDown" weight="0.6"/>  <!-- G25 -->
     <hack system="medBay" weight="0.9"/>                                                    <!-- G24 -->
     <hack system="airlock" when="enemyMedBayDown"/>
     <board system="lifeSupport" when="enemyLifeSupportDown" weight="0.85"/>                <!-- G23: keep it from being repaired -->

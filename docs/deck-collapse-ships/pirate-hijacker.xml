@@ -28,9 +28,9 @@
   <ai plan="crew-kill">
     <!-- Wants your ship intact: spores the engines and piloting, silences the guns, then boards.
          The first five lines are Deck Collapse's own example; Life Support is never cut while our boarders are aboard. -->
-    <target system="engines" weapon="Sporewing" weight="0.8"/>
-    <target system="piloting" weapon="Sporewing"/>
-    <target system="weapon" weapon="Gat 2.1 Twinshot" weight="0.8"/>
+    <target unless="ownCrewIn" system="engines" weapon="Sporewing" weight="0.8"/>
+    <target unless="ownCrewIn" system="piloting" weapon="Sporewing"/>
+    <target unless="ownCrewIn" system="weapon" weapon="Gat 2.1 Twinshot" weight="0.8"/>
     <target system="lifeSupport" when="enemyWeaponsDown" unless="ownBoardersAboard" weapon="Gat 2.1 Twinshot" weight="0.8"/>   <!-- G26, G27 -->
     <target system="medBay" when="enemyWounded" unless="ownCrewIn" weight="0.5"/>                                         <!-- G27 -->
     <board system="weapon" when="enemyShieldsDown" weight="0.8"/>   <!-- G23 -->

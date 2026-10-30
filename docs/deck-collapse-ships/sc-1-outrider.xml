@@ -21,7 +21,7 @@
   <!-- G19: suggested floor layout and conduit wheel = ship-suggestions.md (content/ships/outrider/ship.xml on Cloud-C-Init-Coding). -->
   <!-- Captain plan, Ai-Generated-Proposal (2026-10-30). Lines marked G22-G27 use features Deck Collapse doesn't have yet (README.md). -->
   <ai plan="destroy">
-    <!-- A Kestrel-style all-rounder: strip shields with the 3-shot laser, missile the guns. -->
+    <!-- An all-rounder: strip shields with the 3-shot laser, missile the guns. -->
     <target system="shields" weapon="Gat 3.1 Triblast" weight="0.8"/>
     <target system="weapon" weapon="Gat M1 Pathfinder" weight="0.8"/>
     <target system="weapon" when="enemyShieldsDown" weapon="Gat 3.1 Triblast"/>

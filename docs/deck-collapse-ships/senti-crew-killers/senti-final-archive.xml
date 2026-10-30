@@ -23,8 +23,8 @@
   <ai plan="crew-kill">
     <!-- Keep the ship, kill the crew: bio bomb the Med Bay where the hurt gather, burn the Life Support, and let the
          anti-bio beam sweep the most crowded systems (crew-kill's ordinary aiming). -->
-    <target system="medBay" weapon="BB 00 X1" when="enemyWounded" weight="0.85"/>
-    <target system="lifeSupport" weapon="3B 01 F1" weight="0.75"/>
+    <target unless="ownCrewIn" system="medBay" weapon="BB 00 X1" when="enemyWounded" weight="0.85"/>
+    <target unless="ownCrewIn" system="lifeSupport" weapon="3B 01 F1" weight="0.75"/>
     <hack system="medBay" weight="0.9"/>                                                    <!-- G24 -->
     <board system="medBay" when="enemyMedBayDown" weight="0.8"/>                           <!-- G23, G25 -->
     <board system="lifeSupport"/>
