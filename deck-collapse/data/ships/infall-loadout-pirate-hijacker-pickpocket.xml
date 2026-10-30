@@ -22,7 +22,9 @@
     <!-- No Sporewing: shoot the guns, board the guns, then the Med Bay. Replaces the Hijacker's plan. -->
     <target unless="ownCrewIn" system="weapon" weapon="Gat 2.1 Twinshot" weight="0.8"/>
     <target system="medBay" when="enemyWounded" unless="ownCrewIn" weapon="Gat 2.1 Twinshot" weight="0.5"/>   <!-- G27 -->
+    <target system="aaa" when="enemyWounded" unless="ownCrewIn" weapon="Gat 2.1 Twinshot" weight="0.5"/>   <!-- Senti ships: the AAA replaces the Med Bay -->
     <board system="weapon" weight="0.8"/>                                                                       <!-- G23 -->
     <board system="medBay" when="enemyWounded" weight="0.6"/>
+    <board system="aaa" when="enemyWounded" weight="0.6"/>   <!-- Senti ships: the AAA replaces the Med Bay -->
   </ai>
 </loadout>

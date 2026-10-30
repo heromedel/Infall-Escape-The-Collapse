@@ -23,7 +23,9 @@
          system where our own hunters are, or cut the air while they are aboard (Lykario breathe). Replaces the Outrider's plan. -->
     <target system="weapon" weapon="Gat 2.1 Twinshot" unless="ownCrewIn" weight="0.8"/>                         <!-- G27 -->
     <target system="medBay" when="enemyWounded" unless="ownCrewIn" weapon="Gat 2.1 Twinshot" weight="0.6"/>
+    <target system="aaa" when="enemyWounded" unless="ownCrewIn" weapon="Gat 2.1 Twinshot" weight="0.6"/>   <!-- Senti ships: the AAA replaces the Med Bay -->
     <board system="medBay" weight="0.8"/>                                                                       <!-- G23 -->
+    <board system="aaa" weight="0.8"/>   <!-- Senti ships: the AAA replaces the Med Bay -->
     <board system="weapon" when="enemyMedBayDown"/>                                                             <!-- G25 -->
   </ai>
 </loadout>
