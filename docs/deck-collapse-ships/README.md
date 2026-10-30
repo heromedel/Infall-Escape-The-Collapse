@@ -90,3 +90,37 @@ New gaps:
 Judgment calls: fire and breaches in separate systems (a breach drains the air a fire needs); teleport standing in
 for an upgraded AAA broadcasting avatars aboard; the weapon codes follow the Senti number codes, with F for fire,
 B for breach and X for anti-bio as suggestions; band 7–8 for the bio weapons, since a bio bomb is new to the genre.
+
+## Captain plans (2026-10-30)
+
+**Ai-Generated-Proposal (2026-10-30)**, asked by heromedel: an `<ai>` section in every ship (Deck Collapse's format,
+commit 49333f3 on its branch). Most ships play `destroy` with a few lines from their design; the boarders and crew
+killers play `crew-kill`. The Cutpurse inherits the Hijacker's plan; other loadouts with an `<ai>` replace their
+ship's plan.
+
+| Ship | Plan | In short |
+|---|---|---|
+| SC-1 Outrider | destroy | Triblast on Shields, Pathfinder on the guns |
+| Pirate Hijacker (and Cutpurse) | crew-kill | Deck Collapse's example, plus boarders on the guns and the Med Bay; never cuts the air while its boarders are aboard |
+| Pickpocket | crew-kill | Twinshot on the guns; boarders on the guns, then the Med Bay |
+| Burr, Pappus | destroy | the guns that could stop it, then the engines that could chase it |
+| Light Attack Frame | destroy | the Hull Laser on the guns once the shield is down; the Suit Dock's suit pops the shield |
+| Vein Moth | destroy | both weapons on one system: the guns, then Piloting |
+| Scrap Hound | crew-kill | boarders to the Med Bay; never fires on a system holding its own hunters, nor cuts the air while they're aboard |
+| Polyp, Polyp (Flak) | destroy | the missile on the guns; the flak pops shields for the swarm |
+| Relay Picket | destroy | the guns, to protect its station |
+| Mote | destroy | ion the shields, then the guns |
+| Census Picket | crew-kill | burn the Med Bay, then Life Support; hack whichever still works |
+| Quiet Ledger | crew-kill | breach Life Support, burn the Med Bay, hack Airlock Control so they can't vent fires; holograms hold the airless rooms |
+| Final Archive | crew-kill | bio bomb the Med Bay where the hurt gather, burn Life Support; the anti-bio beam sweeps the crowded systems |
+
+Features the plans use that Deck Collapse doesn't have yet, written as if they existed:
+
+| Ref | Gap | What the files ask for |
+|---|---|---|
+| G22 | Suit lines | `<suit system suit when weight/>`: where a battlesuit goes, like a weapon line |
+| G23 | Boarding lines | `<board system when weight/>`: which enemy system teleported boarders go to |
+| G24 | Hacking lines | `<hack system when weight/>`: hack targets beyond crew-kill's Med Bay first |
+| G25 | Conditions on enemy systems | `when="enemyMedBayDown"`, `when="enemyLifeSupportDown"` |
+| G26 | Our boarders aboard | `ownBoardersAboard`: any of our crew is aboard the enemy ship |
+| G27 | Negative conditions | `unless="…"` skips a line while the condition holds; `ownCrewIn`: our own crew are in the target system (so a ship never shoots its own boarders) |

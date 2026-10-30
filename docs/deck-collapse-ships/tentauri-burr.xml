@@ -21,4 +21,11 @@
   <crew name="Pilot" race="Tentauri" station="piloting"/>             <!-- G1: runs up to four systems in its room -->
   <crew name="Gunner" race="Tentauri" station="weaponsA"/>
   <!-- G19: suggested floor layout = the layout in ship-suggestions.md (content/ships/tentauri-scout/ship.xml on Cloud-C-Init-Coding). -->
+  <!-- Captain plan, Ai-Generated-Proposal (2026-10-30). Lines marked G22-G27 use features Deck Collapse doesn't have yet (README.md). -->
+  <ai plan="destroy">
+    <!-- Gets in, survives, gets out: knock out the guns that could stop it, then the engines that could chase it. -->
+    <target system="weapon" weapon="Tentauri Defense Laser" weight="0.8"/>
+    <target system="shields" weapon="Tentauri Defense Laser" when="enemyWeaponsDown" weight="0.6"/>
+    <target system="engines" weapon="Tentauri Defense Laser" when="enemyWeaponsDown"/>
+  </ai>
 </ship>

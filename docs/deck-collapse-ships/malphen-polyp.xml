@@ -14,4 +14,10 @@
     <weapon name="Flesh Mortar" kind="missile" power="1" shots="1" damage="1" tech="biomechanical"/>  <!-- G4: a fleshy, Stinger-like missile -->
   </system>
   <crew name="Grown" race="Malphen" station="piloting"/>              <!-- G1: high HP, heals slowly anywhere aboard -->
+  <!-- Captain plan, Ai-Generated-Proposal (2026-10-30). Lines marked G22-G27 use features Deck Collapse doesn't have yet (README.md). -->
+  <ai plan="destroy">
+    <!-- The missile ignores shields: hit the guns. -->
+    <target system="weapon" weapon="Flesh Mortar" weight="0.8"/>
+    <target system="engines" weapon="Flesh Mortar" when="enemyWeaponsDown"/>
+  </ai>
 </ship>

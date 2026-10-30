@@ -17,4 +17,13 @@
     <member name="Hunter" race="Lykario" station="teleport" combat="1"/>
     <member name="Hunter" race="Lykario" station="weapons"/>
   </crew>
+  <!-- Captain plan, Ai-Generated-Proposal (2026-10-30). Lines marked G22-G27 use features Deck Collapse doesn't have yet (README.md). -->
+  <ai plan="crew-kill">
+    <!-- A boarding raid. Shoot the guns, send the pack to the Med Bay so the hurt can't heal, and never fire on a
+         system where our own hunters are, or cut the air while they are aboard (Lykario breathe). Replaces the Outrider's plan. -->
+    <target system="weapon" weapon="Gat 2.1 Twinshot" unless="ownCrewIn" weight="0.8"/>                         <!-- G27 -->
+    <target system="medBay" when="enemyWounded" unless="ownCrewIn" weapon="Gat 2.1 Twinshot" weight="0.6"/>
+    <board system="medBay" weight="0.8"/>                                                                       <!-- G23 -->
+    <board system="weapon" when="enemyMedBayDown"/>                                                             <!-- G25 -->
+  </ai>
 </loadout>

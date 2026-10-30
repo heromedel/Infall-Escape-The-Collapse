@@ -11,4 +11,10 @@
   <system type="weapon" id="weaponsB" name="Weapons B" level="1">
     <weapon name="Coil" kind="laser" power="1" shots="1" damage="1" tech="biomechanical"/>
   </system>
+  <!-- Captain plan, Ai-Generated-Proposal (2026-10-30). Lines marked G22-G27 use features Deck Collapse doesn't have yet (README.md). -->
+  <ai plan="destroy">
+    <!-- As the Burr, with plain lasers. -->
+    <target system="weapon" weapon="Coil" weight="0.8"/>
+    <target system="engines" weapon="Coil" when="enemyWeaponsDown"/>
+  </ai>
 </loadout>

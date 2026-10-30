@@ -16,4 +16,12 @@
   </system>
   <crew name="Pilot" race="Azurethea" station="piloting"/>            <!-- G1: half HP, make breathable air, repair biomechanical systems faster -->
   <crew name="Gunner" race="Azurethea" station="weapons"/>
+  <!-- Captain plan, Ai-Generated-Proposal (2026-10-30). Lines marked G22-G27 use features Deck Collapse doesn't have yet (README.md). -->
+  <ai plan="destroy">
+    <!-- Picks one system and keeps hitting it: both weapons on the guns, then on Piloting. -->
+    <target system="weapon" weapon="Stinger" weight="0.85"/>
+    <target system="weapon" weapon="Lantern" weight="0.85"/>
+    <target system="piloting" weapon="Stinger" when="enemyWeaponsDown" weight="0.8"/>
+    <target system="piloting" weapon="Lantern" when="enemyWeaponsDown" weight="0.8"/>
+  </ai>
 </ship>
