@@ -22,6 +22,31 @@ These values are hard-coded in FTL, so they could not be extracted. Treat them a
 | Enemy scaling | enemy ships get more hull, power and better equipment in later sectors; the formula is hard-coded |
 | Scrap rewards | a won fight gives roughly 10–30 scrap early, rising in later sectors |
 
+## Breach chances and rarity (hand-written, 2026-10-30)
+
+A quick reference for setting effect chances, from FTL's weapon data (`breachChance` and `fireChance`, stored in
+tenths, and `rarity`). Kept in the hand-written part of this file so a re-run of the extraction script keeps it.
+
+**Rarity** is how often a weapon turns up at random, in stores and as rewards: **0** never at random (only fitted to
+set ships or given by events), **1** most common, up to **5** rarest. It is the only hint in the data of when a
+weapon is met: a common one tends to show up early because it shows up often. Which sector a weapon appears in is
+hard-coded in the game, and the faction weapon lists don't narrow it down: the breach weapons (Heavy Lasers, Breach
+Missiles) are on nearly every faction's list.
+
+| Breach | Weapon (rarity) | Also sets fires |
+|:-:|---|:-:|
+| 100% | Breach Bomb I (0), Breach Bomb II (4) | — |
+| 100% | Heavy Crystal II (0), the defence system's shot (0) | — |
+| 80% | Breach Missiles (3) | 30% |
+| 30% | Heavy Laser I (2), Heavy Laser II (4), Heavy Pierce Laser (0) | 30% |
+| 30% | Hull Smasher II (3), Hull Missile (3) | 10% |
+| 20% | Hull Smasher I (2) | — |
+| 20% | Hermes (2), Pegasus (3) | 30% |
+| 10% | Small missiles and crystal weapons (Leto, Artemis, Swarm, Crystal Burst) | 0–10% |
+| 0% | All Burst, Chain and Charge lasers | 0–10% |
+
+Among lasers, 30% breach is the ceiling, and the most common lasers never breach.
+
 ## Weapons
 
 Cooldown is in seconds (per charge for charge weapons). Missiles = missiles used per volley. SP = shield piercing. Beam length is in pixels. Fire and breach chances are per room hit.
