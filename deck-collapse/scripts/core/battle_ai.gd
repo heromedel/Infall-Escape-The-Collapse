@@ -363,14 +363,39 @@ func _jump(battle: Battle, side: int) -> Dictionary:
 		if battle.why_cannot_jump(side) == "":
 			return {"kind": "jump"}
 		return {}
-	if level == "Easy" or Settings.value("jump_escape") == "Off":
+	if Settings.value("jump_escape") == "Off":
 		return {}
 	var ship := battle.ships[side]
 	var enemy := battle.ships[1 - side]
+	# A ship that can't hurt the enemy's hull or crew has nothing to stay for (it would never end the fight).
+	if not _can_hurt(ship) and battle.why_cannot_jump(side) == "":
+		return {"kind": "jump"}
+	if level == "Easy":
+		return {}
 	var losing := float(ship.hull) / ship.hull_max < 0.3 and float(enemy.hull) / enemy.hull_max > 0.5
 	if losing and battle.why_cannot_jump(side) == "":
 		return {"kind": "jump"}
 	return {}
+
+
+## Whether the ship has any way to damage the enemy's hull or kill its crew: a weapon that does damage or hurts
+## crew, a battlesuit that shoots for damage or boards, or a Teleport Bay to send boarders.
+func _can_hurt(ship: ShipState) -> bool:
+	for system_id in ship.weapon_systems():
+		if ship.systems[system_id].weapons.any(func(w): return w.damage > 0 or w.crewDamage > 0):
+			return true
+	for system_id in ship.system_order:
+		var system: Dictionary = ship.systems[system_id]
+		if system.type == "teleport":
+			return true
+		if system.type == "evb" and system.suits.any(_suit_hurts):
+			return true
+	return false
+
+
+static func _suit_hurts(suit_id: String) -> bool:
+	var suit := Catalog.suit_kind(suit_id)
+	return suit.action == "board" or suit.action == "shoot" and suit.damage > 0
 
 
 ## Power the Med Bay when wounded crew of ours are in it.
