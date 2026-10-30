@@ -20,7 +20,7 @@
   <!-- Captain plan, Ai-Generated-Proposal (2026-10-30). Lines marked G22-G27 use the plan lines for those gaps (README.md); Deck Collapse has them now. -->
   <ai plan="crew-kill">
     <!-- No Sporewing: shoot the guns, board the guns, then the Med Bay. Replaces the Hijacker's plan. -->
-    <target system="weapon" weapon="Gat 2.1 Twinshot" weight="0.8"/>
+    <target unless="ownCrewIn" system="weapon" weapon="Gat 2.1 Twinshot" weight="0.8"/>
     <target system="medBay" when="enemyWounded" unless="ownCrewIn" weapon="Gat 2.1 Twinshot" weight="0.5"/>   <!-- G27 -->
     <board system="weapon" weight="0.8"/>                                                                       <!-- G23 -->
     <board system="medBay" when="enemyWounded" weight="0.6"/>
