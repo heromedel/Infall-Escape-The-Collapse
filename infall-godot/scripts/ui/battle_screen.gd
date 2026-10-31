@@ -135,8 +135,9 @@ func frame_everything(instant: bool = false) -> void:
 		if ship.escaped or (ship.destroyed and ship.explosion_ticks > 60):
 			continue
 		var bounds := Formation.hull_bounds(ship.design)
-		# Frame the rooms and the nose; the HUD may cover the engines at the far ends
-		var trimmed := Rect2(bounds.position + Vector2(bounds.size.x * 0.12, 0), Vector2(bounds.size.x * 0.76, bounds.size.y * 0.86))
+		# Frame every room and the nose; only the engines behind the last room may sit under the HUD
+		var floor_rect := ship.design.floor_rect()
+		var trimmed := Rect2(Vector2(floor_rect.position.x - 50.0, bounds.position.y), Vector2(floor_rect.size.x + 100.0, floor_rect.end.y + 30.0 - bounds.position.y))
 		var corners := [trimmed.position, trimmed.end, Vector2(trimmed.position.x, trimmed.end.y), Vector2(trimmed.end.x, trimmed.position.y)]
 		for corner in corners:
 			var world_point := encounter.local_to_world(ship, corner)
@@ -146,7 +147,7 @@ func frame_everything(instant: bool = false) -> void:
 			else:
 				rect = rect.expand(world_point)
 	var view_size := get_viewport().get_visible_rect().size
-	camera.frame(rect.grow(20.0), view_size, 96.0, 150.0)
+	camera.frame(rect.grow(20.0), view_size, 104.0, 150.0)
 	if instant:
 		camera.zoom = Vector2.ONE * camera.target_zoom
 		camera.position = camera.target_position

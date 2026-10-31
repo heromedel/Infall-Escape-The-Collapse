@@ -513,46 +513,69 @@ func _any_charging() -> bool:
 	return false
 
 
+## Each enemy's hull, shields and state float beside it in the world (GDD 3B: a ship's information near the
+## ship), so a squad of several reads at a glance. Squad-mates of the selected ship get the same.
 func _draw_enemies() -> void:
-	var enemies := screen.encounter.enemy_ships()
-	if enemies.is_empty() or not screen.encounter.fight_started:
-		return
-	var x := size.x - PAD - 330
-	var y := PAD
-	for ship in enemies:
-		if ship.escaped and ship.explosion_ticks == 0 and not ship.destroyed:
-			pass
-		var rect := Rect2(x, y, 330, 92)
-		var border := UiColours.ENEMY_RED if not ship.is_gone() else UiColours.BORDER_DIM
-		UiKit.draw_frame(self, rect, Color(0.16, 0.06, 0.08, 0.86), border)
-		UiKit.draw_text(self, rect.position + Vector2(14, 26), ship.name.to_upper(), 18, UiColours.TEXT, UiKit.font_title())
-		var state := ""
-		if ship.destroyed:
-			state = "DESTROYED"
-		elif ship.crew_dead:
-			state = "CREW LOST"
-		elif ship.escaped:
-			state = "ESCAPED"
-		elif ship.surrendered:
-			state = "SURRENDERED"
-		elif ship.charging_escape:
-			state = "CHARGING JUMP %d%%" % int(ship.jump_charge * 100.0)
-		UiKit.draw_text(self, rect.position + Vector2(rect.size.x - 12, 26), state, 13, UiColours.WARNING, UiKit.font_bold(), HORIZONTAL_ALIGNMENT_RIGHT, 0)
-		var fraction := float(ship.hull) / maxf(1.0, ship.max_hull)
-		var segment := 300.0 / ship.max_hull
-		for index in ship.max_hull:
-			draw_rect(Rect2(rect.position + Vector2(14 + index * segment, 38), Vector2(maxf(1.0, segment - 2), 12)), UiColours.hull_colour(fraction) if index < ship.hull else UiColours.BAR_EMPTY)
-		var pip_x := 14.0
-		var layers := ship.system_by("shields").level / 2 if ship.system_by("shields") else 0
-		for index in layers:
-			draw_circle(rect.position + Vector2(pip_x + 8, 66), 8, UiColours.SHIELD_BLUE if index < ship.shield_layers else Color(0.15, 0.15, 0.25))
-			pip_x += 22
-		for index in (5 if ship.has_system("supershield") else 0):
-			draw_circle(rect.position + Vector2(pip_x + 6, 66), 6, UiColours.SUPERSHIELD if index < ship.supershield else Color(0.25, 0.12, 0.22))
-			pip_x += 16
-		UiKit.draw_text(self, rect.position + Vector2(rect.size.x - 12, 72), "EVASION %d%%   %s" % [ship.evasion(), ship.design.class_text], 13, UiColours.TEXT_DIM, UiKit.font_bold(), HORIZONTAL_ALIGNMENT_RIGHT, 0)
-		_region(rect, func(): _look_at(ship), "%s\n%s\nHull %d / %d. Click to look at it." % [ship.name, ship.design.description, ship.hull, ship.max_hull])
-		y += 100
+	var encounter := screen.encounter
+	for ship in encounter.ships:
+		if ship == screen.selected_ship or ship.escaped:
+			continue
+		if ship.side == 1 and not encounter.fight_started:
+			continue
+		if ship.destroyed and ship.explosion_ticks > 60:
+			continue
+		_draw_floating_status(ship)
+
+
+func _draw_floating_status(ship: Ship) -> void:
+	var bounds := Formation.hull_bounds(ship.design)
+	var floor_rect := ship.design.floor_rect()
+	# Just past the ship's nose, in the open space toward the divider, where it hides nothing of the ship
+	var local_anchor := Vector2(floor_rect.get_center().x, bounds.position.y - 18.0)
+	var world_point := screen.encounter.local_to_world(ship, local_anchor)
+	var at: Vector2 = screen.world.get_global_transform_with_canvas() * world_point
+	var width := 230.0
+	var rect := Rect2(at - Vector2(width * 0.5, 62 if ship.side == 0 else 0), Vector2(width, 62))
+	rect.position.x = clampf(rect.position.x, PAD, size.x - width - PAD)
+	rect.position.y = clampf(rect.position.y, 104.0, size.y - 240.0)
+	var enemy := ship.side == 1
+	var border := UiColours.ENEMY_RED if enemy and not ship.is_gone() else (UiColours.POWER_GREEN if not enemy else UiColours.BORDER_DIM)
+	UiKit.draw_frame(self, rect, Color(0.04, 0.05, 0.09, 0.82) if not enemy else Color(0.14, 0.05, 0.07, 0.84), Color(border, 0.8), 6.0)
+	var title := ship.name.to_upper()
+	while UiKit.font_bold().get_string_size(title, HORIZONTAL_ALIGNMENT_LEFT, -1, 14).x > width - 100.0 and title.length() > 4:
+		title = title.substr(0, title.length() - 2) + "…"
+	UiKit.draw_text(self, rect.position + Vector2(10, 19), title, 14, UiColours.TEXT, UiKit.font_bold())
+	var state := ""
+	if ship.destroyed:
+		state = "DESTROYED"
+	elif ship.crew_dead:
+		state = "CREW LOST"
+	elif ship.surrendered:
+		state = "SURRENDERED"
+	elif ship.charging_escape:
+		state = "JUMPING %d%%" % int(ship.jump_charge * 100.0)
+	elif ship.is_cloaked():
+		state = "CLOAKED"
+	else:
+		state = "EVADE %d%%" % ship.evasion()
+	UiKit.draw_text(self, rect.position + Vector2(width - 10, 19), state, 12, UiColours.WARNING if state != "EVADE %d%%" % ship.evasion() else UiColours.TEXT_DIM, UiKit.font_bold(), HORIZONTAL_ALIGNMENT_RIGHT, 0)
+	var fraction := float(ship.hull) / maxf(1.0, ship.max_hull)
+	var segment := (width - 20.0) / ship.max_hull
+	for index in ship.max_hull:
+		draw_rect(Rect2(rect.position + Vector2(10 + index * segment, 26), Vector2(maxf(1.0, segment - 1.5), 10)), UiColours.hull_colour(fraction) if index < ship.hull else UiColours.BAR_EMPTY)
+	var pip_x := 10.0
+	var layers := ship.system_by("shields").level / 2 if ship.system_by("shields") else 0
+	for index in layers:
+		draw_circle(rect.position + Vector2(pip_x + 6, 49), 6, UiColours.SHIELD_BLUE if index < ship.shield_layers else Color(0.15, 0.15, 0.25))
+		pip_x += 16
+	for index in (5 if ship.has_system("supershield") else 0):
+		draw_circle(rect.position + Vector2(pip_x + 5, 49), 5, UiColours.SUPERSHIELD if index < ship.supershield else Color(0.25, 0.12, 0.22))
+		pip_x += 13
+	UiKit.draw_text(self, rect.position + Vector2(width - 10, 54), "%d/%d" % [ship.hull, ship.max_hull], 12, UiColours.TEXT_DIM, UiKit.font_bold(), HORIZONTAL_ALIGNMENT_RIGHT, 0)
+	if enemy:
+		_region(rect, func(): _look_at(ship), "%s (%s)\n%s\nHull %d / %d. Click to look at it." % [ship.name, ship.design.class_text, ship.design.description, ship.hull, ship.max_hull])
+	else:
+		_region(rect, func(): screen.select_ship(ship), "%s: click to select this ship." % ship.name)
 
 
 func _look_at(ship: Ship) -> void:

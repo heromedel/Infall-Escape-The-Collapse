@@ -11,15 +11,28 @@ var encounter: Encounter
 var enemy_squad: SquadDef
 var overlays := CanvasLayer.new()
 var title: TitleScreen
+var console := DebugConsole.new()
 var _overlay_count := 0
 
 
 func _ready() -> void:
 	overlays.layer = 20
 	add_child(overlays)
+	add_child(GamepadInput.new())
+	var console_layer := CanvasLayer.new()
+	console_layer.layer = 50
+	add_child(console_layer)
+	console.main = self
+	console_layer.add_child(console)
 	show_title()
 	if OS.has_environment("INFALL_SMOKE"):
 		_smoke_test()
+
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and event.keycode == KEY_QUOTELEFT:
+		console.toggle()
+		get_viewport().set_input_as_handled()
 
 
 ## A quick check that a build loads its content and can start a run: INFALL_SMOKE=1 ./Infall

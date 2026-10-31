@@ -46,6 +46,18 @@ func _ready() -> void:
 	await _wait(25.0)
 	await _shot("09_fight_late")
 	print("outcome: ", main.encounter.outcome, " mawjig ", main.run.mawjig)
+	_close_overlays()
+	main.run.save_to_disk()
+	var saved_mawjig: int = main.run.mawjig
+	main.show_title()
+	await _wait(0.6)
+	main.continue_run()
+	await _wait(1.0)
+	print("continued: mawjig ", main.run.mawjig, " (saved ", saved_mawjig, "), cluster ", main.run.cluster().name)
+	await _shot("10_continued")
+	main.open_map()
+	await _wait(0.6)
+	await _shot("11_map_again")
 	get_tree().quit()
 
 
