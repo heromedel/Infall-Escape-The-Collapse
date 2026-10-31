@@ -64,7 +64,7 @@ source doc carries the tag heromedel's words give it.
 
 ## Terrans (the GATOS)
 
-- The GATOS are cats. Their formal name is the Galactic Alliance of Tabby Occupied Systems, written G.A.T.O.S. and known as the GATOS. (Race profiles, Terrans; Decided, heromedel 2026-10-31)
+- The GATOS are humans by default and cats with the `GATOS Species: Terrans > Tabbys` setting. Their formal name is the Galactic Alliance of Terran Occupied Systems, or of Tabby Occupied Systems with Tabbys, written G.A.T.O.S. and known as the GATOS. (Race profiles, Terrans; Decided, heromedel 2026-10-31)
 - Terrans are believed to be the most common race in the galaxy. (Race profiles, Terrans 8; Proposed)
 - Terrans live in tight-knit core areas, with arms of colonies reaching out from them. (Race profiles, Terrans 8; Proposed)
 - In good times Terrans are accepted by others and are interested in trade and other cultures. (Race profiles, Terrans 2; Proposed)
@@ -133,8 +133,8 @@ source doc carries the tag heromedel's words give it.
 ### Unknown to most other races
 
 - The Mecha call themselves HalfMechs. They are not robots, but a small race of halfling-like, genetically modified cyborgs who live inside semi-cybernetic mech suits. (Race profiles, Mecha names, what they are; Proposed)
-- HalfMechs are halfling-like in size and childish in attitude, and oddly adorable for their viciousness. (Race profiles, Mecha what they are; Proposed)
-- The HalfMechs' origin is lost to time, but genetic evidence suggests they were Terran, bred to fit inside mech suits. Their creation, and possibly the power the suits give them, made them immature, violent and greedy, like cruel children. (Race profiles, Mecha origin; Proposed)
+- HalfMechs are halfling-like in size and childish in attitude (kitten-like with Tabbys), and oddly adorable for their viciousness. (Race profiles, Mecha what they are; Proposed)
+- The HalfMechs' origin is lost to time, but genetic evidence suggests they were Terran, bred to fit inside mech suits. Their creation, and possibly the power the suits give them, made them immature, violent and greedy, like cruel children (cruel kittens with Tabbys). (Race profiles, Mecha origin; Proposed)
 - Outside their suits, HalfMechs are incredibly bashful if not violent, but their overconfidence keeps them from being truly shy. (Race profiles, Mecha out of their suits; Proposed)
 
 ## Tentauri

@@ -56,16 +56,23 @@ anything Claude added tagged Ai-Generated-Proposal.
 
 ## 7. Races and Crew
 
-- **A — Decided (heromedel, 2026-10-31):** the GATOS are officially cats, and G.A.T.O.S. stands for the Galactic
-  Alliance of Tabby Occupied Systems (race profiles, Terrans).
+- **A — Decided (heromedel, 2026-10-31):** a setting, `GATOS Species: Terrans > Tabbys`. With Terrans, the default,
+  the GATOS are humans, the Galactic Alliance of Terran Occupied Systems; with Tabbys they are cats, the Galactic
+  Alliance of Tabby Occupied Systems (race profiles, Terrans). It replaces "the GATOS are officially cats", earlier
+  the same day. The setting also chooses the GATOS crew portraits (the mercenary humans or the cat heads), the
+  HalfMechs' look and words (childlike or kitten-like) and the Senti's portraits (GV 7D), and words in events that
+  depend on the species (e.g. DISTRESS_GATOS_FAMILY's kittens). Not built yet: the Godot version shows cats until
+  it is.
 - **B — Decided (heromedel, 2026-10-31):** a Mecha crew member's blue choice may be how the player first learns
   the name HalfMechs (the MECHA_TERRITORY event).
 - **C — Proposed (heromedel, 2026-10-31):** hired mercenaries work on a contract, which can be renewed for a price
   that rises each time. If any of the mercenary crew die, the mercenaries are likely to leave after the battle.
-- **D — Proposed (heromedel, 2026-10-31):** with the GATOS as cats, the HalfMechs are kitten-like rather than
-  childlike, and the Senti would be holographic cats. Crew portraits could follow: cats in the HalfMech colour
-  palette for the Mecha, and semi-transparent yellow-green cats with holographic distortion or scan lines for the
-  Senti. Human Terran portraits would avoid this if decent ones could be made.
+- **D — Proposed (heromedel, 2026-10-31):** with Tabbys (GV 7A), the HalfMechs are kitten-like rather than
+  childlike, and the Senti are holographic cats. Crew portraits follow: cats in the HalfMech colour palette for the
+  Mecha, and semi-transparent yellow-green cats with holographic distortion or scan lines for the Senti. With
+  Terrans, the GATOS crew use human portraits.
+  - **Liked (heromedel, 2026-10-31):** the portrait options in `docs/art/portraits/`: HalfMech kittens K1 to K5 and
+    mercenary Terrans M1 to M5 all look fine as tokens.
   - **Idea (heromedel, 2026-10-31):** the HalfMech kittens follow the HalfMech pilot art's dark look: black
     kittens in dark tones, with blue, green or purple eyes and Mecha power purple implants.
 
@@ -104,4 +111,5 @@ anything Claude added tagged Ai-Generated-Proposal.
 | 2026-10-31 | The doc started; today's decisions recorded (GV 2A–14D). |
 | 2026-10-31 | The GATOS are cats: the Galactic Alliance of Tabby Occupied Systems (GV 7A, race profiles). |
 | 2026-10-31 | Mercenaries on renewable contracts (GV 7C), for the next build; HalfMechs may be learned through a Mecha crew member (GV 7B). |
+| 2026-10-31 | The GATOS Species setting, Terrans > Tabbys, replaces "officially cats" (GV 7A); the portrait options liked (GV 7D). |
 | 2026-10-31 | 1.21 Jigawatts is 1.21 Mawjig (GV 6A); "the Power Cores on a ship" covers every ship (GV 6B); kitten-like HalfMechs and holographic cat Senti proposed (GV 7D). |
