@@ -4,12 +4,14 @@ Ship designs made with `ship-design-process.md`. Nothing here is decided. Prices
 `docs/reference/` and leave out crew. Tags are as in `tag-styles.md`: each design states its default tag, and
 points that differ are tagged where they appear.
 
-## Tentauri Tough Little Scout (2026-10-22)
+## Tentauri "Burr", the tough little scout (2026-10-22)
+
+**Name — Proposed (2026-10-29):** Burr (Tentauri ship names, race profile point 1); earlier the Tough Little Scout.
 
 Default tag: **Proposed (2026-10-22)**, from heromedel's worked example; Claude's additions are tagged.
 
 1. **Race:** Tentauri.
-2. **Band:** 1 (easy, near the start of a run).
+2. **Band:** 1 (easy, near the start of a run). **Ai-Generated-Proposal (2026-10-29):** now band 3, by the band rule (heromedel's rule of 2026-10-29: no non-vanilla weapon types or EVB suits in band 1, `ship-design-process.md`); its Supershield and Defensive lasers are new, and at 188.81 it is over the band 1 and 2 budgets. The **Pappus** loadout below is its band 1 version.
 3. **State:** doing fine.
 4. **Race info used — Ai-Generated-Proposal (2026-10-22):** small ships of about two crew, possibly mates; few rooms with many systems (GDD 5B); go
    where they want, even unwelcome, without looking to destroy; shields and defence specialists; Zoltan-like
@@ -51,7 +53,7 @@ Default tag: **Proposed (2026-10-22)**, from heromedel's worked example; Claude'
    converted from the accepted floor plan (`docs/art/tentauri/scout/`). North is the bow; y grows toward the stern.
 
    ```
-   Ship: Tentauri Tough Little Scout
+   Ship: Burr
    Center: Tile                    (5 x 5 tiles)
    Hull: 8
    Reactor: 10
@@ -121,6 +123,28 @@ Default tag: **Proposed (2026-10-22)**, from heromedel's worked example; Claude'
 Flags for review:
 
 - The Defensive special isn't in the cost tables yet; its price here is the rule above.
+
+### Tentauri "Pappus", band 1 loadout (2026-10-29)
+
+**Ai-Generated-Proposal (2026-10-29)**, asked by heromedel: the scout without its new tech, so the Tentauri can still
+appear in band 1 (heromedel's rule of 2026-10-29: no non-vanilla weapon types or EVB suits in band 1, `ship-design-process.md`).
+
+- **Drops** the Supershield Generator and the Medbay; the reactor drops to 7 bars (Weapons 2, Engines 2, Shields 2,
+  Life Support 1).
+- **Weapons:** two **Coil** lasers (a name from the race profile's examples): a plain 1-shot, 1-damage laser,
+  1 power, 9.0 s, 6.79, as the genre's basic laser. One per weapon system, as before.
+- **Shield check:** both Coils fired together still beat one layer: the first takes the layer, the second lands.
+- **Price:** Shields 54.46 · Engines 2.42 · Sensors 9.68 · Doors 14.52 · Weapon systems 9.68 · Reactor, 7 bars
+  27.83 · 2 × Coil 13.58 = **132.17**, under band 1's budget (137).
+
+```
+Loadout: Pappus                      (loadout.burr.pappus.xml)
+Inherit: Patch
+Reactor: 7
+Supershield Generator   removed
+Medbay                  removed
+Weapons: Coil (Weapons A, mount 3), Coil (Weapons B, mount 4)
+```
 
 ## SC-1 "Outrider": Terran starting scout (2026-10-22)
 
@@ -506,7 +530,7 @@ Judgment calls for review:
 
 | | Cutpurse (new) | Hijacker (existing, unchanged) |
 |---|---|---|
-| Bands | 1–3 | 4–6 |
+| Bands | 2–3 (was 1–3; see the Pickpocket below) | 4–6 |
 | Hull | 9 | 14 |
 | AZC level | 2 (4 systems at once) | 3 (6 systems at once) |
 | Piloting | 1 | 2 |
@@ -597,7 +621,7 @@ Weapons, the other at Piloting.
 
 | Tier | Ships |
 |---|---|
-| Low (bands 1–3) | Bands 1–2: 1 × Cutpurse. Band 3: 1–2 × Cutpurse (2 = 260.92, under 414) |
+| Low (bands 1–3) | Band 1: 1 × Pickpocket. Band 2: 1 × Cutpurse. Band 3: 1–2 × Cutpurse or Pickpocket (two = about 262, under 414) |
 | Mid (bands 4–6) | 1–2 × Hijacker |
 | High (bands 7–8) | [heavy pirate ship] · [Hijacker high-band loadout] (placeholders) |
 
@@ -615,6 +639,40 @@ Conduct, only where it differs from the Hijacker:
 - **Can a bands 1–3 pirate afford a crew teleporter?** Yes, at level 1 (21.78), by dropping the gun, Medbay, Doors
   and Sensors.
 - The stun-lock targeting rule is needed for any squad with more than one Sporewing.
+
+### Pirate Pickpocket, band 1 loadout (2026-10-29)
+
+**Ai-Generated-Proposal (2026-10-29)**, asked by heromedel: the Cutpurse without the stolen spore launcher, so
+pirates still appear in band 1 (heromedel's rule of 2026-10-29: no non-vanilla weapon types or EVB suits in band 1, `ship-design-process.md`). The Sporewing's spores and stun are new, so the Cutpurse moves to bands 2–3.
+
+- **Same as the Cutpurse** (hull 9, AZC level 2, Shields 1, Piloting 1, Engines 1, Life Support 1, Crew Teleporter 1,
+  3 Terrans; no Doors, so fire is still its weakness), but its gun is the Gat 2.1 "Twinshot" on Weapons A (a 2-shot
+  laser, as the genre's Dual Shot) and Weapons B is gone.
+- **Shield check:** the Twinshot's two shots beat one layer: 1 damage per volley.
+- **Price:** Shields 54.46 · Weapon Control A level 1 4.84 · Crew Teleporter level 1 21.78 · AZC level 2 42.36 ·
+  Twinshot 7.67 = **131.11**, under band 1's budget (137).
+
+```
+Loadout: Pickpocket                  (loadout.pirate-hijacker.pickpocket.xml)
+Inherit: Patch
+Hull: 9
+Hull Art: faired-over port bay
+Reactor: AZC level 2
+Piloting           Level 1
+Sensors            removed
+Doors              removed
+Shields            Level 1 (2 bars)
+Engines            Level 1
+Weapons A          Level 1
+Weapons B          removed
+Medbay             removed
+Crew Teleporter    Level 1
+Mount 3: (-2.8,-1.6)   Slide: Left
+Conduits:                            the spur to Weapons B comes out
+    (2,-1,Remove) (2,-2,Remove) (1,-2,N,S)
+Weapons: Gat 2.1 "Twinshot" (Weapons A, mount 3)
+Crew: 3 Terrans
+```
 
 ## Mecha Light Attack Frame, two loadouts (2026-10-23)
 
@@ -806,9 +864,9 @@ that a squad is mainly a list of ships with counts per tier (`rough-example-squa
 below are the extra this brief asked for.
 
 - **Ships:** 1 × Light Attack Frame, Hull Laser loadout; 1 × Light Attack Frame, Suit Dock loadout.
-- **Shows up in:** Border clusters of a doing-fine Mecha region, band 3 (bands 1–2 field a single frame).
+- **Shows up in:** Border clusters of a doing-fine Mecha region, band 3 (bands 1–2 field a single frame). **Ai-Generated-Proposal (2026-10-29):** the Suit Dock loadout is bands 2–3 only (heromedel's rule of 2026-10-29: no non-vanilla weapon types or EVB suits in band 1, `ship-design-process.md`); band 1 fields the Hull Laser loadout, whose hull bonus is the genre's own (its Hull Smasher lasers).
 - **Size by band:** set by the squad value budgets in `mawjig-cost-table.md`. Bands 1–2 (budgets 137 and 173): one
-  frame, either loadout, alone, or a pair of weaker ships or loadouts that fits the budget (not designed yet).
+  frame alone (band 1: the Hull Laser loadout only; band 2: either), or a pair of weaker ships or loadouts that fits the budget (not designed yet).
   Band 3 (414): the pair (269.69), or 2 Hull Laser + 1 Suit Dock (401.41).
 - **How the two fight together:** the Suit Dock launches its suit at once, at the target's shield room, to keep the
   layer down. The Hull Laser fires at rooms without systems, for double damage, to gut the hull. Both pick the
@@ -842,3 +900,282 @@ below are the extra this brief asked for.
   and it can return to a squad ship; a second hit destroys the suit and its occupant.
 - **Shared between the two ships:** nothing at system level. The pair shares only tactics: the suit pops the shield
   for the Hull Laser.
+
+## Azurethea "Vein Moth" (2026-10-29)
+
+Default tag: **Ai-Generated-Proposal (2026-10-29)**. First drafted for Deck Collapse (`docs/deck-collapse-ships/`);
+heromedel asked for the Infall version if it works as an Infall idea.
+
+1. **Race:** Azurethea.
+2. **Band:** 1–2 (low tier).
+3. **State:** doing fine, met along the quiet lanes of an Azurethea region (race profile 7).
+4. **Race info used:** winged, part-organic ships; FTL's power pool as biological energy; low tech is
+   single-system targeting shots (stinger missiles or single-shot energy beams); nearly pacifist, readily accepts
+   surrender; crew have half HP, make breathable air and repair biomechanical systems faster. Ship names: flying
+   insects; weapon names: insect parts (Likely, heromedel).
+5. **Function:** an explorer. Ideas considered: a vein patrol, a refugee escort, a survey ship, an explorer. The
+   explorer fits a doing-fine Azurethea best: it rarely starts the fight and picks one system to hit when it must.
+6. **Kinds of systems and crew:** light shields, two vanilla single-system weapons, 2 crew; no Sensors (good
+   sensors are their high tech).
+7. **Variation:** standard for the race at low tier.
+8. **Layout and systems:** hull 10. Reactor (biological pool) 8 bars: Shields 2, Engines 2, Weapons 2, Life
+   Support 1, Medbay 1. One weapon system at level 2 holds both weapons (GDD 8L), cheaper than two systems with the
+   second-system surcharge.
+
+   | System | Level / bars |
+   |---|---|
+   | Piloting | 1 |
+   | Shields | 1 (one layer, 2 bars) |
+   | Engines | 2 |
+   | Life Support | 1 |
+   | Medbay | 1 |
+   | Weapons | 2 (2 slots) |
+
+   **Layout — Ai-Generated-Proposal (2026-10-29):** in the ship setup format (GDD 5F–5L). A body of two 2 × 2 rooms
+   with a 1 × 2 wing room each side; both airlocks are in the wings.
+
+   ```
+   Ship: Vein Moth
+   Center: Point                   (4 x 4 tiles)
+   Hull: 10
+   Reactor: 8
+
+   Room 0: (-1,-2),(1,-1)          forward
+   Room 1: (2,-1),(2,1)            starboard wing
+   Room 2: (-1,1),(1,2)            aft
+   Room 3: (-2,-1),(-2,1)          port wing (empty)
+
+   Piloting(-1,-2)       Level 1   Location: North Wall
+   Weapons(1,-2)         Level 2   Location: North Wall
+   Shields(-1,-1)        Level 1 (2 bars)   Location: West Wall
+   Medbay(2,1)           Level 1   Location: East Wall
+   Engines(-1,2)         Level 2   Location: South Wall
+   Life Support(1,2)     Level 1   Location: South Wall
+
+   Door 0: (1,-1)   Facing: South   (forward to aft)
+   Door 1: (1,-1)   Facing: East    (forward to starboard wing)
+   Door 2: (-1,1)   Facing: West    (aft to port wing)
+   Door 3: (2,-1)   Facing: East    (airlock)
+   Door 4: (-2,-1)  Facing: West    (airlock)
+
+   Weapons: Stinger (mount 1), Lantern (mount 2)
+   Mount 1: (-0.7,-3.2)   Slide: Up
+   Mount 2: (0.7,-3.2)    Slide: Up
+   Mount 3: (-2.8,-2.2)   Slide: Up
+   Mount 4: (2.8,-2.2)    Slide: Up
+   Crew: 2 Azurethea
+   ```
+
+   Passes made:
+   - Pass 1: two weapon systems and Sensors 1: 139.22, over band 1's budget (137).
+   - Pass 2: dropped Sensors (high tech has the good sensors).
+   - Pass 3: one weapon system at level 2 instead of two, so no second-system surcharge.
+   - Pass 4: wing rooms each side for the winged shape; the airlocks go there, and no console sits on a door tile.
+9. **Weapons:** the **Stinger** exists (1-damage missile, 1 power, 6.79). One new weapon:
+
+   **Lantern** (a firefly's light organ): Beam, Damage, Biomechanical, Azurethea · 1 room · Damage 1 · Power 1.
+   - Charge: 14.0 s (7.0 base + 2.0 damage + 5.0 beam). Price: 6.57 (1.41 + 4.09 + 1.16 × 10 ÷ 14 + 0.24).
+   - **Shield check:** the Stinger ignores shields, so 1 damage per volley gets through one layer; the Lantern adds
+     damage once the layer is down.
+10. **Price:** Shields 54.46 · Engines 2.42 · Medbay 12.11 · Weapon Control level 2 14.52 · Reactor, 8 bars 32.67 ·
+    Stinger 6.79 · Lantern 6.57 = **129.54**, under band 1's budget (137). Crew are extra: 2 Azurethea at 12.11, 24.22.
+11. **New rules recorded:** none (the Lantern is priced from the existing beam rows).
+
+Judgment calls: the explorer function; no Sensors; one weapon system holding both weapons; the wing layout.
+
+## Lykario "Scrap Hound", a stolen Outrider (2026-10-29)
+
+Default tag: **Ai-Generated-Proposal (2026-10-29)**. First drafted for Deck Collapse; heromedel asked for the Infall
+version if it works.
+
+1. **Race:** Lykario.
+2. **Band:** 1–2 (low tier).
+3. **State:** doing fine (they raid for fun), any Lykario cluster.
+4. **Race info used:** ships are a mix of stolen parts; their power model is whatever the stolen ship used; basic
+   weapons, crew teleporters, cloaking; they use an autopilot while boarding; stolen weapons keep their maker's
+   name; crew have quick attacks, reduced HP and Animal Senses (they sense Life Signs without sensors).
+5. **Function:** a boarding raider. Ideas considered: a scrap-built raider, a stolen Terran scout, a decoy, a
+   hunting pair. The stolen scout says the most about the race: the Lykario fly what they took.
+6. **Kinds of systems and crew:** a crew teleporter, one stolen laser, Auto Pilot so the pilot can board too, no
+   Sensors (Animal Senses), 3 crew.
+7. **Variation:** a Lykario variation of a Terran hull.
+8. **Layout and systems:** a **loadout of the SC-1 Outrider** (GDD 5J), so it keeps the Outrider's rooms, doors,
+   conduit wheel and mounts; a loadout may change its race and crew. Battered, so hull 12 instead of 30. AZC level 2
+   (stolen with the hull): 5 systems draw power, so one is off at a time. The Crew Teleporter goes into the empty
+   starboard forward room (room 4), which the rim already reaches.
+
+   ```
+   Loadout: Scrap Hound                (loadout.outrider.scrap-hound.xml)
+   Inherit: Patch
+   Race: Lykario
+   Hull: 12
+   Hull Art: the Outrider with its paint patched and bone-white claw markings
+   Piloting               Level 2      (Auto Pilot)
+   Sensors                removed      (Animal Senses)
+   Doors                  removed
+   Engines                Level 1
+   Weapons                Level 1
+   Medbay                 removed
+   Crew Teleporter(2,-2)  Level 1   Location: East Wall
+   Weapons: Gat 2.1 "Twinshot" (mount 3)
+   Crew: 3 Lykario
+   ```
+
+   Passes made:
+   - Pass 1: a new scrap-built hull on the genre's pool: 140.79, over budget, and the pool is a biomechanical
+     model, which the Lykario don't use.
+   - Pass 2: a stolen Terran hull, so the AZC comes with it; then a stolen Outrider, which reuses a whole design.
+   - Pass 3: dropped Doors, Medbay and Sensors, and Engines to level 1, to fit the budget.
+9. **Weapons:** the Gat 2.1 "Twinshot" (stolen, keeps its name; a vanilla 2-shot laser). **Shield check:** its two
+   shots beat one layer, 1 damage per volley.
+10. **Price:** Shields 54.46 · Piloting level 2 4.84 · Weapon Control level 1 4.84 · Crew Teleporter 21.78 · AZC level
+    2 42.36 · Twinshot 7.67 = **135.95**, under band 1's budget (137). Crew are extra: 3 Lykario at 13.31, 39.93.
+11. **New rules recorded:** none.
+
+Judgment calls: a loadout of another race's ship (GDD 5J doesn't forbid it); hull 12 for a battered hull; it is
+close to the pirate Pickpocket in power, but differs in crew (quick, fragile, no need for Sensors) and Auto Pilot.
+
+## Malphen "Polyp", a band 1 swarm ship (2026-10-29)
+
+Default tag: **Ai-Generated-Proposal (2026-10-29)**. First drafted for Deck Collapse; heromedel liked the name.
+
+1. **Race:** Malphen.
+2. **Band:** 1, in threes (`ship-design-process.md`: weaker ships for band 1, Malphen swarms).
+3. **State:** doing fine, where a Malphen mass grows into Abandoned clusters.
+4. **Race info used:** each ship is a living organism and its crew are parts it grows; the growth organ is their
+   clone bay; low tech is fleshy missiles and flak; crew have high HP and heal slowly aboard; ship and weapon names
+   come from the races who face them (growths, Likely, heromedel).
+5. **Function:** a swarm ship. Ideas considered: one larger ship, a pair, a swarm of three, a lone scout. The swarm
+   is what the design process asked for and suits a mass that grows.
+6. **Kinds of systems and crew:** no shields, one weapon, a growth organ, 1 crew.
+7. **Variation:** standard for the race at band 1, with a flak loadout.
+8. **Layout and systems:** hull 5. Reactor (biomechanical pool) 4 bars: Engines 1, Life Support 1, Growth Organ 1,
+   Weapons 1. Killing its one crew member doesn't end it: the organ grows another unless it is destroyed first.
+
+   **Layout — Ai-Generated-Proposal (2026-10-29):** lopsided, a 2 × 2 room with a 1 × 3 bulge on one side.
+
+   ```
+   Ship: Polyp
+   Center: Tile                    (3 x 3 tiles)
+   Hull: 5
+   Reactor: 4
+
+   Room 0: (-1,-1),(0,0)           main
+   Room 1: (1,-1),(1,1)            bulge
+
+   Piloting(-1,-1)       Level 1   Location: North Wall
+   Weapons(0,-1)         Level 1   Location: North Wall
+   Growth Organ(-1,0)    Level 1   Location: West Wall
+   Engines(1,-1)         Level 1   Location: East Wall
+   Life Support(1,1)     Level 1   Location: East Wall
+
+   Door 0: (0,0)    Facing: East    (main to bulge)
+   Door 1: (1,0)    Facing: East    (airlock)
+
+   Weapons: Flesh Mortar (mount 1)
+   Mount 1: (-0.5,-1.8)   Slide: Up
+   Mount 2: (-1.8,0.2)    Slide: Left
+   Mount 3: (1.8,-1.2)    Slide: Right
+   Crew: 1 Malphen
+   ```
+
+   **Flak loadout:** `Weapons: Bone Flak (mount 1)`, no missiles. A swarm can mix the two, so shield-poppers open
+   the way for the missiles.
+9. **Weapons:** two new, both vanilla types:
+
+   **Flesh Mortar:** Missile, Damage, Biomechanical, Malphen · Shots 1 · Damage 1 · Power 1. Priced as the Stinger:
+   9.0 s, 6.79.
+
+   **Bone Flak:** Flak, Damage, Biomechanical, Malphen · 2 projectiles · Damage 1 each · Power 1. Charge 8.0 s
+   (7.0 + 4.0 damage − 3.0 flak). Price 9.78 (1.41 + 4.09 + 1.16 × 20 ÷ 8 + 1.38).
+   - **Shield check:** the Flesh Mortar ignores shields; the Bone Flak's first projectile pops the layer and the
+     second lands.
+10. **Price:** Growth Organ (as the Clone Bay) 12.11 · Weapon Control 4.84 · Reactor, 4 bars 14.52 · Flesh Mortar
+    6.79 = **38.26**; with Bone Flak **41.25**. Three Polyps are 114.78–123.75, under band 1's budget (137). Crew are
+    extra: 1 Malphen at 13.31.
+11. **New rules recorded:** none (both weapons are priced from existing rows).
+
+Judgment calls: hull 5 per ship (15 across a swarm of three); keeping Life Support (the profile doesn't say whether
+Malphen breathe); whether a squad of three is too much for a first fight.
+
+## Senti-GPH "Relay Picket" (2026-10-29)
+
+Default tag: **Ai-Generated-Proposal (2026-10-29)**. First drafted for Deck Collapse.
+
+1. **Race:** Senti-GPH.
+2. **Band:** 3 (low tier, but its AAA is new tech, and at 181.84 it is over band 2's budget).
+3. **State:** doing fine, guarding a relay or broadcast station.
+4. **Race info used:** Terran-like tech with conduits and an AZC (maybe slightly worse); the AAA stores and
+   broadcasts their avatars, and damage to it drops avatars until repaired; low tech is beams, good sensors and a
+   small AAA; crew have half HP, need no oxygen and are immune to fire; ion disrupts them; silhouette centred on the
+   AAA; weapon names are number codes.
+5. **Function:** a station picket. Ideas considered: an archive courier, a relay picket, a survey ship, a data
+   collector. The picket fits their dense clusters around relay stations.
+6. **Kinds of systems and crew:** two beams, Sensors 2, an AAA hosting 2 avatars, 2 crew; no Life Support or Medbay.
+7. **Variation:** standard for the race at low tier.
+8. **Layout and systems:** hull 10. AZC level 2; 4 systems draw power (Shields, Engines, AAA, Weapons), so all run
+   at once. No Life Support: Senti don't breathe (GDD 5L: an unlisted system doesn't exist). The AAA sits in the
+   middle of the big central room, with the core, Shields and Weapons around it: a breach there drains no air they
+   need, and fire doesn't hurt them.
+
+   **Layout — Ai-Generated-Proposal (2026-10-29):**
+
+   ```
+   Ship: Relay Picket
+   Center: Tile                    (5 x 5 tiles)
+   Hull: 10
+   Reactor: AZC level 2
+
+   Room 0: (-1,-2),(1,-2)          bridge
+   Room 1: (-1,-1),(1,1)           array room
+   Room 2: (-2,0),(-2,0)           port airlock room (empty)
+   Room 3: (2,0),(2,0)             starboard airlock room (empty)
+   Room 4: (-1,2),(1,2)            engine room
+
+   Piloting(-1,-2)       Level 1   Location: North Wall
+   Sensors(1,-2)         Level 2   Location: North Wall
+   Weapons(-1,-1)        Level 3   Location: West Wall
+   AAA(0,0)              Level 2   Rotation: None (stands in the middle)
+   AZC(-1,1)             Level 2
+   Shields(1,1)          Level 1 (2 bars)   Location: East Wall
+   Engines(-1,2)         Level 1   Location: South Wall
+
+   Door 0: (0,-2)   Facing: South
+   Door 1: (-1,0)   Facing: West
+   Door 2: (1,0)    Facing: East
+   Door 3: (0,1)    Facing: South
+   Door 4: (-2,0)   Facing: West    (airlock)
+   Door 5: (2,0)    Facing: East    (airlock)
+
+   Conduits:                       a ring through the bridge, the array room and the engine room
+       (-1,-2,S,E) (0,-2,E,W) (1,-2,S,W) (-1,-1,N,S) (1,-1,N,S) (-1,0,N,S)
+       (1,0,N,S) (-1,1,N,S) (1,1,N,S) (-1,2,N,E) (0,2,E,W) (1,2,N,W)
+
+   Weapons: 2B 01 V1 (mount 1), 1B 02 V1 (mount 2)
+   Mount 1: (-1.2,-3)     Slide: Up
+   Mount 2: (1.2,-3)      Slide: Up
+   Mount 3: (-2.8,-1)     Slide: Left
+   Mount 4: (2.8,-1)      Slide: Right
+   Crew: 2 Senti-GPH
+   ```
+
+   **AAA levels — Ai-Generated-Proposal (2026-10-29):** one avatar per level, as a first guess.
+9. **Weapons:** two new beams:
+
+   **2B 01 V1:** Beam, Damage, Mechanical, Senti-GPH · 2 rooms · Damage 1 · Power 1. Charge 16.0 s. Price 7.19.
+
+   **1B 02 V1:** Beam, Damage, Mechanical, Senti-GPH · 1 room · Damage 2 · Power 2. Charge 16.0 s. Price 11.28.
+   - **Shield check:** one layer cuts each beam by 1, so the 1B 02 V1 still lands 1 damage; the 2B 01 V1 lands once
+     the layer is down.
+10. **Price:** Shields 54.46 · Sensors level 2 15.73 · AAA level 2 (buy 21.78 + 8.47) 30.25 ·
+    Weapon Control level 3 20.57 · AZC level 2 42.36 · 2B 01 V1 7.19 · 1B 02 V1 11.28 = **181.84**. Band 3 (414):
+    two pickets (363.68). Crew are extra: 2 Senti-GPH at 15.73, 31.46.
+11. **New rules recorded:** none.
+
+Judgment calls: band 3; no Life Support or Medbay; one avatar per AAA level.
+
+## Whispwraith "Mote": not written up for Infall (2026-10-29)
+
+**Ai-Generated-Proposal (2026-10-29):** the Deck Collapse Mote isn't brought into Infall yet. Its low tech is ion
+blasts only, so it can't damage a hull and fails the shield check (step 9); the Whispwraith win by converting a
+ship's air, which needs their atmosphere rules and the ??? victory path designed first.

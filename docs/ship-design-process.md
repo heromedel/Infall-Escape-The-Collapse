@@ -24,6 +24,7 @@ and the game build the same ship:
 - **Rooms:** numbered, each by its two corner tiles from the centre, e.g. `Room 0: (-1,-1),(0,0)`.
 - **Systems:** keyed by name (plus a label if there are two, e.g. `Weapons A`), with tile, wall and level/power.
   One tile per system. Anything not listed doesn't exist, so Life Support is never left out by accident.
+  **Decided (2026-10-31, heromedel):** a Medbay may share a room only with systems crew can't man (GDD 5B).
 - **Doors:** numbered, by tile and facing; airlocks are doors facing space. EVA and EVB Docks sit next to one.
 - **Other data:** hull, reactor (or Mecha self-power; Terran conduits tile by tile with directions, GDD 5H),
   starting weapons and crew, and the weapon mounts (coordinates on the ship; the hull art at most hints at them).
@@ -45,6 +46,14 @@ gameplay.
 **Proposed (2026-10-23):** a squad's size isn't fixed by its full ships. For band 1 especially, weaker ships or
 loadouts let a squad of two or more fit the band's squad value budget (`mawjig-cost-table.md`). The Malphen in
 particular can field many small, weak ships early.
+
+**Introducing tech by band (heromedel, 2026-10-29):**
+
+- **Decided:** things are introduced slowly. Any race may populate band 1, but its band 1 ships still show only
+  what a new player can read.
+- **Decided:** no non-vanilla weapon types in band 1 (types the genre doesn't have, e.g. multi-target lasers), and
+  more complicated tech maybe even later. EVB suits are not met in band 1.
+- **Likely:** EVB suits that cause fire, or anything complicated to deal with or new, maybe not even in band 2.
 
 **Proposed (2026-10-23):** a design can have several loadouts on purpose:
 
