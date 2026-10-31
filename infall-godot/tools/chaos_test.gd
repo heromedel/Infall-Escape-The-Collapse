@@ -611,6 +611,13 @@ func _save_and_continue() -> void:
 
 
 func _console() -> void:
+	if main.console.visible:
+		# A random key opened it earlier: close it first, so the check below starts from a closed console
+		await _key(KEY_QUOTELEFT)
+		await _frames(1)
+		if main.console.visible:
+			_fail("the backtick key does not close the console once it is open: the command line now reads '%s'" % main.console._input.text, "console will not close with backtick")
+			return
 	await _key(KEY_QUOTELEFT)
 	await _frames(1)
 	if main.console.visible and rng.randf() < 0.7:
