@@ -104,6 +104,30 @@ anything Claude added tagged Ai-Generated-Proposal.
 - **D — Ai-Generated-Proposal (2026-10-31):** messages sit on a dark plate so they read over any ship; hovering a
   system's console shows only that system.
 
+## Next build
+
+The list for the next build, in no fixed order. Nothing here is built yet.
+
+1. **Mercenaries** on renewable contracts, with more mercenary events (GV 7C; ideas: escorting The Colony Ship).
+2. **The genre's wiki timings** for repair, fire-fighting and the teleporter (GV 7E).
+3. **The GATOS Species setting** (GV 7A) and what it needs: the human mercenary faces (M1 to M5) for GATOS crew with
+   Terrans, the cat heads with Tabbys; the HalfMech kitten faces (K1 to K5) and holographic cat Senti with Tabbys;
+   species words in events (children or kittens, childlike or kitten-like) filled in from the setting.
+4. **Ship values worked out from their parts** by Eco's rules (GV 8B).
+5. **Windows that rebuild break** (heromedel's screenshot, 2026-10-31): the ship screen after an upgrade grows and
+   slides up with empty space below, as the store did. Fix it once in the window base that all windows share, so
+   every rebuilding window (store, ship screen, events, hail) empties at once, shrinks to fit and scrolls when
+   tall.
+6. **Upgrade prices read as "+6.05"** (heromedel, 2026-10-31): show the plain price as the store does, with the
+   low Mawjig warning.
+7. **Regions are too large** (heromedel, 2026-10-31: "it looks like I could stick to GATOS territory the whole
+   run"). Measured: GATOS space is about 35–40% of all clusters, though the region the squad starts in reaches
+   only 1–2 bands outward. Make regions smaller and more of them, and GATOS less common.
+8. **More room between the ships and the barrier** (heromedel, 2026-10-31). Today the Outrider's nose is about 4.5
+   tiles from the barrier.
+9. **Check the chaos tester's last open finding:** an event window that stayed open about 20 s while Continue was
+   pressed.
+
 ## Decision log
 
 | Date | Decision |
