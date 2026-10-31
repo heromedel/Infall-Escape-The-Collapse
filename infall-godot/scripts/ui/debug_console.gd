@@ -40,6 +40,8 @@ func toggle() -> void:
 	visible = not visible
 	if visible:
 		_input.grab_focus()
+	else:
+		_input.release_focus()
 
 
 func _say(text: String) -> void:

@@ -2,7 +2,8 @@ class_name ShipAI
 extends RefCounted
 ## The captain of one enemy ship. Twice a second it hands out power, aims its weapons, sends its crew where
 ## they are needed, boards, launches suits, cloaks, and decides when to run or offer surrender (the squad's
-## conduct). It only gives orders the player could give; the encounter carries them out.
+## conduct). It only gives orders the player could give; the encounter carries them out. A ship whose file has
+## a captain plan (<ai>, CaptainPlan) follows it for what it shoots, where it boards and where it sends suits.
 
 const TROUBLE_ORDER := ["shields", "weapons", "piloting", "oxygen", "engines", "supershield", "medbay", "teleporter", "evb_dock", "doors", "sensors"]
 const STATION_ORDER := ["piloting", "weapons", "shields", "engines", "evb_dock", "teleporter", "doors", "sensors", "oxygen", "medbay"]
@@ -137,11 +138,13 @@ func _aim_weapons() -> void:
 
 
 func _aim(slot: WeaponSlot, taken_rooms: Array[int]) -> void:
-	var room_index := _pick_room(slot.def, taken_rooms)
+	# The plan is rolled once per aim, so the choice sticks until the weapon is aimed again
+	var planned := _plan_pick("target", slot.def)
+	var room_index := planned.room if planned else _pick_room(slot.def, taken_rooms)
 	if room_index < 0:
 		return
 	taken_rooms.append(room_index)
-	slot.aim_at(target, _pick_tile(room_index))
+	slot.aim_at(target, planned.cell if planned else _pick_tile(room_index))
 	slot.autofire = true
 	if slot.def.type == "beam":
 		var start: Vector2 = target.rooms[room_index].centre_local(target.design)
@@ -165,11 +168,13 @@ func _pick_tile(room_index: int) -> Vector2i:
 ## Which room to hit: the squad's preferred systems first (its conduct), else a weighted pick of system rooms;
 ## hull-bonus weapons go for empty rooms.
 func _pick_room(weapon: WeaponDef, taken_rooms: Array[int]) -> int:
+	var spare := _spares_own_crew()
 	if encounter.squad:
 		for behaviour in encounter.squad.targets:
 			var system := target.system_by(behaviour)
-			if system and not taken_rooms.has(system.room) and not system.is_broken():
+			if system and not taken_rooms.has(system.room) and not system.is_broken() and not (spare and _own_crew_in(system.room)):
 				return system.room
+	var crew_kill := ship.design.plan != null and ship.design.plan.plan == "crew-kill"
 	var total := 0
 	var weights: Array[int] = []
 	for room in target.rooms:
@@ -179,10 +184,16 @@ func _pick_room(weapon: WeaponDef, taken_rooms: Array[int]) -> int:
 		else:
 			for system in room.systems:
 				weight = maxi(weight, ROOM_WEIGHT.get(system.behaviour, 1))
+		if crew_kill:
+			weight += 3 * target.crew_in_room(room.index, target.side).size()
 		if taken_rooms.has(room.index):
 			weight = maxi(1, weight / 3)
+		if spare and _own_crew_in(room.index):
+			weight = 0
 		weights.append(weight)
 		total += weight
+	if total == 0:
+		return encounter.rng.randi_range(0, target.rooms.size() - 1)
 	var roll := encounter.rng.randi_range(1, maxi(1, total))
 	for index in weights.size():
 		roll -= weights[index]
@@ -360,7 +371,8 @@ func _use_specials() -> void:
 						gathering.append(member)
 						sent += 1
 	if ship.system_by("evb_dock") and not ship.suit_out:
-		encounter.launch_suit(ship, target)
+		var planned := _plan_pick("suit", null)
+		encounter.launch_suit(ship, target, planned.room if planned else -1)
 	if ship.system_by("cloaking") and ship.cloak_ticks == 0:
 		var incoming := 0
 		for shot in encounter.projectiles:
@@ -371,11 +383,84 @@ func _use_specials() -> void:
 
 
 func _boarding_room() -> int:
+	var planned := _plan_pick("board", null)
+	if planned:
+		return planned.room
 	for behaviour in ["weapons", "shields", "piloting", "oxygen"]:
 		var system := target.system_by(behaviour)
 		if system:
 			return system.room
 	return 0
+
+
+# --- The captain plan ----------------------------------------------------------------------------------------
+
+## The system the plan sends a weapon, boarders or a suit at this time, or null to use the captain's judgement:
+## the first line that fits whose roll succeeds.
+func _plan_pick(kind: String, weapon: WeaponDef) -> ShipSystem:
+	var plan := ship.design.plan
+	if plan == null or target == null:
+		return null
+	for line in plan.lines:
+		if line.kind != kind or (weapon and not CaptainPlan.names_weapon(line, weapon)):
+			continue
+		var system := target.system_by(line.system)
+		if system == null or system.is_broken():
+			continue
+		if not _holds(line.when, system) or (line.unless != "" and _holds(line.unless, system)):
+			continue
+		if encounter.rng.randf() < CaptainPlan.chance(line.weight, _difficulty()):
+			return system
+	return null
+
+
+## Whether a plan condition holds now, for a line aimed at `system` on the target.
+func _holds(condition: String, system: ShipSystem) -> bool:
+	match condition:
+		"", "always":
+			return true
+		"enemyWeaponsDown":
+			return _system_down(target, "weapons")
+		"enemyShieldsDown":
+			return target.shield_layers == 0
+		"enemyMedBayDown":
+			return _system_down(target, "medbay")
+		"enemyLifeSupportDown":
+			return _system_down(target, "oxygen")
+		"enemyWounded":
+			for member in target.crew:
+				if not member.dead and member.health < member.max_health * 0.7:
+					return true
+			return false
+		"ownBoardersAboard":
+			return ship.crew.any(func(m): return not m.dead and m.ship == target)
+		"enemyBoardersAboard":
+			return target.crew.any(func(m): return not m.dead and m.ship == ship)
+		"ownCrewIn":
+			return _own_crew_in(system.room)
+	return false
+
+
+## A ship without the system counts it as down, as the card game does.
+static func _system_down(on: Ship, behaviour: String) -> bool:
+	var system := on.system_by(behaviour)
+	return system == null or system.is_broken() or on.system_power(system) <= 0
+
+
+func _own_crew_in(room_index: int) -> bool:
+	return not target.crew_in_room(room_index, ship.side).is_empty()
+
+
+## Whether this aim avoids rooms holding our own boarders: by difficulty, 50, 75 or 100 percent of the time,
+## unless the plan says spareOwnCrew="false".
+func _spares_own_crew() -> bool:
+	if ship.design.plan and not ship.design.plan.spare_own_crew:
+		return false
+	return encounter.rng.randf() < float({"Easy": 0.5, "Normal": 0.75, "Hard": 1.0}.get(_difficulty(), 0.75))
+
+
+func _difficulty() -> String:
+	return encounter.wallet.difficulty if encounter.wallet else "Normal"
 
 
 # --- Conduct: running and surrendering ------------------------------------------------------------------------

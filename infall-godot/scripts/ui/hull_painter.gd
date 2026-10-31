@@ -66,8 +66,8 @@ func _build() -> void:
 		_engines.append(Vector2(x, block.end.y + 2.0))
 	# Grow then shrink the outline: round styles come out smooth, angular ones keep their corners
 	var grown := Geometry2D.offset_polygon(shape, 22.0, Geometry2D.JOIN_ROUND if style.round else Geometry2D.JOIN_MITER)
-	var smooth := Geometry2D.offset_polygon(grown[0], -16.0, Geometry2D.JOIN_ROUND if style.round else Geometry2D.JOIN_MITER) if not grown.is_empty() else []
-	_body = smooth[0] if not smooth.is_empty() else shape
+	var smooth := Geometry2D.offset_polygon(_thin(grown[0]), -16.0, Geometry2D.JOIN_ROUND if style.round else Geometry2D.JOIN_MITER) if not grown.is_empty() else []
+	_body = _thin(smooth[0]) if not smooth.is_empty() else shape
 	_add_style_extras(floor_rect, style)
 
 
@@ -328,7 +328,19 @@ func _draw_markings(style: Dictionary) -> void:
 
 func _offset(polygon: PackedVector2Array, amount: float) -> PackedVector2Array:
 	var result := Geometry2D.offset_polygon(polygon, amount, Geometry2D.JOIN_ROUND)
-	return result[0] if not result.is_empty() else PackedVector2Array()
+	return _thin(result[0]) if not result.is_empty() else PackedVector2Array()
+
+
+## Drops points closer than a few pixels to the last one kept. Round joins add a point every fraction of a pixel,
+## and each offset of an offset multiplies them; a hull drawn from thousands of points stalls the fight's start.
+static func _thin(polygon: PackedVector2Array, spacing: float = 3.0) -> PackedVector2Array:
+	if polygon.size() < 8:
+		return polygon
+	var kept := PackedVector2Array([polygon[0]])
+	for point in polygon:
+		if point.distance_squared_to(kept[kept.size() - 1]) >= spacing * spacing:
+			kept.append(point)
+	return kept if kept.size() >= 3 else polygon
 
 
 func _outline(polygon: PackedVector2Array, colour: Color, width: float) -> void:

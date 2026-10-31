@@ -35,7 +35,7 @@ func _show_opening() -> void:
 		var blue := runner.is_blue(choice)
 		var crew_name := runner.crew_for_choice(choice)
 		var label := "%d. %s%s" % [number, (runner.requirement_label(choice) + " ") if blue or String(choice.requires).begins_with("mawjig") else "", runner.fill_text(choice.text, crew_name)]
-		add_button(label, func(): _choose(choice, crew_name), BLUE if blue else UiColours.TEXT)
+		add_button(label, func(): LowMawjigWarning.confirm(self, runner.run, runner.most_given_away(choice), func(): _choose(choice, crew_name)), BLUE if blue else UiColours.TEXT)
 		number += 1
 
 

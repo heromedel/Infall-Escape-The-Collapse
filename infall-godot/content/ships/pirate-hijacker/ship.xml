@@ -72,4 +72,16 @@
 	<crew>
 		<member race="terran" count="5"/>
 	</crew>
+	<!-- Captain plan, as in the card game version's ship file: wants your ship intact, so it spores the engines
+	     and piloting, silences the guns, then boards; it never cuts Life Support while its boarders are aboard. -->
+	<ai plan="crew-kill">
+		<target unless="ownCrewIn" system="engines" weapon="Sporewing" weight="0.8"/>
+		<target unless="ownCrewIn" system="piloting" weapon="Sporewing"/>
+		<target unless="ownCrewIn" system="weapons" weapon="Gat 2.1 Twinshot" weight="0.8"/>
+		<target system="oxygen" when="enemyWeaponsDown" unless="ownBoardersAboard" weapon="Gat 2.1 Twinshot" weight="0.8"/>
+		<target system="medbay" when="enemyWounded" unless="ownCrewIn" weight="0.5"/>
+		<board system="weapons" when="enemyShieldsDown" weight="0.8"/>
+		<board system="medbay" when="enemyWounded" weight="0.6"/>
+		<board system="piloting"/>
+	</ai>
 </ship>

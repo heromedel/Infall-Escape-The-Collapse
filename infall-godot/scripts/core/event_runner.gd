@@ -22,7 +22,7 @@ func event_for_arrival() -> EventDef:
 	if cluster.kind == "opening":
 		return Library.events.get("START_LAUNCH")
 	if cluster.event_done:
-		return Library.events.get("REVISIT")
+		return before_or_after_collapse("REVISIT")
 	return pick(cluster.kind)
 
 
@@ -43,6 +43,8 @@ func pick(kind: String) -> EventDef:
 		if def.kind != kind or not def.fits(run.band(), states, race):
 			continue
 		if def.unique and run.used_events.has(def.id):
+			continue
+		if def.after_collapse and not collapse_known():
 			continue
 		if not def.hazard.is_empty() and def.hazard != cluster.hazard:
 			continue
@@ -104,7 +106,22 @@ func can_take(choice: Dictionary) -> bool:
 			return false
 		"squad":
 			return run.living_ships().size() >= int(parts[1])
+		"collapse":
+			return collapse_known()
 	return true
+
+
+## Whether the squad knows about the collapse: from the opening's fifth cluster, when it appears (GDD 2P).
+## Before that, events must not speak of it.
+func collapse_known() -> bool:
+	return run.galaxy.collapse_radius > 0.0
+
+
+## An event, or its _EARLY version while the collapse is still unknown.
+func before_or_after_collapse(id: String) -> EventDef:
+	if not collapse_known() and Library.events.has(id + "_EARLY"):
+		return Library.events[id + "_EARLY"]
+	return Library.events.get(id)
 
 
 func is_blue(choice: Dictionary) -> bool:
@@ -153,6 +170,16 @@ func resolve(choice: Dictionary, crew_name: String) -> Dictionary:
 	for effect in picked.effects:
 		_apply(effect.tag, effect.attrs, result)
 	return result
+
+
+## The most Mawjig a choice can give away, over all its outcomes (for the low Mawjig warning, GDD 14L).
+func most_given_away(choice: Dictionary) -> int:
+	var most := 0
+	for outcome in choice.outcomes:
+		for effect in outcome.effects:
+			if effect.tag == "mawjig" and not effect.attrs.has("size"):
+				most = maxi(most, -Mawjig.amount(float(effect.attrs.get("amount", "0"))))
+	return mini(most, run.mawjig)
 
 
 func _apply(tag: String, attrs: Dictionary, result: Dictionary) -> void:

@@ -11,4 +11,10 @@
 		<member race="mecha" station="piloting"/>
 		<member race="mecha" station="evb_dock"/>
 	</crew>
+	<!-- Captain plan, as in the card game version's loadout: the suit pops the shield layer for its partner's
+	     Hull Laser. It replaces the frame's plan. -->
+	<ai plan="destroy">
+		<suit system="shields" weight="0.85"/>
+		<suit system="weapons" when="enemyShieldsDown"/>
+	</ai>
 </loadout>

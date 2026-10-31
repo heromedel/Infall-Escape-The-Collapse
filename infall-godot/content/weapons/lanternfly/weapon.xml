@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Built from parts (GDD 8E): charge time and price from docs/reference/weapon-budget-table.md, cost per volley from mawjig-cost-table.md. -->
-<weapon id="lanternfly" name="Lanternfly" race="azurethea" tech="biomechanical" type="laser" power="1" shots="1" damage="1" charge="9.0" cost="0.02" price="6.79" colour="#8fc0ff" >
+<weapon id="lanternfly" name="Ocellus" race="azurethea" tech="biomechanical" type="laser" power="1" shots="1" damage="1" charge="9.0" cost="0.02" price="6.79" colour="#8fc0ff" >
 	<description>A single shot of living light at a single room.</description>
 </weapon>

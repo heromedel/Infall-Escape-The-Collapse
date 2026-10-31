@@ -2,7 +2,8 @@ class_name CrewBrain
 extends RefCounted
 ## What crew do on their own, as in the genre: walk where they are sent (opening doors, or breaking them when
 ## boarding), and in whatever room they stand in fight intruders, put out fires, patch breaches, repair
-## systems and conduits, heal in a medbay, and otherwise man the console they stand at.
+## systems and conduits, and otherwise man the console they stand at. A working medbay heals them whatever they
+## are doing.
 
 const MELEE_PER_TICK := 0.28        # health a second of fighting is about 5.6 at melee 1.0
 const SABOTAGE_PER_TICK := 0.6
@@ -81,6 +82,7 @@ static func tick(member: CrewMember, encounter: Encounter) -> void:
 		member.teleporting_ticks -= 1
 		return
 	member.previous_position = member.position
+	_heal_in_medbay(member)
 	if member.attack_cooldown > 0:
 		member.attack_cooldown -= 1
 	if member.stun_ticks > 0:
@@ -96,6 +98,23 @@ static func tick(member: CrewMember, encounter: Encounter) -> void:
 		return
 	member.position = member.ship.design.cell_centre(member.cell)
 	_work(member, encounter)
+
+
+## A powered medbay heals everyone of its ship's side in its room every tick, at any task: its own crew and
+## allies from other ships, never enemies. Fire or lack of air keeps hurting them at the same time.
+static func _heal_in_medbay(member: CrewMember) -> void:
+	member.healing = false
+	var ship := member.ship
+	if member.side != ship.side or member.health >= member.max_health:
+		return
+	var room_index := ship.room_at(member.cell)
+	if room_index < 0:
+		return
+	for system in ship.rooms[room_index].systems:
+		if system.behaviour == "medbay" and ship.system_power(system) > 0:
+			member.health = minf(member.max_health, member.health + MEDBAY_HEAL_PER_TICK * ship.system_power(system))
+			member.healing = true
+			return
 
 
 static func _step(member: CrewMember) -> void:
@@ -176,12 +195,7 @@ static func _work(member: CrewMember, encounter: Encounter) -> void:
 			room.infection = maxf(0.0, room.infection - 1.2 * _repair_speed(member, ship))
 			member.task = "repairing"
 			return
-		# 3. Heal in a working medbay
 		member.task = "idle"
-		for system in room.systems:
-			if system.behaviour == "medbay" and ship.system_power(system) > 0 and member.health < member.max_health:
-				member.health = minf(member.max_health, member.health + MEDBAY_HEAL_PER_TICK * ship.system_power(system))
-				member.task = "healing"
 		return
 	# Boarding: wreck what is in the room while nobody stops us
 	for system in room.systems:

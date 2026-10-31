@@ -10,7 +10,7 @@ signal closed
 
 const STATE_COLOURS := {
 	"Doing Fine": Color("#cfe3ff"), "Struggling": Color("#ffd27a"), "Doomed": Color("#ff7a52"),
-	"Swallowed": Color("#5a3a6e"), "Abandoned": Color("#8a8f99"), "Unclaimed": Color("#9aa6b8"),
+	"Swallowed": Color("#050507"), "Abandoned": Color("#8a8f99"), "Unclaimed": Color("#9aa6b8"),
 }
 const RACE_TINTS := {
 	"terran": Color("#66ff66"), "mecha": Color("#aa28eb"), "tentauri": Color("#ff5eca"), "azurethea": Color("#4f8fff"),
@@ -30,11 +30,14 @@ var _wait_button: Button
 var _info := RichTextLabel.new()
 var _backdrop_stars: Array = []
 var _overview: ImageTexture = null
+static var _region_glow: ImageTexture = null   # race regions as soft blobs, built once per galaxy
+static var _region_glow_key: String = ""
 
 
 func open(run_state: RunState, jumping_allowed: bool) -> void:
 	run = run_state
 	can_jump = jumping_allowed
+	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR   # the region wash is a small picture stretched smooth
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	theme = UiKit.theme()
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -103,8 +106,12 @@ func _gui_input(event: InputEvent) -> void:
 			camera -= event.relative / zoom
 			_clamp_camera()
 		_update_hover(event.position)
-	elif event is InputEventKey and event.pressed and event.keycode in [KEY_ESCAPE, KEY_J]:
+
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo and event.keycode in [KEY_ESCAPE, KEY_J]:
 		closed.emit()
+		get_viewport().set_input_as_handled()
 
 
 func _zoom_limits() -> Vector2:
@@ -228,12 +235,13 @@ func _draw() -> void:
 	draw_arc(core, rim, 0, TAU, 512, Color("#ffd46b", 0.35), 2.0, true)
 	draw_arc(core, galaxy.outer_radius() * zoom, 0, TAU, 512, Color("#ffd46b", 0.12), 1.0, true)
 	var view := Rect2(Vector2(-200, -200), size + Vector2(400, 400))
-	# Region tints
-	for cluster in galaxy.clusters:
-		if cluster.race != "":
-			var at := _to_screen(cluster.position)
-			if view.has_point(at):
-				draw_circle(at, 95.0 * zoom, Color(RACE_TINTS.get(cluster.race, Color.WHITE), 0.035))
+	# Race regions: one faint wash of colour per region, under the clusters
+	var glow_key := "%d:%d" % [galaxy.seed_value, galaxy.bands]   # the same seed with another run length is another map
+	if _region_glow == null or _region_glow_key != glow_key:
+		_region_glow = _render_regions(galaxy)
+		_region_glow_key = glow_key
+	var outer := galaxy.outer_radius()
+	draw_texture_rect(_region_glow, Rect2(_to_screen(Vector2(-outer, -outer)), Vector2(outer, outer) * 2.0 * zoom), false, Color(1, 1, 1, 0.1))
 	# Links
 	for index in galaxy.clusters.size():
 		var cluster: Dictionary = galaxy.clusters[index]
@@ -280,9 +288,13 @@ func _draw_cluster(index: int) -> void:
 	if not readable and not cluster.visited:
 		colour = colour.darkened(0.35)
 	var scale := clampf(zoom * 1.25, 0.8, 1.6)
+	var swallowed := state == "Swallowed"
 	for star in cluster.stars:
 		var point := at + Vector2(star[0], star[1]) * scale
-		draw_circle(point, float(star[2]) * scale + 2.5, Color(colour, 0.12))
+		if swallowed:
+			draw_circle(point, float(star[2]) * scale * 0.7 + 1.2, Color(0.45, 0.45, 0.5, 0.7))
+		else:
+			draw_circle(point, float(star[2]) * scale + 2.5, Color(colour, 0.12))
 		draw_circle(point, float(star[2]) * scale * 0.7, colour)
 	if run.galaxy.is_rim(index):
 		var pulse := 0.5 + 0.5 * sin(_time * 2.0)
@@ -309,6 +321,34 @@ func _draw_cluster(index: int) -> void:
 			UiKit.draw_text(self, at + Vector2(0, -18), badge, 15, Color("#ffd46b") if badge == "$" else (UiColours.WARNING if badge == "!" else UiColours.ACCENT), UiKit.font_bold(), HORIZONTAL_ALIGNMENT_CENTER, 0)
 	if run.galaxy.collapse_radius > 0.0 and cluster.radius - run.galaxy.collapse_radius < Galaxy.COLLAPSE_STEP and cluster.radius > run.galaxy.collapse_radius:
 		draw_arc(at, 18, 0, TAU, 20, Color(1.0, 0.35, 0.2, 0.5 + 0.4 * sin(_time * 6.0)), 2.0, true)
+
+
+const REGION_PIXEL := 24.0   # map units per pixel of the region wash
+
+
+static func _render_regions(galaxy: Galaxy) -> ImageTexture:
+	var outer := galaxy.outer_radius()
+	var pixels := int(outer * 2.0 / REGION_PIXEL)
+	var image := Image.create(pixels, pixels, false, Image.FORMAT_RGBA8)
+	image.fill(Color(0, 0, 0, 0))
+	var reach := int(115.0 / REGION_PIXEL)
+	for cluster in galaxy.clusters:
+		if cluster.race == "":
+			continue
+		var colour: Color = RACE_TINTS.get(cluster.race, Color.WHITE)
+		var centre: Vector2 = (cluster.position + Vector2(outer, outer)) / REGION_PIXEL
+		for dy in range(-reach, reach + 1):
+			for dx in range(-reach, reach + 1):
+				if dx * dx + dy * dy > reach * reach:
+					continue
+				var x := int(centre.x) + dx
+				var y := int(centre.y) + dy
+				if x >= 0 and y >= 0 and x < pixels and y < pixels:
+					image.set_pixel(x, y, colour)
+	# Shrinking and growing back blurs the edges into a soft glow
+	image.resize(pixels / 3, pixels / 3, Image.INTERPOLATE_BILINEAR)
+	image.resize(pixels, pixels, Image.INTERPOLATE_CUBIC)
+	return ImageTexture.create_from_image(image)
 
 
 ## The whole galaxy in a corner: its arms and regions, the collapse, the rim, the squad, and the part of the map
@@ -366,11 +406,35 @@ func _render_overview(side: float) -> ImageTexture:
 
 
 func _draw_legend() -> void:
-	var at := Vector2(size.x - 300, 40)
-	UiKit.draw_frame(self, Rect2(at, Vector2(270, 196)), UiColours.PANEL, UiColours.BORDER_DIM)
+	var races := []
+	for race_id in RACE_TINTS:
+		if Library.race(race_id):
+			races.append(race_id)
 	var rows := [["Doing Fine", STATE_COLOURS["Doing Fine"]], ["Struggling", STATE_COLOURS["Struggling"]], ["Doomed", STATE_COLOURS["Doomed"]], ["Abandoned or unclaimed", STATE_COLOURS["Abandoned"]], ["Swallowed", STATE_COLOURS["Swallowed"]]]
-	for index in rows.size():
-		var y := at.y + 30 + index * 26
-		draw_circle(Vector2(at.x + 22, y - 5), 6, rows[index][1])
-		UiKit.draw_text(self, Vector2(at.x + 40, y), rows[index][0], 16, UiColours.TEXT_DIM)
-	UiKit.draw_text(self, Vector2(at.x + 16, at.y + 172), "$ store   ! hazard   ? distress", 15, UiColours.TEXT_DIM, UiKit.font_bold())
+	var height := 40.0 + rows.size() * 26 + 34 + 30 + races.size() * 22 + 14
+	var at := Vector2(size.x - 300, 40)
+	UiKit.draw_frame(self, Rect2(at, Vector2(270, height)), UiColours.PANEL, UiColours.BORDER_DIM)
+	UiKit.draw_text(self, Vector2(at.x + 16, at.y + 26), "CLUSTERS", 13, UiColours.TEXT_DIM, UiKit.font_bold())
+	var y := at.y + 52
+	for row in rows:
+		_draw_cluster_icon(Vector2(at.x + 26, y - 6), row[1], row[0] == "Swallowed")
+		UiKit.draw_text(self, Vector2(at.x + 46, y), row[0], 16, UiColours.TEXT_DIM)
+		y += 26
+	UiKit.draw_text(self, Vector2(at.x + 16, y + 2), "$ store   ! hazard   ? distress", 15, UiColours.TEXT_DIM, UiKit.font_bold())
+	y += 34
+	UiKit.draw_text(self, Vector2(at.x + 16, y), "REGIONS", 13, UiColours.TEXT_DIM, UiKit.font_bold())
+	y += 24
+	for race_id in races:
+		draw_circle(Vector2(at.x + 26, y - 5), 8.0, Color(RACE_TINTS[race_id], 0.35))
+		UiKit.draw_text(self, Vector2(at.x + 46, y), "%s space" % Library.race(race_id).name, 15, UiColours.TEXT_DIM)
+		y += 22
+
+
+## A small three-star cluster, as the map draws them.
+func _draw_cluster_icon(centre: Vector2, colour: Color, swallowed: bool) -> void:
+	for offset in [Vector2(-5, 2), Vector2(4, -3), Vector2(2, 5)]:
+		if swallowed:
+			draw_circle(centre + offset, 3.2, Color(0.45, 0.45, 0.5, 0.8))
+		else:
+			draw_circle(centre + offset, 4.2, Color(colour, 0.15))
+		draw_circle(centre + offset, 2.2, colour)

@@ -13,7 +13,8 @@ A design-stage project: we are writing a game design document, not building the 
 
 - Follow `docs/game-project-standards.md`: standard rules (workflow, labelling of plans/steps/questions,
   branch rules), elegant code principles, and the designer's game design philosophy.
-- `docs/gdd.html` is the game design document. Points are lettered per section (e.g. 2A). Points in the design
+- `docs/gdd.html` is the game design document. Points are lettered per section (e.g. 2A).
+  `docs/godot-version-decisions.md` extends it for the Godot version (points cited as GV 3A). Points in the design
   docs are tagged as in `docs/tag-styles.md`; follow it when adding or editing points. Undiscussed ideas go in `docs/ideas.md`.
 - Concerns to save for later, if heromedel agrees, go in `docs/concerns.md`.
 - A shared, co-editable copy of the GDD exists at https://claude.ai/artifact/DNRJEFZkzS4zBL1nPHoLmX. Don't keep

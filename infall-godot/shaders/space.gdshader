@@ -13,6 +13,7 @@ uniform float planet_radius = 0.16;
 uniform vec4 planet_colour : source_color = vec4(0.75, 0.45, 0.35, 1.0);
 uniform vec4 planet_shadow : source_color = vec4(0.12, 0.05, 0.08, 1.0);
 uniform float planet_kind = 0.0;   // 0 none, 1 planet, 2 star
+uniform vec2 light_direction = vec2(-0.6, -0.5);   // where the planet's sunlight comes from
 uniform float collapse_glow = 0.0; // 0 to 1: how near the collapse is
 uniform vec2 collapse_direction = vec2(-0.7, 0.7);
 uniform vec2 screen_size = vec2(1920.0, 1080.0);
@@ -80,23 +81,25 @@ void fragment() {
 	colour += stars(pixel * 0.012 + camera_offset * 0.0006, 0.16, 0.035, 0.75);
 	colour += stars(pixel * 0.0065 + camera_offset * 0.0012 + 17.0, 0.10, 0.022, 1.1);
 	colour += stars(pixel * 0.0032 + camera_offset * 0.0024 + 41.0, 0.08, 0.016, 1.6);
-	// planet or star
+	// planet or star: far away, so it barely moves as the camera pans and doesn't grow with zoom
 	if (planet_kind > 0.5) {
-		vec2 p = (UV - planet_position - camera_offset * vec2(0.00002, 0.00003)) * vec2(screen_size.x / screen_size.y, 1.0);
+		vec2 p = (UV - planet_position - camera_offset * vec2(0.000006, 0.000008)) * vec2(screen_size.x / screen_size.y, 1.0);
 		float d = length(p);
 		if (planet_kind < 1.5) {
-			float body = smoothstep(planet_radius, planet_radius - 0.003, d);
-			vec2 light_dir = normalize(vec2(-0.6, -0.5));
+			float body = smoothstep(planet_radius, planet_radius - 0.006, d);
+			vec2 light_dir = normalize(light_direction);
 			float lit = clamp(dot(normalize(vec3(p, sqrt(max(0.0, planet_radius * planet_radius - d * d)))), normalize(vec3(light_dir, 0.6))), 0.0, 1.0);
-			float bands = fbm(vec2(p.x * 9.0, p.y * 26.0) + seed);
-			vec3 surface = mix(planet_shadow.rgb, planet_colour.rgb, lit) * (0.8 + 0.3 * bands);
-			float atmosphere = smoothstep(planet_radius + 0.03, planet_radius, d) * (1.0 - body);
-			colour = mix(colour, surface, body);
-			colour += planet_colour.rgb * atmosphere * 0.35 * (0.5 + lit);
+			float bands = fbm(vec2(p.x * 5.0, p.y * 15.0) / planet_radius * 0.2 + seed);
+			vec3 surface = mix(planet_shadow.rgb, planet_colour.rgb, lit) * (0.85 + 0.25 * bands);
+			// distance haze: the planet takes on the colour of the space between, and loses contrast
+			surface = mix(surface, colour + nebula_b.rgb * 0.25, 0.28);
+			float atmosphere = smoothstep(planet_radius + 0.045, planet_radius, d) * (1.0 - body);
+			colour = mix(colour, surface, body * 0.92);
+			colour += planet_colour.rgb * atmosphere * 0.18 * (0.4 + lit);
 		} else {
 			float glow = exp(-d / max(0.001, planet_radius) * 2.2);
-			colour += planet_colour.rgb * glow * 1.4;
-			colour += vec3(1.0) * smoothstep(planet_radius * 0.35, 0.0, d);
+			colour += planet_colour.rgb * glow * 1.1;
+			colour += vec3(1.0) * smoothstep(planet_radius * 0.3, 0.0, d) * 0.8;
 		}
 	}
 	COLOR = vec4(colour, 1.0);

@@ -1,6 +1,7 @@
 class_name Formation
 extends RefCounted
-## Sizes ships for laying out squads: the box a ship's hull art (or drawn hull) covers, in local pixels.
+## Sizes ships for laying out squads: the box a ship's hull art (or drawn hull) covers, in local pixels, the
+## square zone every ship sits in, and where a squad's zones go.
 
 
 static func hull_bounds(design: ShipDesign) -> Rect2:
@@ -51,3 +52,59 @@ static func shield_shape(design: ShipDesign) -> Dictionary:
 	var shape := {"centre": centre, "radii": half * sqrt(maxf(fit, 1e-4)) + Vector2(22, 22)}
 	_shields[design.id] = shape
 	return shape
+
+
+const ZONE_MARGIN_TILES := 8.0       # heromedel, 2026-10-31: the largest hull plus 8 tiles
+const SQUAD_SHIFT_ZONES := 0.5       # in a fight each squad sits half a zone to its own side, so rows don't line up
+static var _zone_size: float = 0.0
+
+
+## The side of the square zone each ship sits centred in (GDD 3S): the largest hull in the game plus the margin,
+## so a big ship just fits and a small one sits far from its neighbours and the barrier.
+static func zone_size() -> float:
+	if _zone_size <= 0.0:
+		var largest := 0.0
+		for id in Library.ships:
+			var bounds := hull_bounds(Library.ship(id))
+			largest = maxf(largest, maxf(bounds.size.x, bounds.size.y))
+		_zone_size = ceilf(largest / ShipDesign.TILE + ZONE_MARGIN_TILES) * ShipDesign.TILE
+	return _zone_size
+
+
+## The centres of a squad's zones, as (sideways, back from the front line) in zones, for a formation from the
+## settings (GDD 3H: a gentle curve, outer ships forward; 3I: other shapes).
+static func zone_offsets(count: int, shape: String) -> Array[Vector2]:
+	var offsets: Array[Vector2] = []
+	for index in count:
+		var across := index - (count - 1) * 0.5
+		var u := across / maxf(1.0, (count - 1) * 0.5)
+		var back := 0.0
+		if count > 1:
+			match shape:
+				"Curve":
+					back = 0.45 * (1.0 - u * u)
+				"Inverted Curve":
+					back = 0.45 * u * u
+		offsets.append(Vector2(across, back))
+	return offsets
+
+
+## Puts every ship in the middle of its zone (GDD 3S). The player squad sits below the barrier and the enemy
+## above it (GDD 3A); each zone's front edge starts at the barrier's line, so ships never crowd it or each other.
+static func lay_out(encounter: Encounter, shape: String) -> void:
+	var zone := zone_size()
+	for side in [0, 1]:
+		var squad: Array[Ship] = []
+		for ship in encounter.ships:
+			if ship.side == side:
+				squad.append(ship)
+		var offsets := zone_offsets(squad.size(), shape)
+		var shift := SQUAD_SHIFT_ZONES * zone if encounter.fight_started else 0.0
+		for index in squad.size():
+			var ship := squad[index]
+			ship.facing_down = side == 1
+			var depth := Encounter.BARRIER_HALF_DEPTH + zone * (0.5 + offsets[index].y)
+			var centre := Vector2(offsets[index].x * zone - shift, depth) if side == 0 else Vector2(-offsets[index].x * zone + shift, -depth)
+			var hull_centre := hull_bounds(ship.design).get_center()
+			# local_to_world turns an enemy ship around, so its hull centre is subtracted the other way
+			ship.world_position = centre + hull_centre if ship.facing_down else centre - hull_centre

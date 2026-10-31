@@ -34,7 +34,7 @@ func _process(delta: float) -> void:
 	texts = texts.filter(func(t): return t.life > 0.0)
 	if encounter:
 		for shot in encounter.projectiles:
-			if shot.kind == "missile" and randf() < 0.7:
+			if shot.kind == "missile" and randf() < 0.7 and not encounter.in_barrier(shot.position):
 				var at := shot.previous_position.lerp(shot.position, alpha)
 				_add("smoke", at - shot.velocity.normalized() * 10.0, Vector2(randf_range(-8, 8), randf_range(-8, 8)), randf_range(0.6, 1.1), randf_range(3.0, 5.0), Color(0.75, 0.75, 0.8, 0.35), false)
 	queue_redraw()
@@ -125,6 +125,8 @@ func _draw_solid_shots() -> void:
 	for shot in encounter.projectiles:
 		var at := shot.previous_position.lerp(shot.position, alpha)
 		var direction := shot.velocity.normalized()
+		if _crossing(shot.kind, at):
+			continue
 		match shot.kind:
 			"missile":
 				var side := direction.orthogonal()
@@ -144,6 +146,8 @@ func _draw_solid_shots() -> void:
 		if suit.gone:
 			continue
 		var at := suit.previous_position.lerp(suit.position, alpha)
+		if encounter.in_barrier(at):
+			continue
 		var texture := Library.texture(suit.def.art_path) if not suit.def.art_path.is_empty() else null
 		if texture:
 			var size := texture.get_size() * suit.def.art_scale
@@ -156,9 +160,15 @@ func _draw_solid_shots() -> void:
 
 
 func _draw_glowing_shots() -> void:
+	var dashes: bool = Settings.get_value("shots_crossing_barrier", "Shown") == "Shown"
 	for shot in encounter.projectiles:
 		var at := shot.previous_position.lerp(shot.position, alpha)
 		var direction := shot.velocity.normalized()
+		if _crossing(shot.kind, at):
+			# Inside the barrier a shot is far away: only a tiny faint dash shows it is on its way (GDD 3R)
+			if dashes:
+				_glow.draw_line(at - direction * 6.0, at, Color(shot.colour.lightened(0.3), 0.35), 1.5, true)
+			continue
 		match shot.kind:
 			"laser", "defense":
 				var length := 34.0 if shot.kind == "laser" else 20.0
@@ -192,9 +202,10 @@ func _draw_glowing_shots() -> void:
 			var centre := encounter.local_to_world(target, encounter.bubble_centre(target))
 			end_point = centre + (hit_point - centre).normalized() * minf(radii.x, radii.y) * 0.98
 			end_point = origin.lerp(hit_point, 0.92) if end_point.distance_to(origin) > origin.distance_to(hit_point) else end_point
-		_glow.draw_line(origin, end_point, Color(colour, 0.25 * fade), 16.0, true)
-		_glow.draw_line(origin, end_point, Color(colour, 0.85 * fade), 5.0, true)
-		_glow.draw_line(origin, end_point, Color(1, 1, 1, 0.8 * fade), 1.8, true)
+		for part in _outside_barrier(origin, end_point):
+			_glow.draw_line(part[0], part[1], Color(colour, 0.25 * fade), 16.0, true)
+			_glow.draw_line(part[0], part[1], Color(colour, 0.85 * fade), 5.0, true)
+			_glow.draw_line(part[0], part[1], Color(1, 1, 1, 0.8 * fade), 1.8, true)
 		_glow.draw_circle(end_point, 9.0 + 2.0 * sin(_time * 30.0), Color(colour.lightened(0.5), 0.8 * fade))
 		if not beam.blocked:
 			var start_world := encounter.local_to_world(target, beam.start)
@@ -209,4 +220,34 @@ func _draw_glowing_shots() -> void:
 		if suit.gone:
 			continue
 		var at := suit.previous_position.lerp(suit.position, alpha)
+		if encounter.in_barrier(at):
+			if dashes:
+				_glow.draw_circle(at, 1.6, Color(0.75, 0.4, 1.0, 0.35))
+			continue
 		_glow.draw_circle(at + Vector2(0, 10), 5.0 + sin(_time * 30.0), Color(0.75, 0.4, 1.0, 0.5))
+
+
+## Whether something is crossing the barrier, and so far away that it isn't drawn as itself.
+func _crossing(kind: String, at: Vector2) -> bool:
+	return Encounter.GATOMETERS_PER_SECOND.has(kind) and encounter.in_barrier(at)
+
+
+## The parts of a line outside the barrier: a beam is seen leaving its ship and arriving, not crossing.
+func _outside_barrier(a: Vector2, b: Vector2) -> Array:
+	var half := Encounter.BARRIER_HALF_DEPTH
+	if is_equal_approx(a.y, b.y):
+		return [] if encounter.in_barrier(a) else [[a, b]]
+	var cuts: Array[float] = [0.0]
+	for edge in [half, -half]:
+		var t: float = (edge - a.y) / (b.y - a.y)
+		if t > 0.0 and t < 1.0:
+			cuts.append(t)
+	cuts.append(1.0)
+	cuts.sort()
+	var parts: Array = []
+	for index in cuts.size() - 1:
+		var from := a.lerp(b, cuts[index])
+		var to := a.lerp(b, cuts[index + 1])
+		if not encounter.in_barrier(from.lerp(to, 0.5)):
+			parts.append([from, to])
+	return parts

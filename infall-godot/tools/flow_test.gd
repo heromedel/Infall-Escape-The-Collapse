@@ -26,6 +26,14 @@ func _ready() -> void:
 	main.open_store()
 	await _wait(0.8)
 	await _shot("05_store")
+	# Buy the first thing on offer: the window must stay on screen and fit its contents
+	for child in main.overlays.get_children():
+		if child is StoreWindow:
+			var buttons: Array = child.find_children("*", "Button", true, false).filter(func(b): return not b.disabled and b.text.contains("."))
+			if not buttons.is_empty():
+				buttons[0].emit_signal("pressed")
+	await _wait(0.5)
+	await _shot("05b_store_after_buying")
 	_close_overlays()
 	main.open_ship_screen()
 	await _wait(0.8)

@@ -4,8 +4,16 @@ extends Control
 ## its crew, its power bars, its weapons and special systems, the Jigawatt Drive, Mawjig, and a card for each
 ## enemy ship. Every clickable part registers a region while it is drawn; clicks and tooltips go through those
 ## regions, and anything not on the HUD falls through to the battle world.
+##
+## The HUD is a set of cards the player can move by their grab bars, dock to each other and fold away; HudLayout
+## keeps where they are. A folded card opens by itself when something goes wrong on it, and folds again after
+## five quiet seconds (heromedel, 2026-10-31).
 
 const PAD := 16.0
+const CARD_NAMES := {"top": "MAWJIG AND DRIVE", "ship": "SHIP", "crew": "CREW", "power": "SYSTEMS", "subsystems": "SUBSYSTEMS", "weapons": "WEAPONS", "specials": "SPECIALS"}
+const FOLDED_HEIGHT := 26.0
+const FOLD_BACK_SECONDS := 5.0
+const OPACITY := {"85%": 0.86, "100%": 1.0, "70%": 0.7}
 
 var screen: BattleScreen
 var box_rect := Rect2()
@@ -15,9 +23,16 @@ var _hover_time := 0.0
 var _message := ""
 var _message_time := 0.0
 var _time := 0.0
+var layout := HudLayout.load_saved()
+var _drag_grab := Vector2.ZERO        # where on the card the grab bar was taken
+var _trouble: Dictionary = {}         # card -> how much is wrong on it, to notice when it gets worse
+var _peeking: Dictionary = {}         # folded card -> time of its last change, while it shows itself
+var _last_sizes: Dictionary = {}      # card -> its size when it last had something to show
+var _placing: Dictionary = {}         # cards being placed this frame
 
 
 func _ready() -> void:
+	add_to_group("battle_hud")
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 
@@ -29,21 +44,39 @@ func flash_message(text: String) -> void:
 
 func _process(delta: float) -> void:
 	_time += delta
+	if layout.dragging != "" and not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+		layout.drop(layout.dragging, size)   # the release was missed (the HUD was hidden mid-drag)
 	if _message_time > 0.0:
 		_message_time -= delta
 	var mouse := get_local_mouse_position()
-	var region := _region_at(mouse)
-	if region != _hover_region:
-		_hover_region = region
+	var region := {} if screen and screen.hold_pause else _region_at(mouse)
+	if not _same_region(region, _hover_region):
 		_hover_time = 0.0
 	else:
 		_hover_time += delta
+	_hover_region = region   # the fresh copy, so a tooltip shows the latest numbers
 	queue_redraw()
 
 
 func _input(event: InputEvent) -> void:
 	if screen == null or screen.encounter == null or not is_visible_in_tree():
 		return
+	if screen.hold_pause:
+		return   # a window is open over the HUD: its clicks are the window's
+	if layout.dragging != "":
+		# A card is being moved: it follows the mouse and lands where the button is let go
+		if event is InputEventMouseMotion:
+			layout.drag_to(layout.dragging, get_local_mouse_position() - _drag_grab, size)
+			get_viewport().set_input_as_handled()
+		elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and not event.pressed:
+			layout.drop(layout.dragging, size)
+			get_viewport().set_input_as_handled()
+		return
+	if event is InputEventMouseButton and event.pressed and event.button_index in [MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT]:
+		for id in _peeking.keys():   # clicking a card that opened by itself keeps it open
+			if layout.rects.has(id) and layout.rects[id].has_point(get_local_mouse_position()):
+				_peeking.erase(id)
+				layout.set_folded(id, false)
 	if event is InputEventMouseButton and event.pressed and event.button_index in [MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT]:
 		var region := _region_at(get_local_mouse_position())
 		if region.is_empty():
@@ -52,6 +85,13 @@ func _input(event: InputEvent) -> void:
 		if action.is_valid():
 			action.call()
 		get_viewport().set_input_as_handled()
+
+
+## Regions are rebuilt every frame with fresh callables, so the same spot is recognised by its place.
+func _same_region(a: Dictionary, b: Dictionary) -> bool:
+	if a.is_empty() or b.is_empty():
+		return a.is_empty() and b.is_empty()
+	return a.rect == b.rect
 
 
 func _region_at(point: Vector2) -> Dictionary:
@@ -72,25 +112,167 @@ func _draw() -> void:
 	if screen == null or screen.encounter == null:
 		return
 	var ship := screen.selected_ship
-	var y := PAD
-	y = _draw_squad_tabs(y)
-	if ship and not ship.is_gone():
-		_draw_ship_card(ship, Vector2(PAD, y))
-		_draw_crew_list(ship, Vector2(PAD, y + 150.0))
-		_draw_power(ship)
-		_draw_weapons(ship)
-		_draw_specials(ship)
-	_draw_top_centre()
+	layout.rects.clear()
+	layout.hidden.clear()
+	for id in HudLayout.DEFAULTS:
+		if id == "top" or (ship and not ship.is_gone()):
+			_draw_card(id, ship)
 	_draw_enemies()
 	_draw_overlays()
 	_draw_tooltip()
 
 
-func _draw_squad_tabs(y: float) -> float:
+# --- Cards ----------------------------------------------------------------------------------------------------
+
+## Draws one card where the layout puts it (its host first, if it is docked), folded or open, with its grab bar.
+func _draw_card(id: String, ship: Ship) -> void:
+	if layout.rects.has(id) or _placing.has(id):
+		return
+	_placing[id] = true   # a guard: docks are checked for loops, but drawing must never recurse forever
+	var host := layout.host_of(id)
+	if host != "" and HudLayout.DEFAULTS.has(host) and (host == "top" or ship):
+		_draw_card(host, ship)
+	_placing.erase(id)
+	_watch(id, ship)
+	var full := _card_size(id, ship)
+	var folded := layout.is_folded(id) and not _peeking.has(id)
+	var card_size := Vector2(clampf(full.x, 170.0, 260.0), FOLDED_HEIGHT) if folded and full != Vector2.ZERO else full
+	if full == Vector2.ZERO:
+		# Nothing to show: hold its place at its last size for cards docked to it, but don't draw it
+		var held: Vector2 = _last_sizes.get(id, Vector2(170, 40))
+		layout.rects[id] = Rect2(layout.place(id, held, size), held)
+		layout.hidden[id] = true
+		return
+	_last_sizes[id] = card_size
+	var at := layout.place(id, card_size, size)
+	var rect := Rect2(at, card_size)
+	layout.rects[id] = rect
+	if folded:
+		UiKit.draw_frame(self, rect, _panel(), UiColours.BORDER_DIM, 5.0)
+		UiKit.draw_text(self, rect.position + Vector2(12, 18), CARD_NAMES[id], 13, UiColours.TEXT_DIM, UiKit.font_bold())
+		_region(rect, func(): layout.set_folded(id, false), "%s is folded. Click to open it." % CARD_NAMES[id].capitalize())
+	else:
+		match id:
+			"top": _draw_top_centre(at)
+			"ship": _draw_ship_card(ship, at)
+			"crew": _draw_crew_list(ship, at)
+			"power": _draw_power(ship, at)
+			"subsystems": _draw_subsystems(ship, at)
+			"weapons": _draw_weapons(ship, at)
+			"specials": _draw_specials(ship, at)
+	if Settings.get_value("hud_layout", "Movable") == "Movable":
+		_draw_grab_bar(id, rect, folded)
+
+
+## How big a card is when open, worked out from what it shows; zero when it has nothing to show.
+func _card_size(id: String, ship: Ship) -> Vector2:
+	match id:
+		"top":
+			return Vector2(692, 74)
+		"ship":
+			var ships := screen.encounter.player_ships()
+			var tabs := 44.0 if ships.size() > 1 else 0.0
+			return Vector2(maxf(560.0, ships.size() * 178.0 - 8.0 if tabs > 0.0 else 0.0), 136.0 + tabs)
+		"crew":
+			return Vector2(290, ship.crew.filter(func(m): return not m.dead).size() * 54.0 + 36.0)
+		"power":
+			return Vector2(120.0 + _power_systems(ship, true).size() * SYSTEM_COLUMN + 10.0, POWER_HEIGHT)
+		"subsystems":
+			var count := _power_systems(ship, false).size()
+			return Vector2(count * SYSTEM_COLUMN + 20.0, POWER_HEIGHT) if count > 0 else Vector2.ZERO
+		"weapons":
+			if ship.weapons.filter(func(s): return s.def.type != "suit").is_empty() and ship.system_by("weapons") == null:
+				return Vector2.ZERO
+			return Vector2(maxi(_weapon_slots(ship).size(), 1) * (WEAPON_SLOT.x + 8) + 16, WEAPON_SLOT.y + 74)
+		"specials":
+			var count := _special_buttons(ship).size()
+			return Vector2(170, count * 38.0 + 40.0) if count > 0 else Vector2.ZERO
+	return Vector2.ZERO
+
+
+## The grab bar: a small tab on the card's top edge to drag it by, with a button to fold or open it. It stays
+## faint until the mouse comes near.
+func _draw_grab_bar(id: String, rect: Rect2, folded: bool) -> void:
+	var handle := Rect2(rect.position.x + rect.size.x * 0.5 - 34.0, rect.position.y - 7.0, 68.0, 12.0)
+	var fold := Rect2(handle.end.x + 4.0, handle.position.y, 16.0, 12.0)
+	var near := rect.grow(6.0).has_point(get_local_mouse_position()) or layout.dragging == id
+	var alpha := 0.95 if near else 0.3
+	for part in [handle, fold]:
+		draw_rect(part, Color(UiColours.PANEL_LIGHT, alpha))
+		draw_rect(part, Color(UiColours.BORDER, alpha * 0.8), false, 1.0)
+	for dot in 4:
+		draw_circle(handle.position + Vector2(22.0 + dot * 8.0, 6.0), 1.6, Color(UiColours.TEXT, alpha))
+	draw_line(fold.get_center() - Vector2(4, 0), fold.get_center() + Vector2(4, 0), Color(UiColours.TEXT, alpha), 1.5)
+	if folded:
+		draw_line(fold.get_center() - Vector2(0, 4), fold.get_center() + Vector2(0, 4), Color(UiColours.TEXT, alpha), 1.5)
+	_region(handle, func(): _start_drag(id), "Drag to move this card; drop it against another card's side to dock it there. Right click puts it back.", func(): _reset_card(id))
+	_region(fold, func(): _toggle_fold(id), "Fold this card to its bar, or open it.")
+
+
+func _start_drag(id: String) -> void:
+	_drag_grab = get_local_mouse_position() - layout.rects[id].position
+	layout.drag_to(id, layout.rects[id].position, size)
+
+
+func _toggle_fold(id: String) -> void:
+	_peeking.erase(id)
+	layout.set_folded(id, not layout.is_folded(id))
+
+
+func _reset_card(id: String) -> void:
+	layout.reset_card(id)
+
+
+## Notices when something gets worse on a card. A folded card then shows itself, and folds again five quiet
+## seconds later unless the player clicks it (settings: Collapsed Cards Reopen on Change, Reopened Cards Fold
+## Back).
+func _watch(id: String, ship: Ship) -> void:
+	var trouble := _card_trouble(id, ship)
+	var key := "%s:%d" % [id, ship.get_instance_id() if ship else 0]   # per ship, so switching ships isn't a change
+	var worse := trouble > float(_trouble.get(key, trouble)) + 0.01
+	_trouble[key] = trouble
+	if not layout.is_folded(id):
+		_peeking.erase(id)
+		return
+	if worse and Settings.get_value("collapsed_cards_reopen", true):
+		_peeking[id] = _time
+	elif _peeking.has(id) and Settings.get_value("reopened_cards_fold_back", true) and _time - float(_peeking[id]) > FOLD_BACK_SECONDS:
+		_peeking.erase(id)
+
+
+## How much is wrong on a card: it rises when crew are hurt, hull or shields are lost, or systems and weapons
+## are damaged or lose power, and falls as things recover.
+func _card_trouble(id: String, ship: Ship) -> float:
+	if ship == null or ship.is_gone():
+		return 0.0
+	var trouble := 0.0
+	match id:
+		"crew":
+			for member in ship.crew:
+				trouble += 100.0 if member.dead else (member.max_health - member.health)
+				if not member.dead and (member.stun_ticks > 0 or member.suffocating or member.task in ["fighting", "extinguishing"]):
+					trouble += 20.0
+		"ship":
+			trouble = (ship.max_hull - ship.hull) * 10.0 + ship.max_shield_layers() - ship.shield_layers
+		"power", "subsystems":
+			for system in _power_systems(ship, id == "power"):
+				trouble += system.damage * 10.0 + system.ion * 5.0 + (10.0 if system.spored else 0.0) + system.level - ship.system_power(system)
+		"weapons":
+			for slot in ship.weapons:
+				trouble += 0.0 if slot.powered else 10.0
+	return trouble
+
+
+func _panel() -> Color:
+	return Color(UiColours.PANEL, OPACITY.get(Settings.get_value("hud_card_opacity", "85%"), 0.86))
+
+
+func _draw_squad_tabs(at: Vector2) -> float:
+	var y := at.y
 	var ships := screen.encounter.player_ships()
 	if ships.size() <= 1:
 		return y
-	var x := PAD
+	var x := at.x
 	for ship in ships:
 		var rect := Rect2(x, y, 170, 34)
 		var chosen := ship == screen.selected_ship
@@ -105,9 +287,10 @@ func _draw_squad_tabs(y: float) -> float:
 	return y + 44
 
 
-func _draw_ship_card(ship: Ship, at: Vector2) -> void:
+func _draw_ship_card(ship: Ship, card_at: Vector2) -> void:
+	var at := Vector2(card_at.x, _draw_squad_tabs(card_at))
 	var rect := Rect2(at, Vector2(560, 136))
-	UiKit.draw_frame(self, rect, UiColours.PANEL)
+	UiKit.draw_frame(self, rect, _panel())
 	UiKit.draw_text(self, at + Vector2(16, 30), ship.name.to_upper(), 24, UiColours.TEXT, UiKit.font_title())
 	UiKit.draw_text(self, at + Vector2(16, 52), "%s  ·  %s" % [ship.design.class_text, ship.race.name], 15, UiColours.TEXT_DIM)
 	# Hull: one segment per point, as the genre shows it
@@ -166,13 +349,13 @@ func _draw_crew_list(ship: Ship, at: Vector2) -> void:
 	for member in members:
 		var rect := Rect2(at.x, y, 290, 50)
 		var chosen := member.selected
-		UiKit.draw_frame(self, rect, UiColours.PANEL_LIGHT if chosen else UiColours.PANEL, UiColours.POWER_GREEN if chosen else UiColours.BORDER_DIM, 6.0)
+		UiKit.draw_frame(self, rect, UiColours.PANEL_LIGHT if chosen else _panel(), UiColours.POWER_GREEN if chosen else UiColours.BORDER_DIM, 6.0)
 		CrewPortraits.draw_token(self, member.race.id, member.name, rect.position + Vector2(22, 25), 16.0, UiColours.POWER_GREEN)
 		UiKit.draw_text(self, rect.position + Vector2(46, 20), member.name, 16, UiColours.TEXT, UiKit.font_bold())
 		var fraction := member.health_fraction()
 		draw_rect(Rect2(rect.position + Vector2(46, 29), Vector2(120, 7)), UiColours.BAR_EMPTY)
 		draw_rect(Rect2(rect.position + Vector2(46, 29), Vector2(120 * fraction, 7)), UiColours.hull_colour(fraction))
-		if member.task == "healing":
+		if member.healing:
 			var pulse := 0.5 + 0.5 * sin(_time * 6.0)
 			draw_rect(Rect2(rect.position + Vector2(46, 29), Vector2(120 * fraction, 7)), Color(1, 1, 1, 0.35 * pulse))
 		# What they are doing, and where: "manning" over "Piloting"
@@ -210,8 +393,8 @@ func _crew_status(member: CrewMember) -> String:
 			return "moving"
 		"stunned":
 			return "stunned"
-		"healing":
-			return "healing"
+	if member.healing:
+		return "healing"
 	return "boarding" if member.ship != member.home else "standing by"
 
 
@@ -278,19 +461,25 @@ func _button(rect: Rect2, text: String, action: Callable, tooltip: String = "", 
 
 # --- Power ----------------------------------------------------------------------------------------------------
 
-func _draw_power(ship: Ship) -> void:
-	var bottom := size.y - PAD
-	var x := PAD
-	var column := 44.0
-	var bar_height := 9.0
-	var panel_height := 170.0
-	var systems: Array = ship.systems.filter(func(s): return s.behaviour != "power_core")
+const SYSTEM_COLUMN := 44.0
+const POWER_HEIGHT := 170.0
+const POWER_BAR := 9.0
+
+
+## The systems that draw power (`main`) or the subsystems that don't, in their display order.
+func _power_systems(ship: Ship, main: bool) -> Array:
+	var systems: Array = ship.systems.filter(func(s): return s.behaviour != "power_core" and s.def.draws_power == main)
 	systems.sort_custom(func(a, b): return a.def.order < b.def.order)
-	var main_systems: Array = systems.filter(func(s): return s.def.draws_power)
-	var sub_systems: Array = systems.filter(func(s): return not s.def.draws_power)
-	var width := 120.0 + main_systems.size() * column + 30.0 + sub_systems.size() * column
-	var rect := Rect2(x, bottom - panel_height, width, panel_height)
-	UiKit.draw_frame(self, rect, UiColours.PANEL)
+	return systems
+
+
+func _draw_power(ship: Ship, at: Vector2) -> void:
+	var main_systems := _power_systems(ship, true)
+	var bottom := at.y + POWER_HEIGHT
+	var x := at.x
+	var bar_height := POWER_BAR
+	var rect := Rect2(at, _card_size("power", ship))
+	UiKit.draw_frame(self, rect, _panel())
 	# The power source: reactor bars, the AZC, or nothing for a self-powered ship
 	var source_at := Vector2(x + 14, bottom - 30)
 	match ship.reactor_type:
@@ -320,13 +509,17 @@ func _draw_power(ship: Ship) -> void:
 			UiKit.draw_text(self, source_at + Vector2(0, 16), "POWERED", 14, UiColours.TEXT_DIM, UiKit.font_bold())
 	x += 120.0
 	for system in main_systems:
-		_draw_system_column(ship, system, Vector2(x, bottom - 30), column, bar_height, true)
-		x += column
-	x += 30.0
-	draw_line(Vector2(x - 16, bottom - panel_height + 14), Vector2(x - 16, bottom - 12), UiColours.BORDER_DIM, 1.0)
-	for system in sub_systems:
-		_draw_system_column(ship, system, Vector2(x, bottom - 30), column, bar_height, false)
-		x += column
+		_draw_system_column(ship, system, Vector2(x, bottom - 30), SYSTEM_COLUMN, bar_height, true)
+		x += SYSTEM_COLUMN
+
+
+## The subsystems (piloting, sensors, doors and the like): their own card, docked beside the systems at first.
+func _draw_subsystems(ship: Ship, at: Vector2) -> void:
+	UiKit.draw_frame(self, Rect2(at, _card_size("subsystems", ship)), _panel())
+	var x := at.x + 10.0
+	for system in _power_systems(ship, false):
+		_draw_system_column(ship, system, Vector2(x, at.y + POWER_HEIGHT - 30), SYSTEM_COLUMN, POWER_BAR, false)
+		x += SYSTEM_COLUMN
 
 
 func _draw_system_column(ship: Ship, system: ShipSystem, base: Vector2, column: float, bar_height: float, main: bool) -> void:
@@ -426,17 +619,22 @@ func _system_tooltip(ship: Ship, system: ShipSystem) -> String:
 
 # --- Weapons --------------------------------------------------------------------------------------------------
 
-func _draw_weapons(ship: Ship) -> void:
+const WEAPON_SLOT := Vector2(170, 86)
+
+
+func _weapon_slots(ship: Ship) -> Array:
+	return ship.weapons.filter(func(s): return s.def.type != "suit")
+
+
+func _draw_weapons(ship: Ship, card_at: Vector2) -> void:
 	var weapons_system := ship.system_by("weapons")
-	var slots: Array = ship.weapons.filter(func(s): return s.def.type != "suit")
-	if slots.is_empty() and weapons_system == null:
-		return
-	var slot_size := Vector2(170, 86)
+	var slots := _weapon_slots(ship)
+	var slot_size := WEAPON_SLOT
 	var count := maxi(slots.size(), 1)
 	var width := count * (slot_size.x + 8) + 16
-	var at := Vector2(size.x * 0.5 - width * 0.5 + 120, size.y - PAD - slot_size.y - 16 - 34)
-	var rect := Rect2(at - Vector2(8, 30), Vector2(width, slot_size.y + 40 + 34))
-	UiKit.draw_frame(self, rect, UiColours.PANEL)
+	var at := card_at + Vector2(8, 30)
+	var rect := Rect2(card_at, Vector2(width, slot_size.y + 40 + 34))
+	UiKit.draw_frame(self, rect, _panel())
 	UiKit.draw_text(self, at + Vector2(0, -10), "WEAPONS", 15, UiColours.TEXT_DIM, UiKit.font_bold())
 	if weapons_system:
 		var capacity := ship.weapon_capacity() if ship.reactor_type != "pool" else weapons_system.usable_bars() - weapons_system.ion
@@ -490,7 +688,8 @@ func _toggle_weapon_power(ship: Ship, slot: WeaponSlot) -> void:
 
 # --- Specials, the drive and the squad's resources -------------------------------------------------------------
 
-func _draw_specials(ship: Ship) -> void:
+## The special system buttons: boarding, suits, cloaking and the doors.
+func _special_buttons(ship: Ship) -> Array:
 	var buttons: Array = []
 	var encounter := screen.encounter
 	var teleporter := ship.system_by("teleporter")
@@ -508,14 +707,17 @@ func _draw_specials(ship: Ship) -> void:
 		buttons.append(["OPEN DOORS", func(): screen.set_all_doors(ship, true, false), "Open every inner door.", ship.doors_controllable(), -1])
 		buttons.append(["CLOSE DOORS", func(): screen.set_all_doors(ship, false, false), "Close every door, airlocks too.", ship.doors_controllable(), -1])
 		buttons.append(["VENT", func(): screen.set_all_doors(ship, true, true), "Open the airlocks to vent air and fires into space.", ship.doors_controllable(), -1])
-	if buttons.is_empty():
-		return
+	return buttons
+
+
+func _draw_specials(ship: Ship, at: Vector2) -> void:
+	var buttons := _special_buttons(ship)
 	var width := 150.0
-	var x := size.x - PAD - width
-	var y := size.y - PAD - buttons.size() * 38.0
-	var frame := Rect2(x - 10, y - 34, width + 20, buttons.size() * 38.0 + 40)
-	UiKit.draw_frame(self, frame, UiColours.PANEL)
-	UiKit.draw_text(self, Vector2(x, y - 12), "SYSTEMS", 15, UiColours.TEXT_DIM, UiKit.font_bold())
+	var x := at.x + 10.0
+	var y := at.y + 34.0
+	var frame := Rect2(at, Vector2(width + 20, buttons.size() * 38.0 + 40))
+	UiKit.draw_frame(self, frame, _panel())
+	UiKit.draw_text(self, Vector2(x, y - 12), "SPECIALS", 15, UiColours.TEXT_DIM, UiKit.font_bold())
 	for entry in buttons:
 		var rect := Rect2(x, y, width, 32)
 		_button(rect, entry[0], entry[1], entry[2], entry[3])
@@ -524,19 +726,18 @@ func _draw_specials(ship: Ship) -> void:
 		y += 38
 
 
-func _draw_top_centre() -> void:
+func _draw_top_centre(at: Vector2) -> void:
 	var encounter := screen.encounter
-	var centre := size.x * 0.5
-	var rect := Rect2(centre - 320, PAD, 640, 74)
-	UiKit.draw_frame(self, rect, UiColours.PANEL)
+	var rect := Rect2(at, Vector2(640, 74))
+	var centre := rect.get_center().x
+	UiKit.draw_frame(self, rect, _panel())
 	# Mawjig
 	var mawjig := screen.run.mawjig if screen.run else 0
 	UiKit.draw_text(self, rect.position + Vector2(16, 26), "MAWJIG", 13, UiColours.TEXT_DIM, UiKit.font_bold())
-	var low := mawjig < Mawjig.JUMP_COST * 2
-	var mawjig_colour := Color("#ffd46b") if not low else Color(UiColours.DAMAGED_RED, 0.6 + 0.4 * sin(_time * 5.0))
+	var mawjig_colour := LowMawjigWarning.counter_colour(mawjig, _time)
 	UiKit.draw_text(self, rect.position + Vector2(16, 58), Mawjig.format(mawjig), 30, mawjig_colour, UiKit.font_title())
-	if low:
-		UiKit.draw_text(self, Vector2(size.x * 0.5, rect.end.y + 44), "LOW ON MAWJIG: every shot and every jump spends it", 15, UiColours.DAMAGED_RED, UiKit.font_bold(), HORIZONTAL_ALIGNMENT_CENTER, 0)
+	if mawjig < LowMawjigWarning.DANGER:
+		_draw_notice("LOW ON MAWJIG: every shot and every jump spends it", rect.end.y + 44, UiColours.DAMAGED_RED)
 	_region(Rect2(rect.position, Vector2(140, 74)), Callable(), "Mawjig: the squad's fuel, ammunition and money in one. A jump costs 1.21; every shot costs a little.")
 	# Jigawatt Drive
 	var charge := encounter.squad_jump_charge()
@@ -555,7 +756,7 @@ func _draw_top_centre() -> void:
 		_button(Rect2(drive_at + Vector2(288, 29), Vector2(66, 21)), "HAIL", func(): screen.hail_pressed.emit(), "Hail the enemy squad: ask for surrender, or offer terms.", true)
 	elif screen.store_here:
 		_button(Rect2(drive_at + Vector2(288, 29), Vector2(66, 21)), "STORE", func(): screen.store_pressed.emit(), "Trade at this cluster's store.", true)
-	var pause_rect := Rect2(rect.end.x + 8, PAD, 44, 32)
+	var pause_rect := Rect2(rect.end.x + 8, rect.position.y, 44, 32)
 	_button(pause_rect, "", func(): screen.toggle_pause(), "Pause or unpause. Hotkey: Space", true, screen.paused)
 	var middle := pause_rect.get_center()
 	if screen.paused:
@@ -563,7 +764,7 @@ func _draw_top_centre() -> void:
 	else:
 		draw_rect(Rect2(middle + Vector2(-7, -8), Vector2(5, 16)), UiColours.TEXT)
 		draw_rect(Rect2(middle + Vector2(2, -8), Vector2(5, 16)), UiColours.TEXT)
-	var menu_rect := Rect2(rect.end.x + 8, PAD + 38, 44, 32)
+	var menu_rect := Rect2(rect.end.x + 8, rect.position.y + 38, 44, 32)
 	_button(menu_rect, "", func(): screen.menu_pressed.emit(), "Menu. Hotkey: Esc", true)
 	for line in 3:
 		draw_rect(Rect2(menu_rect.get_center() + Vector2(-9, -7 + line * 6), Vector2(18, 2.5)), UiColours.TEXT)
@@ -584,13 +785,47 @@ func _any_charging() -> bool:
 func _draw_enemies() -> void:
 	var encounter := screen.encounter
 	for ship in encounter.ships:
-		if ship == screen.selected_ship or ship.escaped:
+		if ship.escaped:
 			continue
 		if ship.side == 1 and not encounter.fight_started:
 			continue
 		if ship.destroyed and ship.explosion_ticks > 60:
 			continue
-		_draw_floating_status(ship)
+		if _draw_offscreen_marker(ship):
+			continue
+		if ship != screen.selected_ship:
+			_draw_floating_status(ship)
+
+
+## A ship out of view gets an arrow at the screen's edge pointing to it, with its name and hull; clicking the
+## arrow flies the camera there. Returns false when the ship is on screen.
+func _draw_offscreen_marker(ship: Ship) -> bool:
+	var centre_world := screen.encounter.local_to_world(ship, Formation.hull_bounds(ship.design).get_center())
+	var at: Vector2 = screen.world.get_global_transform_with_canvas() * centre_world
+	if Rect2(Vector2.ZERO, size).grow(60.0).has_point(at):
+		return false
+	var inner := Rect2(Vector2(70, 110), size - Vector2(140, 280))
+	var middle := inner.get_center()
+	var direction := (at - middle).normalized()
+	var reach_x := inner.size.x * 0.5 / maxf(absf(direction.x), 0.001)
+	var reach_y := inner.size.y * 0.5 / maxf(absf(direction.y), 0.001)
+	var point := middle + direction * minf(reach_x, reach_y)
+	var colour := UiColours.POWER_GREEN if ship.side == 0 else UiColours.ENEMY_RED
+	var side := direction.orthogonal()
+	draw_colored_polygon(PackedVector2Array([point + direction * 18.0, point + side * 11.0, point - side * 11.0]), Color(colour, 0.9))
+	var label_at := point - direction * 34.0
+	var box := Rect2(label_at - Vector2(64, 18), Vector2(128, 36))
+	for id in layout.rects:
+		if not layout.hidden.has(id) and layout.rects[id].grow(4.0).intersects(box.merge(Rect2(point - Vector2(18, 18), Vector2(36, 36)))):
+			return true   # a card is in the way: the card matters more than the arrow
+	draw_rect(box, Color(0.02, 0.035, 0.07, 0.85))
+	draw_rect(box, Color(colour, 0.6), false, 1.0)
+	UiKit.draw_text(self, box.position + Vector2(64, 15), ship.name, 12, UiColours.TEXT, UiKit.font_bold(), HORIZONTAL_ALIGNMENT_CENTER, 0)
+	var fraction := float(ship.hull) / float(maxi(1, ship.max_hull))
+	draw_rect(Rect2(box.position + Vector2(10, 23), Vector2(108, 5)), UiColours.BAR_EMPTY)
+	draw_rect(Rect2(box.position + Vector2(10, 23), Vector2(108 * fraction, 5)), UiColours.hull_colour(fraction))
+	_region(box.merge(Rect2(point - Vector2(18, 18), Vector2(36, 36))), func(): screen.focus_ship(ship), "%s is out of view. Click to fly there." % ship.name)
+	return true
 
 
 func _draw_floating_status(ship: Ship) -> void:
@@ -645,8 +880,7 @@ func _draw_floating_status(ship: Ship) -> void:
 
 
 func _look_at(ship: Ship) -> void:
-	screen.camera.target_position = ship.world_position
-	screen.camera.target_zoom = maxf(screen.camera.target_zoom, 0.8)
+	screen.focus_ship(ship)
 
 
 func _draw_overlays() -> void:
@@ -656,8 +890,8 @@ func _draw_overlays() -> void:
 		UiKit.draw_text(self, Vector2(centre.x, 150), text, 44, Color(0.9, 0.95, 1.0, 0.9), UiKit.font_title(), HORIZONTAL_ALIGNMENT_CENTER, 0)
 		UiKit.draw_text(self, Vector2(centre.x, 178), "press Space to resume", 17, UiColours.TEXT_DIM, null, HORIZONTAL_ALIGNMENT_CENTER, 0)
 	if screen.aim_mode != "":
-		var hint: String = {"weapon": "Click an enemy room to aim. Right click cancels.", "beam": "Press on an enemy room and drag to aim the beam's sweep.", "teleport": "Click an enemy room to send boarders.", "suit": "Click an enemy ship to send the battlesuit."}.get(screen.aim_mode, "")
-		UiKit.draw_text(self, Vector2(centre.x, size.y - 300), hint, 18, UiColours.TARGET_YELLOW, UiKit.font_bold(), HORIZONTAL_ALIGNMENT_CENTER, 0)
+		var hint: String = {"weapon": "Click a tile of an enemy ship to aim. Right click cancels.", "beam": "Press on an enemy tile and drag to aim the beam's sweep.", "teleport": "Click an enemy room to send boarders.", "suit": "Click an enemy ship to send the battlesuit."}.get(screen.aim_mode, "")
+		_draw_notice(hint, size.y - 300, UiColours.TARGET_YELLOW)
 		var mouse := get_local_mouse_position()
 		var colour := UiColours.ENEMY_RED if screen._aim_is_autofire() else UiColours.TARGET_YELLOW
 		draw_arc(mouse, 14, 0, TAU, 24, colour, 2.0, true)
@@ -665,7 +899,7 @@ func _draw_overlays() -> void:
 			draw_line(mouse + step * 8, mouse + step * 20, colour, 2.0)
 	if _message_time > 0.0:
 		var alpha := clampf(_message_time, 0.0, 1.0)
-		UiKit.draw_text(self, Vector2(centre.x, size.y - 270), _message, 20, Color(UiColours.WARNING, alpha), UiKit.font_bold(), HORIZONTAL_ALIGNMENT_CENTER, 0)
+		_draw_notice(_message, size.y - 250, UiColours.WARNING, alpha)
 	if box_rect.size.length() > 4.0:
 		draw_rect(box_rect, Color(UiColours.POWER_GREEN, 0.12))
 		draw_rect(box_rect, Color(UiColours.POWER_GREEN, 0.8), false, 1.5)
@@ -673,16 +907,45 @@ func _draw_overlays() -> void:
 		_draw_room_info(screen.hover_ship, screen.hover_room)
 
 
+## A line of text on a dark plate, centred on the screen, so it reads over any ship or star.
+func _draw_notice(text: String, baseline: float, colour: Color, alpha: float = 1.0) -> void:
+	var font := UiKit.font_bold()
+	var width := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, 19).x
+	var plate := Rect2(size.x * 0.5 - width * 0.5 - 18, baseline - 24, width + 36, 34)
+	draw_rect(plate, Color(0.02, 0.035, 0.07, 0.88 * alpha))
+	draw_rect(plate, Color(colour, 0.55 * alpha), false, 1.5)
+	UiKit.draw_text(self, Vector2(size.x * 0.5, baseline), text, 19, Color(colour, alpha), font, HORIZONTAL_ALIGNMENT_CENTER, 0)
+
+
+## What the mouse is over inside a ship: on a console tile just that system, elsewhere the room and what is in it.
 func _draw_room_info(ship: Ship, room_index: int) -> void:
 	var room := ship.rooms[room_index]
 	var view: ShipView = screen.views.get(ship)
 	if view == null or (ship.side == 1 and not view.interior_visible):
 		return
 	var lines := PackedStringArray()
+	var console: ShipSystem = null
 	for system in room.systems:
-		lines.append("%s %s" % [system.display_name(), "(damaged)" if system.damage > 0 else ""])
-	if lines.is_empty():
-		lines.append(room.name if not room.name.is_empty() else "Empty room")
+		if system.cell == screen.hover_cell:
+			console = system
+	if console:
+		lines.append(console.display_name())
+		lines.append("Level %d · power %d" % [console.level, ship.system_power(console)])
+		if console.damage > 0:
+			lines.append("%d bar%s damaged" % [console.damage, "" if console.damage == 1 else "s"])
+		if console.ion > 0:
+			lines.append("Ionized")
+		if console.spored:
+			lines.append("Spored")
+		if console.def.manned:
+			lines.append("Manned by %s" % console.manned_by.name if console.manned_by else "Unmanned")
+	else:
+		lines.append(room.name if not room.name.is_empty() else "Room")
+		if not room.systems.is_empty():
+			var names := PackedStringArray()
+			for system in room.systems:
+				names.append(system.display_name() + (" (damaged)" if system.damage > 0 else ""))
+			lines.append("Systems here: " + ", ".join(names))
 	lines.append("Air %d%%" % int(room.oxygen * 100.0))
 	if room.is_burning():
 		lines.append("On fire")
@@ -690,11 +953,18 @@ func _draw_room_info(ship: Ship, room_index: int) -> void:
 		lines.append("Hull breach")
 	if room.infection > 0.0:
 		lines.append("Infected")
-	var mouse := get_local_mouse_position() + Vector2(22, 18)
-	var height := lines.size() * 20 + 10
-	draw_rect(Rect2(mouse, Vector2(200, height)), Color(0.02, 0.04, 0.08, 0.85))
+	var font := UiKit.font_regular()
+	var width := 0.0
+	for line in lines:
+		width = maxf(width, font.get_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, -1, 15).x)
+	var at := get_local_mouse_position() + Vector2(22, 18)
+	var box := Rect2(at, Vector2(width + 18, lines.size() * 20 + 10))
+	box.position.x = minf(box.position.x, size.x - box.size.x - 8)
+	box.position.y = minf(box.position.y, size.y - box.size.y - 8)
+	draw_rect(box, Color(0.02, 0.04, 0.08, 0.88))
+	draw_rect(box, UiColours.BORDER_DIM, false, 1.0)
 	for index in lines.size():
-		UiKit.draw_text(self, mouse + Vector2(8, 20 + index * 20), lines[index], 15, UiColours.TEXT if index == 0 else UiColours.TEXT_DIM)
+		UiKit.draw_text(self, box.position + Vector2(9, 20 + index * 20), lines[index], 15, UiColours.TEXT if index == 0 else UiColours.TEXT_DIM)
 
 
 func _draw_tooltip() -> void:

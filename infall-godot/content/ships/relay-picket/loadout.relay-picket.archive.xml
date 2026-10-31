@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Ai-Generated-Proposal (2026-10-31): a stronger band-range loadout of the same hull (production goals: loadouts by band range). -->
 <loadout id="archive" ship="relay-picket" name="Senti Archive Cruiser" class="Archive Cruiser" inherit="patch" hull="16" value="305.2">
 	<reactor type="core" level="3"/>
 	<system id="shields" tile="-1,-1" level="4" wall="west"/>

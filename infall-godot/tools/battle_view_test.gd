@@ -30,7 +30,7 @@ func _ready() -> void:
 	encounter.setup(players, enemies, 3)
 	screen = BattleScreen.new()
 	add_child(screen)
-	screen.show_encounter(encounter, run, 12345, 0.3, true)
+	screen.show_encounter(encounter, run, int(OS.get_environment("LOOK")) if OS.get_environment("LOOK") != "" else 12345, 0.3, true)
 	if not enemies.is_empty():
 		for ship in players:
 			for slot in ship.weapons:

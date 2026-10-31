@@ -461,7 +461,7 @@ func _draw_crew() -> void:
 			if t > 0.5:
 				continue
 		_draw_upright(canvas, at, func(p: Vector2): _draw_member(canvas, member, p, ring))
-		if member.task == "healing":
+		if member.healing:
 			_draw_heal_sparks(canvas, at, member.name.hash())
 
 

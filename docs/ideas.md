@@ -239,6 +239,15 @@ shot from one weapon goes to the same target room.
   Some weapons, such as missiles or a specific variety, maybe the ones that cause fire, could hurt crew in the whole
   room instead.
 
+### Area weapons: Blast (2026-10-31)
+
+- **Proposed (heromedel, 2026-10-31):** a weapon special that hits an area if it hits: a 2×2 block of tiles, like
+  one of the genre's rooms, for missiles, bombs and lasers but not beams. It would cost more per shot; how much
+  still needs consideration and discussion.
+  - **Ai-Generated-Proposal (2026-10-31):** call it Blast, since Burst is the genre's word for flak. The hull takes
+    the damage once and only the tile effects spread, so it would be worth well under 4× a plain shot (Eco to
+    price); fire and breach roll once and land on one of the four tiles; a block across a wall hits both rooms.
+
 ### Point-defense laser (2026-10-21)
 
 **Unlikely (2026-10-23):** an actual defence laser system that shoots down incoming missiles, like a defence drone
@@ -262,6 +271,12 @@ New weapon ideas:
 
 ## Battle screen
 
+### Split battle view (2026-10-31)
+
+- **Unlikely (2026-10-31):** a setting `Battle View: One Field > Split`. Split would show the enemy squad in its own
+  framed window at the side of the screen, the genre's way, instead of both squads on one battlefield with the
+  barrier between them. It works against space feeling vast, so it would only ever be an option.
+
 ### Step saved: distance from the barrier by the largest ship (heromedel, 2026-10-26)
 
 Instead of a fixed gap between each squad's front line and the barrier, reserve the space the largest ship in the
@@ -277,3 +292,11 @@ from the formation files of GDD 3S. Some surprise battles could flip the player'
 ### A larger battle area (heromedel, 2026-10-28)
 
 Advanced: a larger battle area that allows flank and pincer attacks.
+
+## Mercenaries
+
+### Mercenaries escorting The Colony Ship (2026-10-31)
+
+- **Proposed (heromedel, 2026-10-31):** instead of, or as well as, mercenaries joining the squad (GV 7C), the squad
+  could hire mercenaries to follow behind and protect The Colony Ship and the scout ships. That would unlock new
+  blue choices or new events.

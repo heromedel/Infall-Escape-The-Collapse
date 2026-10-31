@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- The run's spine: the collapse opening (GDD 2P, texts from docs/events-collapse-opening-and-terran-stores.md,
-     Ai-Generated-Proposal 2026-10-23 by Lori, opening 1's first paragraph heromedel's), waiting, being stranded
-     (GDD 9B), revisits, and the rim. Events other than the opening texts are Ai-Generated-Proposals
-     (2026-10-31) written for the Godot version. -->
+<!-- The run's spine: the collapse opening (GDD 2P, texts from docs/events-collapse-opening-and-terran-stores.md),
+     waiting, being stranded (GDD 9B), revisits, and the rim. -->
 <events>
 	<event id="START_LAUNCH" title="Behind You" kind="opening" unique="yes">
 		<text>Your homeworld is in a panic. Something is wrong with the Galactic Core, the region at the center of the galaxy. Scientists are in a frenzy of arguments and debates, but they all agree that something cataclysmic could be coming. Many refuse to believe it, but others have sponsored a colony ship to travel farther from the core. Your job, as Captain of the forward scouts, is to explore ahead and find a path for The Colony Ship to survive.
@@ -39,17 +37,25 @@ The Colony Ship's signal comes through weaker than before. "Our messages to the 
 	</event>
 
 	<event id="REVISIT" kind="revisit">
-		<text>You're back at {cluster}. Nothing here has changed, except that the collapse is closer.</text>
+		<text>You're back at {cluster}. The collapse is closer than when you left.</text>
+		<choice text="Continue..."/>
+	</event>
+	<event id="REVISIT_EARLY" kind="revisit">
+		<text>You're back at {cluster}.</text>
 		<choice text="Continue..."/>
 	</event>
 
 	<event id="WAITED" kind="wait">
-		<text>Your squad holds position. The power cores tick over, slowly turning stray matter into Mawjig. On the long-range display, the collapse creeps outward.</text>
+		<text>Your squad holds position while its ships slowly turn stray matter into Mawjig. On the long-range display, the collapse creeps outward.</text>
+		<choice text="Continue..."/>
+	</event>
+	<event id="WAITED_EARLY" kind="wait">
+		<text>Your squad holds position while its ships slowly turn stray matter into Mawjig.</text>
 		<choice text="Continue..."/>
 	</event>
 
 	<event id="STRANDED" kind="wait">
-		<text>Your squad has become stranded due to not enough Mawjig to jump. Checking the manual it says the "Material to Energy, Space-Time JigaWatt Powered, Jump Drive" needs at least 1.21 Jigawatts to power a jump. Luckily the Power Cores on a ship can produce enough "Materials Worth of Jigawatts" to eventually power a jump, if we wait long enough.</text>
+		<text>Your squad has become stranded due to not enough Mawjig to jump. Checking the manual it says the "Material to Energy, Space-Time JigaWatt Powered, Jump Drive" needs at least 1.21 Jigawatts to power a jump. Luckily the Power Cores on a ship can produce enough "Materials Worth of Jigawatts" to eventually power a jump, if you wait long enough.</text>
 		<choice text="Keep waiting..."/>
 	</event>
 

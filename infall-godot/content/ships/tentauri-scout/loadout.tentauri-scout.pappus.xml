@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The Burr without its new tech, so the Tentauri can appear in band 1 (docs/ship-suggestions.md, Pappus): no
+     Supershield or Medbay, a 7-bar reactor, and two plain Coil lasers. -->
+<loadout id="pappus" ship="tentauri-scout" name="Tentauri Pappus" class="Little Scout" inherit="patch" value="132.17">
+	<reactor type="pool" level="7"/>
+	<system id="supershield" removed="yes"/>
+	<system id="medbay" removed="yes"/>
+	<weapons>
+		<weapon id="coil" mount="3"/>
+		<weapon id="coil" mount="4"/>
+	</weapons>
+	<ai plan="destroy">
+		<target system="weapons" weapon="Coil" weight="0.8"/>
+		<target system="engines" weapon="Coil" when="enemyWeaponsDown"/>
+	</ai>
+</loadout>

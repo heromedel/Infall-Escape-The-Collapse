@@ -27,8 +27,26 @@ static func format(cents: int) -> String:
 	return "%s%d.%02d" % [sign, whole, part]
 
 
-## A reward of a size (low, medium, high) scaled by band, as events write them (events-sample.md).
+# Event rewards by band (low, medium, high), the genre's curve on Normal, from Infall: Eco's review (2026-10-31).
+# Unlike wreck rewards (GDD 8I), events have no ship value behind them, so they follow the full curve.
+const EVENT_REWARDS := [
+	[2.06, 3.75, 5.08], [2.91, 5.21, 7.14], [3.75, 6.78, 9.21], [4.72, 8.23, 11.25],
+	[5.57, 9.81, 13.31], [6.41, 11.37, 15.37], [7.26, 12.83, 17.54], [8.11, 14.41, 19.61],
+]
+
+
+## An event's reward of a size (events-sample.md) at a band: tiny is a third of low, huge one and a half times high.
 static func reward_for_size(size: String, band: int) -> int:
-	var base := {"tiny": 0.71, "low": 2.11, "medium": 4.23, "high": 7.26, "huge": 10.89}.get(size, 1.81) as float
-	var band_scale := 1.0 + 0.1 * float(band - 1)
-	return amount(base * band_scale)
+	var row: Array = EVENT_REWARDS[clampi(band, 1, EVENT_REWARDS.size()) - 1]
+	match size:
+		"tiny":
+			return amount(row[0] / 3.0)
+		"low":
+			return amount(row[0])
+		"medium":
+			return amount(row[1])
+		"high":
+			return amount(row[2])
+		"huge":
+			return amount(row[2] * 1.5)
+	return amount(row[0])
