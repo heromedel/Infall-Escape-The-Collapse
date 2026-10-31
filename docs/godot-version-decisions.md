@@ -127,12 +127,14 @@ The list for the next build, in no fixed order. Nothing here is built yet.
    player is playing as.
 8. **More room between the ships and the barrier** (heromedel, 2026-10-31): a fixed gap of 6 tiles between every
    zone and the barrier, the same for every ship, on top of the zone's margin, so even the largest hull's nose is
-   10–12 tiles from the barrier and smaller ships more. Widen the barrier itself too (now 12 tiles).
+   10–12 tiles from the barrier and smaller ships more. Widen the barrier itself to 16 tiles (now 12).
 9. **Show what is under the cursor while aiming** (heromedel's screenshot, 2026-10-31): the hover box naming the
    system on a tile is hidden while a weapon is armed, which is exactly when the player needs it.
 10. **Survivors** (heromedel's screenshot, 2026-10-31): a survivor joined from a ship that had been blown up, and
-    without asking. Survivors should only come from a ship that wasn't destroyed, and the player chooses whether to
-    take them on.
+    without asking. The player always chooses whether to take a survivor on, and survivors come only from:
+    - a ship that surrendered;
+    - enemy boarders on your ship whose own ship was blown up, if they surrender;
+    - special events, e.g. a ship you never fought is destroyed in an event and your crew manage to save someone.
 11. **Check the chaos tester's last open finding:** an event window that stayed open about 20 s while Continue was
    pressed.
 
