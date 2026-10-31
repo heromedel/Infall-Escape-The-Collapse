@@ -60,7 +60,7 @@ reviewed its part on 2026-10-31; what was changed is under **Checked**, and what
   DISTRESS_TENTAURI_PAIR has no third Tentauri; MECHA_OUTMATCHED's line; NEUTRAL_REFUGEE_CONVOY "many races";
   NEUTRAL_COLONY_SHIP_SUPPLY's outcome finishes the story.
 - SENTI_DOOMED_ARCHIVE is for doomed Senti only; SENTI_PICKET is for border clusters and speaks plainly.
-- heromedel's answers (2026-10-31): the GATOS are officially cats, so DISTRESS_GATOS_FAMILY's kittens stay (GV 7A);
+- heromedel's answers (2026-10-31): the GATOS Species setting decides whether DISTRESS_GATOS_FAMILY has kittens or children (GV 7A);
   MECHA_TERRITORY's "HalfMech" line stays (GV 7B); mercenaries should work on contracts (GV 7C), not built yet.
   STRANDED keeps "1.21 Jigawatts" (the same thing as 1.21 Mawjig, GV 6A) and now says "you", not "we".
 
