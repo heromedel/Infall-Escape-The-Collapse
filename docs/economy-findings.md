@@ -401,23 +401,27 @@ Godot Version now recomputes values as the game runs; these are Eco's reference 
 (`system-prices.md`): structure (hull 2.42 a point, a room with a system 10% of its level-1 price, other rooms and
 doors 0.48, mounts 6.05; a ship with no mount entries counts one per weapon) + reactor + systems at their levels
 (Piloting, Life Support and Engines from 36.31) + weapons (table prices; infection priced like fire). Crew excluded.
-Shields in the ship files count bars, priced here as shield-test layers (GDD 8H). The growth organ has no table
+Shields in the ship files count bars, priced here as shield-test layers (GDD 8H). **Shared with Godot Version
+(2026-10-31):** a room holding several systems counts 10% of its dearest system's level-1 price; the AZC counts as a
+room system at 18.15; a shields room counts one layer (54.46, so 5.45); the Supershield is 38.72 with upgrades 7.26
+and 12.11. Godot Version's in-game values match these to within 0.02. (Tentauri Scout = the Burr, Tentauri Warden =
+the Seedpod.) The growth organ has no table
 price; FHP's 6.05 for an unpriced system stands in. Ships from `Cloud-C-Godot-Version` at bd3f4ac.
 
 | Ship | Before | Now | Of which structure | Hull | Rooms (with a system) | Doors | Mounts |
 |---|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
 | Pirate Scrapper | 85.12 | 240.97 | 46.92 | 8 | 5 (5) | 7 | 1 |
-| Spawnling | 98.98 | 260.77 | 46.81 | 12 | 5 (3) | 6 | 1 |
+| Spawnling | 98.98 | 262.58 | 48.61 | 12 | 5 (3) | 6 | 1 |
 | Relay Picket | 150.93 | 266.01 | 42.46 | 9 | 3 (3) | 4 | 1 |
-| Moth Skiff | 138.23 | 288.41 | 41.25 | 7 | 3 (3) | 4 | 2 |
-| Packrunner | 166.12 | 328.39 | 53.34 | 9 | 5 (5) | 7 | 2 |
-| Light Attack Frame | 159.55 | 338.15 | 69.67 | 7 | 6 (5) | 7 | 6 |
+| Moth Skiff | 138.23 | 290.83 | 43.67 | 7 | 3 (3) | 4 | 2 |
+| Packrunner | 166.12 | 330.81 | 55.76 | 9 | 5 (5) | 7 | 2 |
+| Light Attack Frame | 159.55 | 339.96 | 71.48 | 7 | 6 (5) | 7 | 6 |
 | Patrol Cutter | 170.71 | 346.62 | 66.99 | 13 | 9 (6) | 10 | 2 |
-| Tentauri Scout | 188.81 | 364.27 | 61.71 | 8 | 2 (2) | 3 | 6 |
-| Sporecarrier | 243.82 | 411.29 | 58.54 | 12 | 6 (6) | 7 | 2 |
-| Outrider | 181.42 | 421.44 | 131.09 | 30 | 10 (5) | 14 | 6 |
-| Tentauri Warden | 267.51 | 424.81 | 48.38 | 11 | 3 (2) | 4 | 2 |
-| Assault Frame | 298.88 | 470.21 | 62.41 | 13 | 7 (6) | 9 | 2 |
+| Tentauri Scout | 188.81 | 395.61 | 66.42 | 8 | 2 (2) | 3 | 6 |
+| Sporecarrier | 243.82 | 413.11 | 60.36 | 12 | 6 (6) | 7 | 2 |
+| Outrider | 181.42 | 421.93 | 131.57 | 30 | 10 (5) | 14 | 6 |
+| Tentauri Warden | 267.51 | 465.61 | 50.44 | 11 | 3 (2) | 4 | 2 |
+| Assault Frame | 298.88 | 472.03 | 64.21 | 13 | 7 (6) | 9 | 2 |
 | Pirate Hijacker | 267.61 | 477.14 | 100.59 | 14 | 11 (8) | 19 | 6 |
 
 Values rise about 171 a ship on average: about 109 is the three core systems (a flat 36.31 each) and the rest is
