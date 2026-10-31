@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Distress calls. REFUGEE_FAILING_AIR is the sample from docs/events-sample.md (Ai-Generated-Proposal
-     2026-10-23); the rest are Ai-Generated-Proposals (2026-10-31) for the Godot version. -->
+<!-- Distress calls. REFUGEE_FAILING_AIR is the sample from docs/events-sample.md. -->
 <events>
 	<event id="REFUGEE_FAILING_AIR" title="Failing Air" kind="distress" bands="1-4" states="Refugee,Struggling" weight="2" unique="yes">
 		<text>A crowded refugee transport drifts at the edge of the cluster, its running lights dimmed to save power. Its captain hails you.

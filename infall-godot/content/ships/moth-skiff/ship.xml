@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Ai-Generated-Proposal (2026-10-31), made for the Godot version to fill a gap in the roster (rule 3: the genre's ship roles, built from the race profile). -->
 <ship id="moth-skiff" name="Azurethea Moth Skiff" class="Moth Skiff" race="azurethea" faction="azurethea" style="azurethea" center="Tile" hull="7" value="112.4">
 	<reactor type="pool" level="8"/>
 	<description>A small winged Azurethea ship, partly grown and partly built. Quick to dodge and slow to start a fight.</description>

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Ai-Generated-Proposal (2026-10-31), made for the Godot version to fill a gap in the roster (rule 3: the genre's ship roles, built from the race profile). -->
 <ship id="pirate-scrapper" name="Pirate Scrapper" class="Light Raider" race="terran" faction="pirate" style="pirate" center_x="Point" center_y="Tile" hull="8" value="134.6">
 	<reactor type="core" level="1"/>
 	<description>A small doomed-GATOS raider of scorched plates and mismatched panels: one twin laser and not much else.</description>

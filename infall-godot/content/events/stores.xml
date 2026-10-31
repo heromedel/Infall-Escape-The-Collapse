@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Store openings. The three GATOS doing-fine openings are Lori's (docs/events-collapse-opening-and-terran-stores.md,
-     Ai-Generated-Proposal 2026-10-23). The rest are Ai-Generated-Proposals (2026-10-31) for the Godot version,
-     following GDD 2R (doomed and refugee stores run short; occupied stores are low or barren). -->
+<!-- Store openings, following GDD 2R (doomed and refugee stores run short; occupied stores are low or barren). -->
 <events>
 	<event id="STORE_TERRAN_FINE_1" title="A GATOS Trade Hub" kind="store" races="terran" states="Doing Fine">
 		<text>The trade hub is crowded with ships of many races. GATOS patrol craft keep a polite watch over the lanes. A cheerful voice comes over the comm.

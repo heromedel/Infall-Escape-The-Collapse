@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Wreckage, caches and derelicts: matter to convert into Mawjig (GDD 8C). Ai-Generated-Proposals (2026-10-31). -->
+<!-- Wreckage, caches and derelicts: matter to convert into Mawjig (GDD 8C). -->
 <events>
 	<event id="ITEMS_WRECKAGE" title="Wreckage" kind="items" weight="2">
 		<text>The remains of a battle drift through the cluster: twisted hull plates, shattered weapon mounts, frozen debris. Your squad's converters could turn a lot of it into Mawjig.</text>

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Traders, travellers, mercenaries and news (GDD 7G mercenaries; 2B: shock near the collapse, disbelief far
-     from it). SENTI_ARCHIVE_REQUEST is the sample from docs/events-sample.md (Ai-Generated-Proposal 2026-10-23);
-     the rest are Ai-Generated-Proposals (2026-10-31). -->
+     from it). SENTI_ARCHIVE_REQUEST is the sample from docs/events-sample.md. -->
 <events>
 	<event id="SENTI_ARCHIVE_REQUEST" title="The Archive Asks" kind="neutral" races="senti" states="Doing Fine,Struggling" bands="2-8" weight="2" unique="yes">
 		<text>A Senti relay station hangs above the cluster's largest moon, broadcasting on every channel at once. A hologram flickers onto your screen.

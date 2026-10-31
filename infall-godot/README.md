@@ -74,7 +74,8 @@ the Last Fleet. Lose when every scout ship is gone (GDD 1F).
 ## Filled in from the genre or the lore (Ai-Generated-Proposals, 2026-10-31)
 
 Where the design docs are silent, this build fills the gap with the genre's behaviour or extrapolates from the race
-profiles, as heromedel asked. None of this is a design decision; each is a starting point to review.
+profiles, as heromedel asked. None of this is a design decision; each is a starting point to review. What still needs checking by Ship Designs,
+Lori or Eco is listed in `docs/items-needing-second-opinion.md`.
 
 - **New ships:** GATOS Patrol Cutter (and a Checkpoint loadout), Pirate Scrapper, Pirate Marauder (Hijacker bands
   7–8), Mecha Assault Frame and Siege Frame, Tentauri Warden and Vanguard, Azurethea Moth Skiff and Sporecarrier, Senti

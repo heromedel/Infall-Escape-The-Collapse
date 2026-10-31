@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Ai-Generated-Proposal (2026-10-31): a stronger band-range loadout of the same hull (production goals: loadouts by band range). -->
 <loadout id="vanguard" ship="tentauri-warden" name="Tentauri Vanguard" class="Vanguard" inherit="patch" hull="16" value="488.4">
 	<reactor type="pool" level="18"/>
 	<system id="shields" tile="1,-3" level="6" wall="north"/>

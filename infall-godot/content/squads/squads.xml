@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Enemy squads: a named list of ship designs with counts per band (rough-example-squad-layout.md), where they
-     show up (region race and cluster states, GDD 2R) and how they behave in a fight (their conduct).
-     Terran Pirates and the Light Attack Pair follow docs/ship-suggestions.md; the rest are Ai-Generated-Proposals
-     (2026-10-31) made for the Godot version from the race profiles. -->
+     show up (region race and cluster states, GDD 2R) and how they behave in a fight (their conduct). -->
 <squads>
 	<squad id="terran-pirates" name="GATOS Pirates" race="terran" faction="pirate" where_races="terran,mecha,any" where_states="Doomed,Struggling,Border,Abandoned,Refugee,Occupied,Unclaimed">
 		<tier bands="1"><ship design="pirate-scrapper" count="1"/></tier>

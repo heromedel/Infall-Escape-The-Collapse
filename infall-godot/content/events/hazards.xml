@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Hazard clusters: asteroids, a star's flares, nebulae, ion storms (production goals: hazards as the genre's).
-     The cluster's hazard stays active while the squad is there. Ai-Generated-Proposals (2026-10-31). -->
+     The cluster's hazard stays active while the squad is there. -->
 <events>
 	<event id="HAZARD_ASTEROIDS" title="Asteroid Field" kind="hazard" hazard="asteroids" weight="2">
 		<text>The cluster is full of tumbling rock. Your pilots weave between the bigger asteroids, but the small ones will keep coming. Shields up.</text>

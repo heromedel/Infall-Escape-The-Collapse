@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Hostile encounters, by race and cluster state. Ai-Generated-Proposals (2026-10-31) for the Godot version,
-     written from docs/race-profiles.md and checked against docs/lore-facts.md. A plain <fight/> picks a squad
-     that fits the cluster (its race, state and band). -->
+<!-- Hostile encounters, by race and cluster state, from docs/race-profiles.md and docs/lore-facts.md. A plain
+     <fight/> picks a squad that fits the cluster (its race, state and band). -->
 <events>
 	<!-- GATOS pirates: doomed GATOS turned criminal (race profiles, Terrans 4) -->
 	<event id="PIRATE_AMBUSH" title="Hijackers" kind="hostile" races="terran,any" states="Doomed,Struggling,Border,Abandoned,Unclaimed" weight="2">

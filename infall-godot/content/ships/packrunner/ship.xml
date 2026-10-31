@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Ai-Generated-Proposal (2026-10-31), made for the Godot version to fill a gap in the roster (rule 3: the genre's ship roles, built from the race profile). -->
 <ship id="packrunner" name="Lykario Packrunner" class="Packrunner" race="lykario" faction="lykario" style="lykario" center_x="Point" center_y="Tile" hull="9" value="152.3">
 	<reactor type="pool" level="9"/>
 	<description>A Lykario raider patched together from stolen hulls under bone-white claw marks. Half its crew is always waiting by the teleporter.</description>

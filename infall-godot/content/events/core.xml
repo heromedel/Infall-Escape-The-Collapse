@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- The run's spine: the collapse opening (GDD 2P, texts from docs/events-collapse-opening-and-terran-stores.md,
-     Ai-Generated-Proposal 2026-10-23 by Lori, opening 1's first paragraph heromedel's), waiting, being stranded
-     (GDD 9B), revisits, and the rim. Events other than the opening texts are Ai-Generated-Proposals
-     (2026-10-31) written for the Godot version. -->
+<!-- The run's spine: the collapse opening (GDD 2P, texts from docs/events-collapse-opening-and-terran-stores.md),
+     waiting, being stranded (GDD 9B), revisits, and the rim. -->
 <events>
 	<event id="START_LAUNCH" title="Behind You" kind="opening" unique="yes">
 		<text>Your homeworld is in a panic. Something is wrong with the Galactic Core, the region at the center of the galaxy. Scientists are in a frenzy of arguments and debates, but they all agree that something cataclysmic could be coming. Many refuse to believe it, but others have sponsored a colony ship to travel farther from the core. Your job, as Captain of the forward scouts, is to explore ahead and find a path for The Colony Ship to survive.
