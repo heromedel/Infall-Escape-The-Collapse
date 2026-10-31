@@ -82,9 +82,13 @@ and tells the player it is a good deal. FTL does the same: the Kestrel's startin
 | Flak, 3 projectiles, 2 power | 10.0 s | 14.45 | Flak I 15.73 |
 | Ion blast, 1 ion, 1 power | 9.5 s | 6.06 | Ion Blast 7.26 |
 | Breach bomb, 1 power | 13.0 s | 11.92 | Breach Bomb I 12.10 |
-| 3-shot multi-target breach laser, 2 power | 17.0 s | 17.08 | new |
+| 3-shot multi-target breach laser, 30% breach, 2 power | 14.9 s | 15.78 | new |
 | 1-room phase beam, 2 dmg, 2 power | 19.0 s | 16.58 | new |
 | Tentauri Defense Laser: 1 dmg, Defensive, 1 power | 9.0 s | 12.11 | Defense Drone Mark I 12.11 |
+
+**Proposed (heromedel, 2026-10-29):** the multi-target breach laser breaches about 30% of the time, not on
+every hit. FTL's lasers top out at 30% breach (Heavy Laser Mark I and II, Hull Smasher Mark II); only bombs,
+Breach Missiles and a crystal weapon go higher. At 100% it would be 0.19 a volley, 17.0 s and 17.08.
 
 The Stinger lands above the Leto because FTL's missile prices carry the scarcity discount that Infall drops: a
 shield-ignoring missile costs more to buy and more to fire than a laser.

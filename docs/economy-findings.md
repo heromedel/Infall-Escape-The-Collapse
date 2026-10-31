@@ -364,3 +364,16 @@ here. Nothing in the GDD or the tables is changed by this.
   a spare unpowered weapon kept to swap in, so early players buy slightly fewer weapons: a small loosening, nothing
   to retune. Fight rewards come from ship value (8I), which counts whatever a ship carries.
 - **Bought mount beyond the hull's — Ai-Generated-Proposal, first guess:** 4.84, the Weapon Control buy price.
+
+## F11. Enemy Mawjig for shots (2026-10-28)
+
+Asked by Infall: Deck Collapse: with the default Ammo setting enemies pay for their shots too, but no doc said how
+much Mawjig an enemy carries. F4's 0.64 per fight (the player's average ammo cost) ran dry in 23% of its card
+battles, which last longer than real-time fights.
+
+- **Proposed (heromedel, 2026-10-28):** an enemy ship carries its own wreck reward as its purse: 2.5% of its ship
+  value × the band adjustment 1.(band − 1) (GDD 8I). A band 1 Light Attack Frame carries about 3.99. If enemies
+  still run dry often, raise it (e.g. × 1.5) rather than add a band table; an enemy running dry should be rare.
+- **Likely (heromedel, 2026-10-28):** a wreck pays the normal reward. Mawjig the enemy didn't spend is not added on
+  top: the wreck reward already stands for everything recoverable, and adding the purse would raise quick-kill
+  rewards by up to 100% and break the squad budgets (F6).
