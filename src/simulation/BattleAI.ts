@@ -94,9 +94,9 @@ function isManningWanted(ship: Ship, member: { id: number }, wanted: { mannedBy?
 function targetOrders(ship: Ship, enemy: Ship): Order[] {
   const wanted = TARGET_ORDER.map((name) => enemy.system(name)).find((system) => system && !system.isBroken)
     ?? enemy.systems[0];
-  const room = wanted ? enemy.roomOfTile(wanted.tile) : enemy.rooms[0];
-  if (!room) return [];
+  const tile = wanted ? wanted.tile : enemy.rooms[0]?.tiles[0];
+  if (!tile) return [];
   return ship.weapons
-    .filter((weapon) => !weapon.target || weapon.target.roomId !== room.id || weapon.target.shipId !== enemy.id)
-    .map((weapon) => ({ kind: 'TargetWeapon', shipId: ship.id, mount: weapon.mount, targetShipId: enemy.id, targetRoomId: room.id, autofire: true }));
+    .filter((weapon) => !weapon.target || !sameTile(weapon.target.tile, tile) || weapon.target.shipId !== enemy.id)
+    .map((weapon) => ({ kind: 'TargetWeapon', shipId: ship.id, mount: weapon.mount, targetShipId: enemy.id, targetTile: { x: tile.x, y: tile.y }, autofire: true }));
 }

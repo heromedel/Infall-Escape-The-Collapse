@@ -42,7 +42,7 @@ export class Host {
 
   /** Tells every client the look settings changed, so the window can switch without a new battle. */
   announceLook(): void {
-    this.sendAll({ kind: 'Look', look: { battleGui: this.settings.battleGui, autofire: this.settings.autofire, targetLines: this.settings.targetLines } });
+    this.sendAll({ kind: 'Look', look: { battleGui: this.settings.battleGui, autofire: this.settings.autofire, targetLines: this.settings.targetLines, shotsCrossingBarrier: this.settings.shotsCrossingBarrier, showZones: this.settings.showZones } });
   }
 
   /** Pause Control (GDD 4H): Captain mode, so any client of the host's own window pauses. Who asked is logged. */
@@ -75,7 +75,9 @@ export class Host {
   private carryOut(order: Order): void {
     const battle = this.battle;
     if (!battle || battle.simulation.result) return;
-    const fields = order.kind === 'MoveCrew' ? { kind: order.kind, shipId: order.shipId, crewId: order.crewId, x: order.tile.x, y: order.tile.y } : order;
+    const fields = order.kind === 'MoveCrew' ? { kind: order.kind, shipId: order.shipId, crewId: order.crewId, x: order.tile.x, y: order.tile.y }
+      : order.kind === 'TargetWeapon' ? { kind: order.kind, shipId: order.shipId, mount: order.mount, targetShipId: order.targetShipId, tile: `${order.targetTile.x},${order.targetTile.y}`, autofire: order.autofire }
+      : order;
     this.log.event('host.order', { ...fields, paused: this.paused });
     battle.simulation.applyOrdersNow([order]);
     this.sendAll({ kind: 'Snapshot', snapshot: battle.simulation.snapshot() });

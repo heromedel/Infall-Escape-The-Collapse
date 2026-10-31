@@ -22,6 +22,8 @@ import { WeaponDefinition } from '../simulation/content/WeaponDefinition';
 import { WeaponFileReader, WeaponFileError } from '../simulation/content/WeaponFileReader';
 import { DEFAULT_RACE, RaceDefinition, readRaceDefinition } from '../simulation/content/RaceDefinition';
 import { Log } from './Log';
+import type { ProjectileArt } from '../shared/Messages';
+import { FormationDefinition, FormationFileError, readFormationDefinition } from '../simulation/content/FormationDefinition';
 
 /** A system's content: its name and, when it has one, its symbol's SVG text. */
 export interface SystemEntry {
@@ -40,7 +42,10 @@ export class ContentLibrary {
   private readonly ships = new Map<string, ShipEntry>();
   private readonly systems = new Map<string, SystemEntry>();
   private readonly weapons = new Map<string, WeaponDefinition>();
+  /** Each weapon's projectile picture by weapon name, read from the SVG its file names. */
+  private readonly projectiles = new Map<string, ProjectileArt>();
   private readonly races = new Map<string, RaceDefinition>();
+  private readonly formations = new Map<string, FormationDefinition>();
 
   private constructor(private readonly log: Log) {}
 
@@ -54,9 +59,10 @@ export class ContentLibrary {
     library.loadRaces(path.join(contentFolder, 'races'));
     library.loadWeapons(path.join(contentFolder, 'weapons'));
     library.loadShips(path.join(contentFolder, 'ships'));
+    library.loadFormations(path.join(contentFolder, 'formations'));
     library.noteSystemsWithoutSymbols();
     library.noteWeaponsMissing();
-    log.event('content.loaded', { ships: library.ships.size, systems: library.systems.size, weapons: library.weapons.size, races: library.races.size });
+    log.event('content.loaded', { ships: library.ships.size, systems: library.systems.size, weapons: library.weapons.size, races: library.races.size, formations: library.formations.size });
     return library;
   }
 
@@ -80,9 +86,41 @@ export class ContentLibrary {
     return [...this.weapons.keys()];
   }
 
+  /** Every loaded weapon's projectile picture, by weapon name; a weapon without one draws the window's placeholder. */
+  projectileArt(): Record<string, ProjectileArt> {
+    return Object.fromEntries(this.projectiles);
+  }
+
   /** The race's traits, or the plain defaults under its name when it has no file. */
   race(name: string): RaceDefinition {
     return this.races.get(name) ?? { ...DEFAULT_RACE, name };
+  }
+
+  /** A formation by name (GDD 3S); the first loaded when the name is unknown, so a battle always has one. */
+  formation(name: string): FormationDefinition {
+    const formation = this.formations.get(name) ?? [...this.formations.values()][0];
+    if (!formation) throw new Error('No formation files are loaded (content/formations)');
+    return formation;
+  }
+
+  formationNames(): string[] {
+    return [...this.formations.keys()];
+  }
+
+  private loadFormations(formationsFolder: string): void {
+    if (!fs.existsSync(formationsFolder)) return;
+    for (const folderName of fs.readdirSync(formationsFolder).sort()) {
+      const file = path.join(formationsFolder, folderName, 'formation.xml');
+      if (!fs.existsSync(file)) continue;
+      try {
+        const formation = readFormationDefinition(fs.readFileSync(file, 'utf8'));
+        this.formations.set(formation.name, formation);
+        this.log.event('content.formation_loaded', { formation: formation.name, zones: formation.zones.length, zoneSize: formation.zoneSize, shift: formation.shift });
+      } catch (error) {
+        const reason = error instanceof FormationFileError ? error.message : `unexpected error: ${(error as Error).message}`;
+        this.log.event('content.formation_refused', { file, reason });
+      }
+    }
   }
 
   private loadRaces(racesFolder: string): void {
@@ -109,12 +147,28 @@ export class ContentLibrary {
       try {
         const weapon = reader.readWeapon(fs.readFileSync(file, 'utf8'));
         this.weapons.set(weapon.name, weapon);
+        this.loadProjectileArt(weapon, path.join(weaponsFolder, folderName));
         this.log.event('content.weapon_loaded', { weapon: weapon.name, type: weapon.type, shots: weapon.shots, damage: weapon.damage, chargeSeconds: weapon.chargeSeconds });
       } catch (error) {
         const reason = error instanceof WeaponFileError ? error.message : `unexpected error: ${(error as Error).message}`;
         this.log.event('content.weapon_refused', { file, reason });
       }
     }
+  }
+
+  /** The projectile's SVG named by the weapon file, when it is there; a missing file is noted, not fatal. */
+  private loadProjectileArt(weapon: WeaponDefinition, folder: string): void {
+    if (!weapon.projectileArt) return;
+    const file = path.join(folder, weapon.projectileArt);
+    if (!fs.existsSync(file) || !file.toLowerCase().endsWith('.svg')) {
+      this.log.event('content.projectile_art_missing', { weapon: weapon.name, file });
+      return;
+    }
+    const content = fs.readFileSync(file, 'utf8');
+    const viewBox = /viewBox="\s*[-\d.]+\s+[-\d.]+\s+([\d.]+)\s+([\d.]+)\s*"/.exec(content);
+    const width = Number(viewBox?.[1] ?? /\swidth="([\d.]+)/.exec(content)?.[1] ?? 0);
+    const height = Number(viewBox?.[2] ?? /\sheight="([\d.]+)/.exec(content)?.[1] ?? 0);
+    this.projectiles.set(weapon.name, { content, width, height });
   }
 
   /** A ship that names a weapon with no file can't arm it; say so once per name. */

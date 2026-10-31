@@ -16,7 +16,7 @@ import { RandomSource } from '../src/simulation/RandomSource';
 import { BattleLog } from '../src/simulation/BattleLog';
 import { secondsToTicks } from '../src/simulation/Ticks';
 import { readRaceDefinition, DEFAULT_RACE } from '../src/simulation/content/RaceDefinition';
-import { DEFAULT_DISTANCE_GM } from '../src/simulation/Simulation';
+import { DEFAULT_DISTANCE_GM, ON_SCREEN_FLIGHT_SECONDS } from '../src/simulation/Simulation';
 
 const contentFolder = path.join(__dirname, '..', 'content');
 const shipReader = new ShipFileReader();
@@ -92,7 +92,7 @@ describe('fire modes (the genre: autofire keeps the target, fire once lets it go
     const player = simulation.squads[0].ships[0];
     const enemy = simulation.squads[1].ships[0];
     const gat = player.weapons[0];
-    simulation.applyOrders([{ kind: 'TargetWeapon', shipId: player.id, mount: gat.mount, targetShipId: enemy.id, targetRoomId: enemy.rooms[0].id, autofire }]);
+    simulation.applyOrders([{ kind: 'TargetWeapon', shipId: player.id, mount: gat.mount, targetShipId: enemy.id, targetTile: enemy.rooms[0].tiles[0], autofire }]);
     // charge, fire the whole volley and a little more
     for (let tick = 0; tick < gat.chargeNeeded + secondsToTicks(2); tick++) simulation.advanceOneTick();
     return { simulation, weapon: () => gat };
@@ -166,7 +166,7 @@ describe('per-weapon power (the genre: slots take bars from the reactor into the
   it('an unpowered weapon keeps its charge, losing it slowly, and resumes from there', () => {
     const { simulation, ship, gat } = outriderFight();
     const enemy = simulation.squads[1].ships[0];
-    simulation.applyOrders([{ kind: 'TargetWeapon', shipId: ship.id, mount: gat.mount, targetShipId: enemy.id, targetRoomId: enemy.rooms[0].id, autofire: true }]);
+    simulation.applyOrders([{ kind: 'TargetWeapon', shipId: ship.id, mount: gat.mount, targetShipId: enemy.id, targetTile: enemy.rooms[0].tiles[0], autofire: true }]);
     for (let i = 0; i < 40; i++) tick(simulation);
     const charged = gat.chargeTicks;
     expect(charged).toBeGreaterThan(30);
@@ -184,8 +184,8 @@ describe('the distance between the squads (GDD 3Q)', () => {
     const near = new Simulation(1, weaponsByName, raceByName, 400);
     const far = new Simulation(1, weaponsByName, raceByName, 2400);
     expect(near.distanceGm).toBe(DEFAULT_DISTANCE_GM);
-    expect(near.shotFlightTicks).toBe(secondsToTicks(1.0));
-    expect(far.shotFlightTicks).toBe(secondsToTicks(3.0));
+    expect(near.shotFlightTicks).toBe(secondsToTicks(2 * ON_SCREEN_FLIGHT_SECONDS + 0.4));
+    expect(far.shotFlightTicks).toBe(secondsToTicks(2 * ON_SCREEN_FLIGHT_SECONDS + 2.4));
   });
 });
 
@@ -195,24 +195,47 @@ describe('shots', () => {
   const target = squad.ships[0];
   const log = new BattleLog();
   const noDodge = { chance: () => false } as unknown as RandomSource;
-  const room = target.roomOfTile(target.system('Shields')!.tile)!;
+  const shieldsTile = target.system('Shields')!.tile;
+  const room = target.roomOfTile(shieldsTile)!;
 
   it('a laser takes a shield layer instead of the hull', () => {
     target.shieldLayers = 1;
-    const laser = new Shot(1, weaponsByName('Gat 3.1'), 9, target.id, room.id, 1);
+    const laser = new Shot(1, weaponsByName('Gat 3.1'), 9, target.id, shieldsTile, 1);
     laser.fly(target, noDodge, log);
     expect(target.shieldLayers).toBe(0);
     expect(target.hullPoints).toBe(30);
   });
-  it('a missile passes shields and damages hull, the system in the room and the crew there', () => {
+  it('a missile passes shields and damages hull, the system on its tile and the crew in the room', () => {
     target.shieldLayers = 1;
     const crewBefore = target.livingCrewInRoom(room).map((member) => member.health);
-    const missile = new Shot(2, weaponsByName('Gat M1'), 9, target.id, room.id, 1);
+    const missile = new Shot(2, weaponsByName('Gat M1'), 9, target.id, shieldsTile, 1);
     missile.fly(target, noDodge, log);
     expect(target.shieldLayers).toBe(1);
     expect(target.hullPoints).toBe(29);
     expect(target.system('Shields')!.damage).toBe(1);
     expect(target.livingCrewInRoom(room).map((member) => member.health)).toEqual(crewBefore.map((health) => health - 15));
+  });
+});
+
+describe('per-tile targeting (GDD 3L)', () => {
+  it('a shot landing on a tile damages the system on that tile and no other in the room', () => {
+    const simulation = new Simulation(11, weaponsByName, raceByName);
+    simulation.addSquad('Player', 'player', 10, [shipFile('outrider')]);
+    simulation.addSquad('Enemy', 'enemy', 10, [shipFile('light-attack-frame')]);
+    const enemy = simulation.squads[1].ships[0];
+    // the frame's first room holds several systems; aim at the Shields console's tile
+    const shields = enemy.system('Shields')!;
+    const room = enemy.roomOfTile(shields.tile)!;
+    const others = enemy.systemsInRoom(room).filter((system) => system !== shields);
+    expect(others.length).toBeGreaterThan(0);
+    enemy.shieldLayers = 0;
+    const random = new RandomSource(1);
+    const neverMiss = { chance: () => false, next: () => 0 } as unknown as RandomSource;
+    void random;
+    const shot = new Shot(1, weaponsByName('Gat M1'), 1, enemy.id, shields.tile, 1);
+    shot.fly(enemy, neverMiss, new BattleLog());
+    expect(shields.damage).toBe(1);
+    for (const other of others) expect(other.damage).toBe(0);
   });
 });
 

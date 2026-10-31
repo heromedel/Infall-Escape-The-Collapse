@@ -6,6 +6,7 @@
 
 import { WeaponDefinition } from './content/WeaponDefinition';
 import { Ship } from './Ship';
+import { Tile } from './content/Tile';
 import { RandomSource } from './RandomSource';
 import { evasionPercent } from './steps/EnginesStep';
 import { BattleLog } from './BattleLog';
@@ -23,7 +24,7 @@ export class Shot {
     readonly weapon: WeaponDefinition,
     readonly fromShipId: number,
     readonly toShipId: number,
-    readonly toRoomId: number,
+    readonly toTile: Tile,
     public ticksLeft: number,
   ) {
     this.flightTicks = ticksLeft;
@@ -43,7 +44,7 @@ export class Shot {
   }
 
   private land(target: Ship, random: RandomSource, log: BattleLog): void {
-    const fields = { weapon: this.weapon.name, target: target.name, room: this.toRoomId };
+    const fields = { weapon: this.weapon.name, target: target.name, tile: `${this.toTile.x},${this.toTile.y}` };
     if (random.chance(evasionPercent(target) / 100)) {
       log.event('shot_missed', fields);
       return;
@@ -54,8 +55,10 @@ export class Shot {
       log.event('shot_blocked', { ...fields, layersLeft: target.shieldLayers });
       return;
     }
-    const room = target.room(this.toRoomId);
-    const systems = room ? target.systemsInRoom(room) : [];
+    // the shot lands on its tile: the room's air and crew feel it, but only the system on that tile is hit (GDD 3L)
+    const room = target.roomOfTile(this.toTile);
+    const onTile = target.systemOnTile(this.toTile);
+    const systems = onTile ? [onTile] : [];
     let damage = this.weapon.damage;
     if (this.weapon.effects.includes('Hull bonus') && systems.length === 0) damage *= 2;
 

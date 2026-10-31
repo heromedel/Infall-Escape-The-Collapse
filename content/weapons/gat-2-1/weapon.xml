@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Gat 2.1 "Twinshot": the Hijacker's 2-shot laser (ship-suggestions.md, Hijacker step 9). Charge 11.1 s; 0.02 a shot. -->
 <weapon name="Gat 2.1" nickname="Twinshot" type="Laser" effects="Damage, Conduit damage" techType="Mechanical" race="Terran"
-        shots="2" damage="1" power="1" chargeSeconds="11.1" mawjigPerShot="0.021" conduitDamageChance="10%"
+        shots="2" damage="1" power="1" chargeSeconds="11.1" mawjigPerShot="0.021" conduitDamageChance="10%" projectileArt="bolt.svg"
         description="Two shots for keeping pressure on shields, not for killing hulls."/>

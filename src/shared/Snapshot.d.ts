@@ -8,6 +8,8 @@ export interface Snapshot {
   seconds: number;
   /** The off-screen distance between the squads (GDD 3Q). */
   distanceGm: number;
+  /** Seconds a shot takes from firing to arriving: on screen out, the gap, on screen in. */
+  shotFlightSeconds: number;
   squads: SnapshotSquad[];
   shots: SnapshotShot[];
   /** Set once the battle is decided. */
@@ -75,7 +77,8 @@ export interface SnapshotWeapon {
   powered: boolean;
   /** Bars it needs from its weapon system. */
   cost: number;
-  target?: { shipId: number; roomId: number };
+  /** The tile aimed at, in the target ship's signed coordinates (GDD 5G). */
+  target?: { shipId: number; tile: { x: number; y: number } };
   /** The target stays after a volley (autofire) or is let go after one. */
   autofire: boolean;
 }
@@ -86,7 +89,7 @@ export interface SnapshotShot {
   type: string;
   fromShipId: number;
   toShipId: number;
-  toRoomId: number;
+  toTile: { x: number; y: number };
   /** Flight progress from 0 to 1. */
   progress: number;
 }

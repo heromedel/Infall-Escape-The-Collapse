@@ -6,6 +6,7 @@
 import type { ShipPicture } from './ShipPicture';
 import type { Snapshot } from './Snapshot';
 import type { Order } from './Order';
+import type { FormationDefinition } from './Formation';
 
 export type ClientToHost =
   | { kind: 'Order'; order: Order }
@@ -20,11 +21,22 @@ export interface Look {
   autofire: boolean;
   /** Draw a line from the ship to each target room as well as the room mark. */
   targetLines: boolean;
+  /** Show the tiny faint dash of a shot crossing the barrier strip (GDD 3R). */
+  shotsCrossingBarrier: boolean;
+  /** Draw the formation zones translucent (debug). */
+  showZones: boolean;
+}
+
+/** A projectile's picture: SVG text and its size, drawn nose up with its top centre on the flight path. */
+export interface ProjectileArt {
+  content: string;
+  width: number;
+  height: number;
 }
 
 export type HostToClient =
   /** Sent once when a battle starts: everything the window needs to draw each ship (the static parts). */
-  | { kind: 'BattleStarted'; pictures: Record<number, ShipPicture>; playerShipIds: number[]; formation: { depth: number; inverted: boolean }; look: Look }
+  | { kind: 'BattleStarted'; pictures: Record<number, ShipPicture>; playerShipIds: number[]; formations: { player: FormationDefinition; enemy: FormationDefinition }; projectiles: Record<string, ProjectileArt>; look: Look }
   /** A look setting changed mid-battle (the debug console for now, the settings screen later). */
   | { kind: 'Look'; look: Look }
   /** Sent every tick while a battle runs, and once more when it ends. */

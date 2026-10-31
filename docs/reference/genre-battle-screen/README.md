@@ -73,3 +73,11 @@ not the data, so it can only be measured from a recording. What the data does gi
 
 For ours: a laser is a streak with a bright head and a thinning tail in the weapon's colour, flickering a little;
 a missile is a slim nose-first rocket with an exhaust flame. Each weapon file names its own projectile art later.
+
+## The largest hull, measured (2026-10-28)
+
+From the genre's ship layouts in its data files: the largest room footprint is 15 tiles long by 8 wide; the
+widest is 15, the tallest 10, over 18 distinct layouts. Our ships fly nose up, so the long axis is height. A
+formation zone (GDD 3S) must fit the largest hull with its art. Ours are bigger than the genre's layouts: the
+Outrider's art is 21 tiles tall and the Cutpurse's 22 (13 tiles of rooms plus nose and engines), so the zone is
+24 cells, our largest art plus a margin.

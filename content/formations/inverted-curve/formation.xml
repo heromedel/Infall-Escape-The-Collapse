@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The inverted curve (GDD 3I, 3S): centre ships forward, outer ships back. Same layout rules as curve. -->
+<formation name="Inverted Curve" zoneSize="24" shift="6" margin="12">
+  <zone slot="1" column="0"  row="18"/>
+  <zone slot="2" column="25" row="12"/>
+  <zone slot="3" column="50" row="6"/>
+  <zone slot="4" column="75" row="12"/>
+  <zone slot="5" column="100" row="18"/>
+  <zone slot="6" column="125" row="12"/>
+</formation>

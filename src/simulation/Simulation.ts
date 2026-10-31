@@ -24,10 +24,12 @@ import type { Snapshot, SnapshotShip } from '../shared/Snapshot';
 
 /**
  * The off-screen distance between the squads (GDD 3Q), in GATO Meters: a shot crosses it unseen, one GM a
- * millisecond, after 0.3 s on screen leaving and before 0.3 s on screen arriving. 400 GM is a one-second flight.
+ * millisecond, after 2.5 s on screen leaving and before 2.5 s on screen arriving. 400 GM is a 0.4 s crossing, so
+ * a shot takes 5.4 s from firing to arriving. The on-screen legs are long enough for a bolt to cross a squad at the
+ * genre's pace (docs/reference/genre-battle-screen: about 240 px a second); the window hurries it when they aren't.
  */
 export const DEFAULT_DISTANCE_GM = 400;
-export const ON_SCREEN_FLIGHT_SECONDS = 0.3;
+export const ON_SCREEN_FLIGHT_SECONDS = 2.5;
 
 export interface BattleResult {
   winner: Side | 'draw';
@@ -113,12 +115,13 @@ export class Simulation {
       tick: this.tick,
       seconds: ticksToSeconds(this.tick),
       distanceGm: this.distanceGm,
+      shotFlightSeconds: ticksToSeconds(this.shotFlightTicks),
       squads: this.squads.map((squad) => ({
         side: squad.side, name: squad.name, mawjig: squad.mawjig, ships: squad.ships.map((ship) => this.snapshotShip(ship)),
       })),
       shots: this.shots.map((shot) => ({
         id: shot.id, weaponName: shot.weapon.name, type: shot.weapon.type, fromShipId: shot.fromShipId,
-        toShipId: shot.toShipId, toRoomId: shot.toRoomId, progress: shot.progress,
+        toShipId: shot.toShipId, toTile: shot.toTile, progress: shot.progress,
       })),
       result: this.result,
     };
@@ -139,7 +142,7 @@ export class Simulation {
         case 'TargetWeapon': {
           const weapon = ship.weapons.find((candidate) => candidate.mount === order.mount);
           const target = this.ship(order.targetShipId);
-          if (weapon && target && target.room(order.targetRoomId)) { weapon.target = { shipId: order.targetShipId, roomId: order.targetRoomId }; weapon.autofire = order.autofire; }
+          if (weapon && target && target.roomOfTile(order.targetTile)) { weapon.target = { shipId: order.targetShipId, tile: order.targetTile }; weapon.autofire = order.autofire; }
           break;
         }
         case 'ClearTarget': {

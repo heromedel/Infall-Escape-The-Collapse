@@ -72,8 +72,8 @@ function continueVolley(ship: Ship, weapon: Weapon, squad: Squad, shots: Shot[],
     weapon.volleyShotsLeft = 0;
     return;
   }
-  shots.push(new Shot(nextShotId(), weapon.definition, ship.id, weapon.target!.shipId, weapon.target!.roomId, flightTicks));
-  log.event('shot_fired', { ship: ship.name, weapon: weapon.definition.name, targetShip: weapon.target!.shipId, room: weapon.target!.roomId, cost });
+  shots.push(new Shot(nextShotId(), weapon.definition, ship.id, weapon.target!.shipId, weapon.target!.tile, flightTicks));
+  log.event('shot_fired', { ship: ship.name, weapon: weapon.definition.name, targetShip: weapon.target!.shipId, tile: `${weapon.target!.tile.x},${weapon.target!.tile.y}`, cost });
   weapon.volleyShotsLeft--;
   weapon.nextShotTicks = TICKS_BETWEEN_SHOTS;
   if (weapon.volleyShotsLeft === 0 && !weapon.autofire) weapon.target = undefined;

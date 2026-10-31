@@ -41,6 +41,7 @@ export class WeaponFileReader {
       fireChance: this.chance(root.fireChance, `${where} fireChance`),
       conduitDamageChance: this.chance(root.conduitDamageChance, `${where} conduitDamageChance`),
       description: this.optional(root.description),
+      projectileArt: this.optional(root.projectileArt),
     };
   }
 
