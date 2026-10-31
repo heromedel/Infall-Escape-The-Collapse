@@ -440,3 +440,8 @@ structure. Small ships rise most (the Scrapper about 2.8×), big ones least (abo
 **Open for heromedel:** rewards rise most early (about 2.25× in band 1), where buying ships doesn't offset it yet, so a
 band 1 fight would leave about 6.10 for upgrades instead of 1.82. Store prices are unchanged, so early upgrades
 come about three times as fast as in the genre.
+
+- **heromedel (2026-10-31): left as it is for now, to adjust later.** If the early game plays too loose, the
+  suggested lever is a lower start to the band adjustment (e.g. × 0.5 in band 1 rising evenly to × 1.7 in band 8,
+  so a band 1 fight pays about 3.85). The other options were leaving core systems out of the wreck (a special case)
+  or accepting it.
