@@ -27,7 +27,8 @@ var _shield_rect := ColorRect.new()
 var _shield_material: ShaderMaterial
 var _super_rect := ColorRect.new()
 var _super_material: ShaderMaterial
-var _hits: Array = []              # {position (local), age}
+var _hits: Array = []              # shield bubble hits: {position (local), age}
+var _super_hits: Array = []        # Supershield hits
 
 
 func setup(view_ship: Ship, owner: Encounter) -> void:
@@ -83,21 +84,23 @@ func _setup_bubbles() -> void:
 
 
 ## Called by the battle screen when a shot hits this ship's shields, at a world point.
-func shield_hit(world_point: Vector2) -> void:
-	_hits.append({"position": encounter.world_to_local(ship, world_point), "age": 0.0})
-	if _hits.size() > 4:
-		_hits.pop_front()
+func shield_hit(world_point: Vector2, supershield: bool = false) -> void:
+	var list := _super_hits if supershield else _hits
+	list.append({"position": encounter.world_to_local(ship, world_point), "age": 0.0})
+	if list.size() > 4:
+		list.pop_front()
 
 
 func _process(delta: float) -> void:
 	time += delta
 	position = ship.world_position
 	rotation = PI if ship.facing_down else 0.0
-	for hit in _hits:
+	for hit in _hits + _super_hits:
 		hit.age += delta
 	_hits = _hits.filter(func(hit): return hit.age < 1.2)
-	_update_bubble(_shield_material, _shield_rect, ship.shield_layers, 0.0)
-	_update_bubble(_super_material, _super_rect, ship.supershield, 0.0)
+	_super_hits = _super_hits.filter(func(hit): return hit.age < 1.2)
+	_update_bubble(_shield_material, _shield_rect, ship.shield_layers, _hits)
+	_update_bubble(_super_material, _super_rect, ship.supershield, _super_hits)
 	var fade := 1.0
 	if ship.destroyed:
 		fade = clampf(1.0 - ship.explosion_ticks / 50.0, 0.0, 1.0)
@@ -116,17 +119,17 @@ func _process(delta: float) -> void:
 		_hull_layer.modulate = Color.WHITE
 
 
-func _update_bubble(material: ShaderMaterial, rect: ColorRect, layers: int, _unused: float) -> void:
-	rect.visible = layers > 0 or not _hits.is_empty()
+func _update_bubble(material: ShaderMaterial, rect: ColorRect, layers: int, hits: Array) -> void:
+	rect.visible = layers > 0 or not hits.is_empty()
 	material.set_shader_parameter("strength", clampf(0.35 + 0.22 * layers, 0.0, 1.0) if layers > 0 else 0.0)
 	material.set_shader_parameter("time", time)
 	var hit_points := PackedVector2Array()
 	var hit_ages := PackedFloat32Array()
 	for index in 4:
-		if index < _hits.size():
-			var local: Vector2 = _hits[index].position
+		if index < hits.size():
+			var local: Vector2 = hits[index].position
 			hit_points.append((local - rect.position) / rect.size)
-			hit_ages.append(_hits[index].age)
+			hit_ages.append(hits[index].age)
 		else:
 			hit_points.append(Vector2(-10, -10))
 			hit_ages.append(9.0)

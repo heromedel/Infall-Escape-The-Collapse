@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The run's spine: the collapse opening (GDD 2P, texts from docs/events-collapse-opening-and-terran-stores.md,
+     Ai-Generated-Proposal 2026-10-23 by Lori, opening 1's first paragraph heromedel's), waiting, being stranded
+     (GDD 9B), revisits, and the rim. Events other than the opening texts are Ai-Generated-Proposals
+     (2026-10-31) written for the Godot version. -->
+<events>
+	<event id="START_LAUNCH" title="Behind You" kind="opening" unique="yes">
+		<text>Your homeworld is in a panic. Something is wrong with the Galactic Core, the region at the center of the galaxy. Scientists are in a frenzy of arguments and debates, but they all agree that something cataclysmic could be coming. Many refuse to believe it, but others have sponsored a colony ship to travel farther from the core. Your job, as Captain of the forward scouts, is to explore ahead and find a path for The Colony Ship to survive.
+
+Behind you, The Colony Ship's engines light up as it begins its long journey. A message comes through from its bridge.
+
+"Our astronomers still can't say what is wrong with the Galactic Core. They can only say it is getting worse. We won't wait to find out. Everyone we could bring is aboard. Scout the way ahead, find us safe clusters to jump to, and keep in touch. We'll be right behind you."</text>
+		<choice text="Continue..."/>
+	</event>
+
+	<event id="COLLAPSE_OPENING_2" title="Radiation" kind="message" unique="yes">
+		<text>A transmission from The Colony Ship is waiting for you when you arrive.
+
+"Our sensors are picking up unusual radiation from the core. Nobody aboard has seen readings like these before. Keep moving. We'll send word as soon as we understand it."</text>
+		<choice text="Continue..."/>
+	</event>
+	<event id="COLLAPSE_OPENING_3" title="Brighter" kind="message" unique="yes">
+		<text>The Galactic Core is brighter than anyone has ever seen it. Even from here, its glare washes out the stars around it on your viewscreens.
+
+The Colony Ship's signal comes through weaker than before. "Our messages to the inner regions aren't getting through. Their relays have gone quiet, all of them at once. Whatever is happening, it is reaching them first."</text>
+		<choice text="Continue..."/>
+	</event>
+	<event id="COLLAPSE_OPENING_4" title="Dark" kind="message" unique="yes">
+		<text>The core has gone dark. Where the glare was, there is only black.
+
+"Our long-range sensors are tracking jumps heading away from the core," The Colony Ship reports. "Ten times as many as before it went dark. Everyone out there saw what we saw, and they are all running."</text>
+		<choice text="Continue..."/>
+	</event>
+	<event id="COLLAPSE_OPENING_5" title="Swallowed" kind="message" unique="yes">
+		<text>Your sensors show it before The Colony Ship's message arrives. The Galactic Core has collapsed into a super black hole, and its edge is moving outward. Clusters that looked like an easy few jumps inward are gone, swallowed all at once.
+
+"It's real. It's coming our way," The Colony Ship says. "We'll follow your path as fast as our Jigawatt Drives allow. Find us a way out."</text>
+		<choice text="Continue..."/>
+	</event>
+
+	<event id="REVISIT" kind="revisit">
+		<text>You're back at {cluster}. Nothing here has changed, except that the collapse is closer.</text>
+		<choice text="Continue..."/>
+	</event>
+
+	<event id="WAITED" kind="wait">
+		<text>Your squad holds position. The power cores tick over, slowly turning stray matter into Mawjig. On the long-range display, the collapse creeps outward.</text>
+		<choice text="Continue..."/>
+	</event>
+
+	<event id="STRANDED" kind="wait">
+		<text>Your squad has become stranded due to not enough Mawjig to jump. Checking the manual it says the "Material to Energy, Space-Time JigaWatt Powered, Jump Drive" needs at least 1.21 Jigawatts to power a jump. Luckily the Power Cores on a ship can produce enough "Materials Worth of Jigawatts" to eventually power a jump, if we wait long enough.</text>
+		<choice text="Keep waiting..."/>
+	</event>
+
+	<event id="FINAL_RIVAL" title="The Last Fleet" kind="final" unique="yes">
+		<text>Beyond this cluster there is nothing but the dark between galaxies. Your sensors find a path out, a run of stable space your Jigawatt Drives could follow, and The Colony Ship could follow you.
+
+You are not alone. Three ships hang over the way out, darkened GATOS hulls with scorched emblems. Their leader hails you.
+
+"We know where you're going. We've followed scouts like you for weeks. There's only room for one of us out there, and we were here first."</text>
+		<choice text="If they want the way out, they'll have to take it.">
+			<outcome><fight squad="final-rival"/></outcome>
+		</choice>
+	</event>
+
+	<event id="NOTHING_GENERIC" kind="nothing" weight="1">
+		<text>The cluster is quiet. A few distant ships run silent across your sensors and vanish into jumps of their own.</text>
+	</event>
+	<event id="NOTHING_DUST" kind="nothing" weight="1">
+		<text>A thin haze of dust drifts between the stars here. Your ships' converters pick through it as you pass, but there's nothing worth stopping for.</text>
+	</event>
+	<event id="NOTHING_DOOMED" kind="nothing" states="Doomed,Abandoned" weight="2">
+		<text>Every channel here is silent. Whoever lived in this cluster has already left, or already given up. The only movement on your sensors is the collapse, closer than it was.</text>
+	</event>
+	<event id="NOTHING_DISBELIEF" kind="nothing" states="Doing Fine" weight="1.5">
+		<text>Local broadcasts here are full of ordinary news: trade prices, a festival, a dispute over mining rights. One talk show is laughing about "core panic." Nobody here believes the collapse is real yet.</text>
+	</event>
+	<event id="NOTHING_STRUGGLING" kind="nothing" states="Struggling" weight="1.5">
+		<text>Traffic control here is overwhelmed. Ships of every kind are queued for jumps outward, and the controllers have stopped asking where anyone is going.</text>
+	</event>
+	<event id="NOTHING_COLONY_SHIP" kind="nothing" bands="2-8" weight="0.8" unique="yes">
+		<text>A transmission from The Colony Ship finds you. "We're still behind you. Some of the children have started drawing your ships. They think you're heroes. Don't tell them otherwise."</text>
+	</event>
+</events>

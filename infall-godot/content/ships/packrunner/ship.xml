@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Ai-Generated-Proposal (2026-10-31), made for the Godot version to fill a gap in the roster (rule 3: the genre's ship roles, built from the race profile). -->
+<ship id="packrunner" name="Lykario Packrunner" class="Packrunner" race="lykario" faction="lykario" style="lykario" center_x="Point" center_y="Tile" hull="9" value="152.3">
+	<reactor type="pool" level="9"/>
+	<description>A Lykario raider patched together from stolen hulls under bone-white claw marks. Half its crew is always waiting by the teleporter.</description>
+	<room id="0" from="-1,-3" to="1,-2" name="Bridge"/>
+	<room id="1" from="-2,-1" to="-1,0" name="Teleporter room"/>
+	<room id="2" from="1,-1" to="2,0" name="Shields room"/>
+	<room id="3" from="-2,1" to="2,1" name="Mid hall"/>
+	<room id="4" from="-1,2" to="1,3" name="Engine room"/>
+	<system id="piloting" tile="-1,-3" level="1" wall="north"/>
+	<system id="weapons" tile="1,-3" level="2" wall="north"/>
+	<system id="crew-teleporter" tile="-2,-1" level="1" wall="west"/>
+	<system id="shields" tile="2,-1" level="2" wall="east"/>
+	<system id="medbay" tile="-2,1" level="1" wall="west"/>
+	<system id="life-support" tile="2,1" level="1" wall="east"/>
+	<system id="engines" tile="-1,3" level="3" wall="south"/>
+	<door id="0" tile="-1,-2" facing="south"/>
+	<door id="1" tile="1,-2" facing="south"/>
+	<door id="2" tile="-1,0" facing="south"/>
+	<door id="3" tile="1,0" facing="south"/>
+	<door id="4" tile="1,1" facing="south"/>
+	<door id="5" tile="-1,3" facing="west"/>
+	<door id="6" tile="1,3" facing="east"/>
+	<weapons>
+		<weapon id="fang" mount="3"/>
+		<weapon id="snarl" mount="4"/>
+	</weapons>
+	<crew>
+		<member race="lykario" station="piloting"/>
+		<member race="lykario" station="weapons"/>
+		<member race="lykario" count="2"/>
+	</crew>
+</ship>

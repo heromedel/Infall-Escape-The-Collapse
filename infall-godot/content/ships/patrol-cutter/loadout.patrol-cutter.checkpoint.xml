@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Ai-Generated-Proposal (2026-10-31): a stronger band-range loadout of the same hull (production goals: loadouts by band range). -->
+<loadout id="checkpoint" ship="patrol-cutter" name="GATOS Checkpoint Cutter" class="Checkpoint Cutter" inherit="patch" hull="16" value="296.5">
+	<reactor type="core" level="3"/>
+	<system id="shields" tile="-2,-2" level="4" wall="west"/>
+	<system id="engines" tile="0,4" level="3" wall="south"/>
+	<system id="weapons" tile="1,-4" level="4" wall="north"/>
+	<weapons>
+		<weapon id="gat-3-1" mount="3"/>
+		<weapon id="gat-m2" mount="4"/>
+	</weapons>
+</loadout>

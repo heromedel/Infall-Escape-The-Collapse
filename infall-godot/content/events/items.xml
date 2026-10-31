@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Wreckage, caches and derelicts: matter to convert into Mawjig (GDD 8C). Ai-Generated-Proposals (2026-10-31). -->
+<events>
+	<event id="ITEMS_WRECKAGE" title="Wreckage" kind="items" weight="2">
+		<text>The remains of a battle drift through the cluster: twisted hull plates, shattered weapon mounts, frozen debris. Your squad's converters could turn a lot of it into Mawjig.</text>
+		<choice text="Convert what you can.">
+			<outcome weight="3"><text>Your converters hum for hours, converting enough of the matter into energy to fill your Mawjig stores.</text><mawjig size="medium"/></outcome>
+			<outcome weight="1"><text>Something in the wreckage is still armed. It goes off against your hull.</text><hull amount="-3"/><mawjig size="low"/></outcome>
+		</choice>
+		<choice text="Leave it."/>
+	</event>
+	<event id="ITEMS_WEAPON_CACHE" title="A Hidden Cache" kind="items" weight="1">
+		<text>Your sensors find a sealed container tucked into an asteroid's shadow, marked with a pirate gang's sign.</text>
+		<choice text="Crack it open.">
+			<outcome weight="3"><text>Inside is a weapon, still in its packing.</text><weapon tier="mid"/></outcome>
+			<outcome weight="1"><text>It's booby-trapped. The blast scorches your ship.</text><hull amount="-2"/><mawjig size="low"/></outcome>
+		</choice>
+		<choice text="Leave it."/>
+	</event>
+	<event id="ITEMS_DERELICT_SCOUT" title="A Derelict" kind="items" bands="1-6" weight="0.6" unique="yes">
+		<text>A GATOS scout cruiser hangs dead in space, its crew long gone. Its hull is holed, but its core still reads stable. With enough work it could fly again.</text>
+		<choice text="Get it flying and add it to the squad.">
+			<outcome><text>It takes every spare part you can scrape together, but the old scout's Jigawatt Drive finally wakes. Its sealed stasis bay held three of its crew, alive, and they are ready to fly with you.</text><ship design="outrider" hull="12" name="SC-1 Wayfarer"/></outcome>
+		</choice>
+		<choice text="Strip it for Mawjig.">
+			<outcome><text>You strip the derelict and convert it.</text><mawjig size="high"/></outcome>
+		</choice>
+	</event>
+	<event id="ITEMS_SUPPLY_DROP" title="A Supply Drop" kind="items" states="Doing Fine,Struggling" weight="1">
+		<text>A GATOS relay beacon is broadcasting free repair supplies for any ship that needs them, "while stocks last."</text>
+		<choice text="Take what you need.">
+			<outcome><text>Your crews patch the worst of the damage.</text><hull amount="6"/></outcome>
+		</choice>
+	</event>
+	<event id="ITEMS_STARDUST" title="Rich Dust" kind="items" weight="1">
+		<text>A dense, dark cloud of dust is drifting through this cluster, heavy with metals. Every ship that passes through it can scoop up some matter.</text>
+		<choice text="Scoop it up.">
+			<outcome><text>Your converters run hot. It's slow work, but it pays.</text><mawjig size="low"/><xp skill="piloting" amount="20"/></outcome>
+		</choice>
+	</event>
+	<event id="ITEMS_MECHA_GRAVEYARD" title="A Frame Graveyard" kind="items" races="mecha" weight="1.5">
+		<text>A Mecha frame graveyard: black hulls stacked in neat rows, stripped of anything useful. The Mecha are tidy about their dead. But someone missed a weapon pod.</text>
+		<choice text="Take it.">
+			<outcome><text>The pod's weapon is still in working order.</text><weapon race="mecha" tier="mid"/></outcome>
+		</choice>
+		<choice text="Leave the dead alone."/>
+	</event>
+	<event id="ITEMS_SPORE_CLOUD" title="Spore Bloom" kind="items" races="azurethea" weight="1">
+		<text>A cloud of drifting Azurethea spores glitters in the light of the local star. It's beautiful, and the matter in it could be converted.</text>
+		<choice text="Fly through it slowly.">
+			<outcome weight="2"><text>Your converters gather the spores.</text><mawjig size="low"/></outcome>
+			<outcome weight="1"><text>The spores clog your systems. Your crew spend hours clearing them out.</text><system_damage amount="1"/></outcome>
+		</choice>
+		<choice text="Go around it."/>
+	</event>
+</events>

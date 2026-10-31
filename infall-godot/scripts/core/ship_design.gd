@@ -265,6 +265,49 @@ func _link_layout() -> void:
 	doors = kept
 	if mounts.is_empty():
 		_place_default_mounts()
+	if reactor_type == "core" and conduits.is_empty():
+		_lay_default_conduits()
+
+
+## A core ship whose file lists no conduits gets a branching network out from the AZC along the walkways:
+## the cheap, fragile layout of a ship nobody designed to be easy to reroute.
+func _lay_default_conduits() -> void:
+	var core := Vector2i(999, 999)
+	for system in systems:
+		if system.id == "azc":
+			core = system.cell
+	if not cell_room.has(core):
+		return
+	var walk := {}
+	for cell in cell_room:
+		var list: Array[Vector2i] = []
+		for step in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+			if cell_room.get(cell + step, -2) == cell_room[cell]:
+				list.append(cell + step)
+		walk[cell] = list
+	for door in doors:
+		if not door.to_space:
+			walk[door.a].append(door.b)
+			walk[door.b].append(door.a)
+	var bit_for := {Vector2i(0, -1): 1, Vector2i(1, 0): 2, Vector2i(0, 1): 4, Vector2i(-1, 0): 8}
+	var seen := {core: true}
+	var queue: Array[Vector2i] = [core]
+	conduits[core] = 0
+	var reached_rooms := {cell_room[core]: true}
+	while not queue.is_empty():
+		var cell: Vector2i = queue.pop_front()
+		for next in walk[cell]:
+			if seen.has(next):
+				continue
+			seen[next] = true
+			# One run into each room is enough; the rest of the room's tiles stay bare
+			if reached_rooms.has(cell_room[next]) and cell_room[next] != cell_room[cell]:
+				continue
+			reached_rooms[cell_room[next]] = true
+			var step: Vector2i = next - cell
+			conduits[cell] = int(conduits.get(cell, 0)) | int(bit_for[step])
+			conduits[next] = int(conduits.get(next, 0)) | int(bit_for[-step])
+			queue.append(next)
 
 
 ## Ships drawn without hull art get mounts on their widest flanks, nose first (as the art rules plan hulls).

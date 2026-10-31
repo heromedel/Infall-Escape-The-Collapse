@@ -86,6 +86,8 @@ func show_encounter(new_encounter: Encounter, wallet: RunState, look_seed: int, 
 	effects.particles.clear()
 	world.add_child(effects)
 	divider.visible = encounter.fight_started
+	encounter.step()   # one tick so crew are at their consoles and the HUD reads true from the first frame
+	encounter.notes.clear()
 	if selected_ship == null or not encounter.ships.has(selected_ship) or selected_ship.is_gone():
 		selected_ship = encounter.living(0)[0] if not encounter.living(0).is_empty() else null
 	background.set_cluster_look(look_seed, collapse_near, encounter.hazard)
@@ -273,7 +275,7 @@ func _show_note(note: Dictionary) -> void:
 			effects.shield_sparks(note.position, UiColours.SHIELD_BLUE)
 			Sfx.play("hit_shield")
 		"supershield_hit":
-			views[ship].shield_hit(note.position)
+			views[ship].shield_hit(note.position, true)
 			effects.shield_sparks(note.position, UiColours.SUPERSHIELD)
 			Sfx.play("hit_shield")
 		"miss":

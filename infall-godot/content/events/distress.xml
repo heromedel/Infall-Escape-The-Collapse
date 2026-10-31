@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Distress calls. REFUGEE_FAILING_AIR is the sample from docs/events-sample.md (Ai-Generated-Proposal
+     2026-10-23); the rest are Ai-Generated-Proposals (2026-10-31) for the Godot version. -->
+<events>
+	<event id="REFUGEE_FAILING_AIR" title="Failing Air" kind="distress" bands="1-4" states="Refugee,Struggling" weight="2" unique="yes">
+		<text>A crowded refugee transport drifts at the edge of the cluster, its running lights dimmed to save power. Its captain hails you.
+
+"Our life support is failing. We have twice the people aboard it was built for. We fled the collapse with whatever would fly. Please, if you can spare anything, help us."</text>
+		<choice text="Send your crew over to repair their life support.">
+			<outcome weight="2"><text>Your crew spend hours crawling through the transport's ducts and finally get its air scrubbers running again. The captain sends over what little Mawjig they can spare and thanks you on behalf of everyone aboard.</text><mawjig size="low"/></outcome>
+			<outcome weight="1"><text>The transport's life support was pieced together from three different ships, and none of the parts want to work together. Your crew get it running at half strength before a coolant line bursts and scalds {crew}. Half strength will last the refugees as far as the next cluster. The captain thanks you anyway.</text><crew_hurt amount="35"/></outcome>
+		</choice>
+		<choice text="Ferry as many of them as you can to the nearest station.">
+			<outcome><text>You make several trips between the transport and a station that still has room. When the last refugees are across, one of them, a former ship's engineer, asks to stay aboard and serve with your crew.</text><crew race="terran"/></outcome>
+		</choice>
+		<choice text="Give them enough Mawjig to jump to the next cluster." requires="mawjig:1.21">
+			<outcome><text>You transfer enough Mawjig for a single jump. The captain thanks you. As you leave, the transport's drive begins to charge.</text><mawjig amount="-1.21"/></outcome>
+		</choice>
+		<choice text="Wish them luck and leave.">
+			<outcome><text>You can't spare the time or the Mawjig. The transport's lights grow fainter behind you as you prepare to jump.</text></outcome>
+		</choice>
+		<choice text="Send {crew} to keep their air breathable." requires="crew:azurethea">
+			<outcome><text>{crew} moves from cabin to cabin. Each room fills with fresh air the moment they stand in it. With the worst of the danger past, your crew repair the scrubbers without hurrying. The captain sends over a share of their Mawjig. One of the refugees also asks to join your crew.</text><mawjig size="low"/><crew race="terran"/></outcome>
+		</choice>
+	</event>
+
+	<event id="DISTRESS_FREIGHTER" title="Engine Fire" kind="distress" weight="1.5">
+		<text>A freighter is drifting with a fire in its engine section, its crew sealed in the forward compartments and broadcasting for help.</text>
+		<choice text="Dock and send a team to fight the fire.">
+			<outcome weight="3"><text>Your crew get the fire under control. The grateful freighter crew insist you take part of their cargo, already converted to Mawjig.</text><mawjig size="medium"/></outcome>
+			<outcome weight="1"><text>The fire is worse than it looked. Your crew put it out, but {crew} is badly burned doing it. The freighter crew pay you what they can.</text><mawjig size="low"/><crew_hurt amount="45"/></outcome>
+		</choice>
+		<choice text="Vent their engine room from outside." requires="system:doors">
+			<outcome><text>Your crew talk them through opening their outer hatches from the bridge. The fire dies in the vacuum. They send a generous thank-you.</text><mawjig size="medium"/></outcome>
+		</choice>
+		<choice text="Leave them."/>
+	</event>
+
+	<event id="DISTRESS_TENTAURI_PAIR" title="A Missing Mate" kind="distress" races="tentauri,any" weight="1">
+		<text>A tiny Tentauri ship is circling the same patch of space over and over. Only one voice answers your hail, where there should be two. "My mate was outside, mending the hull. The line broke. They are out there somewhere."</text>
+		<choice text="Help search.">
+			<outcome weight="2"><text>Your sensors find the drifting Tentauri at last, cold but alive. The two of them wrap around each other at the airlock. They give you everything they can spare, and one of their cousins, travelling with them, asks to join your crew.</text><mawjig size="low"/><crew race="tentauri"/></outcome>
+			<outcome weight="1"><text>You search until your drive is charged. There's nothing. The Tentauri ship thanks you, and keeps circling.</text></outcome>
+		</choice>
+		<choice text="Use your sensors to sweep the area." requires="system:sensors">
+			<outcome><text>Your sensors pick out the tiny, cold shape in minutes. The reunited pair insist on giving you a gift: a Tentauri weapon they no longer need.</text><weapon id="coil"/><mawjig size="tiny"/></outcome>
+		</choice>
+		<choice text="You can't spare the time."/>
+	</event>
+
+	<event id="DISTRESS_MECHA_POD" title="A Small Pod" kind="distress" races="mecha,any" states="Border,Doomed,Struggling,Abandoned" weight="1">
+		<text>An escape pod is tumbling through the wreckage of a recent fight, broadcasting in clipped Mecha code. Inside, sensors read a single HalfMech in a damaged suit, very much alive and very much annoyed.</text>
+		<choice text="Bring the pod aboard.">
+			<outcome weight="2"><text>The HalfMech climbs out, inspects your ship with open contempt, and then announces that it will be staying, since your ship clearly needs someone competent.</text><crew race="mecha"/></outcome>
+			<outcome weight="1"><text>The HalfMech comes out of the pod swinging. By the time your crew pin it down and push it back out the airlock, {crew} is hurt.</text><crew_hurt amount="40"/></outcome>
+		</choice>
+		<choice text="Leave it."/>
+	</event>
+
+	<event id="DISTRESS_LYKARIO" title="A Wounded Hunter" kind="distress" races="lykario,any" weight="0.8">
+		<text>A Lykario raider is limping along on one engine, its crew yelling cheerfully at each other over an open channel. "Hey! Scouts! We're fine, totally fine. We could use a hand though."</text>
+		<choice text="Help them patch their engine.">
+			<outcome weight="3"><text>The Lykario are loud, grateful and very hard to work around. One of them decides your squad is a better hunt than his own and asks to come along.</text><crew race="lykario"/></outcome>
+			<outcome weight="1"><text>The moment your crew are aboard, the "wounded" Lykario try to take your ship. It doesn't go well for them, but it doesn't go well for {crew} either.</text><crew_hurt amount="40"/><mawjig size="low"/></outcome>
+		</choice>
+		<choice text="Keep your distance."/>
+	</event>
+
+	<event id="DISTRESS_SENTI_ARCHIVE" title="A Drifting Archive" kind="distress" races="senti,any" weight="0.8">
+		<text>A Senti data barge is drifting dead, its array dark. A faint hologram flickers on your screen. "We, The Senti-, request a power transfer. Our archive is failing. Everything it holds will be lost."</text>
+		<choice text="Transfer some Mawjig to restart their array." requires="mawjig:1.21">
+			<outcome><text>The array lights up cyan. "We, The Senti-, will remember this." In return they transmit star charts for every cluster they have ever recorded nearby.</text><mawjig amount="-1.21"/><reveal/></outcome>
+		</choice>
+		<choice text="Let {crew} talk to it." requires="crew:senti">
+			<outcome><text>{crew} links with the barge directly and restarts it without spending a thing. The archive's keepers transmit their nearby charts, and a little Mawjig for the trouble.</text><reveal/><mawjig size="low"/></outcome>
+		</choice>
+		<choice text="Move on."/>
+	</event>
+
+	<event id="DISTRESS_INFECTED_STATION" title="Overgrown" kind="distress" races="malphen,any" states="Abandoned,Doomed" weight="1">
+		<text>A small station is calling for help. Half of its hull is covered in fleshy growth, and the growth is still spreading. Someone inside is begging for a ride.</text>
+		<choice text="Send a team in to get them out.">
+			<outcome weight="2"><text>Your team cut their way through the growth and bring out a single survivor, who joins your crew in gratitude.</text><crew race="region"/></outcome>
+			<outcome weight="1"><text>The growth moves. Your team get out, but {crew} is hurt, and the survivor doesn't make it.</text><crew_hurt amount="50"/></outcome>
+		</choice>
+		<choice text="Leave."/>
+	</event>
+
+	<event id="DISTRESS_GATOS_FAMILY" title="Stragglers" kind="distress" races="terran" states="Struggling,Refugee,Doing Fine" weight="1.2">
+		<text>A tiny GATOS shuttle has run dry two jumps short of anywhere. A whole family is crammed into it, kittens and all. "Please," says the pilot. "We just need enough to reach the next hub."</text>
+		<choice text="Give them the Mawjig they need." requires="mawjig:1.21">
+			<outcome><text>The family cheers. The pilot promises to name the next kitten after your ship. As they jump away, they send you a message: "There's a cache of parts two drifts over. We couldn't carry it."</text><mawjig amount="-1.21"/><weapon tier="low" race="terran"/></outcome>
+		</choice>
+		<choice text="Tow them to the hub yourself.">
+			<outcome><text>It takes time, but the family is safe. The hub's dockmaster thanks you with a little Mawjig.</text><mawjig size="low"/></outcome>
+		</choice>
+		<choice text="You can't help them."/>
+	</event>
+
+	<event id="DISTRESS_REFUGEE_SHIP" title="A Ship That Wants a Squad" kind="distress" states="Refugee,Struggling,Doomed" bands="2-7" weight="0.7" unique="yes">
+		<text>A GATOS patrol cutter, its crew worn out and its captain gone, asks to join you. "We were guarding a convoy. The convoy's gone. We can't stay here, and we can't go anywhere alone. Let us fly with you."</text>
+		<choice text="Welcome them to the squad.">
+			<outcome><text>The cutter falls into formation beside you. Its crew are tired, but they're still flying.</text><ship design="patrol-cutter" hull="9"/></outcome>
+		</choice>
+		<choice text="Give them directions to the nearest hub instead."/>
+	</event>
+
+	<event id="DISTRESS_TENTAURI_JOIN" title="Joint Operations" kind="distress" races="tentauri" states="Struggling,Doomed" bands="2-8" weight="0.8" unique="yes">
+		<text>A Tentauri scout hails you, two voices at once. "Our cluster is not going to last. We would rather travel with someone. We do not trade ourselves away, but we will fly with you, if you will have us."</text>
+		<choice text="Welcome them to the squad.">
+			<outcome><text>The little Tentauri ship takes a place in your formation, shields up, and stays there.</text><ship design="tentauri-scout"/></outcome>
+		</choice>
+		<choice text="Wish them luck."/>
+	</event>
+</events>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Traders, travellers, mercenaries and news (GDD 7G mercenaries; 2B: shock near the collapse, disbelief far
+     from it). SENTI_ARCHIVE_REQUEST is the sample from docs/events-sample.md (Ai-Generated-Proposal 2026-10-23);
+     the rest are Ai-Generated-Proposals (2026-10-31). -->
+<events>
+	<event id="SENTI_ARCHIVE_REQUEST" title="The Archive Asks" kind="neutral" races="senti" states="Doing Fine,Struggling" bands="2-8" weight="2" unique="yes">
+		<text>A Senti relay station hangs above the cluster's largest moon, broadcasting on every channel at once. A hologram flickers onto your screen.
+
+"We, The Senti-, have learned that your people's world is gone. We would like to preserve its records in our archive. We will pay for them."</text>
+		<choice text="Transmit your home world's records.">
+			<outcome><text>You transmit everything your ships carry: maps, histories, songs and the names of the dead. The hologram stays still while the station reads it all.
+
+"We, The Senti-, thank you. Your world will be remembered for as long as we are."
+
+The payment arrives a moment later.</text><mawjig size="medium"/></outcome>
+		</choice>
+		<choice text="Refuse. Your people's history stays with your people.">
+			<outcome><text>The hologram dips its head.
+
+"We, The Senti-, understand. Records are only worth keeping when they are given freely."
+
+The station goes back to its broadcasts as you prepare to jump.</text></outcome>
+		</choice>
+		<choice text="Let {crew} negotiate." requires="crew:senti">
+			<outcome><text>{crew} steps up to the console. "I know what records like these are worth to them. Let me do the talking."
+
+After a quick exchange of data, {crew} transmits the records. The station's payment arrives a moment later, far more than it first offered.</text><mawjig size="high"/></outcome>
+		</choice>
+	</event>
+
+	<event id="NEUTRAL_MERCENARY" title="For Hire" kind="neutral" states="Border,Doomed,Struggling,Refugee,Unclaimed" bands="2-8" weight="1" unique="yes">
+		<text>A Lykario raider pulls alongside, its captain lounging in the pilot's seat. "Heard you're heading for the rim. A squad needs teeth out there. Pay me, and my ship and my pack fly with you."</text>
+		<choice text="Hire them." requires="mawjig:9.66">
+			<outcome><text>The money changes hands, and the Lykario raider slots into your formation with a cheerful howl.</text><mawjig amount="-9.66"/><ship design="packrunner"/></outcome>
+		</choice>
+		<choice text="No thanks.">
+			<outcome><text>"Your loss!" The raider jumps away.</text></outcome>
+		</choice>
+	</event>
+
+	<event id="NEUTRAL_TRADER" title="A Passing Trader" kind="neutral" weight="1.5">
+		<text>A trader's barge drops out of a jump next to you. "Selling, not buying. One crate of parts, cheap, because I need the Mawjig more than the parts."</text>
+		<choice text="Buy the crate." requires="mawjig:2.42">
+			<outcome weight="3"><text>The crate holds a working weapon.</text><mawjig amount="-2.42"/><weapon tier="low"/></outcome>
+			<outcome weight="1"><text>The crate holds repair parts. Not what you hoped, but useful.</text><mawjig amount="-2.42"/><hull amount="5"/></outcome>
+		</choice>
+		<choice text="Wave them on."/>
+	</event>
+
+	<event id="NEUTRAL_TRAVELLER_NEWS" title="Word From Ahead" kind="neutral" weight="1.2">
+		<text>A lone traveller's ship hails you, heading the other way. "Going back for my family," they say. "Want my charts? I won't need them where I'm going."</text>
+		<choice text="Take the charts.">
+			<outcome><text>The traveller's charts fill in the clusters around you.</text><reveal/></outcome>
+		</choice>
+		<choice text="Tell them to turn around. There's nothing behind you but the collapse.">
+			<outcome><text>The line goes quiet for a long time. "I know," they finally say. They jump away, still heading inward.</text></outcome>
+		</choice>
+	</event>
+
+	<event id="NEUTRAL_DISBELIEF" title="Core Panic" kind="neutral" states="Doing Fine" weight="1.2">
+		<text>A GATOS customs officer waves your squad through, then notices where you came from. "From the inner clusters? Don't tell me you believe that core panic stuff. It's a solar storm. They'll be laughing about it in a month."</text>
+		<choice text="Show them your sensor logs.">
+			<outcome weight="1"><text>The officer goes pale, then quietly transfers you some Mawjig. "For the trip. I'm going to go talk to my family."</text><mawjig size="low"/></outcome>
+			<outcome weight="1"><text>"Doctored," the officer snorts. "Move along."</text></outcome>
+		</choice>
+		<choice text="Move along."/>
+	</event>
+
+	<event id="NEUTRAL_BEGGARS" title="Beggars" kind="neutral" states="Occupied,Doomed,Refugee" weight="1.5">
+		<text>A battered little shuttle drifts up, its crew of {race} broadcasting a plea for anything at all: food, air, Mawjig. Their cluster has nothing left to give them.</text>
+		<choice text="Give them what you can." requires="mawjig:0.61">
+			<outcome><text>They thank you over and over. One of them asks whether you have room for a crew member who can work.</text><mawjig amount="-0.61"/><crew race="region"/></outcome>
+		</choice>
+		<choice text="You have nothing to spare."/>
+	</event>
+
+	<event id="NEUTRAL_AZURETHEA_EXPLORERS" title="Explorers" kind="neutral" races="azurethea" states="Doing Fine,Core" weight="1.5">
+		<text>An Azurethea exploration ship drifts by, wings spread wide to catch the starlight. They hail you with open curiosity. "Where have you come from? What have you seen? We map everything."</text>
+		<choice text="Trade charts with them.">
+			<outcome><text>They send their charts in exchange for yours, and add a small gift for the news from the core.</text><reveal/><mawjig size="tiny"/></outcome>
+		</choice>
+		<choice text="Warn them about the collapse.">
+			<outcome><text>The Azurethea are quiet for a long time. "Then we will go and see it, and tell the others." Their ship turns inward. They leave you their charts.</text><reveal/></outcome>
+		</choice>
+	</event>
+
+	<event id="NEUTRAL_MECHA_YARD" title="Frame Upgrades" kind="neutral" races="mecha" states="Doing Fine,Core" weight="1">
+		<text>A Mecha repair yard offers upgrades to anyone who can pay, no questions asked. "We help our own build," the yard boss says. "You're not our own. So you pay double. Still a good deal."</text>
+		<choice text="Pay for a system upgrade." requires="mawjig:6.03">
+			<outcome><text>Mecha engineers swarm over your ship. When they leave, one of your systems runs better than it ever has.</text><mawjig amount="-6.03"/><upgrade/></outcome>
+		</choice>
+		<choice text="Pay for hull repairs." requires="mawjig:2.42">
+			<outcome><text>They patch your hull with dark Mecha plating. It doesn't match, but it holds.</text><mawjig amount="-2.42"/><hull amount="8"/></outcome>
+		</choice>
+		<choice text="Leave."/>
+	</event>
+
+	<event id="NEUTRAL_TENTAURI_ESCORT" title="An Escort" kind="neutral" races="tentauri" states="Struggling,Refugee,Doomed" weight="1">
+		<text>A Tentauri ship is escorting a long line of refugee transports through the cluster. "We do not take them aboard," the voices explain. "We have no room. But we can make sure they get through."</text>
+		<choice text="Fly escort with them for a while.">
+			<outcome weight="2"><text>The convoy reaches the far side of the cluster safely. The refugees pool together a little Mawjig for your trouble, and the Tentauri share their shield tricks with your crew.</text><mawjig size="low"/><xp skill="shields" amount="30"/></outcome>
+			<outcome weight="1"><text>Raiders hit the convoy halfway through the cluster.</text><fight squad="lykario-pack"/></outcome>
+		</choice>
+		<choice text="Move on."/>
+	</event>
+
+	<event id="NEUTRAL_REFUGEE_CONVOY" title="The Convoy" kind="neutral" states="Refugee" weight="2">
+		<text>A refugee convoy fills the cluster: dozens of ships of every race, flying too close together, going nowhere fast. Their coordinator hails you. "Scouts? Are you scouts? Please, which way is safe?"</text>
+		<choice text="Share your charts with them.">
+			<outcome><text>The convoy changes course. A thank-you comes from a hundred voices at once, along with a little Mawjig and a volunteer.</text><mawjig size="low"/><crew race="region"/></outcome>
+		</choice>
+		<choice text="Tell them to follow The Colony Ship's path.">
+			<outcome><text>"The Colony Ship? There's a colony ship?" The news spreads through the convoy like a cheer.</text><mawjig size="tiny"/></outcome>
+		</choice>
+	</event>
+
+	<event id="NEUTRAL_COLONY_SHIP_SUPPLY" title="From Home" kind="neutral" bands="2-8" weight="0.6">
+		<text>A small courier from The Colony Ship catches up with your squad. "Supplies," the courier's pilot says. "They want you to keep going. Everyone aboard chipped in."</text>
+		<choice text="Thank them.">
+			<outcome><text>The supplies help.</text><mawjig size="medium"/><hull amount="4"/></outcome>
+		</choice>
+	</event>
+</events>

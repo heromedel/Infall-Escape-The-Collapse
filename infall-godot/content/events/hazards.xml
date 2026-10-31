@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Hazard clusters: asteroids, a star's flares, nebulae, ion storms (production goals: hazards as the genre's).
+     The cluster's hazard stays active while the squad is there. Ai-Generated-Proposals (2026-10-31). -->
+<events>
+	<event id="HAZARD_ASTEROIDS" title="Asteroid Field" kind="hazard" hazard="asteroids" weight="2">
+		<text>The cluster is full of tumbling rock. Your pilots weave between the bigger asteroids, but the small ones will keep coming. Shields up.</text>
+		<choice text="Mine a few for Mawjig while you're here.">
+			<outcome weight="2"><text>The rock is rich. Your converters work through a whole asteroid.</text><mawjig size="low"/></outcome>
+			<outcome weight="1"><text>Something else is hiding in the field.</text><fight/></outcome>
+		</choice>
+		<choice text="Keep your distance."/>
+	</event>
+	<event id="HAZARD_ASTEROID_PIRATES" title="Rocks and Raiders" kind="hazard" hazard="asteroids" weight="1">
+		<text>Asteroids fill the cluster, and your sensors pick out a ship hiding among them, engines cold, waiting for someone to come close.</text>
+		<choice text="It's an ambush. Fight it out among the rocks."><outcome><fight/></outcome></choice>
+	</event>
+	<event id="HAZARD_SUN" title="Too Close to a Star" kind="hazard" hazard="sun" weight="2">
+		<text>The cluster's jump point is far too close to an unstable star. Its flares will lick across your ships while you're here. Fires are likely.</text>
+		<choice text="Charge the drives and stay alert."/>
+	</event>
+	<event id="HAZARD_SUN_FIGHT" title="Fire and Steel" kind="hazard" hazard="sun" weight="1">
+		<text>A flaring star, and a ship using its glare to hide. It comes at you out of the light.</text>
+		<choice text="Battle stations!"><outcome><fight/></outcome></choice>
+	</event>
+	<event id="HAZARD_NEBULA" title="Nebula" kind="hazard" hazard="nebula" weight="2">
+		<text>A thick nebula swallows the cluster. Your sensors are almost blind in here: you won't see inside other ships. Then again, neither will anyone else.</text>
+		<choice text="Search the nebula for anything useful.">
+			<outcome weight="2"><text>Hidden in the murk is the wreck of a smuggler. Its hold isn't empty.</text><mawjig size="medium"/></outcome>
+			<outcome weight="1"><text>You aren't the only ones hiding in here.</text><fight/></outcome>
+		</choice>
+		<choice text="Wait for the drives to charge."/>
+	</event>
+	<event id="HAZARD_ION_STORM" title="Ion Storm" kind="hazard" hazard="ion_storm" weight="2">
+		<text>An ion storm is raging through the cluster. Every ship's power is cut in half while it lasts. Reactors flicker, and the AZC strains to run half its usual systems.</text>
+		<choice text="Ride it out."/>
+	</event>
+	<event id="HAZARD_ION_FIGHT" title="Storm Raiders" kind="hazard" hazard="ion_storm" weight="1">
+		<text>Someone was waiting for you in the ion storm. Their ships are weakened by it too, but they've had time to get used to it.</text>
+		<choice text="Fight through the storm."><outcome><fight/></outcome></choice>
+	</event>
+</events>

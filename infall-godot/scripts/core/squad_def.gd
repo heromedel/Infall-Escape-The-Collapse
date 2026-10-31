@@ -15,6 +15,8 @@ var escape_hull: float = 0.25
 var targets: PackedStringArray = []   # systems the squad prefers to aim at, in order
 var hail: String = "hostile"      # which Hail answers it gives
 var description: String = ""
+var where_races: PackedStringArray = []   # region races it shows up in; "any" for anywhere
+var where_states: PackedStringArray = []  # cluster states it shows up in; empty for any
 
 
 static func from_xml(node: XmlTree) -> SquadDef:
@@ -23,6 +25,8 @@ static func from_xml(node: XmlTree) -> SquadDef:
 	def.name = node.get_attr("name", def.id)
 	def.race = node.get_attr("race", "terran")
 	def.faction = node.get_attr("faction", def.race)
+	def.where_races = node.get_attr("where_races", def.race).split(",", false)
+	def.where_states = node.get_attr("where_states", "").split(",", false)
 	for tier in node.all("tier"):
 		var bands := tier.get_attr("bands", "1-8").split("-")
 		var entry := {"low_band": int(bands[0]), "high_band": int(bands[bands.size() - 1]), "ships": []}

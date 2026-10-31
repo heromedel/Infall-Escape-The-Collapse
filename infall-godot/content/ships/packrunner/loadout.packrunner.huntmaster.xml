@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Ai-Generated-Proposal (2026-10-31): a stronger band-range loadout of the same hull (production goals: loadouts by band range). -->
+<loadout id="huntmaster" ship="packrunner" name="Lykario Huntmaster" class="Huntmaster" inherit="patch" hull="15" value="291.8">
+	<reactor type="pool" level="13"/>
+	<system id="shields" tile="2,-1" level="4" wall="east"/>
+	<system id="crew-teleporter" tile="-2,-1" level="2" wall="west"/>
+	<system id="weapons" tile="1,-3" level="3" wall="north"/>
+	<system id="cloaking" tile="1,3" level="1" wall="south"/>
+	<weapons>
+		<weapon id="fang" mount="3"/>
+		<weapon id="gat-i1" mount="4"/>
+		<weapon id="snarl" mount="1"/>
+	</weapons>
+	<crew>
+		<member race="lykario" station="piloting"/>
+		<member race="lykario" station="weapons"/>
+		<member race="lykario" count="3"/>
+	</crew>
+</loadout>

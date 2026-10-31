@@ -29,6 +29,6 @@ static func format(cents: int) -> String:
 
 ## A reward of a size (low, medium, high) scaled by band, as events write them (events-sample.md).
 static func reward_for_size(size: String, band: int) -> int:
-	var base := {"tiny": 0.61, "low": 1.81, "medium": 3.62, "high": 6.03, "huge": 9.66}.get(size, 1.81) as float
+	var base := {"tiny": 0.71, "low": 2.11, "medium": 4.23, "high": 7.26, "huge": 10.89}.get(size, 1.81) as float
 	var band_scale := 1.0 + 0.1 * float(band - 1)
 	return amount(base * band_scale)

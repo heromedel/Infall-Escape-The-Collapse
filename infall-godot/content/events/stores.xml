@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Store openings. The three GATOS doing-fine openings are Lori's (docs/events-collapse-opening-and-terran-stores.md,
+     Ai-Generated-Proposal 2026-10-23). The rest are Ai-Generated-Proposals (2026-10-31) for the Godot version,
+     following GDD 2R (doomed and refugee stores run short; occupied stores are low or barren). -->
+<events>
+	<event id="STORE_TERRAN_FINE_1" title="A GATOS Trade Hub" kind="store" races="terran" states="Doing Fine">
+		<text>The trade hub is crowded with ships of many races. GATOS patrol craft keep a polite watch over the lanes. A cheerful voice comes over the comm.
+
+"Welcome to the hub! Dock wherever there's room. If we don't have it, it probably hasn't been built yet."</text>
+		<choice text="Continue..."><outcome><store/></outcome></choice>
+	</event>
+	<event id="STORE_TERRAN_FINE_2" title="A GATOS Trade Hub" kind="store" races="terran" states="Doing Fine">
+		<text>A GATOS trade station turns slowly above a green world, its docking arms busy with freighters. A patrol cutter scans your squad, then flashes a friendly light and moves on.
+
+The station's dockmaster hails you. "Clean hulls and clear lanes, scouts. Our shelves are full and our prices are fair. Come aboard and have a look."</text>
+		<choice text="Continue..."><outcome><store/></outcome></choice>
+	</event>
+	<event id="STORE_TERRAN_FINE_3" title="A GATOS Trade Hub" kind="store" races="terran" states="Doing Fine">
+		<text>The hub's public channel is a wall of offers: repairs, parts, supplies and crew looking for a ship. GATOS patrols keep the pirates far from here, and nobody docked at the hub looks worried.
+
+"First time at a GATOS hub?" a trader asks. "Everything we sell is built to be easy to fit and easy to fix. Take your time."</text>
+		<choice text="Continue..."><outcome><store/></outcome></choice>
+	</event>
+	<event id="STORE_TERRAN_STRUGGLING" title="A Hub Holding On" kind="store" races="terran" states="Struggling,Refugee">
+		<text>The hub is still open, but half its docking arms are full of refugee transports and the shelves have gaps in them. A tired dockmaster waves you in anyway.
+
+"We're all in this together, aren't we? We'll sell what we can. Just don't ask for anything we've had to give away."</text>
+		<choice text="Continue..."><outcome><store/></outcome></choice>
+	</event>
+	<event id="STORE_TERRAN_DOOMED" title="A Checkpoint Market" kind="store" races="terran" states="Doomed">
+		<text>The old trade hub has become a checkpoint. Scorched GATOS cutters scan every arriving hull twice. A voice with no welcome in it comes over the comm.
+
+"Docking costs extra now. Everything costs extra now. You want to trade, you pay the toll first."</text>
+		<choice text="Pay the toll and trade."><outcome><mawjig amount="-0.61"/><store/></outcome></choice>
+		<choice text="Leave them to it."/>
+		<choice text="Remind them who's flying ahead of a colony ship." requires="crew:terran">
+			<outcome><text>{crew} gets on the comm and talks about the colony ship, the families aboard it, and the GATOS who stuck together when it counted. The checkpoint goes quiet. Then the toll is waived.</text><store/></outcome>
+		</choice>
+	</event>
+	<event id="STORE_MECHA" title="A Mecha Yard" kind="store" races="mecha" states="Doing Fine,Core,Struggling,Border">
+		<text>A Mecha yard hangs in the dark, all black girders and purple work lights. Frames in every stage of assembly drift in its cradles. A HalfMech in a dented suit answers your hail, visor glowing.
+
+"You can trade. You can't stay. Pay well and nobody gets hurt."</text>
+		<choice text="Continue..."><outcome><store/></outcome></choice>
+	</event>
+	<event id="STORE_TENTAURI" title="A Quiet Exchange" kind="store" races="tentauri">
+		<text>A cluster of pearly Tentauri habitats sits behind more shields than seems necessary. Two voices welcome you at once, softly, and a docking light blinks on.
+
+"You may come in. We have shields to spare, and we are happy to part with some."</text>
+		<choice text="Continue..."><outcome><store/></outcome></choice>
+	</event>
+	<event id="STORE_AZURETHEA_FINE" title="A Closed Garden" kind="store" races="azurethea" states="Doing Fine,Core">
+		<text>An Azurethea outpost, grown more than built, turns its wings toward the nearest star. They let you dock, but only at the outer ring.
+
+"You may trade," says a gentle voice. "We keep most of what we make to ourselves. Please understand."</text>
+		<choice text="Continue..."><outcome><store/></outcome></choice>
+	</event>
+	<event id="STORE_AZURETHEA_STRUGGLING" title="An Open Garden" kind="store" races="azurethea" states="Struggling,Doomed,Refugee,Border">
+		<text>The Azurethea outpost has opened every one of its docking petals. Times have changed, and so have they.
+
+"We will trade anything that helps us all get farther from the dark. Even our own technology. Come in."</text>
+		<choice text="Continue..."><outcome><store/></outcome></choice>
+	</event>
+	<event id="STORE_SENTI" title="A Senti Storage Facility" kind="store" races="senti">
+		<text>A relay station of white struts and cyan light lines is broadcasting on every channel at once. A hologram resolves on your screen.
+
+"We, The Senti-, welcome you to look around our storage facilities if you would like to trade."</text>
+		<choice text="Continue..."><outcome><store/></outcome></choice>
+	</event>
+	<event id="STORE_LYKARIO" title="A Trading Post of Sorts" kind="store" races="lykario">
+		<text>A Lykario trading post is welded together from at least four other races' stations. Most of the goods on offer still wear their original owners' markings.
+
+"Don't ask where it came from," the trader growls, grinning. "Ask what it costs."</text>
+		<choice text="Continue..."><outcome><store/></outcome></choice>
+	</event>
+	<event id="STORE_NEUTRAL" title="An Independent Trader" kind="store" weight="0.6">
+		<text>An independent trader has set up shop in a hollowed-out asteroid, flying no one's colours. "I sell to everyone," they say. "For now, anyway."</text>
+		<choice text="Continue..."><outcome><store/></outcome></choice>
+	</event>
+	<event id="STORE_OCCUPIED" title="An Occupied Market" kind="store" states="Occupied" weight="3">
+		<text>Mecha frames watch over this cluster's old market. The original traders are still here, but their shelves are nearly bare, and a Mecha toll-taker gets a cut of every sale.</text>
+		<choice text="Trade anyway."><outcome><store/></outcome></choice>
+		<choice text="Leave."/>
+	</event>
+</events>
