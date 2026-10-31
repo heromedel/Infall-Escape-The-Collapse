@@ -170,7 +170,7 @@ func _crew_column() -> VBoxContainer:
 		stack.add_child(UiKit.label(", ".join(skills) if not skills.is_empty() else "No skills yet", 13, UiColours.TEXT_DIM))
 		var buttons := HBoxContainer.new()
 		for other in run.living_ships():
-			if other != ship and other.living_crew_count() < EventRunner.MAX_CREW_PER_SHIP:
+			if other != ship and other.living_crew_count() < EventRunner.MAX_CREW_PER_SHIP and ship.living_crew_count() > 1:
 				buttons.add_child(UiKit.button("TO %s" % other.name.to_upper(), func():
 					ship.crew.erase(member)
 					other.add_crew(member)

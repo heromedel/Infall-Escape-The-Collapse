@@ -49,7 +49,7 @@ func _process(delta: float) -> void:
 	if _message_time > 0.0:
 		_message_time -= delta
 	var mouse := get_local_mouse_position()
-	var region := _region_at(mouse)
+	var region := {} if screen and screen.hold_pause else _region_at(mouse)
 	if not _same_region(region, _hover_region):
 		_hover_time = 0.0
 	else:
@@ -61,6 +61,8 @@ func _process(delta: float) -> void:
 func _input(event: InputEvent) -> void:
 	if screen == null or screen.encounter == null or not is_visible_in_tree():
 		return
+	if screen.hold_pause:
+		return   # a window is open over the HUD: its clicks are the window's
 	if layout.dragging != "":
 		# A card is being moved: it follows the mouse and lands where the button is let go
 		if event is InputEventMouseMotion:

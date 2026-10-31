@@ -32,6 +32,10 @@ func _ready() -> void:
 	_input.offset_top = -40
 	_input.placeholder_text = "Command (help for a list)"
 	_input.text_submitted.connect(_run)
+	_input.gui_input.connect(func(event: InputEvent):
+		if event is InputEventKey and event.pressed and event.keycode == KEY_QUOTELEFT:
+			toggle()
+			_input.accept_event())
 	add_child(_input)
 	_say("Infall admin console. Type help.")
 
@@ -40,6 +44,8 @@ func toggle() -> void:
 	visible = not visible
 	if visible:
 		_input.grab_focus()
+	else:
+		_input.release_focus()
 
 
 func _say(text: String) -> void:

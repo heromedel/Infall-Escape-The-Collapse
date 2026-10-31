@@ -176,6 +176,18 @@ func _check_outcome() -> void:
 		note("fight_over", {"outcome": outcome})
 
 
+## When the squad jumps away, crew aboard other ships or out in battlesuits are left behind and lost, as in the
+## genre.
+func leave_behind_away_crew() -> void:
+	for ship in living(0):
+		for member in ship.crew:
+			if not member.dead and (member.ship != ship or member.in_suit):
+				member.dead = true
+				note("crew_died", {"ship": ship, "crew": member, "position": Vector2.ZERO})
+		ship.suit_out = false
+	suits = suits.filter(func(s): return s.side != 0)
+
+
 ## When a fight ends, crew still aboard enemy ships come home, unless the ship blew up under them.
 func _bring_boarders_home() -> void:
 	for ship in ships:

@@ -124,11 +124,11 @@ func _check_invariants() -> void:
 		elif selected.is_gone():
 			_fail("the selected ship %s is gone but still selected while %d others live (after %s)" % [selected.name, battle.encounter.living(0).size(), _action], "selected ship gone")
 		var counted := _windows().filter(func(w): return not w is RoomPicker).size()
-		var drifted: bool = main._overlay_count != counted
+		var drifted: bool = battle.hold_pause != (counted > 0)
 		var drifted_before: bool = _overdraw.get("overlay_count", false)
 		_overdraw["overlay_count"] = drifted
 		if drifted and drifted_before:
-			_fail("Main._overlay_count is %d but %d windows are open %s (after %s); the battle unpauses when it reaches 0" % [main._overlay_count, counted, _names(_windows()), _action], "overlay counter drifted")
+			_fail("the battle's hold is %s but %d windows are open %s (after %s)" % [battle.hold_pause, counted, _names(_windows()), _action], "battle hold drifted")
 		for member in battle.selected_crew:
 			if member.dead:
 				_fail("dead crew member %s is still selected" % member.name, "dead crew selected")

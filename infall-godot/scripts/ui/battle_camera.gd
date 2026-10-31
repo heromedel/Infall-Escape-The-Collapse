@@ -10,6 +10,7 @@ var target_position := Vector2.ZERO
 var target_zoom := 0.6
 var _dragging := false
 var user_moved := false            # the player moved the camera; stop framing the fight by itself
+var keys_free := true              # no window or text box has the keyboard, so the arrow keys pan
 
 
 func _ready() -> void:
@@ -22,7 +23,9 @@ func _process(delta: float) -> void:
 	var new_zoom := lerpf(zoom.x, target_zoom, blend)
 	zoom = Vector2.ONE * new_zoom
 	position = position.lerp(target_position, blend)
-	var pan := Vector2(Input.get_axis("ui_left", "ui_right"), Input.get_axis("ui_up", "ui_down"))
+	if _dragging and not Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
+		_dragging = false   # the release went to a window that opened mid-drag
+	var pan := Vector2(Input.get_axis("ui_left", "ui_right"), Input.get_axis("ui_up", "ui_down")) if keys_free else Vector2.ZERO
 	if pan != Vector2.ZERO:
 		target_position += pan * 900.0 * delta / zoom.x
 		user_moved = true

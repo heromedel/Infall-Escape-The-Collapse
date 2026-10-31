@@ -20,6 +20,7 @@ var stats := {"ships_destroyed": 0, "crews_killed": 0, "jumps": 0, "mawjig_earne
 var over: bool = false
 var won: bool = false
 var difficulty: String = "Normal"
+var pending_fight: String = ""      # the squad being fought, if the run was saved mid-fight
 var log_book: LogBook
 
 
@@ -149,7 +150,7 @@ func to_save() -> Dictionary:
 	return {
 		"game": "Infall: Escape The Collapse", "version": 2, "seed": seed_value, "current": current, "jumps": jumps,
 		"mawjig": mawjig, "cargo": cargo.duplicate(), "used_events": used_events.duplicate(), "stats": stats.duplicate(),
-		"difficulty": difficulty, "squad": ships, "galaxy": galaxy.to_save(), "rng_state": rng.state,
+		"difficulty": difficulty, "pending_fight": pending_fight, "squad": ships, "galaxy": galaxy.to_save(), "rng_state": rng.state,
 	}
 
 
@@ -187,6 +188,7 @@ static func load_from_disk() -> RunState:
 	for key in data.get("stats", {}):
 		run.stats[key] = int(data.stats[key])
 	run.difficulty = data.get("difficulty", "Normal")
+	run.pending_fight = data.get("pending_fight", "")
 	run.galaxy = Galaxy.from_save(data.galaxy)
 	for ship_data in data.squad:
 		run.squad.append(Ship.from_save(ship_data, 0))

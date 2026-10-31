@@ -106,8 +106,12 @@ func _gui_input(event: InputEvent) -> void:
 			camera -= event.relative / zoom
 			_clamp_camera()
 		_update_hover(event.position)
-	elif event is InputEventKey and event.pressed and event.keycode in [KEY_ESCAPE, KEY_J]:
+
+
+func _unhandled_key_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.pressed and not event.echo and event.keycode in [KEY_ESCAPE, KEY_J]:
 		closed.emit()
+		get_viewport().set_input_as_handled()
 
 
 func _zoom_limits() -> Vector2:

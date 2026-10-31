@@ -5,7 +5,7 @@ extends Node
 ## targets, power, doors, boarding and suits. Like the genre's main screen, it is where the whole run is
 ## played from; the map, events and store open over it.
 
-signal fight_over(outcome: String)
+signal fight_over(outcome: String, finished: Encounter)
 signal surrender_offered(ship: Ship)
 signal jump_pressed
 signal ship_screen_pressed
@@ -163,6 +163,7 @@ func _process(delta: float) -> void:
 	_update_views(alpha)
 	background.follow_camera(camera.position, camera.zoom.x)
 	divider.zoom = camera.zoom.x
+	camera.keys_free = not hold_pause and not get_viewport().gui_get_focus_owner() is LineEdit
 	divider.camera_x = camera.position.x
 
 
@@ -366,9 +367,11 @@ func _on_fight_over(outcome: String) -> void:
 	for ship in encounter.living(0):
 		for slot in ship.weapons:
 			slot.clear_target()
+	var finished := encounter
 	get_tree().create_timer(1.6).timeout.connect(func():
-		frame_everything()
-		fight_over.emit(outcome))
+		if encounter == finished:
+			frame_everything()
+		fight_over.emit(outcome, finished))
 
 
 var _shake := 0.0
@@ -742,11 +745,11 @@ func set_all_doors(ship: Ship, open: bool, airlocks: bool) -> void:
 
 
 func return_to_stations() -> void:
-	var ships: Array[Ship] = [selected_ship] if selected_ship else []
-	for ship in ships:
-		for member in ship.crew:
-			if member.ship == ship and member.can_act():
-				CrewBrain.order_to_room(member, member.station_room, true)
+	if selected_ship == null:
+		return
+	for member in selected_ship.crew:
+		if member.ship == selected_ship and member.can_act():
+			CrewBrain.order_to_room(member, member.station_room, true)
 
 
 func save_stations() -> void:

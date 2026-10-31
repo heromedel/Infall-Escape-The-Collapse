@@ -12,7 +12,6 @@ var enemy_squad: SquadDef
 var overlays := CanvasLayer.new()
 var title: TitleScreen
 var console := DebugConsole.new()
-var _overlay_count := 0
 
 
 func _ready() -> void:
@@ -85,6 +84,11 @@ func continue_run() -> void:
 	if run == null:
 		return
 	_begin_playing()
+	if run.pending_fight != "":
+		# Saved in the middle of a fight: it starts again, rather than the cluster counting as done
+		_show_quiet_cluster()
+		start_fight(run.pending_fight)
+		return
 	arrive_at_cluster()
 
 
@@ -184,6 +188,7 @@ func start_fight(squad_id: String) -> void:
 	encounter.band = run.band()
 	encounter.hazard = _hazard_here()
 	encounter.setup(run.living_ships(), enemies, int(run.cluster().seed) + run.jumps)
+	run.pending_fight = enemy_squad.id
 	battle.show_encounter(encounter, run, int(run.cluster().seed), run.collapse_nearness(), false)
 	battle.paused = Settings.get_value("event_auto_pause", true)
 	run.log_book.write("fight", {"squad": enemy_squad.id, "ships": enemies.map(func(s): return s.design.id)}, "A fight with %s." % enemy_squad.name)
@@ -194,11 +199,12 @@ func start_fight(squad_id: String) -> void:
 	Sfx.play_music("combat")
 
 
-func _on_fight_over(outcome: String) -> void:
+func _on_fight_over(outcome: String, finished: Encounter) -> void:
+	run.pending_fight = ""
 	Sfx.play_music("explore")
 	if outcome == "lost":
 		return
-	var rewards := runner.fight_rewards(encounter) if outcome in ["won", "surrendered"] else {"mawjig": 0, "lines": []}
+	var rewards := runner.fight_rewards(finished) if outcome in ["won", "surrendered"] else {"mawjig": 0, "lines": []}
 	var final_fight: bool = run.cluster().kind == "final" and outcome in ["won", "surrendered"]
 	var window := Overlay.new()
 	_open(window)
@@ -315,6 +321,8 @@ func open_map() -> void:
 func jump_to(index: int) -> void:
 	if encounter.in_fight():
 		run.log_book.write("fled", {"cluster": run.current}, "The squad jumped away from a fight.")
+	run.pending_fight = ""
+	encounter.leave_behind_away_crew()
 	Sfx.play("jump")
 	await battle.play_jump_out()
 	run.jump_to(index)
@@ -336,7 +344,7 @@ func wait_here() -> void:
 # --- Refitting ------------------------------------------------------------------------------------------------
 
 func open_store() -> void:
-	if encounter.in_fight():
+	if encounter.in_fight() or run.living_ships().is_empty():
 		return
 	var window := StoreWindow.new()
 	_open(window)
@@ -345,7 +353,7 @@ func open_store() -> void:
 
 
 func open_ship_screen() -> void:
-	if encounter.in_fight():
+	if encounter.in_fight() or run.living_ships().is_empty():
 		return
 	var window := ShipScreen.new()
 	_open(window)
@@ -388,16 +396,16 @@ func _check_unlocks() -> void:
 ## Opens a window over the ship view; the battle holds still while any window is open.
 func _open(window: Control) -> void:
 	overlays.add_child(window)
-	_overlay_count += 1
-	if battle:
-		battle.hold_pause = true
-	window.tree_exited.connect(func():
-		_overlay_count -= 1
-		if battle and _overlay_count <= 0:
-			_overlay_count = 0
-			battle.hold_pause = false)
-	if window.has_signal("closed") and not window is MapScreen:
-		pass
+	_refresh_hold()
+	window.tree_exited.connect(_refresh_hold)
+
+
+## The battle holds while any window is open, worked out from the windows themselves so it can't drift.
+func _refresh_hold() -> void:
+	if battle == null or not is_inside_tree():
+		return
+	var open := overlays.get_children().filter(func(w): return not w.is_queued_for_deletion() and not w is TitleScreen)
+	battle.hold_pause = not open.is_empty()
 
 
 func _close(window: Control) -> void:
@@ -407,7 +415,6 @@ func _close(window: Control) -> void:
 func _close_battle() -> void:
 	for child in overlays.get_children():
 		child.queue_free()
-	_overlay_count = 0
 	if battle:
 		battle.queue_free()
 		battle = null
