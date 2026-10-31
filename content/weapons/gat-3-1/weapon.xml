@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Gat 3.1 "Triblast": the Outrider's 3-shot laser (ship-suggestions.md, Outrider step 9; numbers Ai-Generated-Proposal 2026-10-22).
+     Charge 13.1 s = 7.0 base + 6.0 damage + 0.09 conduit (weapon-budget-table); 0.021 a shot (mawjig-cost-table). -->
+<weapon name="Gat 3.1" nickname="Triblast" type="Laser" effects="Damage, Conduit damage" techType="Mechanical" race="Terran"
+        shots="3" damage="1" power="2" chargeSeconds="13.1" mawjigPerShot="0.021" conduitDamageChance="10%" projectileArt="bolt.svg"
+        description="Three quick shots. The overload it leaves can cut a power conduit."/>

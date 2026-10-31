@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Whispwraith "Mote": low tech, met only inside the collapse (Swallowed clusters, the ??? victory path). New design
+     (2026-10-29), Ai-Generated-Proposal, from the Whispwraith profile (2 power bars per Whispwraith, ion weapons; low
+     tech: ion blasts, one or two crew). "Mote" is a working name. Gap references are listed in README.md. -->
+<ship name="Mote" race="Whispwraith" faction="Whispwraith" color="#FF00E6" hull="10" missiles="0">
+  <note>Smooth and round, silent. Its power is its crew: two Whispwraith give four bars. Its own air is toxic to other races, and oxygen is toxic to them.</note>
+  <power kind="crew" barsPerCrew="2"/>                               <!-- G2 -->
+  <system type="piloting" level="1"/>
+  <system type="shields" level="1"/>
+  <system type="engines" level="1"/>
+  <system type="lifeSupport" level="1" atmosphere="Whispwraith"/>    <!-- G15 -->
+  <system type="weapon" id="weapons" name="Weapons" level="1">        <!-- G3 -->
+    <weapon name="Hush" kind="ion" power="1" shots="1" damage="0"/>   <!-- G4: an ion blast -->
+  </system>
+  <crew name="One" race="Whispwraith" station="piloting"/>            <!-- G1: heal in their own air, teleport themselves (mid tech) -->
+  <crew name="Other" race="Whispwraith" station="weapons"/>
+  <!-- Captain plan, Ai-Generated-Proposal (2026-10-30). Lines marked G22-G27 use features Deck Collapse doesn't have yet (README.md). -->
+  <ai plan="destroy">
+    <!-- Ion the shields, then the guns. -->
+    <target system="shields" weapon="Hush" weight="0.8"/>
+    <target system="weapon" weapon="Hush" when="enemyShieldsDown"/>
+  </ai>
+</ship>

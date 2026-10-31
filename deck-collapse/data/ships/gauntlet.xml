@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Classic boarding cruiser: a teleporter, tough crew, light guns. -->
+<ship bands="3-8" name="Gauntlet" faction="Colony Fleet" color="#66FF66" hull="30" missiles="6">
+  <note>Wins by boarding. Four hardened crew, a Teleport Bay and just enough guns to keep the enemy busy.</note>
+  <system type="reactor" level="7"/>
+  <system type="shields" level="1"/>
+  <system type="engines" level="2"/>
+  <system type="piloting" level="1"/>
+  <system type="sensors" level="1"/>
+  <system type="lifeSupport" level="1"/>
+  <system type="medBay" level="1"/>
+  <system type="airlock" level="1"/>
+  <system type="teleport" level="1"/>
+  <system type="weapon" id="weapons" name="Weapons" level="2">
+    <weapon ref="spark-laser"/>
+    <weapon ref="torpedo"/>
+  </system>
+  <crew name="Krell" station="teleport" combat="2" repair="1"/>
+  <crew name="Vash" station="teleport" combat="1"/>
+  <crew name="Toor" station="piloting" piloting="1"/>
+  <crew name="Ima" station="weapons"/>
+</ship>

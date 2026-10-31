@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Lykario "Scrap Hound": a stolen, battered SC-1 Outrider (ship-suggestions.md, 2026-10-29), bands 1-2, a patch of
+     the Outrider (G18) that changes its race and crew. Ai-Generated-Proposal. Gap references are listed in README.md. -->
+<loadout ship="SC-1 Outrider" name="Scrap Hound" inherit="Patch" race="Lykario" faction="Lykario" color="#D1DBE7" hull="12" missiles="0">
+  <note>The pack flies what it took. Two hunters cross over while the Auto Pilot flies, and it needs no Sensors: Animal Senses find the other crew.</note>
+  <system type="piloting" level="2"/>                                <!-- Auto Pilot, so the pilot can board too -->
+  <system type="sensors" removed="true"/>
+  <system type="airlock" removed="true"/>
+  <system type="engines" level="1"/>
+  <system type="medBay" removed="true"/>
+  <system type="teleport" level="1"/>
+  <system type="weapon" id="weapons" name="Weapons" level="1">        <!-- G3 -->
+    <weapon name="Gat 2.1 Twinshot" kind="laser" power="1" shots="2" damage="1" conduitDamage="10" mount="3"/>  <!-- stolen, keeps its maker's name -->
+  </system>
+  <crew>
+    <member name="Pack Leader" race="Lykario" station="piloting" combat="1"/>   <!-- G1: quick attacks, reduced HP, Animal Senses -->
+    <member name="Hunter" race="Lykario" station="teleport" combat="1"/>
+    <member name="Hunter" race="Lykario" station="weapons"/>
+  </crew>
+  <!-- Captain plan, Ai-Generated-Proposal (2026-10-30). Lines marked G22-G27 use features Deck Collapse doesn't have yet (README.md). -->
+  <ai plan="crew-kill">
+    <!-- A boarding raid. Shoot the guns, send the pack to the Med Bay so the hurt can't heal, and never fire on a
+         system where our own hunters are, or cut the air while they are aboard (Lykario breathe). Replaces the Outrider's plan. -->
+    <target system="weapon" weapon="Gat 2.1 Twinshot" unless="ownCrewIn" weight="0.8"/>                         <!-- G27 -->
+    <target system="medBay" when="enemyWounded" unless="ownCrewIn" weapon="Gat 2.1 Twinshot" weight="0.6"/>
+    <target system="aaa" when="enemyWounded" unless="ownCrewIn" weapon="Gat 2.1 Twinshot" weight="0.6"/>   <!-- Senti ships: the AAA replaces the Med Bay -->
+    <board system="medBay" weight="0.8"/>                                                                       <!-- G23 -->
+    <board system="aaa" weight="0.8"/>   <!-- Senti ships: the AAA replaces the Med Bay -->
+    <board system="weapon" when="enemyMedBayDown"/>                                                             <!-- G25 -->
+  </ai>
+</loadout>

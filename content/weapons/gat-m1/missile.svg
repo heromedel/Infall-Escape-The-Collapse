@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Gat M1 missile: a Gato missile (own drawing, genre-like per docs/reference/genre-battle-screen: a slim rocket
+     seen from above, pointed nose, small fins, an exhaust flame, about 32 by 80 px). Drawn nose up; the top centre
+     is the point on the flight path. Gato style: a pale grey body with an amber nose band, three swept fins, and a
+     gold flame with a white heart that pulses. -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 76" width="24" height="76">
+  <defs>
+    <linearGradient id="body" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#9aa3b0"/>
+      <stop offset="0.5" stop-color="#e3e8ef"/>
+      <stop offset="1" stop-color="#8a94a3"/>
+    </linearGradient>
+    <linearGradient id="flame" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FFE066"/>
+      <stop offset="0.6" stop-color="#FF8500" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#FF3B3B" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <!-- exhaust flame, pulsing -->
+  <path d="M8 50 L16 50 L12 74 Z" fill="url(#flame)">
+    <animate attributeName="d" values="M8 50 L16 50 L12 74 Z;M8 50 L16 50 L12 66 Z;M8 50 L16 50 L12 76 Z;M8 50 L16 50 L12 74 Z" dur="0.3s" repeatCount="indefinite"/>
+  </path>
+  <path d="M10 50 L14 50 L12 60 Z" fill="#FFF8D6"/>
+  <!-- fins: two swept side fins and one down the middle -->
+  <polygon points="7,40 2,52 7,50" fill="#6b7280"/>
+  <polygon points="17,40 22,52 17,50" fill="#6b7280"/>
+  <rect x="11" y="42" width="2" height="9" fill="#5a6270"/>
+  <!-- body with the nose cone and the amber band -->
+  <path d="M12 2 C15 8 16 14 16 20 L16 50 L8 50 L8 20 C8 14 9 8 12 2 Z" fill="url(#body)" stroke="#4b5563" stroke-width="0.8"/>
+  <rect x="8" y="18" width="8" height="3" fill="#FFB13B"/>
+  <path d="M12 2 C13.5 5 14.5 8.5 15 12 L9 12 C9.5 8.5 10.5 5 12 2 Z" fill="#c9d1dc"/>
+</svg>

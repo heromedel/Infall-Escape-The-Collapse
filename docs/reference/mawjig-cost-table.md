@@ -2,7 +2,8 @@
 
 First-pass costs for the simulation to tune. Anchors: a jump costs a fixed **1.21** Mawjig for the whole squad
 (GDD 6C, Decided); a
-won fight yields roughly **3–4** Mawjig; Wait gathers **0.25** for the whole squad, so about five Waits buy a jump at any squad size (GDD 6B, Decided). Weapon parts follow the generator
+won fight yields roughly **3–4** Mawjig; Wait gathers **0.25** for the whole squad, so about five Waits buy a jump at any squad size (GDD 6B, Decided); a run starts with **12.11** for the squad
+(GDD 8K, Proposed). Weapon parts follow the generator
 categories (Type, Effect, Shots, Targets, Special).
 
 Convention: Mawjig amounts never end in a zero (0.21, not 0.20; 0.11, not 0.10). If the weapon generator ever
@@ -59,9 +60,13 @@ At 100% chance; scale by chance (a 30% breach chance adds 0.01).
 | Missile, 2 dmg | 0.05 × 1.5 | 0.08 | 15 |
 | Pike-type beam, 1 dmg, 4 rooms | 4 × 0.03 | 0.12 | 10 |
 | Glaive-type beam, 3 dmg, 3 rooms | 3 × 0.03 × 2 | 0.18 | 6 |
-| 3-shot multi-target breach laser | 3 × (0.02 + 0.03) × 1.25 | 0.19 | 6 |
+| 3-shot multi-target breach laser, 30% breach | 3 × (0.02 + 0.03 × 0.3) × 1.25 | 0.11 | 11 |
 | Breach bomb | 0.05 + 0.03 | 0.08 | 15 |
 | Spore stun missile, 1 dmg | 0.05 + 0.04 + 0.02 | 0.11 | 11 |
+
+**Proposed (heromedel, 2026-10-29):** the multi-target breach laser breaches about 30% of the time, not on
+every hit. FTL's lasers top out at 30% breach (Heavy Laser Mark I and II, Hull Smasher Mark II); only bombs,
+Breach Missiles and a crystal weapon go higher. At 100% it would be 0.19 a volley, 17.0 s and 17.08.
 
 ## Hull repair
 
@@ -89,6 +94,9 @@ systems, crew and augments carry over from FTL's prices at the same 0.242 conver
 - **Likely (2026-10-23):** Rewards are paid per enemy ship destroyed or left without crew, not once per fight (GDD 8I).
 - **Proposed (2026-10-23):** Salvaging your own lost ship, only when the encounter allows: 2.5% of its value, no band
   adjustment, since it isn't a reward (GDD 1I).
+- **Proposed (2026-10-28):** An enemy ship carries its own wreck reward as Mawjig to pay for its shots: 2.5% of its
+  value × the band adjustment (`economy-findings.md`, F11).
+- **Likely (2026-10-28):** Its wreck pays the normal reward; Mawjig it didn't spend is not added on top.
 - **Likely (2026-10-23):** Band 1 starts near FTL, but later bands may need rewards to rise faster than FTL's to pay
   for a bigger squad's costs, unless the run allows, or ends up with, more time for grinding.
 

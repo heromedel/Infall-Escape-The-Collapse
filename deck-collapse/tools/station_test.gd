@@ -1,0 +1,100 @@
+## Headless test of the stop between battles: buys everything a station offers, moves weapons and suits through
+## cargo, sells, upgrades and undoes, then starts a battle with the changed ship to check it still flies. Also
+## checks every built-in ship can fly and survives being saved and reloaded unchanged.
+## Run: godot --headless --path . res://tools/station_test.tscn
+extends Node
+
+const SIMULATE := preload("res://tools/simulate.gd")
+
+var problems: Array[String] = []
+
+
+func _ready() -> void:
+	for design in Catalog.designs.filter(func(d): return d.built_in):
+		_check(design)
+	_check_events()
+	print("Station test: %d ships, %d events, %d problems" % [Catalog.designs.filter(func(d): return d.built_in).size(),
+		Catalog.events.size(), problems.size()])
+	for problem in problems:
+		print("  ", problem)
+	get_tree().quit()
+
+
+## Every choice of every event, many times over, on a run whose ship has every race aboard and every system.
+func _check_events() -> void:
+	if Catalog.events.size() < 1:
+		problems.append("No events loaded.")
+	for event in Catalog.events:
+		for i in 20:
+			var run := RunState.new(Catalog.designs[0])
+			run.record_battle(Battle.new(run.design, Catalog.designs[1], 0, 3))
+			for race_id in Catalog.races:
+				run.carry.crew.append({"name": race_id, "race": race_id, "skills": CrewSkills.empty(), "wounds": 0, "system": "reactor"})
+			var choices: Array = run.event_choices(event.choices)
+			if choices.is_empty():
+				problems.append("%s shows no choices." % event.id)
+				continue
+			var shown: Dictionary = choices[i % choices.size()]
+			var result := run.resolve_event_choice(shown.choice, shown.crew)
+			if String(result.text).contains("{crew}"):
+				problems.append("%s left {crew} in its text." % event.id)
+			for follow in run.event_choices(result.outcome.choices):
+				run.resolve_event_choice(follow.choice, shown.crew)
+			if result.battle and run.beacon.get("enemy") == null:
+				problems.append("%s leads to a battle with no enemy." % event.id)
+
+
+func _check(design: ShipDesign) -> void:
+	# Saving and reloading a design must keep it the same.
+	var copy := design.duplicate_design().duplicate_design()
+	if copy.to_xml() != design.duplicate_design().to_xml():
+		problems.append("%s changes when saved and reloaded." % design.name)
+	if copy.systems.filter(func(s): return s.type == "reactor").size() != 1:
+		problems.append("%s doesn't have exactly one reactor after reloading." % design.name)
+	if not design.problems().is_empty():
+		problems.append("%s can't fly: %s" % [design.name, ", ".join(design.problems())])
+	var enemy: ShipDesign = Catalog.designs[0]
+	var run := RunState.new(design)
+	run.record_battle(Battle.new(run.design, enemy, 0, 7))
+	run.mawjig = 1000.0
+	for round in 3:
+		run.station = Station.new(run.design, run.rng)
+		for section in run.station.sections:
+			for item in section.items:
+				run.buy(item)
+		run.repair_hull(5)
+		run.buy_missile()
+		for system in run.design.systems.duplicate():
+			run.upgrade(system.id)
+		run.undo_upgrade()
+		for index in range(run.cargo.size() - 1, -1, -1):
+			var targets := run.cargo_targets(index)
+			if not targets.is_empty():
+				run.use_cargo(index, targets[0].target)
+		for system in run.weapon_systems():
+			if not system.weapons.is_empty():
+				run.store_weapon(system.id, 0)
+				break
+		if not run.cargo.is_empty():
+			run.sell_cargo(0)
+	if run.design.problems().size() > 0:
+		problems.append("%s: %s" % [design.name, ", ".join(run.design.problems())])
+	if run.cargo.size() > run.cargo_slots():
+		problems.append("%s: cargo over %d" % [design.name, run.cargo_slots()])
+	for system in run.weapon_systems():
+		if system.weapons.size() > Weapons.SLOTS_PER_SYSTEM:
+			problems.append("%s: %d weapons in %s" % [design.name, system.weapons.size(), system.name])
+	var weapon_count := 0
+	for system in run.weapon_systems():
+		weapon_count += system.weapons.size()
+	print("%-18s systems %2d  weapons %d  cargo %d  crew %d  Mawjig %.2f" % [design.name, run.design.systems.size(),
+		weapon_count, run.cargo.size(), run.carry.crew.size(), run.mawjig])
+	var battle := Battle.new(run.design, enemy, 0, 9, run.battle_carry())
+	var ai := BattleAI.new("Normal", 3)
+	var steps := 0
+	while not battle.over and steps < 3000:
+		var side := battle.active_side
+		SIMULATE.perform(battle, side, ai.next_action(battle, side))
+		steps += 1
+	if not battle.over and not battle.aftermath:
+		problems.append("%s: battle after upgrades didn't finish" % design.name)

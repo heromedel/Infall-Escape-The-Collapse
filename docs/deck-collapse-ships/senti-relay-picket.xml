@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Senti-GPH "Relay Picket": a low-tech guard for a relay or broadcast station, band 3, doing-fine Senti clusters.
+     New design (2026-10-29), Ai-Generated-Proposal, from race profile Senti-GPH 6, 9 and 10 (low: beams, good sensors,
+     a small AAA). Gap references are listed in README.md. -->
+<ship name="Relay Picket" race="Senti-GPH" faction="Senti-GPH" color="#D2FF00" hull="10" missiles="0">
+  <note>Holographic crew broadcast by an Armoured Avatar Array: damage the AAA and avatars drop out until it is repaired. No Life Support, since Senti don't breathe; ion disrupts them.</note>
+  <power kind="AZC" level="2"/>                                     <!-- G2: Terran-like core, maybe slightly worse -->
+  <system type="piloting" level="1" draws="false"/>
+  <system type="sensors" level="2" draws="false"/>
+  <system type="shields" level="1"/>
+  <system type="engines" level="1"/>
+  <system type="aaa" level="2"/>                                     <!-- G12: hosts 3 Senti per level (built in Deck Collapse, 2026-10-30) -->
+  <system type="weapon" id="weapons" name="Weapons" level="3">        <!-- G3 -->
+    <weapon name="2B 01 V1" kind="beam" power="1" shots="1" damage="1" rooms="2"/>   <!-- G4, G16 -->
+    <weapon name="1B 02 V1" kind="beam" power="2" shots="1" damage="2" rooms="1"/>
+  </system>
+  <crew name="Pilot" race="Senti-GPH" station="piloting"/>            <!-- G1, G15: half HP, no oxygen, immune to fire -->
+  <crew name="Gunner" race="Senti-GPH" station="weapons"/>
+  <!-- Captain plan, Ai-Generated-Proposal (2026-10-30). Lines marked G22-G27 use features Deck Collapse doesn't have yet (README.md). -->
+  <ai plan="destroy">
+    <!-- A station guard: silence the guns that threaten the station. -->
+    <target system="weapon" weapon="1B 02 V1" weight="0.8"/>
+    <target system="weapon" weapon="2B 01 V1" weight="0.75"/>
+    <target system="engines" weapon="1B 02 V1" when="enemyWeaponsDown" weight="0.6"/>
+  </ai>
+</ship>

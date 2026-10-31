@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Light Attack Frame, Suit Dock loadout (ship-suggestions.md, 2026-10-23), bands 2-3 (no EVB suits in band 1), a patch of the frame (G18, GDD 5J).
+     One crew member flies a laser battlesuit that pops a shield layer for its partner's Hull Laser. -->
+<loadout ship="Light Attack Frame" name="Light Attack Frame (Suit Dock)" inherit="Patch">
+  <system id="pod" removed="true"/>
+  <system type="evb" id="dock" name="EVB Dock" level="2" ownPower="2" suit="laser"/>   <!-- G17 -->
+  <crew>
+    <member name="Pilot" race="Mecha" station="piloting"/>
+    <member name="Suit Pilot" race="Mecha" station="dock"/>
+  </crew>
+  <!-- Captain plan, Ai-Generated-Proposal (2026-10-30). Lines marked G22-G27 use features Deck Collapse doesn't have yet (README.md). -->
+  <ai plan="destroy">
+    <!-- The suit's job is popping the shield layer for its partner's Hull Laser. Replaces the frame's plan. -->
+    <suit system="shields" suit="laser" weight="0.85"/>              <!-- G22 -->
+    <suit system="weapon" suit="laser" when="enemyShieldsDown"/>
+  </ai>
+</loadout>

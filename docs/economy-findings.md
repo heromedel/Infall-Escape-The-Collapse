@@ -301,3 +301,79 @@ about FTL's per ship (F4).
   higher-tech, dearer items, and later purchases are for several ships. Spending rises with band and squad size,
   so high-band pay doesn't run away (F4: per-ship upgrade money stays near FTL's). An early diver with 1–2 ships
   gets more per ship, but needs that power to survive; that is the dive's intended payoff. No change suggested.
+
+## F8. Starting Mawjig (2026-10-26)
+
+No doc set how much Mawjig a run starts with; Production's Goal P made the gap visible. FTL starts a ship with
+about 16 fuel and about 10 scrap on Normal (hard-coded, from memory) and, for the Kestrel, 8 missiles (data).
+
+| Option | Amount | Matches |
+|---|:-:|---|
+| A | 19.36 | FTL's 16 fuel as 16 jumps |
+| B | 22.18 | The Kestrel's whole start at Infall's prices |
+| C | 12.11 | One band of jumps (10 × 1.21) |
+
+- **Proposed (heromedel, 2026-10-26): C, 12.11 for the squad, for now** (GDD 8K). It covers the 5-jump collapse
+  opening (6.05) with a little over; band 1 nets about +6.81 per band for a lone ship (F4), so the start is a
+  cushion. It is tighter than FTL: Mawjig is also shopping money, so an early store purchase leaves the squad lean,
+  and one unlucky stretch means Waiting.
+
+## F9. Mecha self-powered bars at 8.47 Mawjig each (2026-10-26)
+
+- **Proposed (heromedel, 2026-10-26):** each self-powered bar on a Mecha ship adds 8.47 Mawjig to its system's
+  price, replacing the ordinary reactor-bar price (3.63 for bars 1–5, 4.84 for 6–10). A self-powered system is always
+  on and never competes for power; the bar can't be moved, which is its downside. Over a 20-bar ship, power costs
+  about 55% more than a reactor would (about 169 against about 109). Recorded in `system-prices.md`.
+- **New totals for Ship Designs** (crew extra, as before):
+
+  | Light Attack Frame | Own power, old → new | Ship total, old → new | Band 1 wreck pays |
+  |---|:-:|:-:|:-:|
+  | Hull Laser (6 bars) | 22.99 → 50.82 | 131.72 → 159.55 | 3.99 |
+  | Suit Dock (7 bars) | 27.83 → 59.29 | 137.97 → 169.43 | 4.24 |
+
+- A single frame is now about 20% over the band 1 squad value budget (137, F6). Suggested (Ai-Generated-Proposal):
+  allow it, since Mecha are meant to be tough and a tougher ship pays more; or Ship Designs gives band 1 a lighter
+  loadout.
+
+## F10. Weapon systems: second systems, slots and mounts (2026-10-27)
+
+Asked by Infall: Init Coding for heromedel, about its GDD points on several weapon systems (8K and 8L on
+`Cloud-C-Init-Coding`, to be relettered at merge, since 8K here is Starting Mawjig; now 8L and 8M). Sent there as opinions; recorded
+here. Nothing in the GDD or the tables is changed by this.
+
+- **heromedel (2026-10-27):** level prices stay per system (two weapon systems are different systems). The lever
+  against splitting is the install cost: each additional weapon system costs more to install than the one before,
+  enough to slightly hamper it.
+- **Install step — Ai-Generated-Proposal:** each additional weapon system costs **1.21 Mawjig** (one jump) more to
+  install than the one before: **4.84, 6.05, 7.26, 8.47, 9.68, 10.89** for the 1st to 6th system. In scrap that is
+  20, 25, 30, 35, 40, 45: the same 5-scrap rise as the reactor bands and the Mecha bar upgrades.
+
+  | Shape (heromedel's three) | Total | What the rising install adds |
+  |---|:-:|---|
+  | 2 × level 3, the standard spread | 42.35 | +1.21, about 3% |
+  | 3 × level 2 | 47.19 | +3.63 |
+  | 6 × level 1, hard to disable, low-power weapons only | 47.19 | +18.15, about 62% |
+  | 1 × level 6, the only one holding a 6-power weapon | about 59.3 | none; its cost is the climbing levels |
+
+  The penalty grows with how far a ship splits. Compounding × 1.25 lands close (54.49 for 6 × level 1) with odd
+  numbers; a step of a full buy price (+4.84 each) makes 6 × level 1 cost 101.64, which punishes the
+  hard-to-disable layout too much. Mecha ships, which need several weapon systems, pay only 1.21 to 3.63 extra for
+  2 to 4 systems. The same step could apply to a second system of any kind.
+- **Slots equal level — no change to weapon prices or fight rewards.** The tables price power, damage and charge
+  time, never slots; a level-N system has N bars, so slots only bind where power already does. What is lost early is
+  a spare unpowered weapon kept to swap in, so early players buy slightly fewer weapons: a small loosening, nothing
+  to retune. Fight rewards come from ship value (8I), which counts whatever a ship carries.
+- **Bought mount beyond the hull's — Ai-Generated-Proposal, first guess:** 4.84, the Weapon Control buy price.
+
+## F11. Enemy Mawjig for shots (2026-10-28)
+
+Asked by Infall: Deck Collapse: with the default Ammo setting enemies pay for their shots too, but no doc said how
+much Mawjig an enemy carries. F4's 0.64 per fight (the player's average ammo cost) ran dry in 23% of its card
+battles, which last longer than real-time fights.
+
+- **Proposed (heromedel, 2026-10-28):** an enemy ship carries its own wreck reward as its purse: 2.5% of its ship
+  value × the band adjustment 1.(band − 1) (GDD 8I). A band 1 Light Attack Frame carries about 3.99. If enemies
+  still run dry often, raise it (e.g. × 1.5) rather than add a band table; an enemy running dry should be rare.
+- **Likely (heromedel, 2026-10-28):** a wreck pays the normal reward. Mawjig the enemy didn't spend is not added on
+  top: the wreck reward already stands for everything recoverable, and adding the purse would raise quick-kill
+  rewards by up to 100% and break the squad budgets (F6).

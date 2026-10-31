@@ -1,0 +1,602 @@
+## The enemy captain. Each call looks at the battle and picks one action; the caller performs it, animates it,
+## and asks again until the AI ends its turn. It uses the same actions and checks as the human captain.
+class_name BattleAI
+extends RefCounted
+
+## Action shapes: { kind: "play", uid, target } · { kind: "move", crew, system } · { kind: "burn" } ·
+## { kind: "reroute" } · { kind: "treat" } · { kind: "recall", suit } · { kind: "jump" } · { kind: "end" }
+var level := "Normal"
+var _rng := RandomNumberGenerator.new()
+## The when of the plan line _plan_pick last followed ("" if none), so a line aimed at our own crew on purpose
+## (when="ownCrewIn") isn't steered away from them.
+var _picked_when := ""
+
+## Station order when nothing urgent needs a crew member.
+const STATION_PRIORITY := ["piloting", "weapon", "shields", "engines", "evb", "sensors", "teleport", "airlock", "medBay"]
+## A plan line's chance to be followed when it leaves out weight (heromedel: 3 times out of 4), and the most any
+## line can have after the captain's level adjusts it, so captains stay a little unpredictable.
+const DEFAULT_PLAN_WEIGHT := 0.75
+const MAX_PLAN_WEIGHT := 0.9
+
+## Captain turns (both sides) with no hull damage before an AI calls it a stalemate and jumps away.
+const STALEMATE_TURNS := 30
+## Enemy systems worth breaking, best first.
+const TARGET_PRIORITY := ["shields", "weapon", "piloting", "engines", "teleport", "evb", "cloak", "hacking",
+	"lifeSupport", "mindControl", "medBay", "aaa", "sensors", "reactor", "battery", "airlock"]
+
+
+func _init(ai_level: String = "Normal", seed_value: int = 0) -> void:
+	level = ai_level
+	_rng.seed = seed_value if seed_value != 0 else int(Time.get_ticks_usec())
+
+
+func next_action(battle: Battle, side: int) -> Dictionary:
+	var ship := battle.ships[side]
+	var enemy := battle.ships[1 - side]
+	var steps: Array[Callable] = [
+		func(): return _play_first(battle, side, "power", {}),
+		func(): return _crew_move(battle, side),
+		func(): return _crew_cards(battle, side),
+		func(): return _free_own_crew(battle, side),
+		func(): return _battery_if_needed(battle, side),
+		func(): return _play_first(battle, side, "shield", {}),
+		func(): return _hack(battle, side),
+		func(): return _mind_control(battle, side),
+		func(): return _fire_weapons(battle, side),
+		func(): return _launch_suit(battle, side),
+		func(): return _teleport(battle, side),
+		func(): return _cloak(battle, side),
+		func(): return _treat(battle, side),
+		func(): return _recall_suits(battle, side),
+		func(): return _jump(battle, side),
+		func(): return _burn(battle, side),
+	]
+	for step in steps:
+		var action: Dictionary = step.call()
+		if not action.is_empty():
+			return action
+	if battle.why_cannot_reroute(side) == "" and ship.power_row.size() < ship.capacity_of_type("reactor"):
+		return {"kind": "reroute"}
+	return {"kind": "end"}
+
+
+# ---------------------------------------------------------------- crew
+
+func _crew_move(battle: Battle, side: int) -> Dictionary:
+	var ship := battle.ships[side]
+	var free := battle.living_crew_of(side).filter(func(m): return m.controlled_by < 0)
+	var wanted := _wanted_stations(battle, side)
+	var assignment := {}  # crew id -> system id
+	var unassigned := free.duplicate()
+	for station in wanted:
+		if unassigned.is_empty():
+			break
+		var ship_side: int = station.ship
+		var system_id: String = station.system
+		var chosen := {}
+		var hostile := battle.has_hostiles(ship_side, system_id)
+		for member in unassigned:
+			if member.ship == ship_side and member.system == system_id and not (hostile and _avoids_boarders(member)):
+				chosen = member
+				break
+		if chosen.is_empty():
+			for member in unassigned:
+				var fits: bool = Battle.health_fraction(member) < 0.5 if station.get("wounded_only", false) else true
+				fits = fits and not (hostile and _avoids_boarders(member))
+				if member.ship == ship_side and not member.moved and fits:
+					chosen = member
+					break
+		if chosen.is_empty():
+			continue
+		unassigned.erase(chosen)
+		assignment[chosen.id] = system_id
+	# Crew who keep away from boarders step out of a boarded system to the nearest one without them.
+	for member in unassigned:
+		if _avoids_boarders(member) and member.ship == side and battle.has_hostiles(side, member.system):
+			var row: Array = ship.system_order
+			var here: int = row.find(member.system)
+			var nearest := ""
+			for id in row:
+				if not battle.has_hostiles(side, id) and (nearest == "" or absi(row.find(id) - here) < absi(row.find(nearest) - here)):
+					nearest = id
+			if nearest != "":
+				assignment[member.id] = nearest
+	for member in free:
+		if assignment.has(member.id) and member.system != assignment[member.id]:
+			if battle.why_cannot_move(side, member, assignment[member.id]) == "":
+				return {"kind": "move", "crew": member.id, "system": assignment[member.id]}
+	return {}
+
+
+static func _avoids_boarders(member: Dictionary) -> bool:
+	return Catalog.race(member.get("race", "")).get("avoids_boarders", false)
+
+
+## Where crew should be this turn, most urgent first: { ship, system, wounded_only? }.
+func _wanted_stations(battle: Battle, side: int) -> Array:
+	var ship := battle.ships[side]
+	var wanted: Array = []
+	var hand_ids := ship.hand.map(func(card): return card.id)
+	var med_bay := ship.first_system_of_type("medBay")
+	# Badly hurt crew go to the Med Bay.
+	if med_bay != "" and ship.capacity(med_bay) > 0:
+		for member in battle.living_crew_of(side):
+			if Battle.health_fraction(member) < 0.5 and member.ship == side:
+				wanted.append({"ship": side, "system": med_bay, "wounded_only": true})
+	# Boarders on our ship get met.
+	for member in battle.living_crew():
+		if member.owner != side and member.ship == side:
+			wanted.append({"ship": side, "system": member.system})
+	# Fires, breaches and damage get a worker when we hold a Repair.
+	if "repair" in hand_ids:
+		for system_id in ship.system_order:
+			if ship.systems[system_id].on_fire:
+				wanted.append({"ship": side, "system": system_id})
+		for type in ["lifeSupport"] + STATION_PRIORITY + ["reactor", "battery", "cloak", "hacking", "mindControl"]:
+			for system_id in ship.system_order:
+				if ship.systems[system_id].type == type and Battle.needs_repair(ship.systems[system_id]):
+					wanted.append({"ship": side, "system": system_id})
+	# A launch needs someone in the EVB Dock right after the pilot.
+	if "suit" in hand_ids:
+		wanted.append({"ship": side, "system": ship.first_system_of_type("piloting")})
+		for card in ship.hand:
+			if card.id == "suit":
+				wanted.append({"ship": side, "system": card.system})
+	# A Teleport card needs a boarder waiting in the bay right after the pilot, until two are across.
+	var bay := ship.first_system_of_type("teleport")
+	var across := battle.living_crew_of(side).filter(func(m): return m.ship != side).size()
+	if "teleport" in hand_ids and bay != "" and across < 2:
+		wanted.append({"ship": side, "system": ship.first_system_of_type("piloting")})
+		wanted.append({"ship": side, "system": bay})
+	# Ordinary stations.
+	for type in STATION_PRIORITY:
+		if type == "evb" and not "suit" in hand_ids:
+			continue
+		if type == "medBay":
+			continue
+		for system_id in ship.system_order:
+			if ship.systems[system_id].type == type:
+				wanted.append({"ship": side, "system": system_id})
+	return wanted
+
+
+func _crew_cards(battle: Battle, side: int) -> Dictionary:
+	var ship := battle.ships[side]
+	for system_id in _systems_by_importance(ship):
+		var action := _play_first(battle, side, "repair", {"system": system_id, "ship": side})
+		if not action.is_empty():
+			return action
+	# Bring the air back where our crew are choking.
+	for system_id in ship.system_order:
+		var ours_inside := battle.crew_in_system(side, system_id).any(func(m): return m.owner == side)
+		if ours_inside and ship.systems[system_id].air <= 1 and not ship.systems[system_id].breached:
+			var action := _play_first(battle, side, "restore", {})
+			if not action.is_empty():
+				return action
+	# Vent a burning or boarded system nobody of ours is in.
+	for system_id in ship.system_order:
+		var system: Dictionary = ship.systems[system_id]
+		var ours_inside := battle.crew_in_system(side, system_id).any(func(m): return m.owner == side)
+		var boarders_inside := battle.crew_in_system(side, system_id).any(func(m): return m.owner != side)
+		if (system.on_fire or boarders_inside) and not ours_inside:
+			var action := _play_first(battle, side, "airlock", {"system": system_id, "ship": side})
+			if not action.is_empty():
+				return action
+	return {}
+
+
+func _free_own_crew(battle: Battle, side: int) -> Dictionary:
+	for member in battle.living_crew_of(side):
+		if member.controlled_by >= 0:
+			var action := _play_first(battle, side, "mindControl", {"crew": member.id})
+			if not action.is_empty():
+				return action
+	return {}
+
+
+# ---------------------------------------------------------------- tactics
+
+func _battery_if_needed(battle: Battle, side: int) -> Dictionary:
+	var ship := battle.ships[side]
+	var wanted_power := 0
+	for card in ship.hand:
+		wanted_power += battle.card_definition(ship, card).cost
+	if wanted_power > ship.available_power():
+		return _play_first(battle, side, "battery", {})
+	return {}
+
+
+func _hack(battle: Battle, side: int) -> Dictionary:
+	if level == "Easy":
+		return {}
+	var enemy := battle.ships[1 - side]
+	var targets: Array = []
+	var planned := _plan_pick(battle, side, "hacks", "", func(id): return enemy.systems[id].disabled_turns <= 0)
+	if planned != "":
+		targets.append(planned)
+	if battle.ships[side].design.ai.plan == "crew-kill" and enemy.has_type("medBay"):
+		# Keep their wounded from healing.
+		targets.append(enemy.first_system_of_type("medBay"))
+	if not enemy.shield_layers.is_empty() and _has_weapon_cards(battle, side):
+		targets.append(enemy.first_system_of_type("shields"))
+	targets.append_array(_ranked_targets(battle, side))
+	for system_id in targets:
+		if enemy.systems[system_id].disabled_turns > 0 or enemy.systems[system_id].type == "reactor":
+			continue
+		var action := _play_first(battle, side, "hack", {"system": system_id, "ship": 1 - side})
+		if not action.is_empty():
+			return action
+	return {}
+
+
+func _mind_control(battle: Battle, side: int) -> Dictionary:
+	var enemy := battle.ships[1 - side]
+	var victims := battle.living_crew_of(1 - side).filter(func(m): return m.ship == 1 - side and m.controlled_by < 0)
+	victims.sort_custom(func(a, b): return CrewSkills.total(a.skills) > CrewSkills.total(b.skills))
+	var targets := _ranked_targets(battle, side)
+	for victim in victims:
+		for system_id in targets:
+			if enemy.is_broken(system_id):
+				continue
+			var action := _play_first(battle, side, "mindControl", {"crew": victim.id, "system": system_id, "ship": 1 - side})
+			if not action.is_empty():
+				return action
+	return {}
+
+
+func _fire_weapons(battle: Battle, side: int) -> Dictionary:
+	var ship := battle.ships[side]
+	var enemy := battle.ships[1 - side]
+	var weapon_cards := ship.hand.filter(func(card): return card.id == "weapon")
+	# Ion first to strip shields, then torpedoes, then bolts, then beams once shields are down.
+	var order := {"ion": 0, "missile": 1, "flak": 2, "laser": 3, "beam": 4}
+	weapon_cards.sort_custom(func(a, b): return order.get(battle.weapon_of(ship, a).kind, 3) < order.get(battle.weapon_of(ship, b).kind, 3))
+	for card in weapon_cards:
+		var weapon := battle.weapon_of(ship, card)
+		var kind: String = weapon.kind
+		var layers := maxi(0, enemy.shield_layers.size() - int(weapon.pierce))
+		if kind == "beam" and layers > 0 and level != "Easy" and weapon.damage <= layers:
+			continue
+		var home := _own_boarded_target(battle, side, weapon)
+		if home != "":
+			var at_home := {"system": home, "ship": side}
+			if battle.why_cannot_play(side, card.uid, at_home) == "":
+				return {"kind": "play", "uid": card.uid, "target": at_home}
+		var planned := _plan_pick(battle, side, "targets", weapon.name, func(id): return not enemy.is_broken(id))
+		var on_purpose := planned != "" and _picked_when == "ownCrewIn"
+		var candidates: Array = ([planned] if planned != "" else []) + _weapon_targets(battle, side, kind)
+		# Keep shots off our own crew aboard the enemy, as often as this captain's level manages (rules.xml <ai>).
+		var spare := _spares_own_crew(battle, side)
+		if spare:
+			var clear := candidates.filter(func(id): return on_purpose and id == planned or not _own_crew_in(battle, side, id))
+			if clear.is_empty() and level == "Hard":
+				continue
+			if not clear.is_empty():
+				candidates = clear
+		for system_id in candidates:
+			var target := {"system": system_id, "ship": 1 - side}
+			if battle.why_cannot_play(side, card.uid, target) == "":
+				var rooms := battle.beam_rooms(ship, card)
+				if rooms > 1:
+					target.direction = _best_sweep(battle, side, system_id, rooms, spare)
+				var bolts := battle.bolts_to_aim(ship, card)
+				if bolts > 1 and level != "Easy":
+					target.systems = _split_bolts(battle, side, kind, bolts, spare)
+				return {"kind": "play", "uid": card.uid, "target": target}
+	return {}
+
+
+## The ship's plan (its file's <ai> lines of one kind, in order): each line for this weapon or suit (who; lines that
+## name none are for all), whose when holds, whose unless doesn't, and whose system the enemy has usable rolls its
+## weight; the first that succeeds names the system. A failed roll only means the captain chooses as usual, which may
+## pick the same system.
+func _plan_pick(battle: Battle, side: int, kind: String, who: String, usable: Callable) -> String:
+	var enemy := battle.ships[1 - side]
+	var who_key: String = ShipDesign.PLAN_LINES[kind][1]
+	for line in battle.ships[side].design.ai.get(kind, []):
+		if who_key != "" and line[who_key] != "" and line[who_key] != who:
+			continue
+		var system_id := ""
+		for id in enemy.system_order:
+			if enemy.systems[id].type == line.system and usable.call(id):
+				system_id = id
+				break
+		if system_id == "" or not _plan_condition(battle, side, line.when, system_id):
+			continue
+		if line.unless != "" and _plan_condition(battle, side, line.unless, system_id):
+			continue
+		if _rng.randf() < plan_weight(line.weight):
+			_picked_when = line.when
+			return system_id
+	_picked_when = ""
+	return ""
+
+
+## A plan line's weight for this captain: Easy halves it, Hard adds 0.1; never above MAX_PLAN_WEIGHT.
+func plan_weight(weight: float) -> float:
+	match level:
+		"Easy": weight *= 0.5
+		"Hard": weight += 0.1
+	return clampf(weight, 0.0, MAX_PLAN_WEIGHT)
+
+
+## Whether a plan line's when (or unless) holds, for a line aiming at the enemy's system_id. A ship with none of a
+## system counts it as down.
+func _plan_condition(battle: Battle, side: int, condition: String, system_id: String) -> bool:
+	var enemy := battle.ships[1 - side]
+	match condition:
+		"enemyWeaponsDown":
+			return enemy.weapon_systems().all(func(id): return enemy.capacity(id) <= 0)
+		"enemyShieldsDown":
+			return enemy.shield_layers.is_empty()
+		"enemyMedBayDown":
+			return _all_down(enemy, "medBay")
+		"enemyLifeSupportDown":
+			return _all_down(enemy, "lifeSupport")
+		"enemyWounded":
+			return battle.living_crew_of(1 - side).any(func(m): return m.ship == 1 - side and m.wounds > 0)
+		"ownBoardersAboard":
+			return battle.living_crew_of(side).any(func(m): return m.ship == 1 - side)
+		"enemyBoardersAboard":
+			return battle.living_crew_of(1 - side).any(func(m): return m.ship == side)
+		"ownCrewIn":
+			return _own_crew_in(battle, side, system_id)
+		"always", "":
+			return true
+	push_warning("Unknown plan condition '%s'." % condition)
+	return true
+
+
+static func _all_down(ship: ShipState, type: String) -> bool:
+	return ship.system_order.all(func(id): return ship.systems[id].type != type or ship.capacity(id) <= 0)
+
+
+## A crew-only weapon (crew damage, no system damage; not a beam) fires on our own ship at a system holding enemy
+## boarders and, if this captain spares its own crew this time, none of ours (heromedel 2026-10-30).
+func _own_boarded_target(battle: Battle, side: int, weapon: Dictionary) -> String:
+	if weapon.kind == "beam" or weapon.damage > 0 or int(weapon.crewDamage) <= 0:
+		return ""
+	var spare := _spares_own_crew(battle, side)
+	for system_id in battle.ships[side].system_order:
+		var inside := battle.crew_in_system(side, system_id)
+		if inside.any(func(m): return m.owner != side) and not (spare and inside.any(func(m): return m.owner == side)):
+			return system_id
+	return ""
+
+
+## Whether this captain keeps its shots off its own crew this time: a ship whose plan has spareOwnCrew="false" never
+## does; otherwise the level's chance in rules.xml <ai spareOwnCrew> (Easy, Normal, Hard).
+func _spares_own_crew(battle: Battle, side: int) -> bool:
+	if not battle.ships[side].design.ai.get("spare_own_crew", true):
+		return false
+	var chance := Catalog.by_skill(Catalog.rule("ai", "spareOwnCrew", [50, 75, 100]), ["Easy", "Normal", "Hard"].find(level))
+	return _rng.randf() * 100.0 < chance
+
+
+func _own_crew_in(battle: Battle, side: int, system_id: String) -> bool:
+	return battle.crew_in_system(1 - side, system_id).any(func(m): return m.owner == side)
+
+
+## Aims a multi-target weapon's bolts across the best targets: the first, the second, then the first again ...
+func _split_bolts(battle: Battle, side: int, kind: String, bolts: int, spare: bool = false) -> Array:
+	var targets := _weapon_targets(battle, side, kind).filter(func(id): return not battle.ships[1 - side].is_broken(id))
+	var clear := targets.filter(func(id): return not _own_crew_in(battle, side, id))
+	if spare and not clear.is_empty():
+		targets = clear
+	if targets.is_empty():
+		targets = _weapon_targets(battle, side, kind)
+	var aims: Array = []
+	for i in bolts:
+		aims.append(targets[i % mini(2, targets.size())])
+	return aims
+
+
+## The direction a beam aimed here should sweep: the way that crosses more working systems and enemy crew (and, when
+## sparing our own crew, none of them).
+func _best_sweep(battle: Battle, side: int, system_id: String, rooms: int, spare: bool = false) -> int:
+	var enemy := battle.ships[1 - side]
+	var best_direction := 1
+	var best_score := -1
+	for direction in [1, -1]:
+		var score := 0
+		for swept in battle.sweep_systems(1 - side, system_id, direction, rooms):
+			var crew := battle.crew_in_system(1 - side, swept)
+			score += (0 if enemy.is_broken(swept) else 2) + crew.filter(func(m): return m.owner != side).size()
+			if spare and crew.any(func(m): return m.owner == side):
+				score -= 100
+		if score > best_score:
+			best_score = score
+			best_direction = direction
+	return best_direction
+
+
+func _weapon_targets(battle: Battle, side: int, kind: String) -> Array:
+	var enemy := battle.ships[1 - side]
+	var ranked := _ranked_targets(battle, side)
+	if level == "Easy":
+		ranked.shuffle()
+		return ranked
+	var shields_id := enemy.first_system_of_type("shields")
+	if kind in ["ion", "missile"] and shields_id != "" and not enemy.shield_layers.is_empty():
+		ranked.erase(shields_id)
+		ranked.push_front(shields_id)
+	if kind == "beam" or battle.ships[side].design.ai.plan == "crew-kill":
+		# Beams burn crew, and a crew-kill captain wants them dead: aim where the most enemy crew stand.
+		ranked.sort_custom(func(a, b): return battle.crew_in_system(1 - side, a).size() > battle.crew_in_system(1 - side, b).size())
+	return ranked
+
+
+## Enemy systems in the order worth hitting. Hard captains finish off nearly broken systems first.
+func _ranked_targets(battle: Battle, side: int) -> Array:
+	var enemy := battle.ships[1 - side]
+	var ranked: Array = []
+	for type in TARGET_PRIORITY:
+		for system_id in enemy.system_order:
+			if enemy.systems[system_id].type == type:
+				ranked.append(system_id)
+	var useful := ranked.filter(func(system_id): return not enemy.is_broken(system_id))
+	var broken := ranked.filter(func(system_id): return enemy.is_broken(system_id))
+	if level == "Hard":
+		useful.sort_custom(func(a, b):
+			var left_a: int = enemy.systems[a].level - enemy.systems[a].damage
+			var left_b: int = enemy.systems[b].level - enemy.systems[b].damage
+			return ranked.find(a) + left_a * 3 < ranked.find(b) + left_b * 3)
+	elif level == "Normal" and _rng.randf() < 0.25:
+		useful.shuffle()
+	return useful + broken
+
+
+func _launch_suit(battle: Battle, side: int) -> Dictionary:
+	var ship := battle.ships[side]
+	var enemy := battle.ships[1 - side]
+	for card in ship.hand:
+		if card.id != "suit":
+			continue
+		var definition := battle.card_definition(ship, card)
+		var wanted := true
+		if definition.suit == "repair":
+			wanted = ship.systems.values().any(func(s): return s.damage > 0)
+		elif definition.suit == "guardian":
+			wanted = enemy.uses_missile_weapons() or not enemy.suits.is_empty()
+		var target := {}
+		if Catalog.suit_kind(definition.suit).action in ["shoot", "board"]:
+			var planned := _plan_pick(battle, side, "suits", definition.suit, func(id): return not enemy.is_broken(id))
+			if planned != "":
+				target = {"system": planned, "ship": 1 - side}
+		if wanted and battle.why_cannot_play(side, card.uid, target) == "":
+			return {"kind": "play", "uid": card.uid, "target": target}
+	return {}
+
+
+## Call suits home once their air is gone or their pilot is badly hurt.
+func _recall_suits(battle: Battle, side: int) -> Dictionary:
+	var ship := battle.ships[side]
+	for index in ship.suits.size():
+		var suit: Dictionary = ship.suits[index]
+		var pilot := battle.crew_by_id(suit.pilot)
+		if suit.turns_left <= 0 or not pilot.is_empty() and Battle.health_fraction(pilot) < 0.5:
+			if battle.why_cannot_recall(side, index) == "":
+				return {"kind": "recall", "suit": index}
+	return {}
+
+
+func _teleport(battle: Battle, side: int) -> Dictionary:
+	var ship := battle.ships[side]
+	# Bring hurt boarders home to the bay.
+	for member in battle.living_crew_of(side):
+		if member.ship != side and Battle.health_fraction(member) < 0.5:
+			var action := _play_first(battle, side, "teleport", {"system": member.system, "ship": member.ship})
+			if not action.is_empty():
+				return action
+	var boarders := battle.living_crew_of(side).filter(func(m): return m.ship != side).size()
+	if boarders >= 2 or level == "Easy" and boarders >= 1:
+		return {}
+	# Send whoever waits in the bay, if enough crew stay home to run the ship.
+	var home_crew := battle.living_crew_of(side).filter(func(m): return m.ship == side and m.controlled_by < 0)
+	var senders := battle.teleport_senders(side).filter(func(m): return Battle.health_fraction(m) >= 0.7)
+	if senders.is_empty() or home_crew.size() - senders.size() < 1:
+		return {}
+	var enemy := battle.ships[1 - side]
+	var bay := ship.first_system_of_type("teleport")
+	var planned := _plan_pick(battle, side, "boards", "", func(_id): return true)
+	for system_id in ([planned] if planned != "" else []) + _ranked_targets(battle, side):
+		if enemy.is_broken(system_id) and system_id != planned:
+			continue
+		var action := _play_first(battle, side, "teleport", {"system": bay, "ship": side, "to_system": system_id, "to_ship": 1 - side})
+		if not action.is_empty():
+			return action
+	return {}
+
+
+func _cloak(battle: Battle, side: int) -> Dictionary:
+	var ship := battle.ships[side]
+	if ship.hull * 3 <= ship.hull_max * 2 or level == "Hard":
+		return _play_first(battle, side, "cloak", {})
+	return {}
+
+
+## Jump: in the aftermath to leave (repairs come earlier in the step order), mid-battle only to flee.
+## The Jig Drive charges by itself on turns the Engines burn.
+func _jump(battle: Battle, side: int) -> Dictionary:
+	if battle.aftermath:
+		if battle.why_cannot_jump(side) == "":
+			return {"kind": "jump"}
+		return {}
+	if Settings.value("jump_escape") == "Off":
+		return {}
+	var ship := battle.ships[side]
+	var enemy := battle.ships[1 - side]
+	# A ship that can't hurt the enemy, or a fight where no hull has been hit for a long while, has nothing to stay for.
+	var stalemate := battle.turn_number - battle.last_hull_damage_turn > STALEMATE_TURNS
+	if (stalemate or not _can_hurt(ship)) and battle.why_cannot_jump(side) == "":
+		return {"kind": "jump"}
+	if level == "Easy":
+		return {}
+	var losing := float(ship.hull) / ship.hull_max < 0.3 and float(enemy.hull) / enemy.hull_max > 0.5
+	if losing and battle.why_cannot_jump(side) == "":
+		return {"kind": "jump"}
+	return {}
+
+
+## Whether the ship has any way to damage the enemy's hull or kill its crew: a weapon that does damage or hurts
+## crew, a battlesuit that shoots for damage or boards, or a Teleport Bay to send boarders.
+func _can_hurt(ship: ShipState) -> bool:
+	for system_id in ship.weapon_systems():
+		if ship.systems[system_id].weapons.any(func(w): return w.damage > 0 or w.crewDamage > 0):
+			return true
+	for system_id in ship.system_order:
+		var system: Dictionary = ship.systems[system_id]
+		if system.type == "teleport":
+			return true
+		if system.type == "evb" and system.suits.any(_suit_hurts):
+			return true
+	return false
+
+
+static func _suit_hurts(suit_id: String) -> bool:
+	var suit := Catalog.suit_kind(suit_id)
+	return suit.action == "board" or suit.action == "shoot" and suit.damage > 0
+
+
+## Power the Med Bay when wounded crew of ours are in it.
+func _treat(battle: Battle, side: int) -> Dictionary:
+	var ship := battle.ships[side]
+	var med_bay := Battle.treating_system(ship)
+	if med_bay == "" or battle.why_cannot_treat(side) != "":
+		return {}
+	var patients := battle.crew_in_system(side, med_bay) if ship.systems[med_bay].type == "medBay" \
+		else battle.living_crew_of(side).filter(func(m): return m.ship == side and Catalog.race(m.race).broadcast)
+	if patients.any(func(m): return m.owner == side and m.wounds > 0):
+		return {"kind": "treat"}
+	return {}
+
+
+func _burn(battle: Battle, side: int) -> Dictionary:
+	# Every earlier step has passed, so any power left over goes into evasion.
+	if battle.why_cannot_burn(side) != "":
+		return {}
+	return {"kind": "burn"}
+
+
+# ---------------------------------------------------------------- helpers
+
+## Plays the first card with this id that is legal against the target.
+func _play_first(battle: Battle, side: int, card_id: String, target: Dictionary) -> Dictionary:
+	for card in battle.ships[side].hand:
+		if card.id == card_id and battle.why_cannot_play(side, card.uid, target) == "":
+			return {"kind": "play", "uid": card.uid, "target": target}
+	return {}
+
+
+func _has_weapon_cards(battle: Battle, side: int) -> bool:
+	return battle.ships[side].hand.any(func(card): return card.id == "weapon")
+
+
+func _systems_by_importance(ship: ShipState) -> Array:
+	var ordered: Array = []
+	for type in ["lifeSupport", "shields", "weapon", "piloting", "engines", "reactor", "medBay", "teleport", "evb",
+			"cloak", "hacking", "mindControl", "sensors", "battery", "airlock"]:
+		for system_id in ship.system_order:
+			if ship.systems[system_id].type == type:
+				ordered.append(system_id)
+	return ordered

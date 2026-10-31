@@ -36,6 +36,7 @@ each with its SVG, PNG exports, review sheets, build tools and a notes README.
 | 2026-10-25 | **Decided:** no marked exterior doors: no airlock hatches, docking frames or launch bays drawn brightly on a hull. The hull may imply an opening by its shapes, never mark exactly where a door is (airlocks stay in the floor plan). |
 | 2026-10-26 | **Decided:** no system takes more than one tile, big machines included (such as the Cybernetic Servicing Core). |
 | 2026-10-26 | **Decided:** any EVA or EVB Dock must be next to an airlock door: its tile is beside the airlock. |
+| 2026-10-27 | **Hard Rule:** never apply an effect to the whole image. **Decided:** work one detail at a time, each a goal with several tries, looks and corrections, checked by test tools including a blind checker that names each part. The process: `sprite-process.md`. |
 | 2026-10-23 | No rocket-like Terran designs for a while: no pointed nose cone, tail fins and engine-bell silhouette. Terran ships look built for deep space, not for launching from a planet (race profiles, Terrans 1, Likely). |
 
 ## Shared tools
@@ -51,6 +52,8 @@ every mount sits on the hull's edge with a clear line forward, and that a hull p
 |---|---|
 | [`terran/outrider/`](terran/outrider/) | SC-1 Outrider hull: accepted by Ship Designs (pass 7, six edge mounts, re-accepted 2026-10-26). Floor layout test 4 in `floor-layout-tests/` (tests 1–3 in git history). |
 | [`terran/pirate-hijacker/`](terran/pirate-hijacker/) | Terran Pirate Hijacker hull, Hijacker and Cutpurse loadouts, squad view and floor plans: accepted by Ship Designs (one-tile AZC, six edge mounts, no hull hatches: re-accepted 2026-10-26). |
+| [`terran/crew-test-2/`](terran/crew-test-2/) | Test folder: the GATOS crew experiments (the drifter at 2x, its back and side views, typing in four directions, at game size). Not final art. |
+| [`terran/cat-concept-for-gatos/`](terran/cat-concept-for-gatos/) | Cat Concept for Gatos: a mercenary cat crew sprite (cute but tough) in four facings, a concept for the GATOS crew. |
 | [`tentauri/scout/`](tentauri/scout/) | Tentauri scout hull, armed preview and floor plan with organic consoles: accepted by Ship Designs, including the later changes (segmented Defense Laser, edge mounts, organs on the walls; 2026-10-25), then six edge mounts, toned-down side thrusters and Tentauri pink symbols (2026-10-26). |
 | [`tentauri/crew/`](tentauri/crew/) | heromedel's Tentauri crew sprite sheet (20 rows, with typing at 1–3 extra systems) and the tentacle reach prototype, saved as the crew reference. |
 | [`mecha/light-attack-frame/pixel-redo/`](mecha/light-attack-frame/pixel-redo/) | **Current Mecha Light Attack Frame**, accepted by Ship Designs (2026-10-25): the sleek battle-cross hull (also the Mecha hull style reference), pixel floor plans, pixel weapons and armed previews for both loadouts. |

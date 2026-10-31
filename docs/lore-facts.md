@@ -97,7 +97,8 @@ source doc carries the tag heromedel's words give it.
 - An Azurethea produces breathable air wherever it stands and can survive briefly in space without a suit. (Race profiles, Azurethea 6, 9; Proposed)
 - Azurethea ships run on biological energy flowing through the whole ship, not on a power core. (Race profiles, Azurethea 6; Proposed)
 - Azurethea weapons often disable systems with spores. (Race profiles, Azurethea 6; Proposed)
-- Azurethea weapons are named after creatures and natural things, such as the Stinger. (Race profiles, Azurethea 6; Ai-Generated-Proposal)
+- Azurethea weapons are named after insect parts, such as the Stinger. (Race profiles, Azurethea 6; Likely)
+- Azurethea ships are named after flying insects, such as the Dragonfly. (Race profiles, Azurethea 1; Likely)
 - The Azurethea spread in thin, vein-like regions reaching out for exploration and resources, and leave the neutral clusters near them alone. (Race profiles, Azurethea 8; Proposed)
 - The Azurethea are physically fragile, and they cannot wear EVA suits. (Race profiles, Azurethea 9; Proposed)
 
@@ -131,8 +132,8 @@ source doc carries the tag heromedel's words give it.
 
 ### Unknown to most other races
 
-- The Mecha call themselves HalfMechs. They are not robots, but a small race of childlike, genetically modified cyborgs who live inside semi-cybernetic mech suits. (Race profiles, Mecha names, what they are; Proposed)
-- HalfMechs are childlike in size and attitude, and oddly adorable for their viciousness. (Race profiles, Mecha what they are; Proposed)
+- The Mecha call themselves HalfMechs. They are not robots, but a small race of halfling-like, genetically modified cyborgs who live inside semi-cybernetic mech suits. (Race profiles, Mecha names, what they are; Proposed)
+- HalfMechs are halfling-like in size and childish in attitude, and oddly adorable for their viciousness. (Race profiles, Mecha what they are; Proposed)
 - The HalfMechs' origin is lost to time, but genetic evidence suggests they were Terran, bred to fit inside mech suits. Their creation, and possibly the power the suits give them, made them immature, violent and greedy, like cruel children. (Race profiles, Mecha origin; Proposed)
 - Outside their suits, HalfMechs are incredibly bashful if not violent, but their overconfidence keeps them from being truly shy. (Race profiles, Mecha out of their suits; Proposed)
 
@@ -142,6 +143,7 @@ source doc carries the tag heromedel's words give it.
 - The Tentauri live in small groups, often two to a ship, possibly mates. (Race profiles, Tentauri 1; Proposed)
 - Tentauri ships are small and compact, with few rooms holding many systems. (Race profiles, Tentauri 1; Proposed)
 - Tentauri ships are prismatic and mottled, like a chameleon or mother of pearl. (Race profiles, Tentauri 1; Proposed)
+- Tentauri ships are named after seeds and the ways plants spread them, such as the Burr and the Pappus. (Race profiles, Tentauri 1; Proposed)
 - The Tentauri are quiet and diplomatic, but force their way into any place they want to go, without looking to destroy anyone. (Race profiles, Tentauri 2; Proposed)
 - Struggling Tentauri ally in joint operations, such as a ship joining a fleet, more than they trade. (Race profiles, Tentauri 3; Proposed)
 - Doomed Tentauri are highly cooperative, even with aggressive races. (Race profiles, Tentauri 4; Proposed)
@@ -209,6 +211,7 @@ source doc carries the tag heromedel's words give it.
 - The Malphen can be paid in matter to let a ship pass. (Race profiles, Malphen 2; Ai-Generated-Proposal)
 - No race takes the Malphen in. The Azurethea and Tentauri fear them most. (Race profiles, Malphen 5; Ai-Generated-Proposal)
 - Malphen weapons are named by the races who face them, such as the Flesh Mortar. (Race profiles, Malphen 6; Ai-Generated-Proposal)
+- Malphen ships are named by the races who face them, after growths, such as the Polyp. (Race profiles, Malphen; Likely)
 - Malphen territory is one connected mass that slowly grows outward. (Race profiles, Malphen 8; Ai-Generated-Proposal)
 - Killing a Malphen ship's crew is not the end of it. The ship grows new crew unless its growth organ is destroyed. (Race profiles, Malphen 1; Ai-Generated-Proposal)
 

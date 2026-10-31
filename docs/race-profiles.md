@@ -96,6 +96,9 @@ a Spanish pun is beside the point. They are a loose alliance of humans, not cats
 1. **Tone and ship style — Proposed (2026-10-21):** a butterfly-like race of peaceful creatures using a mix of
    biomechanical technology. Ships shaped much like moths or butterflies, partly organic.
    - **Silhouette — Proposed (2026-10-22):** winged.
+   - **Ship names — Likely (2026-10-29, heromedel):** flying insects, e.g. Dragonfly, and the Vein Moth
+     (`docs/deck-collapse-ships/`). More examples (Ai-Generated-Proposal): Hawkmoth, Lacewing, Mayfly, Damselfly,
+     Cicada.
    - **Colours — Proposed (2026-10-22):** iridescent blues and royal blues with wing-like patterns.
 2. **Doing fine — Proposed (2026-10-21):** nearly pacifist and docile; highly likely to accept or offer
    surrender; primarily interested in exploration. Slightly isolationist about sharing technology or letting
@@ -109,8 +112,9 @@ a Spanish pun is beside the point. They are a loose alliance of humans, not cats
    in whatever room they stand in. Weapons often disable systems with spores, or fire damaging shots at single
    rooms. Power works as FTL's default (a limited pool of power that can be moved to any system), flavoured as
    biological energy flowing through the whole ship rather than a power core or conduits.
-   - **Weapon names — Ai-Generated-Proposal (2026-10-22):** biological, after creatures and natural things, like
-     the Stinger.
+   - **Weapon names — Likely (2026-10-29, heromedel):** insect parts or insect-based, so they never share a name
+     with a ship: the Stinger, and the Lantern (a firefly's light organ) for a single-shot beam. Replaces the
+     earlier proposal of creatures and natural things.
 7. **Near and inside their territory — Ai-Generated-Proposal (2026-10-22):** quiet, lightly patrolled lanes along
    their veins, with exploration outposts at the tips. Their ships rarely start fights and readily accept
    surrender. Stores follow their mood: doing fine, they sell little of their own technology and few crew
@@ -136,7 +140,7 @@ a Spanish pun is beside the point. They are a loose alliance of humans, not cats
 
 - **Names — Proposed (2026-10-23):** they call themselves **HalfMechs**. Other races will still probably call them
   **The Mecha**.
-- **What they are — Proposed (2026-10-23):** not robots. A small race of childlike, genetically modified cyborgs who
+- **What they are — Proposed (2026-10-23):** not robots. A small race of halfling-like, genetically modified cyborgs who
   live inside semi-cybernetic mech suits. Outside of their suits they are rather attractive for underdeveloped
   half-cybernetic creatures, due to their genetic enhancement and quick growth cycle, like diminutive genetically
   engineered humans, and oddly adorable for their viciousness.
@@ -243,6 +247,12 @@ Homeworlds. (Earlier: octopus-like, working label "Octopods".)
    perhaps two crew members on a standard ship, possibly mates. Their ships have few rooms with many systems in
    them.
    - **Silhouette — Proposed (2026-10-22):** compact, like tiny shuttles.
+   - **Ship names — Proposed (2026-10-29):** seeds and the ways plants spread them, since the Tentauri spread by
+     starting small regions far apart (point 8). The name says the job: the **Burr** hooks on and gets in where it
+     isn't wanted (the tough scout); the **Pappus**, a dandelion's floating seed, rides far (the light band 1 scout).
+     More examples (Ai-Generated-Proposal): Samara (escorts, couriers), Seedpod, Acorn and Chestnut (armoured
+     defenders), Thistledown and Milkweed (scouts). No ocean plants, as with their weapons. heromedel's first thought
+     was plain plant names (Bluebell, Ficus).
    - **Colours — Proposed (2026-10-22):** prismatic, multicoloured ships, close to a chameleon or mother of
      pearl; aqua, teal and coral white or coral pink among them, in mottled patterns.
 2. **Doing fine — Proposed (2026-10-21):** quiet and diplomatic, but if they want to go into a system they are
@@ -268,7 +278,7 @@ Homeworlds. (Earlier: octopus-like, working label "Octopods".)
    apart from each other than most races.
 9. **Crew traits — Proposed (2026-10-21):** can run multiple systems at the same time, maybe up to four.
 10. **Ship tiers:**
-    - **Low tech — Proposed (2026-10-22):** the Tough Little Scout (`ship-suggestions.md`): 2 crew, two rooms,
+    - **Low tech — Proposed (2026-10-22):** the Burr (earlier: Tough Little Scout; `ship-suggestions.md`): 2 crew, two rooms,
       one shield layer, Supershield, two Defense Lasers.
     - **Mid tech — Ai-Generated-Proposal (2026-10-22):** 2–3 crew, three rooms; two shield layers and a faster
       Supershield; defence that also shoots down lasers (like FTL's Defense Drone Mark II); a Pike-like beam;
@@ -370,6 +380,9 @@ events; "Malphen" is the everyday name.
 
 - **Proposed (2026-10-21):** basically a core race.
 - **Silhouette — Proposed (2026-10-22):** bulbous, irregular shapes.
+- **Ship names — Likely (2026-10-29, heromedel):** growths, named by the races who face them, as their weapons are:
+  the Polyp, a small swarm ship (`docs/deck-collapse-ships/`). Larger ships (Ai-Generated-Proposal): Cyst, Blister,
+  Nodule, Lesion, Tumour.
 - **Proposed (2026-10-21):** biomechanical weapons that infect a ship's systems and spread.
 - **Open (2026-10-21):** either the race is basically mutants, or it is a living ship with no crew. (An answer is
   suggested in the profile below.)

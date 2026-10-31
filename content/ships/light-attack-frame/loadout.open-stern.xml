@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Open Stern: Engines and Life Support share one stern room (ship-suggestions.md, Proposed 2026-10-26). -->
+<loadout ship="Light Attack Frame" name="Light Attack Frame, Open Stern" inherit="Patch">
+  <rooms>
+    <room id="4" from="-2,2" to="2,2" note="stern room: Engines and Life Support together"/>
+    <room id="5" removed="true"/>
+  </rooms>
+  <doors>
+    <door id="4" removed="true"/>
+  </doors>
+</loadout>

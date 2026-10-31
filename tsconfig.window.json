@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "node",
+    "strict": true,
+    "outDir": "build/window",
+    "rootDir": "src/window",
+    "sourceMap": true,
+    "lib": ["ES2022", "DOM"],
+    "types": []
+  },
+  "include": ["src/window/**/*.ts", "src/shared/*.d.ts"]
+}

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Crew names for GATOS crew as humans (Crew Portraits: Plain Tokens). Plain human names, Ai-Generated-Proposal.
+  Format after Federation-Home-Planet's name lists (docs/NAMES.md there): each name is M, F or B (both), on a rarity
+  level; a name comes up in proportion to its level's weight. No rarity means the first level.
+-->
+<names race="gatos" style="human">
+  <rarity>
+    <level name="common" weight="100"/>
+    <level name="uncommon" weight="30"/>
+    <level name="rare" weight="10"/>
+  </rarity>
+  <name sex="M">Marcus</name>
+  <name sex="M">Daniel</name>
+  <name sex="M">Owen</name>
+  <name sex="M">Victor</name>
+  <name sex="M">Henry</name>
+  <name sex="M">Isaac</name>
+  <name sex="M">Mateo</name>
+  <name sex="M">Desmond</name>
+  <name sex="M" rarity="uncommon">Silas</name>
+  <name sex="M" rarity="uncommon">Bruno</name>
+  <name sex="M" rarity="rare">Lazlo</name>
+  <name sex="F">Nadia</name>
+  <name sex="F">Grace</name>
+  <name sex="F">Elena</name>
+  <name sex="F">Priya</name>
+  <name sex="F">Hannah</name>
+  <name sex="F">Rosa</name>
+  <name sex="F">Iris</name>
+  <name sex="F">Leah</name>
+  <name sex="F" rarity="uncommon">Mireille</name>
+  <name sex="F" rarity="uncommon">Ingrid</name>
+  <name sex="F" rarity="rare">Odette</name>
+  <name sex="B">Jordan</name>
+  <name sex="B">Sam</name>
+  <name sex="B" rarity="uncommon">Rowan</name>
+  <name sex="B" rarity="rare">Quinn</name>
+</names>

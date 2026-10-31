@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Ship systems for Infall: Deck Collapse.
+  Each system adds cards to its captain's deck and limits how much power can be spent on its cards in one turn
+  (its level, minus damage). Edit the numbers here to rebalance; the game reads this file at start.
+
+  type            the id the rules engine and ship files use
+  name            shown on tiles and cards
+  card            the card id this system adds (see scripts/core/card_library.gd), or "" for none
+  cardsPerLevel   how many of that card each level adds
+  prices          Mawjig per level step: level 1's price, then each upgrade (docs/reference/system-prices.md).
+                  A system at a level is worth the sum of the steps up to it. 0 means it comes installed.
+  minLevel / maxLevel   designer limits; required="true" means every ship has it
+  mannable        true if a crew member assigned here gives a benefit
+
+  Manning (numbers by skill: untrained, Veteran, Master; from the genre, from memory):
+  mannedEvasion   evasion % a crew member here adds while the Engines are burning
+  crewDraw        % chance, each turn, to draw an extra card of this system's own (the system "recharging faster")
+  unmannedDraw    % chance per working level to draw an extra card of its own even unmanned (crewDraw adds to it)
+  mannedLevel     levels added while manned; the system's top level is only reached when manned
+  evasionByLevel  Engines: evasion % for 1, 2, 3… levels of power
+-->
+<systems>
+  <system type="reactor" name="Reactor" card="power" cardsPerLevel="1" minLevel="2" maxLevel="12" required="true" mannable="false"
+      prices="3.63,3.63,3.63,3.63,3.63,4.84,4.84,4.84,4.84,4.84,6.05,6.05">
+    Adds 1 Power card per level. Damage takes power cards offline.
+  </system>
+  <system type="shields" name="Shields" card="shield" cardsPerLevel="1" minLevel="1" maxLevel="4" mannable="true"
+      prices="54.46,12.11,24.21,43.56" crewDraw="10,15,20" unmannedDraw="10">
+    Adds 1 Raise Shield card per level. Up to one shield layer per working level. May draw an extra Raise Shield each turn (10% per working level, more when manned).
+  </system>
+  <system type="engines" name="Engines" card="" cardsPerLevel="0" minLevel="1" maxLevel="8" mannable="true"
+      prices="0,2.42,3.63,7.26,9.68,14.52,19.36,29.04" mannedEvasion="5,7,10"
+      evasionByLevel="5,10,15,20,25,28,31,35">
+    Burn power here for evasion. Each turn you burn, the Jig Drive charges by the working level. Crew here add evasion.
+  </system>
+  <system type="piloting" name="Piloting" card="" cardsPerLevel="0" minLevel="1" maxLevel="3" required="true" mannable="true"
+      prices="0,4.84,12.11" mannedEvasion="5,7,10">
+    Needed to dodge and to jump. Level 2 has Auto Pilot (half evasion unmanned), level 3 Advanced Auto Pilot (full). The Jig Drive only charges while it works.
+  </system>
+  <system type="sensors" name="Sensors" card="" cardsPerLevel="0" minLevel="1" maxLevel="3" mannable="true"
+      prices="9.68,6.05,9.68" mannedLevel="1">
+    Level 1 shows enemy crew, 2 their power, 3 their weapon cards, 4 their whole hand. Manned: +1 level.
+  </system>
+  <system type="lifeSupport" name="Life Support" card="restore" cardsPerLevel="1" minLevel="1" maxLevel="3" required="true" mannable="false"
+      prices="0,6.05,12.11">
+    Adds 1 Restore Environment card per level. Each level holds 1 pip of air. While it is broken or offline, each turn uses a pip; once the air is gone, no system has air. Working, it refills a pip each turn.
+  </system>
+  <system type="medBay" name="Med Bay" card="" cardsPerLevel="0" minLevel="1" maxLevel="3" mannable="false"
+      prices="12.11,8.47,10.89">
+    Press TREAT on its tile (1 power) to run it this turn: as your turn ends, everyone in it heals 1 wound per working level.
+  </system>
+  <system type="aaa" name="Avatar Array" card="" cardsPerLevel="0" minLevel="1" maxLevel="3" mannable="false"
+      prices="12.11,8.47,10.89">
+    The Senti's Armoured Avatar Array (race profiles, Senti-GPH 6 and 9). It broadcasts 3 Senti per working level;
+    damage blinks the extra ones out (stored, not dead) until it's repaired. A Senti who dies is broadcast again into it
+    after 4, 3 or 2 turns by level while it works. TREAT (1 power) heals every Senti aboard 1 wound per working level as
+    your turn ends. Ai-Generated-Proposal (heromedel 2026-10-30): numbers in rules.xml aaa; prices as the Med Bay's.
+  </system>
+  <system type="airlock" name="Airlock Control" card="" cardsPerLevel="0" minLevel="1" maxLevel="3" mannable="true"
+      prices="14.52,8.47,12.11" mannedLevel="1">
+    Lets you play Cycle Airlock. From level 2, each level makes boarders take a turn longer to move out of a system; each level slows fire spreading. Manned: +1 level.
+  </system>
+  <system type="teleport" name="Teleport Bay" card="teleport" cardsPerLevel="1" minLevel="1" maxLevel="3" mannable="false"
+      prices="21.78,7.26,14.52">
+    Adds 1 Teleport card per level. Boarders damage the system they stand in.
+  </system>
+  <system type="cloak" name="Cloaking" card="cloak" cardsPerLevel="1" minLevel="1" maxLevel="3" mannable="false"
+      prices="36.31,7.26,12.11">
+    Adds 1 Cloak card per level. You cannot stay cloaked more turns in a row than its level.
+  </system>
+  <system type="mindControl" name="Mind Control" card="mindControl" cardsPerLevel="1" minLevel="1" maxLevel="3" mannable="false"
+      prices="18.15,7.26,14.52">
+    Adds 1 Mind Control card per level.
+  </system>
+  <system type="hacking" name="Hacking" card="hack" cardsPerLevel="1" minLevel="1" maxLevel="3" mannable="false"
+      prices="19.36,8.47,14.52">
+    Adds 1 Hack card per level. You cannot hack more turns in a row than its level.
+  </system>
+  <system type="battery" name="Backup Battery" card="battery" cardsPerLevel="1" minLevel="1" maxLevel="2" mannable="false"
+      prices="8.47,12.11">
+    Adds 1 Backup Cell per level: temporary power for one turn.
+  </system>
+  <system type="evb" name="EVB Dock" card="suit" cardsPerLevel="0" minLevel="1" maxLevel="3" mannable="false"
+      prices="14.52,2.42,4.84">
+    Holds up to 4 battlesuit types (data/suits.xml); each adds Launch cards by its speed. Its level is the power it can spend on launches each turn, and a suit's turns of air (level + 1). Needs a crew member in the dock to launch.
+  </system>
+  <system type="weapon" name="Weapon System" card="weapon" cardsPerLevel="0" minLevel="1" maxLevel="8" mannable="true"
+      prices="4.84,9.68,6.05,8.47,12.11,18.15,21.78,24.21" crewDraw="10,15,20">
+    Holds up to 4 weapons. Its level is the power its weapons can use each turn. Each weapon adds cards by its speed. Crew here may draw an extra weapon card each turn.
+  </system>
+</systems>

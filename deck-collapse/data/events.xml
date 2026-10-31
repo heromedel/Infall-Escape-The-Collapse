@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Events at stops between battles that have no store (heromedel 2026-10-29). Written by Infall: Lori
+  (docs/events-deck-collapse.md on Cloud-C-Lori, f9ad958), Ai-Generated-Proposal until heromedel reviews them.
+  Format: docs/event-design-process.md and events-sample.md.
+
+  <event id name>      <text> is the opening box; each <choice> is a numbered choice.
+  <choice>             text; blue choices have "requires": race:Mecha, system:teleport, sensors:2 … and are hidden
+                       when the ship doesn't meet them. {crew} is the crew member a race choice found.
+  <outcome>            one is picked by weight; its text, then what it does:
+                         mawjig, hull, missiles   "+low", "-low", "+medium" (sizes in rules.xml events)
+                         wound="crew"             the crew member named {crew} (or a random one) is wounded
+                         join="Terran"            a new crew member of that race joins
+                         repair="system"          one damaged system is fully repaired
+                         battle="random"          a battle against a random enemy for the band
+                       An outcome can hold its own <choice>s (a follow-up box).
+-->
+<events>
+  <event id="DERELICT_FREIGHTER" name="Sealed Hold">
+    <text>A freighter drifts dark and silent at the edge of the cluster. Its cargo hold is still sealed. Your scans show no life aboard.</text>
+    <choice text="Cut through the hold doors.">
+      <outcome weight="3" mawjig="+low">Your crew cut their way in and find the hold still half full. They haul across everything worth converting.</outcome>
+      <outcome weight="2" wound="crew">The cutting torch sets off a fuel line behind the doors. The blast throws your crew clear, but {crew} is burned before they can get back aboard.</outcome>
+    </choice>
+    <choice text="Leave it alone.">
+      <outcome>You leave the freighter to drift. Whatever it carried can stay its own business.</outcome>
+    </choice>
+    <choice requires="race:Mecha" text="Have {crew} plug into the freighter's door controls.">
+      <outcome mawjig="+medium">{crew} links into the freighter's systems and takes control of the doors. The hold opens without a spark. Your crew empty it at their leisure.</outcome>
+    </choice>
+  </event>
+
+  <event id="ASTEROID_BELT" name="Loose Rock">
+    <text>The cluster's star is ringed by a slow belt of asteroids. Some of them glitter with ore worth converting into Mawjig. Mining them means flying close.</text>
+    <choice text="Move in and mine the nearest asteroids.">
+      <outcome weight="3" mawjig="+low">Your squad breaks up the nearest asteroids and converts the ore.</outcome>
+      <outcome weight="2" hull="-low" mawjig="+low">A spinning fragment clips one of your ships before its pilot can pull away. You gather what ore you can and leave the belt.</outcome>
+    </choice>
+    <choice text="Keep your distance.">
+      <outcome>You stay clear of the belt while your Jigawatt Drives charge.</outcome>
+    </choice>
+    <choice requires="sensors:2" text="Scan the belt for the richest rock first.">
+      <outcome mawjig="+medium">Your sensors pick out a single asteroid veined with ore, drifting well away from the rest. Your squad mines it without a scratch.</outcome>
+    </choice>
+  </event>
+
+  <event id="STRANDED_PILOT" name="One Life Sign">
+    <text>A damaged shuttle hangs in the cluster, its engines dead. Its pilot hails you, weak but polite.
+
+"Please, I've been out here for days. I can fly anything you give me if you take me with you."</text>
+    <choice text="Bring the pilot aboard.">
+      <outcome weight="1" join="Terran">The pilot is as harmless as they sounded, and grateful to be somewhere warm. Once they have eaten, they ask to join your crew.</outcome>
+      <outcome weight="1" battle="random">As you match course, a pirate ship powers up behind the shuttle. The pilot was only bait.</outcome>
+    </choice>
+    <choice text="Leave the shuttle.">
+      <outcome>You leave the shuttle behind. Its pilot's hails follow you until you jump.</outcome>
+    </choice>
+    <choice requires="race:Lykario" text="Ask {crew} what they sense aboard the shuttle.">
+      <outcome>{crew} goes still for a moment. "One life on that shuttle. More on the ship hiding behind it."
+
+Your scanners show nothing, but you trust {crew}.
+        <choice text="Prepare for battle.">
+          <outcome battle="random">The pirate ship drops its disguise when it sees you coming. Its crew are not ready for a fight.</outcome>
+        </choice>
+        <choice text="Leave before the trap can close.">
+          <outcome>You jump away before the pirates can spring their trap.</outcome>
+        </choice>
+      </outcome>
+    </choice>
+  </event>
+
+  <event id="PIRATE_TOLL" name="The Toll">
+    <text>A pirate ship drops out of hiding as you arrive and trains its weapons on your squad.
+
+"This cluster's ours. Pay the toll and fly on, or we take it from your wreck."</text>
+    <choice text="Pay the toll.">
+      <outcome mawjig="-low">The pirates count your payment twice before letting you go.</outcome>
+    </choice>
+    <choice text="Refuse and prepare for battle.">
+      <outcome battle="random">"Your funeral," the pirate captain says.</outcome>
+    </choice>
+    <choice requires="system:cloak" text="Cloak and lead your squad out of their sensor range.">
+      <outcome>You cloak and lead your squad along the edge of the cluster, out of the pirates' sensor range. By the time they stop searching, you are gone.</outcome>
+    </choice>
+  </event>
+
+  <event id="AZURETHEA_EXPLORER" name="Torn Wing">
+    <text>An Azurethea explorer ship rests near one of the cluster's moons, one of its wings torn. Its crew hail you gently and say they will manage on their own.</text>
+    <choice text="Offer to help with their repairs.">
+      <outcome mawjig="+low">Your crew spend hours patching the explorer's torn wing. The Azurethea thank you in their quiet way and send over what Mawjig they can spare.</outcome>
+    </choice>
+    <choice text="Wish them well and move on.">
+      <outcome>The explorer dips its wings as you leave.</outcome>
+    </choice>
+    <choice requires="race:Azurethea" text="Let {crew} speak with them.">
+      <outcome repair="system">{crew} talks with them for a long time. Afterwards, the explorers offer to tend your ship as well, and a team of them works through one of your damaged systems.</outcome>
+    </choice>
+  </event>
+
+  <event id="TENTAURI_PASSAGE" name="Making Room">
+    <text>A small Tentauri ship arrives right behind you, its shields bright. Its two crew ask, quietly, that your squad move aside. They are passing through and would rather not wait.</text>
+    <choice text="Move aside and let them pass.">
+      <outcome>The Tentauri slip past without another word.</outcome>
+    </choice>
+    <choice text="Hold your position.">
+      <outcome hull="-low">The Tentauri ship pushes through your formation anyway, its shields grinding against your hull. It never fires, and it is gone before you can.</outcome>
+    </choice>
+    <choice requires="race:Tentauri" text="Let {crew} talk to them.">
+      <outcome repair="system">{crew} and the strangers trade a few soft words. The Tentauri stay long enough to help repair one of your systems before they go on their way.</outcome>
+    </choice>
+  </event>
+
+  <event id="OLD_BATTLEFIELD" name="Old Wreckage">
+    <text>The wreckage of an old battle drifts through the cluster, cold and scattered. Some of the wrecks still carry unspent missiles. Some of those are still live.</text>
+    <choice text="Send your crew to search the wrecks.">
+      <outcome weight="3" missiles="+low">Your crew find a rack of missiles still sealed in its casing and bring it home.</outcome>
+      <outcome weight="2" wound="crew">A missile wakes up as your crew move it. The blast wounds {crew} before the others can pull them clear.</outcome>
+    </choice>
+    <choice text="Leave the dead alone.">
+      <outcome>The wreckage drifts on behind you as you leave.</outcome>
+    </choice>
+    <choice requires="system:teleport" text="Teleport the salvage aboard from a safe distance.">
+      <outcome missiles="+low" mawjig="+low">You lock onto the wrecks from a safe distance and teleport across everything that still looks useful.</outcome>
+    </choice>
+  </event>
+
+  <event id="MECHA_PATROL" name="Mecha Ground">
+    <text>A Mecha patrol ship blocks your way, wide and heavily armed.
+
+"This cluster belongs to us. Leave it, or pay to stay."</text>
+    <choice text="Pay what they ask.">
+      <outcome mawjig="-low">The patrol takes your payment and moves aside without a word.</outcome>
+    </choice>
+    <choice text="Refuse and prepare for battle.">
+      <outcome battle="random">The patrol ship opens fire.</outcome>
+    </choice>
+    <choice requires="system:hacking" text="Hack their sensors to make your squad look stronger.">
+      <outcome>Their sensors suddenly show a squad far stronger than yours. The patrol hesitates, then decides you are not worth the risk and lets you pass.</outcome>
+    </choice>
+    <choice requires="race:Mecha" text="Let {crew} answer them.">
+      <outcome mawjig="-low" missiles="+low">{crew} answers them in their own blunt way. Soon the talk turns to business. The patrol decides a trade is worth more than a fight and sells you missiles from its own stores.</outcome>
+    </choice>
+  </event>
+</events>

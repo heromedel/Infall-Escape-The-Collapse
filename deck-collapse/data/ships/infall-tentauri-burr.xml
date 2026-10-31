@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Tentauri "Burr", the tough little scout (ship-suggestions.md, 2026-10-22). Band 3 (was band 1; see the Pappus loadout), doing-fine Tentauri clusters.
+     Gets in, survives, gets out. Gap references (G1, G2 ...) are listed in README.md. -->
+<ship bands="3-4" name="Burr" race="Tentauri" faction="Tentauri" color="#FF5ECA" hull="8" missiles="0">
+  <note>Two crew, two rooms, good shields and a Supershield; two defence lasers that shoot down torpedoes when not aimed.</note>
+  <power kind="pool" level="10"/>                                    <!-- G2: biomechanical pool, as the genre's reactor -->
+  <system type="piloting" level="1"/>
+  <system type="shields" level="1"/>
+  <system type="engines" level="2"/>
+  <system type="sensors" level="1"/>
+  <system type="airlock" level="1"/>
+  <system type="lifeSupport" level="1"/>
+  <system type="medBay" level="1"/>
+  <system type="supershield" level="2" capacity="5"/>               <!-- G11 -->
+  <system type="weapon" id="weaponsA" name="Weapons A" level="1">    <!-- G3 -->
+    <weapon name="Tentauri Defense Laser" kind="laser" power="1" shots="1" damage="1" defensive="true" tech="biomechanical"/>  <!-- G4, G7 -->
+  </system>
+  <system type="weapon" id="weaponsB" name="Weapons B" level="1">
+    <weapon name="Tentauri Defense Laser" kind="laser" power="1" shots="1" damage="1" defensive="true" tech="biomechanical"/>
+  </system>
+  <crew name="Pilot" race="Tentauri" station="piloting"/>             <!-- G1: runs up to four systems in its room -->
+  <crew name="Gunner" race="Tentauri" station="weaponsA"/>
+  <!-- G19: suggested floor layout = the layout in ship-suggestions.md (content/ships/tentauri-scout/ship.xml on Cloud-C-Init-Coding). -->
+  <!-- Captain plan, Ai-Generated-Proposal (2026-10-30). Lines marked G22-G27 use the plan lines for those gaps (README.md); Deck Collapse has them now. -->
+  <ai plan="destroy">
+    <!-- Gets in, survives, gets out: knock out the guns that could stop it, then the engines that could chase it. -->
+    <target system="weapon" weapon="Tentauri Defense Laser" weight="0.8"/>
+    <target system="shields" weapon="Tentauri Defense Laser" when="enemyWeaponsDown" weight="0.6"/>
+    <target system="engines" weapon="Tentauri Defense Laser" when="enemyWeaponsDown"/>
+  </ai>
+</ship>

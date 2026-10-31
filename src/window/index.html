@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Infall: Escape The Collapse</title>
+  <style>
+    /* GDD 14B: muted blue boxes, white text. Placeholder look until the GUI discussion (14A). */
+    :root { --box: #1d2a3a; --edge: #4a6a8a; --text: #ffffff; --faint: #9fb3c8; --space: #0b1018; }
+    html, body { height: 100%; margin: 0; }
+    body { background: var(--space); color: var(--text); font: 15px/1.4 system-ui, sans-serif; display: grid; grid-template-rows: auto 1fr auto; overflow: hidden; }
+    #battle-area { position: relative; min-height: 0; grid-row: 2; }   /* stays in the stretching row when the header hides */
+    #battle-area > svg { position: absolute; inset: 0; }
+    header, footer, #dock-band { background: var(--box); border-bottom: 1px solid var(--edge); padding: 8px 16px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+    footer { border-bottom: none; border-top: 1px solid var(--edge); display: grid; gap: 6px; }
+    h1 { margin: 0; font-size: 18px; }
+    select, input { background: var(--space); color: var(--text); border: 1px solid var(--edge); padding: 6px; font: inherit; }
+    #ship-caption { color: var(--faint); }
+    #viewport { width: 100%; height: 100%; display: block; cursor: default; touch-action: none; }
+    /* the floating GUI: a screen-sized layer over the battle; only its elements take the pointer */
+    #hud { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; display: none; }
+    #hud .clickable { pointer-events: auto; }
+    body.battle #hud { display: block; }
+    #viewport.panning { cursor: grabbing; }
+    pre { margin: 0; white-space: pre-wrap; color: var(--faint); max-height: 6em; overflow: auto; }
+
+    /* the card GUI (Settings: Battle GUI card) floats over the battle's bottom-left corner */
+    #dock-band { display: none; position: absolute; left: 8px; bottom: 8px; padding: 0; background: none; border: none; z-index: 1; }
+    #dock { width: 356px; height: 192px; display: block; }
+    /* screens: the title, the ship viewer, the battle; the body's class says which */
+    #title { display: none; grid-row: 2; place-self: center; text-align: center; }
+    #title h1 { font-size: 44px; letter-spacing: 2px; margin: 0 0 32px; }
+    #title button { display: block; width: 260px; margin: 10px auto; padding: 12px; font: inherit; font-size: 18px; background: var(--box); color: var(--text); border: 1px solid var(--edge); border-radius: 4px; cursor: pointer; }
+    #title button:hover { border-color: var(--text); }
+    #settings { display: none; grid-row: 2; place-self: center; background: var(--box); border: 1px solid var(--edge); border-radius: 6px; padding: 20px 28px; min-width: 420px; }
+    #settings h2 { margin: 0 0 12px; font-size: 20px; }
+    #settings label { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 6px 0; border-bottom: 1px solid #263445; }
+    #settings .reply { color: var(--faint); font-size: 13px; min-height: 1.4em; margin-top: 8px; }
+    body.title #title { display: block; }
+    body.settings #settings { display: block; }
+    body.title #battle-area, body.settings #battle-area, body.title #viewer-band, body.settings #viewer-band, body.title footer, body.settings footer { display: none; }
+    body.battle #viewer-band { display: none; }
+    body.battle.gui-card #dock-band { display: block; }
+    body.battle footer { display: none; }
+    body.console-open footer { display: grid !important; position: fixed; left: 0; right: 0; top: 0; z-index: 2; box-shadow: 0 6px 20px #000; }
+
+    /* cursors say what the next click does (the genre's crosshair for aiming) */
+    .clickable, rect.door, [data-crew-id] { cursor: pointer; }
+    /* the aiming cursor is a reticle in the fire mode's colour, red for autofire and yellow for fire once, everywhere until the target is set */
+    body.aim-auto, body.aim-auto * { cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28'><circle cx='14' cy='14' r='9' fill='none' stroke='%23FF3B3B' stroke-width='2'/><circle cx='14' cy='14' r='2' fill='%23FF3B3B'/><path d='M14 1v6M14 21v6M1 14h6M21 14h6' stroke='%23FF3B3B' stroke-width='2'/></svg>") 14 14, crosshair !important; }
+    body.aim-once, body.aim-once * { cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28'><circle cx='14' cy='14' r='9' fill='none' stroke='%23FFE066' stroke-width='2'/><circle cx='14' cy='14' r='2' fill='%23FFE066'/><path d='M14 1v6M14 21v6M1 14h6M21 14h6' stroke='%23FFE066' stroke-width='2'/></svg>") 14 14, crosshair !important; }
+    body.crew-selected #viewport rect.tile.own { cursor: cell; }
+    body.dragging-slot, body.dragging-slot * { cursor: grabbing !important; }
+    rect.tile.hover-room { fill: #ffd27a; stroke: #FFE066; stroke-width: 2; }   /* the hovered room's outline is always yellow (genre frame 03) */
+    body.crew-selected #viewport rect.tile.own:hover { fill: #bfe3ff; }
+  </style>
+</head>
+<body>
+  <header id="viewer-band">
+    <h1>Infall: Escape The Collapse</h1>
+    <label>Ship <select id="ship-picker"></select></label>
+    <label>Side <select id="side-picker"><option value="player">Player</option><option value="enemy">Enemy</option></select></label>
+    <span id="ship-caption"></span>
+  </header>
+  <section id="title">
+    <h1>Infall: Escape The Collapse</h1>
+    <button id="title-battle">Test Battle</button>
+    <button id="title-viewer">Ship Viewer</button>
+    <button id="title-settings">Settings</button>
+    <button id="title-exit">Exit</button>
+  </section>
+  <section id="settings">
+    <h2>Settings</h2>
+    <div id="settings-rows"></div>
+    <div class="reply" id="settings-reply"></div>
+    <button id="settings-back" style="margin-top: 12px">Back</button>
+  </section>
+  <div id="battle-area">
+    <svg id="viewport" xmlns="http://www.w3.org/2000/svg"></svg>
+    <svg id="hud" xmlns="http://www.w3.org/2000/svg"></svg>
+    <div id="dock-band"><svg id="dock" xmlns="http://www.w3.org/2000/svg"></svg></div>
+  </div>
+  <footer>
+    <input id="debug-line" placeholder="Debug console: type a command and press Enter (help lists them)">
+    <pre id="debug-output"></pre>
+  </footer>
+  <script type="module" src="window.js"></script>
+</body>
+</html>

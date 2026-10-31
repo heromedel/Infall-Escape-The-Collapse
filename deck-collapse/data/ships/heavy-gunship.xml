@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Classic elite enemy: tougher hull, two shield layers, heavy guns and a guardian suit. -->
+<ship bands="2-8" name="Heavy Gunship" faction="Hunters" color="#FF8500" hull="14" missiles="4">
+  <note>An elite hunter. Two shield layers, a heavy laser, a beam and a guardian suit that shoots down torpedoes.</note>
+  <system type="reactor" level="10"/>
+  <system type="shields" level="2"/>
+  <system type="engines" level="2"/>
+  <system type="piloting" level="2"/>
+  <system type="sensors" level="2"/>
+  <system type="lifeSupport" level="1"/>
+  <system type="medBay" level="1"/>
+  <system type="airlock" level="1"/>
+  <system type="evb" id="dock" suit="guardian" level="2"/>
+  <system type="weapon" id="weapons" name="Weapons" level="3">
+    <weapon ref="heavy-laser"/>
+    <weapon ref="cleaver-beam"/>
+  </system>
+  <crew name="Cmdr. Ost" station="piloting" piloting="2" repair="1"/>
+  <crew name="Lt. Barra" station="weapons" weapons="1"/>
+  <crew name="Ens. Quill" station="shields" shields="1"/>
+  <crew name="Ens. Faro" station="dock"/>
+</ship>
