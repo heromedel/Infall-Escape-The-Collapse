@@ -32,6 +32,7 @@ the Last Fleet. Lose when every scout ship is gone (GDD 1F).
 | Zoom | Mouse wheel | RT / R2 in, LT / L2 out |
 | Pan | Middle drag, arrow keys | Right stick |
 | Frame the whole fight | Home | |
+| Move a HUD card | Drag its grab bar (the small tab on its top edge); drop it against another card's side to dock it. Right click the bar puts it back; the button beside it folds the card. Settings: HUD Layout, HUD Card Opacity, Reset HUD layout | |
 | Fly to a ship | Double-click it, F for the selected ship, or click its status card | |
 | Next squad ship | Tab | |
 | Map and jump | J or JUMP | View / Select |

@@ -36,6 +36,14 @@ static func settings() -> Overlay:
 	window.place_panel(760)
 	window.add_title("SETTINGS")
 	window.add_text("[color=#a8b8cc]Each setting lists its default first. Classic options bring play closer to the genre's own rules.[/color]", 16)
+	# The list scrolls, so it never runs off a small screen
+	var scroll := ScrollContainer.new()
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.custom_minimum_size = Vector2(0, 560)
+	var rows := VBoxContainer.new()
+	rows.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	scroll.add_child(rows)
+	window.body.add_child(scroll)
 	for id in Settings.OPTIONS:
 		var option: Array = Settings.OPTIONS[id]
 		var choices: Array = option[1]
@@ -60,8 +68,12 @@ static func settings() -> Overlay:
 				Settings.set_value(id, next)
 				button.text = _choice_text(next))
 			row.add_child(button)
-		window.body.add_child(row)
+		rows.add_child(row)
 	window.add_text("[color=#a8b8cc]Terran Ship Conduits and Run Length apply to new runs.[/color]", 15)
+	window.add_button("Reset HUD layout", func():
+		HudLayout.new().reset()
+		for hud in window.get_tree().get_nodes_in_group("battle_hud"):
+			hud.layout = HudLayout.load_saved())
 	window.add_button("Done", window.close)
 	return window
 

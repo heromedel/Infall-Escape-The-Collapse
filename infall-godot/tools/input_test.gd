@@ -65,6 +65,25 @@ func _ready() -> void:
 	battle.paused = true
 	await _click(_screen_of(ship, door_point), MOUSE_BUTTON_LEFT)
 	_check("clicking a door opens it", door.held_open)
+	# 7. HUD cards: drag the weapons card by its grab bar, fold the crew card, and see it open when crew are hurt
+	var hud: BattleHud = battle.hud
+	hud.layout.reset()
+	await _wait(0.2)
+	var before: Rect2 = hud.layout.rects["weapons"]
+	var grab := _hud_region("Drag to move this card")
+	for candidate in hud._regions:
+		if String(candidate.tooltip).begins_with("Drag to move") and before.grow(10).has_point(candidate.rect.get_center()):
+			grab = candidate
+	await _drag(grab.rect.get_center(), grab.rect.get_center() + Vector2(-300, -400))
+	var after: Rect2 = hud.layout.rects["weapons"]
+	_check("dragging a card's grab bar moves it", after.position.distance_to(before.position) > 250.0 and hud.layout.cards["weapons"].has("anchor"))
+	hud.layout.set_folded("crew", true)
+	await _wait(0.2)
+	_check("a folded card shrinks to its bar", hud.layout.rects["crew"].size.y <= HudLayout.MARGIN + 12.0)
+	ship.crew[0].health -= 20.0
+	await _wait(0.2)
+	_check("a folded card opens when its crew are hurt", hud.layout.rects["crew"].size.y > 60.0)
+	hud.layout.reset()
 	await _wait(0.3)
 	get_viewport().get_texture().get_image().save_png("/tmp/claude-0/input_test.png")
 	get_tree().quit()
@@ -100,6 +119,35 @@ func _click(viewport_point: Vector2, button: int) -> void:
 		event.pressed = pressed
 		Input.parse_input_event(event)
 		await _wait(0.05)
+
+
+func _drag(from: Vector2, to: Vector2) -> void:
+	var start: Vector2 = get_viewport().get_final_transform() * from
+	var end: Vector2 = get_viewport().get_final_transform() * to
+	Input.warp_mouse(start)
+	await _wait(0.05)
+	var press := InputEventMouseButton.new()
+	press.position = start
+	press.global_position = start
+	press.button_index = MOUSE_BUTTON_LEFT
+	press.pressed = true
+	Input.parse_input_event(press)
+	await _wait(0.05)
+	for step in 6:
+		var at := start.lerp(end, (step + 1) / 6.0)
+		Input.warp_mouse(at)
+		var motion := InputEventMouseMotion.new()
+		motion.position = at
+		motion.global_position = at
+		Input.parse_input_event(motion)
+		await _wait(0.05)
+	var release := InputEventMouseButton.new()
+	release.position = end
+	release.global_position = end
+	release.button_index = MOUSE_BUTTON_LEFT
+	release.pressed = false
+	Input.parse_input_event(release)
+	await _wait(0.1)
 
 
 func _key(code: int) -> void:
