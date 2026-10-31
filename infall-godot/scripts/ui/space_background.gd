@@ -54,8 +54,11 @@ func set_cluster_look(look_seed: int, collapse_near: float, hazard: String) -> v
 	if hazard == "sun":
 		kind = 2.0
 	_material.set_shader_parameter("planet_kind", kind)
-	_material.set_shader_parameter("planet_position", Vector2(rng.randf_range(0.65, 0.92), rng.randf_range(0.15, 0.85)) if rng.randf() < 0.5 else Vector2(rng.randf_range(0.08, 0.35), rng.randf_range(0.15, 0.85)))
-	_material.set_shader_parameter("planet_radius", rng.randf_range(0.06, 0.15) if kind < 1.5 else 0.22)
+	# Big and partly past a screen edge, as far planets look in the genre; a star sits further off
+	var left_side := rng.randf() < 0.5
+	_material.set_shader_parameter("planet_position", Vector2(rng.randf_range(-0.06, 0.1) if left_side else rng.randf_range(0.9, 1.06), rng.randf_range(0.15, 0.85)))
+	_material.set_shader_parameter("planet_radius", rng.randf_range(0.28, 0.42) if kind < 1.5 else 0.3)
+	_material.set_shader_parameter("light_direction", Vector2(1.0 if left_side else -1.0, rng.randf_range(-0.7, 0.3)))   # lit on the side facing the battle
 	var planet_colours := [Color(0.75, 0.45, 0.35), Color(0.35, 0.6, 0.8), Color(0.55, 0.7, 0.45), Color(0.8, 0.7, 0.5), Color(0.6, 0.45, 0.75)]
 	var planet: Color = planet_colours[rng.randi_range(0, planet_colours.size() - 1)]
 	if kind > 1.5:

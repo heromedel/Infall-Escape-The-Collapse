@@ -5,11 +5,10 @@ func _ready() -> void:
 	var player := Ship.from_design(Library.ship(OS.get_environment("P") if OS.get_environment("P") != "" else "outrider"), 0, rng)
 	var enemy := Ship.from_design(Library.ship(OS.get_environment("E")), 1, rng)
 	enemy.facing_down = true
-	player.world_position = Vector2(0, 500)
-	enemy.world_position = Vector2(0, -500)
 	var encounter := Encounter.new()
 	encounter.wallet = RunState.new()
 	encounter.setup([player], [enemy], 1)
+	Formation.lay_out(encounter, "Curve")
 	for slot in player.weapons:
 		slot.target_ship = enemy
 		slot.target_room = 0

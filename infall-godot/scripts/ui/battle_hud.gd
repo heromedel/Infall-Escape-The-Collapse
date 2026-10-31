@@ -539,11 +539,10 @@ func _draw_top_centre() -> void:
 	# Mawjig
 	var mawjig := screen.run.mawjig if screen.run else 0
 	UiKit.draw_text(self, rect.position + Vector2(16, 26), "MAWJIG", 13, UiColours.TEXT_DIM, UiKit.font_bold())
-	var low := mawjig < Mawjig.JUMP_COST * 2
-	var mawjig_colour := Color("#ffd46b") if not low else Color(UiColours.DAMAGED_RED, 0.6 + 0.4 * sin(_time * 5.0))
+	var mawjig_colour := LowMawjigWarning.counter_colour(mawjig, _time)
 	UiKit.draw_text(self, rect.position + Vector2(16, 58), Mawjig.format(mawjig), 30, mawjig_colour, UiKit.font_title())
-	if low:
-		UiKit.draw_text(self, Vector2(size.x * 0.5, rect.end.y + 44), "LOW ON MAWJIG: every shot and every jump spends it", 15, UiColours.DAMAGED_RED, UiKit.font_bold(), HORIZONTAL_ALIGNMENT_CENTER, 0)
+	if mawjig < LowMawjigWarning.DANGER:
+		_draw_notice("LOW ON MAWJIG: every shot and every jump spends it", rect.end.y + 44, UiColours.DAMAGED_RED)
 	_region(Rect2(rect.position, Vector2(140, 74)), Callable(), "Mawjig: the squad's fuel, ammunition and money in one. A jump costs 1.21; every shot costs a little.")
 	# Jigawatt Drive
 	var charge := encounter.squad_jump_charge()
@@ -591,13 +590,44 @@ func _any_charging() -> bool:
 func _draw_enemies() -> void:
 	var encounter := screen.encounter
 	for ship in encounter.ships:
-		if ship == screen.selected_ship or ship.escaped:
+		if ship.escaped:
 			continue
 		if ship.side == 1 and not encounter.fight_started:
 			continue
 		if ship.destroyed and ship.explosion_ticks > 60:
 			continue
-		_draw_floating_status(ship)
+		if _draw_offscreen_marker(ship):
+			continue
+		if ship != screen.selected_ship:
+			_draw_floating_status(ship)
+
+
+## A ship out of view gets an arrow at the screen's edge pointing to it, with its name and hull; clicking the
+## arrow flies the camera there. Returns false when the ship is on screen.
+func _draw_offscreen_marker(ship: Ship) -> bool:
+	var centre_world := screen.encounter.local_to_world(ship, Formation.hull_bounds(ship.design).get_center())
+	var at: Vector2 = screen.world.get_global_transform_with_canvas() * centre_world
+	if Rect2(Vector2.ZERO, size).grow(60.0).has_point(at):
+		return false
+	var inner := Rect2(Vector2(70, 110), size - Vector2(140, 280))
+	var middle := inner.get_center()
+	var direction := (at - middle).normalized()
+	var reach_x := inner.size.x * 0.5 / maxf(absf(direction.x), 0.001)
+	var reach_y := inner.size.y * 0.5 / maxf(absf(direction.y), 0.001)
+	var point := middle + direction * minf(reach_x, reach_y)
+	var colour := UiColours.POWER_GREEN if ship.side == 0 else UiColours.ENEMY_RED
+	var side := direction.orthogonal()
+	draw_colored_polygon(PackedVector2Array([point + direction * 18.0, point + side * 11.0, point - side * 11.0]), Color(colour, 0.9))
+	var label_at := point - direction * 34.0
+	var box := Rect2(label_at - Vector2(64, 18), Vector2(128, 36))
+	draw_rect(box, Color(0.02, 0.035, 0.07, 0.85))
+	draw_rect(box, Color(colour, 0.6), false, 1.0)
+	UiKit.draw_text(self, box.position + Vector2(64, 15), ship.name, 12, UiColours.TEXT, UiKit.font_bold(), HORIZONTAL_ALIGNMENT_CENTER, 0)
+	var fraction := float(ship.hull) / float(maxi(1, ship.max_hull))
+	draw_rect(Rect2(box.position + Vector2(10, 23), Vector2(108, 5)), UiColours.BAR_EMPTY)
+	draw_rect(Rect2(box.position + Vector2(10, 23), Vector2(108 * fraction, 5)), UiColours.hull_colour(fraction))
+	_region(box.merge(Rect2(point - Vector2(18, 18), Vector2(36, 36))), func(): screen.focus_ship(ship), "%s is out of view. Click to fly there." % ship.name)
+	return true
 
 
 func _draw_floating_status(ship: Ship) -> void:
@@ -652,8 +682,7 @@ func _draw_floating_status(ship: Ship) -> void:
 
 
 func _look_at(ship: Ship) -> void:
-	screen.camera.target_position = ship.world_position
-	screen.camera.target_zoom = maxf(screen.camera.target_zoom, 0.8)
+	screen.focus_ship(ship)
 
 
 func _draw_overlays() -> void:

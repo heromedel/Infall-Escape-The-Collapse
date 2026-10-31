@@ -16,6 +16,8 @@ const OPTIONS := {
 	"map_zoom": ["Clamped", ["Clamped", "Free"], "Map Zoom"],
 	"formation": ["Curve", ["Curve", "Inverted Curve", "Flat Row"], "Squad Formation"],
 	"screen_shake": [true, [true, false], "Screen Shake"],
+	"low_mawjig_warning": [true, [true, false], "Low Mawjig Warning"],
+	"shots_crossing_barrier": ["Shown", ["Shown", "Hidden"], "Shots Crossing Barrier"],
 	"fullscreen": [false, [false, true], "Fullscreen"],
 	"master_volume": [0.8, [], "Master Volume"],
 	"music_volume": [0.6, [], "Music Volume"],

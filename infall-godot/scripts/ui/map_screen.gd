@@ -37,6 +37,7 @@ static var _region_glow_seed: int = -1
 func open(run_state: RunState, jumping_allowed: bool) -> void:
 	run = run_state
 	can_jump = jumping_allowed
+	texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR   # the region wash is a small picture stretched smooth
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	theme = UiKit.theme()
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -235,7 +236,7 @@ func _draw() -> void:
 		_region_glow = _render_regions(galaxy)
 		_region_glow_seed = galaxy.seed_value
 	var outer := galaxy.outer_radius()
-	draw_texture_rect(_region_glow, Rect2(_to_screen(Vector2(-outer, -outer)), Vector2(outer, outer) * 2.0 * zoom), false, Color(1, 1, 1, 0.11))
+	draw_texture_rect(_region_glow, Rect2(_to_screen(Vector2(-outer, -outer)), Vector2(outer, outer) * 2.0 * zoom), false, Color(1, 1, 1, 0.1))
 	# Links
 	for index in galaxy.clusters.size():
 		var cluster: Dictionary = galaxy.clusters[index]
@@ -339,6 +340,9 @@ static func _render_regions(galaxy: Galaxy) -> ImageTexture:
 				var y := int(centre.y) + dy
 				if x >= 0 and y >= 0 and x < pixels and y < pixels:
 					image.set_pixel(x, y, colour)
+	# Shrinking and growing back blurs the edges into a soft glow
+	image.resize(pixels / 3, pixels / 3, Image.INTERPOLATE_BILINEAR)
+	image.resize(pixels, pixels, Image.INTERPOLATE_CUBIC)
 	return ImageTexture.create_from_image(image)
 
 

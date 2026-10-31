@@ -13,11 +13,10 @@ func _ready() -> void:
 		var enemy_id := "pirate-hijacker.cutpurse" if index % 2 == 0 else "light-attack-frame"
 		var enemy := Ship.from_design(Library.ship(enemy_id), 1, rng)
 		enemy.facing_down = true
-		player.world_position = Vector2(0, 500)
-		enemy.world_position = Vector2(0, -500)
 		var encounter := Encounter.new()
 		encounter.wallet = run
 		encounter.setup([player], [enemy], index)
+		Formation.lay_out(encounter, "Curve")
 		# The player aims everything at the enemy's weapons room with autofire, the simplest captain
 		for slot in player.weapons:
 			slot.target_ship = enemy

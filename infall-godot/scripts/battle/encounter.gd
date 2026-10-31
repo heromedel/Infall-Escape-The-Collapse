@@ -13,6 +13,13 @@ const SHIELD_XP := 1.8
 const VOLLEY_XP := 1.5
 const SUIT_SPEED := 7.0
 const TELEPORT_TICKS := 20
+# The barrier (GDD 3Q, 3R): a strip across the battlefield between the squads that stands for the distance
+# between them. It is 12 tiles deep (heromedel, 2026-10-31) and centred on y = 0, the player squad below it.
+const BARRIER_HALF_DEPTH := 6.0 * ShipDesign.TILE
+const DEFAULT_GATOMETERS := 400.0
+# How fast each kind of shot covers Gatometers; a longer gap only means a longer wait (GDD 3Q).
+# Not in the docs yet: lasers and flak 400 a second (1 s for the default gap), missiles 260, battlesuits 130.
+const GATOMETERS_PER_SECOND := {"laser": 400.0, "flak": 400.0, "missile": 260.0, "suit": 130.0}
 
 var ships: Array[Ship] = []
 var projectiles: Array[Projectile] = []
@@ -32,6 +39,7 @@ var wallet: RunState = null         # pays for the player's shots (GDD 8C)
 var fight_started: bool = false
 var surrender_offered: bool = false
 var no_mawjig_warned: bool = false
+var gatometers: float = DEFAULT_GATOMETERS   # this battle's distance across the barrier
 
 
 func setup(player_ships: Array, enemy_ships: Array, seed_value: int) -> void:
@@ -327,7 +335,7 @@ func _defend(ship: Ship, slot: WeaponSlot) -> void:
 	var best: Projectile = null
 	var best_distance := 700.0 * 700.0
 	for shot in projectiles:
-		if not shot.can_be_shot_down() or shot.side == ship.side or shot.target == null or shot.target.side != ship.side:
+		if not shot.can_be_shot_down() or shot.side == ship.side or shot.target == null or shot.target.side != ship.side or in_barrier(shot.position):
 			continue
 		var distance := shot.position.distance_squared_to(origin)
 		if distance < best_distance:
@@ -343,7 +351,7 @@ func _defend(ship: Ship, slot: WeaponSlot) -> void:
 		note("shot_down", {"ship": ship, "position": best.position})
 		return
 	for suit in suits:
-		if suit.gone or suit.side == ship.side or suit.target == null or suit.target.side != ship.side:
+		if suit.gone or suit.side == ship.side or suit.target == null or suit.target.side != ship.side or in_barrier(suit.position):
 			continue
 		if suit.position.distance_squared_to(origin) < 650.0 * 650.0:
 			slot.charge = 0.0
@@ -372,7 +380,7 @@ func _tick_projectiles() -> void:
 			continue
 		if shot.shot_down:
 			continue
-		shot.position += shot.velocity
+		shot.position += shot.velocity * barrier_pace(shot.kind, shot.position, shot.velocity)
 		if shot.missed:
 			if shot.life_ticks < 160:
 				still_flying.append(shot)
@@ -670,7 +678,7 @@ func _tick_suits() -> void:
 			kept.append(suit)
 			continue
 		var home_point := local_to_world(suit.home, suit.home.design.cell_centre(suit.home.system_by("evb_dock").cell)) if suit.home.system_by("evb_dock") else suit.home.world_position
-		var heading_home_ticks := suit.position.distance_to(home_point) / SUIT_SPEED + 40.0
+		var heading_home_ticks := suit.position.distance_to(home_point) / SUIT_SPEED + crossing_seconds("suit") * TICKS + 40.0
 		if suit.state != "returning" and (suit.target == null or suit.target.is_gone() or suit.oxygen_ticks < heading_home_ticks or suit.is_damaged()):
 			suit.state = "returning"
 		match suit.state:
@@ -678,7 +686,7 @@ func _tick_suits() -> void:
 				suit.orbit_angle += 0.012
 				var radii := bubble_radii(suit.target) * 1.12
 				var orbit_point := local_to_world(suit.target, bubble_centre(suit.target) + Vector2(cos(suit.orbit_angle) * radii.x, sin(suit.orbit_angle) * radii.y))
-				suit.position = suit.position.move_toward(orbit_point, SUIT_SPEED)
+				suit.position = suit.position.move_toward(orbit_point, SUIT_SPEED * barrier_pace("suit", suit.position, (orbit_point - suit.position).normalized() * SUIT_SPEED))
 				if suit.state == "outbound" and suit.position.distance_to(orbit_point) < 30.0:
 					suit.state = "attacking"
 				if suit.state == "attacking":
@@ -692,7 +700,7 @@ func _tick_suits() -> void:
 						note("shot", {"ship": suit.home, "weapon": suit.def, "position": suit.position})
 				kept.append(suit)
 			"returning":
-				suit.position = suit.position.move_toward(home_point, SUIT_SPEED)
+				suit.position = suit.position.move_toward(home_point, SUIT_SPEED * barrier_pace("suit", suit.position, (home_point - suit.position).normalized() * SUIT_SPEED))
 				if suit.position.distance_to(home_point) < 10.0 or suit.home.destroyed:
 					_suit_docks(suit)
 					continue
@@ -840,6 +848,35 @@ func _tick_hazard() -> void:
 
 
 # --- Geometry -------------------------------------------------------------------------------------------------
+
+## The ship whose shield bubble holds a world point, if any.
+func ship_under(world_point: Vector2) -> Ship:
+	for ship in ships:
+		if not ship.is_gone() and _inside_bubble(ship, world_point):
+			return ship
+	return null
+
+
+func in_barrier(world_point: Vector2) -> bool:
+	return absf(world_point.y) < BARRIER_HALF_DEPTH
+
+
+## Seconds a kind of shot (or a battlesuit) takes to cross the barrier at this battle's distance.
+func crossing_seconds(kind: String) -> float:
+	return gatometers / float(GATOMETERS_PER_SECOND.get(kind, 400.0))
+
+
+## How much of its normal speed something keeps inside the barrier, so that crossing it takes
+## crossing_seconds whatever its speed and angle: the line stays straight, only the time stretches (GDD 3R).
+## Shots that don't cross between the squads (asteroids, defence bolts) keep their speed.
+func barrier_pace(kind: String, world_point: Vector2, velocity: Vector2) -> float:
+	if not GATOMETERS_PER_SECOND.has(kind) or not in_barrier(world_point) or velocity.length_squared() < 0.0001:
+		return 1.0
+	var direction := velocity.normalized()
+	var path := BARRIER_HALF_DEPTH * 2.0 / maxf(absf(direction.y), 0.1)
+	var normal_ticks := path / velocity.length()
+	return clampf(normal_ticks / maxf(1.0, crossing_seconds(kind) * TICKS), 0.01, 1.0)
+
 
 func local_to_world(ship: Ship, local: Vector2) -> Vector2:
 	return ship.world_position + (-local if ship.facing_down else local)

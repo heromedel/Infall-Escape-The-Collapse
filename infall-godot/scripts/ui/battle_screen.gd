@@ -15,10 +15,6 @@ signal menu_pressed
 signal squad_lost
 
 const TICK_SECONDS := 0.05
-const SQUAD_GAP := 120.0            # world pixels between the two squads' noses, top to bottom
-const SQUAD_OFFSET := 420.0          # each squad sits this far to its side: the wide screen carries the distance
-const FORMATION_DEPTH := 0.7         # GDD 3H: curve depth in ship lengths
-const FORMATION_SPACING := 1.35
 
 var encounter: Encounter
 var run: RunState
@@ -89,7 +85,7 @@ func show_encounter(new_encounter: Encounter, wallet: RunState, look_seed: int, 
 	store_here = has_store
 	selected_crew.clear()
 	aim_mode = ""
-	_lay_out_squads()
+	Formation.lay_out(encounter, String(Settings.get_value("formation", "Curve")))
 	for ship in encounter.ships:
 		var view := ShipView.new()
 		view.setup(ship, encounter)
@@ -99,6 +95,7 @@ func show_encounter(new_encounter: Encounter, wallet: RunState, look_seed: int, 
 	effects.particles.clear()
 	world.add_child(effects)
 	divider.visible = encounter.fight_started
+	divider.encounter = encounter
 	encounter.step()   # one tick so crew are at their consoles and the HUD reads true from the first frame
 	encounter.notes.clear()
 	if selected_ship == null or not encounter.ships.has(selected_ship) or selected_ship.is_gone():
@@ -108,35 +105,14 @@ func show_encounter(new_encounter: Encounter, wallet: RunState, look_seed: int, 
 	frame_everything(true)
 
 
-func _lay_out_squads() -> void:
-	for side in [0, 1]:
-		var squad: Array[Ship] = []
-		for ship in encounter.ships:
-			if ship.side == side:
-				squad.append(ship)
-		var widest := 200.0
-		var longest := 200.0
-		for ship in squad:
-			var bounds := Formation.hull_bounds(ship.design)
-			widest = maxf(widest, bounds.size.x)
-			longest = maxf(longest, bounds.size.y)
-		var spacing := widest * FORMATION_SPACING
-		for index in squad.size():
-			var ship := squad[index]
-			var bounds := Formation.hull_bounds(ship.design)
-			var offset := (index - (squad.size() - 1) * 0.5)
-			var curve := 0.0
-			if squad.size() > 1:
-				var u := offset / maxf(1.0, (squad.size() - 1) * 0.5)
-				curve = FORMATION_DEPTH * longest * (1.0 - u * u)   # outer ships forward, centre back (GDD 3H)
-			ship.facing_down = side == 1
-			# Player squad bottom, enemy squad top (GDD 3A), each shifted to its own side of the screen so the
-			# space between them reads as distance while both stay large enough to work.
-			var shift := SQUAD_OFFSET if encounter.fight_started else 0.0
-			if side == 0:
-				ship.world_position = Vector2(offset * spacing - shift, SQUAD_GAP * 0.5 - bounds.position.y + curve)
-			else:
-				ship.world_position = Vector2(-offset * spacing + shift, -SQUAD_GAP * 0.5 + bounds.position.y - curve)
+## Flies the camera to one ship, close enough to work its rooms; Home frames everything again.
+func focus_ship(ship: Ship) -> void:
+	var bounds := Formation.hull_bounds(ship.design)
+	var view_size := get_viewport().get_visible_rect().size
+	var fit := minf((view_size.y - 104.0 - 150.0) / bounds.size.y, (view_size.x - 700.0) / bounds.size.x)
+	camera.target_zoom = clampf(fit, BattleCamera.MIN_ZOOM, BattleCamera.MAX_ZOOM)
+	camera.target_position = encounter.local_to_world(ship, bounds.get_center()) + Vector2(0, (150.0 - 104.0) * 0.5) / camera.target_zoom
+	camera.user_moved = true
 
 
 ## Frames the whole encounter, or just the player's squad when there is no one to fight.
@@ -187,6 +163,7 @@ func _process(delta: float) -> void:
 	_update_views(alpha)
 	background.follow_camera(camera.position, camera.zoom.x)
 	divider.zoom = camera.zoom.x
+	divider.camera_x = camera.position.x
 
 
 func _tick_auto_pause() -> void:
@@ -396,7 +373,8 @@ func _on_fight_over(outcome: String) -> void:
 
 var _shake := 0.0
 func shake(amount: float) -> void:
-	_shake = maxf(_shake, amount)
+	if Settings.get_value("screen_shake", true):
+		_shake = maxf(_shake, amount)
 
 
 func _physics_process(delta: float) -> void:
@@ -447,6 +425,11 @@ func _mouse_button(event: InputEventMouseButton) -> void:
 		if aim_mode != "":
 			_click_while_aiming(event)
 			return
+		if event.double_click and selected_crew.is_empty():
+			var ship := encounter.ship_under(world.get_global_mouse_position())
+			if ship:
+				focus_ship(ship)
+				return
 		if hover_crew and hover_crew.side == 0:
 			_select_crew([hover_crew], event.shift_pressed)
 			return
@@ -547,8 +530,11 @@ func _key(event: InputEventKey) -> void:
 				arm_weapon(selected_ship.weapons[index])
 		KEY_TAB:
 			cycle_ship()
-		KEY_HOME, KEY_F:
+		KEY_HOME:
 			frame_everything()
+		KEY_F:
+			if selected_ship:
+				focus_ship(selected_ship)
 		KEY_J:
 			jump_pressed.emit()
 		KEY_U:

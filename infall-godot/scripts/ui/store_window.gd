@@ -200,7 +200,7 @@ func _card(title: String, detail: String, price: int, sold: bool, on_buy: Callab
 	detail_label.custom_minimum_size = Vector2(400, 0)
 	text.add_child(detail_label)
 	row.add_child(text)
-	var buy := UiKit.button("SOLD" if sold else Mawjig.format(price), on_buy, 110)
+	var buy := UiKit.button("SOLD" if sold else Mawjig.format(price), func(): LowMawjigWarning.confirm(self, run, price, on_buy), 110)
 	buy.disabled = sold or run.mawjig < price
 	buy.add_theme_color_override("font_color", Color("#ffd46b"))
 	row.add_child(buy)

@@ -31,7 +31,8 @@ the Last Fleet. Lose when every scout ship is gone (GDD 1F).
 | Crew back to stations | Z | |
 | Zoom | Mouse wheel | RT / R2 in, LT / L2 out |
 | Pan | Middle drag, arrow keys | Right stick |
-| Frame the whole fight | F or Home | |
+| Frame the whole fight | Home | |
+| Fly to a ship | Double-click it, F for the selected ship, or click its status card | |
 | Next squad ship | Tab | |
 | Map and jump | J or JUMP | View / Select |
 | Ship screen (upgrades, weapons, crew) | U or SHIP | |

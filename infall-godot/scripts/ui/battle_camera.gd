@@ -3,7 +3,7 @@ extends Camera2D
 ## The battle camera pans and zooms (GDD 3C): ships keep their size; zoomed out both squads show as an
 ## overview, zoomed in the rooms are worked. It eases toward where it is told to look, so it never jumps.
 
-const MIN_ZOOM := 0.22
+const MIN_ZOOM := 0.1   # far enough out to see two full squads and the barrier between them
 const MAX_ZOOM := 1.6
 
 var target_position := Vector2.ZERO

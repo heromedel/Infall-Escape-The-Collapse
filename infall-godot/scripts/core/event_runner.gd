@@ -155,6 +155,16 @@ func resolve(choice: Dictionary, crew_name: String) -> Dictionary:
 	return result
 
 
+## The most Mawjig a choice can give away, over all its outcomes (for the low Mawjig warning, GDD 14L).
+func most_given_away(choice: Dictionary) -> int:
+	var most := 0
+	for outcome in choice.outcomes:
+		for effect in outcome.effects:
+			if effect.tag == "mawjig" and not effect.attrs.has("size"):
+				most = maxi(most, -Mawjig.amount(float(effect.attrs.get("amount", "0"))))
+	return mini(most, run.mawjig)
+
+
 func _apply(tag: String, attrs: Dictionary, result: Dictionary) -> void:
 	match tag:
 		"mawjig":
