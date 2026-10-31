@@ -72,16 +72,23 @@ static func rows_for(variant: Dictionary) -> Array:
 ## Draws the face centred on a point, each pixel `pixel` units wide.
 static func draw(canvas: CanvasItem, center: Vector2, crew_name: String, pixel: float, alpha: float = 1.0) -> void:
 	var variant := variant_for(crew_name)
-	var rows := rows_for(variant)
-	var origin := center - Vector2(WIDTH, HEIGHT) * pixel / 2.0
-	for y in HEIGHT:
+	var colours := FIXED.duplicate()
+	colours.merge(variant.fur, true)
+	draw_rows(canvas, center, rows_for(variant), colours, pixel, alpha)
+
+
+## Draws any pixel grid (rows of palette letters, "." clear) centred on a point.
+static func draw_rows(canvas: CanvasItem, center: Vector2, rows: Array, colours: Dictionary, pixel: float, alpha: float = 1.0) -> void:
+	var size := Vector2(String(rows[0]).length(), rows.size())
+	var origin := center - size * pixel / 2.0
+	for y in rows.size():
 		var row: String = rows[y]
-		for x in WIDTH:
+		for x in row.length():
 			var letter := row[x]
 			if letter == ".":
 				continue
-			var hex: String = variant.fur.get(letter, FIXED.get(letter, "#ff00ff"))
-			canvas.draw_rect(Rect2(origin + Vector2(x, y) * pixel, Vector2(pixel, pixel)), Color(Color(hex), alpha))
+			var colour := Color(colours.get(letter, "#ff00ff"))
+			canvas.draw_rect(Rect2(origin + Vector2(x, y) * pixel, Vector2(pixel, pixel)), Color(colour, colour.a * alpha))
 
 
 static func _put(row: String, column: int, cells: String) -> String:

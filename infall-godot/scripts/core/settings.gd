@@ -21,6 +21,7 @@ const OPTIONS := {
 	"collapsed_cards_reopen": [true, [true, false], "Collapsed Cards Reopen on Change"],
 	"reopened_cards_fold_back": [true, [true, false], "Reopened Cards Fold Back"],
 	"low_mawjig_warning": [true, [true, false], "Low Mawjig Warning"],
+	"gatos_species": ["Terrans", ["Terrans", "Tabbys"], "GATOS Species"],
 	"shots_crossing_barrier": ["Shown", ["Shown", "Hidden"], "Shots Crossing Barrier"],
 	"fullscreen": [false, [false, true], "Fullscreen"],
 	"master_volume": [0.8, [], "Master Volume"],

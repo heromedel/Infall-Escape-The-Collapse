@@ -1,8 +1,9 @@
 class_name CrewPortraits
 extends RefCounted
 ## Crew portrait tokens: a round token with a small face for each race, so crew read at a glance without
-## animated sprites. The GATOS are cats, drawn as the approved pixel-art cat head (CrewFace). A crew member's
-## look comes from their name, so it stays the same all run.
+## animated sprites. The GATOS Species setting (GV 7A, 7D) chooses the GATOS faces (mercenary humans, or the
+## approved pixel-art cat head), the HalfMechs' (a helmet, or dark cyborg kittens) and the Senti's (a hologram, or a
+## holographic cat). A crew member's look comes from their name, so it stays the same all run.
 
 
 
@@ -17,15 +18,24 @@ static func draw_face(canvas: CanvasItem, race_id: String, seed_text: String, ce
 	var seed := absi(hash(seed_text))
 	match race_id:
 		"terran":
-			CrewFace.draw(canvas, centre, seed_text, r * 2.0 / CrewFace.WIDTH)
+			if Species.tabbys():
+				CrewFace.draw(canvas, centre, seed_text, r * 2.0 / CrewFace.WIDTH)
+			else:
+				SpeciesFaces.draw_human(canvas, centre, seed_text, r)
 		"mecha":
-			_mecha(canvas, centre, r)
+			if Species.tabbys():
+				SpeciesFaces.draw_kitten(canvas, centre, seed_text, r)
+			else:
+				_mecha(canvas, centre, r)
 		"tentauri":
 			_tentauri(canvas, seed, centre, r)
 		"azurethea":
 			_moth(canvas, centre, r)
 		"senti":
-			_senti(canvas, centre, r)
+			if Species.tabbys():
+				_senti_cat(canvas, seed_text, centre, r)
+			else:
+				_senti(canvas, centre, r)
 		"lykario":
 			_wolf(canvas, seed, centre, r)
 		"malphen":
@@ -79,6 +89,23 @@ static func _senti(canvas: CanvasItem, c: Vector2, r: float) -> void:
 	canvas.draw_rect(Rect2(c + Vector2(-r * 0.42, -r * 0.16), Vector2(r * 0.28, r * 0.12)), glow)
 	canvas.draw_rect(Rect2(c + Vector2(r * 0.14, -r * 0.16), Vector2(r * 0.28, r * 0.12)), glow)
 	canvas.draw_line(c + Vector2(-r * 0.2, r * 0.3), c + Vector2(r * 0.2, r * 0.3), cyan, r * 0.07, true)
+
+
+## A holographic cat (GV 7D): the GATOS head in the Senti's yellow-green, see-through, with scan lines and one row
+## slipped sideways like a flickering projection.
+static func _senti_cat(canvas: CanvasItem, seed_text: String, c: Vector2, r: float) -> void:
+	var rows := CrewFace.rows_for(CrewFace.variant_for(seed_text))
+	var slipped := 3 + absi(seed_text.hash()) % 5
+	rows[slipped] = rows[slipped].right(1) + rows[slipped].left(-1)   # one pixel to the right, wrapping
+	# Bright lines over a see-through body: the outline and the eyes glow, the fur lets the dark show through
+	var colours := {"#": "#eaff70", "Y": "#9ccc00a0", "O": "#7aa80090", "o": "#5a800088", "K": "#b8ff60a0",
+		"W": "#c8f070a0", "N": "#4ff0ff", "S": "#d2ff00a0", "H": "#4ff0ff"}
+	var pixel := r * 2.0 / CrewFace.WIDTH
+	canvas.draw_circle(c, r * 0.8, Color(0.82, 1.0, 0.0, 0.1))
+	CrewFace.draw_rows(canvas, c, rows, colours, pixel)
+	for index in range(1, CrewFace.HEIGHT, 2):
+		var y := c.y - CrewFace.HEIGHT * pixel / 2.0 + (index + 0.5) * pixel
+		canvas.draw_line(Vector2(c.x - r * 0.8, y), Vector2(c.x + r * 0.8, y), Color(0.0, 0.05, 0.0, 0.22), maxf(0.6, pixel * 0.3))
 
 
 static func _wolf(canvas: CanvasItem, seed: int, c: Vector2, r: float) -> void:

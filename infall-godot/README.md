@@ -70,7 +70,7 @@ the Last Fleet. Lose when every scout ship is gone (GDD 1F).
   ships that unlock as you get farther (GDD 7C).
 - **Art:** the hull art from `docs/art/` (Outrider, Pirate Hijacker and Cutpurse, Mecha Light Attack Frame, Tentauri
   scout) and its weapon art, lined up to the ship files' floor plans. Ships without art get a hull drawn from their
-  floor plan in their race's style (GDD 5K). Crew are portrait tokens; the GATOS are cats.
+  floor plan in their race's style (GDD 5K). Crew are portrait tokens; the GATOS Species setting (Terrans > Tabbys) makes the GATOS humans or cats.
 - **Sound:** every effect and the three music tracks are synthesized by `tools/make_audio.py`.
 
 ## Filled in from the genre or the lore (Ai-Generated-Proposals, 2026-10-31)

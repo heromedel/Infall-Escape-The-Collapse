@@ -64,8 +64,13 @@ anything Claude added tagged Ai-Generated-Proposal.
   Alliance of Tabby Occupied Systems (race profiles, Terrans). It replaces "the GATOS are officially cats", earlier
   the same day. The setting also chooses the GATOS crew portraits (the mercenary humans or the cat heads), the
   HalfMechs' look and words (childlike or kitten-like) and the Senti's portraits (GV 7D), and words in events that
-  depend on the species (e.g. DISTRESS_GATOS_FAMILY's kittens). Not built yet: the Godot version shows cats until
-  it is.
+  depend on the species (e.g. DISTRESS_GATOS_FAMILY's kittens). Built: text says both ways as
+  `{gatos:Terran words|Tabby words}`, filled in when shown, and the GATOS have shared names plus names for each
+  species.
+  - **Ai-Generated-Proposal (2026-10-31):** the fifteen human names for Terrans (Dana Reyes, Mack Holloway and
+    the rest, in `content/races/terran/race.xml`); the cat-only names (Mittens, Captain Fluff and the rest) are used
+    with Tabbys. With Tabbys the Senti are drawn as the GATOS cat head in their yellow-green, see-through with a
+    glowing outline and eyes, scan lines and one slipped row.
 - **B — Decided (heromedel, 2026-10-31):** a Mecha crew member's blue choice may be how the player first learns
   the name HalfMechs (the MECHA_TERRITORY event).
 - **C — Proposed (heromedel, 2026-10-31):** hired mercenaries work on a contract, which can be renewed for a price

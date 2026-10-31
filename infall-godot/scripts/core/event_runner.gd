@@ -79,7 +79,7 @@ func fill_text(text: String, crew_name: String = "") -> String:
 	if crew_name.is_empty():
 		var anyone := _any_crew()
 		crew_name = anyone.name if anyone else "your crew"
-	return result.replace("{crew}", crew_name)
+	return Species.words(result.replace("{crew}", crew_name))
 
 
 ## Whether the squad can take a choice; blue choices the squad can't take are not shown at all, as in the genre.
