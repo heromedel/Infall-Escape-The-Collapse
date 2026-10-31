@@ -259,3 +259,11 @@ New weapon ideas:
 - **Ship-to-ship sweeping beam:** sweeps from one enemy ship to another.
 - **Frequency-shifting lasers:** alternate their frequency for a percentage chance to bypass a shield, at the cost
   of charging slower or taking more power.
+
+## Battle screen
+
+### Split battle view (2026-10-31)
+
+- **Unlikely (2026-10-31):** a setting `Battle View: One Field > Split`. Split would show the enemy squad in its own
+  framed window at the side of the screen, the genre's way, instead of both squads on one battlefield with the
+  barrier between them. It works against space feeling vast, so it would only ever be an option.
