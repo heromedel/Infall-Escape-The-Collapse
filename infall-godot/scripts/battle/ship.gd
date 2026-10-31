@@ -21,6 +21,7 @@ const CONDUIT_REPAIR_PER_TICK := 1.0
 const SUFFOCATION_PER_TICK := 0.3   # 6 health a second with no air
 const FIRE_BURN_PER_TICK := 0.15
 const JUMP_FULL := 1.0
+const CONSOLE_ORDER := ["piloting", "weapons", "shields", "engines", "evb_dock", "teleporter", "doors", "sensors", "oxygen", "medbay"]
 
 var design: ShipDesign
 var name: String
@@ -181,25 +182,29 @@ func add_crew(member: CrewMember) -> void:
 	crew.append(member)
 
 
-## Gives every crew member a station room: their preferred system if the file named one, else a free system.
+## Gives every crew member a station: the system their file named if it is free, otherwise the most important
+## system nobody holds yet. Several crew can share a room as long as each has a console.
 func assign_stations() -> void:
-	var used: Array[int] = []
+	var taken: Array[ShipSystem] = []
 	for member in crew:
-		if member.station_room >= 0 and member.station_room < rooms.size():
-			used.append(member.station_room)
+		var system: ShipSystem = null
+		if not member.station_preference.is_empty():
+			system = system_by(member.station_preference)
+		if member.station_room >= 0 and member.station_room < rooms.size() and system == null:
 			continue
-		var system := system_by(member.station_preference) if not member.station_preference.is_empty() else null
-		if system and not used.has(system.room):
-			member.station_room = system.room
-		else:
-			for candidate in ["piloting", "weapons", "engines", "shields", "evb_dock", "doors", "sensors", "oxygen", "medbay"]:
+		if system == null or taken.has(system):
+			system = null
+			for candidate in CONSOLE_ORDER:
 				var found := system_by(candidate)
-				if found and not used.has(found.room):
-					member.station_room = found.room
+				if found and not taken.has(found):
+					system = found
 					break
-		if member.station_room < 0:
+		if system:
+			taken.append(system)
+			member.station_room = system.room
+			member.station_preference = system.behaviour
+		elif member.station_room < 0:
 			member.station_room = 0
-		used.append(member.station_room)
 
 
 ## Puts every crew member who is aboard at their station, on a free tile. Used when a fight or a cluster starts.
@@ -307,13 +312,24 @@ func cell_is_claimed(cell: Vector2i, of_side: int, ignore: CrewMember = null) ->
 ## A free tile in a room for a crew member of a side: a system console first, then any tile.
 func free_cell_in_room(room_index: int, of_side: int, member: CrewMember = null) -> Vector2i:
 	var room := rooms[room_index]
-	for system in room.systems:
+	if member and member.home == self:
+		var own := system_by(member.station_preference)
+		if own and own.room == room_index and not cell_is_claimed(own.cell, of_side, member):
+			return own.cell
+	var consoles: Array = room.systems.duplicate()
+	consoles.sort_custom(func(a, b): return _console_rank(a) < _console_rank(b))
+	for system in consoles:
 		if system.behaviour != "power_core" and system.def.manned and not cell_is_claimed(system.cell, of_side, member):
 			return system.cell
 	for cell in room.cells:
 		if not cell_is_claimed(cell, of_side, member):
 			return cell
 	return room.cells[0]
+
+
+func _console_rank(system: ShipSystem) -> int:
+	var rank := CONSOLE_ORDER.find(system.behaviour)
+	return rank if rank >= 0 else 99
 
 
 func room_has_space(room_index: int, of_side: int, member: CrewMember = null) -> bool:

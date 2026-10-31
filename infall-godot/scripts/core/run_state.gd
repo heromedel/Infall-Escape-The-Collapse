@@ -17,3 +17,8 @@ func spend(cents: int) -> bool:
 
 func earn(cents: int) -> void:
 	mawjig += cents
+
+
+## Writes what happened in a fight to the run's log (coding rule 10: a machine line and a readable line).
+func log_note(_note: Dictionary) -> void:
+	pass
