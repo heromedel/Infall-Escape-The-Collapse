@@ -49,6 +49,9 @@ then its structure, reactor, systems at their levels and weapons; crew are count
 | Each door | 2 | 0.48 |
 | Each weapon mount | — | **6.05** |
 
+- **Rooms — Ai-Generated-Proposal (2026-10-31), shared with Godot Version:** a room holding several systems counts
+  10% of its dearest system's level-1 price; the AZC counts as a room system at 18.15 (its level 1); a shields room
+  counts the shield test's level 1, one layer (54.46, so 5.45). Reference values per ship: `economy-findings.md`, F13.
 - **Weapon mounts — Proposed (heromedel, 2026-10-31):** a mount costs 25 scrap (**6.05**) to add at a store, and each
   mount a ship has counts at that price in its value. FHP counts mounts but doesn't price them. Replaces the first
   guess of 4.84 (`economy-findings.md`, F10).
