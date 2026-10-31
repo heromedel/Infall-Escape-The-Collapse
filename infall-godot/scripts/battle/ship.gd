@@ -686,7 +686,7 @@ func _tick_manning() -> void:
 		system.manned_count = 0
 		system.integration_bar = false
 	for member in crew_aboard(side):
-		if not member.can_act() or member.is_moving() or member.task in ["fighting", "repairing", "extinguishing", "patching", "healing"]:
+		if not member.can_act() or member.is_moving() or member.task in ["fighting", "repairing", "extinguishing", "patching"]:
 			member.integrate_ticks = 0
 			continue
 		var room_index := room_at(member.cell)

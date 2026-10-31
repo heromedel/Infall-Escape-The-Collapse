@@ -33,11 +33,11 @@ func _process(delta: float) -> void:
 		_message_time -= delta
 	var mouse := get_local_mouse_position()
 	var region := _region_at(mouse)
-	if region != _hover_region:
-		_hover_region = region
+	if not _same_region(region, _hover_region):
 		_hover_time = 0.0
 	else:
 		_hover_time += delta
+	_hover_region = region   # the fresh copy, so a tooltip shows the latest numbers
 	queue_redraw()
 
 
@@ -52,6 +52,13 @@ func _input(event: InputEvent) -> void:
 		if action.is_valid():
 			action.call()
 		get_viewport().set_input_as_handled()
+
+
+## Regions are rebuilt every frame with fresh callables, so the same spot is recognised by its place.
+func _same_region(a: Dictionary, b: Dictionary) -> bool:
+	if a.is_empty() or b.is_empty():
+		return a.is_empty() and b.is_empty()
+	return a.rect == b.rect
 
 
 func _region_at(point: Vector2) -> Dictionary:
@@ -172,7 +179,7 @@ func _draw_crew_list(ship: Ship, at: Vector2) -> void:
 		var fraction := member.health_fraction()
 		draw_rect(Rect2(rect.position + Vector2(46, 29), Vector2(120, 7)), UiColours.BAR_EMPTY)
 		draw_rect(Rect2(rect.position + Vector2(46, 29), Vector2(120 * fraction, 7)), UiColours.hull_colour(fraction))
-		if member.task == "healing":
+		if member.healing:
 			var pulse := 0.5 + 0.5 * sin(_time * 6.0)
 			draw_rect(Rect2(rect.position + Vector2(46, 29), Vector2(120 * fraction, 7)), Color(1, 1, 1, 0.35 * pulse))
 		# What they are doing, and where: "manning" over "Piloting"
@@ -210,8 +217,8 @@ func _crew_status(member: CrewMember) -> String:
 			return "moving"
 		"stunned":
 			return "stunned"
-		"healing":
-			return "healing"
+	if member.healing:
+		return "healing"
 	return "boarding" if member.ship != member.home else "standing by"
 
 
@@ -656,8 +663,8 @@ func _draw_overlays() -> void:
 		UiKit.draw_text(self, Vector2(centre.x, 150), text, 44, Color(0.9, 0.95, 1.0, 0.9), UiKit.font_title(), HORIZONTAL_ALIGNMENT_CENTER, 0)
 		UiKit.draw_text(self, Vector2(centre.x, 178), "press Space to resume", 17, UiColours.TEXT_DIM, null, HORIZONTAL_ALIGNMENT_CENTER, 0)
 	if screen.aim_mode != "":
-		var hint: String = {"weapon": "Click an enemy room to aim. Right click cancels.", "beam": "Press on an enemy room and drag to aim the beam's sweep.", "teleport": "Click an enemy room to send boarders.", "suit": "Click an enemy ship to send the battlesuit."}.get(screen.aim_mode, "")
-		UiKit.draw_text(self, Vector2(centre.x, size.y - 300), hint, 18, UiColours.TARGET_YELLOW, UiKit.font_bold(), HORIZONTAL_ALIGNMENT_CENTER, 0)
+		var hint: String = {"weapon": "Click a tile of an enemy ship to aim. Right click cancels.", "beam": "Press on an enemy tile and drag to aim the beam's sweep.", "teleport": "Click an enemy room to send boarders.", "suit": "Click an enemy ship to send the battlesuit."}.get(screen.aim_mode, "")
+		_draw_notice(hint, size.y - 300, UiColours.TARGET_YELLOW)
 		var mouse := get_local_mouse_position()
 		var colour := UiColours.ENEMY_RED if screen._aim_is_autofire() else UiColours.TARGET_YELLOW
 		draw_arc(mouse, 14, 0, TAU, 24, colour, 2.0, true)
@@ -665,7 +672,7 @@ func _draw_overlays() -> void:
 			draw_line(mouse + step * 8, mouse + step * 20, colour, 2.0)
 	if _message_time > 0.0:
 		var alpha := clampf(_message_time, 0.0, 1.0)
-		UiKit.draw_text(self, Vector2(centre.x, size.y - 270), _message, 20, Color(UiColours.WARNING, alpha), UiKit.font_bold(), HORIZONTAL_ALIGNMENT_CENTER, 0)
+		_draw_notice(_message, size.y - 250, UiColours.WARNING, alpha)
 	if box_rect.size.length() > 4.0:
 		draw_rect(box_rect, Color(UiColours.POWER_GREEN, 0.12))
 		draw_rect(box_rect, Color(UiColours.POWER_GREEN, 0.8), false, 1.5)
@@ -673,16 +680,45 @@ func _draw_overlays() -> void:
 		_draw_room_info(screen.hover_ship, screen.hover_room)
 
 
+## A line of text on a dark plate, centred on the screen, so it reads over any ship or star.
+func _draw_notice(text: String, baseline: float, colour: Color, alpha: float = 1.0) -> void:
+	var font := UiKit.font_bold()
+	var width := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, 19).x
+	var plate := Rect2(size.x * 0.5 - width * 0.5 - 18, baseline - 24, width + 36, 34)
+	draw_rect(plate, Color(0.02, 0.035, 0.07, 0.88 * alpha))
+	draw_rect(plate, Color(colour, 0.55 * alpha), false, 1.5)
+	UiKit.draw_text(self, Vector2(size.x * 0.5, baseline), text, 19, Color(colour, alpha), font, HORIZONTAL_ALIGNMENT_CENTER, 0)
+
+
+## What the mouse is over inside a ship: on a console tile just that system, elsewhere the room and what is in it.
 func _draw_room_info(ship: Ship, room_index: int) -> void:
 	var room := ship.rooms[room_index]
 	var view: ShipView = screen.views.get(ship)
 	if view == null or (ship.side == 1 and not view.interior_visible):
 		return
 	var lines := PackedStringArray()
+	var console: ShipSystem = null
 	for system in room.systems:
-		lines.append("%s %s" % [system.display_name(), "(damaged)" if system.damage > 0 else ""])
-	if lines.is_empty():
-		lines.append(room.name if not room.name.is_empty() else "Empty room")
+		if system.cell == screen.hover_cell:
+			console = system
+	if console:
+		lines.append(console.display_name())
+		lines.append("Level %d · power %d" % [console.level, ship.system_power(console)])
+		if console.damage > 0:
+			lines.append("%d bar%s damaged" % [console.damage, "" if console.damage == 1 else "s"])
+		if console.ion > 0:
+			lines.append("Ionized")
+		if console.spored:
+			lines.append("Spored")
+		if console.def.manned:
+			lines.append("Manned by %s" % console.manned_by.name if console.manned_by else "Unmanned")
+	else:
+		lines.append(room.name if not room.name.is_empty() else "Room")
+		if not room.systems.is_empty():
+			var names := PackedStringArray()
+			for system in room.systems:
+				names.append(system.display_name() + (" (damaged)" if system.damage > 0 else ""))
+			lines.append("Systems here: " + ", ".join(names))
 	lines.append("Air %d%%" % int(room.oxygen * 100.0))
 	if room.is_burning():
 		lines.append("On fire")
@@ -690,11 +726,18 @@ func _draw_room_info(ship: Ship, room_index: int) -> void:
 		lines.append("Hull breach")
 	if room.infection > 0.0:
 		lines.append("Infected")
-	var mouse := get_local_mouse_position() + Vector2(22, 18)
-	var height := lines.size() * 20 + 10
-	draw_rect(Rect2(mouse, Vector2(200, height)), Color(0.02, 0.04, 0.08, 0.85))
+	var font := UiKit.font_regular()
+	var width := 0.0
+	for line in lines:
+		width = maxf(width, font.get_string_size(line, HORIZONTAL_ALIGNMENT_LEFT, -1, 15).x)
+	var at := get_local_mouse_position() + Vector2(22, 18)
+	var box := Rect2(at, Vector2(width + 18, lines.size() * 20 + 10))
+	box.position.x = minf(box.position.x, size.x - box.size.x - 8)
+	box.position.y = minf(box.position.y, size.y - box.size.y - 8)
+	draw_rect(box, Color(0.02, 0.04, 0.08, 0.88))
+	draw_rect(box, UiColours.BORDER_DIM, false, 1.0)
 	for index in lines.size():
-		UiKit.draw_text(self, mouse + Vector2(8, 20 + index * 20), lines[index], 15, UiColours.TEXT if index == 0 else UiColours.TEXT_DIM)
+		UiKit.draw_text(self, box.position + Vector2(9, 20 + index * 20), lines[index], 15, UiColours.TEXT if index == 0 else UiColours.TEXT_DIM)
 
 
 func _draw_tooltip() -> void:

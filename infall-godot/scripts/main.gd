@@ -24,6 +24,7 @@ func _ready() -> void:
 	add_child(console_layer)
 	console.main = self
 	console_layer.add_child(console)
+	add_child(BattleWarmup.new())
 	show_title()
 	if OS.has_environment("INFALL_SMOKE"):
 		_smoke_test()
@@ -174,6 +175,7 @@ func _after_event(result: Dictionary, then: Callable) -> void:
 # --- Fights ---------------------------------------------------------------------------------------------------
 
 func start_fight(squad_id: String) -> void:
+	var asked := Time.get_ticks_usec()
 	enemy_squad = runner.pick_squad(squad_id)
 	var enemies := runner.build_enemy_ships(enemy_squad)
 	encounter = Encounter.new()
@@ -185,6 +187,10 @@ func start_fight(squad_id: String) -> void:
 	battle.show_encounter(encounter, run, int(run.cluster().seed), run.collapse_nearness(), false)
 	battle.paused = Settings.get_value("event_auto_pause", true)
 	run.log_book.write("fight", {"squad": enemy_squad.id, "ships": enemies.map(func(s): return s.design.id)}, "A fight with %s." % enemy_squad.name)
+	# How long the fight took to appear, so a slow start can be measured on the player's machine
+	RenderingServer.frame_post_draw.connect(func():
+		var took := (Time.get_ticks_usec() - asked) / 1000
+		run.log_book.write("fight_shown", {"ms": took}, "The fight took %d ms to appear." % took), CONNECT_ONE_SHOT)
 	Sfx.play_music("combat")
 
 

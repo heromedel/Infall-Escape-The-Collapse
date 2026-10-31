@@ -793,11 +793,15 @@ func cloak(ship: Ship) -> bool:
 # --- Hazards --------------------------------------------------------------------------------------------------
 
 func _tick_hazard() -> void:
-	if hazard.is_empty():
-		return
+	# Set every tick, hazard or not, so a storm's penalty ends when the squad leaves it
 	for ship in ships:
+		var stormed := ship.reactor_penalty > 0 or ship.core_capacity_penalty > 0
 		ship.reactor_penalty = ship.reactor_level / 2 if hazard == "ion_storm" else 0
 		ship.core_capacity_penalty = 2 if hazard == "ion_storm" else 0
+		if stormed and hazard != "ion_storm":
+			ship.power_everything()   # out of the storm: the power it took comes back
+	if hazard.is_empty():
+		return
 	hazard_timer -= 1
 	if hazard_timer > 0:
 		return
