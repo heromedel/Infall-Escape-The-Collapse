@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mecha Light Attack Frame, standard stern, Hull Laser loadout (docs/ship-suggestions.md). No reactor: every
+     system carries its own power, and a Mecha crew member integrating with a system adds one bar. -->
+<ship id="light-attack-frame" name="Light Attack Frame" class="Hull Laser" race="mecha" faction="mecha" style="mecha" center_x="Point" center_y="Tile" hull="7" value="131.72">
+	<reactor type="none" level="0"/>
+	<art hull="mecha-bc-hull-2x.png" scale="0.5" center="170,159.5" filter="nearest"/>
+	<description>A sleek battle-cross of dark banded metal lit by purple. The Hull Laser in its pod needs a Mecha integrated with it to fire: stun, kill or pull that crew member away and the laser goes quiet.</description>
+
+	<room id="0" from="-1,-2" to="1,-1" name="Command deck"/>
+	<room id="1" from="-3,-1" to="-2,0" name="Spare bay"/>
+	<room id="2" from="2,-1" to="3,0" name="Weapon bay"/>
+	<room id="3" from="-1,0" to="1,1" name="Core room"/>
+	<room id="4" from="-2,2" to="-1,2" name="Engine room"/>
+	<room id="5" from="1,2" to="2,2" name="Life support room"/>
+
+	<system id="piloting" tile="-1,-2" level="1" wall="north"/>
+	<system id="shields" tile="1,-2" level="2" own_power="2" wall="north"/>
+	<system id="doors" tile="1,-1" level="1" wall="east"/>
+	<system id="servicing-core" tile="1,1" level="1" own_power="1" wall="none"/>
+	<system id="engines" tile="-2,2" level="1" own_power="1" wall="west"/>
+	<system id="life-support" tile="2,2" level="1" own_power="1" wall="east"/>
+	<system id="weapon-pod" tile="3,-1" level="2" own_power="1" wall="east"/>
+
+	<door id="0" tile="-1,-1" facing="south"/>
+	<door id="1" tile="-1,0" facing="west"/>
+	<door id="2" tile="1,0" facing="east"/>
+	<door id="3" tile="-1,1" facing="south"/>
+	<door id="4" tile="-1,2" facing="east"/>
+	<door id="5" tile="-3,-1" facing="west"/>
+	<door id="6" tile="-3,0" facing="west"/>
+
+	<mount id="1" x="72" y="9" slide="up"/>
+	<mount id="2" x="268" y="9" slide="up"/>
+	<mount id="3" x="42" y="117" slide="up"/>
+	<mount id="4" x="298" y="117" slide="up"/>
+	<mount id="5" x="16" y="167" slide="left"/>
+	<mount id="6" x="324" y="167" slide="right"/>
+
+	<weapons>
+		<weapon id="ds-st-hull-laser" mount="4"/>
+	</weapons>
+	<crew>
+		<member race="mecha" station="piloting"/>
+		<member race="mecha" station="weapons"/>
+	</crew>
+</ship>

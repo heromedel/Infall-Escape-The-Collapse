@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Prices in Mawjig from docs/reference/system-prices.md. "buy" installs level 1; "upgrades" are the step prices for each level after. -->
+<system id="engines" name="Engines" behaviour="engines" max_level="8" draws_power="yes" manned="yes" buy="0" upgrades="2.42,3.63,7.26,9.68,14.52,19.36,29.04" icon="engines" hotkey="S" order="20">
+	<description>Gives the ship its evasion and charges the Jigawatt Drive. Evasion needs Piloting working. A crew member at the console adds evasion.</description>
+	<level>5% evasion</level>
+	<level>10% evasion</level>
+	<level>15% evasion</level>
+	<level>20% evasion</level>
+	<level>25% evasion</level>
+	<level>28% evasion</level>
+	<level>31% evasion</level>
+	<level>35% evasion</level>
+</system>

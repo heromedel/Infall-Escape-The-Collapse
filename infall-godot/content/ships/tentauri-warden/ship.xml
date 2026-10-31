@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Ai-Generated-Proposal (2026-10-31), made for the Godot version to fill a gap in the roster (rule 3: the genre's ship roles, built from the race profile). -->
+<ship id="tentauri-warden" name="Tentauri Warden" class="Warden" race="tentauri" faction="tentauri" style="tentauri" center="Tile" hull="11" value="331.2">
+	<reactor type="pool" level="14"/>
+	<description>A three-room Tentauri ship, pillowy and prismatic, wrapped in shields. It means to pass, not to destroy.</description>
+	<room id="0" from="-2,-3" to="2,-1" name="Forward"/>
+	<room id="1" from="-1,0" to="1,1" name="Middle"/>
+	<room id="2" from="-2,2" to="2,2" name="Rear"/>
+	<system id="piloting" tile="0,-3" level="2" wall="north"/>
+	<system id="sensors" tile="-1,-3" level="2" wall="north"/>
+	<system id="shields" tile="1,-3" level="4" wall="north"/>
+	<system id="weapons" tile="-2,-2" level="3" wall="west"/>
+	<system id="engines" tile="-2,-1" level="3" wall="west"/>
+	<system id="doors" tile="2,-1" level="2" wall="east"/>
+	<system id="life-support" tile="-1,0" level="1" wall="west"/>
+	<system id="medbay" tile="1,0" level="2" wall="east"/>
+	<system id="supershield" tile="0,1" level="3" wall="south"/>
+	<door id="0" tile="0,-1" facing="south"/>
+	<door id="1" tile="0,1" facing="south"/>
+	<door id="2" tile="-2,2" facing="west"/>
+	<door id="3" tile="2,2" facing="east"/>
+	<weapons>
+		<weapon id="tentauri-defense-laser" mount="3"/>
+		<weapon id="tendril-beam" mount="4"/>
+	</weapons>
+	<crew>
+		<member race="tentauri" station="piloting"/>
+		<member race="tentauri" station="weapons"/>
+		<member race="tentauri"/>
+	</crew>
+</ship>

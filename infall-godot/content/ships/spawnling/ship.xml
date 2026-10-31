@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Ai-Generated-Proposal (2026-10-31), made for the Godot version to fill a gap in the roster (rule 3: the genre's ship roles, built from the race profile). -->
+<ship id="spawnling" name="Malphen Spawnling" class="Spawnling" race="malphen" faction="malphen" style="malphen" center="Tile" hull="12" value="128.4">
+	<reactor type="pool" level="8"/>
+	<description>A swollen, lopsided living ship. Its crew are parts it grows. It does not answer hails.</description>
+	<room id="0" from="-1,-2" to="1,-1" name="Head"/>
+	<room id="1" from="-2,0" to="-1,1" name="Left lobe"/>
+	<room id="2" from="0,0" to="0,1" name="Core"/>
+	<room id="3" from="1,0" to="2,1" name="Right lobe"/>
+	<room id="4" from="-1,2" to="1,2" name="Tail"/>
+	<system id="piloting" tile="0,-2" level="1" wall="north"/>
+	<system id="weapons" tile="1,-2" level="1" wall="north"/>
+	<system id="shields" tile="-1,-2" level="2" wall="north"/>
+	<system id="growth-organ" tile="-2,0" level="1" wall="west"/>
+	<system id="engines" tile="2,1" level="1" wall="east"/>
+	<system id="life-support" tile="2,0" level="1" wall="east"/>
+	<door id="0" tile="0,-1" facing="south"/>
+	<door id="1" tile="-1,0" facing="east"/>
+	<door id="2" tile="1,0" facing="west"/>
+	<door id="3" tile="0,1" facing="south"/>
+	<door id="4" tile="-1,2" facing="west"/>
+	<door id="5" tile="1,2" facing="east"/>
+	<weapons>
+		<weapon id="gristle-missile" mount="3"/>
+	</weapons>
+	<crew>
+		<member race="malphen" station="piloting"/>
+		<member race="malphen" station="weapons"/>
+		<member race="malphen"/>
+	</crew>
+</ship>

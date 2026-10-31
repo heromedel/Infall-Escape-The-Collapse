@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Ai-Generated-Proposal (2026-10-31): a stronger band-range loadout of the same hull (production goals: loadouts by band range). -->
+<loadout id="broodmass" ship="spawnling" name="Malphen Broodmass" class="Broodmass" inherit="patch" hull="22" value="302.6">
+	<reactor type="pool" level="12"/>
+	<system id="shields" tile="-1,-2" level="4" wall="north"/>
+	<system id="weapons" tile="1,-2" level="4" wall="north"/>
+	<system id="growth-organ" tile="-2,0" level="3" wall="west"/>
+	<system id="engines" tile="2,1" level="2" wall="east"/>
+	<weapons>
+		<weapon id="flesh-mortar" mount="3"/>
+		<weapon id="gristle-missile" mount="4"/>
+		<weapon id="gristle-missile" mount="1"/>
+	</weapons>
+	<crew>
+		<member race="malphen" station="piloting"/>
+		<member race="malphen" station="weapons"/>
+		<member race="malphen" count="3"/>
+	</crew>
+</loadout>

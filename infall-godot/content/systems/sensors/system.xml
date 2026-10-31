@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Prices in Mawjig from docs/reference/system-prices.md. "buy" installs level 1; "upgrades" are the step prices for each level after. -->
+<system id="sensors" name="Sensors" behaviour="sensors" max_level="3" draws_power="no" manned="yes" buy="9.68" upgrades="6.05,9.68" icon="sensors" hotkey="" order="61">
+	<description>Shows what happens inside the ships in the fight, and how far away clusters can be read on the map.</description>
+	<level>See inside your own ships; read nearby clusters</level>
+	<level>See inside enemy ships; read clusters two jumps out</level>
+	<level>See enemy weapons charging; read clusters three jumps out</level>
+</system>

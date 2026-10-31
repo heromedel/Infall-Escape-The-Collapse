@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Tentauri Tough Little Scout (docs/ship-suggestions.md): two rooms, many systems, a Supershield and two
+     Defense Lasers. Biomechanical, with the default power pool. -->
+<ship id="tentauri-scout" name="Tough Little Scout" class="Scout" race="tentauri" faction="tentauri" style="tentauri" center="Tile" hull="8" value="188.81">
+	<reactor type="pool" level="10"/>
+	<art hull="tentauri-scout-hull.png" scale="1.0" center="170,197.5"/>
+	<description>A compact, pillowy shuttle in mother-of-pearl. It gets in, survives, and gets out.</description>
+
+	<room id="0" from="-2,-2" to="2,0" name="Forward"/>
+	<room id="1" from="-1,1" to="1,2" name="Rear"/>
+
+	<system id="sensors" tile="-1,-2" level="1" wall="north"/>
+	<system id="piloting" tile="0,-2" level="1" wall="north"/>
+	<system id="shields" tile="1,-2" level="2" wall="north"/>
+	<system id="weapons" tile="-2,-1" level="2" wall="west"/>
+	<system id="engines" tile="-2,0" level="2" wall="west"/>
+	<system id="doors" tile="2,0" level="1" wall="east"/>
+	<system id="life-support" tile="-1,1" level="1" wall="north"/>
+	<system id="medbay" tile="1,1" level="1" wall="north"/>
+	<system id="supershield" tile="0,2" level="2" wall="south"/>
+
+	<door id="0" tile="0,0" facing="south"/>
+	<door id="1" tile="-1,2" facing="west"/>
+	<door id="2" tile="1,2" facing="east"/>
+
+	<mount id="1" x="140" y="57" slide="up"/>
+	<mount id="2" x="200" y="57" slide="up"/>
+	<mount id="3" x="33" y="150" slide="left"/>
+	<mount id="4" x="307" y="150" slide="right"/>
+	<mount id="5" x="60" y="98" slide="left"/>
+	<mount id="6" x="280" y="98" slide="right"/>
+
+	<weapons>
+		<weapon id="tentauri-defense-laser" mount="3"/>
+		<weapon id="tentauri-defense-laser" mount="4"/>
+	</weapons>
+	<crew>
+		<member race="tentauri" station="piloting"/>
+		<member race="tentauri" station="shields"/>
+	</crew>
+</ship>

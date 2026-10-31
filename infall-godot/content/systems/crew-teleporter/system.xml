@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Prices in Mawjig from docs/reference/system-prices.md. "buy" installs level 1; "upgrades" are the step prices for each level after. -->
+<system id="crew-teleporter" name="Crew Teleporter" behaviour="teleporter" max_level="3" draws_power="yes" manned="no" buy="21.78" upgrades="7.26,14.52" icon="teleporter" hotkey="T" order="70">
+	<description>Sends crew standing in its room to a room on another ship, and brings them home again. A Supershield blocks it.</description>
+	<level>Recharges in 30 s</level>
+	<level>Recharges in 20 s</level>
+	<level>Recharges in 10 s</level>
+</system>

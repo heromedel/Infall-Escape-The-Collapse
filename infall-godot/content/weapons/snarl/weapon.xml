@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Built from parts (GDD 8E): charge time and price from docs/reference/weapon-budget-table.md, cost per volley from mawjig-cost-table.md. -->
+<weapon id="snarl" name="Snarl" race="lykario" tech="mechanical" type="bomb" power="1" shots="1" damage="0" charge="14.0" cost="0.07" price="11.91" colour="#e9eef7" stun="5" crew_damage="0">
+	<description>A stun charge teleported into a room before the pack boards it.</description>
+</weapon>

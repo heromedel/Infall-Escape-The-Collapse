@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Crew traits from docs/race-profiles.md point 9; power colour from docs/art/palette.md; crew price from system-prices.md. -->
+<race id="tentauri" name="Tentauri" singular="Tentauri" health="100" speed="0.9" xp_rate="0.25" repair="1.0" biomech_repair="1.2" melee="0.8" power_colour="#FF5ECA" crew_price="14.52" portrait="tentauri" tech="biomechanical" systems_at_once="4">
+	<description>Octojellies: quiet, diplomatic beings who travel in pairs and force their way wherever they wish to go.</description>
+	<traits>Run up to four systems in the same room at once. Learn each skill slowly.</traits>
+	<names>Oolu, Mirrel, Shoal, Pellucid, Ivri, Coralle, Nacre, Tullo, Spindle, Wisp, Plume, Aurel, Loquo, Tessaly</names>
+</race>

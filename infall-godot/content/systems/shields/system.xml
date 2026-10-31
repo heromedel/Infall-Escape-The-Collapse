@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Prices in Mawjig from docs/reference/system-prices.md. "buy" installs level 1; "upgrades" are the step prices for each level after. -->
+<system id="shields" name="Shields" behaviour="shields" max_level="8" draws_power="yes" manned="yes" buy="30.25" upgrades="24.21,4.84,7.26,9.68,14.52,19.36,24.21" icon="shields" hotkey="A" order="10">
+	<description>Raises a shield around the ship. Every two bars of power hold one shield layer, and each layer stops one laser or flak hit before it recharges. Missiles and bombs pass through. A crew member at the console recharges the layers faster.</description>
+	<level>Half a layer: not enough on its own</level>
+	<level>One shield layer</level>
+	<level>One shield layer</level>
+	<level>Two shield layers</level>
+	<level>Two shield layers</level>
+	<level>Three shield layers</level>
+	<level>Three shield layers</level>
+	<level>Four shield layers</level>
+</system>

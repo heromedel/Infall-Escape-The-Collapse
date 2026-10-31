@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<loadout id="opensternsuitdock" ship="light-attack-frame" name="Light Attack Frame" class="Open Stern Suit Dock" inherit="patch" value="137.97">
+	<room id="4" from="-2,2" to="2,2" name="Stern"/>
+	<room id="5" removed="yes"/>
+	<door id="4" removed="yes"/>
+	<system id="weapon-pod" removed="yes"/>
+	<system id="evb-dock" tile="3,-1" level="2" own_power="2" wall="east"/>
+	<door id="7" tile="3,0" facing="east"/>
+	<weapons/>
+	<suits>
+		<suit id="laser-battlesuit"/>
+	</suits>
+	<crew>
+		<member race="mecha" station="piloting"/>
+		<member race="mecha" station="evb_dock"/>
+	</crew>
+</loadout>

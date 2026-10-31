@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<loadout id="suitdock" ship="light-attack-frame" name="Light Attack Frame" class="Suit Dock" inherit="patch" value="137.97">
+	<system id="weapon-pod" removed="yes"/>
+	<system id="evb-dock" tile="3,-1" level="2" own_power="2" wall="east"/>
+	<door id="7" tile="3,0" facing="east"/>
+	<weapons/>
+	<suits>
+		<suit id="laser-battlesuit"/>
+	</suits>
+	<crew>
+		<member race="mecha" station="piloting"/>
+		<member race="mecha" station="evb_dock"/>
+	</crew>
+</loadout>

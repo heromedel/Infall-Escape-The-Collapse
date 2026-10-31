@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Prices in Mawjig from docs/reference/system-prices.md. "buy" installs level 1; "upgrades" are the step prices for each level after. -->
+<system id="azc" name="Armoured ZeroPoint Core" behaviour="power_core" max_level="5" draws_power="no" manned="no" buy="0" upgrades="" icon="azc" hotkey="" order="0">
+	<description>The Terran power core. It has no power limit: any system joined to it by unbroken conduits has power. Its level sets how many power-hungry systems can run at once.</description>
+	<level>2 systems at once</level>
+	<level>4 systems at once</level>
+	<level>6 systems at once</level>
+	<level>8 systems at once</level>
+	<level>10 systems at once</level>
+</system>

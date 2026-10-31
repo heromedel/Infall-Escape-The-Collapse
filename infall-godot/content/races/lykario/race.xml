@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Crew traits from docs/race-profiles.md point 9; power colour from docs/art/palette.md; crew price from system-prices.md. -->
+<race id="lykario" name="Lykario" singular="Lykario" health="75" speed="1.3" xp_rate="1.0" repair="0.9" biomech_repair="0.5" melee="1.3" power_colour="#D1DBE7" crew_price="13.31" portrait="lykario" tech="mechanical">
+	<description>A wolf-like race of raiders who hunt for the joy of it and keep going whatever happens.</description>
+	<traits>Fast and quick to strike, but fragile.</traits>
+	<names>Rask, Tharn, Kael, Vasha, Grell, Skarra, Hroth, Yeska, Dravo, Fenn, Arrok, Tisk, Moro, Lupa, Varg</names>
+</race>

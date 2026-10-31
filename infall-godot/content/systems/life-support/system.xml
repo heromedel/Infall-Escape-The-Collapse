@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Prices in Mawjig from docs/reference/system-prices.md. "buy" installs level 1; "upgrades" are the step prices for each level after. -->
+<system id="life-support" name="Life Support" behaviour="oxygen" max_level="3" draws_power="yes" manned="no" buy="0" upgrades="6.05,12.11" icon="oxygen" hotkey="F" order="40">
+	<description>Fills the ship's rooms with breathable air. Without it the air slowly runs out, and crew who breathe start to suffocate.</description>
+	<level>Refills air slowly</level>
+	<level>Refills air steadily</level>
+	<level>Refills air quickly</level>
+</system>

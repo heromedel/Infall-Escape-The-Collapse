@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Prices in Mawjig from docs/reference/system-prices.md. "buy" installs level 1; "upgrades" are the step prices for each level after. -->
+<system id="cloaking" name="Cloaking" behaviour="cloaking" max_level="3" draws_power="yes" manned="no" buy="36.31" upgrades="7.26,12.11" icon="cloaking" hotkey="C" order="72">
+	<description>Hides the ship for a few seconds: most shots miss it and its weapons hold their charge.</description>
+	<level>Cloaks for 5 s</level>
+	<level>Cloaks for 10 s</level>
+	<level>Cloaks for 15 s</level>
+</system>

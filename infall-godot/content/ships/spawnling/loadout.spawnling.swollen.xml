@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Ai-Generated-Proposal (2026-10-31): the band 3 Spawnling, grown its flak sac. -->
+<loadout id="swollen" ship="spawnling" name="Malphen Spawnling" class="Swollen Spawnling" inherit="patch" hull="14" value="181.3">
+	<system id="weapons" tile="1,-2" level="3" wall="north"/>
+	<weapons>
+		<weapon id="gristle-missile" mount="3"/>
+		<weapon id="flesh-mortar" mount="4"/>
+	</weapons>
+</loadout>

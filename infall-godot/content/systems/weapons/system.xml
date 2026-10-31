@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Prices in Mawjig from docs/reference/system-prices.md. "buy" installs level 1; "upgrades" are the step prices for each level after. -->
+<system id="weapons" name="Weapons" behaviour="weapons" max_level="8" draws_power="yes" manned="yes" buy="4.84" upgrades="9.68,6.05,8.47,12.11,18.15,21.78,24.21" icon="weapons" hotkey="W" order="30">
+	<description>Powers the ship's weapons. Each weapon needs its own power, up to this system's level. A crew member at the console charges weapons faster.</description>
+	<level>1 power for weapons</level>
+	<level>2 power for weapons</level>
+	<level>3 power for weapons</level>
+	<level>4 power for weapons</level>
+	<level>5 power for weapons</level>
+	<level>6 power for weapons</level>
+	<level>7 power for weapons</level>
+	<level>8 power for weapons</level>
+</system>

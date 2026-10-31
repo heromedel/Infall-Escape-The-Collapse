@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Marauder: a bands 7-8 loadout of the Hijacker, filling the "Hijacker high-band loadout" placeholder of the
+     Terran Pirates squad. Suggestion, extrapolated from the Hijacker: more core, more guns, a bigger teleporter. -->
+<loadout id="marauder" ship="pirate-hijacker" name="Pirate Marauder" inherit="patch" class="Marauder" hull="20" value="402.33">
+	<reactor type="core" level="4"/>
+	<system id="shields" tile="-2,-3" level="6" wall="west"/>
+	<system id="weapons" tile="2,-3" level="5" wall="east"/>
+	<system id="engines" tile="-1,6" level="4" wall="south"/>
+	<system id="crew-teleporter" tile="2,2" level="3" wall="east"/>
+	<system id="medbay" tile="-2,2" level="3" wall="west"/>
+	<system id="doors" tile="-1,-4" level="3" wall="west"/>
+	<weapons>
+		<weapon id="gat-3-1" mount="3"/>
+		<weapon id="sporewing" mount="4"/>
+		<weapon id="gat-m2" mount="1"/>
+	</weapons>
+	<crew>
+		<member race="terran" count="6"/>
+	</crew>
+</loadout>

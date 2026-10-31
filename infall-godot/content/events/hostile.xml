@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Hostile encounters, by race and cluster state. Ai-Generated-Proposals (2026-10-31) for the Godot version,
+     written from docs/race-profiles.md and checked against docs/lore-facts.md. A plain <fight/> picks a squad
+     that fits the cluster (its race, state and band). -->
+<events>
+	<!-- GATOS pirates: doomed GATOS turned criminal (race profiles, Terrans 4) -->
+	<event id="PIRATE_AMBUSH" title="Hijackers" kind="hostile" races="terran,any" states="Doomed,Struggling,Border,Abandoned,Unclaimed" weight="2">
+		<text>A dark GATOS hull drops out of a jump right on top of your squad, its emblem scorched black. Its captain doesn't bother with a greeting.
+
+"Nice ships. We'll be taking one."</text>
+		<choice text="Battle stations!"><outcome><fight squad="terran-pirates"/></outcome></choice>
+	</event>
+	<event id="PIRATE_TOLL" title="The Toll" kind="hostile" races="terran,mecha,any" states="Doomed,Border,Abandoned,Refugee" weight="1.5">
+		<text>Two ships with mismatched panels and stolen weapons block the only clean jump lane out of the cluster. "Toll's due," their captain announces. "Pay up and fly on, or don't, and we'll take it off your wrecks."</text>
+		<choice text="Pay the toll.">
+			<outcome><text>You transfer the Mawjig. They let you pass with a mocking salute.</text><mawjig amount="-1.81"/></outcome>
+		</choice>
+		<choice text="Refuse.">
+			<outcome><text>"Your funeral," the captain says, and their weapons come online.</text><fight squad="terran-pirates"/></outcome>
+		</choice>
+		<choice text="Lock their bridge down and let the doors do the talking." requires="system:doors">
+			<outcome weight="1"><text>You broadcast your door and boarding defences in detail. The pirates mutter among themselves and decide you aren't worth the trouble.</text></outcome>
+			<outcome weight="1"><text>They aren't impressed.</text><fight squad="terran-pirates"/></outcome>
+		</choice>
+	</event>
+	<event id="PIRATE_DISTRESS_TRAP" title="A Call for Help" kind="hostile" races="terran,any" states="Doomed,Abandoned,Border" weight="1">
+		<text>A GATOS freighter is broadcasting a distress call: engines out, life support failing, children aboard. Your sensors read the freighter's hold as full of armed crew.</text>
+		<choice text="Answer the call anyway, ready for a fight.">
+			<outcome><text>The "freighter" powers up weapons the moment you come in range.</text><fight squad="terran-pirates"/></outcome>
+		</choice>
+		<choice text="Leave them to it.">
+			<outcome><text>As you charge your drives, the distress call cuts off and a very different voice swears at you over an open channel.</text></outcome>
+		</choice>
+	</event>
+	<event id="GATOS_SHAKEDOWN" title="Inspection" kind="hostile" races="terran" states="Doomed" weight="2">
+		<text>A GATOS patrol cutter hails you, its paint gone dark and its emblem replaced with something meaner. "Checkpoint. Outsiders and their friends pay for passage now. You've got outsider stink all over you."</text>
+		<choice text="Pay them.">
+			<outcome><text>They take the Mawjig and wave you through with a sneer.</text><mawjig amount="-2.42"/></outcome>
+		</choice>
+		<choice text="We're GATOS too. Stand aside.">
+			<outcome weight="1"><text>A long silence. "Not anymore you're not." They open fire.</text><fight squad="gatos-checkpoint"/></outcome>
+			<outcome weight="1"><text>The captain hesitates, then mutters something about the colony ship and lets you through. "Go on. Before I change my mind."</text></outcome>
+		</choice>
+		<choice text="Refuse.">
+			<outcome><fight squad="gatos-checkpoint"/></outcome>
+		</choice>
+	</event>
+
+	<!-- Mecha: territorial, attack with the advantage, insist interlopers leave when outmatched (Mecha 2) -->
+	<event id="MECHA_TERRITORY" title="Mecha Territory" kind="hostile" races="mecha" states="Border,Doing Fine,Core,Occupied" weight="2">
+		<text>A pair of black Mecha frames slides out of the dark, purple lights pulsing along their blades. "This is Mecha territory," says a voice that sounds almost childishly pleased with itself. "You're trespassing. That makes your ship ours."</text>
+		<choice text="Come and take it."><outcome><fight/></outcome></choice>
+		<choice text="Offer them Mawjig to look the other way.">
+			<outcome weight="2"><text>They consider it. "Fine. Profit is profit." The frames peel away.</text><mawjig amount="-2.42"/></outcome>
+			<outcome weight="1"><text>"Why take some when we can take all of it?"</text><fight/></outcome>
+		</choice>
+		<choice text="Have {crew} answer them in their own words." requires="crew:mecha">
+			<outcome><text>{crew} answers in a stream of clipped Mecha code. There's a pause, then a burst of what might be laughter. "A HalfMech crewing a scout? Go on, then. Bring us something good next time."</text></outcome>
+		</choice>
+	</event>
+	<event id="MECHA_OUTMATCHED" title="Get Out" kind="hostile" races="mecha" states="Doing Fine,Border" bands="3-8" weight="1">
+		<text>A lone Mecha frame shadows your squad, keeping its distance. "You are outnumbering us," it admits, sounding sulky. "Leave our territory. Now. Or we'll call the others."</text>
+		<choice text="Leave peacefully.">
+			<outcome><text>The frame follows you to the edge of the cluster and then stops, watching you go.</text></outcome>
+		</choice>
+		<choice text="Attack it before it calls anyone."><outcome><fight/></outcome></choice>
+	</event>
+	<event id="MECHA_RAIDERS" title="Raiders" kind="hostile" races="mecha,any" states="Doomed,Struggling,Abandoned" weight="1.5">
+		<text>Mecha frames with mismatched plates and half their lights broken come at you in formation. The doomed Mecha haven't turned refugee. They've turned raider.</text>
+		<choice text="Fight them off."><outcome><fight squad="mecha-raiders"/></outcome></choice>
+	</event>
+
+	<!-- Tentauri: quiet, diplomatic, force their way through (Tentauri 2) -->
+	<event id="TENTAURI_PASSAGE" title="Coming Through" kind="hostile" races="tentauri,any" states="Border,Doing Fine,Unclaimed,Struggling" weight="1.5">
+		<text>A small, pearly Tentauri ship is heading straight through your formation. Two soft voices speak at once. "Please move. We are going through. We would rather not hurt anyone."</text>
+		<choice text="Move aside and let them pass.">
+			<outcome><text>The Tentauri ship glides between your ships. As it passes, it sends a short, polite pulse of thanks.</text></outcome>
+		</choice>
+		<choice text="Hold formation. Make them go around.">
+			<outcome><text>"Then we are sorry," the voices say, and shields flare to life.</text><fight squad="tentauri-passage"/></outcome>
+		</choice>
+		<choice text="Ask {crew} to talk to them." requires="crew:tentauri">
+			<outcome><text>{crew} drifts to the comm and talks with the strangers for a long time, in voices too soft to follow. When it's over, the Tentauri pass, and leave a small gift of Mawjig in your path.</text><mawjig size="low"/></outcome>
+		</choice>
+	</event>
+
+	<!-- Azurethea: near-pacifist, accept surrender; doomed, aggressively defensive (Azurethea 2, 4) -->
+	<event id="AZURETHEA_WARNING" title="Turn Back" kind="hostile" races="azurethea" states="Doomed,Border,Struggling,Occupied" weight="1.5">
+		<text>A winged Azurethea ship spreads between you and the cluster's inner worlds. "We have had enough of ships like yours," its captain says. "Turn back. We don't want to fight, but we will."</text>
+		<choice text="Turn back.">
+			<outcome><text>You pull away. The Azurethea ship watches you go, wings spread, until you jump.</text></outcome>
+		</choice>
+		<choice text="Push through.">
+			<outcome><fight squad="azurethea-wardens"/></outcome>
+		</choice>
+		<choice text="Let {crew} speak with them." requires="crew:azurethea">
+			<outcome><text>{crew} speaks with them softly. The ship folds its wings, and its captain sends you a little of their Mawjig. "For anyone who still travels with one of us."</text><mawjig size="low"/></outcome>
+		</choice>
+	</event>
+
+	<!-- Senti-GPH: doomed Senti kill the living while archiving them (sample SENTI_ARCHIVE_REQUEST, doomed) -->
+	<event id="SENTI_DOOMED_ARCHIVE" title="Preservation" kind="hostile" races="senti" states="Doomed,Struggling" weight="2">
+		<text>A Senti relay ship turns its weapons toward you as you arrive.
+
+"We, The Senti-, are preserving everything we can before this cluster is lost. We will preserve your records and your biological data. Lower your shields. This will not take long."</text>
+		<choice text="Transmit your records and let them scan your crew.">
+			<outcome><text>The ship takes your records, then scans every member of your crew down to the cell. When it is finished, it powers down its weapons without another word. You leave as quickly as your drives allow.</text></outcome>
+		</choice>
+		<choice text="Prepare for battle.">
+			<outcome><text>"We, The Senti-, will preserve what is left of you."</text><fight squad="senti-pickets"/></outcome>
+		</choice>
+	</event>
+	<event id="SENTI_PICKET" title="A Picket Line" kind="hostile" races="senti" states="Border,Doing Fine" weight="1">
+		<text>A Senti picket ship sweeps your squad with sensors so strong your consoles flicker. "We, The Senti-, are recording a hostile intrusion." It does not wait for you to argue.</text>
+		<choice text="Defend yourselves."><outcome><fight squad="senti-pickets"/></outcome></choice>
+	</event>
+
+	<!-- Lykario: raid seemingly for fun; struggling or doomed, in denial and eager to join a hunt (Lykario 2-4) -->
+	<event id="LYKARIO_HUNT" title="The Hunt" kind="hostile" races="lykario,any" states="Border,Doing Fine,Refugee,Unclaimed" weight="1.5">
+		<text>Howling floods every channel as a patched-together Lykario ship swings around to face you. "Good hunting, little scouts! Run if you want. It's more fun when you run."</text>
+		<choice text="Stand and fight."><outcome><fight squad="lykario-pack"/></outcome></choice>
+		<choice text="Offer to share the hunt instead." requires="crew:lykario">
+			<outcome><text>{crew} howls back. The Lykario fall silent, then laugh, and the raider peels off with an invitation to hunt together "after all this is over."</text><mawjig size="tiny"/></outcome>
+		</choice>
+	</event>
+	<event id="LYKARIO_DENIAL" title="Everything Is Fine" kind="hostile" races="lykario" states="Struggling,Doomed" weight="1">
+		<text>A Lykario ship hails you, its captain grinning. "Collapse? What collapse? We're hunting, same as always. You look like good sport."</text>
+		<choice text="Fight."><outcome><fight squad="lykario-pack"/></outcome></choice>
+		<choice text="Bribe them to hunt someone else.">
+			<outcome weight="1"><text>"Ha! Fair enough." They take the Mawjig and go off howling.</text><mawjig amount="-1.81"/></outcome>
+			<outcome weight="1"><text>"Keep it. We'll take it off you anyway."</text><fight squad="lykario-pack"/></outcome>
+		</choice>
+	</event>
+
+	<!-- Malphen: patient, hungry, can be paid in matter (Malphen 2, 3) -->
+	<event id="MALPHEN_GROWTH" title="Something Alive" kind="hostile" races="malphen,any" states="Abandoned,Doing Fine,Struggling,Doomed,Unclaimed" weight="1.5">
+		<text>A swollen, lopsided shape detaches itself from a field of overgrown wreckage. It's a ship, and it's alive. It turns toward you slowly, like something waking up hungry.</text>
+		<choice text="Open fire before it gets closer."><outcome><fight squad="malphen-growth"/></outcome></choice>
+		<choice text="Jettison some matter for it and back away.">
+			<outcome weight="3"><text>The living ship drifts to the cloud of matter you dumped and folds around it. It doesn't follow you.</text><mawjig amount="-1.21"/></outcome>
+			<outcome weight="1"><text>It ignores the offering and keeps coming.</text><fight squad="malphen-growth"/></outcome>
+		</choice>
+	</event>
+
+	<!-- Anywhere -->
+	<event id="HOSTILE_INTERCEPT" title="Intercept" kind="hostile" weight="1">
+		<text>Your sensors light up: ships on an intercept course, weapons hot. They don't answer your hails.</text>
+		<choice text="Battle stations!"><outcome><fight/></outcome></choice>
+	</event>
+	<event id="HOSTILE_DESPERATE" title="Desperate" kind="hostile" states="Doomed" weight="1.5">
+		<text>"Give us your ships!" The voice on the channel is ragged. "We just need to get away from it, you understand? We need your ships!" Their weapons are already charging.</text>
+		<choice text="Defend yourselves."><outcome><fight/></outcome></choice>
+	</event>
+</events>
