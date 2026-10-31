@@ -1,0 +1,84 @@
+# Godot Version: Working Decisions and Changes
+
+An extension of the GDD (`docs/gdd.html`) for the Godot version of the game (`infall-godot/`, branch
+`Cloud-C-Godot-Version`). It holds decisions and changes made while building this version that the GDD doesn't
+have yet. Where a point here and the GDD disagree, this doc is the newer word for the Godot version, until the
+point is moved into the GDD.
+
+Sections are numbered as in the GDD and points lettered within each section. Cite a point as **GV** plus its number
+and letter, e.g. GV 3A. Points are tagged as in `docs/tag-styles.md`, with heromedel's words setting the tag and
+anything Claude added tagged Ai-Generated-Proposal.
+
+## 2. The Collapse and Campaign Structure
+
+- **A — Proposed (heromedel, 2026-10-31):** the map is the whole galaxy, open in every direction but through the
+  core. The squad may head inward at first but can't get close enough in the opening jumps to be caught when the
+  collapse appears. For now, reaching the rim anywhere brings the final battle and the win.
+  - **Ai-Generated-Proposal (2026-10-31):** the galaxy is a disc of four spiral arms. The start is far enough from
+    the core that four inward jumps can't reach the first horizon. The rim is the outermost ring, 260 map pixels
+    deep. The map screen shows an overview of the whole galaxy.
+- **B — Likely (heromedel, 2026-10-31):** on the map, Swallowed clusters are black, the legend's icons look like
+  clusters, and each race region is one faint wash of colour rather than many circles, so the clusters stand out.
+- **C — Decided (heromedel, 2026-10-31):** events don't speak of the collapse before it appears (GDD 2P).
+
+## 3. Squad Combat
+
+- **A — Decided (heromedel, 2026-10-31):** a hit lands on one tile: the system on that tile and the crew standing
+  on it are hit, not the whole room; a beam hits only the tiles it passes through. Fires and breaches already
+  harm the rest of the room. Moved into GDD 3L.
+- **B — Decided (heromedel, 2026-10-31):** crew are ordered to a tile, not only to a room.
+- **C — Likely (heromedel, 2026-10-31):** each ship sits centred in a square zone as big as the largest hull plus
+  8 tiles. That is 30 tiles today: the largest genre hulls (the Lanius at 600 × 606 px, the Crystal Cruiser at
+  721 px long) and our Pirate Hijacker (22 tiles long) all fit. A small ship sits far from its neighbours and
+  from the barrier.
+- **D — Likely (heromedel, 2026-10-31):** the barrier between the squads (GDD 3R) is at least 12 tiles deep.
+- **E — Decided (heromedel, 2026-10-31):** the setting is called `Shots Crossing Barrier: Shown > Hidden`.
+- **F — Proposed (heromedel, 2026-10-31):** space should feel vast; panning and zooming deal with the distance.
+  - **Ai-Generated-Proposal (2026-10-31):** the camera frames the fight at the start and then moves only when the
+    player moves it. Double-click a ship or press F to fly to it; Home frames everything. Ships out of view get an
+    arrow at the screen's edge.
+- **G — Likely (heromedel, 2026-10-31):** background planets are larger, look more distant and stay nearly still
+  as the camera moves.
+
+## 5. Ships
+
+- **A — Decided (heromedel, 2026-10-31):** a powered Medbay heals every crew member of its own side in its room
+  every tick, whatever they are doing, while fire or lack of air keeps hurting them. It heals allies from any
+  ship of the squad, never enemies. (The room rule is GDD 5B.)
+
+## 7. Races and Crew
+
+- **A — Decided (heromedel, 2026-10-31):** the GATOS are officially cats, and G.A.T.O.S. stands for the Galactic
+  Alliance of Tabby Occupied Systems (race profiles, Terrans).
+- **B — Decided (heromedel, 2026-10-31):** a Mecha crew member's blue choice may be how the player first learns
+  the name HalfMechs (the MECHA_TERRITORY event).
+- **C — Proposed (heromedel, 2026-10-31):** hired mercenaries work on a contract, which can be renewed for a price
+  that rises each time. If any of the mercenary crew die, the mercenaries are likely to leave after the battle.
+
+## 8. Weapons and Systems
+
+- **A — Likely (Infall: Eco, 2026-10-31):** event rewards follow the genre's curve by band; the battlesuit gives
+  0.02 Mawjig back when it comes home (economy-findings F5).
+
+## 14. User Interface
+
+- **A — Proposed (heromedel, 2026-10-31):** the HUD's sections are cards the player can drag by a small bar at
+  the top, to customise the layout. The layout is shared by every ship.
+- **B — Proposed (heromedel, 2026-10-31):** the subsystems are a card of their own, which can lock onto the
+  systems card or detach from it.
+- **C — Proposed (heromedel, 2026-10-31):** cards can be folded. A folded card opens by itself when something
+  changes on it (a crew member is hurt, say), so its animation shows, and folds again after 5 quiet seconds.
+  Settings: `Collapsed Cards Reopen on Change: On > Off`, `Reopened Cards Fold Back: On > Off`.
+  - **Ai-Generated-Proposal (2026-10-31):** cards snap to the screen's edges and to each other; right clicking a
+    card's bar puts it back. Settings: `HUD Layout: Movable > Locked`, `HUD Card Opacity: 85% > 100% > 70%`, and a
+    Reset HUD layout button.
+- **D — Ai-Generated-Proposal (2026-10-31):** messages sit on a dark plate so they read over any ship; hovering a
+  system's console shows only that system.
+
+## Decision log
+
+| Date | Decision |
+| --- | --- |
+| 2026-10-31 | The doc started; today's decisions recorded (GV 2A–14D). |
+| 2026-10-31 | The GATOS are cats: the Galactic Alliance of Tabby Occupied Systems (GV 7A, race profiles). |
+| 2026-10-31 | Mercenaries on renewable contracts (GV 7C); HalfMechs may be learned through a Mecha crew member (GV 7B). |

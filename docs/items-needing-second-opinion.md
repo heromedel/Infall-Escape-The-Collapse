@@ -60,9 +60,9 @@ reviewed its part on 2026-10-31; what was changed is under **Checked**, and what
   DISTRESS_TENTAURI_PAIR has no third Tentauri; MECHA_OUTMATCHED's line; NEUTRAL_REFUGEE_CONVOY "many races";
   NEUTRAL_COLONY_SHIP_SUPPLY's outcome finishes the story.
 - SENTI_DOOMED_ARCHIVE is for doomed Senti only; SENTI_PICKET is for border clusters and speaks plainly.
-- Not changed, for heromedel: STRANDED is heromedel's text; DISTRESS_GATOS_FAMILY's kittens (the GATOS are drawn
-  as cats in the Godot version, as heromedel asked); MECHA_TERRITORY's "HalfMech" line; NEUTRAL_MERCENARY's permanent
-  ship.
+- heromedel's answers (2026-10-31): the GATOS are officially cats, so DISTRESS_GATOS_FAMILY's kittens stay (GV 7A);
+  MECHA_TERRITORY's "HalfMech" line stays (GV 7B); mercenaries should work on contracts (GV 7C), not built yet.
+  STRANDED is heromedel's text and waits on his answer about "1.21 Jigawatts".
 
 ### Eco (2026-10-31)
 

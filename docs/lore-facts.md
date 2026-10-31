@@ -64,7 +64,7 @@ source doc carries the tag heromedel's words give it.
 
 ## Terrans (the GATOS)
 
-- The Terrans' formal name is the Galactic Alliance of Terran Occupied Systems, written G.A.T.O.S. and known as the GATOS. (Race profiles, Terrans; Proposed)
+- The GATOS are cats. Their formal name is the Galactic Alliance of Tabby Occupied Systems, written G.A.T.O.S. and known as the GATOS. (Race profiles, Terrans; Decided, heromedel 2026-10-31)
 - Terrans are believed to be the most common race in the galaxy. (Race profiles, Terrans 8; Proposed)
 - Terrans live in tight-knit core areas, with arms of colonies reaching out from them. (Race profiles, Terrans 8; Proposed)
 - In good times Terrans are accepted by others and are interested in trade and other cultures. (Race profiles, Terrans 2; Proposed)
