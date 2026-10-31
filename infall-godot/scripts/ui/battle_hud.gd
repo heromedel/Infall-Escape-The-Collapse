@@ -903,7 +903,7 @@ func _draw_overlays() -> void:
 	if box_rect.size.length() > 4.0:
 		draw_rect(box_rect, Color(UiColours.POWER_GREEN, 0.12))
 		draw_rect(box_rect, Color(UiColours.POWER_GREEN, 0.8), false, 1.5)
-	if screen.hover_ship and screen.hover_room >= 0 and _hover_region.is_empty() and screen.aim_mode == "":
+	if screen.hover_ship and screen.hover_room >= 0 and _hover_region.is_empty():   # aiming too: it names the target
 		_draw_room_info(screen.hover_ship, screen.hover_room)
 
 

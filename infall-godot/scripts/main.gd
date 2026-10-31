@@ -225,6 +225,14 @@ func _on_fight_over(outcome: String, finished: Encounter) -> void:
 			window.add_text("The enemy breaks off and leaves you to go your way.", 20)
 	for line in rewards.lines:
 		window.body.add_child(UiKit.label(line, 18, UiColours.POWER_GREEN, true))
+	for survivor in rewards.get("survivors", []):
+		var race := Library.race(survivor.race)
+		window.add_text("A survivor, %s (%s), %s and asks to join your crew." % [survivor.name, race.singular, survivor.why], 18)
+		var take := window.add_button("Take %s aboard." % survivor.name, func(): pass, UiColours.POWER_GREEN)
+		take.pressed.connect(func():
+			var ship := runner.take_survivor(survivor)
+			take.text = "%s joins the %s." % [survivor.name, ship.name] if ship else "There is no room aboard for %s." % survivor.name
+			take.disabled = true)
 	window.add_button("Continue...", func():
 		window.close()
 		_after_fight(final_fight))

@@ -8,6 +8,7 @@ signal closed
 var panel := PanelContainer.new()
 var body := VBoxContainer.new()
 var dim := ColorRect.new()
+var _scroll: ScrollContainer = null   # the scrolling area, for windows whose contents can grow tall
 
 
 func _init() -> void:
@@ -33,6 +34,37 @@ func place_panel(width: float, height: float = 0.0) -> void:
 
 func _recentre() -> void:
 	panel.position = (size - panel.size) * 0.5
+
+
+## A part of the window that scrolls when it is taller than the screen. Windows that rebuild their contents put them
+## here and empty it with clear().
+func scrolling_area() -> VBoxContainer:
+	_scroll = ScrollContainer.new()
+	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	var area := VBoxContainer.new()
+	area.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	area.add_theme_constant_override("separation", 12)
+	_scroll.add_child(area)
+	body.add_child(_scroll)
+	return area
+
+
+## Empties a box at once, not at the end of the frame, so the old and new contents are never both in the window;
+## the window then shrinks back around whatever replaces them.
+func clear(box: Container) -> void:
+	for child in box.get_children():
+		box.remove_child(child)
+		child.queue_free()
+	refit.call_deferred()
+
+
+## Fits the window to its contents again and keeps it centred, scrolling the scrolling area if it is too tall.
+func refit() -> void:
+	if _scroll:
+		var area := _scroll.get_child(0) as Control
+		_scroll.custom_minimum_size = Vector2(0, minf(area.get_combined_minimum_size().y, get_viewport_rect().size.y - 260.0))
+	panel.size = Vector2.ZERO
+	_recentre()
 
 
 func add_title(text: String, colour: Color = UiColours.TEXT) -> Label:

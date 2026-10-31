@@ -71,5 +71,4 @@ func _finish(result: Dictionary) -> void:
 
 
 func _clear() -> void:
-	for child in body.get_children():
-		child.queue_free()
+	clear(body)

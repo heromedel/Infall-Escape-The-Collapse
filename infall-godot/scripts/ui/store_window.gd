@@ -8,8 +8,7 @@ const INSTALLABLE := ["medbay", "doors", "sensors", "crew-teleporter", "cloaking
 
 var run: RunState
 var ship: Ship
-var _content := VBoxContainer.new()
-var _scroll := ScrollContainer.new()   # a long store scrolls instead of running off the screen
+var _content: VBoxContainer          # the scrolling area: a long store scrolls instead of running off the screen
 var _money := Label.new()
 
 
@@ -27,9 +26,7 @@ func open(run_state: RunState, for_ship: Ship) -> void:
 	_money.add_theme_color_override("font_color", Color("#ffd46b"))
 	top.add_child(_money)
 	body.add_child(top)
-	_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	_scroll.add_child(_content)
-	body.add_child(_scroll)
+	_content = scrolling_area()
 	add_button("LEAVE THE STORE", close)
 	_ensure_stock()
 	_rebuild()
@@ -88,9 +85,7 @@ func _ensure_stock() -> void:
 
 
 func _rebuild() -> void:
-	for child in _content.get_children():
-		_content.remove_child(child)   # out of the layout now, not at the end of the frame
-		child.queue_free()
+	clear(_content)
 	_money.text = "MAWJIG  " + Mawjig.format(run.mawjig)
 	var stock: Dictionary = run.cluster().store_stock
 	var columns := HBoxContainer.new()
@@ -168,15 +163,6 @@ func _rebuild() -> void:
 			row.add_child(spacer)
 			row.add_child(UiKit.button("SELL +%s" % Mawjig.format(price), func(): _sell(index, price), 160))
 			right.add_child(row)
-	_fit_to_screen.call_deferred()
-
-
-## Shrinks the window back around its contents after a rebuild, scrolling when the store is taller than the screen.
-func _fit_to_screen() -> void:
-	var most := get_viewport_rect().size.y - 260.0
-	_scroll.custom_minimum_size = Vector2(0, minf(_content.get_combined_minimum_size().y, most))
-	panel.size = Vector2.ZERO
-	_recentre()
 
 
 func _section(text: String) -> Label:

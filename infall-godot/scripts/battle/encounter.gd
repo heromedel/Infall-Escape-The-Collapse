@@ -15,8 +15,8 @@ const SUIT_SPEED := 18.0   # pixels a tick: fast enough to cross the zones and t
 const TELEPORT_TICKS := 20
 const SUIT_RETURN_REFUND := 2     # a battlesuit that comes home gives 0.02 Mawjig back (heromedel, economy-findings F5)
 # The barrier (GDD 3Q, 3R): a strip across the battlefield between the squads that stands for the distance
-# between them. It is 12 tiles deep (heromedel, 2026-10-31) and centred on y = 0, the player squad below it.
-const BARRIER_HALF_DEPTH := 6.0 * ShipDesign.TILE
+# between them. It is 16 tiles deep (heromedel, 2026-10-31) and centred on y = 0, the player squad below it.
+const BARRIER_HALF_DEPTH := 8.0 * ShipDesign.TILE
 const DEFAULT_GATOMETERS := 400.0
 # How fast each kind of shot covers Gatometers; a longer gap only means a longer wait (GDD 3Q).
 # Not in the docs yet: lasers and flak 400 a second (1 s for the default gap), missiles 260, battlesuits 130.
@@ -41,6 +41,7 @@ var fight_started: bool = false
 var surrender_offered: bool = false
 var no_mawjig_warned: bool = false
 var gatometers: float = DEFAULT_GATOMETERS   # this battle's distance across the barrier
+var surrendered_boarders: Array[CrewMember] = []   # enemy boarders left aboard our ships when theirs was destroyed
 
 
 func setup(player_ships: Array, enemy_ships: Array, seed_value: int) -> void:
@@ -188,9 +189,11 @@ func leave_behind_away_crew() -> void:
 	suits = suits.filter(func(s): return s.side != 0)
 
 
-## When a fight ends, crew still aboard enemy ships come home, unless the ship blew up under them.
+## When a fight ends, crew still aboard other ships come home, unless the ship blew up under them. Enemy boarders
+## whose own ship is gone have nowhere to go: they surrender, and may ask to join the winners (heromedel, 2026-10-31).
 func _bring_boarders_home() -> void:
 	for ship in ships:
+		var surrendering: Array[CrewMember] = []
 		for member in ship.crew:
 			if member.dead or member.ship == ship:
 				continue
@@ -198,7 +201,14 @@ func _bring_boarders_home() -> void:
 				member.dead = true
 				note("crew_died", {"ship": member.ship, "crew": member, "position": Vector2.ZERO})
 				continue
+			if ship.side == 1 and ship.destroyed:
+				surrendering.append(member)
+				continue
 			_land(member, ship, ship.system_by("teleporter").room if ship.system_by("teleporter") else ship.crew[0].station_room)
+		for member in surrendering:
+			member.ship.visitors.erase(member)
+			ship.crew.erase(member)
+			surrendered_boarders.append(member)
 
 
 # --- Weapons --------------------------------------------------------------------------------------------------

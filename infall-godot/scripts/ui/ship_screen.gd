@@ -5,21 +5,20 @@ extends Overlay
 
 var run: RunState
 var ship: Ship
-var _content := VBoxContainer.new()
+var _content: VBoxContainer          # the scrolling area, rebuilt after every change
 
 
 func open(run_state: RunState, selected: Ship) -> void:
 	run = run_state
 	ship = selected if selected and not selected.is_gone() else run.living_ships()[0]
 	place_panel(1320, 0)
-	body.add_child(_content)
+	_content = scrolling_area()
 	add_button("DONE", close)
 	_rebuild()
 
 
 func _rebuild() -> void:
-	for child in _content.get_children():
-		child.queue_free()
+	clear(_content)
 	var header := HBoxContainer.new()
 	header.add_theme_constant_override("separation", 10)
 	header.add_child(UiKit.title_label(ship.name.to_upper(), 30))
@@ -100,8 +99,10 @@ func _upgrade_row(label: String, level: int, max_level: int, price: int, on_upgr
 	if not note.is_empty():
 		text.add_child(UiKit.label(note, 13, UiColours.TEXT_DIM))
 	row.add_child(text)
-	var button := UiKit.button("MAX" if price < 0 else "+%s" % Mawjig.format(price), on_upgrade, 100)
+	# The price of the next level, shown as the store shows prices: a cost, not a gain
+	var button := UiKit.button("MAX" if price < 0 else Mawjig.format(price), func(): LowMawjigWarning.confirm(self, run, price, on_upgrade), 100)
 	button.disabled = price < 0 or run.mawjig < price
+	button.tooltip_text = "" if price < 0 else "Upgrade one level for %s Mawjig." % Mawjig.format(price)
 	button.add_theme_color_override("font_color", Color("#ffd46b"))
 	row.add_child(button)
 	return card

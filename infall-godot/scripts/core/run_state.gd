@@ -30,7 +30,7 @@ static func start(seed_number: int, ship_id: String) -> RunState:
 	run.rng.seed = seed_number
 	run.difficulty = Settings.get_value("difficulty", "Normal")
 	var band_count := 4 if Settings.get_value("run_length", "Standard") == "Short" else 8
-	run.galaxy = Galaxy.generate(seed_number, band_count)
+	run.galaxy = Galaxy.generate(seed_number, band_count, Library.ship(ship_id).race)
 	run.current = run.galaxy.start_index
 	run.galaxy.clusters[run.current].visited = true
 	run.mawjig = Mawjig.amount(START_MAWJIG + (6.03 if run.difficulty == "Easy" else 0.0))

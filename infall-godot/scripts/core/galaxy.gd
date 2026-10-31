@@ -22,9 +22,13 @@ const CLUSTER_AREA := 54000.0        # map area per cluster, on average
 const ARMS := 4
 const ARM_TWIST := 2.4               # how tightly the arms wind
 const REGION_AREA := 960000.0        # map area per race region, on average
-const REGION_RACES := {"terran": 34, "mecha": 18, "azurethea": 12, "tentauri": 10, "senti": 9, "lykario": 9, "malphen": 8}
+# How often each race's regions come up and how large they are. All equal for now (heromedel, 2026-10-31), so each
+# race holds about a seventh of claimed space; kept as data so they can be tuned later.
+const REGION_RACES := {"terran": 1, "mecha": 1, "azurethea": 1, "tentauri": 1, "senti": 1, "lykario": 1, "malphen": 1}
+const REGION_SIZES := {"terran": 1.0, "mecha": 1.0, "azurethea": 1.0, "tentauri": 1.0, "senti": 1.0, "lykario": 1.0, "malphen": 1.0}
 
 var seed_value: int = 0
+var home_race: String = "terran"     # the player's race: the region the run starts in is theirs
 var bands: int = 8
 var clusters: Array = []             # see _new_cluster
 var regions: Array = []              # {race, centre, size}
@@ -33,9 +37,10 @@ var start_index: int = 0
 var _grid := {}                      # grid cell -> cluster indices, for finding neighbours fast
 
 
-static func generate(seed_number: int, band_count: int) -> Galaxy:
+static func generate(seed_number: int, band_count: int, home: String = "terran") -> Galaxy:
 	var galaxy := Galaxy.new()
 	galaxy.seed_value = seed_number
+	galaxy.home_race = home
 	galaxy.bands = band_count
 	var rng := RandomNumberGenerator.new()
 	rng.seed = seed_number
@@ -243,9 +248,9 @@ func _place_regions(rng: RandomNumberGenerator) -> void:
 				break
 		var centre := Vector2.from_angle(rng.randf() * TAU) * sqrt(rng.randf_range(pow(CORE_RADIUS, 2), pow(outer, 2)))
 		if index == 0:
-			race = "terran"   # the run starts in GATOS space (GDD 7C: a Terran start)
+			race = home_race   # the run starts in the player's own race's space (heromedel, 2026-10-31)
 			centre = clusters[start_index].position * 1.04
-		var size := {"terran": 1.25, "mecha": 1.15, "tentauri": 0.6, "senti": 0.7, "lykario": 0.65, "azurethea": 0.9, "malphen": 1.0}.get(race, 1.0) as float
+		var size := float(REGION_SIZES.get(race, 1.0))
 		regions.append({"race": race, "centre": centre, "size": size})
 
 
@@ -431,11 +436,11 @@ func to_save() -> Dictionary:
 		var cluster: Dictionary = clusters[index]
 		if cluster.visited or cluster.seen or cluster.event_done or cluster.occupier != "" or not cluster.store_stock.is_empty() or (cluster.store and cluster.kind != "store"):
 			changed[str(index)] = {"visited": cluster.visited, "seen": cluster.seen, "event_done": cluster.event_done, "occupier": cluster.occupier, "store": cluster.store, "store_stock": cluster.store_stock}
-	return {"version": 2, "seed": seed_value, "bands": bands, "collapse_radius": collapse_radius, "changed": changed}
+	return {"version": 2, "seed": seed_value, "bands": bands, "home_race": home_race, "collapse_radius": collapse_radius, "changed": changed}
 
 
 static func from_save(data: Dictionary) -> Galaxy:
-	var galaxy := Galaxy.generate(int(data.seed), int(data.bands))   # the same seed builds the same map
+	var galaxy := Galaxy.generate(int(data.seed), int(data.bands), String(data.get("home_race", "terran")))   # the same seed builds the same map
 	galaxy.collapse_radius = float(data.collapse_radius)
 	for key in data.changed:
 		var cluster: Dictionary = galaxy.clusters[int(key)]

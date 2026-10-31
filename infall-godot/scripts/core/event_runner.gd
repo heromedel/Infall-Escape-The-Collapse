@@ -438,12 +438,26 @@ func fight_rewards(encounter: Encounter) -> Dictionary:
 			var weapon := ship.weapons[run.rng.randi_range(0, ship.weapons.size() - 1)].def
 			run.cargo.append(weapon.id)
 			lines.append("Salvaged weapon: %s" % weapon.display_name())
-	if beaten > 0 and run.rng.randf() < 0.08:
-		var ship := _ship_with_room()
-		if ship:
-			var race := Library.race(encounter.enemy_ships()[0].race.id)
-			var member := CrewMember.create(race, race.random_name(run.rng, []))
-			ship.add_crew(member)
-			ship.assign_stations()
-			lines.append("A survivor, %s (%s), asks to join your crew" % [member.name, race.singular])
-	return {"mawjig": total, "lines": lines}
+	# Survivors who may ask to join, for the player to accept or not (heromedel, 2026-10-31): boarders who surrendered
+	# when their ship was destroyed, and now and then someone from a ship that surrendered. Never from a wreck.
+	var survivors: Array = []
+	for member in encounter.surrendered_boarders:
+		survivors.append({"race": member.race.id, "name": member.name, "why": "surrendered when their ship was destroyed"})
+	for ship in encounter.enemy_ships():
+		if ship.surrendered and run.rng.randf() < 0.3:
+			var crew: Array = ship.crew.filter(func(m): return not m.dead)
+			if not crew.is_empty():
+				var member: CrewMember = crew[run.rng.randi_range(0, crew.size() - 1)]
+				survivors.append({"race": member.race.id, "name": member.name, "why": "has had enough of the %s" % ship.name})
+	return {"mawjig": total, "lines": lines, "survivors": survivors}
+
+
+## Takes a survivor aboard the first ship with room. Returns the ship, or null when every ship is full.
+func take_survivor(survivor: Dictionary) -> Ship:
+	var ship := _ship_with_room()
+	if ship == null:
+		return null
+	ship.add_crew(CrewMember.create(Library.race(survivor.race), survivor.name))
+	ship.assign_stations()
+	run.log_book.write("survivor_joined", survivor, "%s joined the crew." % survivor.name)
+	return ship
