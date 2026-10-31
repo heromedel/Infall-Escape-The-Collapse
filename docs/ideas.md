@@ -233,6 +233,12 @@ shot from one weapon goes to the same target room.
 - Possibly targeting rooms on different ships in the enemy squad too, to decide.
 - Could be an optional setting: `Multi Target Lasers: On > Off` (default first), so players can keep FTL's behaviour.
 
+### Weapons that hurt the whole room (2026-10-31)
+
+- **Proposed (2026-10-31):** shots hit a single tile: the tile and the system there take the hit, not the whole room.
+  Some weapons, such as missiles or a specific variety, maybe the ones that cause fire, could hurt crew in the whole
+  room instead.
+
 ### Point-defense laser (2026-10-21)
 
 **Unlikely (2026-10-23):** an actual defence laser system that shoots down incoming missiles, like a defence drone
