@@ -377,3 +377,20 @@ battles, which last longer than real-time fights.
 - **Likely (heromedel, 2026-10-28):** a wreck pays the normal reward. Mawjig the enemy didn't spend is not added on
   top: the wreck reward already stands for everything recoverable, and adding the purse would raise quick-kill
   rewards by up to 100% and break the squad budgets (F6).
+
+## F12. Ship value counts structure, core systems and mounts (2026-10-31)
+
+From Federation Home Planet's `Pricing.java` (heromedel/federation-home-planet), converted at 0.242; recorded in
+`system-prices.md`.
+
+- **Likely (heromedel, 2026-10-31):** hull 2.42 a point; a room with a system 10% of that system's level-1 price; a
+  room without one 0.48; a door 0.48.
+- **Likely (heromedel, 2026-10-31):** Piloting, Life Support and Engines count 36.31 each at level 1 (FHP's 150),
+  instead of free.
+- **Proposed (heromedel, 2026-10-31):** a weapon mount costs 6.05 (25 scrap) to add at a store and counts at that
+  in a ship's value (replaces F10's 4.84).
+- **Likely (heromedel, 2026-10-31):** the wreck rate stays 2.5%, so wreck rewards rise with values; the rising price
+  of buying ships offsets it. The F6 budgets and target rewards are now lower than what typical ships pay; recheck
+  them once ships are revalued.
+- Rough effect: the Outrider rises from 181.42 by about 97 for structure and about 109 for its three core systems;
+  the Light Attack Frame by about 36 for structure, plus its core systems.

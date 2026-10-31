@@ -11,12 +11,14 @@ level (e.g. Shields at 2 bars: 30.25 + 24.21 = 54.46), the same way Federation H
 (`Pricing.system`).
 
 FTL lists Piloting and Engines at 1 scrap because every ship starts with them; Life Support starts installed too.
+**Likely (heromedel, 2026-10-31):** in a ship's value they cost **36.31** each at level 1 (150 scrap, heromedel's
+price in Federation Home Planet's `Pricing.CORE_SYSTEM`), upgrades on top. Every ship still starts with them.
 
 | System | FTL buy (scrap) | Buy (Mawjig) | Upgrades, per level (Mawjig) | All upgrades (Mawjig) |
 |---|---|---|---|---|
-| Life Support (FTL Oxygen) | 0 | starts installed | 6.05, 12.11 | 18.16 |
-| Piloting | 1 | starts installed | 4.84, 12.11 | 16.95 |
-| Engines | 1 | starts installed | 2.42, 3.63, 7.26, 9.68, 14.52, 19.36, 29.04 | 85.91 |
+| Life Support (FTL Oxygen) | 0 (150 in a ship's value) | 36.31 | 6.05, 12.11 | 18.16 |
+| Piloting | 1 (150 in a ship's value) | 36.31 | 4.84, 12.11 | 16.95 |
+| Engines | 1 (150 in a ship's value) | 36.31 | 2.42, 3.63, 7.26, 9.68, 14.52, 19.36, 29.04 | 85.91 |
 | Shields | 125 | 30.25 | 24.21, 4.84, 7.26, 9.68, 14.52, 19.36, 24.21 | 104.08 |
 | Weapon Control | 20 | 4.84 | 9.68, 6.05, 8.47, 12.11, 18.15, 21.78, 24.21 | 100.45 |
 | Medbay | 50 | 12.11 | 8.47, 10.89 | 19.36 |
@@ -32,6 +34,26 @@ FTL lists Piloting and Engines at 1 scrap because every ship starts with them; L
 | Artillery | 150 | 36.31 | 7.26, 12.11, 19.36 | 38.73 |
 
 Drone Control and Artillery are listed for reference; both are unplaced (see `ftl-weapon-system-organization.md`).
+
+## Ship value: hull, rooms, doors and mounts
+
+**Likely (heromedel, 2026-10-31):** a ship's value counts its structure as Federation Home Planet does
+(`Pricing.java`: `HULL_POINT`, `SYSTEM_ROOM_PERCENT`, `EMPTY_ROOM`, `DOOR`), converted at 0.242. A ship's value is
+then its structure, reactor, systems at their levels and weapons; crew are counted separately.
+
+| Part | FHP (scrap) | Mawjig |
+|---|:-:|:-:|
+| Each hull point | 10 | 2.42 |
+| Each room holding a system | 10% of that system's level-1 price | 10% of its level-1 price (Mawjig) |
+| Each room without a system | 2 | 0.48 |
+| Each door | 2 | 0.48 |
+| Each weapon mount | — | **6.05** |
+
+- **Weapon mounts — Proposed (heromedel, 2026-10-31):** a mount costs 25 scrap (**6.05**) to add at a store, and each
+  mount a ship has counts at that price in its value. FHP counts mounts but doesn't price them. Replaces the first
+  guess of 4.84 (`economy-findings.md`, F10).
+- **Likely (heromedel, 2026-10-31):** the wreck rate stays 2.5% of value (GDD 8I), so rewards rise with the new
+  values; buying ships rises the same way, which offsets it.
 
 ## Shields under the shield test (GDD 8H)
 
