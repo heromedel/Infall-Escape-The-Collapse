@@ -136,7 +136,7 @@ a Spanish pun is beside the point. They are a loose alliance of humans, not cats
 
 - **Names — Proposed (2026-10-23):** they call themselves **HalfMechs**. Other races will still probably call them
   **The Mecha**.
-- **What they are — Proposed (2026-10-23):** not robots. A small race of childlike, genetically modified cyborgs who
+- **What they are — Proposed (2026-10-23):** not robots. A small race of halfling-like, genetically modified cyborgs who
   live inside semi-cybernetic mech suits. Outside of their suits they are rather attractive for underdeveloped
   half-cybernetic creatures, due to their genetic enhancement and quick growth cycle, like diminutive genetically
   engineered humans, and oddly adorable for their viciousness.

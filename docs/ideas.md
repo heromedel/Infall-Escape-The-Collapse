@@ -253,3 +253,12 @@ New weapon ideas:
 - **Ship-to-ship sweeping beam:** sweeps from one enemy ship to another.
 - **Frequency-shifting lasers:** alternate their frequency for a percentage chance to bypass a shield, at the cost
   of charging slower or taking more power.
+
+## Battle screen
+
+### Step saved: distance from the barrier by the largest ship (heromedel, 2026-10-26)
+
+Instead of a fixed gap between each squad's front line and the barrier, reserve the space the largest ship in the
+genre's size range needs (the biggest hull, with a slight margin) and anchor every ship at the same point on the
+far side of that space. A ship that big just fits; a small ship anchored at the same point has much more room to
+the barrier. Not done yet: saved as a battle screen step to do after the current GUI passes.

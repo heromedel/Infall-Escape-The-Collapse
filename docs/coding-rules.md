@@ -41,5 +41,21 @@ elegant code principles and the standard rules) and `CLAUDE.md` (the hard rule f
 12. **Tests.** Run the tests the change needs. Don't run every test every time.
 13. **Ticks.** The simulation runs on fixed ticks (GDD 3E), 20 a second (0.05 s); every time in the reference
     tables is converted to ticks.
+14. **Names first, then code (heromedel, 2026-10-26).** Before each step of a plan, Claude gives a one-page table of
+    contents: every class, what it owns, its public functions with one line each, and the main flow as plain calls.
+    No function bodies. heromedel objects to names there, while renaming is free. Then Claude writes the step
+    unhindered, with comments saying what and why, and reports anything not on the approved page: a new class, a
+    renamed function, a helper that grew. Names are plain words that say what the thing does, never metaphors; a
+    name that needs a sentence to justify it is the wrong name.
+15. **Trivial choices are Claude's (heromedel, 2026-10-26).** When a step needs a small choice the docs don't make,
+    and no hard rule or decision is touched, Claude makes it and says so in the report, e.g. swapping a test fight's
+    enemy for a loadout that carries a laser. heromedel doesn't want to be asked about, or have spoiled, every ship,
+    loadout and event. Design choices still go to him.
+16. **Comments credit the design, not the AI (heromedel, 2026-10-26).** Where a rule comes from the design, the
+    comment cites the point (`GDD 6C: a jump costs 1.21 for the squad`). Where the docs are silent and Claude had to
+    guess, the comment says `Not in the docs yet:` and the guess, so it reads as an open question. No AI credits in
+    code.
+17. **FTL's terms.** FTL's terms, e.g. scrap, may appear in the design docs only beside their Mawjig conversion,
+    and likely never in the code. *(Likely, heromedel, 2026-10-26)*
 
 Branch and merge rules for the coding session are heromedel's to set.

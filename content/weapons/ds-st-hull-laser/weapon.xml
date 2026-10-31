@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- DS-ST Hull Laser: the Light Attack Frame's double-shot laser (ship-suggestions.md, Light Attack Frame step 9).
+     Charge 12.8 s; 0.036 a shot; double damage to a room without a system (Hull bonus). -->
+<weapon name="DS-ST Hull Laser" type="Laser" effects="Damage, Hull bonus, Breach" techType="Mechanical" race="Mecha"
+        shots="2" damage="1" power="2" chargeSeconds="12.8" mawjigPerShot="0.036" breachChance="20%"
+        description="Double Shot, Single Target. Tears into bare hull where no system braces it."/>

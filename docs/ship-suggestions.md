@@ -74,8 +74,13 @@ Default tag: **Proposed (2026-10-22)**, from heromedel's worked example; Claude'
    Door 1: (-1,2)   Facing: West   (airlock)
    Door 2: (1,2)    Facing: East   (airlock)
 
-   Weapons: Tentauri Defense Laser (Weapons A), Tentauri Defense Laser (Weapons B)
-   Mounts: 6
+   Weapons: Tentauri Defense Laser (Weapons A, mount 3), Tentauri Defense Laser (Weapons B, mount 4)
+   Mount 1: (-0.9,-4)     Slide: Up
+   Mount 2: (0.9,-4)      Slide: Up
+   Mount 3: (-3.9,-1.4)   Slide: Left
+   Mount 4: (3.9,-1.4)    Slide: Right
+   Mount 5: (-3.1,-2.8)   Slide: Left
+   Mount 6: (3.1,-2.8)    Slide: Right
    Crew: 2 Tentauri
    ```
 
@@ -229,16 +234,21 @@ step, not to every line; points he agreed to are tagged.
    Door 12: (2,0)   Facing: East   (airlock)
    Door 13: (2,1)   Facing: East   (airlock)
 
-   Conduits:                       wheel: rim, 4 spokes; mounts 3 and 4 fed twice (W and E exits)
+   Conduits:                       wheel: rim and 4 spokes; conduits feed systems, not mounts (5H)
        (-1,-6,S,E) (0,-6,E,W) (1,-6,S,W) (-1,-5,N,S,E) (0,-5,S,W) (1,-5,N,S)
-       (-1,-4,N,S) (0,-4,N,S) (1,-4,N,S) (-1,-3,N,S,W) (0,-3,N,S) (1,-3,N,S,E)
-       (-2,-2,S,E,W) (-1,-2,N,W) (0,-2,N,S) (1,-2,N,S,E) (-2,-1,N,S) (0,-1,N,S)
+       (-1,-4,N,S) (0,-4,N,S) (1,-4,N,S) (-1,-3,N,S) (0,-3,N,S) (1,-3,N,S)
+       (-2,-2,S,E) (-1,-2,N,W) (0,-2,N,S) (1,-2,N,S) (-2,-1,N,S) (0,-1,N,S)
        (1,-1,N,S) (-2,0,N,S) (0,0,N,S) (1,0,N,S) (-2,1,N,E) (-1,1,S,E,W)
        (0,1) (1,1,N,S,W) (-1,2,N,S) (0,2,N,S) (1,2,N,S) (-1,3,N,S)
        (0,3,N,S) (1,3,N,S) (-1,4,N,S) (0,4,N,S) (1,4,N,S) (-1,5,N,S)
        (0,5,N,S) (1,5,N,S) (-1,6,N,E) (0,6,N,E,W) (1,6,N,W)
    Weapons: Gat 3.1 "Triblast" (mount 3), Gat M1 "Pathfinder" (mount 4)
-   Mounts: 6
+   Mount 1: (-1.9,-6.9)   Slide: Left
+   Mount 2: (1.9,-6.9)    Slide: Right
+   Mount 3: (-2.6,-2.8)   Slide: Left
+   Mount 4: (2.6,-2.8)    Slide: Right
+   Mount 5: (-5.5,5.8)    Slide: Left
+   Mount 6: (5.5,5.8)     Slide: Right
    Crew: 3 Terrans
    ```
 
@@ -324,7 +334,9 @@ Default tag: **Ai-Generated-Proposal (2026-10-22)**; not reviewed yet.
 7. **Variation:** a variation: the doomed Terran pirate.
 8. **Layout and systems:** a classic Terran cruiser hull with rust and mismatched panels, and a visibly bolted-on
    organic Azurethea launcher, so the stolen weapon shows on the ship. Hull 14 (FTL's elite Rebel template; mid
-   band). AZC level 3 (6 systems): Shields, Engines, Life Support, Weapons, Medbay and Teleporter all run at once.
+   band). AZC level 3 (6 systems). **Proposed (2026-10-27):** with the Sporewing on its own weapon system there are 7
+   systems that draw power, so one is off at any time (usually the Medbay until boarders come back hurt): the bolted-on
+   system strains the core.
 
    | System | Bars | Draws on the AZC |
    |---|---|---|
@@ -334,12 +346,15 @@ Default tag: **Ai-Generated-Proposal (2026-10-22)**; not reviewed yet.
    | Shields | 4 (2 layers) | yes |
    | Engines | 3 | yes |
    | Life Support | 1 | yes |
-   | Weapons | 3 | yes |
+   | Weapons A (Twinshot) | 2 | yes |
+   | Weapons B (Sporewing; maxSlots 1) | 1 | yes |
    | Medbay | 2 | yes |
    | Crew Teleporter | 2 | yes |
 
-   **Conduits:** a ring like the Outrider's, plus one spur out to the bolted-on launcher. Cut the spur and
-   the stolen weapon goes dark: a weak point the player can read from the ship's art and aim for.
+   **Conduits — Proposed (2026-10-27, heromedel):** a ring like the Outrider's. Conduits feed systems, not mounts
+   (GDD 5H), so the Sporewing sits on its own weapon system (Weapons B, GDD 8M) in the starboard flank room by the
+   launcher, reached by a single spur off the ring. Cut the spur and the stolen weapon goes dark: a weak point the
+   player can read from the ship's art and aim for. Replaces the earlier spur to the launcher's mount.
 
    Passes made:
    - Pass 1: an FTL pirate copy: mixed crew, burst lasers, teleporter. Generic.
@@ -349,6 +364,8 @@ Default tag: **Ai-Generated-Proposal (2026-10-22)**; not reviewed yet.
    - Pass 4: conduit spur to the launcher, a readable weak point.
    - Pass 5: all-Terran crew (xenophobic when doomed).
    - Pass 6: checked counters and rewards (see 9).
+   - Pass 7 (2026-10-27): the Sporewing moved to its own weapon system so the spur still feeds it (GDD 5H, 8M).
+
    **Layout — Proposed (2026-10-26):** in the ship setup format (GDD 5F–5L; `ship-design-process.md` step 8),
    converted from the accepted floor plan (`docs/art/terran/pirate-hijacker/floor-plans/`). North is the bow; y grows
    toward the stern.
@@ -366,7 +383,7 @@ Default tag: **Ai-Generated-Proposal (2026-10-22)**; not reviewed yet.
    Room 3: (1,-3),(2,-2)           weapons room
    Room 4: (-2,-1),(-2,0)          port flank (empty)
    Room 5: (-1,-1),(1,0)           core room
-   Room 6: (2,-1),(2,0)            starboard flank (empty)
+   Room 6: (2,-1),(2,0)            starboard flank (Weapons B, by the launcher)
    Room 7: (-2,1),(-1,2)           medbay
    Room 8: (1,1),(2,2)             teleporter room
    Room 9: (-2,3),(2,4)            aft hall (empty)
@@ -376,7 +393,8 @@ Default tag: **Ai-Generated-Proposal (2026-10-22)**; not reviewed yet.
    Sensors(1,-6)            Level 1   Location: North Wall
    Doors(-1,-4)             Level 2   Location: West Wall
    Shields(-2,-3)           Level 2 (4 bars)   Location: West Wall
-   Weapons(2,-3)            Level 3   Location: East Wall
+   Weapons A(2,-3)          Level 2   Location: East Wall
+   Weapons B(2,-1)          Level 1   Location: East Wall   maxSlots: 1
    AZC(1,-1)                Level 3
    Medbay(-2,2)             Level 2   Location: West Wall
    Crew Teleporter(2,2)     Level 2   Location: East Wall
@@ -403,15 +421,20 @@ Default tag: **Ai-Generated-Proposal (2026-10-22)**; not reviewed yet.
    Door 17: (2,3)   Facing: East   (airlock)
    Door 18: (2,4)   Facing: East   (airlock)
 
-   Conduits:                       ring; one spur E to the Sporewing; Twinshot fed twice (W exits)
+   Conduits:                       ring; one spur to Weapons B (the Sporewing's system), the weak point
        (-1,-6,S,E) (1,-6,S,W) (-1,-5,N,S) (1,-5,N,S) (-1,-4,N,S) (1,-4,N,S)
-       (-2,-3,S,E,W) (-1,-3,N,W) (1,-3,N,S) (-2,-2) (-1,-2,E,W) (1,-2)
-       (2,-2,E,W) (-2,-1,N,S) (1,-1,N,S) (-2,0,N,S) (1,0,N,E) (2,0,S,W)
-       (-2,1,N,S) (2,1,N,S) (-2,2,N,S) (2,2,N,S) (-2,3,N,S) (2,3,N,S)
+       (-2,-3,S,E) (-1,-3,N,W) (1,-3,N,S) (-2,-2,N,S) (1,-2,N,S,E) (2,-2,S,W)
+       (-2,-1,N,S) (1,-1,N,S) (2,-1,N) (-2,0,N,S) (1,0,N,S) (-2,1,N,S)
+       (1,1,N,E) (2,1,S,W) (-2,2,N,S) (2,2,N,S) (-2,3,N,S) (2,3,N,S)
        (-2,4,N,S) (2,4,N,S) (-2,5,N,E) (-1,5,S,W) (1,5,S,E) (2,5,N,W)
        (-1,6,N,E) (1,6,N,W)
-   Weapons: Gat 2.1 "Twinshot" (mount 3), Sporewing (mount 4)
-   Mounts: 6
+   Weapons: Gat 2.1 "Twinshot" (Weapons A, mount 3), Sporewing (Weapons B, mount 4)
+   Mount 1: (-2.3,-4.9)   Slide: Left
+   Mount 2: (2.3,-4.9)    Slide: Right
+   Mount 3: (-4,-1.6)     Slide: Left
+   Mount 4: (4,-1.6)      Slide: Right   System: Weapons B
+   Mount 5: (-5,7.6)      Slide: Left
+   Mount 6: (5,7.6)       Slide: Right
    Crew: 5 Terrans
    ```
 
@@ -448,7 +471,8 @@ Default tag: **Ai-Generated-Proposal (2026-10-22)**; not reviewed yet.
     | Engines (installed; levels 2–3: 2.42 + 3.63) | 6.05 |
     | Piloting level 2 | 4.84 |
     | Life Support | starts installed |
-    | Weapon Control (buy 4.84 + levels 2–3: 9.68 + 6.05) | 20.57 |
+    | Weapon Control A (buy 4.84 + level 2 9.68) | 14.52 |
+    | Weapon Control B (buy) | 4.84 |
     | Medbay (buy + level 2) | 20.58 |
     | Doors (buy + level 2) | 22.99 |
     | Sensors (buy) | 9.68 |
@@ -456,15 +480,19 @@ Default tag: **Ai-Generated-Proposal (2026-10-22)**; not reviewed yet.
     | AZC level 3 | 72.61 |
     | Sporewing | 7.02 |
     | Gat 2.1 "Twinshot" | 7.67 |
-    | **Total** | **267.61** |
+    | **Total** | **266.41** |
 
-    Crew are extra: 5 Terrans at 10.89 each, 54.45.
+    Plus the second-system surcharge on Weapon Control B (GDD 8M, about 5–10%, Eco to set). Crew are extra: 5 Terrans at 10.89 each, 54.45.
 11. **New rules recorded:** spores and stun cooldown and price rates in `weapon-budget-table.md`.
 
 Judgment calls for review:
 
 - Doomed state, band 5, and the hijacker function.
 - Hull 14 and AZC level 3.
+- (2026-10-27) The Sporewing on its own weapon system (Weapons B, level 1, maxSlots 1) in the starboard flank room;
+  AZC kept at level 3, so one of 7 systems is off at a time, rather than AZC level 4 (+36.31).
+- (2026-10-27) Mount coordinates in tile units from the centre, rounded to 0.1, read off the hull art's mount spots;
+  they can lie outside the floor.
 - All-Terran crew.
 - The Sporewing: missile type (can be shot down) rather than bomb, 1 power, spores priced as ion, stun from FTL's
   Ion Stunner.
@@ -487,12 +515,13 @@ Judgment calls for review:
 | Shields | 1 layer (shield test level 1) | 2 layers |
 | Engines | 1 | 3 |
 | Life Support | 1 | 1 |
-| Weapons | 1 | 3 |
+| Weapons A | — | 2 |
+| Weapons B (Sporewing) | 1 | 1 |
 | Medbay | — | 2 |
 | Crew Teleporter | 1 | 2 |
 | Weapons carried | Sporewing | Sporewing, Gat 2.1 "Twinshot" |
 | Crew | 3 Terrans | 5 Terrans |
-| Price | **130.46** | 267.61 |
+| Price | **130.46** | 266.41 + surcharge |
 
 Same hull and silhouette: the classic Terran cruiser with rust, mismatched panels, darker paint (falling GATOS,
 Decided) and the bolted-on Azurethea launcher.
@@ -516,18 +545,14 @@ Sensors            removed
 Doors              removed
 Shields            Level 1 (2 bars)
 Engines            Level 1
-Weapons            Level 1
+Weapons A          removed
 Medbay             removed
 Crew Teleporter    Level 1
 
-Weapons: Sporewing (mount 4)
-Crew: 3 Terrans
+Mount 3: (-2.8,-1.6)   Slide: Left       (on the faired-over port bay)
 
-Conduits:                       the Twinshot feeds come out (no mount 3 weapon)
-    (-1,-2,Remove)
-    (-2,-2,N,S)
-    (-2,-3,S,E)
-    (1,-2,N,S,E)
+Weapons: Sporewing (Weapons B, mount 4)
+Crew: 3 Terrans
 ```
 
 **Ideas considered:** keep the teleporter and drop the guns (picked); keep the Twinshot and drop the teleporter, so
@@ -685,7 +710,7 @@ there. Asked by heromedel through Infall: Production (handoff 2026-10-23 14:17).
    Cybernetic Servicing Core(1,1)      Level 1   Own Power: 1   Rotation: None (always upright)
    Engines(-2,2)                       Level 1   Own Power: 1   Location: West Wall
    Life Support(2,2)                   Level 1   Own Power: 1   Location: East Wall
-   Weapon Pod(3,-1)                    Level 2   Own Power: 1   Location: East Wall
+   Weapon Pod(3,-1)                    Level 2   Own Power: 1   Location: East Wall   maxSlots: 1
 
    Door 0: (-1,-1)  Facing: South
    Door 1: (-1,0)   Facing: West
@@ -696,7 +721,12 @@ there. Asked by heromedel through Infall: Production (handoff 2026-10-23 14:17).
    Door 6: (-3,0)   Facing: West   (airlock)
 
    Weapons: DS-ST Hull Laser (mount 4)
-   Mounts: 6
+   Mount 1: (-3.3,-4.3)   Slide: Up
+   Mount 2: (3.3,-4.3)    Slide: Up
+   Mount 3: (-4.2,-1.2)   Slide: Up
+   Mount 4: (4.2,-1.2)    Slide: Up
+   Mount 5: (-4.9,0.2)    Slide: Left
+   Mount 6: (4.9,0.2)     Slide: Right
    Crew: 2 Mecha
    ```
 

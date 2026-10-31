@@ -14,6 +14,7 @@ one place.
 | Whispwraith power magenta | `#FF00E6` | The Whispwraith's power colour; the closest of all to another race's (between Tentauri pink and Mecha purple) | Magenta: **Proposed (2026-10-26)**; the value: **Ai-Generated-Proposal** |
 | Lykario power silver | `#D1DBE7` | The Lykario's power colour; faint on light floors, so it may need a dark outline there | Silver: **Likely (2026-10-26)**; the value: **Ai-Generated-Proposal** |
 | Malphen power flesh | `#FFA480` | The Malphen's power colour, a fleshy pink-orange, kept pale so it doesn't read as cut-off red or pirate orange | Fleshy pink-orange: **Likely (2026-10-26)**; the value: **Ai-Generated-Proposal** |
+| Console blue | `#1C242C` | The disc the game draws behind a system symbol, standing in for the console until console art exists, so power green reads over a bright floor | **Decided (2026-10-26, heromedel)** |
 
 - **Checked against power green (2026-10-26):** power green has a perceived lightness of 0.89 and saturation (chroma)
   of 0.23 (OKLCH). Each race colour is the most saturated its hue allows at a lightness that still reads as lit:

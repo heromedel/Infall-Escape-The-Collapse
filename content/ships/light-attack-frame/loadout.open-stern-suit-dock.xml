@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Open Stern Suit Dock: both changes at once, since a loadout derives from the base ship only (GDD 5J). -->
+<loadout ship="Light Attack Frame" name="Light Attack Frame, Open Stern Suit Dock" inherit="Patch">
+  <rooms>
+    <room id="4" from="-2,2" to="2,2" note="stern room: Engines and Life Support together"/>
+    <room id="5" removed="true"/>
+  </rooms>
+  <systems>
+    <system name="Weapon Pod" removed="true"/>
+    <system name="EVB Dock" tile="3,-1" level="2" selfPower="2" wall="East"/>
+  </systems>
+  <doors>
+    <door id="4" removed="true"/>
+    <door id="7" tile="3,0" facing="East" note="airlock beside the EVB Dock"/>
+  </doors>
+  <weapons/>
+  <suits>
+    <suit name="laser battlesuit"/>
+  </suits>
+</loadout>

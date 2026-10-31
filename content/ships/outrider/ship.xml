@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SC-1 Outrider: the Terran starting scout (ship-suggestions.md, layout Proposed 2026-10-26).
+     Coordinates count from the ship's centre; North is the bow, y grows toward the stern (GDD 5G). -->
+<ship name="SC-1 Outrider" race="Terran">
+  <center x="Tile" y="Tile"/>                       <!-- 5 x 13 tiles -->
+  <hull points="30"/>
+  <power kind="AZC" level="2"/>
+  <art hull="outrider-hull.svg" offset="142.5,135"/>
+  <mounts count="6"/>
+
+  <rooms>
+    <room id="0" from="-1,-6" to="1,-5"  note="bridge"/>
+    <room id="1" from="-1,-4" to="1,-3"  note="sensors and doors room"/>
+    <room id="2" from="-2,-2" to="-1,-1" note="medbay"/>
+    <room id="3" from="0,-2"  to="0,-1"  note="corridor"/>
+    <room id="4" from="1,-2"  to="2,-1"  note="starboard forward"/>
+    <room id="5" from="-2,0"  to="-2,1"  note="port airlock room"/>
+    <room id="6" from="-1,0"  to="1,2"   note="core room"/>
+    <room id="7" from="2,0"   to="2,1"   note="starboard airlock room"/>
+    <room id="8" from="-1,3"  to="1,4"   note="aft hall"/>
+    <room id="9" from="-1,5"  to="1,6"   note="engine room"/>
+  </rooms>
+
+  <systems>
+    <system name="Shields"      tile="-1,-6" level="1" wall="North"/>
+    <system name="Piloting"     tile="0,-6"  level="1" wall="North"/>
+    <system name="Weapons"      tile="1,-6"  level="3" wall="North"/>
+    <system name="Sensors"      tile="-1,-4" level="2" wall="West"/>
+    <system name="Doors"        tile="-1,-3" level="1" wall="West"/>
+    <system name="Medbay"       tile="-2,-2" level="1" wall="West"/>
+    <system name="AZC"          tile="0,1"   level="2"/>
+    <system name="Life Support" tile="-1,6"  level="1" wall="South"/>
+    <system name="Engines"      tile="0,6"   level="2" wall="South"/>
+  </systems>
+
+  <doors>
+    <door id="0"  tile="0,-5"  facing="South"/>
+    <door id="1"  tile="0,-3"  facing="South"/>
+    <door id="2"  tile="1,-3"  facing="South"/>
+    <door id="3"  tile="-1,-2" facing="East"/>
+    <door id="4"  tile="0,-1"  facing="South"/>
+    <door id="5"  tile="1,-1"  facing="South"/>
+    <door id="6"  tile="-1,0"  facing="West"/>
+    <door id="7"  tile="1,0"   facing="East"/>
+    <door id="8"  tile="0,2"   facing="South"/>
+    <door id="9"  tile="0,4"   facing="South"/>
+    <door id="10" tile="-2,0"  facing="West" note="airlock"/>
+    <door id="11" tile="-2,1"  facing="West" note="airlock"/>
+    <door id="12" tile="2,0"   facing="East" note="airlock"/>
+    <door id="13" tile="2,1"   facing="East" note="airlock"/>
+  </doors>
+
+  <!-- A wheel: a rim through every system room and four spokes from the AZC, so no single cut unpowers anything.
+       Mounts 3 and 4 are fed twice (the W and E exits). -->
+  <conduits>
+    (-1,-6,S,E) (0,-6,E,W) (1,-6,S,W) (-1,-5,N,S,E) (0,-5,S,W) (1,-5,N,S)
+    (-1,-4,N,S) (0,-4,N,S) (1,-4,N,S) (-1,-3,N,S,W) (0,-3,N,S) (1,-3,N,S,E)
+    (-2,-2,S,E,W) (-1,-2,N,W) (0,-2,N,S) (1,-2,N,S,E) (-2,-1,N,S) (0,-1,N,S)
+    (1,-1,N,S) (-2,0,N,S) (0,0,N,S) (1,0,N,S) (-2,1,N,E) (-1,1,S,E,W)
+    (0,1) (1,1,N,S,W) (-1,2,N,S) (0,2,N,S) (1,2,N,S) (-1,3,N,S)
+    (0,3,N,S) (1,3,N,S) (-1,4,N,S) (0,4,N,S) (1,4,N,S) (-1,5,N,S)
+    (0,5,N,S) (1,5,N,S) (-1,6,N,E) (0,6,N,E,W) (1,6,N,W)
+  </conduits>
+
+  <weapons>
+    <weapon name="Gat 3.1" mount="3"/>
+    <weapon name="Gat M1" mount="4"/>
+  </weapons>
+  <crew>
+    <member race="Terran" count="3"/>
+  </crew>
+</ship>

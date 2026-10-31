@@ -16,8 +16,9 @@ point. Ai-Generated-Proposal is assumed not agreed until heromedel reviews it.
   Working with proposals).
 - **Ai-Generated-Proposal:** written by Claude, not agreed until heromedel reviews it. Used the same way as Proposed.
 - **Open:** not discussed yet; nothing is built on it.
-- **Unlikely:** kept on record, but not expected to be added; nothing is built on it unless heromedel raises it.
-- **Rejected:** turned down, with a line saying why; never brought back unless heromedel raises it.
+- **Unlikely:** kept on record, not expected to be added. Discuss adding it if there is good reason to.
+- **Rejected:** turned down, with a line saying why. If you bring it back up you would need to have a very good
+  explanation. Don't argue.
 
 ## When to set them
 
