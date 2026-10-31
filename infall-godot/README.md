@@ -101,7 +101,6 @@ profiles, as heromedel asked. None of this is a design decision; each is a start
   ready for it, but there is no host or join yet.
 - The Tech victory and other victory paths (ideas); the win is reaching the rim.
 - Augments and drones (the design moves drones into EVB suits and race systems).
-- Choosing the room for a bought system: it goes into the emptiest room for now (GDD 5E wants the player's choice).
 
 ## Tools
 

@@ -246,10 +246,16 @@ func _buy_crew(race: RaceDef, index: int, price: int) -> void:
 
 
 func _buy_system(def: SystemDef, price: int) -> void:
-	var room := ShipOutfitter.room_for_new_system(ship)
-	if room < 0:
+	if ShipOutfitter.room_for_new_system(ship) < 0 or run.mawjig < price:
 		Sfx.play("deny")
 		return
+	var picker := RoomPicker.new()
+	get_parent().add_child(picker)
+	picker.open(ship, def.name)
+	picker.picked.connect(func(room: int): _install(def, price, room))
+
+
+func _install(def: SystemDef, price: int, room: int) -> void:
 	if not run.spend(price):
 		return
 	ShipOutfitter.install_system(ship, def, room)

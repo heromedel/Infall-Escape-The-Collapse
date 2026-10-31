@@ -499,8 +499,18 @@ func _draw_top_centre() -> void:
 		_button(Rect2(drive_at + Vector2(288, 29), Vector2(66, 21)), "HAIL", func(): screen.hail_pressed.emit(), "Hail the enemy squad: ask for surrender, or offer terms.", true)
 	elif screen.store_here:
 		_button(Rect2(drive_at + Vector2(288, 29), Vector2(66, 21)), "STORE", func(): screen.store_pressed.emit(), "Trade at this cluster's store.", true)
-	_button(Rect2(rect.end.x + 8, PAD, 44, 32), "| |" if not screen.paused else "▶", func(): screen.toggle_pause(), "Pause or unpause. Hotkey: Space", true, screen.paused)
-	_button(Rect2(rect.end.x + 8, PAD + 38, 44, 32), "≡", func(): screen.menu_pressed.emit(), "Menu. Hotkey: Esc", true)
+	var pause_rect := Rect2(rect.end.x + 8, PAD, 44, 32)
+	_button(pause_rect, "", func(): screen.toggle_pause(), "Pause or unpause. Hotkey: Space", true, screen.paused)
+	var middle := pause_rect.get_center()
+	if screen.paused:
+		draw_colored_polygon(PackedVector2Array([middle + Vector2(-6, -8), middle + Vector2(8, 0), middle + Vector2(-6, 8)]), UiColours.TEXT)
+	else:
+		draw_rect(Rect2(middle + Vector2(-7, -8), Vector2(5, 16)), UiColours.TEXT)
+		draw_rect(Rect2(middle + Vector2(2, -8), Vector2(5, 16)), UiColours.TEXT)
+	var menu_rect := Rect2(rect.end.x + 8, PAD + 38, 44, 32)
+	_button(menu_rect, "", func(): screen.menu_pressed.emit(), "Menu. Hotkey: Esc", true)
+	for line in 3:
+		draw_rect(Rect2(menu_rect.get_center() + Vector2(-9, -7 + line * 6), Vector2(18, 2.5)), UiColours.TEXT)
 	if encounter.hazard != "":
 		var hazard_text: String = {"asteroids": "ASTEROID FIELD", "sun": "CLOSE TO A STAR: FLARES", "nebula": "NEBULA: SENSORS BLIND", "ion_storm": "ION STORM: HALF POWER", "collapse_edge": "COLLAPSE EDGE: HULL SHEAR"}.get(encounter.hazard, "")
 		UiKit.draw_text(self, Vector2(centre, rect.end.y + 22), hazard_text, 15, UiColours.WARNING, UiKit.font_bold(), HORIZONTAL_ALIGNMENT_CENTER, 0)
@@ -543,7 +553,7 @@ func _draw_floating_status(ship: Ship) -> void:
 	UiKit.draw_frame(self, rect, Color(0.04, 0.05, 0.09, 0.82) if not enemy else Color(0.14, 0.05, 0.07, 0.84), Color(border, 0.8), 6.0)
 	var title := ship.name.to_upper()
 	while UiKit.font_bold().get_string_size(title, HORIZONTAL_ALIGNMENT_LEFT, -1, 14).x > width - 100.0 and title.length() > 4:
-		title = title.substr(0, title.length() - 2) + "…"
+		title = title.substr(0, title.length() - 4) + "..."
 	UiKit.draw_text(self, rect.position + Vector2(10, 19), title, 14, UiColours.TEXT, UiKit.font_bold())
 	var state := ""
 	if ship.destroyed:

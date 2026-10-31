@@ -41,6 +41,15 @@ func _smoke_test() -> void:
 	start_new_run("outrider")
 	await get_tree().create_timer(1.0).timeout
 	print("run started at %s, squad of %d, %d clusters" % [run.cluster().name, run.squad.size(), run.galaxy.clusters.size()])
+	if OS.has_environment("INFALL_SHOT"):
+		for child in overlays.get_children():
+			child.queue_free()
+		start_fight("")
+		battle.paused = false
+		await get_tree().create_timer(8.0).timeout
+		await RenderingServer.frame_post_draw
+		get_viewport().get_texture().get_image().save_png(OS.get_environment("INFALL_SHOT"))
+		print("screenshot saved")
 	get_tree().quit()
 
 

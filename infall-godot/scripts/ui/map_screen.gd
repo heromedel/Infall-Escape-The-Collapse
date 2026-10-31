@@ -47,7 +47,7 @@ func open(run_state: RunState, jumping_allowed: bool) -> void:
 	_jump_button.disabled = true
 	bar.add_child(_jump_button)
 	_wait_button = UiKit.button("WAIT  (+0.25 Mawjig)", func(): wait_chosen.emit(), 240)
-	_wait_button.tooltip_text = "Stay at this cluster: the ships gather a little Mawjig while the collapse moves on (GDD 6B)."
+	_wait_button.tooltip_text = "Stay at this cluster: the ships gather a little Mawjig while the collapse moves on."
 	_wait_button.disabled = not can_jump
 	bar.add_child(_wait_button)
 	bar.add_child(UiKit.button("CLOSE", func(): closed.emit(), 140))
