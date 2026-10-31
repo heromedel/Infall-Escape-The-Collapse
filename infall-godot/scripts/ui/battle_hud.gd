@@ -476,7 +476,11 @@ func _draw_top_centre() -> void:
 	# Mawjig
 	var mawjig := screen.run.mawjig if screen.run else 0
 	UiKit.draw_text(self, rect.position + Vector2(16, 26), "MAWJIG", 13, UiColours.TEXT_DIM, UiKit.font_bold())
-	UiKit.draw_text(self, rect.position + Vector2(16, 58), Mawjig.format(mawjig), 30, Color("#ffd46b"), UiKit.font_title())
+	var low := mawjig < Mawjig.JUMP_COST * 2
+	var mawjig_colour := Color("#ffd46b") if not low else Color(UiColours.DAMAGED_RED, 0.6 + 0.4 * sin(_time * 5.0))
+	UiKit.draw_text(self, rect.position + Vector2(16, 58), Mawjig.format(mawjig), 30, mawjig_colour, UiKit.font_title())
+	if low:
+		UiKit.draw_text(self, Vector2(size.x * 0.5, rect.end.y + 44), "LOW ON MAWJIG: every shot and every jump spends it", 15, UiColours.DAMAGED_RED, UiKit.font_bold(), HORIZONTAL_ALIGNMENT_CENTER, 0)
 	_region(Rect2(rect.position, Vector2(140, 74)), Callable(), "Mawjig: the squad's fuel, ammunition and money in one. A jump costs 1.21; every shot costs a little.")
 	# Jigawatt Drive
 	var charge := encounter.squad_jump_charge()

@@ -68,7 +68,7 @@ func _place_clusters(rng: RandomNumberGenerator) -> void:
 	while clusters.size() < target and attempts < target * 40:
 		attempts += 1
 		var radius := sqrt(rng.randf_range(pow(CORE_RADIUS, 2), pow(outer, 2)))
-		var angle := -PI / 2 + rng.randf_range(-WEDGE_HALF_ANGLE, WEDGE_HALF_ANGLE) * (0.55 + 0.45 * radius / outer)
+		var angle := -PI / 2 + rng.randf_range(-WEDGE_HALF_ANGLE, WEDGE_HALF_ANGLE) * (0.8 + 0.2 * radius / outer)
 		var point := Vector2.from_angle(angle) * radius
 		var cell := _grid_cell(point)
 		var crowded := false

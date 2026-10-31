@@ -263,7 +263,7 @@ func _draw_cluster(index: int) -> void:
 	var readable := _readable(index)
 	if not readable and not cluster.visited:
 		colour = colour.darkened(0.35)
-	var scale := clampf(zoom, 0.6, 1.4)
+	var scale := clampf(zoom * 1.25, 0.8, 1.6)
 	for star in cluster.stars:
 		var point := at + Vector2(star[0], star[1]) * scale
 		draw_circle(point, float(star[2]) * scale + 2.5, Color(colour, 0.12))
@@ -274,6 +274,7 @@ func _draw_cluster(index: int) -> void:
 		UiKit.draw_text(self, at + Vector2(0, 52), "THE RIM", 16, Color("#ffd46b"), UiKit.font_bold(), HORIZONTAL_ALIGNMENT_CENTER, 0)
 	if index == hover:
 		draw_arc(at, 22, 0, TAU, 28, Color(1, 1, 1, 0.7), 1.5, true)
+		UiKit.draw_text(self, at + Vector2(0, 40), cluster.name, 15, Color(1, 1, 1, 0.85), UiKit.font_bold(), HORIZONTAL_ALIGNMENT_CENTER, 0)
 	if index == chosen:
 		draw_arc(at, 25, 0, TAU, 28, Color("#ffe14d"), 2.5, true)
 	if cluster.visited and index != run.current:

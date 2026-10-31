@@ -24,13 +24,18 @@ var _engines: Array[Vector2] = []
 var _time := 0.0
 
 
+var _lights := Node2D.new()
+
+
 func _ready() -> void:
 	_build()
+	add_child(_lights)
+	_lights.draw.connect(_draw_lights)
 
 
 func _process(delta: float) -> void:
 	_time += delta
-	queue_redraw()
+	_lights.queue_redraw()
 
 
 func _style() -> Dictionary:
@@ -59,8 +64,10 @@ func _build() -> void:
 		var block := Rect2(Vector2(x - tile * 0.45, bottom - 10.0), Vector2(tile * 0.9, 22.0))
 		shape = _merge(shape, PackedVector2Array([block.position, Vector2(block.end.x, block.position.y), block.end, Vector2(block.position.x, block.end.y)]))
 		_engines.append(Vector2(x, block.end.y + 2.0))
-	var rounded := Geometry2D.offset_polygon(shape, 6.0, Geometry2D.JOIN_ROUND if style.round else Geometry2D.JOIN_MITER)
-	_body = rounded[0] if not rounded.is_empty() else shape
+	# Grow then shrink the outline: round styles come out smooth, angular ones keep their corners
+	var grown := Geometry2D.offset_polygon(shape, 22.0, Geometry2D.JOIN_ROUND if style.round else Geometry2D.JOIN_MITER)
+	var smooth := Geometry2D.offset_polygon(grown[0], -16.0, Geometry2D.JOIN_ROUND if style.round else Geometry2D.JOIN_MITER) if not grown.is_empty() else []
+	_body = smooth[0] if not smooth.is_empty() else shape
 	_add_style_extras(floor_rect, style)
 
 
@@ -144,26 +151,154 @@ func _draw() -> void:
 	if _body.is_empty():
 		return
 	var style := _style()
-	draw_colored_polygon(_offset(_body, 10.0), Color(0, 0, 0, 0.3))
+	_fill(_offset(_body, 12.0), Color(0, 0, 0, 0.32))
 	for extra in _extras:
 		var polygon: PackedVector2Array = extra[0]
-		draw_colored_polygon(polygon, extra[1])
+		_shaded_polygon(polygon, extra[1])
 		_outline(polygon, style.outline, 2.5)
 		var inner := _offset(polygon, -7.0)
 		if not inner.is_empty():
-			_outline(inner, Color(style.trim, 0.55), 1.5)
-	draw_colored_polygon(_body, style.body)
-	var inner_body := _offset(_body, -14.0)
+			_outline(inner, Color(style.trim, 0.45), 1.5)
+		_draw_extra_details(polygon, style)
+	_shaded_polygon(_body, style.body)
+	var inner_body := _offset(_body, -16.0)
 	if not inner_body.is_empty():
-		draw_colored_polygon(inner_body, style.body.lerp(style.shade, 0.35))
-		_outline(inner_body, Color(style.outline, 0.25), 1.0)
+		_shaded_polygon(inner_body, style.body.lerp(style.shade, 0.3))
+		_outline(inner_body, Color(style.outline, 0.2), 1.0)
+	_draw_seams(style)
+	_draw_rim(style)
 	_outline(_body, style.outline, 3.0)
 	_draw_markings(style)
 	for engine in _engines:
+		draw_rect(Rect2(engine + Vector2(-11, -14), Vector2(22, 12)), style.shade.darkened(0.3))
+		draw_rect(Rect2(engine + Vector2(-11, -14), Vector2(22, 12)), style.outline, false, 1.5)
+
+
+## Engine glow and blinking nav lights: the only parts of a drawn hull that move.
+func _draw_lights() -> void:
+	var style := _style()
+	_draw_nav_lights()
+	for engine in _engines:
 		var flicker := 0.85 + 0.15 * sin(_time * 23.0 + engine.x)
-		draw_circle(engine + Vector2(0, 6), 13.0 * flicker, Color(style.engine, 0.25))
-		draw_circle(engine + Vector2(0, 2), 8.0 * flicker, Color(style.engine, 0.6))
-		draw_circle(engine, 4.0, Color(1, 1, 1, 0.9))
+		_lights.draw_circle(engine + Vector2(0, 8), 15.0 * flicker, Color(style.engine, 0.18))
+		_lights.draw_circle(engine + Vector2(0, 3), 9.0 * flicker, Color(style.engine, 0.55))
+		_lights.draw_circle(engine, 4.5, Color(1, 1, 1, 0.9))
+
+
+## Fills a polygon lit from the upper left: each corner is lighter or darker by where it lies.
+func _shaded_polygon(polygon: PackedVector2Array, base: Color) -> void:
+	if polygon.size() < 3:
+		return
+	var bounds := Rect2(polygon[0], Vector2.ZERO)
+	for point in polygon:
+		bounds = bounds.expand(point)
+	var colours := PackedColorArray()
+	for point in polygon:
+		var u := (point.x - bounds.position.x) / maxf(1.0, bounds.size.x)
+		var v := (point.y - bounds.position.y) / maxf(1.0, bounds.size.y)
+		var light := 0.18 - 0.36 * (u * 0.7 + v * 0.3)
+		colours.append(base.lightened(light) if light > 0.0 else base.darkened(-light))
+	var triangles := Geometry2D.triangulate_polygon(polygon)
+	for index in range(0, triangles.size(), 3):
+		var a := triangles[index]
+		var b := triangles[index + 1]
+		var c := triangles[index + 2]
+		if _triangle_area(polygon[a], polygon[b], polygon[c]) < 0.5:
+			continue
+		draw_polygon(PackedVector2Array([polygon[a], polygon[b], polygon[c]]), PackedColorArray([colours[a], colours[b], colours[c]]))
+
+
+## Fills any polygon safely: self-touching outlines from merging rooms are split into triangles first.
+func _fill(polygon: PackedVector2Array, colour: Color) -> void:
+	if polygon.size() < 3:
+		return
+	var triangles := Geometry2D.triangulate_polygon(polygon)
+	for index in range(0, triangles.size(), 3):
+		var a := polygon[triangles[index]]
+		var b := polygon[triangles[index + 1]]
+		var c := polygon[triangles[index + 2]]
+		if _triangle_area(a, b, c) >= 0.5:
+			draw_colored_polygon(PackedVector2Array([a, b, c]), colour)
+
+
+func _triangle_area(a: Vector2, b: Vector2, c: Vector2) -> float:
+	return absf((b - a).cross(c - a)) * 0.5
+
+
+## Plate seams across the hull at each row of rooms, clipped to the hull.
+func _draw_seams(style: Dictionary) -> void:
+	var bounds := design.floor_rect().grow(60.0)
+	var step := ShipDesign.TILE * 2.0
+	var y := bounds.position.y + step * 0.5
+	var seam := Color(style.outline, 0.22)
+	while y < bounds.end.y:
+		var line := PackedVector2Array([Vector2(bounds.position.x, y), Vector2(bounds.end.x, y)])
+		for piece in Geometry2D.intersect_polyline_with_polygon(line, _body):
+			if piece.size() >= 2:
+				draw_line(piece[0], piece[piece.size() - 1], seam, 1.2)
+		y += step
+
+
+## A lit edge along the hull's upper-left side.
+func _draw_rim(style: Dictionary) -> void:
+	var inner := _offset(_body, -3.0)
+	if inner.size() < 3:
+		return
+	var centre := Vector2.ZERO
+	for point in inner:
+		centre += point
+	centre /= inner.size()
+	for index in inner.size():
+		var a := inner[index]
+		var b := inner[(index + 1) % inner.size()]
+		var normal := (a + b) * 0.5 - centre
+		var facing := normal.normalized().dot(Vector2(-0.6, -0.8))
+		if facing > 0.15:
+			draw_line(a, b, Color(1, 1, 1, 0.22 * facing), 2.0, true)
+
+
+func _draw_extra_details(polygon: PackedVector2Array, style: Dictionary) -> void:
+	var centre := Vector2.ZERO
+	for point in polygon:
+		centre += point
+	centre /= maxf(1, polygon.size())
+	match design.style:
+		"azurethea":
+			for index in 3:
+				var vein_end := polygon[(index * polygon.size()) / 3]
+				draw_line(centre, centre.lerp(vein_end, 0.85), Color(style.trim, 0.35), 1.5, true)
+			draw_circle(centre, 9.0, Color(style.trim, 0.8))
+			draw_circle(centre, 5.0, style.shade.darkened(0.4))
+		"malphen":
+			draw_circle(centre, 6.0, Color(style.trim, 0.35))
+			for index in 4:
+				var vein_end := polygon[(index * polygon.size()) / 4]
+				draw_line(centre, centre.lerp(vein_end, 0.7), Color("#7d3048", 0.45), 2.0, true)
+		"mecha":
+			for index in 3:
+				var at := centre + Vector2(0, (index - 1) * 12.0)
+				draw_rect(Rect2(at - Vector2(5, 1.5), Vector2(10, 3)), Color(style.trim, 0.9))
+
+
+func _draw_nav_lights() -> void:
+	if _body.size() < 3:
+		return
+	var left := _body[0]
+	var right := _body[0]
+	for point in _body:
+		if point.x < left.x:
+			left = point
+		if point.x > right.x:
+			right = point
+	for extra in _extras:
+		for point in extra[0]:
+			if point.x < left.x:
+				left = point
+			if point.x > right.x:
+				right = point
+	var blink := 0.4 + 0.6 * float(int(_time * 1.2) % 2)
+	_lights.draw_circle(left + Vector2(5, 0), 3.0, Color(1.0, 0.25, 0.2, blink))
+	_lights.draw_circle(right + Vector2(-5, 0), 3.0, Color(0.3, 1.0, 0.4, blink))
 
 
 func _draw_markings(style: Dictionary) -> void:
@@ -172,6 +307,7 @@ func _draw_markings(style: Dictionary) -> void:
 		"terran", "gatos":
 			var y := floor_rect.position.y - 26.0
 			draw_line(Vector2(floor_rect.position.x + 6, y), Vector2(floor_rect.end.x - 6, y), style.trim, 4.0)
+			draw_line(Vector2(floor_rect.position.x + 6, floor_rect.end.y + 22.0), Vector2(floor_rect.end.x - 6, floor_rect.end.y + 22.0), style.trim, 3.0)
 		"mecha":
 			for index in 8:
 				var at := Vector2(floor_rect.position.x - 14.0 if index % 2 == 0 else floor_rect.end.x + 14.0, floor_rect.position.y + (index / 2) * floor_rect.size.y / 4.0 + 12.0)
@@ -186,6 +322,8 @@ func _draw_markings(style: Dictionary) -> void:
 				draw_line(start, start + Vector2(-16, 34), style.trim, 3.0, true)
 		"pirate":
 			draw_line(Vector2(floor_rect.position.x - 10.0, floor_rect.position.y + 20.0), Vector2(floor_rect.position.x - 4.0, floor_rect.end.y - 30.0), Color(style.trim, 0.8), 4.0)
+		"tentauri":
+			draw_circle(Vector2(floor_rect.get_center().x, floor_rect.end.y + 18.0), 9.0, Color(style.trim, 0.75))
 
 
 func _offset(polygon: PackedVector2Array, amount: float) -> PackedVector2Array:

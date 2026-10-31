@@ -18,6 +18,17 @@ func _ready() -> void:
 	overlays.layer = 20
 	add_child(overlays)
 	show_title()
+	if OS.has_environment("INFALL_SMOKE"):
+		_smoke_test()
+
+
+## A quick check that a build loads its content and can start a run: INFALL_SMOKE=1 ./Infall
+func _smoke_test() -> void:
+	print("content: %d ships, %d weapons, %d systems, %d races, %d squads, %d events" % [Library.ships.size(), Library.weapons.size(), Library.systems.size(), Library.races.size(), Library.squads.size(), Library.events.size()])
+	start_new_run("outrider")
+	await get_tree().create_timer(1.0).timeout
+	print("run started at %s, squad of %d, %d clusters" % [run.cluster().name, run.squad.size(), run.galaxy.clusters.size()])
+	get_tree().quit()
 
 
 # --- The title ------------------------------------------------------------------------------------------------
