@@ -47,3 +47,18 @@ Rewards per won fight seen in the saves: 27, 47, 49, 45, 31, 26 and 52 scrap, wi
 no hull lost in any of them; one store visit of about 120 scrap. At the cost table's 0.242 Mawjig a scrap that is
 6 to 13 Mawjig a fight, against `mawjig-cost-table.md`'s 3.42 for a band 1 wreck. Bands 4 to 5 pay more by design
 and this was Easy, so it is a note for the economy session, not a correction.
+
+## Hard-coded values, from the genre's community wiki (2026-10-31)
+
+These three are in neither the data file (searched: no teleporter cooldown, repair speed or crew damage field)
+nor the saves, so they come from the community wiki, not from measurement. Treat them as reported, not
+measured, until one is timed under Wine.
+
+| Value | Genre | Infall now |
+|---|---|---|
+| Teleporter cooldown | 20 s, 15 s, 10 s at levels 1, 2, 3; resets at once when the ship is not in danger | no teleporter yet |
+| Repair of one system bar | 12.5 s for an untrained human; Engi twice as fast, Mantis half; skill adds 10% then 20% speed; progress is lost the moment every friendly crew member leaves the room | 6 s a point, about twice too fast |
+| Fire-fighting | the same repair skill: 10.4 s for a human, 5.2 s for an Engi | no fires yet |
+| Crew damage per point of weapon damage | 15 HP for lasers, missiles and beams alike; onboard drones take half | 15, matches |
+
+Sources: ftl.fandom.com pages Crew Teleporter, Systems, Crew skills, Crew, Laser (Weapons), Beam (Weapons).

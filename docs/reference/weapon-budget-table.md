@@ -24,6 +24,7 @@ gap between laser and missile prices, so the two are set equal and lasers are th
 | Spores | +2.5 per shot | as ion: disables a system until cleared like a repair (judgment) |
 | Stun | +2.0 per shot | FTL's Ion Stunner over the Ion Blast |
 | Fire | +3.0 per shot at 100% chance | scale by chance |
+| Infection | +3.0 per shot at 100% chance | as fire (GDD 8G: infection works like fire); Ai-Generated-Proposal |
 | Breach | +1.0 per shot at 100% chance | FTL adds ~0; small value by judgment |
 | Conduit damage | +0.3 per shot at 100% chance | a third of breach: only conduit ships, no oxygen loss, rarely lethal |
 | Hull bonus | +0.7 per shot | double damage to rooms without systems; from FTL's two Hull Smasher lasers (judgment) |
@@ -51,6 +52,7 @@ fit; the half-step damage rule in the cost table applies to per-shot cost only.
 | Spores rate | +0.54 per (spore shots × 10 ÷ cooldown) | as ion (judgment) |
 | Stun rate | +1.21 per (stun shots × 10 ÷ cooldown) | FTL's Ion Stunner over the Ion Blast (5 scrap) |
 | Breach or fire rate | +1.15 per (full-chance shots × 10 ÷ cooldown) | fire by judgment; FTL prices it at zero |
+| Infection rate | +1.15 per (full-chance shots × 10 ÷ cooldown) | as fire (GDD 8G); Ai-Generated-Proposal |
 | Conduit damage rate | +0.38 per (full-chance shots × 10 ÷ cooldown) | a third of breach |
 | Hull bonus | + 0.75 × the damage rate term | from FTL's two Hull Smasher lasers (judgment) |
 | Pierce | +0.75 per shield layer | |

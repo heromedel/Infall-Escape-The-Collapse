@@ -24,6 +24,11 @@ adds half the base, so a laser shot is 0.02, 0.03 and 0.04 at 1, 2 and 3 damage,
 0.08. Half is a first guess for the simulation to tune. The no-trailing-zero convention applies to the final
 price: an x.x0 result must add or subtract 0.01 (0.10 becomes 0.11 or 0.09).
 
+**Rounding — Proposed (heromedel, 2026-10-23; `economy-findings.md` F5):** a weapon's cost per shot is rounded to
+hundredths when the weapon is built (half up, at least 0.01), then the no-trailing-zero rule. A volley is per-shot ×
+shots (× rooms for a beam); a volley landing on x.x0 adds 0.01. E.g. 0.036 a shot becomes 0.04, and 2 shots 0.08.
+The squad's running total can show any amount.
+
 ## Effect, added per shot
 
 At 100% chance; scale by chance (a 30% breach chance adds 0.01).
@@ -59,7 +64,7 @@ At 100% chance; scale by chance (a 30% breach chance adds 0.01).
 | Flak, 3 projectiles | 3 × 0.01 | 0.03 | 40 |
 | Missile, 2 dmg | 0.05 × 1.5 | 0.08 | 15 |
 | Pike-type beam, 1 dmg, 4 rooms | 4 × 0.03 | 0.12 | 10 |
-| Glaive-type beam, 3 dmg, 3 rooms | 3 × 0.03 × 2 | 0.18 | 6 |
+| Glaive-type beam, 3 dmg, 2 rooms | 2 × 0.03 × 2 | 0.12 | 10 |
 | 3-shot multi-target breach laser, 30% breach | 3 × (0.02 + 0.03 × 0.3) × 1.25 | 0.11 | 11 |
 | Breach bomb | 0.05 + 0.03 | 0.08 | 15 |
 | Spore stun missile, 1 dmg | 0.05 + 0.04 + 0.02 | 0.11 | 11 |
