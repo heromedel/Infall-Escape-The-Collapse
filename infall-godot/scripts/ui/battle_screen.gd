@@ -50,8 +50,13 @@ var _beam_start_local := Vector2.ZERO
 var _beam_target: Ship
 
 
+var _flash := ColorRect.new()
+var hazard_layer := HazardAmbience.new()
+
+
 func _ready() -> void:
 	add_child(background)
+	add_child(hazard_layer)
 	add_child(world)
 	world.add_child(divider)
 	world.add_child(camera)
@@ -62,6 +67,13 @@ func _ready() -> void:
 	hud_layer.layer = 5
 	add_child(hud_layer)
 	hud_layer.add_child(hud)
+	var flash_layer := CanvasLayer.new()
+	flash_layer.layer = 15
+	add_child(flash_layer)
+	_flash.color = Color(1, 1, 1, 0)
+	_flash.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	_flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	flash_layer.add_child(_flash)
 
 
 ## Starts showing an encounter: lays out the squads, builds a view for every ship and frames the camera.
@@ -91,6 +103,7 @@ func show_encounter(new_encounter: Encounter, wallet: RunState, look_seed: int, 
 	if selected_ship == null or not encounter.ships.has(selected_ship) or selected_ship.is_gone():
 		selected_ship = encounter.living(0)[0] if not encounter.living(0).is_empty() else null
 	background.set_cluster_look(look_seed, collapse_near, encounter.hazard)
+	hazard_layer.set_hazard(encounter.hazard, look_seed)
 	frame_everything(true)
 
 
@@ -329,6 +342,25 @@ func _show_note(note: Dictionary) -> void:
 			squad_lost.emit()
 		"cloaked":
 			Sfx.play("cloak")
+
+
+## The squad's Jigawatt Drives fire: the ships stretch toward the rim and the screen flashes white.
+func play_jump_out() -> void:
+	hold_pause = true
+	var tween := create_tween()
+	tween.set_parallel(true)
+	for ship in encounter.living(0):
+		var view: ShipView = views[ship]
+		tween.tween_property(view, "scale", Vector2(0.6, 2.6), 0.55).set_trans(Tween.TRANS_EXPO).set_ease(Tween.EASE_IN)
+		tween.tween_property(view, "modulate", Color(2.5, 2.5, 3.0, 0.0), 0.55).set_ease(Tween.EASE_IN)
+	tween.tween_property(_flash, "color", Color(1, 1, 1, 0.9), 0.55).set_delay(0.2)
+	await tween.finished
+	hold_pause = false
+
+
+func play_jump_in() -> void:
+	var tween := create_tween()
+	tween.tween_property(_flash, "color", Color(1, 1, 1, 0.0), 0.7)
 
 
 func _ship_explodes(ship: Ship) -> void:

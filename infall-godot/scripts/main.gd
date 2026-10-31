@@ -310,8 +310,10 @@ func jump_to(index: int) -> void:
 	if encounter.in_fight():
 		run.log_book.write("fled", {"cluster": run.current}, "The squad jumped away from a fight.")
 	Sfx.play("jump")
+	await battle.play_jump_out()
 	run.jump_to(index)
 	arrive_at_cluster()
+	battle.play_jump_in()
 
 
 func wait_here() -> void:

@@ -58,6 +58,18 @@ func _ready() -> void:
 	main.open_map()
 	await _wait(0.6)
 	await _shot("11_map_again")
+	_close_overlays()
+	var from: String = main.run.cluster().name
+	var link: int = -1
+	for candidate in main.run.cluster().links:
+		if main.run.can_jump_to(candidate):
+			link = candidate
+	main.jump_to(link)
+	await _wait(0.3)
+	await _shot("12_jumping")
+	await _wait(1.5)
+	print("jumped from %s to %s, jumps %d" % [from, main.run.cluster().name, main.run.jumps])
+	await _shot("13_arrived")
 	get_tree().quit()
 
 
