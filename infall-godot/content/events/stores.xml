@@ -31,12 +31,12 @@ The station's dockmaster hails you. "Clean hulls and clear lanes, scouts. Our sh
 "Docking costs extra now. Everything costs extra now. You want to trade, you pay the toll first."</text>
 		<choice text="Pay the toll and trade."><outcome><mawjig amount="-0.61"/><store/></outcome></choice>
 		<choice text="Leave them to it."/>
-		<choice text="Remind them who's flying ahead of a colony ship." requires="crew:terran">
-			<outcome><text>{crew} gets on the comm and talks about the colony ship, the families aboard it, and the GATOS who stuck together when it counted. The checkpoint goes quiet. Then the toll is waived.</text><store/></outcome>
+		<choice text="Remind them who's flying ahead of The Colony Ship." requires="crew:terran">
+			<outcome><text>{crew} gets on the comm and talks about The Colony Ship, the families aboard it, and the GATOS who stuck together when it counted. The checkpoint goes quiet. Then the toll is waived.</text><store/></outcome>
 		</choice>
 	</event>
 	<event id="STORE_MECHA" title="A Mecha Yard" kind="store" races="mecha" states="Doing Fine,Core,Struggling,Border">
-		<text>A Mecha yard hangs in the dark, all black girders and purple work lights. Frames in every stage of assembly drift in its cradles. A HalfMech in a dented suit answers your hail, visor glowing.
+		<text>A Mecha yard hangs in the dark, all black girders and purple work lights. Frames in every stage of assembly drift in its cradles. A Mecha in a dented frame answers your hail.
 
 "You can trade. You can't stay. Pay well and nobody gets hurt."</text>
 		<choice text="Continue..."><outcome><store/></outcome></choice>
@@ -54,7 +54,7 @@ The station's dockmaster hails you. "Clean hulls and clear lanes, scouts. Our sh
 		<choice text="Continue..."><outcome><store/></outcome></choice>
 	</event>
 	<event id="STORE_AZURETHEA_STRUGGLING" title="An Open Garden" kind="store" races="azurethea" states="Struggling,Doomed,Refugee,Border">
-		<text>The Azurethea outpost has opened every one of its docking petals. Times have changed, and so have they.
+		<text>The Azurethea outpost has opened every one of its docking wings. Times have changed, and so have they.
 
 "We will trade anything that helps us all get farther from the dark. Even our own technology. Come in."</text>
 		<choice text="Continue..."><outcome><store/></outcome></choice>
@@ -75,7 +75,7 @@ The station's dockmaster hails you. "Clean hulls and clear lanes, scouts. Our sh
 		<text>An independent trader has set up shop in a hollowed-out asteroid, flying no one's colours. "I sell to everyone," they say. "For now, anyway."</text>
 		<choice text="Continue..."><outcome><store/></outcome></choice>
 	</event>
-	<event id="STORE_OCCUPIED" title="An Occupied Market" kind="store" states="Occupied" weight="3">
+	<event id="STORE_OCCUPIED" title="An Occupied Market" kind="store" races="mecha" states="Occupied" weight="3">
 		<text>Mecha frames watch over this cluster's old market. The original traders are still here, but their shelves are nearly bare, and a Mecha toll-taker gets a cut of every sale.</text>
 		<choice text="Trade anyway."><outcome><store/></outcome></choice>
 		<choice text="Leave."/>

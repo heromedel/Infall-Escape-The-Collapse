@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ship id="sporecarrier" name="Azurethea Sporecarrier" class="Sporecarrier" race="azurethea" faction="azurethea" style="azurethea" center="Tile" hull="12" value="251.9">
+<ship id="sporecarrier" name="Azurethea Hawkmoth" class="Hawkmoth" race="azurethea" faction="azurethea" style="azurethea" center="Tile" hull="12" value="243.82">
 	<reactor type="pool" level="13"/>
 	<description>Moth wings over a living hull. It would rather stop your systems with spores than break your ship.</description>
 	<room id="0" from="-1,-3" to="1,-2" name="Bridge"/>

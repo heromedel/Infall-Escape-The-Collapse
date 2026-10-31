@@ -37,12 +37,20 @@ The Colony Ship's signal comes through weaker than before. "Our messages to the 
 	</event>
 
 	<event id="REVISIT" kind="revisit">
-		<text>You're back at {cluster}. Nothing here has changed, except that the collapse is closer.</text>
+		<text>You're back at {cluster}. The collapse is closer than when you left.</text>
+		<choice text="Continue..."/>
+	</event>
+	<event id="REVISIT_EARLY" kind="revisit">
+		<text>You're back at {cluster}.</text>
 		<choice text="Continue..."/>
 	</event>
 
 	<event id="WAITED" kind="wait">
-		<text>Your squad holds position. The power cores tick over, slowly turning stray matter into Mawjig. On the long-range display, the collapse creeps outward.</text>
+		<text>Your squad holds position while its ships slowly turn stray matter into Mawjig. On the long-range display, the collapse creeps outward.</text>
+		<choice text="Continue..."/>
+	</event>
+	<event id="WAITED_EARLY" kind="wait">
+		<text>Your squad holds position while its ships slowly turn stray matter into Mawjig.</text>
 		<choice text="Continue..."/>
 	</event>
 

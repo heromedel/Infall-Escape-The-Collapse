@@ -19,7 +19,7 @@
 		<choice text="Charge the drives and stay alert."/>
 	</event>
 	<event id="HAZARD_SUN_FIGHT" title="Fire and Steel" kind="hazard" hazard="sun" weight="1">
-		<text>A flaring star, and a ship using its glare to hide. It comes at you out of the light.</text>
+		<text>A star is flaring here, and a ship is using its glare to hide. It comes at you out of the light.</text>
 		<choice text="Battle stations!"><outcome><fight/></outcome></choice>
 	</event>
 	<event id="HAZARD_NEBULA" title="Nebula" kind="hazard" hazard="nebula" weight="2">
@@ -31,7 +31,7 @@
 		<choice text="Wait for the drives to charge."/>
 	</event>
 	<event id="HAZARD_ION_STORM" title="Ion Storm" kind="hazard" hazard="ion_storm" weight="2">
-		<text>An ion storm is raging through the cluster. Every ship's power is cut in half while it lasts. Reactors flicker, and the AZC strains to run half its usual systems.</text>
+		<text>An ion storm is raging through the cluster. Power falters across your squad, and half your systems go dark until it passes.</text>
 		<choice text="Ride it out."/>
 	</event>
 	<event id="HAZARD_ION_FIGHT" title="Storm Raiders" kind="hazard" hazard="ion_storm" weight="1">

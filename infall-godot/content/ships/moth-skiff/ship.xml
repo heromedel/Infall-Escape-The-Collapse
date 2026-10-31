@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ship id="moth-skiff" name="Azurethea Moth Skiff" class="Moth Skiff" race="azurethea" faction="azurethea" style="azurethea" center="Tile" hull="7" value="112.4">
+<ship id="moth-skiff" name="Azurethea Moth Skiff" class="Moth Skiff" race="azurethea" faction="azurethea" style="azurethea" center="Tile" hull="7" value="138.23">
 	<reactor type="pool" level="8"/>
 	<description>A small winged Azurethea ship, partly grown and partly built. Quick to dodge and slow to start a fight.</description>
 	<room id="0" from="-1,-3" to="1,-2" name="Bridge"/>

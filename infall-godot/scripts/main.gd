@@ -329,7 +329,7 @@ func wait_here() -> void:
 	elif run.rng.randf() < 0.18 and run.cluster().kind != "final":
 		show_event(runner.pick("hostile"))
 	elif Library.events.has("WAITED"):
-		show_event(Library.events["WAITED"])
+		show_event(runner.before_or_after_collapse("WAITED"))
 	_refresh_quiet_cluster()
 
 

@@ -80,13 +80,14 @@ profiles, as heromedel asked. None of this is a design decision; each is a start
 Lori or Eco is listed in `docs/items-needing-second-opinion.md`.
 
 - **New ships:** GATOS Patrol Cutter (and a Checkpoint loadout), Pirate Scrapper, Pirate Marauder (Hijacker bands
-  7–8), Mecha Assault Frame and Siege Frame, Tentauri Warden and Vanguard, Azurethea Moth Skiff and Sporecarrier, Senti
-  Relay Picket and Archive Cruiser, Lykario Packrunner and Huntmaster, Malphen Spawnling, Swollen Spawnling and
-  Broodmass. Layouts, systems and crews are in their `ship.xml` files.
+  7–8), Mecha Assault Frame and Siege Frame, Tentauri Seedpod and Chestnut, the Tentauri Pappus (the Burr's band 1
+  loadout, from the docs), Azurethea Moth Skiff and Hawkmoth, Senti Beacon Picket and Archive Cruiser, Lykario
+  Packrunner and Huntmaster, Malphen Cyst, Swollen Cyst and Tumour. Layouts, systems and crews are in their
+  `ship.xml` files.
 - **New weapons**, priced with `weapon-budget-table.md` and `mawjig-cost-table.md`: Gat 1.2 "Hammer", Gat M2
-  "Longshot", Gat 5.1 "Hailstorm", Gat X1 "Breacher", Gat I1 "Static", Gat F3 "Scattergun", Hornet, Lanternfly, Pollen
+  "Longshot", Gat 5.1 "Hailstorm", Gat X1 "Breacher", Gat I1 "Static", Gat F3 "Scattergun", Mandible, Ocellus, Pollen
   Bomb, TS-ST Light Laser, SS-ST Breach Missile, HB-MR Hull Beam, Coil, Tendril Beam, Siphon, 3B 01 V2, 2L 02 V1,
-  1L 02 P1, 2B 03 V1, Fang, Snarl, Flesh Mortar, Gristle Missile.
+  1L 02 P1, 2B 03 V1, Fang, Snarl, Sinew Flak (was Flesh Mortar), Gristle Missile.
 - **Squads** for every race, with conduct (surrender and escape chances, preferred targets, how they answer a Hail).
 - **Map generation:** the whole galaxy, a disc of four spiral arms around the core. The squad starts in GATOS space
   close enough to the core to head inward for a few jumps but not to be caught when the collapse appears (GDD 2P),
@@ -97,7 +98,7 @@ Lori or Eco is listed in `docs/items-needing-second-opinion.md`.
   walkways; the conduit rule used is concerns.md item 3's last proposal (no rerouting action: a system has power if an
   unbroken path reaches the AZC).
 - **The final battle:** the Last Fleet, a band of doomed GATOS at the rim (ideas: default final enemy).
-- **Numbers the docs leave open:** layer recharge 2 s, crew 2.6 tiles a second, repair 5.5 s a bar, 15 crew damage a
+- **Numbers the docs leave open:** layer recharge 2 s, crew 2.2 tiles a second, repair 5.5 s a bar, 15 crew damage a
   point of hull damage, the Supershield regrowing a layer every 20, 15 or 10 s, teleporter cooldowns 30/20/10 s,
   suit sorties of about 30 s.
 

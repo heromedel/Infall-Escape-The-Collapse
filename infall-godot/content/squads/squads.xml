@@ -6,13 +6,14 @@
 		<tier bands="1"><ship design="pirate-scrapper" count="1"/></tier>
 		<tier bands="2"><ship design="pirate-hijacker.cutpurse" count="1"/></tier>
 		<tier bands="3"><ship design="pirate-hijacker.cutpurse" count="1"/><ship design="pirate-scrapper" count="0-1"/></tier>
-		<tier bands="4-6"><ship design="pirate-hijacker" count="1-2"/></tier>
+		<tier bands="4"><ship design="pirate-hijacker" count="1"/></tier>
+		<tier bands="5-6"><ship design="pirate-hijacker" count="1-2"/></tier>
 		<tier bands="7-8"><ship design="pirate-hijacker.marauder" count="1"/><ship design="pirate-hijacker" count="1"/></tier>
 		<conduct surrender_chance="45" surrender_hull="0.35" escape_chance="30" escape_hull="0.25" targets="weapons,piloting" hail="pirate"/>
 		<description>Doomed GATOS turned criminal: they want your ship intact, so they stop your weapons and board.</description>
 	</squad>
 	<squad id="gatos-checkpoint" name="GATOS Checkpoint" race="terran" faction="gatos" where_races="terran" where_states="Doomed,Struggling">
-		<tier bands="1-3"><ship design="patrol-cutter" count="1"/></tier>
+		<tier bands="2-3"><ship design="patrol-cutter" count="1"/></tier>
 		<tier bands="4-6"><ship design="patrol-cutter.checkpoint" count="1"/></tier>
 		<tier bands="7-8"><ship design="patrol-cutter.checkpoint" count="2"/></tier>
 		<conduct surrender_chance="35" surrender_hull="0.3" escape_chance="20" escape_hull="0.2" targets="shields,weapons" hail="checkpoint"/>
@@ -22,21 +23,23 @@
 		<tier bands="1"><ship design="light-attack-frame.openstern" count="1"/></tier>
 		<tier bands="2"><ship design="light-attack-frame" count="1"/></tier>
 		<tier bands="3"><ship design="light-attack-frame" count="1"/><ship design="light-attack-frame.suitdock" count="1"/></tier>
-		<tier bands="4-5"><ship design="assault-frame" count="1"/><ship design="light-attack-frame.suitdock" count="0-1"/></tier>
+		<tier bands="4-5"><ship design="assault-frame" count="1"/><ship design="light-attack-frame" count="0-1"/></tier>
 		<tier bands="6-8"><ship design="assault-frame.siege" count="1"/><ship design="assault-frame" count="1"/></tier>
 		<conduct surrender_chance="25" surrender_hull="0.3" escape_chance="50" escape_hull="0.3" targets="shields" hail="mecha"/>
 		<description>The Light Attack Pair and the frames that follow it: the suit pops shields, the guns gut the hull.</description>
 	</squad>
 	<squad id="mecha-raiders" name="Mecha Raiders" race="mecha" faction="mecha" where_races="mecha,any" where_states="Doomed,Struggling,Abandoned">
-		<tier bands="1-2"><ship design="light-attack-frame.opensternsuitdock" count="1"/></tier>
+		<tier bands="1"><ship design="light-attack-frame.openstern" count="1"/></tier>
+		<tier bands="2"><ship design="light-attack-frame.opensternsuitdock" count="1"/></tier>
 		<tier bands="3-4"><ship design="light-attack-frame" count="1-2"/></tier>
 		<tier bands="5-6"><ship design="assault-frame" count="1"/></tier>
-		<tier bands="7-8"><ship design="assault-frame.siege" count="1"/><ship design="light-attack-frame.suitdock" count="1"/></tier>
+		<tier bands="7-8"><ship design="assault-frame.siege" count="1"/><ship design="light-attack-frame" count="1"/></tier>
 		<conduct surrender_chance="30" surrender_hull="0.35" escape_chance="40" escape_hull="0.3" targets="weapons,shields" hail="mecha"/>
 		<description>Desperate Mecha turned raiders, still sure they'll come out ahead.</description>
 	</squad>
 	<squad id="tentauri-passage" name="Tentauri Passage" race="tentauri" faction="tentauri" where_races="tentauri,any" where_states="Border,Doing Fine,Struggling,Unclaimed">
-		<tier bands="1-3"><ship design="tentauri-scout" count="1"/></tier>
+		<tier bands="1-2"><ship design="tentauri-scout.pappus" count="1"/></tier>
+		<tier bands="3"><ship design="tentauri-scout" count="1"/></tier>
 		<tier bands="4-6"><ship design="tentauri-warden" count="1"/><ship design="tentauri-scout" count="0-1"/></tier>
 		<tier bands="7-8"><ship design="tentauri-warden.vanguard" count="1"/><ship design="tentauri-warden" count="1"/></tier>
 		<conduct surrender_chance="60" surrender_hull="0.4" escape_chance="70" escape_hull="0.4" targets="weapons" hail="tentauri"/>
@@ -50,23 +53,23 @@
 		<description>Near-pacifists defending what is theirs; they would rather disable you than destroy you.</description>
 	</squad>
 	<squad id="senti-pickets" name="Senti Pickets" race="senti" faction="senti" where_races="senti" where_states="Doomed,Border,Struggling,Doing Fine">
-		<tier bands="1-3"><ship design="relay-picket" count="1"/></tier>
+		<tier bands="2-3"><ship design="relay-picket" count="1"/></tier>
 		<tier bands="4-6"><ship design="relay-picket.archive" count="1"/></tier>
 		<tier bands="7-8"><ship design="relay-picket.archive" count="1"/><ship design="relay-picket" count="1-2"/></tier>
 		<conduct surrender_chance="40" surrender_hull="0.3" escape_chance="30" escape_hull="0.25" targets="sensors,shields,weapons" hail="senti"/>
 		<description>Senti relay ships. Doomed, they have no qualms about killing the living, while keeping their records.</description>
 	</squad>
 	<squad id="lykario-pack" name="Lykario Pack" race="lykario" faction="lykario" where_races="lykario,any" where_states="Border,Refugee,Doing Fine,Struggling,Doomed,Unclaimed">
-		<tier bands="1-3"><ship design="packrunner" count="1"/></tier>
+		<tier bands="2-3"><ship design="packrunner" count="1"/></tier>
 		<tier bands="4-6"><ship design="packrunner.huntmaster" count="1"/><ship design="packrunner" count="0-1"/></tier>
 		<tier bands="7-8"><ship design="packrunner.huntmaster" count="2"/></tier>
 		<conduct surrender_chance="20" surrender_hull="0.25" escape_chance="35" escape_hull="0.25" targets="weapons,oxygen" hail="lykario"/>
 		<description>A hunt. They board, and they keep going.</description>
 	</squad>
 	<squad id="malphen-growth" name="Malphen Growth" race="malphen" faction="malphen" where_races="malphen,any" where_states="Abandoned,Doing Fine,Struggling,Doomed,Unclaimed">
-		<tier bands="1-2"><ship design="spawnling" count="1"/></tier>
-		<tier bands="3"><ship design="spawnling.swollen" count="1"/></tier>
-		<tier bands="4-6"><ship design="spawnling.broodmass" count="1"/></tier>
+		<tier bands="3"><ship design="spawnling" count="1"/></tier>
+		<tier bands="4"><ship design="spawnling.swollen" count="1"/></tier>
+		<tier bands="5-6"><ship design="spawnling.broodmass" count="1"/></tier>
 		<tier bands="7-8"><ship design="spawnling.broodmass" count="1"/><ship design="spawnling" count="1-2"/></tier>
 		<conduct surrender_chance="30" surrender_hull="0.3" escape_chance="25" escape_hull="0.2" targets="shields,engines" hail="malphen"/>
 		<description>Living ships that infect what they hit. When beaten they jettison matter and flee.</description>

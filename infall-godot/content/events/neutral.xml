@@ -51,12 +51,12 @@ After a quick exchange of data, {crew} transmits the records. The station's paym
 		<choice text="Take the charts.">
 			<outcome><text>The traveller's charts fill in the clusters around you.</text><reveal/></outcome>
 		</choice>
-		<choice text="Tell them to turn around. There's nothing behind you but the collapse.">
+		<choice text="Tell them to turn around. There's nothing behind you but the collapse." requires="collapse">
 			<outcome><text>The line goes quiet for a long time. "I know," they finally say. They jump away, still heading inward.</text></outcome>
 		</choice>
 	</event>
 
-	<event id="NEUTRAL_DISBELIEF" title="Core Panic" kind="neutral" states="Doing Fine" weight="1.2">
+	<event id="NEUTRAL_DISBELIEF" title="Core Panic" kind="neutral" states="Doing Fine" weight="1.2" after_collapse="yes">
 		<text>A GATOS customs officer waves your squad through, then notices where you came from. "From the inner clusters? Don't tell me you believe that core panic stuff. It's a solar storm. They'll be laughing about it in a month."</text>
 		<choice text="Show them your sensor logs.">
 			<outcome weight="1"><text>The officer goes pale, then quietly transfers you some Mawjig. "For the trip. I'm going to go talk to my family."</text><mawjig size="low"/></outcome>
@@ -104,7 +104,7 @@ After a quick exchange of data, {crew} transmits the records. The station's paym
 	</event>
 
 	<event id="NEUTRAL_REFUGEE_CONVOY" title="The Convoy" kind="neutral" states="Refugee" weight="2">
-		<text>A refugee convoy fills the cluster: dozens of ships of every race, flying too close together, going nowhere fast. Their coordinator hails you. "Scouts? Are you scouts? Please, which way is safe?"</text>
+		<text>A refugee convoy fills the cluster: dozens of ships of many races, flying too close together, going nowhere fast. Their coordinator hails you. "Scouts? Are you scouts? Please, which way is safe?"</text>
 		<choice text="Share your charts with them.">
 			<outcome><text>The convoy changes course. A thank-you comes from a hundred voices at once, along with a little Mawjig and a volunteer.</text><mawjig size="low"/><crew race="region"/></outcome>
 		</choice>
@@ -116,7 +116,7 @@ After a quick exchange of data, {crew} transmits the records. The station's paym
 	<event id="NEUTRAL_COLONY_SHIP_SUPPLY" title="From Home" kind="neutral" bands="2-8" weight="0.6">
 		<text>A small courier from The Colony Ship catches up with your squad. "Supplies," the courier's pilot says. "They want you to keep going. Everyone aboard chipped in."</text>
 		<choice text="Thank them.">
-			<outcome><text>The supplies help.</text><mawjig size="medium"/><hull amount="4"/></outcome>
+			<outcome><text>Your crews patch the worst of the damage and top up your Mawjig stores.</text><mawjig size="medium"/><hull amount="4"/></outcome>
 		</choice>
 	</event>
 </events>

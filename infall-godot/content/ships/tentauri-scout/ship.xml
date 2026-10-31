@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Tentauri Tough Little Scout (docs/ship-suggestions.md): two rooms, many systems, a Supershield and two
-     Defense Lasers. Biomechanical, with the default power pool. -->
-<ship id="tentauri-scout" name="Tough Little Scout" class="Scout" race="tentauri" faction="tentauri" style="tentauri" center="Tile" hull="8" value="188.81">
+<!-- Tentauri Burr, earlier the Tough Little Scout (docs/ship-suggestions.md): two rooms, many systems, a
+     Supershield and two Defense Lasers. Biomechanical, with the default power pool. Band 3; its Pappus loadout
+     is the band 1 version. -->
+<ship id="tentauri-scout" name="Tentauri Burr" class="Tough Scout" race="tentauri" faction="tentauri" style="tentauri" center="Tile" hull="8" value="188.81">
 	<reactor type="pool" level="10"/>
 	<art hull="tentauri-scout-hull.png" scale="1.0" center="170,197.5"/>
 	<description>A compact, pillowy shuttle in mother-of-pearl. It gets in, survives, and gets out.</description>

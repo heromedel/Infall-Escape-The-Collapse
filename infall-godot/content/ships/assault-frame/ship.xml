@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ship id="assault-frame" name="Assault Frame" class="Assault Frame" race="mecha" faction="mecha" style="mecha" center_x="Point" center_y="Tile" hull="13" value="291.37">
+<ship id="assault-frame" name="Assault Frame" class="Assault Frame" race="mecha" faction="mecha" style="mecha" center_x="Point" center_y="Tile" hull="13" value="298.88">
 	<reactor type="none" level="0"/>
 	<description>A heavier Mecha frame of black banded metal: a weapon bay on one flank, a suit bay on the other. It guts ships.</description>
 	<room id="0" from="-1,-3" to="1,-2" name="Command deck"/>
@@ -13,7 +13,7 @@
 	<system id="shields" tile="1,-3" level="4" wall="north" own_power="4"/>
 	<system id="evb-dock" tile="-4,-2" level="2" wall="west" own_power="2"/>
 	<system id="weapon-pod" tile="4,-2" level="4" wall="east" own_power="3"/>
-	<system id="doors" tile="-1,-1" level="2" wall="west"/>
+	<system id="doors" tile="0,-3" level="2" wall="north"/>
 	<system id="servicing-core" tile="1,1" level="2" wall="none" own_power="1"/>
 	<system id="life-support" tile="3,1" level="1" wall="east" own_power="1"/>
 	<system id="engines" tile="-1,3" level="2" wall="south" own_power="2"/>

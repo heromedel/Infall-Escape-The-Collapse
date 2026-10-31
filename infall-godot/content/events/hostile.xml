@@ -17,7 +17,7 @@
 		<choice text="Refuse.">
 			<outcome><text>"Your funeral," the captain says, and their weapons come online.</text><fight squad="terran-pirates"/></outcome>
 		</choice>
-		<choice text="Lock their bridge down and let the doors do the talking." requires="system:doors">
+		<choice text="Show them how well your doors hold against boarders." requires="system:doors">
 			<outcome weight="1"><text>You broadcast your door and boarding defences in detail. The pirates mutter among themselves and decide you aren't worth the trouble.</text></outcome>
 			<outcome weight="1"><text>They aren't impressed.</text><fight squad="terran-pirates"/></outcome>
 		</choice>
@@ -36,9 +36,9 @@
 		<choice text="Pay them.">
 			<outcome><text>They take the Mawjig and wave you through with a sneer.</text><mawjig amount="-2.42"/></outcome>
 		</choice>
-		<choice text="We're GATOS too. Stand aside.">
+		<choice text="We're GATOS too. Stand aside." requires="crew:terran">
 			<outcome weight="1"><text>A long silence. "Not anymore you're not." They open fire.</text><fight squad="gatos-checkpoint"/></outcome>
-			<outcome weight="1"><text>The captain hesitates, then mutters something about the colony ship and lets you through. "Go on. Before I change my mind."</text></outcome>
+			<outcome weight="1"><text>The captain hesitates, then mutters something about The Colony Ship and lets you through. "Go on. Before I change my mind."</text></outcome>
 		</choice>
 		<choice text="Refuse.">
 			<outcome><fight squad="gatos-checkpoint"/></outcome>
@@ -58,7 +58,7 @@
 		</choice>
 	</event>
 	<event id="MECHA_OUTMATCHED" title="Get Out" kind="hostile" races="mecha" states="Doing Fine,Border" bands="3-8" weight="1">
-		<text>A lone Mecha frame shadows your squad, keeping its distance. "You are outnumbering us," it admits, sounding sulky. "Leave our territory. Now. Or we'll call the others."</text>
+		<text>A lone Mecha frame shadows your squad, keeping its distance. "You outnumber us," it admits, sounding sulky. "Leave our territory. Now. Or we'll call the others."</text>
 		<choice text="Leave peacefully.">
 			<outcome><text>The frame follows you to the edge of the cluster and then stops, watching you go.</text></outcome>
 		</choice>
@@ -98,7 +98,7 @@
 	</event>
 
 	<!-- Senti-GPH: doomed Senti kill the living while archiving them (sample SENTI_ARCHIVE_REQUEST, doomed) -->
-	<event id="SENTI_DOOMED_ARCHIVE" title="Preservation" kind="hostile" races="senti" states="Doomed,Struggling" weight="2">
+	<event id="SENTI_DOOMED_ARCHIVE" title="Preservation" kind="hostile" races="senti" states="Doomed" weight="2">
 		<text>A Senti relay ship turns its weapons toward you as you arrive.
 
 "We, The Senti-, are preserving everything we can before this cluster is lost. We will preserve your records and your biological data. Lower your shields. This will not take long."</text>
@@ -109,8 +109,8 @@
 			<outcome><text>"We, The Senti-, will preserve what is left of you."</text><fight squad="senti-pickets"/></outcome>
 		</choice>
 	</event>
-	<event id="SENTI_PICKET" title="A Picket Line" kind="hostile" races="senti" states="Border,Doing Fine" weight="1">
-		<text>A Senti picket ship sweeps your squad with sensors so strong your consoles flicker. "We, The Senti-, are recording a hostile intrusion." It does not wait for you to argue.</text>
+	<event id="SENTI_PICKET" title="A Picket Line" kind="hostile" races="senti" states="Border" weight="1">
+		<text>A Senti picket ship sweeps your squad with sensors so strong your consoles flicker. "This relay is closed to outside ships. I am recording your intrusion." It does not wait for you to argue.</text>
 		<choice text="Defend yourselves."><outcome><fight squad="senti-pickets"/></outcome></choice>
 	</event>
 
@@ -122,7 +122,7 @@
 			<outcome><text>{crew} howls back. The Lykario fall silent, then laugh, and the raider peels off with an invitation to hunt together "after all this is over."</text><mawjig size="tiny"/></outcome>
 		</choice>
 	</event>
-	<event id="LYKARIO_DENIAL" title="Everything Is Fine" kind="hostile" races="lykario" states="Struggling,Doomed" weight="1">
+	<event id="LYKARIO_DENIAL" title="Everything Is Fine" kind="hostile" races="lykario" states="Struggling,Doomed" weight="1" after_collapse="yes">
 		<text>A Lykario ship hails you, its captain grinning. "Collapse? What collapse? We're hunting, same as always. You look like good sport."</text>
 		<choice text="Fight."><outcome><fight squad="lykario-pack"/></outcome></choice>
 		<choice text="Bribe them to hunt someone else.">

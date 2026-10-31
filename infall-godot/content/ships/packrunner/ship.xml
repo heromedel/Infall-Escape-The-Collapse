@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ship id="packrunner" name="Lykario Packrunner" class="Packrunner" race="lykario" faction="lykario" style="lykario" center_x="Point" center_y="Tile" hull="9" value="152.3">
+<ship id="packrunner" name="Lykario Packrunner" class="Packrunner" race="lykario" faction="lykario" style="lykario" center_x="Point" center_y="Tile" hull="9" value="166.12">
 	<reactor type="pool" level="9"/>
 	<description>A Lykario raider patched together from stolen hulls under bone-white claw marks. Half its crew is always waiting by the teleporter.</description>
 	<room id="0" from="-1,-3" to="1,-2" name="Bridge"/>

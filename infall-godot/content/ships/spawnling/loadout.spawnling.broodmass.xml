@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<loadout id="broodmass" ship="spawnling" name="Malphen Broodmass" class="Broodmass" inherit="patch" hull="22" value="302.6">
+<loadout id="broodmass" ship="spawnling" name="Malphen Tumour" class="Tumour" inherit="patch" hull="22" value="302.6">
 	<reactor type="pool" level="12"/>
 	<system id="shields" tile="-1,-2" level="4" wall="north"/>
 	<system id="weapons" tile="1,-2" level="4" wall="north"/>

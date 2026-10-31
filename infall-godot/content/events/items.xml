@@ -4,7 +4,7 @@
 	<event id="ITEMS_WRECKAGE" title="Wreckage" kind="items" weight="2">
 		<text>The remains of a battle drift through the cluster: twisted hull plates, shattered weapon mounts, frozen debris. Your squad's converters could turn a lot of it into Mawjig.</text>
 		<choice text="Convert what you can.">
-			<outcome weight="3"><text>Your converters hum for hours, converting enough of the matter into energy to fill your Mawjig stores.</text><mawjig size="medium"/></outcome>
+			<outcome weight="3"><text>Your squad works for hours, converting enough of the matter into energy to fill your Mawjig stores.</text><mawjig size="medium"/></outcome>
 			<outcome weight="1"><text>Something in the wreckage is still armed. It goes off against your hull.</text><hull amount="-3"/><mawjig size="low"/></outcome>
 		</choice>
 		<choice text="Leave it."/>
@@ -18,7 +18,7 @@
 		<choice text="Leave it."/>
 	</event>
 	<event id="ITEMS_DERELICT_SCOUT" title="A Derelict" kind="items" bands="1-6" weight="0.6" unique="yes">
-		<text>A GATOS scout cruiser hangs dead in space, its crew long gone. Its hull is holed, but its core still reads stable. With enough work it could fly again.</text>
+		<text>A GATOS scout cruiser hangs dead in space, silent on every channel. Its hull is holed, but its core still reads stable. With enough work it could fly again.</text>
 		<choice text="Get it flying and add it to the squad.">
 			<outcome><text>It takes every spare part you can scrape together, but the old scout's Jigawatt Drive finally wakes. Its sealed stasis bay held three of its crew, alive, and they are ready to fly with you.</text><ship design="outrider" hull="12" name="SC-1 Wayfarer"/></outcome>
 		</choice>

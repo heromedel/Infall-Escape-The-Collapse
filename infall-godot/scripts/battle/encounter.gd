@@ -13,6 +13,7 @@ const SHIELD_XP := 1.8
 const VOLLEY_XP := 1.5
 const SUIT_SPEED := 7.0
 const TELEPORT_TICKS := 20
+const SUIT_RETURN_REFUND := 2     # a battlesuit that comes home gives 0.02 Mawjig back (heromedel, economy-findings F5)
 # The barrier (GDD 3Q, 3R): a strip across the battlefield between the squads that stands for the distance
 # between them. It is 12 tiles deep (heromedel, 2026-10-31) and centred on y = 0, the player squad below it.
 const BARRIER_HALF_DEPTH := 6.0 * ShipDesign.TILE
@@ -725,6 +726,8 @@ func _suit_docks(suit: Battlesuit) -> void:
 	if suit.home.destroyed:
 		suit.pilot.dead = true
 		return
+	if suit.home.side == 0 and wallet:
+		wallet.earn(SUIT_RETURN_REFUND)
 	var dock := suit.home.system_by("evb_dock")
 	suit.pilot.in_suit = false
 	suit.pilot.ship = suit.home

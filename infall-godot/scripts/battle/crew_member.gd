@@ -5,7 +5,7 @@ extends RefCounted
 
 const SKILLS := ["piloting", "engines", "shields", "weapons", "repair", "combat"]
 const LEVEL_XP := [100.0, 250.0]
-const BASE_SPEED_TILES := 2.6      # tiles a second at speed 1.0
+const BASE_SPEED_TILES := 2.2      # tiles a second at speed 1.0: the genre's usual crew speed, measured (Infall: Eco, 2026-10-31)
 
 var name: String
 var race: RaceDef

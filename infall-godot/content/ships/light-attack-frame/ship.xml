@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Mecha Light Attack Frame, standard stern, Hull Laser loadout (docs/ship-suggestions.md). No reactor: every
      system carries its own power, and a Mecha crew member integrating with a system adds one bar. -->
-<ship id="light-attack-frame" name="Light Attack Frame" class="Hull Laser" race="mecha" faction="mecha" style="mecha" center_x="Point" center_y="Tile" hull="7" value="131.72">
+<ship id="light-attack-frame" name="Light Attack Frame" class="Hull Laser" race="mecha" faction="mecha" style="mecha" center_x="Point" center_y="Tile" hull="7" value="159.55">
 	<reactor type="none" level="0"/>
 	<art hull="mecha-bc-hull-2x.png" scale="0.5" center="170,159.5" filter="nearest"/>
 	<description>A sleek battle-cross of dark banded metal lit by purple. The Hull Laser in its pod needs a Mecha integrated with it to fire: stun, kill or pull that crew member away and the laser goes quiet.</description>

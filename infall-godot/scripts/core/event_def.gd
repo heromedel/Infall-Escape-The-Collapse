@@ -14,6 +14,7 @@ var races: PackedStringArray = []    # region races it fits; empty or "any" is a
 var weight: float = 1.0
 var unique: bool = false
 var hazard: String = ""            # asteroids, sun, nebula, ion_storm, collapse_edge
+var after_collapse: bool = false   # needs the collapse to be known: not during the collapse opening (GDD 2P)
 var text: String = ""
 var choices: Array = []            # {text, requires, outcomes: [{weight, text, effects: [{tag, attrs}]}]}
 
@@ -31,6 +32,7 @@ static func from_xml(node: XmlTree) -> EventDef:
 	def.weight = node.get_float("weight", 1.0)
 	def.unique = node.get_bool("unique", false)
 	def.hazard = node.get_attr("hazard", "")
+	def.after_collapse = node.get_bool("after_collapse", false)
 	var text_node := node.first("text")
 	if text_node:
 		def.text = text_node.get_clean_text()

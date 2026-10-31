@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ship id="relay-picket" name="Senti Relay Picket" class="Relay Picket" race="senti" faction="senti" style="senti" center="Tile" hull="9" value="141.6">
+<ship id="relay-picket" name="Senti Beacon Picket" class="Beacon Picket" race="senti" faction="senti" style="senti" center="Tile" hull="9" value="150.93">
 	<reactor type="core" level="2"/>
 	<description>White hull, cyan light lines. It reads everything about you before it decides anything. Its crew don't breathe, so it carries no Life Support.</description>
 	<room id="0" from="-1,-3" to="1,-2" name="Bridge"/>

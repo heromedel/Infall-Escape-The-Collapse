@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Distress calls. REFUGEE_FAILING_AIR is the sample from docs/events-sample.md. -->
 <events>
-	<event id="REFUGEE_FAILING_AIR" title="Failing Air" kind="distress" bands="1-4" states="Refugee,Struggling" weight="2" unique="yes">
+	<event id="REFUGEE_FAILING_AIR" title="Failing Air" kind="distress" bands="1-4" states="Refugee,Struggling" weight="2" unique="yes" after_collapse="yes">
 		<text>A crowded refugee transport drifts at the edge of the cluster, its running lights dimmed to save power. Its captain hails you.
 
 "Our life support is failing. We have twice the people aboard it was built for. We fled the collapse with whatever would fly. Please, if you can spare anything, help us."</text>
@@ -29,7 +29,7 @@
 			<outcome weight="3"><text>Your crew get the fire under control. The grateful freighter crew insist you take part of their cargo, already converted to Mawjig.</text><mawjig size="medium"/></outcome>
 			<outcome weight="1"><text>The fire is worse than it looked. Your crew put it out, but {crew} is badly burned doing it. The freighter crew pay you what they can.</text><mawjig size="low"/><crew_hurt amount="45"/></outcome>
 		</choice>
-		<choice text="Vent their engine room from outside." requires="system:doors">
+		<choice text="Talk them through venting their engine room.">
 			<outcome><text>Your crew talk them through opening their outer hatches from the bridge. The fire dies in the vacuum. They send a generous thank-you.</text><mawjig size="medium"/></outcome>
 		</choice>
 		<choice text="Leave them."/>
@@ -38,7 +38,7 @@
 	<event id="DISTRESS_TENTAURI_PAIR" title="A Missing Mate" kind="distress" races="tentauri,any" weight="1">
 		<text>A tiny Tentauri ship is circling the same patch of space over and over. Only one voice answers your hail, where there should be two. "My mate was outside, mending the hull. The line broke. They are out there somewhere."</text>
 		<choice text="Help search.">
-			<outcome weight="2"><text>Your sensors find the drifting Tentauri at last, cold but alive. The two of them wrap around each other at the airlock. They give you everything they can spare, and one of their cousins, travelling with them, asks to join your crew.</text><mawjig size="low"/><crew race="tentauri"/></outcome>
+			<outcome weight="2"><text>Your sensors find the drifting Tentauri at last, cold but alive. The two of them wrap around each other at the airlock and give you everything they can spare.</text><mawjig size="low"/></outcome>
 			<outcome weight="1"><text>You search until your drive is charged. There's nothing. The Tentauri ship thanks you, and keeps circling.</text></outcome>
 		</choice>
 		<choice text="Use your sensors to sweep the area." requires="system:sensors">
@@ -48,10 +48,10 @@
 	</event>
 
 	<event id="DISTRESS_MECHA_POD" title="A Small Pod" kind="distress" races="mecha,any" states="Border,Doomed,Struggling,Abandoned" weight="1">
-		<text>An escape pod is tumbling through the wreckage of a recent fight, broadcasting in clipped Mecha code. Inside, sensors read a single HalfMech in a damaged suit, very much alive and very much annoyed.</text>
+		<text>An escape pod is tumbling through the wreckage of a recent fight, broadcasting in clipped Mecha code. Inside, sensors read a single Mecha in a damaged frame, very much alive and very much annoyed.</text>
 		<choice text="Bring the pod aboard.">
-			<outcome weight="2"><text>The HalfMech climbs out, inspects your ship with open contempt, and then announces that it will be staying, since your ship clearly needs someone competent.</text><crew race="mecha"/></outcome>
-			<outcome weight="1"><text>The HalfMech comes out of the pod swinging. By the time your crew pin it down and push it back out the airlock, {crew} is hurt.</text><crew_hurt amount="40"/></outcome>
+			<outcome weight="2"><text>The Mecha climbs out, inspects your ship with open contempt, and then announces that it will be staying, since your ship clearly needs someone competent.</text><crew race="mecha"/></outcome>
+			<outcome weight="1"><text>The Mecha comes out of the pod swinging. By the time your crew pin it down and push it back out the airlock, {crew} is hurt.</text><crew_hurt amount="40"/></outcome>
 		</choice>
 		<choice text="Leave it."/>
 	</event>
@@ -88,7 +88,7 @@
 	<event id="DISTRESS_GATOS_FAMILY" title="Stragglers" kind="distress" races="terran" states="Struggling,Refugee,Doing Fine" weight="1.2">
 		<text>A tiny GATOS shuttle has run dry two jumps short of anywhere. A whole family is crammed into it, kittens and all. "Please," says the pilot. "We just need enough to reach the next hub."</text>
 		<choice text="Give them the Mawjig they need." requires="mawjig:1.21">
-			<outcome><text>The family cheers. The pilot promises to name the next kitten after your ship. As they jump away, they send you a message: "There's a cache of parts two drifts over. We couldn't carry it."</text><mawjig amount="-1.21"/><weapon tier="low" race="terran"/></outcome>
+			<outcome><text>The family cheers. The pilot promises to name the next kitten after your ship. As they jump away, they send you a message: "There's a cache of parts in the next cluster. We couldn't carry it."</text><mawjig amount="-1.21"/><weapon tier="low" race="terran"/></outcome>
 		</choice>
 		<choice text="Tow them to the hub yourself.">
 			<outcome><text>It takes time, but the family is safe. The hub's dockmaster thanks you with a little Mawjig.</text><mawjig size="low"/></outcome>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ship id="tentauri-warden" name="Tentauri Warden" class="Warden" race="tentauri" faction="tentauri" style="tentauri" center="Tile" hull="11" value="331.2">
+<ship id="tentauri-warden" name="Tentauri Seedpod" class="Seedpod" race="tentauri" faction="tentauri" style="tentauri" center="Tile" hull="11" value="267.51">
 	<reactor type="pool" level="14"/>
 	<description>A three-room Tentauri ship, pillowy and prismatic, wrapped in shields. It means to pass, not to destroy.</description>
 	<room id="0" from="-2,-3" to="2,-1" name="Forward"/>

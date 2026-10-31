@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ship id="patrol-cutter" name="GATOS Patrol Cutter" class="Patrol Cutter" race="terran" faction="gatos" style="terran" center="Tile" hull="13" value="205.31">
+<ship id="patrol-cutter" name="GATOS Patrol Cutter" class="Patrol Cutter" race="terran" faction="gatos" style="terran" center="Tile" hull="13" value="170.71">
 	<reactor type="core" level="2"/>
 	<description>A tidy GATOS patrol cutter in white and blue. Doing-fine patrols keep the lanes clear; doomed ones run checkpoints and shakedowns.</description>
 	<room id="0" from="-1,-4" to="1,-3" name="Bridge"/>
