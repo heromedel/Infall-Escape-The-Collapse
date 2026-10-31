@@ -671,7 +671,7 @@ func _tick_manning() -> void:
 		for system in rooms[room_index].systems:
 			if not system.def.manned and not (member.race.integrates and system.behaviour != "power_core"):
 				continue
-			var at_console := member.cell == system.cell
+			var at_console: bool = member.cell == system.cell
 			if not at_console and member.race.systems_at_once <= 1:
 				continue
 			if manned_here >= member.race.systems_at_once or system.manned_by != null:
@@ -682,7 +682,7 @@ func _tick_manning() -> void:
 			member.task = "manning"
 			if member.race.integrates and at_console:
 				member.integrate_ticks += 1
-				var needed := 40 if tech == "mechanical" else 80
+				var needed: int = 40 if tech == "mechanical" else 80
 				if member.integrate_ticks >= needed:
 					system.integration_bar = true
 
@@ -713,7 +713,7 @@ func _tick_supershield() -> void:
 		supershield_progress = 0.0
 		return
 	supershield_progress += 1.0
-	var needed := [400.0, 400.0, 300.0, 200.0][mini(bars, 3)]
+	var needed: float = [400.0, 400.0, 300.0, 200.0][mini(bars, 3)]
 	if supershield_progress >= needed:
 		supershield_progress = 0.0
 		supershield += 1
@@ -938,8 +938,8 @@ func begin_encounter() -> void:
 	jump_charge = 0.0
 	cloak_ticks = 0
 	cloak_cooldown = 0
-	teleporter_cooldown = 0
-	evb_cooldown = 0
+	teleporter_cooldown = 240
+	evb_cooldown = 60
 	charging_escape = false
 	surrendered = false
 	for slot in weapons:

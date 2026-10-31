@@ -563,7 +563,7 @@ func _tick_beams() -> void:
 			beam.blocked = true
 		elif shielded <= 0:
 			beam.blocked = true
-		var t := float(beam.ticks) / beam.total
+		var t: float = float(beam.ticks) / beam.total
 		var sweep_point: Vector2 = beam.start.lerp(beam.end, clampf(t, 0.0, 1.0))
 		beam["point"] = sweep_point
 		if not beam.blocked:
