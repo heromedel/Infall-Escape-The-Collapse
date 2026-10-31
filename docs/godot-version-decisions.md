@@ -66,11 +66,21 @@ anything Claude added tagged Ai-Generated-Proposal.
   childlike, and the Senti would be holographic cats. Crew portraits could follow: cats in the HalfMech colour
   palette for the Mecha, and semi-transparent yellow-green cats with holographic distortion or scan lines for the
   Senti. Human Terran portraits would avoid this if decent ones could be made.
+  - **Idea (heromedel, 2026-10-31):** the HalfMech kittens follow the HalfMech pilot art's dark look: black
+    kittens in dark tones, with blue, green or purple eyes and Mecha power purple implants.
+
+- **E — Proposed (heromedel, 2026-10-31):** for the next build, alongside the mercenary work: the genre's
+  community-wiki timings that Infall: Eco passed on (not timed in game): repair 12.5 s a system bar for an untrained
+  crew member, fire-fighting 10.4 s, teleporter cooldowns 20, 15 and 10 s by level (now 5.5 s, about 6 s and
+  30/20/10 s).
 
 ## 8. Weapons and Systems
 
 - **A — Likely (Infall: Eco, 2026-10-31):** event rewards follow the genre's curve by band; the battlesuit gives
   0.02 Mawjig back when it comes home (economy-findings F5).
+- **B — Decided (heromedel, 2026-10-31):** a ship's value is worked out from its parts when the game loads, by
+  `system-prices.md`'s rules (Infall: Eco; hull, systems, rooms, doors, mounts, reactor and weapons), not typed into
+  each ship file.
 
 ## 14. User Interface
 
