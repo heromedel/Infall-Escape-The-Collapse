@@ -223,6 +223,7 @@ func _start_volley(ship: Ship, slot: WeaponSlot, gunner: CrewMember) -> void:
 	slot.charge = 0.0
 	slot.volley_target_ship = slot.target_ship
 	slot.volley_target_room = slot.target_room
+	slot.volley_target_cell = slot.target_cell if slot.target_ship and slot.target_ship.room_at(slot.target_cell) >= 0 else _any_cell(slot.target_ship, slot.target_room)
 	slot.volley_target_suit = slot.target_suit
 	slot.fired_flash = 6
 	if gunner and gunner.gain_xp("weapons", VOLLEY_XP):
@@ -254,46 +255,57 @@ func _fire_one_shot(ship: Ship, slot: WeaponSlot) -> void:
 	if slot.volley_target_suit != null:
 		if slot.volley_target_suit.gone:
 			return
-		_launch(weapon, ship, null, -1, origin, slot.volley_target_suit.position, "laser", slot.volley_target_suit)
+		_launch(weapon, ship, null, Vector2i(999, 999), origin, slot.volley_target_suit.position, "laser", slot.volley_target_suit)
 		return
 	var target := slot.volley_target_ship
 	if target == null or target.is_gone():
 		return
-	var room_index := slot.volley_target_room
+	var cell := slot.volley_target_cell
 	match weapon.type:
 		"bomb":
-			bombs.append({"weapon": weapon, "source": ship, "target": target, "room": room_index, "ticks": 14})
-			note("bomb_away", {"ship": ship, "target": target, "room": room_index})
+			bombs.append({"weapon": weapon, "source": ship, "target": target, "cell": cell, "ticks": 14})
+			note("bomb_away", {"ship": ship, "target": target, "room": target.room_at(cell)})
 		"flak":
+			# Flak scatters: each piece lands on a tile near the one aimed at
 			var spread := Vector2(rng.randf_range(-45.0, 45.0), rng.randf_range(-45.0, 45.0))
-			var aim := local_to_world(target, target.rooms[room_index].centre_local(target.design) + spread)
-			_launch(weapon, ship, target, _room_near(target, aim), origin, aim, "flak")
+			var landing := _tile_near(target, target.design.cell_centre(cell) + spread)
+			var aim := local_to_world(target, target.design.cell_centre(landing))
+			_launch(weapon, ship, target, landing, origin, aim, "flak")
 		_:
-			var room := target.rooms[room_index]
-			var cell: Vector2i = room.cells[rng.randi_range(0, room.cells.size() - 1)]
-			var aim := local_to_world(target, target.design.cell_centre(cell) + Vector2(rng.randf_range(-8, 8), rng.randf_range(-8, 8)))
-			_launch(weapon, ship, target, room_index, origin, aim, "missile" if weapon.type == "missile" else "laser")
+			var aim := local_to_world(target, target.design.cell_centre(cell) + Vector2(rng.randf_range(-5, 5), rng.randf_range(-5, 5)))
+			_launch(weapon, ship, target, cell, origin, aim, "missile" if weapon.type == "missile" else "laser")
 	note("shot", {"ship": ship, "weapon": weapon, "position": origin})
 
 
-func _room_near(ship: Ship, world_point: Vector2) -> int:
-	var local := world_to_local(ship, world_point)
-	var best := 0
+## The ship's tile nearest a local point.
+func _tile_near(ship: Ship, local: Vector2) -> Vector2i:
+	var best := Vector2i(999, 999)
 	var best_distance := INF
-	for room in ship.rooms:
-		var distance := room.centre_local(ship.design).distance_squared_to(local)
+	for cell in ship.design.cell_room:
+		var distance := ship.design.cell_centre(cell).distance_squared_to(local)
 		if distance < best_distance:
 			best_distance = distance
-			best = room.index
+			best = cell
 	return best
 
 
-func _launch(weapon: WeaponDef, source: Ship, target: Ship, room_index: int, origin: Vector2, aim: Vector2, kind: String, suit: Battlesuit = null) -> Projectile:
+## Some tile of a room: its system console first, since that is what shooting a room is usually for.
+func _any_cell(ship: Ship, room_index: int) -> Vector2i:
+	if ship == null or room_index < 0 or room_index >= ship.rooms.size():
+		return Vector2i(999, 999)
+	var room := ship.rooms[room_index]
+	if not room.systems.is_empty():
+		return room.systems[rng.randi_range(0, room.systems.size() - 1)].cell
+	return room.cells[rng.randi_range(0, room.cells.size() - 1)]
+
+
+func _launch(weapon: WeaponDef, source: Ship, target: Ship, cell: Vector2i, origin: Vector2, aim: Vector2, kind: String, suit: Battlesuit = null) -> Projectile:
 	var shot := Projectile.new()
 	shot.weapon = weapon
 	shot.source = source
 	shot.target = target
-	shot.target_room = room_index
+	shot.target_cell = cell
+	shot.target_room = target.room_at(cell) if target else -1
 	shot.target_suit = suit
 	shot.kind = kind
 	shot.position = origin
@@ -326,7 +338,7 @@ func _defend(ship: Ship, slot: WeaponSlot) -> void:
 		slot.fired_flash = 6
 		best.shot_down = true
 		best.resolved = true
-		var bolt := _launch(slot.def, ship, null, -1, origin, best.position, "defense")
+		var bolt := _launch(slot.def, ship, null, Vector2i(999, 999), origin, best.position, "defense")
 		bolt.hunting = best
 		note("shot_down", {"ship": ship, "position": best.position})
 		return
@@ -336,7 +348,7 @@ func _defend(ship: Ship, slot: WeaponSlot) -> void:
 		if suit.position.distance_squared_to(origin) < 650.0 * 650.0:
 			slot.charge = 0.0
 			slot.fired_flash = 6
-			_launch(slot.def, ship, null, -1, origin, suit.position, "laser", suit)
+			_launch(slot.def, ship, null, Vector2i(999, 999), origin, suit.position, "laser", suit)
 			return
 
 
@@ -381,7 +393,7 @@ func _tick_projectiles() -> void:
 			if not _resolve_at_bubble(shot):
 				continue
 		if shot.resolved and shot.position.distance_to(shot.aim_point) <= shot.velocity.length() * 1.2:
-			_hit_room(shot.target, shot.target_room, shot.weapon, shot.position, shot.source)
+			_hit_tile(shot.target, shot.target_cell, shot.weapon, shot.position, shot.source)
 			continue
 		still_flying.append(shot)
 	projectiles = still_flying
@@ -461,52 +473,62 @@ func _inside_bubble(ship: Ship, world_point: Vector2) -> bool:
 
 
 func bubble_centre(ship: Ship) -> Vector2:
-	return ship.design.floor_rect().get_center()
+	return Formation.shield_shape(ship.design).centre
 
 
-## The shield bubble's half-width and half-height around the ship's floor, wide enough for the hull art.
+## The shield bubble's half-width and half-height: it wraps the whole hull.
 func bubble_radii(ship: Ship) -> Vector2:
-	var floor_rect := ship.design.floor_rect()
-	return floor_rect.size * 0.5 * 1.28 + Vector2(90, 80)
+	return Formation.shield_shape(ship.design).radii
 
 
 # --- Hits -----------------------------------------------------------------------------------------------------
 
-## A shot or bomb landing in a room: hull, system, crew, and the weapon's effects.
-func _hit_room(target: Ship, room_index: int, weapon: WeaponDef, world_point: Vector2, source: Ship) -> void:
+## A shot or bomb landing on one tile (heromedel, 2026-10-31: the system and the tile are hit, not the whole room):
+## the hull takes the damage; the system is damaged only when its console is on that tile; crew standing on the
+## tile are hurt or stunned; fire and breaches start on that tile. `hull` is false for the later tiles of a beam's
+## sweep through a room it already cut.
+func _hit_tile(target: Ship, cell: Vector2i, weapon: WeaponDef, world_point: Vector2, source: Ship, hull: bool = true) -> void:
+	var room_index := target.room_at(cell)
 	if target.destroyed or room_index < 0:
 		return
 	var room := target.rooms[room_index]
 	var damage := weapon.damage if weapon else 1
-	var empty_room := room.systems.is_empty()
-	var hull_damage := damage * (2 if weapon and weapon.hull_bonus and empty_room else 1)
-	target.damage_hull(hull_damage)
-	if damage > 0 and not room.systems.is_empty():
-		target.damage_system(room.systems[rng.randi_range(0, room.systems.size() - 1)], damage)
+	var hull_damage := 0
+	if hull:
+		hull_damage = damage * (2 if weapon and weapon.hull_bonus and room.systems.is_empty() else 1)
+		target.damage_hull(hull_damage)
+	var system := _system_on(target, cell)
+	if damage > 0 and system:
+		target.damage_system(system, damage)
 	var crew_hurt := (weapon.crew_damage if weapon else 15) * damage
-	for member in target.crew_in_room(room_index):
+	for member in target.crew_on_tile(cell):
 		member.health -= crew_hurt
 		if weapon and weapon.stun_ticks > 0:
 			member.stun_ticks = maxi(member.stun_ticks, weapon.stun_ticks)
 	if weapon:
 		if weapon.fire_chance > 0 and rng.randi_range(1, 100) <= weapon.fire_chance:
-			target.start_fire(room.cells[rng.randi_range(0, room.cells.size() - 1)])
+			target.start_fire(cell)
 		if weapon.breach_chance > 0 and rng.randi_range(1, 100) <= weapon.breach_chance:
-			target.breach(room.cells[rng.randi_range(0, room.cells.size() - 1)])
-		if weapon.ion > 0:
-			for system in room.systems:
-				system.add_ion(weapon.ion)
-		if weapon.spores:
-			for system in room.systems:
-				if system.behaviour != "power_core":
-					system.spored = true
-					system.spore_progress = 0.0
+			target.breach(cell)
+		if weapon.ion > 0 and system:
+			system.add_ion(weapon.ion)
+		if weapon.spores and system and system.behaviour != "power_core":
+			system.spored = true
+			system.spore_progress = 0.0
 		if weapon.conduit_chance > 0 and rng.randi_range(1, 100) <= weapon.conduit_chance:
-			target.break_conduit_in_room(room_index, rng)
+			target.break_conduit_at(cell, room_index, rng)
 		if weapon.infection_chance > 0 and rng.randi_range(1, 100) <= weapon.infection_chance:
 			room.infection = maxf(room.infection, 30.0)
 			note("infected", {"ship": target, "room": room_index})
-	note("hit", {"ship": target, "room": room_index, "damage": hull_damage, "position": world_point, "weapon": weapon, "source": source})
+	note("hit", {"ship": target, "room": room_index, "cell": cell, "damage": hull_damage, "position": world_point, "weapon": weapon, "source": source})
+
+
+## The system whose console stands on a tile, if any.
+func _system_on(ship: Ship, cell: Vector2i) -> ShipSystem:
+	for system in ship.systems:
+		if system.cell == cell:
+			return system
+	return null
 
 
 func _tick_bombs() -> void:
@@ -519,7 +541,7 @@ func _tick_bombs() -> void:
 		var target: Ship = bomb.target
 		if target.is_gone():
 			continue
-		var point := local_to_world(target, target.rooms[bomb.room].centre_local(target.design))
+		var point := local_to_world(target, target.design.cell_centre(bomb.cell))
 		if rng.randi_range(1, 100) <= target.evasion():
 			note("miss", {"ship": target, "position": point})
 			continue
@@ -527,7 +549,7 @@ func _tick_bombs() -> void:
 			target.supershield = maxi(0, target.supershield - 1)
 			note("supershield_hit", {"ship": target, "position": point})
 			continue
-		_hit_room(target, bomb.room, bomb.weapon, point, bomb.source)
+		_hit_tile(target, bomb.cell, bomb.weapon, point, bomb.source)
 	bombs = waiting
 
 
@@ -569,8 +591,12 @@ func _tick_beams() -> void:
 		if not beam.blocked:
 			var cell := Vector2i(floor((sweep_point - target.design.cell_offset) / ShipDesign.TILE))
 			var room_index := target.room_at(cell)
-			if room_index >= 0 and not beam.rooms_hit.has(room_index):
-				beam.rooms_hit.append(room_index)
+			if room_index >= 0 and not beam.tiles_hit.has(cell):
+				# A beam cuts every tile it crosses; the hull takes its damage once per room swept
+				beam.tiles_hit.append(cell)
+				var first_in_room: bool = not beam.rooms_hit.has(room_index)
+				if first_in_room:
+					beam.rooms_hit.append(room_index)
 				var applied := WeaponDef.new()
 				applied.damage = shielded
 				applied.hull_bonus = weapon.hull_bonus
@@ -578,7 +604,7 @@ func _tick_beams() -> void:
 				applied.breach_chance = weapon.breach_chance
 				applied.crew_damage = weapon.crew_damage
 				applied.colour = weapon.colour
-				_hit_room(target, room_index, applied, local_to_world(target, sweep_point), beam.source)
+				_hit_tile(target, cell, applied, local_to_world(target, sweep_point), beam.source, first_in_room)
 		if beam.ticks < beam.total + 6:
 			still.append(beam)
 	beams = still
@@ -659,10 +685,9 @@ func _tick_suits() -> void:
 					suit.shot_timer -= 1
 					if suit.shot_timer <= 0:
 						suit.shot_timer = suit.def.suit_shot_ticks
-						var room_index := _suit_target_room(suit)
-						var room := suit.target.rooms[room_index]
-						var aim := local_to_world(suit.target, room.centre_local(suit.target.design))
-						var shot := _launch(suit.def, suit.home, suit.target, room_index, suit.position, aim, "laser")
+						var cell := _any_cell(suit.target, _suit_target_room(suit))
+						var aim := local_to_world(suit.target, suit.target.design.cell_centre(cell))
+						var shot := _launch(suit.def, suit.home, suit.target, cell, suit.position, aim, "laser")
 						shot.kind = "laser"
 						note("shot", {"ship": suit.home, "weapon": suit.def, "position": suit.position})
 				kept.append(suit)
@@ -786,10 +811,11 @@ func _tick_hazard() -> void:
 		"asteroids":
 			hazard_timer = rng.randi_range(120, 260)
 			var target := targets[rng.randi_range(0, targets.size() - 1)]
-			var room_index := rng.randi_range(0, target.rooms.size() - 1)
-			var aim := local_to_world(target, target.rooms[room_index].centre_local(target.design))
+			var room := target.rooms[rng.randi_range(0, target.rooms.size() - 1)]
+			var cell: Vector2i = room.cells[rng.randi_range(0, room.cells.size() - 1)]
+			var aim := local_to_world(target, target.design.cell_centre(cell))
 			var origin := aim + Vector2(rng.randf_range(-1.0, 1.0), rng.randf_range(-0.3, 0.3)).normalized() * 1500.0
-			var rock := _launch(null, null, target, room_index, origin, aim, "asteroid")
+			var rock := _launch(null, null, target, cell, origin, aim, "asteroid")
 			rock.velocity = (aim - origin).normalized() * 380.0 / TICKS
 			rock.damage = 1
 			rock.side = 2

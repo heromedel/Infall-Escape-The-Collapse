@@ -147,7 +147,7 @@ func to_save() -> Dictionary:
 		if not ship.is_gone():
 			ships.append(ship.to_save())
 	return {
-		"game": "Infall: Escape The Collapse", "version": 1, "seed": seed_value, "current": current, "jumps": jumps,
+		"game": "Infall: Escape The Collapse", "version": 2, "seed": seed_value, "current": current, "jumps": jumps,
 		"mawjig": mawjig, "cargo": cargo.duplicate(), "used_events": used_events.duplicate(), "stats": stats.duplicate(),
 		"difficulty": difficulty, "squad": ships, "galaxy": galaxy.to_save(), "rng_state": rng.state,
 	}
@@ -164,14 +164,17 @@ func save_to_disk() -> void:
 
 
 static func has_save() -> bool:
-	return FileAccess.file_exists(SAVE_PATH)
+	if not FileAccess.file_exists(SAVE_PATH):
+		return false
+	var data = JSON.parse_string(FileAccess.get_file_as_string(SAVE_PATH))
+	return typeof(data) == TYPE_DICTIONARY and int(data.get("galaxy", {}).get("version", 1)) >= 2
 
 
 static func load_from_disk() -> RunState:
 	var text := FileAccess.get_file_as_string(SAVE_PATH)
 	var data = JSON.parse_string(text)
-	if typeof(data) != TYPE_DICTIONARY:
-		return null
+	if typeof(data) != TYPE_DICTIONARY or int(data.get("galaxy", {}).get("version", 1)) < 2:
+		return null   # unreadable, or from a build with the old map
 	var run := RunState.new()
 	run.seed_value = int(data.seed)
 	run.rng.seed = run.seed_value

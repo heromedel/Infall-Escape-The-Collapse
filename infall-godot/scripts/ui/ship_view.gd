@@ -13,7 +13,8 @@ var selected: bool = false         # the player's selected ship: conduits glow
 var interior_visible: bool = true  # sensors decide whether the player sees inside enemy ships
 var hover_room: int = -1
 var highlight_rooms: Dictionary = {}   # room -> Color (aiming, moving crew)
-var target_marks: Array = []       # {room, label, colour}
+var highlight_tiles: Dictionary = {}   # tile -> Color (the tile a shot or an order would go to)
+var target_marks: Array = []       # {cell, label, colour}
 var beam_marks: Array = []         # {start, end, colour} in local pixels
 var power_colour := UiColours.POWER_GREEN
 var time: float = 0.0
@@ -166,10 +167,16 @@ func _draw_floor() -> void:
 			canvas.draw_line(rect.position + Vector2(x * tile, 2), rect.position + Vector2(x * tile, rect.size.y - 2), UiColours.FLOOR_LINE if seen else floor_colour.lightened(0.06), 1.0)
 		for y in range(1, room.rect.size.y):
 			canvas.draw_line(rect.position + Vector2(2, y * tile), rect.position + Vector2(rect.size.x - 2, y * tile), UiColours.FLOOR_LINE if seen else floor_colour.lightened(0.06), 1.0)
+		if seen:
+			for cell in room.scorch:
+				if not room.fires.has(cell):
+					_draw_scorch(canvas, design.cell_centre(cell), cell)
 		if seen and room.oxygen < 0.95:
 			canvas.draw_rect(rect, Color(UiColours.LOW_AIR, (1.0 - room.oxygen) * 0.5))
 		if seen and room.infection > 0.0:
 			_draw_infection(canvas, room, rect)
+		if seen and _medbay_working(room):
+			canvas.draw_rect(rect, Color(0.35, 1.0, 0.5, 0.13 + 0.07 * sin(time * 2.2)))
 	_draw_conduits(canvas)
 	for room in ship.rooms:
 		var rect := Rect2(design.cell_top_left(room.rect.position), Vector2(room.rect.size) * tile)
@@ -188,11 +195,23 @@ func _draw_floor() -> void:
 			var room := ship.rooms[room_index]
 			var rect := Rect2(design.cell_top_left(room.rect.position), Vector2(room.rect.size) * tile)
 			canvas.draw_rect(rect.grow(-1.5), highlight_rooms[room_index], false, 3.0)
+	for cell in highlight_tiles:
+		var tile_rect := Rect2(design.cell_top_left(cell), Vector2(tile, tile)).grow(-2.5)
+		canvas.draw_rect(tile_rect, Color(highlight_tiles[cell], 0.18))
+		canvas.draw_rect(tile_rect, highlight_tiles[cell], false, 2.5)
+	_draw_destinations(canvas)
 	for mark in target_marks:
 		_draw_target_mark(canvas, mark)
 	for mark in beam_marks:
 		canvas.draw_line(mark.start, mark.end, Color(mark.colour, 0.85), 3.0, true)
 		canvas.draw_circle(mark.start, 5.0, mark.colour)
+
+
+func _medbay_working(room: ShipRoom) -> bool:
+	for system in room.systems:
+		if system.behaviour == "medbay" and ship.system_power(system) > 0:
+			return true
+	return false
 
 
 func _draw_infection(canvas: CanvasItem, room: ShipRoom, rect: Rect2) -> void:
@@ -309,16 +328,76 @@ func _draw_upright(canvas: CanvasItem, at: Vector2, painter: Callable) -> void:
 
 
 func _draw_fire(canvas: CanvasItem, centre: Vector2, strength: float, cell: Vector2i) -> void:
-	var size := 0.55 + strength / 220.0
-	var seed := cell.x * 7 + cell.y * 13
+	var size := 0.85 + strength / 220.0
+	var seed := float(cell.x * 7 + cell.y * 13)
+	var up := Vector2.DOWN if ship.facing_down else Vector2.UP   # flames rise toward the top of the screen
+	var across := Vector2(-up.y, up.x)
+	var flicker := 0.85 + 0.15 * sin(time * 17.0 + seed) * sin(time * 11.0 + seed * 0.3)
+	# glow on the floor and walls around the tile
+	for ring in 3:
+		canvas.draw_circle(centre, (26.0 - ring * 7.0) * size, Color(1.0, 0.45, 0.1, (0.07 + ring * 0.05) * flicker))
+	var base := centre - up * 12.0
+	canvas.draw_circle(base + up * 2.0, 9.0 * size, Color(1.0, 0.5, 0.1, 0.45 * flicker))
+	# outer tongues: deep orange to red, fading at the tips
+	for index in 6:
+		var x := (index - 2.5) * 3.4 * size + sin(seed + index * 3.1) * 1.5
+		var phase := time * (6.0 + index * 0.9) + seed + index * 2.3
+		var height := (22.0 + 7.0 * sin(phase) + 4.0 * sin(phase * 2.7)) * size * flicker
+		var width := (6.8 - absf(index - 2.5) * 0.6) * size
+		_draw_flame(canvas, base + across * x, up, across, height, width, sin(phase * 1.4) * 4.0 * size,
+			Color(1.0, 0.55, 0.08, 1.0), Color(0.9, 0.12, 0.03, 0.0))
+	# inner core: yellow-white, shorter
+	for index in 3:
+		var phase := time * (8.0 + index) + seed * 1.3 + index
+		var height := (13.0 + 4.0 * sin(phase)) * size * flicker
+		_draw_flame(canvas, base + across * (index - 1) * 4.0 * size, up, across, height, 4.2 * size,
+			sin(phase * 1.7) * 2.5 * size, Color(1.0, 0.97, 0.75, 0.95), Color(1.0, 0.7, 0.15, 0.0))
+	# embers rising and fading
 	for index in 5:
-		var phase := time * (5.0 + index) + seed + index * 1.7
-		var offset := Vector2(sin(phase) * 5.0, cos(phase * 0.7) * 3.0) + Vector2((index - 2) * 4.5, 2.0)
-		var height := (10.0 + 6.0 * sin(phase * 1.3)) * size
-		var base := centre + offset
-		var flame := PackedVector2Array([base + Vector2(-5 * size, 4), base + Vector2(0, -height), base + Vector2(5 * size, 4)])
-		canvas.draw_colored_polygon(flame, Color(1.0, 0.45 + 0.1 * index, 0.1, 0.85))
-		canvas.draw_circle(base + Vector2(0, 1), 3.2 * size, Color(1.0, 0.85, 0.3, 0.9))
+		var t := fposmod(time * (0.55 + index * 0.08) + seed * 0.37 + index * 0.21, 1.0)
+		var drift := across * (sin(seed + index * 5.3 + time * 2.0) * 7.0 * size)
+		var at := base + drift + up * (6.0 + t * 30.0 * size)
+		canvas.draw_circle(at, 1.3 * (1.0 - t * 0.5), Color(1.0, 0.75 - t * 0.4, 0.25, 1.0 - t))
+	# smoke above the flames
+	for index in 3:
+		var t := fposmod(time * 0.35 + index / 3.0 + seed * 0.11, 1.0)
+		var at := base + across * (sin(seed + index * 1.9 + t * 3.0) * 6.0) + up * (20.0 + t * 26.0) * size
+		canvas.draw_circle(at, (4.0 + t * 7.0) * size, Color(0.16, 0.15, 0.15, 0.2 * (1.0 - t) * minf(1.0, t * 4.0)))
+
+
+## One flame tongue as a strip of quads, coloured from its base to its fading tip and bending as it rises.
+func _draw_flame(canvas: CanvasItem, base: Vector2, up: Vector2, across: Vector2, height: float, width: float, sway: float, root: Color, tip: Color) -> void:
+	const STEPS := 6
+	var left := PackedVector2Array()
+	var right := PackedVector2Array()
+	var colours: Array[Color] = []
+	for step in STEPS + 1:
+		var s := step / float(STEPS)
+		var half := width * pow(1.0 - s, 0.8) * (0.75 + 0.5 * sin(PI * minf(1.0, s * 1.6 + 0.2)))
+		var mid := base + up * height * s + across * sway * s * s
+		left.append(mid - across * half)
+		right.append(mid + across * half)
+		colours.append(root.lerp(tip, pow(s, 1.3)))
+	for step in STEPS:
+		var quad := PackedVector2Array([left[step], right[step], right[step + 1], left[step + 1]])
+		if quad[2].distance_squared_to(quad[3]) < 0.01:
+			quad = PackedVector2Array([left[step], right[step], right[step + 1]])
+			canvas.draw_polygon(quad, PackedColorArray([colours[step], colours[step], colours[step + 1]]))
+		else:
+			canvas.draw_polygon(quad, PackedColorArray([colours[step], colours[step], colours[step + 1], colours[step + 1]]))
+
+
+func _draw_scorch(canvas: CanvasItem, centre: Vector2, cell: Vector2i) -> void:
+	var seed := float(cell.x * 19 + cell.y * 23)
+	var points := PackedVector2Array()
+	for index in 10:
+		var radius := 11.0 + 3.0 * sin(seed + index * 2.7)
+		points.append(centre + Vector2.from_angle(index * TAU / 10.0) * radius)
+	canvas.draw_colored_polygon(points, Color(0.2, 0.12, 0.06, 0.22))
+	var inner := PackedVector2Array()
+	for point in points:
+		inner.append(centre + (point - centre) * 0.6)
+	canvas.draw_colored_polygon(inner, Color(0.08, 0.05, 0.03, 0.35))
 
 
 func _draw_breach(canvas: CanvasItem, centre: Vector2, cell: Vector2i) -> void:
@@ -335,17 +414,31 @@ func _draw_breach(canvas: CanvasItem, centre: Vector2, cell: Vector2i) -> void:
 	canvas.draw_circle(centre + Vector2(2, -2), 1.2 + twinkle, Color(1, 1, 1, 0.8))
 
 
+## A target reticle on the tile a weapon is aimed at, with the weapon's number.
 func _draw_target_mark(canvas: CanvasItem, mark: Dictionary) -> void:
-	var room := ship.rooms[mark.room]
-	var at := room.centre_local(ship.design)
+	var cell: Vector2i = mark.cell
+	if ship.room_at(cell) < 0:
+		return
+	var at := ship.design.cell_centre(cell)
 	var colour: Color = mark.colour
 	var pulse := 1.0 + 0.08 * sin(time * 6.0)
-	canvas.draw_arc(at, 15.0 * pulse, 0, TAU, 32, colour, 2.5, true)
+	canvas.draw_arc(at, 11.0 * pulse, 0, TAU, 28, colour, 2.5, true)
 	for step in [Vector2.UP, Vector2.DOWN, Vector2.LEFT, Vector2.RIGHT]:
-		canvas.draw_line(at + step * 9.0, at + step * 21.0 * pulse, colour, 2.5, true)
-	_draw_upright(canvas, at + Vector2(14, 14) * (-1.0 if ship.facing_down else 1.0), func(p: Vector2):
-		canvas.draw_circle(p, 8.0, Color(0, 0, 0, 0.6))
+		canvas.draw_line(at + step * 6.0, at + step * 16.0 * pulse, colour, 2.2, true)
+	_draw_upright(canvas, at + Vector2(13, 13) * (-1.0 if ship.facing_down else 1.0), func(p: Vector2):
+		canvas.draw_circle(p, 7.5, Color(0, 0, 0, 0.65))
 		canvas.draw_string(UiKit.font_bold(), p + Vector2(-4, 5), str(mark.label), HORIZONTAL_ALIGNMENT_CENTER, -1, 13, colour))
+
+
+## Where each selected crew member is walking to: a small marker on their destination tile.
+func _draw_destinations(canvas: CanvasItem) -> void:
+	for member in ship.crew + ship.visitors:
+		if member.ship != ship or not member.selected or member.path.is_empty() or member.dead:
+			continue
+		var at := ship.design.cell_centre(member.destination)
+		var pulse := 0.5 + 0.5 * sin(time * 5.0)
+		canvas.draw_arc(at, 9.0 + pulse * 2.0, 0, TAU, 20, Color(UiColours.POWER_GREEN, 0.8), 2.0, true)
+		canvas.draw_circle(at, 2.5, UiColours.POWER_GREEN)
 
 
 # --- Crew ----------------------------------------------------------------------------------------------------
@@ -368,6 +461,23 @@ func _draw_crew() -> void:
 			if t > 0.5:
 				continue
 		_draw_upright(canvas, at, func(p: Vector2): _draw_member(canvas, member, p, ring))
+		if member.task == "healing":
+			_draw_heal_sparks(canvas, at, member.name.hash())
+
+
+## Small green crosses drifting up off a crew member a medbay is healing.
+func _draw_heal_sparks(canvas: CanvasItem, at: Vector2, seed: int) -> void:
+	var up := Vector2.DOWN if ship.facing_down else Vector2.UP
+	for index in 4:
+		var t := fposmod(time * 0.7 + index / 4.0 + (seed % 97) / 97.0, 1.0)
+		var side := Vector2(up.y, -up.x) * (sin(seed + index * 2.1) * 11.0)
+		var p := at + side + up * (4.0 + t * 26.0)
+		var arm := 4.5 * (1.0 - t * 0.4)
+		var colour := Color(0.45, 1.0, 0.55, minf(1.0, (1.0 - t) * 1.6))
+		canvas.draw_line(p - Vector2(arm + 1.0, 0), p + Vector2(arm + 1.0, 0), Color(0, 0.15, 0.05, colour.a * 0.6), 4.5)
+		canvas.draw_line(p - Vector2(0, arm + 1.0), p + Vector2(0, arm + 1.0), Color(0, 0.15, 0.05, colour.a * 0.6), 4.5)
+		canvas.draw_line(p - Vector2(arm, 0), p + Vector2(arm, 0), colour, 2.5)
+		canvas.draw_line(p - Vector2(0, arm), p + Vector2(0, arm), colour, 2.5)
 
 
 func _draw_member(canvas: CanvasItem, member: CrewMember, at: Vector2, ring: Color) -> void:

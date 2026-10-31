@@ -31,6 +31,7 @@ var aim_slot: WeaponSlot
 var autofire_default: bool = false
 var hover_ship: Ship
 var hover_room: int = -1
+var hover_cell := Vector2i(999, 999)
 var hover_crew: CrewMember
 var hover_door: ShipDoor
 var store_here: bool = false
@@ -206,13 +207,20 @@ func _update_views(alpha: float) -> void:
 		view.selected = ship == selected_ship
 		view.interior_visible = ship.side == 0 or player_sees or _player_crew_aboard(ship)
 		view.highlight_rooms.clear()
+		view.highlight_tiles.clear()
 		view.target_marks.clear()
 		view.beam_marks.clear()
 		if ship == hover_ship and hover_room >= 0:
-			if aim_mode != "" and ship.side == 1:
-				view.highlight_rooms[hover_room] = UiColours.TARGET_YELLOW if not _aim_is_autofire() else UiColours.ENEMY_RED
-			elif not selected_crew.is_empty() and selected_crew[0].ship == ship:
+			if aim_mode in ["weapon", "beam"] and ship.side == 1:
+				# Shots hit a single tile: the tile under the cursor is what gets hit
+				var colour := UiColours.TARGET_YELLOW if not _aim_is_autofire() else UiColours.ENEMY_RED
+				view.highlight_rooms[hover_room] = Color(colour, 0.35)
+				view.highlight_tiles[hover_cell] = colour
+			elif aim_mode != "" and ship.side == 1:
 				view.highlight_rooms[hover_room] = UiColours.TARGET_YELLOW
+			elif not selected_crew.is_empty() and selected_crew[0].ship == ship:
+				view.highlight_rooms[hover_room] = Color(UiColours.POWER_GREEN, 0.4)
+				view.highlight_tiles[hover_cell] = UiColours.POWER_GREEN
 	# Weapon targets of the selected ship's weapons (and every player ship's, dimmer)
 	for ship in encounter.living(0):
 		for index in ship.weapons.size():
@@ -228,7 +236,7 @@ func _update_views(alpha: float) -> void:
 			if slot.def.type == "beam":
 				view.beam_marks.append({"start": slot.beam_start, "end": slot.beam_end, "colour": colour})
 			else:
-				view.target_marks.append({"room": slot.target_room, "label": index + 1, "colour": colour})
+				view.target_marks.append({"cell": slot.target_cell, "label": index + 1, "colour": colour})
 	if aim_mode == "beam" and _beam_target != null and views.has(_beam_target):
 		var mouse_local := encounter.world_to_local(_beam_target, world.get_global_mouse_position())
 		var direction := (mouse_local - _beam_start_local)
@@ -480,9 +488,7 @@ func _click_while_aiming(event: InputEventMouseButton) -> void:
 		"weapon":
 			if hover_room < 0:
 				return
-			aim_slot.target_ship = hover_ship
-			aim_slot.target_room = hover_room
-			aim_slot.target_suit = null
+			aim_slot.aim_at(hover_ship, hover_cell)
 			aim_slot.autofire = _aim_is_autofire()
 			Sfx.play("target")
 			cancel_aim()
@@ -508,8 +514,10 @@ func _finish_beam() -> void:
 	var direction := end_local - _beam_start_local
 	if direction.length() < 4.0:
 		direction = Vector2.RIGHT
-	aim_slot.target_ship = _beam_target
-	aim_slot.target_room = maxi(0, _beam_target.room_at(Vector2i(floor((_beam_start_local - _beam_target.design.cell_offset) / ShipDesign.TILE))))
+	var start_cell := Vector2i(floor((_beam_start_local - _beam_target.design.cell_offset) / ShipDesign.TILE))
+	if _beam_target.room_at(start_cell) < 0:
+		start_cell = _beam_target.rooms[0].cells[0]
+	aim_slot.aim_at(_beam_target, start_cell)
 	aim_slot.beam_start = _beam_start_local
 	aim_slot.beam_end = _beam_start_local + direction.normalized() * aim_slot.def.beam_length
 	aim_slot.autofire = _aim_is_autofire()
@@ -560,6 +568,7 @@ func _update_hover() -> void:
 	var world_point := world.get_global_mouse_position()
 	hover_ship = null
 	hover_room = -1
+	hover_cell = Vector2i(999, 999)
 	hover_crew = null
 	hover_door = null
 	for ship in encounter.ships:
@@ -580,6 +589,7 @@ func _update_hover() -> void:
 		if room >= 0:
 			hover_ship = ship
 			hover_room = room
+			hover_cell = cell
 			return
 
 
@@ -694,13 +704,34 @@ func _box_select(box: Rect2) -> void:
 	_select_crew(picked, Input.is_key_pressed(KEY_SHIFT))
 
 
+## Sends the selected crew to the tile under the cursor: the first to that tile, the others to the free tiles of
+## the same room nearest to it.
 func _order_selected_to_hover() -> void:
 	if hover_ship == null or hover_room < 0:
 		return
-	var moved := false
+	var movers: Array[CrewMember] = []
 	for member in selected_crew:
-		if member.ship == hover_ship and CrewBrain.order_to_room(member, hover_room, true):
+		if member.ship == hover_ship and member.is_active():
+			movers.append(member)
+	if movers.is_empty():
+		return
+	for member in movers:
+		member.destination = Vector2i(999, 999)   # let go of old claims so the group can share the room
+	var room := hover_ship.rooms[hover_room]
+	var free: Array[Vector2i] = []
+	for cell in room.cells:
+		if not hover_ship.cell_is_claimed(cell, 0):
+			free.append(cell)
+	free.sort_custom(func(a, b): return Vector2(a - hover_cell).length_squared() < Vector2(b - hover_cell).length_squared())
+	var moved := false
+	for index in movers.size():
+		if index >= free.size():
+			break
+		if CrewBrain.walk_to(movers[index], free[index], true):
 			moved = true
+	for member in movers:
+		if member.destination == Vector2i(999, 999):
+			member.destination = member.path.back() if not member.path.is_empty() else member.cell
 	if moved:
 		Sfx.play("order")
 

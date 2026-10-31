@@ -19,10 +19,10 @@ the Last Fleet. Lose when every scout ship is gone (GDD 1F).
 |---|---|---|
 | Pause / unpause | Space | Click either stick (L3 / R3) |
 | Select crew | Left click a crew token, or drag a box | X / Square |
-| Move selected crew | Right click (or left click) a room | A / Cross |
+| Move selected crew | Right click (or left click) a tile: the first goes to that tile, the rest to free tiles in its room | A / Cross |
 | Deselect, cancel aiming | Right click, Esc | B / Circle |
-| Aim a weapon | Click its slot (or 1–6), then click an enemy room | X on the slot, then on the room |
-| Aim a beam | Click its slot, then press on an enemy room and drag | |
+| Aim a weapon | Click its slot (or 1–6), then click a tile of an enemy ship: the shot hits that tile and the system there, not the whole room | X on the slot, then on the tile |
+| Aim a beam | Click its slot, then press on an enemy tile and drag: every tile it crosses is hit | |
 | Fire once / autofire | Aim normally fires once (yellow mark); hold Ctrl to switch. V or AUTOFIRE flips the default (red mark) | |
 | Power a system | Click its bars to add power, right click to remove. On the AZC (Terran conduit ships), click to switch a system on or off | |
 | Power a weapon | Right click its slot | |
@@ -85,8 +85,11 @@ profiles, as heromedel asked. None of this is a design decision; each is a start
   Bomb, TS-ST Light Laser, SS-ST Breach Missile, HB-MR Hull Beam, Coil, Tendril Beam, Siphon, 3B 01 V2, 2L 02 V1,
   1L 02 P1, 2B 03 V1, Fang, Snarl, Flesh Mortar, Gristle Missile.
 - **Squads** for every race, with conduct (surrender and escape chances, preferred targets, how they answer a Hail).
-- **Map generation:** a wedge of the galaxy from the core to the rim; regions placed at random with the GATOS at the
-  start; cluster contents (store, hostile, distress, neutral, items, hazard, nothing) by chance.
+- **Map generation:** the whole galaxy, a disc of four spiral arms around the core. The squad starts in GATOS space
+  close enough to the core to head inward for a few jumps but not to be caught when the collapse appears (GDD 2P),
+  and may go any way but through the core; reaching any cluster on the rim brings the final battle (heromedel,
+  2026-10-31). Regions are placed at random; cluster contents (store, hostile, distress, neutral, items, hazard,
+  nothing) by chance. The map screen has an overview of the whole galaxy.
 - **Default conduits:** a core ship whose file lists none gets a branching network out from the AZC along the
   walkways; the conduit rule used is concerns.md item 3's last proposal (no rerouting action: a system has power if an
   unbroken path reaches the AZC).

@@ -24,10 +24,11 @@ func _ready() -> void:
 	_check("click selects a crew member", battle.selected_crew.has(member))
 	# 2. Right click the engine room to send them there
 	var engines := ship.system_by("engines")
-	await _click(_screen_of(ship, ship.rooms[engines.room].centre_local(ship.design)), MOUSE_BUTTON_RIGHT)
-	_check("right click orders them to a room", not member.path.is_empty() or ship.room_at(member.destination) == engines.room)
+	var tile: Vector2i = ship.rooms[engines.room].cells.back()
+	await _click(_screen_of(ship, ship.design.cell_centre(tile)), MOUSE_BUTTON_RIGHT)
+	_check("right click orders them to that tile", member.destination == tile)
 	await _wait(6.0)
-	_check("they walk there", ship.room_at(member.cell) == engines.room)
+	_check("they walk to that tile", member.cell == tile)
 	# 3. Space pauses
 	await _key(KEY_SPACE)
 	_check("space pauses", battle.paused)
@@ -45,8 +46,9 @@ func _ready() -> void:
 		_check("clicking the slot arms it", battle.aim_mode == "weapon" and battle.aim_slot == slot)
 		var enemy: Ship = main.encounter.living(1)[0]
 		var target_room: int = enemy.system_by("shields").room
-		await _click(_screen_of(enemy, enemy.rooms[target_room].centre_local(enemy.design)), MOUSE_BUTTON_LEFT)
-		_check("clicking an enemy room sets the target", slot.target_ship == enemy and slot.target_room == target_room)
+		var target_tile: Vector2i = enemy.rooms[target_room].cells.back()
+		await _click(_screen_of(enemy, enemy.design.cell_centre(target_tile)), MOUSE_BUTTON_LEFT)
+		_check("clicking an enemy tile aims at that tile", slot.target_ship == enemy and slot.target_room == target_room and slot.target_cell == target_tile)
 	# 5. Right click a system's power bars to switch it off, click to switch it on again
 	var medbay := ship.system_by("medbay")
 	var life := ship.system_by("oxygen")

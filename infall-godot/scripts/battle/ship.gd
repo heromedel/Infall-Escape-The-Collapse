@@ -284,6 +284,15 @@ func crew_present() -> Array[CrewMember]:
 	return found
 
 
+## Crew standing on a tile, or stepping off it (a shot that lands there catches them).
+func crew_on_tile(cell: Vector2i) -> Array[CrewMember]:
+	var found: Array[CrewMember] = []
+	for member in _everyone_aboard():
+		if member.cell == cell:
+			found.append(member)
+	return found
+
+
 func crew_in_room(room_index: int, of_side: int = -1) -> Array[CrewMember]:
 	var found: Array[CrewMember] = []
 	for member in _everyone_aboard():
@@ -677,7 +686,7 @@ func _tick_manning() -> void:
 		system.manned_count = 0
 		system.integration_bar = false
 	for member in crew_aboard(side):
-		if not member.can_act() or member.is_moving() or member.task in ["fighting", "repairing", "extinguishing", "patching"]:
+		if not member.can_act() or member.is_moving() or member.task in ["fighting", "repairing", "extinguishing", "patching", "healing"]:
 			member.integrate_ticks = 0
 			continue
 		var room_index := room_at(member.cell)
@@ -823,6 +832,7 @@ func _tick_fires(rng: RandomNumberGenerator) -> void:
 				room.fires[cell] = minf(100.0, room.fires[cell] + 0.2)
 			if room.fires[cell] <= 0.0:
 				room.fires.erase(cell)
+				room.scorch[cell] = true
 				continue
 			if rng.randf() < 0.004:
 				for step in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
@@ -909,6 +919,16 @@ func breach(cell: Vector2i) -> void:
 	_note("breach", {"room": room_index})
 
 
+## Cuts the conduit on a tile when the tile carries one, otherwise one elsewhere in its room (a power surge runs
+## along the conduit).
+func break_conduit_at(cell: Vector2i, room_index: int, rng: RandomNumberGenerator) -> void:
+	if conduits.has(cell) and not broken_conduits.has(cell) and cell != core_cell:
+		broken_conduits[cell] = 100.0
+		_note("conduit_cut", {"room": room_index})
+		return
+	break_conduit_in_room(room_index, rng)
+
+
 func break_conduit_in_room(room_index: int, rng: RandomNumberGenerator) -> void:
 	var candidates: Array[Vector2i] = []
 	for cell in rooms[room_index].cells:
@@ -939,6 +959,7 @@ func repair_everything() -> void:
 		system.spored = false
 	for room in rooms:
 		room.fires.clear()
+		room.scorch.clear()
 		room.breaches.clear()
 		room.infection = 0.0
 		room.oxygen = 1.0

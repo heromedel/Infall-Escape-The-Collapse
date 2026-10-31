@@ -164,28 +164,35 @@ func _draw_crew_list(ship: Ship, at: Vector2) -> void:
 			members.append(member)
 	var y := at.y
 	for member in members:
-		var rect := Rect2(at.x, y, 250, 42)
+		var rect := Rect2(at.x, y, 290, 50)
 		var chosen := member.selected
 		UiKit.draw_frame(self, rect, UiColours.PANEL_LIGHT if chosen else UiColours.PANEL, UiColours.POWER_GREEN if chosen else UiColours.BORDER_DIM, 6.0)
-		CrewPortraits.draw_token(self, member.race.id, member.name, rect.position + Vector2(22, 21), 15.0, UiColours.POWER_GREEN)
-		UiKit.draw_text(self, rect.position + Vector2(44, 18), member.name, 16, UiColours.TEXT, UiKit.font_bold())
+		CrewPortraits.draw_token(self, member.race.id, member.name, rect.position + Vector2(22, 25), 16.0, UiColours.POWER_GREEN)
+		UiKit.draw_text(self, rect.position + Vector2(46, 20), member.name, 16, UiColours.TEXT, UiKit.font_bold())
 		var fraction := member.health_fraction()
-		draw_rect(Rect2(rect.position + Vector2(44, 25), Vector2(140, 6)), UiColours.BAR_EMPTY)
-		draw_rect(Rect2(rect.position + Vector2(44, 25), Vector2(140 * fraction, 6)), UiColours.hull_colour(fraction))
+		draw_rect(Rect2(rect.position + Vector2(46, 29), Vector2(120, 7)), UiColours.BAR_EMPTY)
+		draw_rect(Rect2(rect.position + Vector2(46, 29), Vector2(120 * fraction, 7)), UiColours.hull_colour(fraction))
+		if member.task == "healing":
+			var pulse := 0.5 + 0.5 * sin(_time * 6.0)
+			draw_rect(Rect2(rect.position + Vector2(46, 29), Vector2(120 * fraction, 7)), Color(1, 1, 1, 0.35 * pulse))
+		# What they are doing, and where: "manning" over "Piloting"
 		var status := _crew_status(member)
-		UiKit.draw_text(self, rect.position + Vector2(190, 32), status, 13, UiColours.TEXT_DIM, null, HORIZONTAL_ALIGNMENT_RIGHT, 52)
+		var place := _crew_place(member)
+		var status_colour := UiColours.POWER_GREEN if status == "healing" else (UiColours.WARNING if status in ["fire!", "fighting", "stunned", "no air!"] else UiColours.TEXT)
+		UiKit.draw_text(self, rect.position + Vector2(rect.size.x - 10, 21), status, 13, status_colour, UiKit.font_bold(), HORIZONTAL_ALIGNMENT_RIGHT, 0)
+		UiKit.draw_text(self, rect.position + Vector2(rect.size.x - 10, 39), place, 12, UiColours.TEXT_DIM, null, HORIZONTAL_ALIGNMENT_RIGHT, 0)
 		_region(rect, func(): screen.select_crew_member(member, Input.is_key_pressed(KEY_SHIFT)), _crew_tooltip(member))
-		y += 46
+		y += 54
 	var buttons_at := Vector2(at.x, y + 4)
-	_button(Rect2(buttons_at, Vector2(122, 32)), "STATIONS", func(): screen.return_to_stations(), "Send this ship's crew back to their saved stations. Hotkey: Z")
-	_button(Rect2(buttons_at + Vector2(128, 0), Vector2(122, 32)), "SAVE POSTS", func(): screen.save_stations(), "Save where every crew member stands now as their station.")
+	_button(Rect2(buttons_at, Vector2(142, 32)), "STATIONS", func(): screen.return_to_stations(), "Send this ship's crew back to their saved stations. Hotkey: Z")
+	_button(Rect2(buttons_at + Vector2(148, 0), Vector2(142, 32)), "SAVE POSTS", func(): screen.save_stations(), "Save where every crew member stands now as their station.")
 
 
 func _crew_status(member: CrewMember) -> String:
 	if member.in_suit:
-		return "in suit"
-	if member.ship != member.home:
-		return "boarding"
+		return "in a battlesuit"
+	if member.suffocating:
+		return "no air!"
 	match member.task:
 		"manning":
 			return "manning"
@@ -195,11 +202,53 @@ func _crew_status(member: CrewMember) -> String:
 			return "fire!"
 		"fighting":
 			return "fighting"
+		"breaking":
+			return "breaking a door"
+		"sabotaging":
+			return "sabotaging"
 		"walking":
 			return "moving"
 		"stunned":
 			return "stunned"
-	return ""
+		"healing":
+			return "healing"
+	return "boarding" if member.ship != member.home else "standing by"
+
+
+## Where they are doing it: the station they man, the system they repair, the room they stand in or are
+## walking to.
+func _crew_place(member: CrewMember) -> String:
+	if member.in_suit:
+		return "outside"
+	var ship := member.ship
+	var room_index := ship.room_at(member.destination if member.task == "walking" else member.cell)
+	if room_index < 0:
+		room_index = ship.room_at(member.cell)
+	if member.task == "manning":
+		var names := PackedStringArray()
+		for system in ship.systems:
+			if system.manned_by == member:
+				names.append(system.display_name())
+		if not names.is_empty():
+			return ", ".join(names)
+	var place := _room_label(ship, room_index)
+	if member.task == "walking":
+		place = "to " + place
+	if member.ship != member.home:
+		place += " (%s)" % ship.name
+	return place
+
+
+func _room_label(ship: Ship, room_index: int) -> String:
+	if room_index < 0:
+		return ""
+	var room := ship.rooms[room_index]
+	for system in room.systems:
+		if system.behaviour != "power_core":
+			return system.display_name()
+	if not room.name.is_empty():
+		return room.name
+	return "Room %d" % (room_index + 1)
 
 
 func _crew_tooltip(member: CrewMember) -> String:
@@ -361,6 +410,13 @@ func _system_tooltip(ship: Ship, system: ShipSystem) -> String:
 	if system.def.manned:
 		state.append("manned" if system.manned_by else "unmanned")
 	lines.append("Status: " + ", ".join(state))
+	if system.behaviour == "medbay":
+		if ship.system_power(system) > 0:
+			lines.append("Hurt crew standing in this room heal.")
+		elif ship.reactor_type == "core":
+			lines.append("Switch it on to heal crew standing in it; another system may need to go off first.")
+		else:
+			lines.append("Give it power to heal crew standing in it.")
 	if system.def.draws_power and ship.reactor_type == "pool":
 		lines.append("Click to add power, right click to remove.")
 	elif system.def.draws_power and ship.reactor_type == "core":
@@ -420,7 +476,7 @@ func _draw_weapon_slot(ship: Ship, slot: WeaponSlot, index: int, rect: Rect2) ->
 	if slot.has_target():
 		var mark_colour := UiColours.ENEMY_RED if slot.autofire else UiColours.TARGET_YELLOW
 		draw_arc(rect.position + Vector2(rect.size.x - 22, 58), 7, 0, TAU, 16, mark_colour, 2.0, true)
-	var tooltip := "%s\n%s\n%s\nCharge %.1f s · Power %d · %s Mawjig a volley\nClick to aim, then click an enemy room. Right click to power on or off." % [slot.def.display_name(), slot.def.description, slot.def.stat_line(), needed / 20.0, slot.def.power, Mawjig.format(slot.def.cost_per_volley)]
+	var tooltip := "%s\n%s\n%s\nCharge %.1f s · Power %d · %s Mawjig a volley\nClick to aim, then click a tile of an enemy ship. Right click to power on or off." % [slot.def.display_name(), slot.def.description, slot.def.stat_line(), needed / 20.0, slot.def.power, Mawjig.format(slot.def.cost_per_volley)]
 	_region(rect, func(): screen.arm_weapon(slot), tooltip, func(): _toggle_weapon_power(ship, slot))
 
 

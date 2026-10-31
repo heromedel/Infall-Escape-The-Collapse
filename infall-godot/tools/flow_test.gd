@@ -3,7 +3,7 @@ extends Node
 ## the map, a store, a fight. Run with a display: xvfb-run godot --path . tools/flow_test.tscn
 
 var main: Node
-var out := "/tmp/claude-0/flow"
+var out := OS.get_environment("OUT") if OS.get_environment("OUT") != "" else "/tmp/claude-0/flow"
 
 
 func _ready() -> void:

@@ -141,15 +141,25 @@ func _aim(slot: WeaponSlot, taken_rooms: Array[int]) -> void:
 	if room_index < 0:
 		return
 	taken_rooms.append(room_index)
-	slot.target_ship = target
-	slot.target_room = room_index
-	slot.target_suit = null
+	slot.aim_at(target, _pick_tile(room_index))
 	slot.autofire = true
 	if slot.def.type == "beam":
 		var start: Vector2 = target.rooms[room_index].centre_local(target.design)
 		var angle := encounter.rng.randf() * TAU
 		slot.beam_start = start
 		slot.beam_end = start + Vector2.from_angle(angle) * slot.def.beam_length
+
+
+## The tile to hit in a room: a system's console, since only the system on the tile hit is damaged; any tile
+## of an empty room.
+func _pick_tile(room_index: int) -> Vector2i:
+	var room := target.rooms[room_index]
+	var systems: Array = room.systems.filter(func(s): return s.behaviour != "power_core" and not s.is_broken())
+	if systems.is_empty():
+		systems = room.systems.filter(func(s): return s.behaviour != "power_core")
+	if not systems.is_empty():
+		return systems[encounter.rng.randi_range(0, systems.size() - 1)].cell
+	return room.cells[encounter.rng.randi_range(0, room.cells.size() - 1)]
 
 
 ## Which room to hit: the squad's preferred systems first (its conduct), else a weighted pick of system rooms;

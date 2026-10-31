@@ -147,6 +147,7 @@ static func _work(member: CrewMember, encounter: Encounter) -> void:
 			room.fires[fire_cell] -= Ship.EXTINGUISH_PER_TICK * _repair_speed(member, ship)
 			if room.fires[fire_cell] <= 0.0:
 				room.fires.erase(fire_cell)
+				room.scorch[fire_cell] = true
 			member.task = "extinguishing"
 			return
 		if not room.breaches.is_empty():
@@ -176,10 +177,11 @@ static func _work(member: CrewMember, encounter: Encounter) -> void:
 			member.task = "repairing"
 			return
 		# 3. Heal in a working medbay
+		member.task = "idle"
 		for system in room.systems:
 			if system.behaviour == "medbay" and ship.system_power(system) > 0 and member.health < member.max_health:
 				member.health = minf(member.max_health, member.health + MEDBAY_HEAL_PER_TICK * ship.system_power(system))
-		member.task = "idle"
+				member.task = "healing"
 		return
 	# Boarding: wreck what is in the room while nobody stops us
 	for system in room.systems:

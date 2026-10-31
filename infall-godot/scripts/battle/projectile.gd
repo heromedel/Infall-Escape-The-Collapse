@@ -7,6 +7,7 @@ var weapon: WeaponDef
 var source: Ship
 var target: Ship
 var target_room: int = -1
+var target_cell := Vector2i(999, 999)   # the tile it was aimed at (shots hit a single tile)
 var target_suit: Battlesuit = null
 var kind: String = "laser"          # laser, missile, flak, asteroid, suit_laser, defense
 var position := Vector2.ZERO

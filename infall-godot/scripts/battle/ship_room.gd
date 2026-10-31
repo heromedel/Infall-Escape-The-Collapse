@@ -9,6 +9,7 @@ var rect: Rect2i
 var oxygen: float = 1.0            # 0 to 1
 var fires: Dictionary = {}         # Vector2i -> strength, 0 to 100
 var breaches: Dictionary = {}      # Vector2i -> repair still needed, 0 to 100
+var scorch: Dictionary = {}        # Vector2i -> true where a fire has burned (drawing only)
 var infection: float = 0.0         # 0 to 100 (GDD 8G)
 var systems: Array = []            # ShipSystem in this room (GDD 5B: a room may hold more than one)
 var neighbours: Array[int] = []    # rooms sharing a wall

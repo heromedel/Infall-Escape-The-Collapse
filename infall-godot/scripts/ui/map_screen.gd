@@ -29,6 +29,7 @@ var _jump_button: Button
 var _wait_button: Button
 var _info := RichTextLabel.new()
 var _backdrop_stars: Array = []
+var _overview: ImageTexture = null
 
 
 func open(run_state: RunState, jumping_allowed: bool) -> void:
@@ -37,7 +38,7 @@ func open(run_state: RunState, jumping_allowed: bool) -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	theme = UiKit.theme()
 	mouse_filter = Control.MOUSE_FILTER_STOP
-	camera = run.cluster().position + Vector2(0, -180)
+	camera = run.cluster().position + run.cluster().position.normalized() * 180.0   # a little toward the rim
 	var bar := HBoxContainer.new()
 	bar.add_theme_constant_override("separation", 12)
 	bar.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM)
@@ -124,8 +125,13 @@ func _clamp_camera() -> void:
 func _update_hover(screen_point: Vector2) -> void:
 	hover = -1
 	var best := 28.0
+	var near := _to_map(screen_point)
+	var reach := best / zoom
 	for index in run.galaxy.clusters.size():
-		var distance := _to_screen(run.galaxy.clusters[index].position).distance_to(screen_point)
+		var position: Vector2 = run.galaxy.clusters[index].position
+		if absf(position.x - near.x) > reach or absf(position.y - near.y) > reach:
+			continue
+		var distance := _to_screen(position).distance_to(screen_point)
 		if distance < best:
 			best = distance
 			hover = index
@@ -140,7 +146,7 @@ func _on_jump() -> void:
 ## How far the squad's sensors read the map (GDD 2E): clusters this many links away show what they hold.
 func _readable(index: int) -> bool:
 	var cluster: Dictionary = run.galaxy.clusters[index]
-	if cluster.visited or cluster.seen or index == run.galaxy.exit_index:
+	if cluster.visited or cluster.seen or run.galaxy.is_rim(index):
 		return true
 	var reach := maxi(1, run.sensor_range())
 	var frontier := [run.current]
@@ -167,8 +173,8 @@ func _update_info() -> void:
 		lines.append(", ".join(states))
 	if index == run.current:
 		lines.append("[color=#66ff66]Your squad is here.[/color]")
-	if index == run.galaxy.exit_index:
-		lines.append("[color=#ffd46b]The rim: the last cluster before the edge of the galaxy. Someone else wants it too.[/color]")
+	if run.galaxy.is_rim(index):
+		lines.append("[color=#ffd46b]The rim: the edge of the galaxy, and the way out. Someone else wants out too.[/color]")
 	elif _readable(index):
 		var what: String = {"store": "A store", "hostile": "Ships on sensors", "distress": "A distress signal", "hazard": "A hazard", "items": "Something drifting", "neutral": "Ship traffic", "nothing": "Nothing much", "opening": ""}.get(cluster.kind, "")
 		if cluster.kind == "hazard":
@@ -217,18 +223,27 @@ func _draw() -> void:
 		draw_arc(core, radius + Galaxy.COLLAPSE_STEP * zoom, 0, TAU, 256, Color(1.0, 0.4, 0.2, 0.18 + 0.08 * sin(_time * 3.0)), 1.5, true)
 	else:
 		draw_circle(core, Galaxy.CORE_RADIUS * 0.6 * zoom, Color(1.0, 0.85, 0.6, 0.08 + 0.04 * clampf(run.jumps / 5.0, 0.0, 1.0)))
+	# The rim: reach it anywhere to escape
+	var rim := galaxy.rim_radius() * zoom
+	draw_arc(core, rim, 0, TAU, 512, Color("#ffd46b", 0.35), 2.0, true)
+	draw_arc(core, galaxy.outer_radius() * zoom, 0, TAU, 512, Color("#ffd46b", 0.12), 1.0, true)
+	var view := Rect2(Vector2(-200, -200), size + Vector2(400, 400))
 	# Region tints
 	for cluster in galaxy.clusters:
 		if cluster.race != "":
-			draw_circle(_to_screen(cluster.position), 95.0 * zoom, Color(RACE_TINTS.get(cluster.race, Color.WHITE), 0.035))
+			var at := _to_screen(cluster.position)
+			if view.has_point(at):
+				draw_circle(at, 95.0 * zoom, Color(RACE_TINTS.get(cluster.race, Color.WHITE), 0.035))
 	# Links
 	for index in galaxy.clusters.size():
 		var cluster: Dictionary = galaxy.clusters[index]
+		var a := _to_screen(cluster.position)
 		for other in cluster.links:
 			if other < index:
 				continue
-			var a := _to_screen(cluster.position)
 			var b := _to_screen(galaxy.clusters[other].position)
+			if not view.intersects(Rect2(a, Vector2.ZERO).expand(b)):
+				continue
 			var from_here: bool = index == run.current or other == run.current
 			var colour := Color(0.5, 0.65, 0.85, 0.16)
 			if from_here and can_jump:
@@ -249,6 +264,7 @@ func _draw() -> void:
 	UiKit.draw_text(self, Vector2(30, 60), "STAR MAP", 34, UiColours.TEXT, UiKit.font_title())
 	UiKit.draw_text(self, Vector2(30, 92), "Mawjig %s   ·   jumps %d" % [Mawjig.format(run.mawjig), run.jumps], 18, UiColours.TEXT_DIM, UiKit.font_bold())
 	_draw_legend()
+	_draw_overview()
 	if not can_jump:
 		UiKit.draw_text(self, Vector2(size.x * 0.5, size.y - 110), "The Jigawatt Drive isn't charged: you can look, but not jump.", 18, UiColours.WARNING, UiKit.font_bold(), HORIZONTAL_ALIGNMENT_CENTER, 0)
 
@@ -268,10 +284,9 @@ func _draw_cluster(index: int) -> void:
 		var point := at + Vector2(star[0], star[1]) * scale
 		draw_circle(point, float(star[2]) * scale + 2.5, Color(colour, 0.12))
 		draw_circle(point, float(star[2]) * scale * 0.7, colour)
-	if index == run.galaxy.exit_index:
+	if run.galaxy.is_rim(index):
 		var pulse := 0.5 + 0.5 * sin(_time * 2.0)
-		draw_arc(at, 26 + pulse * 6, 0, TAU, 32, Color("#ffd46b"), 2.5, true)
-		UiKit.draw_text(self, at + Vector2(0, 52), "THE RIM", 16, Color("#ffd46b"), UiKit.font_bold(), HORIZONTAL_ALIGNMENT_CENTER, 0)
+		draw_arc(at, 22 + pulse * 4, 0, TAU, 32, Color("#ffd46b", 0.8), 2.0, true)
 	if index == hover:
 		draw_arc(at, 22, 0, TAU, 28, Color(1, 1, 1, 0.7), 1.5, true)
 		UiKit.draw_text(self, at + Vector2(0, 40), cluster.name, 15, Color(1, 1, 1, 0.85), UiKit.font_bold(), HORIZONTAL_ALIGNMENT_CENTER, 0)
@@ -294,6 +309,60 @@ func _draw_cluster(index: int) -> void:
 			UiKit.draw_text(self, at + Vector2(0, -18), badge, 15, Color("#ffd46b") if badge == "$" else (UiColours.WARNING if badge == "!" else UiColours.ACCENT), UiKit.font_bold(), HORIZONTAL_ALIGNMENT_CENTER, 0)
 	if run.galaxy.collapse_radius > 0.0 and cluster.radius - run.galaxy.collapse_radius < Galaxy.COLLAPSE_STEP and cluster.radius > run.galaxy.collapse_radius:
 		draw_arc(at, 18, 0, TAU, 20, Color(1.0, 0.35, 0.2, 0.5 + 0.4 * sin(_time * 6.0)), 2.0, true)
+
+
+## The whole galaxy in a corner: its arms and regions, the collapse, the rim, the squad, and the part of the map
+## on screen.
+func _draw_overview() -> void:
+	const SIDE := 230.0
+	var galaxy := run.galaxy
+	var centre := Vector2(size.x - 30 - SIDE * 0.5, size.y - 120 - SIDE * 0.5)
+	var scale := SIDE * 0.5 / galaxy.outer_radius()
+	draw_circle(centre, SIDE * 0.5 + 8, Color(0.02, 0.03, 0.06, 0.92))
+	draw_arc(centre, SIDE * 0.5 + 8, 0, TAU, 64, UiColours.BORDER_DIM, 1.5, true)
+	if _overview == null:
+		_overview = _render_overview(SIDE)
+	draw_texture(_overview, centre - Vector2(SIDE, SIDE) * 0.5)
+	draw_circle(centre, Galaxy.CORE_RADIUS * scale, Color(1.0, 0.85, 0.6, 0.5))
+	if galaxy.collapse_radius > 0.0:
+		draw_circle(centre, galaxy.collapse_radius * scale, Color(0.05, 0.0, 0.08))
+		draw_arc(centre, galaxy.collapse_radius * scale, 0, TAU, 64, Color(1.0, 0.45, 0.15, 0.9), 1.5, true)
+	draw_arc(centre, galaxy.rim_radius() * scale, 0, TAU, 96, Color("#ffd46b", 0.5), 1.0, true)
+	var on_screen := Rect2(centre + (_to_map(Vector2.ZERO)) * scale, size / zoom * scale)
+	draw_rect(on_screen, Color(1, 1, 1, 0.5), false, 1.0)
+	var here: Vector2 = centre + run.cluster().position * scale
+	draw_circle(here, 3.5, UiColours.POWER_GREEN)
+	draw_arc(here, 6.0 + sin(_time * 4.0), 0, TAU, 16, Color(UiColours.POWER_GREEN, 0.7), 1.2, true)
+	UiKit.draw_text(self, centre + Vector2(0, SIDE * 0.5 + 30), "THE GALAXY", 14, UiColours.TEXT_DIM, UiKit.font_bold(), HORIZONTAL_ALIGNMENT_CENTER, 0)
+
+
+func _render_overview(side: float) -> ImageTexture:
+	var galaxy := run.galaxy
+	var pixels := int(side)
+	var image := Image.create(pixels, pixels, false, Image.FORMAT_RGBA8)
+	image.fill(Color(0, 0, 0, 0))
+	var scale := side * 0.5 / galaxy.outer_radius()
+	# The glow of the disc: brighter along the spiral arms and toward the core
+	for y in pixels:
+		for x in pixels:
+			var point := (Vector2(x, y) + Vector2(0.5, 0.5) - Vector2(side, side) * 0.5) / scale
+			var radius := point.length()
+			if radius > galaxy.outer_radius():
+				continue
+			var arm := (Galaxy.arm_density(point) - 0.5) * 2.0
+			var bulge := exp(-pow(radius / 2600.0, 2.0))
+			var fade := clampf((galaxy.outer_radius() - radius) / 900.0, 0.0, 1.0)
+			var glow := Color(0.5, 0.58, 0.85) * (0.05 + 0.2 * arm) * fade + Color(1.0, 0.82, 0.55) * bulge * 0.45
+			image.set_pixel(x, y, Color(glow.r, glow.g, glow.b, 1.0))
+	for cluster in galaxy.clusters:
+		var point: Vector2 = cluster.position * scale + Vector2(side, side) * 0.5
+		var colour: Color = RACE_TINTS.get(cluster.race, Color(0.75, 0.8, 0.9))
+		colour.a = 0.5 if cluster.race != "" else 0.3
+		var x := clampi(int(point.x), 0, pixels - 1)
+		var y := clampi(int(point.y), 0, pixels - 1)
+		var under := image.get_pixel(x, y)
+		image.set_pixel(x, y, under.blend(colour))
+	return ImageTexture.create_from_image(image)
 
 
 func _draw_legend() -> void:

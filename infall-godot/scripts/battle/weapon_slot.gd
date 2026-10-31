@@ -11,6 +11,7 @@ var powered: bool = false
 var charge: float = 0.0            # ticks charged
 var target_ship: Ship = null
 var target_room: int = -1
+var target_cell := Vector2i(999, 999)   # the tile aimed at; a hit lands on that tile
 var target_suit: Battlesuit = null
 var beam_start := Vector2.ZERO      # local pixels on the target ship
 var beam_end := Vector2.ZERO
@@ -19,6 +20,7 @@ var shots_left: int = 0             # of the volley being fired
 var shot_timer: int = 0
 var volley_target_ship: Ship = null
 var volley_target_room: int = -1
+var volley_target_cell := Vector2i(999, 999)
 var volley_target_suit: Battlesuit = null
 var slide: float = 0.0              # 0 stowed, 1 slid out past the hull (drawing only)
 var fired_flash: int = 0
@@ -48,9 +50,18 @@ func has_target() -> bool:
 	return target_ship != null and target_room >= 0 and not target_ship.is_gone()
 
 
+## Aims at one tile of a ship; its room comes with it.
+func aim_at(ship: Ship, cell: Vector2i) -> void:
+	target_ship = ship
+	target_cell = cell
+	target_room = ship.room_at(cell)
+	target_suit = null
+
+
 func clear_target() -> void:
 	target_ship = null
 	target_room = -1
+	target_cell = Vector2i(999, 999)
 	target_suit = null
 
 
