@@ -8,7 +8,7 @@ const MAX_CREW_PER_SHIP := 8
 const MAX_SQUAD := 6
 
 var run: RunState
-var mercenary: Ship = null   # the hired ship a contract event is about: {merc}, {price}, {jumps}
+var mercenary: Ship = null   # the hired ship a contract event is about: {merc}, {price}, {jumps} ("3 jumps")
 
 
 func _init(owner: RunState) -> void:
@@ -79,7 +79,8 @@ func fill_text(text: String, crew_name: String = "") -> String:
 	result = result.replace("{ship}", run.living_ships()[0].name if not run.living_ships().is_empty() else "your ship")
 	if mercenary:
 		result = result.replace("{merc}", mercenary.name).replace("{price}", Mawjig.format(run.renewal_price(mercenary)))
-		result = result.replace("{jumps}", str(mercenary.contract.get("jumps", 0)))
+		var jumps := int(mercenary.contract.get("jumps", 0))
+		result = result.replace("{jumps}", "%d jump%s" % [jumps, "" if jumps == 1 else "s"])
 	if crew_name.is_empty():
 		var anyone := _any_crew()
 		crew_name = anyone.name if anyone else "your crew"

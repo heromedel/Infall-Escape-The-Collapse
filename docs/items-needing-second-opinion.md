@@ -15,17 +15,6 @@ reviewed its part on 2026-10-31; what was changed is under **Checked**, and what
 3. **Ship and loadout values** are now worked out from their parts by Eco's rules (GV 8B), so the typed values
    (Chestnut 488.4, Burr 188.81 and the rest) are gone. Ship Designs may want to look at what the parts give.
 
-### For Lori
-
-1. **The mercenary events** (`infall-godot/content/events/neutral.xml`): NEUTRAL_MERCENARY reworded ("hunt with
-   you for a while"), MERCENARY_MECHA, MERCENARY_TENTAURI, MERCENARY_SENTI, MERCENARY_SURVIVALISTS, and the two
-   the game shows itself, MERCENARY_CONTRACT_UP and MERCENARY_WALKOUT (GV 7C).
-2. **The species words** (GV 7A): `{gatos:children|kittens}` in DISTRESS_GATOS_FAMILY, the GATOS freighter
-   (hostile.xml) and The Colony Ship's message (core.xml); "name the next {gatos:baby|kitten}";
-   `{gatos:childishly|kittenishly}` in MECHA_TERRITORY; the Senti's "holographic {gatos:people|cats}".
-3. **GATOS names:** the fifteen human names used with Terrans and the cat-only names used with Tabbys
-   (`content/races/terran/race.xml`).
-
 ### For Eco
 
 1. **Shield levels in ship.xml:** stored as bars (level 2 is one layer, as in the genre) while GDD 8H's shield test
@@ -58,6 +47,17 @@ reviewed its part on 2026-10-31; what was changed is under **Checked**, and what
   Godot Relay Picket → **Beacon Picket** (the docs' Relay Picket is a different ship). Ids are unchanged.
 - Fine as they are: the Patrol Cutter, every ship's Medbay room, the Assault Frame's EVB Dock and weapon names, the
   Packrunner, the Tentauri Seedpod, and the other squads' budgets.
+
+### Lori, evening (2026-10-31)
+
+- Mercenary events: NEUTRAL_MERCENARY "will hunt with you"; MERCENARY_SENTI speaks as "We, The Senti-" (it is a
+  negotiation); "a battered pirate scrapper" in lower case; MERCENARY_CONTRACT_UP keeps numbers out of the prose,
+  with the term and price on the choice ("Renew the contract for another 3 jumps", singular for one).
+  MERCENARY_MECHA, MERCENARY_TENTAURI and MERCENARY_WALKOUT fine as they are.
+- Species words read right both ways. The GATOS names fit; "Captain Fluff" is now "Sir Fluff", so no name carries a
+  rank.
+- Kept: Lori suggested dropping "more gangs than federation" from the GATOS description, but race profile Terrans 1
+  says they are "like a loose alliance of gangs, not a federation" (Likely, 2026-10-27), so it stays.
 
 ### Lori (2026-10-31)
 
