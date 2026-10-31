@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- SC-1 "Outrider", the Terran starting scout (ship-suggestions.md, 2026-10-22). Player ship; met as an enemy, a
+     Terran ship shows pirate orange (GDD 14D). Gap references are listed in README.md. -->
+<ship bands="2-8" name="SC-1 Outrider" race="Terran" faction="GATOS" color="#66FF66" hull="30" missiles="8">
+  <note>A well-equipped light battle scout: a 3-shot laser to strip shields and a light missile that ignores them. Sensors 2 for map range.</note>
+  <power kind="AZC" level="2"/>                                     <!-- G2: powers 4 drawing systems at full; one is off at a time -->
+  <system type="piloting" level="1" draws="false"/>
+  <system type="sensors" level="2" draws="false"/>
+  <system type="airlock" level="1" draws="false"/>
+  <system type="shields" level="1"/>
+  <system type="engines" level="2"/>
+  <system type="lifeSupport" level="1"/>
+  <system type="medBay" level="1"/>
+  <system type="weapon" id="weapons" name="Weapons" level="3">       <!-- G3: one system, 3 slots -->
+    <weapon name="Gat 3.1 Triblast" kind="laser" power="2" shots="3" damage="1" conduitDamage="10" mount="3"/>   <!-- G4, G9 -->
+    <weapon name="Gat M1 Pathfinder" kind="missile" power="1" shots="1" damage="1" breach="10" conduitDamage="10" mount="4"/>
+  </system>
+  <crew name="Pilot" race="Terran" station="piloting"/>
+  <crew name="Gunner" race="Terran" station="weapons"/>
+  <crew name="Shields" race="Terran" station="shields"/>
+  <!-- G19: suggested floor layout and conduit wheel = ship-suggestions.md (content/ships/outrider/ship.xml on Cloud-C-Init-Coding). -->
+  <!-- Captain plan, Ai-Generated-Proposal (2026-10-30). Lines marked G22-G27 use the plan lines for those gaps (README.md); Deck Collapse has them now. -->
+  <ai plan="destroy">
+    <!-- An all-rounder: strip shields with the 3-shot laser, missile the guns. -->
+    <target system="shields" weapon="Gat 3.1 Triblast" weight="0.8"/>
+    <target system="weapon" weapon="Gat M1 Pathfinder" weight="0.8"/>
+    <target system="weapon" when="enemyShieldsDown" weapon="Gat 3.1 Triblast"/>
+    <target system="piloting" weapon="Gat M1 Pathfinder" when="enemyWeaponsDown" weight="0.5"/>
+  </ai>
+</ship>

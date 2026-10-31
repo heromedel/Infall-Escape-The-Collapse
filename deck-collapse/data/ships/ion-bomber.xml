@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Classic support enemy: ion and laser together. -->
+<ship bands="1-5" name="Ion Bomber" faction="Raiders" color="#FF8500" hull="9" missiles="4">
+  <note>Ions your shields down, then follows with a laser and the odd torpedo.</note>
+  <system type="reactor" level="8"/>
+  <system type="shields" level="1"/>
+  <system type="engines" level="2"/>
+  <system type="piloting" level="1"/>
+  <system type="sensors" level="1"/>
+  <system type="lifeSupport" level="1"/>
+  <system type="medBay" level="1"/>
+  <system type="weapon" id="weapons" name="Weapons" level="3">
+    <weapon ref="ion-burst"/>
+    <weapon ref="spark-laser"/>
+    <weapon ref="torpedo"/>
+  </system>
+  <crew name="Unit K-2" station="piloting"/>
+  <crew name="Unit K-5" station="weapons"/>
+  <crew name="Unit K-8" station="shields"/>
+</ship>

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Rule numbers for Infall: Deck Collapse that aren't tied to one system, weapon or suit.
+  Lists by skill read untrained, Veteran, Master. Edit to rebalance; the game reads this file at start.
+-->
+<rules>
+  <!-- The Jig Drive gains a charge per working Engines level at the end of each turn that Engines and Piloting
+       work and at least 1 power was burned in the Engines (heromedel, 2026-10-29). At this many it can jump. -->
+  <jump chargesNeeded="24"/>
+
+  <!-- Crew in a damaged, breached or burning system may draw an extra Repair card each turn.
+       Uses the crew member's Repair skill. -->
+  <crewDraw repair="10,15,20"/>
+
+  <!-- Crew damage in health pips (heromedel 2026-10-29; a Terran has 10 pips at Default toughness).
+       weaponPerDamage: every crew member in a hit system loses this many pips per point of damage (as in the
+       genre, every point of weapon damage hurts everyone in the room).
+       noAir: per turn in a system with no air. fight: per hit in a crew fight, times the race's attack ÷ 100.
+       treat: healed per Med Bay level when treated (heromedel 2026-10-30: 1). Fire: 1 pip per fire pip, per turn. -->
+  <crewDamage weaponPerDamage="1" noAir="1" fight="2" treat="1"/>
+
+  <!-- Fire (heromedel 2026-10-29): a fire has 1 to maxPips pips and grows by 1 each turn. Each turn it hurts
+       everyone inside 1 pip per fire pip, damages its system by 1, and uses half its pips (rounded down) of the
+       system's air; it goes out when the air is gone (breaches and venting take it all) or its system is broken.
+       A Repair puts out repairPips. As each turn ends it may spread to a neighbouring system as a 1-pip fire;
+       each Airlock Control level lowers the chance. -->
+  <fire maxPips="4" repairPips="2" spreadChance="30" spreadPerAirlockLevel="-10" spreadMinimum="5"/>
+
+  <!-- Turns an enemy boarder needs to move out of the system they're in to another, by your Airlock Control level
+       (0 = none; level 1 doesn't slow them, heromedel). Teleporting and venting aren't slowed. -->
+  <airlock boarderExitTurns="0,0,1,2,3"/>
+
+  <!-- Mawjig (docs/reference/mawjig-cost-table.md). A wreck pays rewardPercent of the ship's value times the band
+       adjustment; killing the crew pays crewKillBonus % more. bandStep: the adjustment rises this % each band, x1.0 in
+       band 1 to x1.7 in band 8 (cost table, Fight rewards, Proposed; economy-findings F1). -->
+  <economy rewardPercent="2.5" crewKillBonus="30" bandStep="10" hullRepair="0.48" missile="1.45" suitPart="1.94" crew="10.89"
+      skillVeteran="0.25" skillMaster="0.37" jumpCost="1.21" startingMawjig="12.11" enemyPursePercent="2.5"/>
+  <!-- startingMawjig: a run's purse (GDD 8K, Proposed).
+       enemyPursePercent: an enemy ship carries its own wreck reward to pay for its shots, this % of its ship value
+       (economy-findings F11, Proposed, heromedel 2026-10-28), times the band adjustment. Unspent
+       Mawjig is not added to the salvage (F11, Likely).
+       suitPart: one battlesuit launch's parts in Classic ammo, the genre's drone part (8 scrap x 0.242). -->
+
+  <!-- Stations between battles (stores, heromedel 2026-10-29). The next station comes gapMin to gapMax stops after
+       the last (Station Frequency: 1 in 5–10); each sells hull repair, missiles and suit parts, plus `sections`
+       random sections (systems, weapons, battlesuits, crew) of itemsPerSection items. Items sell back at
+       sellPercent of their price (genre). cargoSlots hold weapons and suits that aren't in the deck (genre: 4).
+       A bought weapon gets its own weapon system up to maxWeaponSystems. crewSkillChance: % that a crew member for
+       hire is a Veteran in one skill (Ai-Generated-Proposal). systemRepair: Mawjig per damage point, fire or breach
+       with Store System Repair On (Ai-Generated-Proposal: the hull repair price). -->
+  <station gapMin="5" gapMax="10" sections="2" itemsPerSection="3" sellPercent="50" cargoSlots="4"
+      maxWeaponSystems="4" crewSkillChance="30" systemRepair="0.48"/>
+
+  <!-- The Avatar Array (systems.xml aaa, heromedel 2026-10-30, Ai-Generated-Proposal). avatarsPerLevel: Senti it
+       broadcasts per working level. rebroadcastTurns: turns, by level 1..3, before a Senti who died returns. -->
+  <aaa avatarsPerLevel="3" rebroadcastTurns="4,3,2"/>
+
+  <!-- Enemy captains (heromedel 2026-10-30). spareOwnCrew: the % chance, at Easy, Normal and Hard, that a captain
+       aims away from rooms holding its own crew. If every room it could hit holds them, Easy and Normal fire anyway and
+       Hard holds the card. A ship's plan can opt out with <ai spareOwnCrew="false">; a line with when="ownCrewIn"
+       aims at its own crew on purpose. -->
+  <ai spareOwnCrew="50,75,100"/>
+
+  <!-- Weapon rarity (genre: 0 never turns up at random, 1 common to 5 rare). weights: how likely a store is to offer
+       a weapon of each rarity 0..5 against the others it may stock. Ai-Generated-Proposal. -->
+  <rarity weights="0,5,4,3,2,1"/>
+
+  <!-- Difficulty bands (GDD: about 8 bands, each about 10 clusters deep). The band rises every stopsPerBand stops.
+       Enemies are picked from ships allowed in the band (bands="1-3" on a ship), and stations only stock
+       weapons allowed in it. hullRepair: Mawjig per hull point by band (mawjig-cost-table.md). -->
+  <bands stopsPerBand="10" hullRepair="0.48,0.48,0.48,0.73,0.73,0.73,0.97,0.97"/>
+
+  <!-- Beacons (heromedel 2026-10-29): each jump reaches a beacon; eventChance % of them hold an event (data/events.xml),
+       the rest a hostile ship. Event sizes: mawjigLow/Medium, hullLow, missilesLow; wound is health pips lost.
+       Ai-Generated-Proposal numbers (low Mawjig = one jump's cost). -->
+  <beacons eventChance="50" mawjigLow="1.21" mawjigMedium="2.42" hullLow="3" missilesLow="2" wound="3"/>
+
+  <!-- Battlesuits (heromedel 2026-10-29): strayHit is the % chance per bolt that a suit drifting beside the firing
+       weapon (or beside the target of its own side's missed bolt) is hit; guardianHit the % chance a guardian suit
+       hits an enemy suit each turn. A hit wounds the pilot. Ai-Generated-Proposal numbers. -->
+  <suits strayHit="15" guardianHit="50"/>
+
+  <!-- Crew XP (GDD 7H, Decided): XP to reach Veteran, then more to reach Master, and XP per event. -->
+  <xp veteran="100" master="150" dodge="6.7" shieldPopped="1.8" volley="1.5" repairPoint="5.6" combat="12.5"/>
+</rules>

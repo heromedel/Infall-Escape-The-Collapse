@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Crew names for GATOS crew drawn as cats (Crew Portraits: Cat Faces): cat versions of human names.
+  Format after Federation-Home-Planet's name lists (docs/NAMES.md there): each name is M, F or B (both), on a rarity
+  level; a name comes up in proportion to its level's weight. No rarity means the first level.
+  Meothew, Pawl, Mewis and Rawndy are heromedel's (2026-10-29); the rest are Ai-Generated-Proposal.
+  The cat GATOS are a concept, not decided (docs/art/terran/cat-concept-for-gatos on Cloud-C-Art).
+-->
+<names race="gatos" style="cats">
+  <rarity>
+    <level name="common" weight="100"/>
+    <level name="uncommon" weight="30"/>
+    <level name="rare" weight="10"/>
+  </rarity>
+  <name sex="M">Meothew</name>
+  <name sex="M">Pawl</name>
+  <name sex="M">Mewis</name>
+  <name sex="M">Rawndy</name>
+  <name sex="M">Clawd</name>
+  <name sex="M">Purrcy</name>
+  <name sex="M">Pawtrick</name>
+  <name sex="M">Meowrice</name>
+  <name sex="M">Furgus</name>
+  <name sex="M">Clawrence</name>
+  <name sex="M" rarity="uncommon">Mewgene</name>
+  <name sex="M" rarity="rare">Felix</name>
+  <name sex="M" rarity="rare">Sylvester</name>
+  <name sex="F">Clawdia</name>
+  <name sex="F">Purrscilla</name>
+  <name sex="F">Meowgan</name>
+  <name sex="F">Ameowlia</name>
+  <name sex="F">Jennyfur</name>
+  <name sex="F">Kitlyn</name>
+  <name sex="F">Pawla</name>
+  <name sex="F">Mewlissa</name>
+  <name sex="F" rarity="uncommon">Purrdita</name>
+  <name sex="F" rarity="uncommon">Hissabel</name>
+  <name sex="F" rarity="uncommon">Furrah</name>
+  <name sex="F" rarity="rare">Tabitha</name>
+  <name sex="F" rarity="rare">Catalina</name>
+  <name sex="B" rarity="uncommon">Kit</name>
+</names>

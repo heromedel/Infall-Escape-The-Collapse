@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Polyp, flak loadout (2026-10-29, Ai-Generated-Proposal): an alternate loadout (ship-design-process.md), so a swarm
+     mixes shield-poppers with missile ships. A patch of the Polyp (G18). -->
+<loadout bands="1-2" ship="Polyp" name="Polyp (Flak)" inherit="Patch" missiles="0">
+  <system type="weapon" id="weapons" name="Weapons" level="1">
+    <weapon name="Bone Flak" kind="flak" power="1" shots="2" damage="1"/>   <!-- G6: two projectiles -->
+  </system>
+  <!-- Captain plan, Ai-Generated-Proposal (2026-10-30). Lines marked G22-G27 use the plan lines for those gaps (README.md); Deck Collapse has them now. -->
+  <ai plan="destroy">
+    <!-- The flak pops shields so the rest of the swarm's missiles land. Replaces the Polyp's plan. -->
+    <target system="shields" weapon="Bone Flak" weight="0.85"/>
+    <target system="weapon" weapon="Bone Flak" when="enemyShieldsDown"/>
+  </ai>
+</loadout>
