@@ -123,8 +123,8 @@ The list for the next build, in no fixed order. Nothing here is built yet.
 7. **Regions are too large** (heromedel, 2026-10-31: "it looks like I could stick to GATOS territory the whole
    run"). Measured: GATOS space is about 35–40% of all clusters, though the region the squad starts in reaches
    only 1–2 bands outward. Make regions smaller and more of them, and GATOS less common.
-8. **More room between the ships and the barrier** (heromedel, 2026-10-31). Today the Outrider's nose is about 4.5
-   tiles from the barrier.
+8. **More room between the ships and the barrier** (heromedel, 2026-10-31): a fixed gap between every zone and the
+   barrier, the same for every ship, on top of the zone's margin. The gap's size is still to be chosen.
 9. **Check the chaos tester's last open finding:** an event window that stayed open about 20 s while Continue was
    pressed.
 
