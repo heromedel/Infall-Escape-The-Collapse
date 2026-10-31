@@ -31,7 +31,7 @@ var _info := RichTextLabel.new()
 var _backdrop_stars: Array = []
 var _overview: ImageTexture = null
 static var _region_glow: ImageTexture = null   # race regions as soft blobs, built once per galaxy
-static var _region_glow_seed: int = -1
+static var _region_glow_key: String = ""
 
 
 func open(run_state: RunState, jumping_allowed: bool) -> void:
@@ -232,9 +232,10 @@ func _draw() -> void:
 	draw_arc(core, galaxy.outer_radius() * zoom, 0, TAU, 512, Color("#ffd46b", 0.12), 1.0, true)
 	var view := Rect2(Vector2(-200, -200), size + Vector2(400, 400))
 	# Race regions: one faint wash of colour per region, under the clusters
-	if _region_glow == null or _region_glow_seed != galaxy.seed_value:
+	var glow_key := "%d:%d" % [galaxy.seed_value, galaxy.bands]   # the same seed with another run length is another map
+	if _region_glow == null or _region_glow_key != glow_key:
 		_region_glow = _render_regions(galaxy)
-		_region_glow_seed = galaxy.seed_value
+		_region_glow_key = glow_key
 	var outer := galaxy.outer_radius()
 	draw_texture_rect(_region_glow, Rect2(_to_screen(Vector2(-outer, -outer)), Vector2(outer, outer) * 2.0 * zoom), false, Color(1, 1, 1, 0.1))
 	# Links

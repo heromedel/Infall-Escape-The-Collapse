@@ -25,6 +25,7 @@ const ANCHORS := ["top_left", "top_centre", "top_right", "bottom_left", "bottom_
 
 var cards: Dictionary = {}         # id -> {anchor, offset} or {dock, side}, plus folded: bool
 var rects: Dictionary = {}         # id -> where the card was drawn this frame
+var hidden: Dictionary = {}        # cards with nothing to show this frame: placed for their docked cards, not targets
 var dragging: String = ""          # the card being dragged, placed at `drag_position` until it is dropped
 var drag_position := Vector2.ZERO
 
@@ -38,6 +39,7 @@ static func load_saved() -> HudLayout:
 			var saved = file.get_value("cards", id, null)
 			if saved is Dictionary and (saved.has("anchor") or saved.has("dock")):
 				layout.cards[id] = saved
+	layout.break_loops()
 	return layout
 
 
@@ -66,6 +68,22 @@ func set_folded(id: String, folded: bool) -> void:
 	save()
 
 
+## Puts a card back where it started; if that would dock two cards to each other, it is pinned where it is.
+func reset_card(id: String) -> void:
+	var folded := is_folded(id)
+	cards[id] = DEFAULTS[id].duplicate()
+	cards[id]["folded"] = folded
+	break_loops()
+	save()
+
+
+## Undocks any card whose chain of docks leads back to itself, pinning it at the top left, so drawing can't loop.
+func break_loops() -> void:
+	for id in cards:
+		if _docks_to(id, id):
+			cards[id] = {"anchor": "top_left", "offset": rects[id].position if rects.has(id) else Vector2(MARGIN, MARGIN), "folded": is_folded(id)}
+
+
 ## The card a card is docked to, if any.
 func host_of(id: String) -> String:
 	return String(cards.get(id, {}).get("dock", ""))
@@ -79,7 +97,8 @@ func place(id: String, card_size: Vector2, screen_size: Vector2) -> Vector2:
 	var host := host_of(id)
 	if host != "" and rects.has(host):
 		var host_rect: Rect2 = rects[host]
-		return host_rect.position + (Vector2(host_rect.size.x + GAP, 0) if card.side == "right" else Vector2(0, host_rect.size.y + GAP))
+		var docked := host_rect.position + (Vector2(host_rect.size.x + GAP, 0) if card.side == "right" else Vector2(0, host_rect.size.y + GAP))
+		return docked.clamp(Vector2.ZERO, (screen_size - card_size).max(Vector2.ZERO))   # never pushed off the screen
 	var anchor := String(card.get("anchor", "top_left"))
 	var offset: Vector2 = card.get("offset", Vector2(MARGIN, MARGIN))
 	var at := offset
@@ -99,8 +118,8 @@ func drag_to(id: String, top_left: Vector2, screen_size: Vector2) -> void:
 	var xs := [MARGIN, screen_size.x - MARGIN - size.x]
 	var ys := [MARGIN, screen_size.y - MARGIN - size.y]
 	for other in rects:
-		if other == id:
-			continue
+		if other == id or hidden.has(other) or _docks_to(other, id):
+			continue   # cards riding on this one would hold it in place
 		var r: Rect2 = rects[other]
 		xs.append_array([r.position.x, r.end.x + GAP, r.position.x - GAP - size.x, r.end.x - size.x])
 		ys.append_array([r.position.y, r.end.y + GAP, r.position.y - GAP - size.y, r.end.y - size.y])
@@ -122,7 +141,7 @@ func drop(id: String, screen_size: Vector2) -> void:
 	var rect := Rect2(drag_position, size)
 	var folded := is_folded(id)
 	for other in rects:
-		if other == id or _docks_to(other, id):
+		if other == id or hidden.has(other) or _docks_to(other, id):
 			continue
 		var r: Rect2 = rects[other]
 		if absf(rect.position.x - (r.end.x + GAP)) < SNAP and absf(rect.position.y - r.position.y) < SNAP:

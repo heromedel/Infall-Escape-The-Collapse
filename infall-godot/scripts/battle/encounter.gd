@@ -11,7 +11,7 @@ const TICKS := 20
 const DODGE_XP := 6.7
 const SHIELD_XP := 1.8
 const VOLLEY_XP := 1.5
-const SUIT_SPEED := 7.0
+const SUIT_SPEED := 18.0   # pixels a tick: fast enough to cross the zones and the barrier on one tank of air
 const TELEPORT_TICKS := 20
 const SUIT_RETURN_REFUND := 2     # a battlesuit that comes home gives 0.02 Mawjig back (heromedel, economy-findings F5)
 # The barrier (GDD 3Q, 3R): a strip across the battlefield between the squads that stands for the distance
@@ -680,7 +680,7 @@ func _tick_suits() -> void:
 			kept.append(suit)
 			continue
 		var home_point := local_to_world(suit.home, suit.home.design.cell_centre(suit.home.system_by("evb_dock").cell)) if suit.home.system_by("evb_dock") else suit.home.world_position
-		var heading_home_ticks := suit.position.distance_to(home_point) / SUIT_SPEED + crossing_seconds("suit") * TICKS + 40.0
+		var heading_home_ticks := _suit_ticks_to(suit.position, home_point) + 40.0
 		if suit.state != "returning" and (suit.target == null or suit.target.is_gone() or suit.oxygen_ticks < heading_home_ticks or suit.is_damaged()):
 			suit.state = "returning"
 		match suit.state:
@@ -708,6 +708,15 @@ func _tick_suits() -> void:
 					continue
 				kept.append(suit)
 	suits = kept
+
+
+## How long a battlesuit takes to fly between two points: its speed, plus the barrier's extra time when the
+## trip crosses it.
+func _suit_ticks_to(from: Vector2, to: Vector2) -> float:
+	var ticks := from.distance_to(to) / SUIT_SPEED
+	if signf(from.y) != signf(to.y):
+		ticks += maxf(0.0, crossing_seconds("suit") * TICKS - BARRIER_HALF_DEPTH * 2.0 / SUIT_SPEED)
+	return ticks
 
 
 func _suit_target_room(suit: Battlesuit) -> int:
@@ -808,10 +817,12 @@ func _tick_hazard() -> void:
 	# Set every tick, hazard or not, so a storm's penalty ends when the squad leaves it
 	for ship in ships:
 		var stormed := ship.reactor_penalty > 0 or ship.core_capacity_penalty > 0
+		if hazard == "ion_storm" and not stormed:
+			ship.power_before_storm = ship.power_snapshot()
 		ship.reactor_penalty = ship.reactor_level / 2 if hazard == "ion_storm" else 0
 		ship.core_capacity_penalty = 2 if hazard == "ion_storm" else 0
 		if stormed and hazard != "ion_storm":
-			ship.power_everything()   # out of the storm: the power it took comes back
+			ship.restore_power(ship.power_before_storm)   # out of the storm: the power it took comes back
 	if hazard.is_empty():
 		return
 	hazard_timer -= 1

@@ -46,6 +46,7 @@ var links: Dictionary = {}          # Vector2i -> Array of {cell, door}
 var core_cell := Vector2i(999, 999)
 var core_capacity_penalty: int = 0  # an ion storm or other hazard taking core capacity
 var reactor_penalty: int = 0
+var power_before_storm: Dictionary = {}   # power_snapshot() from when an ion storm began
 
 # Fight state
 var world_position := Vector2.ZERO
@@ -555,6 +556,35 @@ func set_weapon_powered(slot: WeaponSlot, on: bool) -> bool:
 	if not on:
 		slot.charge = minf(slot.charge, slot.charge * 0.5)
 	return true
+
+
+## Each system's power and each weapon's switch, so it can be put back later (after an ion storm).
+func power_snapshot() -> Dictionary:
+	var systems_power := {}
+	for system in systems:
+		systems_power[system] = [system.power, system.enabled]
+	var weapons_on := {}
+	for slot in weapons:
+		weapons_on[slot] = slot.powered
+	return {"systems": systems_power, "weapons": weapons_on}
+
+
+## Gives back the power a snapshot recorded, as far as the reactor allows, systems before weapons.
+func restore_power(snapshot: Dictionary) -> void:
+	if snapshot.is_empty():
+		return
+	refresh_conduit_power()
+	for system in snapshot.systems:
+		var was: Array = snapshot.systems[system]
+		if reactor_type == "core":
+			if was[1] and not system.enabled and core_load() < core_capacity():
+				system.enabled = true
+		elif reactor_type == "pool":
+			while system.power < int(was[0]) and can_add_power(system):
+				add_power(system)
+	for slot in snapshot.weapons:
+		if snapshot.weapons[slot] and not slot.powered:
+			set_weapon_powered(slot, true)
 
 
 ## Hands out power at the start of a fight: everything that fits, weapons last.

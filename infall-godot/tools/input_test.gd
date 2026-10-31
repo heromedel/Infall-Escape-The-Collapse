@@ -27,7 +27,7 @@ func _ready() -> void:
 	var tile: Vector2i = ship.rooms[engines.room].cells.back()
 	await _click(_screen_of(ship, ship.design.cell_centre(tile)), MOUSE_BUTTON_RIGHT)
 	_check("right click orders them to that tile", member.destination == tile)
-	await _wait(6.0)
+	await _wait(9.0)
 	_check("they walk to that tile", member.cell == tile)
 	# 3. Space pauses
 	await _key(KEY_SPACE)

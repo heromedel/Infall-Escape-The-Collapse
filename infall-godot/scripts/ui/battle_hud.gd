@@ -27,6 +27,8 @@ var layout := HudLayout.load_saved()
 var _drag_grab := Vector2.ZERO        # where on the card the grab bar was taken
 var _trouble: Dictionary = {}         # card -> how much is wrong on it, to notice when it gets worse
 var _peeking: Dictionary = {}         # folded card -> time of its last change, while it shows itself
+var _last_sizes: Dictionary = {}      # card -> its size when it last had something to show
+var _placing: Dictionary = {}         # cards being placed this frame
 
 
 func _ready() -> void:
@@ -42,6 +44,8 @@ func flash_message(text: String) -> void:
 
 func _process(delta: float) -> void:
 	_time += delta
+	if layout.dragging != "" and not Input.is_mouse_button_pressed(MOUSE_BUTTON_LEFT):
+		layout.drop(layout.dragging, size)   # the release was missed (the HUD was hidden mid-drag)
 	if _message_time > 0.0:
 		_message_time -= delta
 	var mouse := get_local_mouse_position()
@@ -66,7 +70,7 @@ func _input(event: InputEvent) -> void:
 			layout.drop(layout.dragging, size)
 			get_viewport().set_input_as_handled()
 		return
-	if event is InputEventMouseButton and event.pressed:
+	if event is InputEventMouseButton and event.pressed and event.button_index in [MOUSE_BUTTON_LEFT, MOUSE_BUTTON_RIGHT]:
 		for id in _peeking.keys():   # clicking a card that opened by itself keeps it open
 			if layout.rects.has(id) and layout.rects[id].has_point(get_local_mouse_position()):
 				_peeking.erase(id)
@@ -107,6 +111,7 @@ func _draw() -> void:
 		return
 	var ship := screen.selected_ship
 	layout.rects.clear()
+	layout.hidden.clear()
 	for id in HudLayout.DEFAULTS:
 		if id == "top" or (ship and not ship.is_gone()):
 			_draw_card(id, ship)
@@ -119,20 +124,27 @@ func _draw() -> void:
 
 ## Draws one card where the layout puts it (its host first, if it is docked), folded or open, with its grab bar.
 func _draw_card(id: String, ship: Ship) -> void:
-	if layout.rects.has(id):
+	if layout.rects.has(id) or _placing.has(id):
 		return
+	_placing[id] = true   # a guard: docks are checked for loops, but drawing must never recurse forever
 	var host := layout.host_of(id)
 	if host != "" and HudLayout.DEFAULTS.has(host) and (host == "top" or ship):
 		_draw_card(host, ship)
+	_placing.erase(id)
 	_watch(id, ship)
 	var full := _card_size(id, ship)
 	var folded := layout.is_folded(id) and not _peeking.has(id)
 	var card_size := Vector2(clampf(full.x, 170.0, 260.0), FOLDED_HEIGHT) if folded and full != Vector2.ZERO else full
+	if full == Vector2.ZERO:
+		# Nothing to show: hold its place at its last size for cards docked to it, but don't draw it
+		var held: Vector2 = _last_sizes.get(id, Vector2(170, 40))
+		layout.rects[id] = Rect2(layout.place(id, held, size), held)
+		layout.hidden[id] = true
+		return
+	_last_sizes[id] = card_size
 	var at := layout.place(id, card_size, size)
 	var rect := Rect2(at, card_size)
 	layout.rects[id] = rect
-	if full == Vector2.ZERO:
-		return
 	if folded:
 		UiKit.draw_frame(self, rect, _panel(), UiColours.BORDER_DIM, 5.0)
 		UiKit.draw_text(self, rect.position + Vector2(12, 18), CARD_NAMES[id], 13, UiColours.TEXT_DIM, UiKit.font_bold())
@@ -206,9 +218,7 @@ func _toggle_fold(id: String) -> void:
 
 
 func _reset_card(id: String) -> void:
-	layout.cards[id] = HudLayout.DEFAULTS[id].duplicate()
-	layout.cards[id]["folded"] = false
-	layout.save()
+	layout.reset_card(id)
 
 
 ## Notices when something gets worse on a card. A folded card then shows itself, and folds again five quiet
@@ -216,8 +226,9 @@ func _reset_card(id: String) -> void:
 ## Back).
 func _watch(id: String, ship: Ship) -> void:
 	var trouble := _card_trouble(id, ship)
-	var worse := trouble > float(_trouble.get(id, trouble)) + 0.01
-	_trouble[id] = trouble
+	var key := "%s:%d" % [id, ship.get_instance_id() if ship else 0]   # per ship, so switching ships isn't a change
+	var worse := trouble > float(_trouble.get(key, trouble)) + 0.01
+	_trouble[key] = trouble
 	if not layout.is_folded(id):
 		_peeking.erase(id)
 		return
@@ -802,6 +813,9 @@ func _draw_offscreen_marker(ship: Ship) -> bool:
 	draw_colored_polygon(PackedVector2Array([point + direction * 18.0, point + side * 11.0, point - side * 11.0]), Color(colour, 0.9))
 	var label_at := point - direction * 34.0
 	var box := Rect2(label_at - Vector2(64, 18), Vector2(128, 36))
+	for id in layout.rects:
+		if not layout.hidden.has(id) and layout.rects[id].grow(4.0).intersects(box.merge(Rect2(point - Vector2(18, 18), Vector2(36, 36)))):
+			return true   # a card is in the way: the card matters more than the arrow
 	draw_rect(box, Color(0.02, 0.035, 0.07, 0.85))
 	draw_rect(box, Color(colour, 0.6), false, 1.0)
 	UiKit.draw_text(self, box.position + Vector2(64, 15), ship.name, 12, UiColours.TEXT, UiKit.font_bold(), HORIZONTAL_ALIGNMENT_CENTER, 0)
