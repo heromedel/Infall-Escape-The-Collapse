@@ -62,7 +62,7 @@ reviewed its part on 2026-10-31; what was changed is under **Checked**, and what
 - SENTI_DOOMED_ARCHIVE is for doomed Senti only; SENTI_PICKET is for border clusters and speaks plainly.
 - heromedel's answers (2026-10-31): the GATOS are officially cats, so DISTRESS_GATOS_FAMILY's kittens stay (GV 7A);
   MECHA_TERRITORY's "HalfMech" line stays (GV 7B); mercenaries should work on contracts (GV 7C), not built yet.
-  STRANDED is heromedel's text and waits on his answer about "1.21 Jigawatts".
+  STRANDED keeps "1.21 Jigawatts" (the same thing as 1.21 Mawjig, GV 6A) and now says "you", not "we".
 
 ### Eco (2026-10-31)
 

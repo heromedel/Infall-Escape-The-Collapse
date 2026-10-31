@@ -55,7 +55,7 @@ The Colony Ship's signal comes through weaker than before. "Our messages to the 
 	</event>
 
 	<event id="STRANDED" kind="wait">
-		<text>Your squad has become stranded due to not enough Mawjig to jump. Checking the manual it says the "Material to Energy, Space-Time JigaWatt Powered, Jump Drive" needs at least 1.21 Jigawatts to power a jump. Luckily the Power Cores on a ship can produce enough "Materials Worth of Jigawatts" to eventually power a jump, if we wait long enough.</text>
+		<text>Your squad has become stranded due to not enough Mawjig to jump. Checking the manual it says the "Material to Energy, Space-Time JigaWatt Powered, Jump Drive" needs at least 1.21 Jigawatts to power a jump. Luckily the Power Cores on a ship can produce enough "Materials Worth of Jigawatts" to eventually power a jump, if you wait long enough.</text>
 		<choice text="Keep waiting..."/>
 	</event>
 

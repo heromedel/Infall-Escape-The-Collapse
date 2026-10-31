@@ -46,6 +46,14 @@ anything Claude added tagged Ai-Generated-Proposal.
   every tick, whatever they are doing, while fire or lack of air keeps hurting them. It heals allies from any
   ship of the squad, never enemies. (The room rule is GDD 5B.)
 
+## 6. Jump Travel
+
+- **A — Decided (heromedel, 2026-10-31):** the manual's "needs at least 1.21 Jigawatts" (GDD 9B) stays: a Jigawatt
+  and a Materials Worth of Jigawatts (a Mawjig) are exactly the same thing, so 1.21 Jigawatts is a jump's 1.21
+  Mawjig. The STRANDED text now says "if you wait long enough", not "we".
+- **B — Decided (heromedel, 2026-10-31):** "the Power Cores on a ship" is deliberately vague: every ship has some
+  kind of power generation, whatever its race, so the line fits every squad.
+
 ## 7. Races and Crew
 
 - **A — Decided (heromedel, 2026-10-31):** the GATOS are officially cats, and G.A.T.O.S. stands for the Galactic
@@ -54,6 +62,10 @@ anything Claude added tagged Ai-Generated-Proposal.
   the name HalfMechs (the MECHA_TERRITORY event).
 - **C — Proposed (heromedel, 2026-10-31):** hired mercenaries work on a contract, which can be renewed for a price
   that rises each time. If any of the mercenary crew die, the mercenaries are likely to leave after the battle.
+- **D — Proposed (heromedel, 2026-10-31):** with the GATOS as cats, the HalfMechs are kitten-like rather than
+  childlike, and the Senti would be holographic cats. Crew portraits could follow: cats in the HalfMech colour
+  palette for the Mecha, and semi-transparent yellow-green cats with holographic distortion or scan lines for the
+  Senti. Human Terran portraits would avoid this if decent ones could be made.
 
 ## 8. Weapons and Systems
 
@@ -81,4 +93,5 @@ anything Claude added tagged Ai-Generated-Proposal.
 | --- | --- |
 | 2026-10-31 | The doc started; today's decisions recorded (GV 2A–14D). |
 | 2026-10-31 | The GATOS are cats: the Galactic Alliance of Tabby Occupied Systems (GV 7A, race profiles). |
-| 2026-10-31 | Mercenaries on renewable contracts (GV 7C); HalfMechs may be learned through a Mecha crew member (GV 7B). |
+| 2026-10-31 | Mercenaries on renewable contracts (GV 7C), for the next build; HalfMechs may be learned through a Mecha crew member (GV 7B). |
+| 2026-10-31 | 1.21 Jigawatts is 1.21 Mawjig (GV 6A); "the Power Cores on a ship" covers every ship (GV 6B); kitten-like HalfMechs and holographic cat Senti proposed (GV 7D). |
