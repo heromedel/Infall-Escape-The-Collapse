@@ -24,6 +24,7 @@ and the game build the same ship:
 - **Rooms:** numbered, each by its two corner tiles from the centre, e.g. `Room 0: (-1,-1),(0,0)`.
 - **Systems:** keyed by name (plus a label if there are two, e.g. `Weapons A`), with tile, wall and level/power.
   One tile per system. Anything not listed doesn't exist, so Life Support is never left out by accident.
+  **Decided (2026-10-31, heromedel):** a Medbay may share a room only with systems crew can't man (GDD 5B).
 - **Doors:** numbered, by tile and facing; airlocks are doors facing space. EVA and EVB Docks sit next to one.
 - **Other data:** hull, reactor (or Mecha self-power; Terran conduits tile by tile with directions, GDD 5H),
   starting weapons and crew, and the weapon mounts (coordinates on the ship; the hull art at most hints at them).
