@@ -620,7 +620,7 @@ func _tick_beams() -> void:
 
 # --- Battlesuits ----------------------------------------------------------------------------------------------
 
-func launch_suit(ship: Ship, target: Ship) -> bool:
+func launch_suit(ship: Ship, target: Ship, target_room: int = -1) -> bool:
 	var dock := ship.system_by("evb_dock")
 	if dock == null or ship.system_power(dock) <= 0 or ship.evb_cooldown > 0 or ship.suits.is_empty() or ship.suit_out:
 		return false
@@ -644,6 +644,7 @@ func launch_suit(ship: Ship, target: Ship) -> bool:
 	suit.pilot = pilot
 	suit.home = ship
 	suit.target = target
+	suit.target_room = target_room
 	suit.side = ship.side
 	suit.oxygen_ticks = suit_def.suit_oxygen_ticks + 100 * maxi(0, ship.system_power(dock) - 2)
 	suit.position = local_to_world(ship, ship.design.cell_centre(dock.cell))

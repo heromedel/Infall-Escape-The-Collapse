@@ -38,4 +38,11 @@
 		<member race="tentauri" station="piloting"/>
 		<member race="tentauri" station="shields"/>
 	</crew>
+	<!-- Captain plan, as in the card game version's ship file: knock out the guns that could stop it, then the
+	     engines that could chase it. -->
+	<ai plan="destroy">
+		<target system="weapons" weapon="Tentauri Defense Laser" weight="0.8"/>
+		<target system="shields" weapon="Tentauri Defense Laser" when="enemyWeaponsDown" weight="0.6"/>
+		<target system="engines" weapon="Tentauri Defense Laser" when="enemyWeaponsDown"/>
+	</ai>
 </ship>

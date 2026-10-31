@@ -43,4 +43,10 @@
 		<member race="mecha" station="piloting"/>
 		<member race="mecha" station="weapons"/>
 	</crew>
+	<!-- Captain plan, as in the card game version's ship file: the Hull Laser goes for the guns once the shield
+	     is down, otherwise the shield. -->
+	<ai plan="destroy">
+		<target system="weapons" weapon="DS-ST Hull Laser" when="enemyShieldsDown" weight="0.85"/>
+		<target system="shields" weapon="DS-ST Hull Laser" weight="0.75"/>
+	</ai>
 </ship>

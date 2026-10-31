@@ -31,6 +31,7 @@ var conduits: Dictionary = {}    # Vector2i -> bit mask of N, E, S, W
 var mounts: Array = []           # {id, position: Vector2 (local pixels), slide: Vector2}
 var weapons: Array = []          # {id, mount}
 var suits: Array = []            # battlesuit ids for an EVB Dock
+var plan: CaptainPlan = null     # the captain's plan from <ai>, if the file has one
 var crew: Array = []             # {race, name, station}
 var art_path: String = ""
 var art_scale: float = 1.0
@@ -79,7 +80,7 @@ static func _entry_key(node: XmlTree) -> String:
 			return node.tag + ":" + node.get_attr("id")
 		"system":
 			return "system:" + node.get_attr("id") + ":" + node.get_attr("label")
-		"reactor", "art", "weapons", "suits", "crew", "description":
+		"reactor", "art", "weapons", "suits", "crew", "description", "ai":
 			return node.tag
 	return ""
 
@@ -214,6 +215,10 @@ func _read(node: XmlTree) -> void:
 						crew.append({"race": member.get_attr("race", race), "name": member.get_attr("name", ""), "station": member.get_attr("station", "")})
 			"description":
 				description = child.get_clean_text()
+			"ai":
+				plan = CaptainPlan.read(child)
+				for problem in plan.problems:
+					problems.append("%s: captain plan: %s" % [id, problem])
 	_link_layout()
 
 
