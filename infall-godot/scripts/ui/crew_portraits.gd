@@ -1,11 +1,9 @@
 class_name CrewPortraits
 extends RefCounted
 ## Crew portrait tokens: a round token with a small face for each race, so crew read at a glance without
-## animated sprites. The GATOS are cats. A crew member's look (fur, eyes) comes from their name, so it stays
-## the same all run.
+## animated sprites. The GATOS are cats, drawn as the approved pixel-art cat head (CrewFace). A crew member's
+## look comes from their name, so it stays the same all run.
 
-const FURS := [Color("#e39a4b"), Color("#8d939c"), Color("#2e2e35"), Color("#e9dcc4"), Color("#f2efe8"), Color("#b0703a"), Color("#6b6f78")]
-const CAT_EYES := [Color("#9be36b"), Color("#f2c84b"), Color("#6fc6ff"), Color("#e8a23a")]
 
 
 static func draw_token(canvas: CanvasItem, race_id: String, seed_text: String, centre: Vector2, radius: float, ring: Color, rim_width: float = 2.0) -> void:
@@ -19,7 +17,7 @@ static func draw_face(canvas: CanvasItem, race_id: String, seed_text: String, ce
 	var seed := absi(hash(seed_text))
 	match race_id:
 		"terran":
-			_cat(canvas, seed, centre, r)
+			CrewFace.draw(canvas, centre, seed_text, r * 2.0 / CrewFace.WIDTH)
 		"mecha":
 			_mecha(canvas, centre, r)
 		"tentauri":
@@ -34,42 +32,6 @@ static func draw_face(canvas: CanvasItem, race_id: String, seed_text: String, ce
 			_malphen(canvas, seed, centre, r)
 		_:
 			canvas.draw_circle(centre, r * 0.7, Color("#c9cfd8"))
-
-
-static func _cat(canvas: CanvasItem, seed: int, c: Vector2, r: float) -> void:
-	var fur: Color = FURS[seed % FURS.size()]
-	var dark := fur.darkened(0.35)
-	var eye: Color = CAT_EYES[(seed / 7) % CAT_EYES.size()]
-	# ears
-	for side in [-1.0, 1.0]:
-		var ear := PackedVector2Array([c + Vector2(side * r * 0.82, -r * 0.05), c + Vector2(side * r * 0.62, -r * 0.98), c + Vector2(side * r * 0.12, -r * 0.5)])
-		canvas.draw_colored_polygon(ear, fur)
-		var inner := PackedVector2Array([c + Vector2(side * r * 0.64, -r * 0.18), c + Vector2(side * r * 0.58, -r * 0.74), c + Vector2(side * r * 0.3, -r * 0.45)])
-		canvas.draw_colored_polygon(inner, Color("#f0a3a8"))
-	# head
-	canvas.draw_circle(c + Vector2(0, r * 0.08), r * 0.74, fur)
-	if seed % 3 == 0:
-		# tabby stripes on the forehead
-		for index in 3:
-			var x := (index - 1) * r * 0.22
-			canvas.draw_line(c + Vector2(x, -r * 0.6), c + Vector2(x * 0.8, -r * 0.3), dark, r * 0.09, true)
-	if seed % 5 == 1:
-		# a patch, for calicos and odd-eyed toms
-		canvas.draw_circle(c + Vector2(-r * 0.32, -r * 0.18), r * 0.26, Color("#e39a4b") if fur != Color("#e39a4b") else Color("#2e2e35"))
-	# muzzle
-	canvas.draw_circle(c + Vector2(-r * 0.15, r * 0.36), r * 0.22, fur.lightened(0.35))
-	canvas.draw_circle(c + Vector2(r * 0.15, r * 0.36), r * 0.22, fur.lightened(0.35))
-	# eyes
-	for side in [-1.0, 1.0]:
-		var at := c + Vector2(side * r * 0.3, -r * 0.02)
-		canvas.draw_circle(at, r * 0.17, eye)
-		canvas.draw_line(at + Vector2(0, -r * 0.13), at + Vector2(0, r * 0.13), Color("#101014"), r * 0.08, true)
-	# nose and whiskers
-	canvas.draw_colored_polygon(PackedVector2Array([c + Vector2(-r * 0.1, r * 0.2), c + Vector2(r * 0.1, r * 0.2), c + Vector2(0, r * 0.31)]), Color("#e87d8a"))
-	var whisker := Color(1, 1, 1, 0.7)
-	for side in [-1.0, 1.0]:
-		canvas.draw_line(c + Vector2(side * r * 0.3, r * 0.38), c + Vector2(side * r * 0.95, r * 0.28), whisker, maxf(0.6, r * 0.04), true)
-		canvas.draw_line(c + Vector2(side * r * 0.3, r * 0.44), c + Vector2(side * r * 0.95, r * 0.5), whisker, maxf(0.6, r * 0.04), true)
 
 
 static func _mecha(canvas: CanvasItem, c: Vector2, r: float) -> void:
