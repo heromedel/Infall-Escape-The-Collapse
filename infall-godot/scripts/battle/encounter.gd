@@ -789,7 +789,7 @@ func send_boarders(ship: Ship, target: Ship, room_index: int) -> bool:
 		return false
 	for member in party:
 		_land(member, target, room_index)
-	ship.teleporter_cooldown = [600, 600, 400, 200][mini(ship.system_power(teleporter), 3)]
+	ship.teleporter_cooldown = Ship.TELEPORTER_COOLDOWN_TICKS[mini(ship.system_power(teleporter), 3)]
 	note("teleported", {"ship": ship, "target": target, "count": party.size()})
 	return true
 
@@ -804,7 +804,7 @@ func recall_boarders(ship: Ship) -> bool:
 			_land(member, ship, teleporter.room)
 			any = true
 	if any:
-		ship.teleporter_cooldown = [600, 600, 400, 200][mini(ship.system_power(teleporter), 3)]
+		ship.teleporter_cooldown = Ship.TELEPORTER_COOLDOWN_TICKS[mini(ship.system_power(teleporter), 3)]
 		note("teleported", {"ship": ship, "target": ship, "count": 0})
 	return any
 

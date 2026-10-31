@@ -98,8 +98,8 @@ Lori or Eco is listed in `docs/items-needing-second-opinion.md`.
   walkways; the conduit rule used is concerns.md item 3's last proposal (no rerouting action: a system has power if an
   unbroken path reaches the AZC).
 - **The final battle:** the Last Fleet, a band of doomed GATOS at the rim (ideas: default final enemy).
-- **Numbers the docs leave open:** layer recharge 2 s, crew 2.2 tiles a second, repair 5.5 s a bar, 15 crew damage a
-  point of hull damage, the Supershield regrowing a layer every 20, 15 or 10 s, teleporter cooldowns 30/20/10 s,
+- **Numbers the docs leave open:** layer recharge 2 s, crew 2.2 tiles a second, repair 12.5 s a bar, fire 10.4 s, 15 crew damage a
+  point of hull damage, the Supershield regrowing a layer every 20, 15 or 10 s, teleporter cooldowns 20/15/10 s,
   suit sorties of about 30 s.
 
 ## Not in this build yet

@@ -39,6 +39,9 @@ anything Claude added tagged Ai-Generated-Proposal.
     arrow at the screen's edge.
 - **G — Likely (heromedel, 2026-10-31):** background planets are larger, look more distant and stay nearly still
   as the camera moves.
+- **H — Ai-Generated-Proposal (2026-10-31):** as in the genre, power that damage or ion took from a system or a
+  weapon comes back by itself once the bars work again. If the player has put that power elsewhere meanwhile, it
+  stays where they put it. (Before this, weapons knocked off by a hit stayed off after the repair.)
 
 ## 5. Ships
 
@@ -76,10 +79,10 @@ anything Claude added tagged Ai-Generated-Proposal.
   - **Idea (heromedel, 2026-10-31):** the HalfMech kittens follow the HalfMech pilot art's dark look: black
     kittens in dark tones, with blue, green or purple eyes and Mecha power purple implants.
 
-- **E — Proposed (heromedel, 2026-10-31):** for the next build, alongside the mercenary work: the genre's
-  community-wiki timings that Infall: Eco passed on (not timed in game): repair 12.5 s a system bar for an untrained
-  crew member, fire-fighting 10.4 s, teleporter cooldowns 20, 15 and 10 s by level (now 5.5 s, about 6 s and
-  30/20/10 s).
+- **E — Likely (heromedel, 2026-10-31):** the genre's community-wiki timings that Infall: Eco passed on (not timed
+  in game): repair 12.5 s a system bar for an untrained crew member, fire-fighting 10.4 s, teleporter cooldowns
+  20, 15 and 10 s by level (were 5.5 s, about 6 s and 30/20/10 s). The teleporter's cooldown resets outside
+  fights. Built.
 
 ## 8. Weapons and Systems
 
@@ -87,7 +90,10 @@ anything Claude added tagged Ai-Generated-Proposal.
   0.02 Mawjig back when it comes home (economy-findings F5).
 - **B — Decided (heromedel, 2026-10-31):** a ship's value is worked out from its parts when the game loads, by
   `system-prices.md`'s rules (Infall: Eco; hull, systems, rooms, doors, mounts, reactor and weapons), not typed into
-  each ship file.
+  each ship file. Built (`scripts/core/ship_value.gd`).
+  - **Likely (Infall: Eco, 2026-10-31):** a room holding several systems counts its dearest; the AZC counts as a
+    room's system at its level-1 price, 18.15; a shields room at one layer's price, 54.46. The Supershield costs
+    38.72, with upgrades of 7.26 and 12.11.
 
 ## 14. User Interface
 

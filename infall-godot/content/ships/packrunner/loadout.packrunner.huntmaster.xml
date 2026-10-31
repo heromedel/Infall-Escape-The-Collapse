@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<loadout id="huntmaster" ship="packrunner" name="Lykario Huntmaster" class="Huntmaster" inherit="patch" hull="15" value="291.8">
+<loadout id="huntmaster" ship="packrunner" name="Lykario Huntmaster" class="Huntmaster" inherit="patch" hull="15">
 	<reactor type="pool" level="13"/>
 	<system id="shields" tile="2,-1" level="4" wall="east"/>
 	<system id="crew-teleporter" tile="-2,-1" level="2" wall="west"/>

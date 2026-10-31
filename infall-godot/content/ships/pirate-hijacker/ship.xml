@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Terran Pirate Hijacker, doomed GATOS turned pirate, bands 4-6 (docs/ship-suggestions.md). It wants your ship
      intact: spores on your engines and piloting, then boarders. -->
-<ship id="pirate-hijacker" name="Pirate Hijacker" class="Hijacker" race="terran" faction="pirate" style="pirate" center_x="Point" center_y="Tile" hull="14" value="267.61">
+<ship id="pirate-hijacker" name="Pirate Hijacker" class="Hijacker" race="terran" faction="pirate" style="pirate" center_x="Point" center_y="Tile" hull="14">
 	<reactor type="core" level="3"/>
 	<art hull="pirate-hijacker-hull-2x.png" scale="0.5" center="240,352.5"/>
 	<description>A classic GATOS cruiser gone dark and scorched, with a stolen Azurethea launcher refitted into a starboard hardpoint.</description>

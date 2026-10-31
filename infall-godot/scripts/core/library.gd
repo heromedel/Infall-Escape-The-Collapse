@@ -92,6 +92,9 @@ func _load_ships() -> void:
 				if loadout:
 					ships[loadout.id] = loadout
 					_note_problems(loadout)
+	# Values come from the ships' parts (system-prices.md), once every system and weapon is loaded
+	for design in ships.values():
+		design.value = ShipValue.of(design)
 
 
 func _note_problems(design: ShipDesign) -> void:

@@ -19,7 +19,7 @@ var race: String = "terran"
 var faction: String = ""          # whose colours it flies: gatos, pirate, mecha, ...
 var style: String = ""            # how a missing hull is drawn: terran, pirate, mecha, tentauri, ...
 var hull: int = 10
-var value: int = 10000           # Mawjig hundredths; what a wreck pays from (GDD 8I)
+var value: int = 0               # Mawjig hundredths, worked out from the parts by ShipValue (GDD 8I: wrecks pay from it)
 var reactor_type: String = "pool"   # pool (bars), core (the AZC and conduits), none (each system powers itself)
 var reactor_level: int = 8
 var cell_offset := Vector2.ZERO   # local pixel position of cell (0,0)'s top-left corner
@@ -29,6 +29,7 @@ var doors: Array = []            # {id, a: Vector2i, b: Vector2i, to_space: bool
 var systems: Array = []          # {id, label, cell, room, wall, level, own_power}
 var conduits: Dictionary = {}    # Vector2i -> bit mask of N, E, S, W
 var mounts: Array = []           # {id, position: Vector2 (local pixels), slide: Vector2}
+var mounts_listed: int = 0       # how many mounts the file lists; the rest were placed by default
 var weapons: Array = []          # {id, mount}
 var suits: Array = []            # battlesuit ids for an EVB Dock
 var plan: CaptainPlan = null     # the captain's plan from <ai>, if the file has one
@@ -136,7 +137,6 @@ func _read(node: XmlTree) -> void:
 	faction = node.get_attr("faction", race)
 	style = node.get_attr("style", faction)
 	hull = node.get_int("hull", 10)
-	value = Mawjig.amount(node.get_float("value", 100.0))
 	var centre_mode := node.get_attr("center", "Tile")
 	var point_x := node.get_attr("center_x", centre_mode) == "Point"
 	var point_y := node.get_attr("center_y", centre_mode) == "Point"
@@ -268,6 +268,7 @@ func _link_layout() -> void:
 			continue
 		kept.append(door)
 	doors = kept
+	mounts_listed = mounts.size()
 	if mounts.is_empty():
 		_place_default_mounts()
 	if reactor_type == "core" and conduits.is_empty():

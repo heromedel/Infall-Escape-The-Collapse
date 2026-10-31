@@ -8,6 +8,7 @@ const SHOT_GAP_TICKS := 5          # 0.25 s between the shots of one volley
 var def: WeaponDef
 var mount_id: int = -1
 var powered: bool = false
+var power_lost: bool = false        # switched off by damage or ion, switched back on once it fits again
 var charge: float = 0.0            # ticks charged
 var target_ship: Ship = null
 var target_room: int = -1
