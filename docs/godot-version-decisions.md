@@ -121,11 +121,19 @@ The list for the next build, in no fixed order. Nothing here is built yet.
 6. **Upgrade prices read as "+6.05"** (heromedel, 2026-10-31): show the plain price as the store does, with the
    low Mawjig warning.
 7. **Regions are too large** (heromedel, 2026-10-31: "it looks like I could stick to GATOS territory the whole
-   run"). Measured: GATOS space is about 35–40% of all clusters, though the region the squad starts in reaches
-   only 1–2 bands outward. Make regions smaller and more of them, and GATOS less common.
-8. **More room between the ships and the barrier** (heromedel, 2026-10-31): a fixed gap between every zone and the
-   barrier, the same for every ship, on top of the zone's margin. The gap's size is still to be chosen.
-9. **Check the chaos tester's last open finding:** an event window that stayed open about 20 s while Continue was
+   run"). Measured: GATOS space is about 35–40% of all clusters, because the GATOS have a third of all regions
+   (weight 34 of 100) and the largest ones. Decided: every race's regions get the same weight and size for now
+   (about 1/7 of claimed space each), keeping the weights as a setting for later; the first region is the race the
+   player is playing as.
+8. **More room between the ships and the barrier** (heromedel, 2026-10-31): a fixed gap of 6 tiles between every
+   zone and the barrier, the same for every ship, on top of the zone's margin, so even the largest hull's nose is
+   10–12 tiles from the barrier and smaller ships more. Widen the barrier itself too (now 12 tiles).
+9. **Show what is under the cursor while aiming** (heromedel's screenshot, 2026-10-31): the hover box naming the
+   system on a tile is hidden while a weapon is armed, which is exactly when the player needs it.
+10. **Survivors** (heromedel's screenshot, 2026-10-31): a survivor joined from a ship that had been blown up, and
+    without asking. Survivors should only come from a ship that wasn't destroyed, and the player chooses whether to
+    take them on.
+11. **Check the chaos tester's last open finding:** an event window that stayed open about 20 s while Continue was
    pressed.
 
 ## Decision log
