@@ -183,9 +183,26 @@ func _track_blocking(delta: float) -> void:
 		return
 	var windows := _windows()
 	var blocked := battle.hold_pause or not windows.is_empty()
+	# Time counts per window: a chain of events (a contract, the opening message, the cluster's event) is not one
+	# stuck window
+	var front: Control = windows.back() if not windows.is_empty() else null
+	if front != _blocked_window:
+		_blocked_window = front
+		_blocked_for = 0.0
 	_blocked_for = _blocked_for + delta if blocked else 0.0
 	if _blocked_for > STUCK_SECONDS:
-		_fail("input blocked for %d s: windows %s, hold_pause %s (after %s)" % [int(_blocked_for), _names(windows), battle.hold_pause, _action], "input blocked over 20 s")
+		# A big window (the ship screen has dozens of buttons) can stay open this long only because the random clicks
+		# keep missing its way out. So first press its way out; it is stuck only if it stays open after that.
+		var top := front
+		var way_out := _way_out(top)
+		if way_out and _way_out_tried != top:
+			_way_out_tried = top
+			_note("pressed '%s' after %d s" % [way_out.text, int(_blocked_for)])
+			way_out.pressed.emit()
+			_blocked_for = STUCK_SECONDS - 3.0
+			return
+		var tried := " (its '%s' button was pressed and it stayed open)" % way_out.text if way_out else ""
+		_fail("input blocked for %d s: windows %s, hold_pause %s%s (after %s)" % [int(_blocked_for), _names(windows), battle.hold_pause, tried, _action], "input blocked over 20 s")
 		_blocked_for = 0.0
 		_force_close_windows()
 	_held_without_window_for = _held_without_window_for + delta if battle.hold_pause and windows.is_empty() else 0.0
@@ -1120,6 +1137,22 @@ func _random_ship(side: int = -1) -> Ship:
 
 func _ship_screen(ship: Ship, local: Vector2) -> Vector2:
 	return main.battle.world.get_global_transform_with_canvas() * main.encounter.local_to_world(ship, local)
+
+
+const WAY_OUT_WORDS := ["DONE", "Continue", "CLOSE", "Close", "Leave", "Resume", "BACK", "Back"]
+var _way_out_tried: Control = null
+var _blocked_window: Control = null
+
+
+## The button that leaves a window (DONE, Continue...), or null.
+func _way_out(window: Control) -> Button:
+	if window == null or not is_instance_valid(window):
+		return null
+	for button in _buttons_in(window):
+		for words in WAY_OUT_WORDS:
+			if String(button.text).begins_with(words) or String(button.text).ends_with(". " + words + "..."):
+				return button
+	return null
 
 
 func _force_close_windows() -> void:

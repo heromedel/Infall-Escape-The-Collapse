@@ -98,8 +98,7 @@ func show_encounter(new_encounter: Encounter, wallet: RunState, look_seed: int, 
 	divider.encounter = encounter
 	encounter.step()   # one tick so crew are at their consoles and the HUD reads true from the first frame
 	encounter.notes.clear()
-	if selected_ship == null or not encounter.ships.has(selected_ship) or selected_ship.is_gone():
-		selected_ship = encounter.living(0)[0] if not encounter.living(0).is_empty() else null
+	_keep_a_ship_selected()
 	background.set_cluster_look(look_seed, collapse_near, encounter.hazard)
 	hazard_layer.set_hazard(encounter.hazard, look_seed)
 	frame_everything(true)
@@ -159,12 +158,19 @@ func _process(delta: float) -> void:
 			_read_notes()
 		if steps >= 4:
 			tick_accumulator = 0.0
+		_keep_a_ship_selected()
 	var alpha := clampf(tick_accumulator / TICK_SECONDS, 0.0, 1.0)
 	_update_views(alpha)
 	background.follow_camera(camera.position, camera.zoom.x)
 	divider.zoom = camera.zoom.x
 	camera.keys_free = not hold_pause and not get_viewport().gui_get_focus_owner() is LineEdit
 	divider.camera_x = camera.position.x
+
+
+## When the selected ship is destroyed or loses its crew, the next living ship of the squad is selected.
+func _keep_a_ship_selected() -> void:
+	if selected_ship == null or not encounter.ships.has(selected_ship) or selected_ship.is_gone():
+		selected_ship = encounter.living(0)[0] if not encounter.living(0).is_empty() else null
 
 
 func _tick_auto_pause() -> void:

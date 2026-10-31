@@ -254,15 +254,20 @@ func save_to_disk() -> void:
 
 
 static func has_save() -> bool:
-	if not FileAccess.file_exists(SAVE_PATH):
-		return false
-	var data = JSON.parse_string(FileAccess.get_file_as_string(SAVE_PATH))
+	var data = _read_save()
 	return typeof(data) == TYPE_DICTIONARY and int(data.get("galaxy", {}).get("version", 1)) >= 2
 
 
-static func load_from_disk() -> RunState:
+## The save file's contents, or null when there is none or it is empty (a save cut short).
+static func _read_save() -> Variant:
+	if not FileAccess.file_exists(SAVE_PATH):
+		return null
 	var text := FileAccess.get_file_as_string(SAVE_PATH)
-	var data = JSON.parse_string(text)
+	return null if text.strip_edges().is_empty() else JSON.parse_string(text)
+
+
+static func load_from_disk() -> RunState:
+	var data = _read_save()
 	if typeof(data) != TYPE_DICTIONARY or int(data.get("galaxy", {}).get("version", 1)) < 2:
 		return null   # unreadable, or from a build with the old map
 	var run := RunState.new()

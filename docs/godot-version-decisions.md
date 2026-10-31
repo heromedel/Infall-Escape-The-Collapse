@@ -145,7 +145,10 @@ The list for the 2026-10-31 evening build. All built; what is left is noted.
 9. **Show what is under the cursor while aiming.** Done.
 10. **Survivors.** Only from surrendered ships and from enemy boarders who surrender when their ship is destroyed,
     and always the player's choice. Special events that save someone are not written yet.
-11. **The chaos tester's last open finding** (an event window open about 20 s): checked, not reproduced.
+11. **The chaos tester's last open finding** (an event window open about 20 s): not a stuck window. The tester
+    counted a chain of windows (a contract, the opening message, the cluster's event) as one, and a big window
+    whose way out its random clicks kept missing. It now times each window and presses a window's way out before
+    calling it stuck; no window was stuck in eight seeds since.
 
 ## Decision log
 

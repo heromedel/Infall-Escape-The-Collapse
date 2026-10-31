@@ -75,9 +75,41 @@ in the Windows build sent at the end of the day.
   Medbay healing at any task, the movable HUD cards and their settings, and the area-weapon idea for
   `ideas.md` (2×2 "Blast").
 
-## 7. How to check it
+## 7. The evening build (the Next build list, GV doc)
+
+1. **Windows that rebuild** (store, ship screen, events, hail) empty at once, shrink to fit and scroll when tall.
+   Upgrade prices read as prices, with the low Mawjig warning. The hover box stays up while aiming.
+2. **Regions:** every race equal for now (the weights stay as data); the first region is the player's race. GATOS
+   space went from about 35–40% of clusters to 12–14%.
+3. **Battlefield:** a fixed 6-tile gap between every zone and the barrier; the barrier is 16 tiles deep.
+4. **Survivors** come only from surrendered ships and from enemy boarders who surrender when their ship is
+   destroyed, and the player always chooses.
+5. **Ship values** are worked out from their parts by Eco's rules (GV 8B), checked against Eco's F13 values: every
+   ship within 2.5 (most exact), the differences being where the shared room rule moves F13. Supershield 38.72
+   with upgrades 7.26 and 12.11.
+6. **The wiki's timings** (GV 7E): repair 12.5 s a bar, fire-fighting 10.4 s, teleporter 20/15/10 s.
+7. **Power comes back after repairs** (GV 3H). Found by the bot runs: weapons switched off by a hit stayed off
+   after the repair, so the starting ship lost to the band 1 Tentauri Pappus in 4 of 6 runs. Now power that damage
+   or ion took comes back by itself, as in the genre; after the fix the bots lost to it in 2 of 8 runs, at jumps 6
+   and 9 (the bots never upgrade, so later losses are expected).
+8. **The GATOS Species setting** (GV 7A): `GATOS Species: Terrans > Tabbys`. Human faces (M1 to M5) for GATOS crew
+   with Terrans; with Tabbys the cat head, the HalfMech kittens (K1 to K5) and holographic cat Senti. Event text
+   switches words (children or kittens, childishly or kittenishly); GATOS names include human or cat names.
+9. **Mercenaries on contract** (GV 7C): renewals cost a quarter more each time; after a battle that killed any of
+   their crew they leave three times in four unless paid to stay; they don't keep a run alive. Four new hiring
+   events (Mecha, Tentauri, Senti, Terran survivalists). Lori has been asked to check the words, Eco the prices.
+10. **Selection:** when the selected ship is destroyed or loses its crew mid-fight, the next ship is selected
+    (found by the chaos tester).
+11. **The chaos tester's 20 s finding** was the tester's own: it timed a chain of windows as one window, and big
+    windows whose way out its random clicks kept missing. It now times each window and presses a window's way
+    out before calling it stuck; no window was stuck in eight seeds since. Its runs also found the selection
+    problem above, and a save read while another test was writing it (reading an empty save no longer errors).
+
+## 8. How to check it
 
 From `infall-godot/`: `tools/compile_check.sh` (script errors), `tools/input_test.tscn` (clicks, 14 checks),
-`tools/test_fight.tscn` (20 fights), `tools/galaxy_test.tscn`, `tools/flow_test.tscn` (screenshots of a run),
+`tools/test_fight.tscn` (20 fights), `tools/galaxy_test.tscn`, `tools/ship_value_test.tscn`,
+`tools/mercenary_test.tscn`, `tools/portrait_sheet.tscn` (every face, both settings), `tools/flow_test.tscn`
+(screenshots of a run), `tools/auto_run.tscn` (bots play whole runs),
 `tools/chaos.sh` (the chaos tester). Run the scenes with `godot --path . <scene>`; the ones that draw need a
 display (`xvfb-run`).
