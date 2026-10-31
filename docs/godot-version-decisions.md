@@ -74,7 +74,17 @@ anything Claude added tagged Ai-Generated-Proposal.
 - **B — Decided (heromedel, 2026-10-31):** a Mecha crew member's blue choice may be how the player first learns
   the name HalfMechs (the MECHA_TERRITORY event).
 - **C — Proposed (heromedel, 2026-10-31):** hired mercenaries work on a contract, which can be renewed for a price
-  that rises each time. If any of the mercenary crew die, the mercenaries are likely to leave after the battle.
+  that rises each time. If any of the mercenary crew die, the mercenaries are likely to leave after the battle. Built.
+  - **Ai-Generated-Proposal (2026-10-31):** a contract runs for a number of jumps the hiring event sets (Lykario 3,
+    "they don't stay long"; Tentauri 5; others 4), and waiting counts as a jump. When it is up, the captain asks for
+    a renewal costing a quarter more than the last term; the player renews or lets them go. After a battle in which
+    any of their own crew died, they leave three times in four, unless the player pays them that price to stay,
+    which works two times in three. When they leave, their crew go with them wherever they are, and the squad's
+    own crew aboard come back. Mercenaries don't keep a run alive (GDD 7G).
+  - **Ai-Generated-Proposal (2026-10-31):** four new hiring events after GDD 7G's race table: Mecha (a fee, cheaper
+    if a Mecha crew member haggles), Tentauri in struggling or doomed space (flying the same way, sharing the
+    drive's Mawjig), struggling Senti (paid in Mawjig or in your sensor logs) and doomed Terran survivalists (who
+    are now and then still pirates). Their words are for Lori to check; their prices for Eco.
 - **D — Proposed (heromedel, 2026-10-31):** with Tabbys (GV 7A), the HalfMechs are kitten-like rather than
   childlike, and the Senti are holographic cats. Crew portraits follow: cats in the HalfMech colour palette for the
   Mecha, and semi-transparent yellow-green cats with holographic distortion or scan lines for the Senti. With
@@ -117,37 +127,25 @@ anything Claude added tagged Ai-Generated-Proposal.
 
 ## Next build
 
-The list for the next build, in no fixed order. Nothing here is built yet.
+The list for the 2026-10-31 evening build. All built; what is left is noted.
 
-1. **Mercenaries** on renewable contracts, with more mercenary events (GV 7C; ideas: escorting The Colony Ship).
-2. **The genre's wiki timings** for repair, fire-fighting and the teleporter (GV 7E).
-3. **The GATOS Species setting** (GV 7A) and what it needs: the human mercenary faces (M1 to M5) for GATOS crew with
-   Terrans, the cat heads with Tabbys; the HalfMech kitten faces (K1 to K5) and holographic cat Senti with Tabbys;
-   species words in events (children or kittens, childlike or kitten-like) filled in from the setting.
-4. **Ship values worked out from their parts** by Eco's rules (GV 8B).
-5. **Windows that rebuild break** (heromedel's screenshot, 2026-10-31): the ship screen after an upgrade grows and
-   slides up with empty space below, as the store did. Fix it once in the window base that all windows share, so
-   every rebuilding window (store, ship screen, events, hail) empties at once, shrinks to fit and scrolls when
-   tall.
-6. **Upgrade prices read as "+6.05"** (heromedel, 2026-10-31): show the plain price as the store does, with the
-   low Mawjig warning.
-7. **Regions are too large** (heromedel, 2026-10-31: "it looks like I could stick to GATOS territory the whole
-   run"). Measured: GATOS space is about 35–40% of all clusters, because the GATOS have a third of all regions
-   (weight 34 of 100) and the largest ones. Decided: every race's regions get the same weight and size for now
-   (about 1/7 of claimed space each), keeping the weights as a setting for later; the first region is the race the
-   player is playing as.
-8. **More room between the ships and the barrier** (heromedel, 2026-10-31): a fixed gap of 6 tiles between every
-   zone and the barrier, the same for every ship, on top of the zone's margin, so even the largest hull's nose is
-   10–12 tiles from the barrier and smaller ships more. Widen the barrier itself to 16 tiles (now 12).
-9. **Show what is under the cursor while aiming** (heromedel's screenshot, 2026-10-31): the hover box naming the
-   system on a tile is hidden while a weapon is armed, which is exactly when the player needs it.
-10. **Survivors** (heromedel's screenshot, 2026-10-31): a survivor joined from a ship that had been blown up, and
-    without asking. The player always chooses whether to take a survivor on, and survivors come only from:
-    - a ship that surrendered;
-    - enemy boarders on your ship whose own ship was blown up, if they surrender;
-    - special events, e.g. a ship you never fought is destroyed in an event and your crew manage to save someone.
-11. **Check the chaos tester's last open finding:** an event window that stayed open about 20 s while Continue was
-   pressed.
+1. **Mercenaries** on renewable contracts, with more mercenary events (GV 7C). Built. Escorting The Colony Ship stays
+   an idea (`ideas.md`).
+2. **The genre's wiki timings** for repair, fire-fighting and the teleporter (GV 7E). Built.
+3. **The GATOS Species setting** (GV 7A) with the human faces, the HalfMech kittens, holographic cat Senti and
+   species words in events. Built.
+4. **Ship values worked out from their parts** by Eco's rules (GV 8B). Built.
+5. **Windows that rebuild break.** Fixed once in the shared window base: windows empty at once, shrink to fit and
+   scroll when tall.
+6. **Upgrade prices read as "+6.05".** Now the plain price, with the low Mawjig warning.
+7. **Regions are too large.** Every race's regions have the same weight and size (weights kept as data); the first
+   region is the player's race. GATOS space is now about 12–14% of clusters.
+8. **More room between the ships and the barrier.** A fixed 6-tile gap between every zone and the barrier; the
+   barrier is 16 tiles.
+9. **Show what is under the cursor while aiming.** Done.
+10. **Survivors.** Only from surrendered ships and from enemy boarders who surrender when their ship is destroyed,
+    and always the player's choice. Special events that save someone are not written yet.
+11. **The chaos tester's last open finding** (an event window open about 20 s): checked, not reproduced.
 
 ## Decision log
 
@@ -158,3 +156,4 @@ The list for the next build, in no fixed order. Nothing here is built yet.
 | 2026-10-31 | Mercenaries on renewable contracts (GV 7C), for the next build; HalfMechs may be learned through a Mecha crew member (GV 7B). |
 | 2026-10-31 | The GATOS Species setting, Terrans > Tabbys, replaces "officially cats" (GV 7A); the portrait options liked (GV 7D). |
 | 2026-10-31 | 1.21 Jigawatts is 1.21 Mawjig (GV 6A); "the Power Cores on a ship" covers every ship (GV 6B); kitten-like HalfMechs and holographic cat Senti proposed (GV 7D). |
+| 2026-10-31 | The evening build: everything on the Next build list (GV 3H, 7A, 7C, 7E, 8B). |

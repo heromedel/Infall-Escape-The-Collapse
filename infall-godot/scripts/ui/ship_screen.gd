@@ -35,6 +35,8 @@ func _rebuild() -> void:
 	header.add_child(money)
 	_content.add_child(header)
 	_content.add_child(UiKit.label("%s · %s · hull %d / %d · %s" % [ship.design.class_text, ship.race.name, ship.hull, ship.max_hull, _power_text()], 17, UiColours.TEXT_DIM))
+	if ship.is_mercenary():
+		_content.add_child(UiKit.label(ship.contract_summary(), 17, UiColours.WARNING))
 	var columns := HBoxContainer.new()
 	columns.add_theme_constant_override("separation", 18)
 	_content.add_child(columns)

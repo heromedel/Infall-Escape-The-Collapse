@@ -15,6 +15,17 @@ reviewed its part on 2026-10-31; what was changed is under **Checked**, and what
 3. **Ship and loadout values** are now worked out from their parts by Eco's rules (GV 8B), so the typed values
    (Chestnut 488.4, Burr 188.81 and the rest) are gone. Ship Designs may want to look at what the parts give.
 
+### For Lori
+
+1. **The mercenary events** (`infall-godot/content/events/neutral.xml`): NEUTRAL_MERCENARY reworded ("hunt with
+   you for a while"), MERCENARY_MECHA, MERCENARY_TENTAURI, MERCENARY_SENTI, MERCENARY_SURVIVALISTS, and the two
+   the game shows itself, MERCENARY_CONTRACT_UP and MERCENARY_WALKOUT (GV 7C).
+2. **The species words** (GV 7A): `{gatos:children|kittens}` in DISTRESS_GATOS_FAMILY, the GATOS freighter
+   (hostile.xml) and The Colony Ship's message (core.xml); "name the next {gatos:baby|kitten}";
+   `{gatos:childishly|kittenishly}` in MECHA_TERRITORY; the Senti's "holographic {gatos:people|cats}".
+3. **GATOS names:** the fifteen human names used with Terrans and the cat-only names used with Tabbys
+   (`content/races/terran/race.xml`).
+
 ### For Eco
 
 1. **Shield levels in ship.xml:** stored as bars (level 2 is one layer, as in the genre) while GDD 8H's shield test
@@ -22,7 +33,10 @@ reviewed its part on 2026-10-31; what was changed is under **Checked**, and what
 2. **The growth organ** (Malphen) is 6.05 as a placeholder until it has a table price (Eco).
 3. **15 crew damage a hull point** is unchecked. Repair, fire-fighting and the teleporter now use the wiki's
    timings (GV 7E).
-4. **The event set pays less than the genre's:** 17 low, 6 medium, 2 high and 4 tiny, where the genre's events
+4. **Mercenary prices** (Ai-Generated-Proposal): Lykario 9.66 for 3 jumps, Mecha 12.11 (7.26 haggled) for 4,
+   Tentauri 3.63 for 5, Senti 9.68 (or sensor logs, renewals from 4.84) for 4, Terran survivalists 6.05 for 4; each
+   renewal a quarter more than the last term.
+5. **The event set pays less than the genre's:** 17 low, 6 medium, 2 high and 4 tiny, where the genre's events
    lean to medium and high.
 
 ## Checked

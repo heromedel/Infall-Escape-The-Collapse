@@ -27,6 +27,7 @@ var healing: bool = false          # a medbay is healing them this tick, whateve
 var stun_ticks: int = 0
 var door_wait: ShipDoor = null
 var dead: bool = false
+var contract_id: int = 0           # a hired mercenary: the contract they came with (GV 7C); 0 for the squad's own
 var in_suit: bool = false
 var teleporting_ticks: int = 0
 var integrate_ticks: int = 0       # Mecha: time spent getting into a system
@@ -91,7 +92,7 @@ func is_boarding() -> bool:
 
 
 func to_save() -> Dictionary:
-	return {"name": name, "race": race.id, "health": health, "xp": xp.duplicate(), "station": station_room}
+	return {"name": name, "race": race.id, "health": health, "xp": xp.duplicate(), "station": station_room, "contract": contract_id}
 
 
 static func from_save(data: Dictionary) -> CrewMember:
@@ -101,4 +102,5 @@ static func from_save(data: Dictionary) -> CrewMember:
 	for skill in saved_xp:
 		member.xp[skill] = float(saved_xp[skill])
 	member.station_room = int(data.get("station", -1))
+	member.contract_id = int(data.get("contract", 0))
 	return member

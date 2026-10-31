@@ -152,8 +152,8 @@ func _check_crews() -> void:
 func _check_outcome() -> void:
 	if not outcome.is_empty():
 		return
-	if living(0).is_empty():
-		outcome = "lost"
+	if living(0).all(func(ship: Ship): return ship.is_mercenary()):
+		outcome = "lost"   # mercenaries fly with the squad but don't keep a run alive (GDD 7G)
 		note("squad_lost")
 		return
 	if not fight_started:

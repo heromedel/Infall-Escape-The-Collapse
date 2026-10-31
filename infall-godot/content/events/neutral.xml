@@ -27,13 +27,77 @@ After a quick exchange of data, {crew} transmits the records. The station's paym
 		</choice>
 	</event>
 
+	<!-- Mercenaries on contract (GV 7C; who hires out follows GDD 7G's race table). A hired ship's renewals cost more
+	     each time; MERCENARY_CONTRACT_UP and MERCENARY_WALKOUT are shown by the game, never picked for a cluster. -->
 	<event id="NEUTRAL_MERCENARY" title="For Hire" kind="neutral" states="Border,Doomed,Struggling,Refugee,Unclaimed" bands="2-8" weight="1" unique="yes">
-		<text>A Lykario raider pulls alongside, its captain lounging in the pilot's seat. "Heard you're heading for the rim. A squad needs teeth out there. Pay me, and my ship and my pack fly with you."</text>
+		<text>A Lykario raider pulls alongside, its captain lounging in the pilot's seat. "Heard you're heading for the rim. A squad needs teeth out there. Pay me, and my ship and my pack hunt with you for a while."</text>
 		<choice text="Hire them." requires="mawjig:9.66">
-			<outcome><text>The money changes hands, and the Lykario raider slots into your formation with a cheerful howl.</text><mawjig amount="-9.66"/><ship design="packrunner"/></outcome>
+			<outcome><text>The money changes hands, and the Lykario raider slots into your formation with a cheerful howl.</text><mawjig amount="-9.66"/><ship design="packrunner" contract="3" pay="9.66"/></outcome>
 		</choice>
 		<choice text="No thanks.">
 			<outcome><text>"Your loss!" The raider jumps away.</text></outcome>
+		</choice>
+	</event>
+	<event id="MERCENARY_MECHA" title="A Fee" kind="neutral" races="mecha" states="Border,Doing Fine,Occupied" bands="2-8" weight="0.8" unique="yes">
+		<text>A black Mecha frame matches your course, its purple running lights blinking in a pattern that might be a joke. "Your enemies have things worth taking. We'll help you take them. For a fee."</text>
+		<choice text="Hire them." requires="mawjig:12.11">
+			<outcome><text>"Pleasure doing business." The frame falls in behind your squad, a little too close.</text><mawjig amount="-12.11"/><ship design="light-attack-frame" contract="4" pay="12.11"/></outcome>
+		</choice>
+		<choice text="Have {crew} haggle." requires="crew:mecha">
+			<outcome><text>{crew} and the frame's pilot trade clipped bursts of Mecha code, faster and faster, until the pilot laughs. The price drops.</text><mawjig amount="-7.26"/><ship design="light-attack-frame" contract="4" pay="7.26"/></outcome>
+		</choice>
+		<choice text="No.">
+			<outcome><text>"Your loss. Maybe literally." The frame peels away into the dark.</text></outcome>
+		</choice>
+	</event>
+	<event id="MERCENARY_TENTAURI" title="The Same Way" kind="neutral" races="tentauri" states="Struggling,Doomed" bands="1-6" weight="0.8" unique="yes">
+		<text>A small Tentauri ship drifts alongside, its pearl-white hull scarred. "We are going the same way. Fly with us, and share the Mawjig for the drive."</text>
+		<choice text="Fly together." requires="mawjig:3.63">
+			<outcome><text>The Tentauri ship slips into your formation as if it had always been there.</text><mawjig amount="-3.63"/><ship design="tentauri-scout.pappus" contract="5" pay="3.63"/></outcome>
+		</choice>
+		<choice text="Go your separate ways.">
+			<outcome><text>"Then may your way stay open." The little ship drifts on alone.</text></outcome>
+		</choice>
+	</event>
+	<event id="MERCENARY_SENTI" title="Records Kept" kind="neutral" races="senti" states="Struggling" bands="2-8" weight="0.8" unique="yes">
+		<text>A Senti Beacon Picket hails you, its cyan light lines flickering. "Our archive is failing. We will fly for you, for Mawjig, or for records we have not yet kept."</text>
+		<choice text="Pay them in Mawjig." requires="mawjig:9.68">
+			<outcome><text>"Payment logged." The Picket takes its place in your squad and starts cataloguing everything.</text><mawjig amount="-9.68"/><ship design="relay-picket" contract="4" pay="9.68"/></outcome>
+		</choice>
+		<choice text="Give them your sensor logs." requires="system:sensors">
+			<outcome><text>The Senti drink in your sensor records, every cluster you have passed through. "Acceptable. Most of this was new." The Picket falls in with your squad.</text><ship design="relay-picket" contract="4" pay="4.84"/></outcome>
+		</choice>
+		<choice text="No.">
+			<outcome><text>"Understood. We will keep looking." The Picket's lights dim as it turns away.</text></outcome>
+		</choice>
+	</event>
+	<event id="MERCENARY_SURVIVALISTS" title="Mostly Not Pirates" kind="neutral" races="terran" states="Doomed" bands="2-8" weight="0.8" unique="yes">
+		<text>A battered Pirate Scrapper hails you on an open channel. "Survivalists, not pirates. Mostly. Pay us and we'll point our guns the same way you point yours."</text>
+		<choice text="Hire them." requires="mawjig:6.05">
+			<outcome weight="3"><text>They take the Mawjig and fall in at the back of your squad. They keep their word. So far.</text><mawjig amount="-6.05"/><ship design="pirate-scrapper" contract="4" pay="6.05"/></outcome>
+			<outcome weight="1"><text>They take the Mawjig, then open fire. Mostly pirates, then.</text><mawjig amount="-6.05"/><fight squad="terran-pirates"/></outcome>
+		</choice>
+		<choice text="No.">
+			<outcome><text>"Suit yourself." The Scrapper limps off toward the next cluster.</text></outcome>
+		</choice>
+	</event>
+	<event id="MERCENARY_CONTRACT_UP" title="Contract's Up" kind="contract">
+		<text>The {merc}'s contract is up. Their captain hails you. "Same terms, more Mawjig. The rim isn't getting any closer." Another {jumps} jumps will cost {price} Mawjig.</text>
+		<choice text="Renew the contract." requires="renewal">
+			<outcome><text>The Mawjig changes hands, and the {merc} keeps its place in your formation.</text><renew_contract/></outcome>
+		</choice>
+		<choice text="Let them go.">
+			<outcome><text>The {merc} peels away and jumps for somewhere that pays better.</text><end_contract/></outcome>
+		</choice>
+	</event>
+	<event id="MERCENARY_WALKOUT" title="Not Worth It" kind="contract">
+		<text>The {merc}'s captain is on the channel before the wreckage stops spinning. "We signed on to fight, not to bury our own. We're done."</text>
+		<choice text="Offer them danger pay to stay." requires="renewal">
+			<outcome weight="2"><text>A long silence. "Fine. But next time your crew go in first."</text><renew_contract/></outcome>
+			<outcome weight="1"><text>"Keep it. You can't pay the dead." The {merc} jumps away.</text><end_contract/></outcome>
+		</choice>
+		<choice text="Let them go.">
+			<outcome><text>The {merc} jumps away without another word.</text><end_contract/></outcome>
 		</choice>
 	</event>
 

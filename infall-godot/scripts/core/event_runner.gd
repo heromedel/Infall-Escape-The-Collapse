@@ -8,6 +8,7 @@ const MAX_CREW_PER_SHIP := 8
 const MAX_SQUAD := 6
 
 var run: RunState
+var mercenary: Ship = null   # the hired ship a contract event is about: {merc}, {price}, {jumps}
 
 
 func _init(owner: RunState) -> void:
@@ -76,6 +77,9 @@ func fill_text(text: String, crew_name: String = "") -> String:
 	var race: String = cluster.race if cluster.race != "" else "terran"
 	var result := text.replace("{race}", Library.race(race).name).replace("{cluster}", cluster.name)
 	result = result.replace("{ship}", run.living_ships()[0].name if not run.living_ships().is_empty() else "your ship")
+	if mercenary:
+		result = result.replace("{merc}", mercenary.name).replace("{price}", Mawjig.format(run.renewal_price(mercenary)))
+		result = result.replace("{jumps}", str(mercenary.contract.get("jumps", 0)))
 	if crew_name.is_empty():
 		var anyone := _any_crew()
 		crew_name = anyone.name if anyone else "your crew"
@@ -108,6 +112,8 @@ func can_take(choice: Dictionary) -> bool:
 			return run.living_ships().size() >= int(parts[1])
 		"collapse":
 			return collapse_known()
+		"renewal":
+			return mercenary != null and run.mawjig >= run.renewal_price(mercenary)
 	return true
 
 
@@ -141,6 +147,8 @@ func requirement_label(choice: Dictionary) -> String:
 			return "(%s)" % parts[1].capitalize()
 		"mawjig":
 			return "(%s Mawjig)" % parts[1]
+		"renewal":
+			return "(%s Mawjig)" % Mawjig.format(run.renewal_price(mercenary)) if mercenary else ""
 	return ""
 
 
@@ -179,6 +187,8 @@ func most_given_away(choice: Dictionary) -> int:
 		for effect in outcome.effects:
 			if effect.tag == "mawjig" and not effect.attrs.has("size"):
 				most = maxi(most, -Mawjig.amount(float(effect.attrs.get("amount", "0"))))
+			elif effect.tag == "renew_contract" and mercenary:
+				most = maxi(most, run.renewal_price(mercenary))
 	return mini(most, run.mawjig)
 
 
@@ -279,7 +289,20 @@ func _apply(tag: String, attrs: Dictionary, result: Dictionary) -> void:
 					ship.hull = clampi(int(attrs.hull), 1, ship.max_hull)
 				ship.name = attrs.get("name", ship.name)
 				run.squad.append(ship)
-				result.lines.append("+1 ship: the %s joins the squad" % ship.name)
+				if attrs.has("contract"):   # a mercenary, paid what the choice cost (GV 7C)
+					run.hire(ship, int(attrs.contract), Mawjig.amount(float(attrs.get("pay", "0"))))
+					result.lines.append("+1 ship: the %s signs on for %s jumps" % [ship.name, attrs.contract])
+				else:
+					result.lines.append("+1 ship: the %s joins the squad" % ship.name)
+		"renew_contract":
+			if mercenary:
+				var price := run.renewal_price(mercenary)
+				run.renew(mercenary)
+				result.lines.append("Mawjig -%s: the %s signs on for %d more jumps" % [Mawjig.format(price), mercenary.name, mercenary.contract.jumps])
+		"end_contract":
+			if mercenary:
+				run.release(mercenary)
+				result.lines.append("The %s leaves the squad" % mercenary.name)
 		"fight":
 			result.fight = attrs.get("squad", "")
 			result.fight_given = true

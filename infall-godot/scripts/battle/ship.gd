@@ -68,6 +68,9 @@ var destroyed: bool = false
 var escaped: bool = false
 var surrendered: bool = false
 var crew_dead: bool = false
+## A hired mercenary's contract (GV 7C), empty for the squad's own ships: {id, jumps, jumps_left, pay, crew_at_start}.
+## `pay` is what the last term cost, in cents; renewing costs more each time (RunState.renewal_price).
+var contract: Dictionary = {}
 var charging_escape: bool = false
 var hit_flash: int = 0
 var explosion_ticks: int = 0
@@ -246,6 +249,17 @@ func has_system(behaviour: String) -> bool:
 
 func room_at(cell: Vector2i) -> int:
 	return design.cell_room.get(cell, -1)
+
+
+func is_mercenary() -> bool:
+	return not contract.is_empty()
+
+
+func contract_summary() -> String:
+	var left := int(contract.get("jumps_left", 0))
+	if left <= 0:
+		return "Mercenary: the contract is up."
+	return "Mercenary: %d jump%s left on the contract." % [left, "" if left == 1 else "s"]
 
 
 func is_gone() -> bool:
@@ -1071,6 +1085,7 @@ func to_save() -> Dictionary:
 		"design": design.id, "name": name, "hull": hull, "max_hull": max_hull,
 		"reactor_type": reactor_type, "reactor_level": reactor_level,
 		"systems": [], "weapons": [], "suits": suits.duplicate(), "crew": [], "broken_conduits": [],
+		"contract": contract.duplicate(),
 	}
 	for system in systems:
 		data.systems.append({"id": system.def.id, "label": system.label, "level": system.level, "damage": system.damage,
@@ -1124,6 +1139,8 @@ static func from_save(data: Dictionary, ship_side: int) -> Ship:
 			slot.powered = bool(entry.get("powered", false))
 			ship.weapons.append(slot)
 	ship.suits.assign(data.get("suits", []))
+	for key in data.get("contract", {}):
+		ship.contract[key] = int(data.contract[key])
 	for entry in data.get("crew", []):
 		ship.add_crew(CrewMember.from_save(entry))
 	for cell in data.get("broken_conduits", []):

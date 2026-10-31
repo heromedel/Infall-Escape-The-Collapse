@@ -20,6 +20,7 @@ var stats := {"ships_destroyed": 0, "crews_killed": 0, "jumps": 0, "mawjig_earne
 var over: bool = false
 var won: bool = false
 var difficulty: String = "Normal"
+var next_contract_id: int = 1
 var pending_fight: String = ""      # the squad being fought, if the run was saved mid-fight
 var log_book: LogBook
 
@@ -103,6 +104,7 @@ func jump_to(index: int) -> void:
 	jumps += 1
 	stats.jumps += 1
 	galaxy.advance_collapse(jumps)
+	_count_contract_jump()
 	var arrived: Dictionary = cluster()
 	arrived.visited = true
 	log_book.write("jump", {"from": from, "to": index, "band": arrived.band, "mawjig": mawjig, "collapse": int(galaxy.collapse_radius)},
@@ -114,7 +116,94 @@ func wait() -> void:
 	earn(Mawjig.WAIT_GAIN)
 	jumps += 1
 	galaxy.advance_collapse(jumps)
+	_count_contract_jump()
 	log_book.write("wait", {"cluster": current, "mawjig": mawjig}, "The squad waited at %s and gathered 0.25 Mawjig." % cluster().name)
+
+
+# --- Mercenaries (GV 7C) --------------------------------------------------------------------------------------
+
+## Each renewal costs a quarter more than the term before (Ai-Generated-Proposal: "a price that rises each time").
+const RENEWAL_RISE := 1.25
+
+
+## The squad's own ships: mercenaries fly with it but don't keep a run alive (GDD 7G).
+func own_ships() -> Array[Ship]:
+	return living_ships().filter(func(ship: Ship): return not ship.is_mercenary())
+
+
+## Signs a ship on as a mercenary for some jumps, having been paid `pay` cents; its crew are on the contract too.
+func hire(ship: Ship, jumps_long: int, pay: int) -> void:
+	ship.contract = {"id": next_contract_id, "jumps": jumps_long, "jumps_left": jumps_long, "pay": pay, "crew_at_start": ship.crew.size()}
+	next_contract_id += 1
+	for member in ship.crew:
+		member.contract_id = ship.contract.id
+	log_book.write("hired_ship", {"ship": ship.name, "jumps": jumps_long, "pay": pay}, "The %s signed on for %d jumps." % [ship.name, jumps_long])
+
+
+func renewal_price(ship: Ship) -> int:
+	return roundi(int(ship.contract.get("pay", 0)) * RENEWAL_RISE)
+
+
+func renew(ship: Ship) -> void:
+	var price := renewal_price(ship)
+	mawjig -= price
+	ship.contract.pay = price
+	ship.contract.jumps_left = ship.contract.jumps
+	log_book.write("renewed", {"ship": ship.name, "pay": price}, "The %s's contract was renewed." % ship.name)
+
+
+## Mercenary ships whose contract has run out.
+func contracts_due() -> Array[Ship]:
+	return living_ships().filter(func(ship: Ship): return ship.is_mercenary() and int(ship.contract.jumps_left) <= 0)
+
+
+## Mercenary ships that lost any of their own crew in the last fight.
+func mercenaries_with_losses() -> Array[Ship]:
+	return living_ships().filter(func(ship: Ship): return ship.is_mercenary() and _contract_crew(ship).size() < int(ship.contract.crew_at_start))
+
+
+## Called as a fight starts, so losses can be told apart from crew who left earlier.
+func count_mercenary_crew() -> void:
+	for ship in living_ships():
+		if ship.is_mercenary():
+			ship.contract.crew_at_start = _contract_crew(ship).size()
+
+
+## The mercenaries leave: their ship, and their crew wherever they are. Anyone of yours aboard comes back first.
+func release(ship: Ship) -> void:
+	var id := int(ship.contract.id)
+	var others := own_ships()
+	for member in ship.crew.duplicate():
+		if member.contract_id != id and not member.dead and not others.is_empty():
+			ship.crew.erase(member)
+			var fewest: Ship = others[0]
+			for other in others:
+				if other.crew.size() < fewest.crew.size():
+					fewest = other
+			fewest.add_crew(member)
+			fewest.assign_stations()
+	for other in living_ships():
+		if other != ship:
+			for member in other.crew.duplicate():
+				if member.contract_id == id:
+					other.crew.erase(member)
+	squad.erase(ship)
+	log_book.write("released", {"ship": ship.name}, "The %s left the squad." % ship.name)
+
+
+func _contract_crew(ship: Ship) -> Array:
+	var found: Array = []
+	for each in living_ships():
+		for member in each.crew:
+			if member.contract_id == int(ship.contract.id) and not member.dead:
+				found.append(member)
+	return found
+
+
+func _count_contract_jump() -> void:
+	for ship in living_ships():
+		if ship.is_mercenary():
+			ship.contract.jumps_left = int(ship.contract.jumps_left) - 1
 
 
 func collapse_distance() -> float:
@@ -150,7 +239,7 @@ func to_save() -> Dictionary:
 	return {
 		"game": "Infall: Escape The Collapse", "version": 2, "seed": seed_value, "current": current, "jumps": jumps,
 		"mawjig": mawjig, "cargo": cargo.duplicate(), "used_events": used_events.duplicate(), "stats": stats.duplicate(),
-		"difficulty": difficulty, "pending_fight": pending_fight, "squad": ships, "galaxy": galaxy.to_save(), "rng_state": rng.state,
+		"difficulty": difficulty, "pending_fight": pending_fight, "next_contract_id": next_contract_id, "squad": ships, "galaxy": galaxy.to_save(), "rng_state": rng.state,
 	}
 
 
@@ -189,6 +278,7 @@ static func load_from_disk() -> RunState:
 		run.stats[key] = int(data.stats[key])
 	run.difficulty = data.get("difficulty", "Normal")
 	run.pending_fight = data.get("pending_fight", "")
+	run.next_contract_id = int(data.get("next_contract_id", 1))
 	run.galaxy = Galaxy.from_save(data.galaxy)
 	for ship_data in data.squad:
 		run.squad.append(Ship.from_save(ship_data, 0))

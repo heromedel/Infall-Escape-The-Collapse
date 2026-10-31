@@ -4,6 +4,9 @@ extends Node
 ## and jump on, until the squad reaches the rim or is lost. Screens report what the player chose; Main decides
 ## what happens next and calls the screen that shows it.
 
+## Ai-Generated-Proposal: how likely mercenaries are to leave after a battle that killed any of their own (GV 7C).
+const MERCENARIES_LEAVE_CHANCE := 0.75
+
 var run: RunState
 var runner: EventRunner
 var battle: BattleScreen
@@ -117,12 +120,26 @@ func _begin_playing() -> void:
 func arrive_at_cluster() -> void:
 	_show_quiet_cluster()
 	run.save_to_disk()
+	# Mercenaries who lost any of their own are likely to leave after the battle (GV 7C)
+	var leaving := run.mercenaries_with_losses().filter(func(_ship): return run.rng.randf() < MERCENARIES_LEAVE_CHANCE)
+	_mercenary_events(leaving, "MERCENARY_WALKOUT", func(): pass)
 	_check_unlocks()
-	var opening := runner.opening_message()
-	if opening:
-		show_event(opening, _play_cluster_event)
-	else:
-		_play_cluster_event()
+	_mercenary_events(run.contracts_due(), "MERCENARY_CONTRACT_UP", func():
+		var opening := runner.opening_message()
+		if opening:
+			show_event(opening, _play_cluster_event)
+		else:
+			_play_cluster_event())
+
+
+## One contract event for each mercenary ship in turn (GV 7C), then `then`.
+func _mercenary_events(ships: Array, event_id: String, then: Callable) -> void:
+	if ships.is_empty():
+		runner.mercenary = null
+		then.call()
+		return
+	runner.mercenary = ships.pop_front()
+	show_event(Library.events[event_id], func(): _mercenary_events(ships, event_id, then))
 
 
 func _play_cluster_event() -> void:
@@ -182,6 +199,7 @@ func _after_event(result: Dictionary, then: Callable) -> void:
 func start_fight(squad_id: String) -> void:
 	var asked := Time.get_ticks_usec()
 	enemy_squad = runner.pick_squad(squad_id)
+	run.count_mercenary_crew()
 	var enemies := runner.build_enemy_ships(enemy_squad)
 	encounter = Encounter.new()
 	encounter.wallet = run

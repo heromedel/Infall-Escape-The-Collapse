@@ -874,7 +874,8 @@ func _draw_floating_status(ship: Ship) -> void:
 		pip_x += 13
 	UiKit.draw_text(self, rect.position + Vector2(width - 10, 54), "%d/%d" % [ship.hull, ship.max_hull], 12, UiColours.TEXT_DIM, UiKit.font_bold(), HORIZONTAL_ALIGNMENT_RIGHT, 0)
 	if enemy:
-		_region(rect, func(): _look_at(ship), "%s (%s)\n%s\nHull %d / %d. Click to look at it." % [ship.name, ship.design.class_text, ship.design.description, ship.hull, ship.max_hull])
+		var contract := ("\n" + ship.contract_summary()) if ship.is_mercenary() else ""
+		_region(rect, func(): _look_at(ship), "%s (%s)\n%s\nHull %d / %d.%s Click to look at it." % [ship.name, ship.design.class_text, ship.design.description, ship.hull, ship.max_hull, contract])
 	else:
 		_region(rect, func(): screen.select_ship(ship), "%s: click to select this ship." % ship.name)
 
