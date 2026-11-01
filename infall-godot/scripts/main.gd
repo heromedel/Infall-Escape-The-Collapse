@@ -141,7 +141,7 @@ func wait_for_host() -> void:
 	overlays.add_child(_waiting)
 	_waiting.place_panel(640)
 	_waiting.add_title("CONNECTED")
-	_waiting.add_text("You're in %s's game. The run starts when the host starts one." % session.name_of(session.admiral), 20)
+	_waiting.add_text("You're in %s's game. The run starts when the host starts one." % session.titled_name(session.admiral), 20)
 	_waiting.add_button("Players", open_players)
 	_waiting.add_button("Leave", func():
 		session.leave_lan()
@@ -203,7 +203,7 @@ func _lay_out_views() -> void:
 				if session.is_admiral(v.player_id):
 					v._give({"k": "hail_open"})
 				else:
-					v.hud.flash_message("The Admiral hails (%s)." % session.name_of(session.admiral)))
+					v.hud.flash_message("The Admiral hails (%s)." % session.titled_name(session.admiral)))
 			view.menu_pressed.connect(open_menu)
 			view.players_pressed.connect(open_players)
 	battle.player_views.sort_custom(func(a, b): return a.player_id < b.player_id)

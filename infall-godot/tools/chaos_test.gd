@@ -118,7 +118,8 @@ func _check_invariants() -> void:
 	if battle and battle.encounter and not battle.encounter.living(0).is_empty():
 		var selected := battle.selected_ship
 		if selected == null:
-			_fail("no ship is selected though the squad has %d living (after %s)" % [battle.encounter.living(0).size(), _action], "selected ship null")
+			if not battle.ship_deselected:   # a player who stepped back past their ship may have none (GV 14F)
+				_fail("no ship is selected though the squad has %d living (after %s)" % [battle.encounter.living(0).size(), _action], "selected ship null")
 		elif not battle.encounter.ships.has(selected):
 			_fail("the selected ship %s is not in the encounter (after %s)" % [selected.name, _action], "selected ship not in encounter")
 		elif selected.is_gone():

@@ -351,7 +351,10 @@ func _draw_crew_list(ship: Ship, at: Vector2) -> void:
 		var chosen := screen.selected_crew.has(member)   # this player's selection, not another's
 		UiKit.draw_frame(self, rect, UiColours.PANEL_LIGHT if chosen else _panel(), UiColours.POWER_GREEN if chosen else UiColours.BORDER_DIM, 6.0)
 		CrewPortraits.draw_token(self, member.race.id, member.name, rect.position + Vector2(22, 25), 16.0, UiColours.POWER_GREEN)
-		UiKit.draw_text(self, rect.position + Vector2(46, 20), member.name, 16, UiColours.TEXT, UiKit.font_bold())
+		UiKit.draw_text(self, rect.position + Vector2(46, 20), member.display_name(), 16, UiColours.TEXT, UiKit.font_bold())
+		if member.side == 0 and member.rank_due() >= 0:
+			var mark := rect.position + Vector2(rect.size.x - 12, 12)   # a gold diamond: a promotion is due
+			draw_colored_polygon(PackedVector2Array([mark + Vector2(0, -6), mark + Vector2(5, 0), mark + Vector2(0, 6), mark + Vector2(-5, 0)]), Color("#ffd46b"))
 		var fraction := member.health_fraction()
 		draw_rect(Rect2(rect.position + Vector2(46, 29), Vector2(120, 7)), UiColours.BAR_EMPTY)
 		draw_rect(Rect2(rect.position + Vector2(46, 29), Vector2(120 * fraction, 7)), UiColours.hull_colour(fraction))
@@ -436,7 +439,9 @@ func _room_label(ship: Ship, room_index: int) -> String:
 
 func _crew_tooltip(member: CrewMember) -> String:
 	var lines := PackedStringArray()
-	lines.append("%s, %s" % [member.name, member.race.singular])
+	lines.append("%s, %s" % [member.display_name(), member.race.singular])
+	if member.side == 0 and member.rank_due() >= 0:
+		lines.append("A promotion to %s is due: the ship screen's Promote." % CrewMember.RANK_TITLE[member.rank_due()])
 	lines.append("Health %d / %d" % [int(member.health), int(member.max_health)])
 	for skill in CrewMember.SKILLS:
 		var level := member.skill_level(skill)
@@ -874,7 +879,7 @@ func _draw_overlays() -> void:
 		var line := "press Space to resume"
 		if session and session.here_count() > 1:
 			var by := screen.battle.paused_by
-			line = ("paused by %s · " % session.name_of(by) if by > 0 else "") + ("press Space to resume" if screen.is_admiral() else "the Admiral, %s, resumes" % session.name_of(session.admiral))
+			line = ("paused by %s · " % session.titled_name(by) if by > 0 else "") + ("press Space to resume" if screen.is_admiral() else "%s resumes" % session.titled_name(session.admiral))
 		UiKit.draw_text(self, Vector2(centre.x, 178), line, 17, UiColours.TEXT_DIM, null, HORIZONTAL_ALIGNMENT_CENTER, 0)
 	if screen.aim_mode != "":
 		var hint: String = {"weapon": "Click a tile of an enemy ship to aim. Right click cancels.", "beam": "Press on an enemy tile and drag to aim the beam's sweep.", "teleport": "Click an enemy room to send boarders.", "suit": "Click an enemy ship to send the battlesuit."}.get(screen.aim_mode, "")

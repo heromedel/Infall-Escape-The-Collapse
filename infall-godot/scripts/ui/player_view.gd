@@ -33,9 +33,11 @@ var pointer := Vector2(960, 540)    # where this player's cursor is, in view pix
 var show_cursor := false            # a controller player's drawn cursor
 
 var selected_ship: Ship
+var ship_deselected := false        # the player stepped back past their ship: none is selected until they pick one
 var selected_crew: Array[CrewMember] = []
 var aim_mode: String = ""            # weapon, beam, teleport, suit
 var aim_slot: WeaponSlot
+var aim_ship: Ship                  # the ship whose weapon is being aimed
 var autofire_default: bool = false
 var hover_ship: Ship
 var hover_room: int = -1
@@ -185,9 +187,13 @@ func _process(delta: float) -> void:
 	_cursor.queue_redraw()
 
 
-## When the selected ship is destroyed or loses its crew, the next living ship of the squad is selected.
+## When the selected ship is destroyed or loses its crew, the next living ship of the squad is selected. A player who
+## stepped back past their ship has none selected until they pick one (GV 14F).
 func _keep_a_ship_selected() -> void:
-	if selected_ship == null or not encounter.ships.has(selected_ship) or selected_ship.is_gone():
+	if selected_ship != null and (not encounter.ships.has(selected_ship) or selected_ship.is_gone()):
+		selected_ship = null
+		ship_deselected = false
+	if selected_ship == null and not ship_deselected:
 		selected_ship = encounter.living(0)[0] if not encounter.living(0).is_empty() else null
 
 
@@ -285,7 +291,7 @@ func handle_input(event: InputEvent) -> void:
 	if encounter == null:
 		return
 	if event is InputEventKey and event.pressed and not event.echo and event.keycode == KEY_ESCAPE:
-		step_back()   # Esc works with a window open too: it is how the menu closes
+		step_back(true)   # Esc works with a window open too: it is how the menu closes
 		return
 	if hold_pause:
 		return
@@ -309,10 +315,13 @@ func _mouse_button(event: InputEventMouseButton) -> void:
 		camera.zoom_at(event.position, 1.0 / 1.12, view_size())
 		return
 	_update_hover()
+	var left_orders := _left_orders()
 	if event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
-		if aim_mode != "":
-			if aim_slot:
-				_give({"k": "untarget", "s": _index(selected_ship), "w": selected_ship.weapons.find(aim_slot)})
+		if left_orders:
+			step_back()   # Mouse Control's second choice: right click steps back (GV 14E)
+		elif aim_mode != "":
+			if aim_slot and aim_ship:
+				_give({"k": "untarget", "s": _index(aim_ship), "w": aim_ship.weapons.find(aim_slot)})
 			cancel_aim()
 		elif not selected_crew.is_empty():
 			_order_selected_to_hover()
@@ -334,7 +343,7 @@ func _mouse_button(event: InputEventMouseButton) -> void:
 		if hover_door and hover_ship and hover_ship.side == 0:
 			toggle_door(hover_ship, hover_door)
 			return
-		if not selected_crew.is_empty() and hover_room >= 0:
+		if left_orders and not selected_crew.is_empty() and hover_room >= 0:
 			_order_selected_to_hover()
 			return
 		_drag_start = event.position
@@ -350,16 +359,17 @@ func _mouse_button(event: InputEventMouseButton) -> void:
 			hud.box_rect = Rect2()
 			if box.size.length() > 8.0:
 				_box_select(box)
-			elif hover_ship and hover_ship.side == 0:
-				selected_ship = hover_ship
-				_select_crew([], false)
+			elif hover_ship and hover_ship.side == 0 and (hover_ship != selected_ship or left_orders):
+				select_ship(hover_ship)
+			elif not left_orders:
+				step_back()   # a click on nothing (or on the selected ship's floor) steps back one level (GV 14F)
 
 
 func _click_while_aiming() -> void:
 	if hover_ship == null or hover_ship.side != 1 or hover_ship.is_gone():
 		var suit := _suit_under_pointer()
 		if aim_mode == "weapon" and suit:
-			_give({"k": "aim_suit", "s": _index(selected_ship), "w": selected_ship.weapons.find(aim_slot), "suit": encounter.suits.find(suit), "auto": _aim_is_autofire()})
+			_give({"k": "aim_suit", "s": _index(aim_ship), "w": aim_ship.weapons.find(aim_slot), "suit": encounter.suits.find(suit), "auto": _aim_is_autofire()})
 			Sfx.play("target")
 			cancel_aim()
 		return
@@ -367,7 +377,7 @@ func _click_while_aiming() -> void:
 		"weapon":
 			if hover_room < 0:
 				return
-			_give({"k": "aim", "s": _index(selected_ship), "w": selected_ship.weapons.find(aim_slot), "ts": _index(hover_ship), "cell": hover_cell, "auto": _aim_is_autofire()})
+			_give({"k": "aim", "s": _index(aim_ship), "w": aim_ship.weapons.find(aim_slot), "ts": _index(hover_ship), "cell": hover_cell, "auto": _aim_is_autofire()})
 			Sfx.play("target")
 			cancel_aim()
 		"beam":
@@ -392,7 +402,7 @@ func _finish_beam() -> void:
 	var start_cell := Vector2i(floor((_beam_start_local - _beam_target.design.cell_offset) / ShipDesign.TILE))
 	if _beam_target.room_at(start_cell) < 0:
 		start_cell = _beam_target.rooms[0].cells[0]
-	_give({"k": "aim_beam", "s": _index(selected_ship), "w": selected_ship.weapons.find(aim_slot), "ts": _index(_beam_target), "cell": start_cell,
+	_give({"k": "aim_beam", "s": _index(aim_ship), "w": aim_ship.weapons.find(aim_slot), "ts": _index(_beam_target), "cell": start_cell,
 			"a": _beam_start_local, "b": _beam_start_local + direction.normalized() * aim_slot.def.beam_length, "auto": _aim_is_autofire()})
 	_beam_target = null
 	Sfx.play("target")
@@ -437,20 +447,32 @@ func _key(event: InputEventKey) -> void:
 			players_pressed.emit(self)
 
 
-## Esc steps back one level at a time: a window closes, aiming stops, then the menu opens.
-func step_back() -> void:
+## Steps back one level at a time (GV 14F): a window closes (Esc), aiming stops, the crew are let go, then the
+## ship, and Esc's last step opens the menu.
+func step_back(esc: bool = false) -> void:
 	var windows := overlays.get_children().filter(func(w): return not w.is_queued_for_deletion())
 	if not windows.is_empty():
-		var top: Control = windows.back()
-		if top.has_method("close"):
-			top.close()
+		if esc:
+			var top: Control = windows.back()
+			if top.has_method("close"):
+				top.close()
 		return
 	if battle.hold_pause:
 		return
 	if aim_mode != "":
 		cancel_aim()
-		return
-	menu_pressed.emit(self)
+	elif not selected_crew.is_empty():
+		selected_crew.clear()
+	elif selected_ship != null:
+		selected_ship = null
+		ship_deselected = true
+	elif esc:
+		menu_pressed.emit(self)
+
+
+## Mouse Control (GV 14E): the genre's way by default; the second choice gives orders with the left button.
+func _left_orders() -> bool:
+	return Settings.get_value("mouse_control", "Left Selects, Right Orders") != "Left Selects, Right Orders"
 
 
 func _update_hover() -> void:
@@ -502,7 +524,7 @@ func _give(order: Dictionary) -> void:
 
 func toggle_pause() -> void:
 	if not is_admiral():
-		hud.flash_message("Only the Admiral pauses (%s)." % session.name_of(session.admiral))
+		hud.flash_message("Only the Admiral pauses (%s)." % session.titled_name(session.admiral))
 		return
 	_give({"k": "pause", "on": not battle.paused})
 
@@ -526,6 +548,7 @@ func arm_weapon(slot: WeaponSlot) -> void:
 		_give({"k": "wpower", "s": _index(selected_ship), "w": selected_ship.weapons.find(slot), "on": true})
 		Sfx.play("power_up")
 	aim_slot = slot
+	aim_ship = selected_ship
 	aim_mode = "beam" if slot.def.type == "beam" else "weapon"
 	Sfx.play("arm")
 
@@ -556,6 +579,7 @@ func system_power(ship: Ship, system: ShipSystem, up: bool) -> void:
 func cancel_aim() -> void:
 	aim_mode = ""
 	aim_slot = null
+	aim_ship = null
 	_beam_target = null
 
 
@@ -585,12 +609,12 @@ func cycle_ship() -> void:
 	if ships.is_empty():
 		return
 	var index := ships.find(selected_ship)
-	selected_ship = ships[(index + 1) % ships.size()]
-	_select_crew([], false)
+	select_ship(ships[(index + 1) % ships.size()])
 
 
 func select_ship(ship: Ship) -> void:
 	selected_ship = ship
+	ship_deselected = false
 	_select_crew([], false)
 
 
@@ -602,6 +626,7 @@ func _select_crew(members: Array, add: bool) -> void:
 			selected_crew.append(member)
 			if member.home.side == 0:
 				selected_ship = member.home
+				ship_deselected = false
 	if not members.is_empty():
 		Sfx.play("select")
 

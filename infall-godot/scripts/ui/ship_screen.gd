@@ -168,7 +168,7 @@ func _crew_column() -> VBoxContainer:
 		card.add_theme_stylebox_override("panel", UiKit.box(UiColours.PANEL_LIGHT, UiColours.BORDER_DIM, 1, 4, 8))
 		var stack := VBoxContainer.new()
 		card.add_child(stack)
-		stack.add_child(UiKit.label("%s · %s · %d/%d" % [member.name, member.race.singular, int(member.health), int(member.max_health)], 16, UiColours.TEXT, true))
+		stack.add_child(UiKit.label("%s · %s · %d/%d" % [member.display_name(), member.race.singular, int(member.health), int(member.max_health)], 16, UiColours.TEXT, true))
 		var skills := PackedStringArray()
 		for skill in CrewMember.SKILLS:
 			var level: int = member.skill_level(skill)
@@ -179,6 +179,11 @@ func _crew_column() -> VBoxContainer:
 		for other in run.living_ships():
 			if other != ship and other.living_crew_count() < EventRunner.MAX_CREW_PER_SHIP and ship.living_crew_count() > 1:
 				buttons.add_child(UiKit.button("TO %s" % other.name.to_upper(), func(): _order({"op": "crew_to", "crew": ship.crew.find(member), "to": run.squad.find(other)}), 0))
+		if member.rank_due() >= 0:
+			var promote := UiKit.button("PROMOTE TO %s" % CrewMember.RANK_TITLE[member.rank_due()].to_upper(), func(): _order({"op": "promote", "crew": ship.crew.find(member)}), 0)
+			promote.tooltip_text = "A rank is for show: it puts a title in front of their name and changes nothing else. One is earned for each skill mastered."
+			promote.add_theme_color_override("font_color", Color("#ffd46b"))
+			buttons.add_child(promote)
 		if ship.living_crew_count() > 1:
 			buttons.add_child(UiKit.button("DISMISS", func(): _order({"op": "dismiss", "crew": ship.crew.find(member)}), 0))
 		stack.add_child(buttons)

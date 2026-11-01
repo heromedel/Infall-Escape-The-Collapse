@@ -19,8 +19,8 @@ the Last Fleet. Lose when every scout ship is gone (GDD 1F).
 |---|---|---|
 | Pause / unpause | Space | Click either stick (L3 / R3) |
 | Select crew | Left click a crew token, or drag a box | X / Square |
-| Move selected crew | Right click (or left click) a tile: the first goes to that tile, the rest to free tiles in its room | A / Cross |
-| Deselect, cancel aiming | Right click, Esc | B / Circle |
+| Move selected crew | Right click a tile (left click too with Mouse Control's second choice): the first goes to that tile, the rest to free tiles in its room | A / Cross |
+| Step back | Esc, or click on nothing: aiming stops, then the crew are let go, then the ship, then (Esc) the menu. With Mouse Control's second choice, right click | B / Circle |
 | Aim a weapon | Click its slot (or 1–6), then click a tile of an enemy ship: the shot hits that tile and the system there, not the whole room | X on the slot, then on the tile |
 | Aim a beam | Click its slot, then press on an enemy tile and drag: every tile it crosses is hit | |
 | Fire once / autofire | Aim normally fires once (yellow mark); hold Ctrl to switch. V or AUTOFIRE flips the default (red mark) | |
@@ -35,7 +35,9 @@ the Last Fleet. Lose when every scout ship is gone (GDD 1F).
 | Move a HUD card | Drag its grab bar (the small tab on its top edge); drop it against another card's side to dock it. Right click the bar puts it back; the button beside it folds the card. Settings: HUD Layout, HUD Card Opacity, Reset HUD layout | |
 | Fly to a ship | Double-click it, F for the selected ship, or click its status card | |
 | Next squad ship | Tab | |
-| Map and jump | J or JUMP | View / Select |
+| Map and jump | J or JUMP (the Admiral jumps) | |
+| Players, LAN, the Admiral | P or the players button by the menu | View / Select |
+| Join as another player | | Start on a new controller |
 | Ship screen (upgrades, weapons, crew) | U or SHIP | |
 | Menu | Esc | Menu / Start |
 
@@ -102,10 +104,16 @@ Lori or Eco is listed in `docs/items-needing-second-opinion.md`.
   point of hull damage, the Supershield regrowing a layer every 20, 15 or 10 s, teleporter cooldowns 20/15/10 s,
   suit sorties of about 30 s.
 
+## Playing together (GV 4)
+
+The game always runs as a server with its players as clients, also alone. Controllers on the same computer join with
+Start and get their own view of the screen (left and right for two, quarters for three or four; Local Co-op View:
+Split > Shared). Over LAN, the host opens the game in the Players menu and others join with the host's IP address,
+at any time. The host is the Admiral and makes the squad's decisions; everyone commands every ship.
+
 ## Not in this build yet
 
-- LAN multiplayer and the multiplayer settings (GDD 4). The simulation runs on fixed ticks and takes orders, so it is
-  ready for it, but there is no host or join yet.
+- The Admiral assigning ships to players, the vote and lock-in multiplayer settings, player profiles (GV 4G).
 - The Tech victory and other victory paths (ideas); the win is reaching the rim.
 - Augments and drones (the design moves drones into EVB suits and race systems).
 

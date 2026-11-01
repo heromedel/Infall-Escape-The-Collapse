@@ -85,6 +85,26 @@ func _ready() -> void:
 	_check("a folded card opens when its crew are hurt", hud.layout.rects["crew"].size.y > 60.0)
 	hud.layout.reset()
 	await _wait(0.3)
+	# 8. Stepping back (GV 14F): Esc lets go of the crew, then the ship, then opens the menu
+	battle.select_crew_member(ship.crew[0], false)
+	await _key(KEY_ESCAPE)
+	_check("Esc lets go of the selected crew first", battle.selected_crew.is_empty() and battle.selected_ship == ship)
+	await _key(KEY_ESCAPE)
+	await _wait(0.2)
+	_check("Esc then lets go of the ship, and stays let go", battle.selected_ship == null)
+	await _key(KEY_ESCAPE)
+	_check("Esc then opens the menu", battle.has_window())
+	await _key(KEY_ESCAPE)
+	_check("Esc closes the menu", not battle.has_window())
+	battle.select_ship(ship)
+	# 9. A promotion (GV 15A): two skills mastered make a Lieutenant, worn in front of the name
+	var veteran: CrewMember = ship.crew[0]
+	veteran.xp["piloting"] = 300.0
+	veteran.xp["engines"] = 300.0
+	_check("a promotion is due for two skills mastered", veteran.rank_due() == 1)
+	main.session.submit(main.session.admiral, {"k": "refit", "op": "promote", "sq": 0, "crew": 0})
+	await _wait(0.2)
+	_check("Promote makes them a Lieutenant", veteran.rank == 1 and veteran.display_name().begins_with("Lt. "))
 	get_viewport().get_texture().get_image().save_png("/tmp/claude-0/input_test.png")
 	get_tree().quit()
 

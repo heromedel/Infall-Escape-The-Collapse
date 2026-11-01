@@ -7,6 +7,8 @@ const NAMES := ["Ginger", "Sable", "Marlowe", "Vex", "Pip", "Index", "Ledger", "
 
 
 func _ready() -> void:
+	if OS.get_environment("CATS") != "":
+		Settings._values["gatos_species"] = "Tabbys"
 	get_window().size = Vector2i(1100, 760)
 	await get_tree().process_frame
 	await get_tree().process_frame
@@ -19,7 +21,16 @@ func _ready() -> void:
 
 func _draw() -> void:
 	draw_rect(Rect2(0, 0, 1100, 760), Color("#0d1220"))
+	if OS.get_environment("CATS") != "":
+		# Thirty GATOS cat heads with Tabbys, to see the coats, faces and tufts side by side
+		var race := Library.race("terran")
+		var names: Array = Array(race.names) + Array(race.species_names.get("Tabbys", PackedStringArray()))
+		for index in mini(names.size(), 40):
+			CrewPortraits.draw_token(self, "terran", names[index], Vector2(60 + (index % 10) * 100, 60 + (index / 10) * 100), 40, Color("#66ff66"))
+		return
 	var was: Variant = Settings.get_value("gatos_species")
+	if OS.get_environment("CATS") != "":
+		return
 	var y := 30.0
 	for species in ["Terrans", "Tabbys"]:
 		Settings._values["gatos_species"] = species

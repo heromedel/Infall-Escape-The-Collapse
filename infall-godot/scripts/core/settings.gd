@@ -22,6 +22,7 @@ const OPTIONS := {
 	"reopened_cards_fold_back": [true, [true, false], "Reopened Cards Fold Back"],
 	"low_mawjig_warning": [true, [true, false], "Low Mawjig Warning"],
 	"gatos_species": ["Terrans", ["Terrans", "Tabbys"], "GATOS Species"],
+	"mouse_control": ["Left Selects, Right Orders", ["Left Selects, Right Orders", "Left Selects and Orders, Right Deselects"], "Mouse Control"],
 	"local_coop_view": ["Split", ["Split", "Shared"], "Local Co-op View"],
 	"shots_crossing_barrier": ["Shown", ["Shown", "Hidden"], "Shots Crossing Barrier"],
 	"fullscreen": [false, [false, true], "Fullscreen"],

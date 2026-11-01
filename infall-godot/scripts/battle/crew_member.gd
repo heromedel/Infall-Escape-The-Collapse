@@ -27,6 +27,7 @@ var healing: bool = false          # a medbay is healing them this tick, whateve
 var stun_ticks: int = 0
 var door_wait: ShipDoor = null
 var dead: bool = false
+var rank: int = -1                 # GV 15A: -1 none, 0 Sgt. up to 5 Cpt.
 var contract_id: int = 0           # a hired mercenary: the contract they came with (GV 7C); 0 for the squad's own
 var in_suit: bool = false
 var teleporting_ticks: int = 0
@@ -48,6 +49,28 @@ static func create(race_def: RaceDef, crew_name: String) -> CrewMember:
 	for skill in SKILLS:
 		member.xp[skill] = 0.0
 	return member
+
+
+## Crew ranks (GV 15A): for show only, kept apart from the name. One is earned for each skill fully mastered (both
+## levels), as Federation Home Planet does it; the player presses Promote when one is due. Losing a skill never takes
+## a rank away. One ladder for every race until racial ranks are made.
+const RANK_PREFIX := ["Sgt.", "Lt.", "Maj.", "Col.", "Cmd.", "Cpt."]
+const RANK_TITLE := ["Sergeant", "Lieutenant", "Major", "Colonel", "Commander", "Captain"]
+
+
+func mastered_skills() -> int:
+	return SKILLS.filter(func(skill): return skill_level(skill) >= 2).size()
+
+
+## The rank they have earned and don't wear yet, or -1.
+func rank_due() -> int:
+	var earned := mini(RANK_PREFIX.size(), mastered_skills()) - 1
+	return earned if earned > rank else -1
+
+
+## Their name as the game shows it: with their rank in front.
+func display_name() -> String:
+	return "%s %s" % [RANK_PREFIX[rank], name] if rank >= 0 else name
 
 
 func skill_level(skill: String) -> int:
@@ -93,7 +116,7 @@ func is_boarding() -> bool:
 
 
 func to_save() -> Dictionary:
-	return {"name": name, "race": race.id, "health": health, "xp": xp.duplicate(), "station": station_room, "contract": contract_id}
+	return {"name": name, "race": race.id, "health": health, "xp": xp.duplicate(), "station": station_room, "contract": contract_id, "rank": rank}
 
 
 static func from_save(data: Dictionary) -> CrewMember:
@@ -104,4 +127,5 @@ static func from_save(data: Dictionary) -> CrewMember:
 		member.xp[skill] = float(saved_xp[skill])
 	member.station_room = int(data.get("station", -1))
 	member.contract_id = int(data.get("contract", 0))
+	member.rank = int(data.get("rank", -1))
 	return member

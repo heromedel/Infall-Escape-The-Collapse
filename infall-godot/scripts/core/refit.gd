@@ -90,6 +90,11 @@ static func apply(run: RunState, order: Dictionary) -> void:
 				member.station_room = -1
 				to.assign_stations()
 				ship.assign_stations()
+		"promote":
+			var member := _member(ship, order)
+			if member and member.rank_due() >= 0:
+				member.rank = member.rank_due()
+				run.log_book.write("promoted", {"name": member.name, "rank": member.rank}, "%s was promoted to %s." % [member.name, CrewMember.RANK_TITLE[member.rank]])
 		"dismiss":
 			var member := _member(ship, order)
 			if member and ship.living_crew_count() > 1:

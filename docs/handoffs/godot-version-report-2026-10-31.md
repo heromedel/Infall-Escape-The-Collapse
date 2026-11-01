@@ -105,11 +105,37 @@ in the Windows build sent at the end of the day.
     out before calling it stuck; no window was stuck in eight seeds since. Its runs also found the selection
     problem above, and a save read while another test was writing it (reading an empty save no longer errors).
 
-## 8. How to check it
+## 8. The build of 2026-11-01 (the Next build list)
+
+1. **Always a server** (GV 4A, 4C): the host puts every player's orders and the clock's ticks into one stream;
+   every machine plays the same stream through the same simulation. Playing alone is hosting with nobody joined.
+   Solo play looks and plays as before.
+2. **LAN** by direct IP (Players menu: open this game to LAN players, or join one). A machine can join a run at any
+   time, mid-fight included: it is sent where the run began and everything since, and catches up. The host checks
+   every 5 s that every machine agrees. Tested with a host and a client on one computer.
+3. **Controllers are players** (GV 4C): Start on a new controller joins, with its own cursor in its own colour,
+   its own selection, camera and windows. Unplugging drops out; plugging back in and Start returns to its place.
+4. **Split screen** (GV 4F): left and right for two, quarters for three or four, every view keeping its shape;
+   `Local Co-op View: Split > Shared`.
+5. **The Admiral** (GV 4B, 4E): squad decisions (events, victories, hails, surrenders, jumps, pausing) are theirs;
+   others see the windows with the choices greyed. "Paused by" shows when more than one plays. If the Admiral's
+   machine drops out, the game pauses and saves. Players are "Admiral Name" and "Commodore Name".
+6. **Mouse Control and stepping back** (GV 14E, 14F): `Mouse Control: Left Selects, Right Orders > Left Selects and
+   Orders, Right Deselects`. Esc and a click on nothing step back: aiming, then the crew, then the ship (the ship
+   cards hide; every ship stays in the squad list), then the menu.
+7. **Crew ranks** (GV 15A): Sgt. to Cpt., one for each skill mastered, by Promote on the ship screen; a gold mark
+   on the crew card when one is due. For show only, kept apart from the name.
+8. **Cat heads** with coats (tabby, tuxedo, calico) and ear tufts, and more of the other faces.
+9. **Mercenaries** now decide whether to leave right after the fight.
+10. **Not built yet:** the Admiral assigning ships to players, the vote and lock-in settings, player profiles
+    (GV 4G); testing with real controllers (simulated here).
+
+## 9. How to check it
 
 From `infall-godot/`: `tools/compile_check.sh` (script errors), `tools/input_test.tscn` (clicks, 14 checks),
 `tools/test_fight.tscn` (20 fights), `tools/galaxy_test.tscn`, `tools/ship_value_test.tscn`,
-`tools/mercenary_test.tscn`, `tools/portrait_sheet.tscn` (every face, both settings), `tools/flow_test.tscn`
+`tools/mercenary_test.tscn`, `tools/coop_test.tscn` (controllers and split screen),
+`tools/lan_test.tscn` (a host and a client: `ROLE=host`, then `ROLE=client`), `tools/portrait_sheet.tscn` (every face, both settings), `tools/flow_test.tscn`
 (screenshots of a run), `tools/auto_run.tscn` (bots play whole runs),
 `tools/chaos.sh` (the chaos tester). Run the scenes with `godot --path . <scene>`; the ones that draw need a
 display (`xvfb-run`).

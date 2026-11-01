@@ -39,7 +39,7 @@ func _rebuild() -> void:
 		var where: String = {"keys": "keyboard and mouse", "pad": "controller", "remote": "LAN"}.get(player.device, "")
 		if player.peer != session.my_peer:
 			where = "over LAN"
-		var text := "%s · %s%s%s" % [player.name, where, " · ADMIRAL" if session.is_admiral(player.id) else "", "" if player.here else " · away"]
+		var text := "%s · %s%s" % [session.titled_name(player.id), where, "" if player.here else " · away"]
 		var label := UiKit.label(text, 18, UiColours.TEXT if player.here else UiColours.TEXT_DIM, true)
 		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		row.add_child(label)
@@ -86,7 +86,7 @@ func _rebuild() -> void:
 				main.wait_for_host(), 100))
 		_list.add_child(row)
 	else:
-		_list.add_child(UiKit.label("You are in %s's game." % session.name_of(session.admiral), 17, UiColours.TEXT, true))
+		_list.add_child(UiKit.label("You are in %s's game." % session.titled_name(session.admiral), 17, UiColours.TEXT, true))
 		_list.add_child(UiKit.button("LEAVE THE GAME", func():
 			session.leave_lan()
 			close()

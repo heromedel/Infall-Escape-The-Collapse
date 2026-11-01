@@ -99,7 +99,7 @@ static func _senti_cat(canvas: CanvasItem, seed_text: String, c: Vector2, r: flo
 	rows[slipped] = rows[slipped].right(1) + rows[slipped].left(-1)   # one pixel to the right, wrapping
 	# Bright lines over a see-through body: the outline and the eyes glow, the fur lets the dark show through
 	var colours := {"#": "#eaff70", "Y": "#9ccc00a0", "O": "#7aa80090", "o": "#5a800088", "K": "#b8ff60a0",
-		"W": "#c8f070a0", "N": "#4ff0ff", "S": "#d2ff00a0", "H": "#4ff0ff"}
+		"W": "#c8f070a0", "N": "#4ff0ff", "S": "#d2ff00a0", "H": "#4ff0ff", "P": "#b4e030a0", "Q": "#5a800088", "T": "#eaff70"}
 	var pixel := r * 2.0 / CrewFace.WIDTH
 	canvas.draw_circle(c, r * 0.8, Color(0.82, 1.0, 0.0, 0.1))
 	CrewFace.draw_rows(canvas, c, rows, colours, pixel)

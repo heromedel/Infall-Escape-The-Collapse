@@ -118,6 +118,16 @@ func name_of(id: int) -> String:
 	return player.name if not player.is_empty() else "Someone"
 
 
+## A player's title (GV 4B): the host's squad leader is the Admiral, every other player a Commodore.
+func title_of(id: int) -> String:
+	return "Admiral" if id == admiral else "Commodore"
+
+
+## "Admiral Name", as the game names a player.
+func titled_name(id: int) -> String:
+	return "%s %s" % [title_of(id), name_of(id)]
+
+
 func here_count() -> int:
 	return players.filter(func(p): return p.here).size()
 
