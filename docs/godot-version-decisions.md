@@ -52,6 +52,23 @@ anything Claude added tagged Ai-Generated-Proposal.
 - **B — Likely (heromedel, 2026-11-01):** players are titled Commodores and the host is the Admiral, so no player
   is outranked by a crew member (crew ranks reach Captain, GV 15A). It replaces the titles in GDD 4B–4D (the
   Captain is the host, joining players are Commanders) and GDD 15B; the roles stay the same.
+- **C — Decided (heromedel, 2026-11-01):** the multiplayer groundwork, all in one build: the server and its clients,
+  every player action sent to the server as an order, LAN hosting and joining by direct IP, and each controller as a
+  player of its own with its own cursor (GDD 14E's buttons). Players drop in and out at any time (GDD 4F): a new pad
+  joins by pressing Start, a LAN player joins a running game, mid-fight included, and a player coming back gets
+  their name, colour and place again. A Players menu lists everyone; the host starts as the Admiral and can hand the
+  role on.
+- **D — Decided (heromedel, 2026-11-01):** until the Admiral can assign ships (later), every player may command every
+  ship and its crew.
+- **E — Decided (heromedel, 2026-11-01):** the multiplayer settings (GDD 4H–4N) are built at their defaults for now:
+  only the Admiral pauses, the Admiral makes event choices while the others see them, an indicator shows who paused,
+  and if the Admiral drops out the game pauses and saves until they return.
+- **F — Decided (heromedel, 2026-11-01):** players sharing a screen get split screen, each with their own camera,
+  cards and selection: left and right for two, quarters for three or four. A setting,
+  `Local Co-op View: Split > Shared`. Shared things (events, the pause and who paused) show once across the screen;
+  a player's own windows open in their view. Over LAN each player has their own screen.
+- **G — Saved for later (heromedel, 2026-11-01):** the Admiral assigning ships and crew to players (GDD 4C–4D), the
+  vote and lock-in options of the multiplayer settings, and player profiles.
 
 ## 5. Ships
 
@@ -182,9 +199,10 @@ The list for the 2026-10-31 evening build. All built; what is left is noted.
 
 ## Next build (after 2026-10-31)
 
-1. **The multiplayer groundwork** (GV 4A, first; heromedel, 2026-11-01: it should have been in the first build): the
-   game always runs as a server and the player's screen is its client, also when playing alone, with every
-   player action sent as an order. LAN hosting and joining by direct IP (GDD 4A) build on it.
+1. **The multiplayer groundwork** (GV 4A, 4C–4F, first; heromedel, 2026-11-01: it should have been in the first
+   build): the game always runs as a server and every screen is its client, also when playing alone; every player
+   action is an order; LAN by direct IP; controllers as players; drop in and out at any time; the Players menu and
+   the Admiral role; split screen; everyone commands every ship for now; the multiplayer settings at their defaults.
 2. **More varied cat heads** (heromedel, 2026-11-01): with Tabbys, the GATOS cat heads (and the holographic Senti
    built on them) get fur patterns as well as colours, e.g. stripes, tuxedo, calico and ear tufts, and the faces other
    than face C come up more often.
@@ -206,3 +224,4 @@ The list for the 2026-10-31 evening build. All built; what is left is noted.
 | 2026-10-31 | The evening build: everything on the Next build list (GV 3H, 7A, 7C, 7E, 8B). |
 | 2026-11-01 | Mouse Control setting and stepping back (GV 14E, 14F); cosmetic crew ranks with Promote (GV 15A); Commodores and the Admiral (GV 4B); always a server (GV 4A). |
 | 2026-11-01 | Always a server is Decided (GV 4A); the multiplayer groundwork goes first on the Next build list. |
+| 2026-11-01 | The multiplayer groundwork planned (GV 4C–4G): server and clients, orders, LAN, controllers, drop in and out, split screen, defaults only. |
