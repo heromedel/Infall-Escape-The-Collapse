@@ -43,6 +43,16 @@ anything Claude added tagged Ai-Generated-Proposal.
   weapon comes back by itself once the bars work again. If the player has put that power elsewhere meanwhile, it
   stays where they put it. (Before this, weapons knocked off by a hit stayed off after the repair.)
 
+## 4. Multiplayer
+
+- **A — Proposed (heromedel, 2026-11-01):** there is no separate single player: the game always runs a server that
+  the player's client connects to, which readies it for LAN and keeps input and the simulation under one control.
+  Playing alone is hosting with nobody joined. Not built yet: the Godot version runs in one process with no host or
+  join (its fixed ticks and orders are ready for it).
+- **B — Likely (heromedel, 2026-11-01):** players are titled Commodores and the host is the Admiral, so no player
+  is outranked by a crew member (crew ranks reach Captain, GV 15A). It replaces the titles in GDD 4B–4D (the
+  Captain is the host, joining players are Commanders) and GDD 15B; the roles stay the same.
+
 ## 5. Ships
 
 - **A — Decided (heromedel, 2026-10-31):** a powered Medbay heals every crew member of its own side in its room
@@ -125,6 +135,26 @@ anything Claude added tagged Ai-Generated-Proposal.
 - **D — Ai-Generated-Proposal (2026-10-31):** messages sit on a dark plate so they read over any ship; hovering a
   system's console shows only that system.
 
+- **E — Likely (heromedel, 2026-11-01):** a setting, `Mouse Control: Left Selects, Right Orders > Left Selects and
+  Orders, Right Deselects`. The default is the genre's: left click selects, arms and targets; right click orders
+  crew and cancels. In both, right click on a system or weapon on the HUD powers it down, as usual.
+- **F — Likely (heromedel, 2026-11-01):** stepping back goes one level at a time: a mode is cancelled (aiming, the
+  teleporter, a suit launch), then the crew or weapon is deselected, then the ship, and Esc's last step opens the
+  menu. Clicking on nothing steps back (right click with the second Mouse Control), and so does Esc. With no ship
+  selected, the ship cards (weapons, systems, crew) are hidden, while every ship of the squad stays listed with its
+  hull and can be selected.
+  - **Ai-Generated-Proposal (2026-11-01):** with no ship selected the weapon hotkeys 1 to 6 do nothing and Tab
+    selects the first ship.
+
+## 15. Ranks and Titles
+
+- **A — Decided (heromedel, 2026-11-01):** crew ranks are cosmetic only, and kept apart from the name: the rank is
+  shown in front of it (e.g. "Lt. Omar Haddad"), so renaming never loses it.
+  - **Proposed (heromedel, 2026-11-01):** ranks and the Promote button as in Federation Home Planet: one rank for
+    each skill fully mastered (both levels), Sgt., Lt., Maj., Col., Cmd., Cpt.; when a rank is due, the player
+    presses Promote. A skill lost never takes a rank away. One ladder for every race until racial ranks are made.
+    It replaces GDD 15C (ranks shown from total skill, with no button).
+
 ## Next build
 
 The list for the 2026-10-31 evening build. All built; what is left is noted.
@@ -155,6 +185,11 @@ The list for the 2026-10-31 evening build. All built; what is left is noted.
 1. **More varied cat heads** (heromedel, 2026-11-01): with Tabbys, the GATOS cat heads (and the holographic Senti
    built on them) get fur patterns as well as colours, e.g. stripes, tuxedo, calico and ear tufts, and the faces other
    than face C come up more often.
+2. **Mouse Control and stepping back** (GV 14E, 14F): the setting, clicking on nothing and Esc stepping back one
+   level, and the no-ship-selected view.
+3. **Crew ranks and Promote** (GV 15A), cosmetic, stored apart from the name.
+4. **Player titles** (GV 4B): Commodores and the Admiral wherever the game names players (multiplayer is not built
+   yet, so for now the player, as host, is the Admiral).
 
 ## Decision log
 
@@ -166,3 +201,4 @@ The list for the 2026-10-31 evening build. All built; what is left is noted.
 | 2026-10-31 | The GATOS Species setting, Terrans > Tabbys, replaces "officially cats" (GV 7A); the portrait options liked (GV 7D). |
 | 2026-10-31 | 1.21 Jigawatts is 1.21 Mawjig (GV 6A); "the Power Cores on a ship" covers every ship (GV 6B); kitten-like HalfMechs and holographic cat Senti proposed (GV 7D). |
 | 2026-10-31 | The evening build: everything on the Next build list (GV 3H, 7A, 7C, 7E, 8B). |
+| 2026-11-01 | Mouse Control setting and stepping back (GV 14E, 14F); cosmetic crew ranks with Promote (GV 15A); Commodores and the Admiral (GV 4B); always a server (GV 4A). |
