@@ -7,6 +7,8 @@ extends RefCounted
 const THRESHOLD := 1000                       # 10 Mawjig, in hundredths
 const DANGER := Mawjig.JUMP_COST * 2          # two jumps
 
+static var current_run: Callable              # Main: () -> the run being played, for shared windows' warnings
+
 
 ## Runs `action` now, or once the player agrees in a warning laid over `host`.
 static func confirm(host: Node, run: RunState, cost: int, action: Callable) -> void:
@@ -22,6 +24,15 @@ static func confirm(host: Node, run: RunState, cost: int, action: Callable) -> v
 		window.close()
 		action.call(), UiColours.WARNING)
 	window.add_button("Keep my Mawjig", window.close)
+
+
+## As confirm(), for a cost already worked out against the squad's Mawjig.
+static func confirm_cost(host: Node, cost: int, action: Callable) -> void:
+	var run: RunState = current_run.call() if current_run.is_valid() else null
+	if run == null:
+		action.call()
+	else:
+		confirm(host, run, cost, action)
 
 
 ## The colour the Mawjig counter shows at an amount; `time` makes the red pulse.

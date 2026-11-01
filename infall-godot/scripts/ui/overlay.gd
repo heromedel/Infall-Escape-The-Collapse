@@ -10,6 +10,15 @@ var body := VBoxContainer.new()
 var dim := ColorRect.new()
 var _scroll: ScrollContainer = null   # the scrolling area, for windows whose contents can grow tall
 
+## A shared window (an event, a victory, a hail) shows on every machine and the Admiral answers it (GDD 4M at its
+## default): its buttons send their press to the stream, and every machine presses the same button when it comes.
+var shared := false
+var serial := 0                       # which shared window this is, counted the same way on every machine
+var page := 0                         # how many times its buttons were replaced, so a late press can't hit new ones
+var _actions: Array[Callable] = []
+static var press_shared: Callable     # Main: (window, page, index) -> sends the press
+static var may_answer: Callable       # Main: () -> whether a player here is the Admiral
+
 
 func _init() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -52,6 +61,9 @@ func scrolling_area() -> VBoxContainer:
 ## Empties a box at once, not at the end of the frame, so the old and new contents are never both in the window;
 ## the window then shrinks back around whatever replaces them.
 func clear(box: Container) -> void:
+	if shared:
+		page += 1
+		_actions.clear()
 	for child in box.get_children():
 		box.remove_child(child)
 		child.queue_free()
@@ -94,8 +106,16 @@ func add_separator() -> void:
 	body.add_child(line)
 
 
-func add_button(text: String, on_press: Callable, colour: Color = UiColours.TEXT) -> Button:
-	var button := UiKit.button(text, on_press)
+func add_button(text: String, on_press: Callable, colour: Color = UiColours.TEXT, confirm_cost: int = 0) -> Button:
+	var button := UiKit.button(text, Callable() if shared else on_press)
+	if shared:
+		var index := _actions.size()
+		var my_page := page
+		_actions.append(on_press)
+		button.pressed.connect(func(): _ask(my_page, index, confirm_cost))
+		if may_answer.is_valid() and not may_answer.call():
+			button.disabled = true
+			button.tooltip_text = "The Admiral chooses."
 	button.alignment = HORIZONTAL_ALIGNMENT_LEFT
 	button.add_theme_color_override("font_color", colour)
 	button.add_theme_color_override("font_hover_color", colour.lightened(0.3))
@@ -103,6 +123,18 @@ func add_button(text: String, on_press: Callable, colour: Color = UiColours.TEXT
 	button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	body.add_child(button)
 	return button
+
+
+## A press of a shared window's button, asked for here: it goes to the stream (after the low Mawjig warning).
+func _ask(my_page: int, index: int, cost: int) -> void:
+	if press_shared.is_valid():
+		LowMawjigWarning.confirm_cost(self, cost, func(): press_shared.call(self, my_page, index))
+
+
+## The press, as it comes back from the stream on every machine.
+func press(at_page: int, index: int) -> void:
+	if at_page == page and index >= 0 and index < _actions.size():
+		_actions[index].call()
 
 
 func close() -> void:

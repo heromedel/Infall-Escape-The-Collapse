@@ -4,8 +4,9 @@ extends RefCounted
 ## the end of a run. Each builds an Overlay and reports the player's choice through a callback.
 
 
-static func surrender_offer(ship: Ship, amount: int, on_answer: Callable) -> Overlay:
+static func surrender_offer(ship: Ship, amount: int, on_answer: Callable, shared: bool = false) -> Overlay:
 	var window := Overlay.new()
+	window.shared = shared
 	window.place_panel(700)
 	window.add_title("THE %s HAILS YOU" % ship.name.to_upper(), UiColours.WARNING)
 	var line := "\"Enough! We give up. Take %s Mawjig and let us go.\"" % Mawjig.format(amount)
@@ -19,14 +20,14 @@ static func surrender_offer(ship: Ship, amount: int, on_answer: Callable) -> Ove
 	return window
 
 
-static func pause_menu(on_resume: Callable, on_settings: Callable, on_save_quit: Callable, on_quit: Callable, on_logs: Callable) -> Overlay:
+static func pause_menu(on_resume: Callable, on_settings: Callable, on_save_quit: Callable, on_quit: Callable, on_logs: Callable, leave_text: String = "Save and quit to the title") -> Overlay:
 	var window := Overlay.new()
 	window.place_panel(460)
 	window.add_title("PAUSED")
 	window.add_button("Resume", func(): on_resume.call(); window.close())
 	window.add_button("Settings", func(): on_settings.call())
 	window.add_button("Open the logs folder", func(): on_logs.call())
-	window.add_button("Save and quit to the title", func(): on_save_quit.call(); window.close())
+	window.add_button(leave_text, func(): on_save_quit.call(); window.close())
 	window.add_button("Save and quit the game", func(): on_quit.call())
 	return window
 

@@ -34,7 +34,8 @@ var integrate_ticks: int = 0       # Mecha: time spent getting into a system
 var suffocating: bool = false
 var attack_cooldown: int = 0
 var kills: int = 0
-var selected: bool = false
+var selected: bool = false          # selected by a player on this machine (drawing only)
+var selection_colour := UiColours.POWER_GREEN
 var player_ordered: bool = false   # walking where the player sent them
 
 

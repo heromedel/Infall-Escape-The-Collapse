@@ -123,6 +123,7 @@ static func button(text: String, on_press: Callable, min_width: float = 0.0) -> 
 	node.text = text
 	node.custom_minimum_size = Vector2(min_width, 40)
 	node.focus_mode = Control.FOCUS_NONE   # Space and Enter are hotkeys; a button must not take them
-	node.pressed.connect(on_press)
+	if on_press.is_valid():
+		node.pressed.connect(on_press)
 	node.pressed.connect(func(): Sfx.play("click"))
 	return node

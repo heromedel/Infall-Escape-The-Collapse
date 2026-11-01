@@ -2,12 +2,12 @@ class_name StoreWindow
 extends Overlay
 ## A cluster's store: weapons, systems, crew, sometimes a ship, hull repairs, and selling what the squad
 ## carries. Stock depends on the cluster's race and state (GDD 2R: doomed and refugee stores run short); prices
-## come from the reference tables. Mawjig can't be bought here: it is the money.
-
-const INSTALLABLE := ["medbay", "doors", "sensors", "crew-teleporter", "cloaking", "supershield", "evb-dock", "shields", "life-support"]
+## come from the reference tables. Mawjig can't be bought here: it is the money. Purchases are orders (Refit), so
+## every player sees the same store; the window shows again whenever the run changes.
 
 var run: RunState
 var ship: Ship
+var give: Callable                    # sends a refit order to the stream
 var _content: VBoxContainer          # the scrolling area: a long store scrolls instead of running off the screen
 var _money := Label.new()
 
@@ -28,7 +28,7 @@ func open(run_state: RunState, for_ship: Ship) -> void:
 	body.add_child(top)
 	_content = scrolling_area()
 	add_button("LEAVE THE STORE", close)
-	_ensure_stock()
+	Refit.ensure_stock(run)
 	_rebuild()
 
 
@@ -41,50 +41,12 @@ func _price_scale() -> float:
 	return 1.0
 
 
-func _ensure_stock() -> void:
-	var cluster := run.cluster()
-	if not cluster.store_stock.is_empty():
-		return
-	var rng := RandomNumberGenerator.new()
-	rng.seed = int(cluster.seed) + 77
-	var race: String = cluster.race if cluster.race != "" else "terran"
-	var short: bool = cluster.states.has("Doomed") or cluster.states.has("Refugee") or cluster.states.has("Occupied")
-	var stock := {"weapons": [], "systems": [], "crew": [], "ship": "", "sold": []}
-	var weapon_pool: Array = []
-	for def in Library.weapons.values():
-		if def.type == "suit" or def.id.ends_with("-stolen"):
-			continue
-		var weight := 3 if def.race == race else 1
-		if def.price > 1200 + run.band() * 280:
-			continue
-		for copy in weight:
-			weapon_pool.append(def.id)
-	for count in (2 if short else 3):
-		if weapon_pool.is_empty():
-			break
-		var pick: String = weapon_pool[rng.randi_range(0, weapon_pool.size() - 1)]
-		weapon_pool = weapon_pool.filter(func(id): return id != pick)
-		stock.weapons.append(pick)
-	var systems := INSTALLABLE.duplicate()
-	if race != "tentauri":
-		systems.erase("supershield")
-	if race != "mecha":
-		systems.erase("evb-dock")
-	if race != "lykario":
-		systems.erase("cloaking")
-	systems.shuffle()
-	for index in mini(2 if short else 3, systems.size()):
-		stock.systems.append(systems[index])
-	var crew_races := [race, "terran"] if race != "malphen" else ["terran"]
-	for count in (1 if short else 2):
-		stock.crew.append(crew_races[rng.randi_range(0, crew_races.size() - 1)])
-	if (cluster.race == "terran" and cluster.rank != "border" and rng.randf() < 0.45) or (cluster.states.has("Refugee") and rng.randf() < 0.5):
-		var ships := {"terran": ["patrol-cutter", "outrider"], "tentauri": ["tentauri-scout"], "azurethea": ["moth-skiff"], "lykario": ["packrunner"], "senti": ["relay-picket"], "mecha": ["light-attack-frame"]}.get(race, ["patrol-cutter"]) as Array
-		stock.ship = ships[rng.randi_range(0, ships.size() - 1)]
-	cluster.store_stock = stock
-
-
 func _rebuild() -> void:
+	if not is_instance_valid(ship) or ship.is_gone() or not run.squad.has(ship):
+		ship = run.living_ships()[0] if not run.living_ships().is_empty() else null
+	if ship == null:
+		close()
+		return
 	clear(_content)
 	_money.text = "MAWJIG  " + Mawjig.format(run.mawjig)
 	var stock: Dictionary = run.cluster().store_stock
@@ -128,7 +90,7 @@ func _rebuild() -> void:
 			right.add_child(_section("SHIPYARD"))
 			right.add_child(_card(design.name, "%s\nHull %d, crew %d. Joins your squad with its crew." % [design.description, design.hull, design.crew.size()], price, full, func(): _buy_ship(design, price)))
 	right.add_child(_section("REPAIRS"))
-	var per_point := _repair_price()
+	var per_point := Refit.repair_price(run)
 	var damaged := 0
 	for each in run.living_ships():
 		damaged += each.max_hull - each.hull
@@ -193,55 +155,25 @@ func _card(title: String, detail: String, price: int, sold: bool, on_buy: Callab
 	return card
 
 
-func _repair_price() -> int:
-	# Per hull point by band: 0.48 in bands 1-3, 0.73 in 4-6, 0.97 in 7-8 (mawjig-cost-table.md)
-	var band := run.band()
-	return 48 if band <= 3 else (73 if band <= 6 else 97)
+func _order(fields: Dictionary) -> void:
+	fields["k"] = "refit"
+	fields["sq"] = run.squad.find(ship)
+	give.call(fields)
 
 
 func _repair(points: int) -> void:
-	var per_point := _repair_price()
-	for count in points:
-		var target: Ship = null
-		for each in run.living_ships():
-			if each.hull < each.max_hull and (target == null or float(each.hull) / each.max_hull < float(target.hull) / target.max_hull):
-				target = each
-		if target == null or not run.spend(per_point):
-			break
-		target.repair_hull(1)
+	_order({"op": "repair", "points": points})
 	Sfx.play("repair")
-	_rebuild()
 
 
 func _buy_weapon(def: WeaponDef, price: int) -> void:
-	if not run.spend(price):
-		return
-	run.cluster().store_stock.sold.append("weapon:" + def.id)
-	var fitted := ShipOutfitter.fit_weapon(ship, def)
-	if not fitted:
-		run.cargo.append(def.id)
-	run.log_book.write("bought", {"weapon": def.id, "price": price}, "Bought %s for %s." % [def.display_name(), Mawjig.format(price)])
+	_order({"op": "buy_weapon", "id": def.id, "price": price})
 	Sfx.play("buy")
-	_rebuild()
 
 
 func _buy_crew(race: RaceDef, index: int, price: int) -> void:
-	var target: Ship = null
-	for each in [ship] + run.living_ships():
-		if each.living_crew_count() < EventRunner.MAX_CREW_PER_SHIP:
-			target = each
-			break
-	if target == null:
-		return
-	if not run.spend(price):
-		return
-	run.cluster().store_stock.sold.append("crew:%d" % index)
-	var member := CrewMember.create(race, race.random_name(run.rng, target.crew.map(func(c): return c.name)))
-	target.add_crew(member)
-	target.assign_stations()
-	run.log_book.write("hired", {"race": race.id, "name": member.name}, "%s joined the %s." % [member.name, target.name])
+	_order({"op": "buy_crew", "race": race.id, "index": index, "price": price})
 	Sfx.play("buy")
-	_rebuild()
 
 
 func _buy_system(def: SystemDef, price: int) -> void:
@@ -251,34 +183,16 @@ func _buy_system(def: SystemDef, price: int) -> void:
 	var picker := RoomPicker.new()
 	get_parent().add_child(picker)
 	picker.open(ship, def.name)
-	picker.picked.connect(func(room: int): _install(def, price, room))
-
-
-func _install(def: SystemDef, price: int, room: int) -> void:
-	if not run.spend(price):
-		return
-	ShipOutfitter.install_system(ship, def, room)
-	run.cluster().store_stock.sold.append("system:" + def.id)
-	run.log_book.write("installed", {"system": def.id, "room": room}, "Installed %s on the %s." % [def.name, ship.name])
-	Sfx.play("buy")
-	_rebuild()
+	picker.picked.connect(func(room: int):
+		_order({"op": "buy_system", "id": def.id, "price": price, "room": room})
+		Sfx.play("buy"))
 
 
 func _buy_ship(design: ShipDesign, price: int) -> void:
-	if not run.spend(price):
-		return
-	var bought := Ship.from_design(design, 0, run.rng, Settings.get_value("terran_conduits", true))
-	run.squad.append(bought)
-	run.cluster().store_stock.sold.append("ship")
-	run.log_book.write("bought_ship", {"design": design.id, "price": price}, "The %s joined the squad." % bought.name)
+	_order({"op": "buy_ship", "id": design.id, "price": price})
 	Sfx.play("buy")
-	_rebuild()
 
 
 func _sell(index: int, price: int) -> void:
-	if index >= run.cargo.size():
-		return
-	run.cargo.remove_at(index)
-	run.earn(price)
+	_order({"op": "sell", "index": index, "id": run.cargo[index], "price": price})
 	Sfx.play("buy")
-	_rebuild()

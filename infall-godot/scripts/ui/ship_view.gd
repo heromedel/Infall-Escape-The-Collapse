@@ -482,7 +482,7 @@ func _draw_heal_sparks(canvas: CanvasItem, at: Vector2, seed: int) -> void:
 
 func _draw_member(canvas: CanvasItem, member: CrewMember, at: Vector2, ring: Color) -> void:
 	if member.selected:
-		canvas.draw_arc(at, TOKEN_RADIUS + 4.0, 0, TAU, 28, Color(UiColours.POWER_GREEN, 0.9), 2.0, true)
+		canvas.draw_arc(at, TOKEN_RADIUS + 4.0, 0, TAU, 28, Color(member.selection_colour, 0.9), 2.0, true)
 	CrewPortraits.draw_token(canvas, member.race.id, member.name, at, TOKEN_RADIUS, ring, 2.2 if member.side == 0 else 2.6)
 	var fraction := member.health_fraction()
 	if fraction < 0.999 or member.selected:

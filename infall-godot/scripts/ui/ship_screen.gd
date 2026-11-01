@@ -5,7 +5,14 @@ extends Overlay
 
 var run: RunState
 var ship: Ship
+var give: Callable                    # sends a refit order to the stream (Refit); the window rebuilds when the run changes
 var _content: VBoxContainer          # the scrolling area, rebuilt after every change
+
+
+func _order(fields: Dictionary) -> void:
+	fields["k"] = "refit"
+	fields["sq"] = run.squad.find(ship)
+	give.call(fields)
 
 
 func open(run_state: RunState, selected: Ship) -> void:
@@ -18,6 +25,11 @@ func open(run_state: RunState, selected: Ship) -> void:
 
 
 func _rebuild() -> void:
+	if not is_instance_valid(ship) or ship.is_gone() or not run.squad.has(ship):
+		ship = run.living_ships()[0] if not run.living_ships().is_empty() else null
+	if ship == null:
+		close()
+		return
 	clear(_content)
 	var header := HBoxContainer.new()
 	header.add_theme_constant_override("separation", 10)
@@ -68,16 +80,14 @@ func _systems_column() -> VBoxContainer:
 	if ship.reactor_type != "none":
 		var label := "Reactor: %d bars" % ship.reactor_level if ship.reactor_type == "pool" else "AZC: level %d" % ship.reactor_level
 		column.add_child(_upgrade_row(label, ship.reactor_level, 25 if ship.reactor_type == "pool" else 5, reactor_price, func():
-			if ShipOutfitter.upgrade_reactor(run, ship):
-				Sfx.play("upgrade")
-			_rebuild()))
+			_order({"op": "upgrade_reactor"})
+			Sfx.play("upgrade")))
 	var systems := ship.systems.filter(func(s): return s.behaviour != "power_core")
 	systems.sort_custom(func(a, b): return a.def.order < b.def.order)
 	for system in systems:
 		column.add_child(_upgrade_row(system.display_name(), system.level, system.def.max_level, ShipOutfitter.system_upgrade_price(system), func():
-			if ShipOutfitter.upgrade_system(run, ship, system):
-				Sfx.play("upgrade")
-			_rebuild(), system.def.level_note(system.level)))
+			_order({"op": "upgrade_system", "sys": ship.systems.find(system)})
+			Sfx.play("upgrade"), system.def.level_note(system.level)))
 	return column
 
 
@@ -124,10 +134,7 @@ func _weapons_column() -> VBoxContainer:
 		name_label.tooltip_text = slot.def.description + "\n" + slot.def.stat_line()
 		name_label.mouse_filter = Control.MOUSE_FILTER_PASS
 		row.add_child(name_label)
-		row.add_child(UiKit.button("TO HOLD", func():
-			ShipOutfitter.unfit_weapon(ship, slot)
-			run.cargo.append(slot.def.id)
-			_rebuild(), 110))
+		row.add_child(UiKit.button("TO HOLD", func(): _order({"op": "unfit", "w": ship.weapons.find(slot)}), 110))
 		column.add_child(row)
 	column.add_child(UiKit.label("Free mounts: %d" % ShipOutfitter.free_mounts(ship).size(), 15, UiColours.TEXT_DIM))
 	if not ship.suits.is_empty():
@@ -145,10 +152,7 @@ func _weapons_column() -> VBoxContainer:
 		name_label.tooltip_text = def.description + "\n" + def.stat_line()
 		name_label.mouse_filter = Control.MOUSE_FILTER_PASS
 		row.add_child(name_label)
-		var fit := UiKit.button("FIT", func():
-			if ShipOutfitter.fit_weapon(ship, def):
-				run.cargo.remove_at(index)
-			_rebuild(), 80)
+		var fit := UiKit.button("FIT", func(): _order({"op": "fit", "index": index}), 80)
 		fit.disabled = ShipOutfitter.free_mounts(ship).is_empty() or weapons_system == null
 		row.add_child(fit)
 		column.add_child(row)
@@ -174,17 +178,9 @@ func _crew_column() -> VBoxContainer:
 		var buttons := HBoxContainer.new()
 		for other in run.living_ships():
 			if other != ship and other.living_crew_count() < EventRunner.MAX_CREW_PER_SHIP and ship.living_crew_count() > 1:
-				buttons.add_child(UiKit.button("TO %s" % other.name.to_upper(), func():
-					ship.crew.erase(member)
-					other.add_crew(member)
-					member.station_room = -1
-					other.assign_stations()
-					ship.assign_stations()
-					_rebuild(), 0))
+				buttons.add_child(UiKit.button("TO %s" % other.name.to_upper(), func(): _order({"op": "crew_to", "crew": ship.crew.find(member), "to": run.squad.find(other)}), 0))
 		if ship.living_crew_count() > 1:
-			buttons.add_child(UiKit.button("DISMISS", func():
-				ship.crew.erase(member)
-				_rebuild(), 0))
+			buttons.add_child(UiKit.button("DISMISS", func(): _order({"op": "dismiss", "crew": ship.crew.find(member)}), 0))
 		stack.add_child(buttons)
 		column.add_child(card)
 	return column

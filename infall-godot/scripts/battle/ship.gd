@@ -549,6 +549,11 @@ func _next_unpowered_weapon() -> WeaponSlot:
 	return null
 
 
+## Whether a weapon could be switched on now.
+func can_power_weapon(slot: WeaponSlot) -> bool:
+	return slot.powered or _weapon_fits(slot)
+
+
 func _weapon_fits(slot: WeaponSlot) -> bool:
 	if slot.def.type == "suit":
 		return false

@@ -14,13 +14,13 @@ func _ready() -> void:
 	await _wait(0.8)
 	await _press_first_event_button()
 	await _wait(0.5)
-	var battle: BattleScreen = main.battle
+	var battle: PlayerView = main.battle.player_views[0]
 	var ship: Ship = battle.selected_ship
 	var member: CrewMember = ship.crew[1]
 	# 1. Click a crew token
 	print("token at ", _screen_of(ship, member.position), " final ", get_viewport().get_final_transform(), " hovered ", get_viewport().gui_get_hovered_control(), " overlays ", main.overlays.get_children(), " hold ", battle.hold_pause)
 	await _click(_screen_of(ship, member.position), MOUSE_BUTTON_LEFT)
-	print("after click hover crew ", battle.hover_crew, " hover ship ", battle.hover_ship, " room ", battle.hover_room, " mouse ", battle.world.get_global_mouse_position(), " member world ", main.encounter.local_to_world(ship, member.position), " hovered control ", get_viewport().gui_get_hovered_control())
+	print("after click hover crew ", battle.hover_crew, " hover ship ", battle.hover_ship, " room ", battle.hover_room, " pointer ", battle.pointer, " member world ", main.encounter.local_to_world(ship, member.position), " hovered control ", get_viewport().gui_get_hovered_control())
 	_check("click selects a crew member", battle.selected_crew.has(member))
 	# 2. Right click the engine room to send them there
 	var engines := ship.system_by("engines")
@@ -36,7 +36,7 @@ func _ready() -> void:
 	_check("space unpauses", not battle.paused)
 	# 4. A fight: arm a weapon from the HUD and aim it at an enemy room
 	main.start_fight("terran-pirates")
-	battle.paused = false
+	main.battle.paused = false
 	await _wait(0.8)
 	var slot: WeaponSlot = ship.weapons[0]
 	var region := _hud_region(slot.def.display_name())
@@ -62,7 +62,7 @@ func _ready() -> void:
 	# 6. A door click
 	var door: ShipDoor = ship.doors[0]
 	var door_point: Vector2 = ship.design.cell_centre(door.cell_a) + Vector2(door.direction) * ShipDesign.TILE * 0.5
-	battle.paused = true
+	main.battle.paused = true
 	await _click(_screen_of(ship, door_point), MOUSE_BUTTON_LEFT)
 	_check("clicking a door opens it", door.held_open)
 	# 7. HUD cards: drag the weapons card by its grab bar, fold the crew card, and see it open when crew are hurt
@@ -91,11 +91,12 @@ func _ready() -> void:
 
 func _screen_of(ship: Ship, local: Vector2) -> Vector2:
 	var world_point: Vector2 = main.encounter.local_to_world(ship, local)
-	return get_viewport().get_canvas_transform() * world_point if false else main.battle.world.get_global_transform_with_canvas() * world_point
+	var view: PlayerView = main.battle.player_views[0]
+	return view.display.position + view.world_to_screen(world_point) * view.view_scale
 
 
 func _hud_region(text_start: String) -> Dictionary:
-	for region in main.battle.hud._regions:
+	for region in main.battle.player_views[0].hud._regions:
 		if String(region.tooltip).begins_with(text_start):
 			return region
 	return {}

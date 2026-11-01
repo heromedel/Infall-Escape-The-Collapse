@@ -20,6 +20,7 @@ var stats := {"ships_destroyed": 0, "crews_killed": 0, "jumps": 0, "mawjig_earne
 var over: bool = false
 var won: bool = false
 var difficulty: String = "Normal"
+static var saves_here := true        # false on a machine that joined another's game
 var next_contract_id: int = 1
 var pending_fight: String = ""      # the squad being fought, if the run was saved mid-fight
 var log_book: LogBook
@@ -244,6 +245,8 @@ func to_save() -> Dictionary:
 
 
 func save_to_disk() -> void:
+	if not saves_here:
+		return   # a machine that joined another's game: only the host keeps the save (GV 4A)
 	if over:
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(SAVE_PATH))
 		return
@@ -267,9 +270,21 @@ static func _read_save() -> Variant:
 
 
 static func load_from_disk() -> RunState:
+	var data = saved_data()
+	return from_data(data) if data != null else null
+
+
+## The save as it was written, or null when there is none this build can read.
+static func saved_data() -> Variant:
 	var data = _read_save()
 	if typeof(data) != TYPE_DICTIONARY or int(data.get("galaxy", {}).get("version", 1)) < 2:
 		return null   # unreadable, or from a build with the old map
+	return data
+
+
+## A run from save data: the host's own save, or the host's sent to a machine joining (the same data, so both build
+## the same run).
+static func from_data(data: Dictionary) -> RunState:
 	var run := RunState.new()
 	run.seed_value = int(data.seed)
 	run.rng.seed = run.seed_value
