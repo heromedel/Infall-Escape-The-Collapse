@@ -150,6 +150,12 @@ The list for the 2026-10-31 evening build. All built; what is left is noted.
     whose way out its random clicks kept missing. It now times each window and presses a window's way out before
     calling it stuck; no window was stuck in eight seeds since.
 
+## Next build (after 2026-10-31)
+
+1. **More varied cat heads** (heromedel, 2026-11-01): with Tabbys, the GATOS cat heads (and the holographic Senti
+   built on them) get fur patterns as well as colours, e.g. stripes, tuxedo, calico and ear tufts, and the faces other
+   than face C come up more often.
+
 ## Decision log
 
 | Date | Decision |
