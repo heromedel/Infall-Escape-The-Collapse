@@ -45,7 +45,7 @@ anything Claude added tagged Ai-Generated-Proposal.
 
 ## 4. Multiplayer
 
-- **A — Proposed (heromedel, 2026-11-01):** there is no separate single player: the game always runs a server that
+- **A — Decided (heromedel, 2026-11-01):** there is no separate single player: the game always runs a server that
   the player's client connects to, which readies it for LAN and keeps input and the simulation under one control.
   Playing alone is hosting with nobody joined. Not built yet: the Godot version runs in one process with no host or
   join (its fixed ticks and orders are ready for it).
@@ -182,13 +182,16 @@ The list for the 2026-10-31 evening build. All built; what is left is noted.
 
 ## Next build (after 2026-10-31)
 
-1. **More varied cat heads** (heromedel, 2026-11-01): with Tabbys, the GATOS cat heads (and the holographic Senti
+1. **The multiplayer groundwork** (GV 4A, first; heromedel, 2026-11-01: it should have been in the first build): the
+   game always runs as a server and the player's screen is its client, also when playing alone, with every
+   player action sent as an order. LAN hosting and joining by direct IP (GDD 4A) build on it.
+2. **More varied cat heads** (heromedel, 2026-11-01): with Tabbys, the GATOS cat heads (and the holographic Senti
    built on them) get fur patterns as well as colours, e.g. stripes, tuxedo, calico and ear tufts, and the faces other
    than face C come up more often.
-2. **Mouse Control and stepping back** (GV 14E, 14F): the setting, clicking on nothing and Esc stepping back one
+3. **Mouse Control and stepping back** (GV 14E, 14F): the setting, clicking on nothing and Esc stepping back one
    level, and the no-ship-selected view.
-3. **Crew ranks and Promote** (GV 15A), cosmetic, stored apart from the name.
-4. **Player titles** (GV 4B): Commodores and the Admiral wherever the game names players (multiplayer is not built
+4. **Crew ranks and Promote** (GV 15A), cosmetic, stored apart from the name.
+5. **Player titles** (GV 4B): Commodores and the Admiral wherever the game names players (multiplayer is not built
    yet, so for now the player, as host, is the Admiral).
 
 ## Decision log
@@ -202,3 +205,4 @@ The list for the 2026-10-31 evening build. All built; what is left is noted.
 | 2026-10-31 | 1.21 Jigawatts is 1.21 Mawjig (GV 6A); "the Power Cores on a ship" covers every ship (GV 6B); kitten-like HalfMechs and holographic cat Senti proposed (GV 7D). |
 | 2026-10-31 | The evening build: everything on the Next build list (GV 3H, 7A, 7C, 7E, 8B). |
 | 2026-11-01 | Mouse Control setting and stepping back (GV 14E, 14F); cosmetic crew ranks with Promote (GV 15A); Commodores and the Admiral (GV 4B); always a server (GV 4A). |
+| 2026-11-01 | Always a server is Decided (GV 4A); the multiplayer groundwork goes first on the Next build list. |
