@@ -19,15 +19,15 @@ func _ready() -> void:
 	await _click_first_choice()
 	await _wait(1.0)
 	await _shot("03_after_event")
-	main.open_map()
+	main.open_map(_view())
 	await _wait(0.8)
 	await _shot("04_map")
 	_close_overlays()
-	main.open_store()
+	main.open_store(_view())
 	await _wait(0.8)
 	await _shot("05_store")
 	# Buy the first thing on offer: the window must stay on screen and fit its contents
-	for child in main.overlays.get_children():
+	for child in _view().overlays.get_children():
 		if child is StoreWindow:
 			var buttons: Array = child.find_children("*", "Button", true, false).filter(func(b): return not b.disabled and b.text.contains("."))
 			if not buttons.is_empty():
@@ -35,7 +35,7 @@ func _ready() -> void:
 	await _wait(0.5)
 	await _shot("05b_store_after_buying")
 	_close_overlays()
-	main.open_ship_screen()
+	main.open_ship_screen(_view())
 	await _wait(0.8)
 	await _shot("06_ship_screen")
 	_close_overlays()
@@ -63,7 +63,7 @@ func _ready() -> void:
 	await _wait(1.0)
 	print("continued: mawjig ", main.run.mawjig, " (saved ", saved_mawjig, "), cluster ", main.run.cluster().name)
 	await _shot("10_continued")
-	main.open_map()
+	main.open_map(_view())
 	await _wait(0.6)
 	await _shot("11_map_again")
 	_close_overlays()
@@ -72,7 +72,7 @@ func _ready() -> void:
 	for candidate in main.run.cluster().links:
 		if main.run.can_jump_to(candidate):
 			link = candidate
-	main.jump_to(link)
+	main.session.submit(main.session.admiral, {"k": "jump", "to": link})
 	await _wait(0.3)
 	await _shot("12_jumping")
 	await _wait(1.5)
@@ -100,5 +100,9 @@ func _click_first_choice() -> void:
 
 
 func _close_overlays() -> void:
-	for child in main.overlays.get_children():
+	for child in main.overlays.get_children() + _view().overlays.get_children():
 		child.queue_free()
+
+
+func _view() -> PlayerView:
+	return main.battle.player_views[0]

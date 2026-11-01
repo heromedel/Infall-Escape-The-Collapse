@@ -205,7 +205,7 @@ func _lay_out_views() -> void:
 				else:
 					v.hud.flash_message("The Admiral hails (%s)." % session.name_of(session.admiral)))
 			view.menu_pressed.connect(open_menu)
-			view.players_pressed.connect(func(_v): open_players())
+			view.players_pressed.connect(open_players)
 	battle.player_views.sort_custom(func(a, b): return a.player_id < b.player_id)
 	var screen := get_viewport().get_visible_rect().size
 	var count := battle.player_views.size()
@@ -237,10 +237,11 @@ func _answering_player() -> int:
 	return session.admiral if session.admiral_is_local() else session.first_local_id()
 
 
-func open_players() -> void:
+func open_players(view: PlayerView = null) -> void:
 	var window := PlayersWindow.new()
 	window.open(session, self)
-	var view := view_of(session.first_local_id())
+	if view == null:
+		view = view_of(session.first_local_id())
 	if view:
 		view.open_window(window)
 	else:
