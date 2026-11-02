@@ -81,26 +81,46 @@ void fragment() {
 	colour += stars(pixel * 0.012 + camera_offset * 0.0006, 0.16, 0.035, 0.75);
 	colour += stars(pixel * 0.0065 + camera_offset * 0.0012 + 17.0, 0.10, 0.022, 1.1);
 	colour += stars(pixel * 0.0032 + camera_offset * 0.0024 + 41.0, 0.08, 0.016, 1.6);
-	// planet or star: far away, so it barely moves as the camera pans and doesn't grow with zoom
+	// planet or star: far away, so it barely moves as the camera pans and doesn't grow with zoom. It sits in the
+	// same space as everything else: lit softly from the side facing the battle, its night side melting into the
+	// dark, seen through the haze and the nebula between, with a thin lit rim of air.
 	if (planet_kind > 0.5) {
 		vec2 p = (UV - planet_position - camera_offset * vec2(0.000006, 0.000008)) * vec2(screen_size.x / screen_size.y, 1.0);
 		float d = length(p);
+		float pixel_size = 1.0 / screen_size.y;
 		if (planet_kind < 1.5) {
-			float body = smoothstep(planet_radius, planet_radius - 0.006, d);
-			vec2 light_dir = normalize(light_direction);
-			float lit = clamp(dot(normalize(vec3(p, sqrt(max(0.0, planet_radius * planet_radius - d * d)))), normalize(vec3(light_dir, 0.6))), 0.0, 1.0);
-			float bands = fbm(vec2(p.x * 5.0, p.y * 15.0) / planet_radius * 0.2 + seed);
-			vec3 surface = mix(planet_shadow.rgb, planet_colour.rgb, lit) * (0.85 + 0.25 * bands);
-			// distance haze: the planet takes on the colour of the space between, and loses contrast
-			surface = mix(surface, colour + nebula_b.rgb * 0.25, 0.28);
-			float atmosphere = smoothstep(planet_radius + 0.045, planet_radius, d) * (1.0 - body);
-			colour = mix(colour, surface, body * 0.92);
-			colour += planet_colour.rgb * atmosphere * 0.18 * (0.4 + lit);
+			vec3 behind = colour;
+			float body = smoothstep(planet_radius + pixel_size * 1.5, planet_radius - pixel_size * 1.5, d);
+			vec3 normal = normalize(vec3(p, sqrt(max(0.0, planet_radius * planet_radius - d * d))));
+			vec3 light = normalize(vec3(normalize(light_direction), 0.45));
+			float facing = dot(normal, light);
+			float lit = smoothstep(-0.25, 0.9, facing);                   // a soft terminator, not a hard edge
+			float limb = pow(clamp(normal.z, 0.0, 1.0), 0.45);            // darker toward the edge of the disc
+			// Turbulent bands, low in contrast, so the surface reads at a distance without looking painted on
+			vec2 surface_uv = vec2(p.x, p.y * 2.6) / planet_radius * 2.2 + seed;
+			float warp = fbm(surface_uv * 0.8 + vec2(time * 0.002, 0.0));
+			float bands = fbm(vec2(surface_uv.x * 0.6 + warp * 1.4, surface_uv.y * 1.6));
+			vec3 surface = mix(planet_colour.rgb * 0.75, planet_colour.rgb * 1.08, bands);
+			surface = mix(planet_shadow.rgb, surface, lit) * mix(0.55, 1.0, limb);
+			// The night side is space-dark, a touch lifted by the nebula's light
+			surface = mix(surface, behind * 0.35 + nebula_b.rgb * 0.06, (1.0 - lit) * 0.7);
+			// Distance haze: the colour of the space between, stronger toward the rim
+			float haze = 0.32 + 0.25 * (1.0 - limb);
+			surface = mix(surface, behind + nebula_a.rgb * 0.12 + nebula_b.rgb * 0.18, haze);
+			colour = mix(colour, surface, body);
+			// Thin air on the lit rim, fading into space
+			float rim = smoothstep(planet_radius + 0.028, planet_radius - 0.002, d) * smoothstep(planet_radius - 0.03, planet_radius, d);
+			colour += mix(planet_colour.rgb, vec3(0.75, 0.85, 1.0), 0.4) * rim * smoothstep(-0.1, 0.8, dot(normalize(p), normalize(light_direction))) * 0.22;
+			// Nebula wisps between us and the planet, so it sits behind them
+			float front = smoothstep(0.55, 0.95, fbm(aspect_uv * 2.4 + vec2(seed * 2.1, time * 0.002) + 9.0)) * nebula_amount;
+			colour += (nebula_a.rgb * 0.5 + nebula_b.rgb * 0.4) * front * body * 0.6;
 		} else {
 			float glow = exp(-d / max(0.001, planet_radius) * 2.2);
 			colour += planet_colour.rgb * glow * 1.1;
 			colour += vec3(1.0) * smoothstep(planet_radius * 0.3, 0.0, d) * 0.8;
 		}
 	}
+	// A whisper of grain so the gradients don't band
+	colour += (hash(pixel + time) - 0.5) * 0.008;
 	COLOR = vec4(colour, 1.0);
 }

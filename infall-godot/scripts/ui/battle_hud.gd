@@ -114,7 +114,10 @@ func _draw() -> void:
 	var ship := screen.selected_ship
 	layout.rects.clear()
 	layout.hidden.clear()
-	for id in HudLayout.DEFAULTS:
+	# Corner cards first, so a card in the middle of an edge knows where they are and moves aside for them
+	var ids: Array = HudLayout.DEFAULTS.keys()
+	ids.sort_custom(func(a, b): return not layout.is_centred(a) and layout.is_centred(b))
+	for id in ids:
 		if id == "top" or (ship and not ship.is_gone()):
 			_draw_card(id, ship)
 	_draw_enemies()

@@ -113,6 +113,11 @@ func place(id: String, card_size: Vector2, screen_size: Vector2) -> Vector2:
 	return at
 
 
+## Whether a card is pinned to the middle of an edge (placed after the corner cards).
+func is_centred(id: String) -> bool:
+	return cards.has(id) and String(cards[id].get("anchor", "")).ends_with("centre")
+
+
 ## A card in the middle of an edge moves aside for the corner cards on the same edge, as it must in a narrow view
 ## (a player's half of the screen, GV 4F).
 func _clear_of_corners(id: String, rect: Rect2, screen_size: Vector2) -> float:
