@@ -163,7 +163,7 @@ func encounter_changed(reframe: bool = true) -> void:
 	divider.encounter = encounter
 	divider.visible = encounter.fight_started
 	_keep_a_ship_selected()
-	background.set_cluster_look(battle.look_seed, battle.collapse_near, encounter.hazard)
+	background.set_cluster_look(battle.look_seed, battle.collapse_near, encounter.hazard, encounter.gap)
 	hazard_layer.set_hazard(encounter.hazard, battle.look_seed)
 	if reframe:
 		frame_everything(true)
@@ -172,8 +172,9 @@ func encounter_changed(reframe: bool = true) -> void:
 func _process(delta: float) -> void:
 	if encounter == null:
 		return
+	_apply_turn()
 	_keep_a_ship_selected()
-	background.follow_camera(camera.position, camera.zoom.x)
+	background.follow_camera(camera.position, camera.zoom.x, viewport.get_canvas_transform().affine_inverse(), encounter.bar_half() * Encounter.BAR_SCALE, Encounter.BAR_SCALE)
 	divider.zoom = camera.zoom.x
 	divider.camera_x = camera.position.x
 	divider.visible = encounter.fight_started and encounter.outcome == ""
@@ -230,28 +231,44 @@ func view_size() -> Vector2:
 	return Vector2(viewport.size)
 
 
+## A point on this view's screen as a real point in the battle: through the camera, then back out of the squeezed
+## gap (GV 3I).
 func screen_to_world(point: Vector2) -> Vector2:
-	return viewport.get_canvas_transform().affine_inverse() * point
+	var view_point := viewport.get_canvas_transform().affine_inverse() * point
+	return encounter.to_real(view_point) if encounter else view_point
 
 
 func world_to_screen(point: Vector2) -> Vector2:
-	return viewport.get_canvas_transform() * point
+	return viewport.get_canvas_transform() * (encounter.to_view(point) if encounter else point)
+
+
+## The battlefield's turn on this machine (GV 3J): vertical by default, the player's squad at the bottom; horizontal
+## puts it on the left. Only the drawing turns, never the battle.
+func _apply_turn() -> void:
+	var horizontal: bool = Settings.get_value("battlefield", "Vertical") == "Horizontal"
+	var turn := -PI * 0.5 if horizontal else 0.0
+	if not is_equal_approx(camera.rotation, turn) or camera.ignore_rotation:
+		camera.set_turn(turn)
+		ShipView.view_turn = -turn
+		if encounter:
+			frame_everything(true)
 
 
 ## Flies the camera to one ship, close enough to work its rooms; Home frames everything again.
 func focus_ship(ship: Ship) -> void:
 	var bounds := Formation.hull_bounds(ship.design)
 	var size := view_size()
-	var fit := minf((size.y - 104.0 - 150.0) / bounds.size.y, (size.x - 700.0) / bounds.size.x)
+	var screen_bounds := bounds.size if is_zero_approx(camera.rotation) else Vector2(bounds.size.y, bounds.size.x)
+	var fit := minf((size.y - 104.0 - 150.0) / screen_bounds.y, (size.x - 700.0) / screen_bounds.x)
 	camera.target_zoom = clampf(fit, BattleCamera.MIN_ZOOM, BattleCamera.MAX_ZOOM)
-	camera.target_position = encounter.local_to_world(ship, bounds.get_center()) + Vector2(0, (150.0 - 104.0) * 0.5) / camera.target_zoom
+	camera.target_position = encounter.to_view(encounter.local_to_world(ship, bounds.get_center())) + (Vector2(0, (150.0 - 104.0) * 0.5) / camera.target_zoom).rotated(camera.rotation)
 	camera.user_moved = true
 
 
-## Frames the whole encounter, or just the player's squad when there is no one to fight.
+## Frames the whole encounter, or just the player's squad when there is no one to fight. The squeezed gap is
+## framed as it is drawn, and a turned view is framed the way the screen sees it.
 func frame_everything(instant: bool = false) -> void:
-	var rect := Rect2()
-	var first := true
+	var points: Array[Vector2] = []
 	for ship in encounter.ships:
 		if ship.side == 1 and not encounter.fight_started:
 			continue
@@ -261,13 +278,15 @@ func frame_everything(instant: bool = false) -> void:
 		var floor_rect := ship.design.floor_rect()
 		var trimmed := Rect2(Vector2(floor_rect.position.x - 50.0, bounds.position.y), Vector2(floor_rect.size.x + 100.0, floor_rect.end.y + 30.0 - bounds.position.y))
 		for corner in [trimmed.position, trimmed.end, Vector2(trimmed.position.x, trimmed.end.y), Vector2(trimmed.end.x, trimmed.position.y)]:
-			var world_point := encounter.local_to_world(ship, corner)
-			if first:
-				rect = Rect2(world_point, Vector2.ZERO)
-				first = false
-			else:
-				rect = rect.expand(world_point)
-	camera.frame(rect.grow(20.0), view_size(), 104.0, 150.0)
+			points.append(encounter.to_view(encounter.local_to_world(ship, corner)).rotated(-camera.rotation))
+	if points.is_empty():
+		return
+	var rect := Rect2(points[0], Vector2.ZERO)
+	for point in points:
+		rect = rect.expand(point)
+	rect = rect.grow(20.0)
+	var centre := rect.get_center().rotated(camera.rotation)
+	camera.frame(Rect2(centre - rect.size * 0.5, rect.size), view_size(), 104.0, 150.0)
 	if instant:
 		camera.zoom = Vector2.ONE * camera.target_zoom
 		camera.position = camera.target_position

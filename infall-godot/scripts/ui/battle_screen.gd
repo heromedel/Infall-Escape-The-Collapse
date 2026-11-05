@@ -78,6 +78,8 @@ func _process(_delta: float) -> void:
 		return
 	var alpha := session.tick_progress if session and not paused and not hold_pause else 1.0
 	effects.alpha = alpha
+	if not player_views.is_empty():
+		effects.zoom = player_views[0].camera.zoom.x
 	var player_sees := _player_sees_inside()
 	var several := player_views.size() > 1
 	for ship in views:

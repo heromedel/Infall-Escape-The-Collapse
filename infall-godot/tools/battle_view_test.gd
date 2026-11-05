@@ -12,6 +12,8 @@ var zoom_ship: Ship = null
 
 
 func _ready() -> void:
+	if OS.get_environment("BATTLEFIELD") != "":
+		Settings._values["battlefield"] = OS.get_environment("BATTLEFIELD")
 	out = OS.get_environment("OUT") if OS.get_environment("OUT") != "" else "/tmp/claude-0/shots"
 	DirAccess.make_dir_recursive_absolute(out)
 	for value in (OS.get_environment("SHOTS") if OS.get_environment("SHOTS") != "" else "1,6,14").split(","):

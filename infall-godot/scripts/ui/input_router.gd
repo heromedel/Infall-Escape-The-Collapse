@@ -111,7 +111,7 @@ func _process(delta: float) -> void:
 			if absf(zoom) > DEAD_ZONE:
 				view.camera.target_zoom = clampf(view.camera.target_zoom * (1.0 + zoom * delta * 1.6), BattleCamera.MIN_ZOOM, BattleCamera.MAX_ZOOM)
 			if pan.length() > DEAD_ZONE:
-				view.camera.target_position += pan * 900.0 * delta / view.camera.zoom.x
+				view.camera.target_position += (pan * 900.0 * delta / view.camera.zoom.x).rotated(view.camera.rotation)
 		elif stick.length() > DEAD_ZONE and root_input:
 			_move_screen_cursor(device, stick, delta)   # a controller with no player in a run does nothing until Start
 	_cursor_drawer.queue_redraw()

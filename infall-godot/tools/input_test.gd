@@ -7,6 +7,8 @@ var main: Node
 
 func _ready() -> void:
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(RunState.SAVE_PATH))
+	if OS.get_environment("BATTLEFIELD") != "":
+		Settings._values["battlefield"] = OS.get_environment("BATTLEFIELD")   # the same clicks with the view turned
 	main = load("res://scenes/main.tscn").instantiate()
 	add_child(main)
 	await _wait(0.5)

@@ -12,16 +12,16 @@ const DODGE_XP := 6.7
 const SHIELD_XP := 1.8
 const VOLLEY_XP := 1.5
 const SUIT_AIR_SCALE := 15   # GV 8C: air for the real distance between the squads (10 to 20 times; 15 to start)
-const SUIT_SPEED := 18.0   # pixels a tick: fast enough to cross the zones and the barrier on one tank of air
+const SUIT_SPEED := 18.0   # pixels a tick
 const TELEPORT_TICKS := 20
 const SUIT_RETURN_REFUND := 2     # a battlesuit that comes home gives 0.02 Mawjig back (heromedel, economy-findings F5)
-# The barrier (GDD 3Q, 3R): a strip across the battlefield between the squads that stands for the distance
-# between them. It is 16 tiles deep (heromedel, 2026-10-31) and centred on y = 0, the player squad below it.
-const BARRIER_HALF_DEPTH := 8.0 * ShipDesign.TILE
-const DEFAULT_GATOMETERS := 400.0
-# How fast each kind of shot covers Gatometers; a longer gap only means a longer wait (GDD 3Q).
-# Not in the docs yet: lasers and flak 400 a second (1 s for the default gap), missiles 260, battlesuits 130.
-const GATOMETERS_PER_SECOND := {"laser": 400.0, "flak": 400.0, "missile": 260.0, "suit": 130.0}
+# The gap between the squads is real (GV 3I): the battlefield is 16,000 pixels from squad to squad and 9,000
+# across, with the gap centred on y = 0 and the player squad below it. Shots fly it at their own speed. Each
+# player's view draws the gap squeezed 1:10 into a bar, past a margin by each squad that is drawn full size.
+const STANDARD_GAP := 5000.0
+const MAX_GAP := 13000.0
+const GAP_MARGIN := 6.0 * ShipDesign.TILE  # by each squad, drawn full size, as the margin by the barrier was
+const BAR_SCALE := 10.0
 
 var ships: Array[Ship] = []
 var projectiles: Array[Projectile] = []
@@ -41,7 +41,7 @@ var wallet: RunState = null         # pays for the player's shots (GDD 8C)
 var fight_started: bool = false
 var surrender_offered: bool = false
 var no_mawjig_warned: bool = false
-var gatometers: float = DEFAULT_GATOMETERS   # this battle's distance across the barrier
+var gap: float = STANDARD_GAP         # this battle's distance between the squads' areas, in pixels
 var surrendered_boarders: Array[CrewMember] = []   # enemy boarders left aboard our ships when theirs was destroyed
 
 
@@ -359,7 +359,7 @@ func _defend(ship: Ship, slot: WeaponSlot) -> void:
 	var best: Projectile = null
 	var best_distance := 700.0 * 700.0
 	for shot in projectiles:
-		if not shot.can_be_shot_down() or shot.side == ship.side or shot.target == null or shot.target.side != ship.side or in_barrier(shot.position):
+		if not shot.can_be_shot_down() or shot.side == ship.side or shot.target == null or shot.target.side != ship.side or in_gap(shot.position):
 			continue
 		var distance := shot.position.distance_squared_to(origin)
 		if distance < best_distance:
@@ -375,7 +375,7 @@ func _defend(ship: Ship, slot: WeaponSlot) -> void:
 		note("shot_down", {"ship": ship, "position": best.position})
 		return
 	for suit in suits:
-		if suit.gone or suit.side == ship.side or suit.target == null or suit.target.side != ship.side or in_barrier(suit.position):
+		if suit.gone or suit.side == ship.side or suit.target == null or suit.target.side != ship.side or in_gap(suit.position):
 			continue
 		if suit.position.distance_squared_to(origin) < 650.0 * 650.0:
 			slot.charge = 0.0
@@ -404,7 +404,7 @@ func _tick_projectiles() -> void:
 			continue
 		if shot.shot_down:
 			continue
-		shot.position += shot.velocity * barrier_pace(shot.kind, shot.position, shot.velocity)
+		shot.position += shot.velocity
 		if shot.missed:
 			if shot.life_ticks < 160:
 				still_flying.append(shot)
@@ -711,7 +711,7 @@ func _tick_suits() -> void:
 				suit.orbit_angle += 0.012
 				var radii := bubble_radii(suit.target) * 1.12
 				var orbit_point := local_to_world(suit.target, bubble_centre(suit.target) + Vector2(cos(suit.orbit_angle) * radii.x, sin(suit.orbit_angle) * radii.y))
-				suit.position = suit.position.move_toward(orbit_point, SUIT_SPEED * barrier_pace("suit", suit.position, (orbit_point - suit.position).normalized() * SUIT_SPEED))
+				suit.position = suit.position.move_toward(orbit_point, SUIT_SPEED)
 				if suit.state == "outbound" and suit.position.distance_to(orbit_point) < 30.0:
 					suit.state = "attacking"
 				if suit.state == "attacking":
@@ -725,7 +725,7 @@ func _tick_suits() -> void:
 						note("shot", {"ship": suit.home, "weapon": suit.def, "position": suit.position})
 				kept.append(suit)
 			"returning":
-				suit.position = suit.position.move_toward(home_point, SUIT_SPEED * barrier_pace("suit", suit.position, (home_point - suit.position).normalized() * SUIT_SPEED))
+				suit.position = suit.position.move_toward(home_point, SUIT_SPEED)
 				if suit.position.distance_to(home_point) < 10.0 or suit.home.destroyed:
 					_suit_docks(suit)
 					continue
@@ -733,13 +733,9 @@ func _tick_suits() -> void:
 	suits = kept
 
 
-## How long a battlesuit takes to fly between two points: its speed, plus the barrier's extra time when the
-## trip crosses it.
+## How long a battlesuit takes to fly between two points: the real distance at its speed.
 func _suit_ticks_to(from: Vector2, to: Vector2) -> float:
-	var ticks := from.distance_to(to) / SUIT_SPEED
-	if signf(from.y) != signf(to.y):
-		ticks += maxf(0.0, crossing_seconds("suit") * TICKS - BARRIER_HALF_DEPTH * 2.0 / SUIT_SPEED)
-	return ticks
+	return from.distance_to(to) / SUIT_SPEED
 
 
 func _suit_target_room(suit: Battlesuit) -> int:
@@ -895,25 +891,42 @@ func ship_under(world_point: Vector2) -> Ship:
 	return null
 
 
-func in_barrier(world_point: Vector2) -> bool:
-	return absf(world_point.y) < BARRIER_HALF_DEPTH
+## Whether a point is in the squeezed part of the gap: drawn in the bar, not full size.
+func in_gap(world_point: Vector2) -> bool:
+	return absf(world_point.y) < _squeezed_half()
 
 
-## Seconds a kind of shot (or a battlesuit) takes to cross the barrier at this battle's distance.
-func crossing_seconds(kind: String) -> float:
-	return gatometers / float(GATOMETERS_PER_SECOND.get(kind, 400.0))
+func _squeezed_half() -> float:
+	return maxf(0.0, gap * 0.5 - GAP_MARGIN)
 
 
-## How much of its normal speed something keeps inside the barrier, so that crossing it takes
-## crossing_seconds whatever its speed and angle: the line stays straight, only the time stretches (GDD 3R).
-## Shots that don't cross between the squads (asteroids, defence bolts) keep their speed.
-func barrier_pace(kind: String, world_point: Vector2, velocity: Vector2) -> float:
-	if not GATOMETERS_PER_SECOND.has(kind) or not in_barrier(world_point) or velocity.length_squared() < 0.0001:
-		return 1.0
-	var direction := velocity.normalized()
-	var path := BARRIER_HALF_DEPTH * 2.0 / maxf(absf(direction.y), 0.1)
-	var normal_ticks := path / velocity.length()
-	return clampf(normal_ticks / maxf(1.0, crossing_seconds(kind) * TICKS), 0.01, 1.0)
+## Half the bar's depth in the view.
+func bar_half() -> float:
+	return _squeezed_half() / BAR_SCALE
+
+
+## Where a real point is drawn in the players' views: unchanged by each squad, squeezed 1:10 across the gap.
+func to_view(world_point: Vector2) -> Vector2:
+	var half := _squeezed_half()
+	var y := world_point.y
+	if absf(y) <= half:
+		return Vector2(world_point.x, y / BAR_SCALE)
+	return Vector2(world_point.x, signf(y) * (absf(y) - half + half / BAR_SCALE))
+
+
+## The real point drawn at a place in the view.
+func to_real(view_point: Vector2) -> Vector2:
+	var half := _squeezed_half()
+	var bar := half / BAR_SCALE
+	var y := view_point.y
+	if absf(y) <= bar:
+		return Vector2(view_point.x, y * BAR_SCALE)
+	return Vector2(view_point.x, signf(y) * (absf(y) - bar + half))
+
+
+## Seconds a shot at a speed (pixels a second) takes to cross the gap.
+func crossing_seconds(speed: float) -> float:
+	return gap / maxf(1.0, speed)
 
 
 func local_to_world(ship: Ship, local: Vector2) -> Vector2:

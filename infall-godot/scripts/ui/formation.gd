@@ -56,7 +56,7 @@ static func shield_shape(design: ShipDesign) -> Dictionary:
 
 const ZONE_MARGIN_TILES := 8.0       # heromedel, 2026-10-31: the largest hull plus 8 tiles
 const SQUAD_SHIFT_ZONES := 0.5       # in a fight each squad sits half a zone to its own side, so rows don't line up
-const BARRIER_GAP_TILES := 6.0       # heromedel, 2026-10-31: a fixed gap between every zone and the barrier
+# The gap between the squads (GV 3I) is the encounter's; each squad's front zone edge sits on its side of it.
 static var _zone_size: float = 0.0
 
 
@@ -104,7 +104,7 @@ static func lay_out(encounter: Encounter, shape: String) -> void:
 		for index in squad.size():
 			var ship := squad[index]
 			ship.facing_down = side == 1
-			var depth := Encounter.BARRIER_HALF_DEPTH + BARRIER_GAP_TILES * ShipDesign.TILE + zone * (0.5 + offsets[index].y)
+			var depth := encounter.gap * 0.5 + zone * (0.5 + offsets[index].y)
 			var centre := Vector2(offsets[index].x * zone - shift, depth) if side == 0 else Vector2(-offsets[index].x * zone + shift, -depth)
 			var hull_centre := hull_bounds(ship.design).get_center()
 			# local_to_world turns an enemy ship around, so its hull centre is subtracted the other way
