@@ -43,6 +43,31 @@ anything Claude added tagged Ai-Generated-Proposal.
   weapon comes back by itself once the bars work again. If the player has put that power elsewhere meanwhile, it
   stays where they put it. (Before this, weapons knocked off by a hit stayed off after the repair.)
 
+- **I — Decided (heromedel, 2026-11-05):** the distance between the squads is real, not pretended. The battlefield
+  is 16,000 pixels from squad to squad and 9,000 across, built lying down like a TV: the player's squad on the left,
+  the enemy's on the right. The standard gap between the squads is about 5,000 pixels; battles further away get a
+  wider one, and squads moving could later widen or close it. Shots fly the real distance at today's weapon speeds,
+  so the flight time is real and the players can see it. It replaces the barrier strip (GV 3D), the slowing of shots
+  inside it, the fixed 400 Gatometers and the `Shots Crossing Barrier` setting (GV 3E).
+  - **Decided (heromedel, 2026-11-05):** each player's view shows their squad, the gap and the enemy's squad as one
+    view under one camera that pans and zooms over it, as now. The gap is drawn squeezed 1:10 into a bar between the
+    squads (the squads sit outside it): a minimap of the space between, with shots, missiles and battlesuits
+    crossing it. The bar's size follows the gap's (5,000 pixels: a 500-pixel bar).
+  - **Decided (heromedel, 2026-11-05):** Gatometers are the gap's real size, 1:1 with pixels, shown in thousands:
+    a 5,000-pixel gap reads "5,000K Gatometers".
+  - **Decided (heromedel, 2026-11-05):** the background is the real one: each part of the view shows the space
+    behind it, so a planet can look big behind one squad, show in part in the bar and barely poke out behind the
+    other. It stays generated (the shader), so its size costs nothing.
+  - **Ai-Generated-Proposal (2026-11-05):** each squad's area is about 1,500 pixels deep (its zones and formation),
+    with today's margin by the gap; the largest gap that fits is about 13,000 pixels (a 1,300-pixel bar). At
+    today's speeds the standard gap takes a laser about 5.6 s, a missile about 8 s and a battlesuit about 14 s each
+    way.
+- **J — Decided (heromedel, 2026-11-05):** a setting, `Battlefield: Vertical > Horizontal`. The battlefield is built
+  horizontal; Vertical, the default, shows it turned so the player's squad is at the bottom, as now. Text, crew
+  portraits and symbols stay upright either way.
+  - **Ai-Generated-Proposal (2026-11-05):** only the drawing turns, not the battle, so each player chooses their own,
+    also over LAN.
+
 ## 4. Multiplayer
 
 - **A — Decided (heromedel, 2026-11-01):** there is no separate single player: the game always runs a server that
@@ -73,8 +98,16 @@ anything Claude added tagged Ai-Generated-Proposal.
   cards and selection: left and right for two, quarters for three or four. A setting,
   `Local Co-op View: Split > Shared`. Shared things (events, the pause and who paused) show once across the screen;
   a player's own windows open in their view. Over LAN each player has their own screen.
-- **G — Saved for later (heromedel, 2026-11-01):** the Admiral assigning ships and crew to players (GDD 4C–4D), the
-  vote and lock-in options of the multiplayer settings, and player profiles.
+- **G — Saved for later (heromedel, 2026-11-01):** the vote and lock-in options of the multiplayer settings, and
+  player profiles. (Assigning ships and crew moved to GV 4I.)
+- **H — Decided (heromedel, 2026-11-05):** one player setup menu, on the title and during a run: every player, their
+  name and colour, which input they use (keyboard and mouse, or a controller), and what they command. Any player can
+  leave and everyone else stays in.
+- **I — Decided (heromedel, 2026-11-05):** ships and crew are assigned to Any player or to specific players
+  (GDD 4C–4D). A ship assigned to a player takes its crew with it, and a crew member can also be assigned on their
+  own. Orders from players who aren't assigned are refused, and they are told why.
+- **J — Likely (heromedel, 2026-11-05):** a player who leaves hands their ships and crew to the Admiral; a setting
+  may choose otherwise later.
 
 ## 5. Ships
 
@@ -143,6 +176,10 @@ anything Claude added tagged Ai-Generated-Proposal.
     room's system at its level-1 price, 18.15; a shields room at one layer's price, 54.46. The Supershield costs
     38.72, with upgrades of 7.26 and 12.11.
 
+- **C — Likely (heromedel, 2026-11-05):** with the real distance (GV 3I), a battlesuit carries 10 to 20 times more
+  air, so it can cross the gap, fight and come home.
+  - **Ai-Generated-Proposal (2026-11-05):** 15 times to start.
+
 ## 14. User Interface
 
 - **A — Proposed (heromedel, 2026-10-31):** the HUD's sections are cards the player can drag by a small bar at
@@ -169,6 +206,8 @@ anything Claude added tagged Ai-Generated-Proposal.
   - **Ai-Generated-Proposal (2026-11-01):** with no ship selected the weapon hotkeys 1 to 6 do nothing and Tab
     selects the first ship. With the default Mouse Control, a left click on the selected ship's own floor also
     steps back, as a click on nothing does. Built.
+
+- **G — Proposed (heromedel, 2026-11-05):** the settings menu gets tabs, as the settings grow.
 
 ## 15. Ranks and Titles
 
@@ -218,6 +257,23 @@ All built in the build of 2026-11-01.
 4. **Crew ranks and Promote** (GV 15A): built.
 5. **Player titles** (GV 4B): built; players are named "Admiral Name" and "Commodore Name".
 
+## Next build (after 2026-11-02)
+
+1. **Co-op fixes** (heromedel, 2026-11-05: with player 1 on the keyboard and player 2 on a controller, the controller
+   began moving player 1's camera, and crew obeyed only player 1). Suspected: the controller's stick also drives the
+   keyboard player's camera through the default arrow actions, and after a window shown to everyone the controller
+   moves the real mouse, so its clicks land in player 1's view.
+2. **The real battlefield** (GV 3I, 3J): 16,000 by 9,000, horizontal, the gap squeezed 1:10 into a bar, real
+   flight times, real Gatometers, the real background, and the `Battlefield: Vertical > Horizontal` setting.
+3. **Battlesuit air** for the longer crossings (GV 8C).
+4. **The player setup menu** (GV 4H) with inputs, assigning ships and crew (GV 4I), and leaving (GV 4J).
+5. **Settings tabs** (GV 14G).
+
+## Later (the road map)
+
+- When the host quits a LAN game, hand the game to another player's machine instead of ending it (GDD 4N, Admiral
+  transfer).
+
 ## Decision log
 
 | Date | Decision |
@@ -232,3 +288,4 @@ All built in the build of 2026-11-01.
 | 2026-11-01 | Always a server is Decided (GV 4A); the multiplayer groundwork goes first on the Next build list. |
 | 2026-11-01 | The multiplayer groundwork planned (GV 4C–4G): server and clients, orders, LAN, controllers, drop in and out, split screen, defaults only. |
 | 2026-11-01 | The 2026-11-01 build: the multiplayer groundwork and the rest of the Next build list. |
+| 2026-11-05 | The real battlefield (GV 3I, 3J), the player setup menu and assignments (GV 4H–4J), more battlesuit air (GV 8C), settings tabs (GV 14G); handing the game over on the road map. |
