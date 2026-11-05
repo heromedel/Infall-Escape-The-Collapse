@@ -286,7 +286,9 @@ func frame_everything(instant: bool = false) -> void:
 		rect = rect.expand(point)
 	rect = rect.grow(20.0)
 	var centre := rect.get_center().rotated(camera.rotation)
-	camera.frame(Rect2(centre - rect.size * 0.5, rect.size), view_size(), 104.0, 150.0)
+	# Turned horizontal, the squads run across the screen: keep them clear of the cards at the corners too
+	var turned := not is_zero_approx(camera.rotation)
+	camera.frame(Rect2(centre - rect.size * 0.5, rect.size), view_size(), 250.0 if turned else 104.0, 160.0 if turned else 150.0, 220.0 if turned else 60.0)
 	if instant:
 		camera.zoom = Vector2.ONE * camera.target_zoom
 		camera.position = camera.target_position

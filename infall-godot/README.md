@@ -36,7 +36,7 @@ the Last Fleet. Lose when every scout ship is gone (GDD 1F).
 | Fly to a ship | Double-click it, F for the selected ship, or click its status card | |
 | Next squad ship | Tab | |
 | Map and jump | J or JUMP (the Admiral jumps) | |
-| Players, LAN, the Admiral | P or the players button by the menu | View / Select |
+| Player setup: players, inputs, who commands what, LAN | P or the players button by the menu | View / Select |
 | Join as another player | | Start on a new controller |
 | Ship screen (upgrades, weapons, crew) | U or SHIP | |
 | Menu | Esc | Menu / Start |
@@ -109,7 +109,8 @@ Lori or Eco is listed in `docs/items-needing-second-opinion.md`.
 The game always runs as a server with its players as clients, also alone. Controllers on the same computer join with
 Start and get their own view of the screen (left and right for two, quarters for three or four; Local Co-op View:
 Split > Shared). Over LAN, the host opens the game in the Players menu and others join with the host's IP address,
-at any time. The host is the Admiral and makes the squad's decisions; everyone commands every ship.
+at any time. The host is the Admiral and makes the squad's decisions. In Player setup the Admiral gives each ship
+and crew member to Any player or to chosen players; any player can change their input or leave.
 
 ## Not in this build yet
 

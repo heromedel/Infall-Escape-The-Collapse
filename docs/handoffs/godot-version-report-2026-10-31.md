@@ -130,7 +130,24 @@ in the Windows build sent at the end of the day.
 10. **Not built yet:** the Admiral assigning ships to players, the vote and lock-in settings, player profiles
     (GV 4G); testing with real controllers (simulated here).
 
-## 9. How to check it
+## 9. The build of 2026-11-05
+
+1. **Co-op fixes:** a controller's stick no longer moves the keyboard player's camera (the arrow-key camera read
+   actions a controller also triggers), and over the windows every player sees a controller has its own cursor
+   instead of moving the real mouse, whose clicks landed in player 1's view. A selects as well as X, and orders
+   selected crew when it points at a room.
+2. **The real battlefield** (GV 3I): 16,000 squad to squad, 9,000 across; a standard gap of 5,000 pixels drawn
+   squeezed 1:10 into a bar, with shots crossing it as minimap marks; "5,000K Gatometers"; real flight times at
+   today's speeds (a laser about 5.6 s, a missile about 8 s); the background traced through the bar to real space.
+3. **Battlefield: Vertical > Horizontal** (GV 3J): horizontal puts your squad on the left; words and portraits stay
+   upright.
+4. **Battlesuits** carry 15 times their air.
+5. **Player setup** (GV 4H–4J): names, inputs, leaving for any player, and who commands each ship and crew member
+   (Any, or chosen players); the host refuses other orders and says why; a player who leaves hands theirs to the
+   Admiral.
+6. **Settings in tabs** (GV 14G).
+
+## 10. How to check it
 
 From `infall-godot/`: `tools/compile_check.sh` (script errors), `tools/input_test.tscn` (clicks, 14 checks),
 `tools/test_fight.tscn` (20 fights), `tools/galaxy_test.tscn`, `tools/ship_value_test.tscn`,

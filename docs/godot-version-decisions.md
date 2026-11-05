@@ -259,15 +259,20 @@ All built in the build of 2026-11-01.
 
 ## Next build (after 2026-11-02)
 
+All built in the build of 2026-11-05.
+
 1. **Co-op fixes** (heromedel, 2026-11-05: with player 1 on the keyboard and player 2 on a controller, the controller
    began moving player 1's camera, and crew obeyed only player 1). Suspected: the controller's stick also drives the
    keyboard player's camera through the default arrow actions, and after a window shown to everyone the controller
-   moves the real mouse, so its clicks land in player 1's view.
+   moves the real mouse, so its clicks land in player 1's view. Both were so, and are fixed: the arrow-key camera
+   answers only the keyboard, and over the windows every player sees each controller has a cursor of its own.
+   A now selects and presses as well, and orders selected crew when it points at a room.
 2. **The real battlefield** (GV 3I, 3J): 16,000 by 9,000, horizontal, the gap squeezed 1:10 into a bar, real
-   flight times, real Gatometers, the real background, and the `Battlefield: Vertical > Horizontal` setting.
-3. **Battlesuit air** for the longer crossings (GV 8C).
-4. **The player setup menu** (GV 4H) with inputs, assigning ships and crew (GV 4I), and leaving (GV 4J).
-5. **Settings tabs** (GV 14G).
+   flight times, real Gatometers, the real background, and the `Battlefield: Vertical > Horizontal` setting. Built.
+3. **Battlesuit air** for the longer crossings (GV 8C): 15 times. Built.
+4. **The player setup menu** (GV 4H) with inputs, assigning ships and crew (GV 4I), and leaving (GV 4J). Built;
+   the keyboard player drops back in with any key, as a controller does with Start.
+5. **Settings tabs** (GV 14G): Game, Battle, Controls, HUD, Players, Display and Sound. Built.
 
 ## Later (the road map)
 
@@ -289,3 +294,4 @@ All built in the build of 2026-11-01.
 | 2026-11-01 | The multiplayer groundwork planned (GV 4C–4G): server and clients, orders, LAN, controllers, drop in and out, split screen, defaults only. |
 | 2026-11-01 | The 2026-11-01 build: the multiplayer groundwork and the rest of the Next build list. |
 | 2026-11-05 | The real battlefield (GV 3I, 3J), the player setup menu and assignments (GV 4H–4J), more battlesuit air (GV 8C), settings tabs (GV 14G); handing the game over on the road map. |
+| 2026-11-05 | The 2026-11-05 build: co-op fixes, the real battlefield, battlesuit air, the player setup menu with assignments, settings tabs. |

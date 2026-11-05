@@ -44,8 +44,8 @@ func _key_axis(negative: Key, positive: Key) -> float:
 
 
 ## Frames a world rectangle in the area of the screen between the HUD bands.
-func frame(rect: Rect2, view_size: Vector2, margin_top: float = 70.0, margin_bottom: float = 150.0) -> void:
-	var usable := Vector2(view_size.x - 120.0, view_size.y - margin_top - margin_bottom)
+func frame(rect: Rect2, view_size: Vector2, margin_top: float = 70.0, margin_bottom: float = 150.0, margin_sides: float = 60.0) -> void:
+	var usable := Vector2(view_size.x - margin_sides * 2.0, view_size.y - margin_top - margin_bottom)
 	var fit := minf(usable.x / maxf(rect.size.x, 1.0), usable.y / maxf(rect.size.y, 1.0))
 	target_zoom = clampf(fit, MIN_ZOOM, MAX_ZOOM)
 	var screen_shift := Vector2(0, (margin_bottom - margin_top) * 0.5) / target_zoom
