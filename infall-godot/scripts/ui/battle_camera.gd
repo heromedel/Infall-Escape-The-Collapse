@@ -25,10 +25,15 @@ func _process(delta: float) -> void:
 	position = position.lerp(target_position, blend)
 	if _dragging and not Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
 		_dragging = false   # the release went to a window that opened mid-drag
-	var pan := Vector2(Input.get_axis("ui_left", "ui_right"), Input.get_axis("ui_up", "ui_down")) if keys_free else Vector2.ZERO
+	# The arrow keys only: the "ui" actions also answer a controller's stick, which belongs to its own player
+	var pan := Vector2(_key_axis(KEY_LEFT, KEY_RIGHT), _key_axis(KEY_UP, KEY_DOWN)) if keys_free else Vector2.ZERO
 	if pan != Vector2.ZERO:
 		target_position += pan * 900.0 * delta / zoom.x
 		user_moved = true
+
+
+func _key_axis(negative: Key, positive: Key) -> float:
+	return float(Input.is_physical_key_pressed(positive)) - float(Input.is_physical_key_pressed(negative))
 
 
 ## Frames a world rectangle in the area of the screen between the HUD bands.

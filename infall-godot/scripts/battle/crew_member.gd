@@ -27,7 +27,9 @@ var healing: bool = false          # a medbay is healing them this tick, whateve
 var stun_ticks: int = 0
 var door_wait: ShipDoor = null
 var dead: bool = false
-var rank: int = -1                 # GV 15A: -1 none, 0 Sgt. up to 5 Cpt.
+var rank: int = -1
+var assigned: Array = []             # GV 4I: player ids of their own; empty follows their ship's
+var own_assignment := false          # assigned on their own, not with their ship                 # GV 15A: -1 none, 0 Sgt. up to 5 Cpt.
 var contract_id: int = 0           # a hired mercenary: the contract they came with (GV 7C); 0 for the squad's own
 var in_suit: bool = false
 var teleporting_ticks: int = 0
@@ -66,6 +68,13 @@ func mastered_skills() -> int:
 func rank_due() -> int:
 	var earned := mini(RANK_PREFIX.size(), mastered_skills()) - 1
 	return earned if earned > rank else -1
+
+
+## Whether a player may give them orders: their own assignment, or else their ship's (GV 4I).
+func commanded_by(player_id: int) -> bool:
+	if own_assignment:
+		return assigned.is_empty() or assigned.has(player_id)
+	return home == null or home.commanded_by(player_id)
 
 
 ## Their name as the game shows it: with their rank in front.
@@ -116,7 +125,7 @@ func is_boarding() -> bool:
 
 
 func to_save() -> Dictionary:
-	return {"name": name, "race": race.id, "health": health, "xp": xp.duplicate(), "station": station_room, "contract": contract_id, "rank": rank}
+	return {"name": name, "race": race.id, "health": health, "xp": xp.duplicate(), "station": station_room, "contract": contract_id, "rank": rank, "assigned": assigned.duplicate(), "own_assignment": own_assignment}
 
 
 static func from_save(data: Dictionary) -> CrewMember:
@@ -128,4 +137,6 @@ static func from_save(data: Dictionary) -> CrewMember:
 	member.station_room = int(data.get("station", -1))
 	member.contract_id = int(data.get("contract", 0))
 	member.rank = int(data.get("rank", -1))
+	member.assigned.assign(data.get("assigned", []).map(func(id): return int(id)))
+	member.own_assignment = bool(data.get("own_assignment", false))
 	return member

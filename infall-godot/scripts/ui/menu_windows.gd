@@ -32,51 +32,62 @@ static func pause_menu(on_resume: Callable, on_settings: Callable, on_save_quit:
 	return window
 
 
-static func settings() -> Overlay:
+## The settings, in tabs (GV 14G). Each setting lists its default first.
+static func settings(tab: String = "Game") -> Overlay:
 	var window := Overlay.new()
-	window.place_panel(760)
+	window.place_panel(820)
 	window.add_title("SETTINGS")
+	var tabs := HBoxContainer.new()
+	tabs.add_theme_constant_override("separation", 6)
+	window.body.add_child(tabs)
 	window.add_text("[color=#a8b8cc]Each setting lists its default first. Classic options bring play closer to the genre's own rules.[/color]", 16)
-	# The list scrolls, so it never runs off a small screen
-	var scroll := ScrollContainer.new()
-	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
-	scroll.custom_minimum_size = Vector2(0, 560)
-	var rows := VBoxContainer.new()
-	rows.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	scroll.add_child(rows)
-	window.body.add_child(scroll)
-	for id in Settings.OPTIONS:
-		var option: Array = Settings.OPTIONS[id]
-		var choices: Array = option[1]
-		var row := HBoxContainer.new()
-		var label := UiKit.label(option[2], 18)
-		label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		row.add_child(label)
-		if choices.is_empty():
-			var slider := HSlider.new()
-			slider.min_value = 0.0
-			slider.max_value = 1.0
-			slider.step = 0.05
-			slider.value = float(Settings.get_value(id, option[0]))
-			slider.custom_minimum_size = Vector2(240, 24)
-			slider.value_changed.connect(func(value): Settings.set_value(id, value); Sfx.apply_volumes())
-			row.add_child(slider)
-		else:
-			var button := UiKit.button(_choice_text(Settings.get_value(id, option[0])), func(): pass, 240)
-			button.pressed.connect(func():
-				var index := choices.find(Settings.get_value(id, option[0]))
-				var next = choices[(index + 1) % choices.size()]
-				Settings.set_value(id, next)
-				button.text = _choice_text(next))
-			row.add_child(button)
-		rows.add_child(row)
-	window.add_text("[color=#a8b8cc]Terran Ship Conduits and Run Length apply to new runs.[/color]", 15)
-	window.add_button("Reset HUD layout", func():
-		HudLayout.new().reset()
-		for hud in window.get_tree().get_nodes_in_group("battle_hud"):
-			hud.layout = HudLayout.load_saved())
+	var rows := window.scrolling_area()
+	var show_tab := func(name: String) -> void:
+		window.clear(rows)
+		for button in tabs.get_children():
+			button.disabled = button.text == name.to_upper()
+		for id in Settings.TABS[name]:
+			rows.add_child(_setting_row(id))
+		if name == "HUD":
+			rows.add_child(UiKit.button("Reset HUD layout", func():
+				HudLayout.new().reset()
+				for hud in window.get_tree().get_nodes_in_group("battle_hud"):
+					hud.layout = HudLayout.load_saved(), 0))
+		if name == "Game":
+			rows.add_child(UiKit.label("Terran Ship Conduits and Run Length apply to new runs. In a game with others, the host's settings for a run are used.", 15, UiColours.TEXT_DIM, true))
+	for name in Settings.TABS:
+		var tab_name: String = name
+		tabs.add_child(UiKit.button(tab_name.to_upper(), func(): show_tab.call(tab_name), 0))
+	show_tab.call(tab if Settings.TABS.has(tab) else "Game")
 	window.add_button("Done", window.close)
 	return window
+
+
+static func _setting_row(id: String) -> Control:
+	var option: Array = Settings.OPTIONS[id]
+	var choices: Array = option[1]
+	var row := HBoxContainer.new()
+	var label := UiKit.label(option[2], 18)
+	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(label)
+	if choices.is_empty():
+		var slider := HSlider.new()
+		slider.min_value = 0.0
+		slider.max_value = 1.0
+		slider.step = 0.05
+		slider.value = float(Settings.get_value(id, option[0]))
+		slider.custom_minimum_size = Vector2(240, 24)
+		slider.value_changed.connect(func(value): Settings.set_value(id, value); Sfx.apply_volumes())
+		row.add_child(slider)
+	else:
+		var button := UiKit.button(_choice_text(Settings.get_value(id, option[0])), func(): pass, 360)
+		button.pressed.connect(func():
+			var index := choices.find(Settings.get_value(id, option[0]))
+			var next = choices[(index + 1) % choices.size()]
+			Settings.set_value(id, next)
+			button.text = _choice_text(next))
+		row.add_child(button)
+	return row
 
 
 static func _choice_text(value) -> String:

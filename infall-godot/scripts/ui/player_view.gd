@@ -504,6 +504,17 @@ func _update_hover() -> void:
 			return
 
 
+## Whether a controller's A here gives an order (crew are selected and it points at a room, not at a card) rather than
+## selecting or pressing.
+func would_order_here() -> bool:
+	if has_window() or selected_crew.is_empty() or aim_mode != "":
+		return false
+	if not hud._region_at(hud.get_local_mouse_position()).is_empty():
+		return false
+	_update_hover()
+	return hover_room >= 0 and hover_crew == null
+
+
 func _suit_under_pointer() -> Battlesuit:
 	var world_point := screen_to_world(pointer)
 	for suit in encounter.suits:

@@ -26,6 +26,10 @@ static func _ship(encounter: Encounter, order: Dictionary, key: String = "s") ->
 	return encounter.ships[index] if index >= 0 and index < encounter.ships.size() else null
 
 
+static func crew_at(encounter: Encounter, ref: Vector2i) -> CrewMember:
+	return _crew(encounter, ref)
+
+
 static func _crew(encounter: Encounter, ref: Vector2i) -> CrewMember:
 	if ref.x < 0 or ref.x >= encounter.ships.size():
 		return null

@@ -19,7 +19,7 @@ const MAX_TICKS_A_FRAME := 4
 const CHECK_EVERY := 100              # ticks between the host's checks that every machine still agrees
 const COLOURS := ["#5fd4ff", "#ffb347", "#c58cff", "#ff6f91", "#9be564", "#ffe066", "#7af0c8", "#f08a5d"]
 ## Orders only the Admiral gives: the squad's decisions.
-const ADMIRAL_ORDERS := ["shared", "pause", "jump", "wait", "hail_open", "rule", "hold"]
+const ADMIRAL_ORDERS := ["shared", "pause", "jump", "wait", "hail_open", "rule", "hold", "assign"]
 
 var is_host := true
 var players: Array[Dictionary] = []   # {id, name, colour, device ("keys", "pad", "remote"), pad, peer, here}
@@ -77,6 +77,8 @@ func remove_local_player(id: int) -> void:
 	player.here = false
 	if not is_host:
 		_player_left.rpc_id(1, id)
+	else:
+		_hand_over(id)
 	_players_changed()
 
 
@@ -141,6 +143,47 @@ func local_hold_changed() -> void:
 	submit(admiral, {"k": "hold", "on": view != null and view.has_window()})
 
 
+## Changes which input a player on this machine uses (GV 4H): "keys", or "pad" with a controller's number. Whoever
+## had that input gives it up and takes this player's old one.
+func set_input(id: int, device: String, pad: int = -1) -> void:
+	var player := player_by_id(id)
+	if player.is_empty() or player.peer != my_peer:
+		return
+	for other in players:
+		if other.id != id and other.peer == my_peer and other.here and other.device == device and other.pad == pad:
+			other.device = player.device
+			other.pad = player.pad
+			_send_player(other)
+	player.device = device
+	player.pad = pad
+	_send_player(player)
+	_players_changed()
+
+
+func rename(id: int, new_name: String) -> void:
+	var player := player_by_id(id)
+	if player.is_empty() or player.peer != my_peer or new_name.strip_edges().is_empty():
+		return
+	player.name = new_name.strip_edges().left(24)
+	_send_player(player)
+	_players_changed()
+
+
+func _send_player(player: Dictionary) -> void:
+	if not is_host and _peer:
+		_player_changed.rpc_id(1, player.id, player.name, player.device, player.pad)
+
+
+@rpc("any_peer", "reliable")
+func _player_changed(id: int, new_name: String, device: String, pad: int) -> void:
+	var player := player_by_id(id)
+	if is_host and not player.is_empty() and player.peer == multiplayer.get_remote_sender_id():
+		player.name = new_name
+		player.device = device
+		player.pad = pad
+		_players_changed()
+
+
 func make_admiral(id: int) -> void:
 	if is_host:
 		admiral = id
@@ -188,7 +231,34 @@ func submit(player_id: int, order: Dictionary) -> void:
 func _sequence(order: Dictionary) -> void:
 	if String(order.k) in ADMIRAL_ORDERS and int(order.get("p", 0)) != admiral and not (order.k == "rule" and int(order.get("p", 0)) == first_local_id()):
 		return
+	var why: String = main.refusal(order) if main else ""
+	if not why.is_empty():
+		_refuse(int(order.get("p", 0)), why)   # a ship or crew member assigned to someone else (GV 4I)
+		return
 	_emit(order)
+
+
+## Tells a player their order was refused, on whichever machine they play.
+func _refuse(player_id: int, why: String) -> void:
+	var player := player_by_id(player_id)
+	if player.is_empty():
+		return
+	if player.peer == my_peer:
+		main.tell(player_id, why)
+	elif _peer:
+		_refused.rpc_id(int(player.peer), player_id, why)
+
+
+@rpc("authority", "reliable")
+func _refused(player_id: int, why: String) -> void:
+	main.tell(player_id, why)
+
+
+## A player has left: the host hands what they commanded to the Admiral (GV 4J), on the stream so every machine
+## does it at the same moment.
+func _hand_over(player_id: int) -> void:
+	if is_host and main and main.run and player_id != admiral:
+		_emit({"k": "handover", "from": player_id, "to": admiral, "p": 0})
 
 
 ## Puts one item on the stream: for the record and for this machine to play. The host sends each item to the
@@ -385,6 +455,7 @@ func _on_peer_disconnected(peer_id: int) -> void:
 		if player.peer == peer_id and player.here:
 			player.here = false
 			admiral_left = admiral_left or player.id == admiral
+			_hand_over(player.id)
 	_players_changed()
 	if admiral_left and main and main.has_method("admiral_gone"):
 		main.admiral_gone()   # the game pauses and saves until the Admiral returns (GDD 4N, off)
@@ -490,6 +561,7 @@ func _player_left(id: int) -> void:
 	var player := player_by_id(id)
 	if is_host and not player.is_empty() and player.peer == multiplayer.get_remote_sender_id():
 		player.here = false
+		_hand_over(id)
 		_players_changed()
 
 

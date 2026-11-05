@@ -24,11 +24,21 @@ const OPTIONS := {
 	"gatos_species": ["Terrans", ["Terrans", "Tabbys"], "GATOS Species"],
 	"mouse_control": ["Left Selects, Right Orders", ["Left Selects, Right Orders", "Left Selects and Orders, Right Deselects"], "Mouse Control"],
 	"local_coop_view": ["Split", ["Split", "Shared"], "Local Co-op View"],
-	"shots_crossing_barrier": ["Shown", ["Shown", "Hidden"], "Shots Crossing Barrier"],
+	"battlefield": ["Vertical", ["Vertical", "Horizontal"], "Battlefield"],
 	"fullscreen": [false, [false, true], "Fullscreen"],
 	"master_volume": [0.8, [], "Master Volume"],
 	"music_volume": [0.6, [], "Music Volume"],
 	"effects_volume": [0.8, [], "Effects Volume"],
+}
+
+## The settings window's tabs (GV 14G), in order, and the settings on each.
+const TABS := {
+	"Game": ["run_length", "difficulty", "terran_conduits", "gatos_species", "low_mawjig_warning"],
+	"Battle": ["battlefield", "formation", "auto_pause", "auto_pause_seconds", "event_auto_pause", "screen_shake", "player_power_colour"],
+	"Controls": ["mouse_control", "map_zoom"],
+	"HUD": ["hud_layout", "hud_card_opacity", "collapsed_cards_reopen", "reopened_cards_fold_back"],
+	"Players": ["local_coop_view"],
+	"Display and Sound": ["fullscreen", "master_volume", "music_volume", "effects_volume"],
 }
 
 ## Settings that change what happens in a run, not just how it looks: in a session every machine uses the host's

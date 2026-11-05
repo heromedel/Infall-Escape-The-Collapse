@@ -68,6 +68,30 @@ func _ready() -> void:
 	await _pad_button(1, JOY_BUTTON_LEFT_STICK)
 	await _wait(0.3)
 	_check("a controller player who isn't the Admiral can't pause", not main.battle.paused)
+	# Assignments (GV 4I): the ship goes to the mouse player alone; the controller's door order is refused
+	var ship0: Ship = main.run.squad[0]
+	main.session.submit(main.session.admiral, {"k": "assign", "sq": 0, "players": [keys_view.player_id]})
+	await _wait(0.2)
+	var door_before: bool = ship0.doors[0].held_open
+	pad_view.toggle_door(ship0, ship0.doors[0])
+	await _wait(0.2)
+	_check("an order for a ship assigned to someone else is refused", ship0.doors[0].held_open == door_before)
+	keys_view.toggle_door(ship0, ship0.doors[0])
+	await _wait(0.2)
+	_check("the assigned player's order goes through", ship0.doors[0].held_open != door_before)
+	# A crew member given to the controller player on their own: they obey the controller, not the ship's player
+	main.session.submit(main.session.admiral, {"k": "assign", "sq": 0, "crew": 1, "players": [pad_view.player_id], "own": true})
+	await _wait(0.2)
+	_check("a crew member assigned on their own takes orders from their player", ship0.crew[1].commanded_by(pad_view.player_id) and not ship0.crew[0].commanded_by(pad_view.player_id))
+	# A player who leaves hands what they commanded to the Admiral (GV 4J)
+	main.session.submit(main.session.admiral, {"k": "assign", "sq": 0, "players": [pad_view.player_id]})
+	await _wait(0.2)
+	var pad_id: int = pad_view.player_id
+	main.session.remove_local_player(pad_id)
+	await _wait(0.3)
+	_check("a player who leaves hands their ship to the Admiral", ship0.assigned == [main.session.admiral] and ship0.crew[1].assigned == [main.session.admiral])
+	main.session.add_local_player("pad", 0)
+	await _wait(0.3)
 	# A controller leaves: back to three views
 	var leaving: int = main.battle.player_views[3].player_id
 	main.session.remove_local_player(leaving)

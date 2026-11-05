@@ -189,6 +189,10 @@ func _lay_out_views() -> void:
 			battle.player_views.erase(view)
 			view.display.queue_free()
 			view.queue_free()
+	for view in battle.player_views:
+		var player := session.player_by_id(view.player_id)
+		view.uses_keys = player.get("device", "keys") == "keys"   # a player can change their input (GV 4H)
+		view.show_cursor = not view.uses_keys
 	for player in wanted:
 		if not battle.player_views.any(func(v): return v.player_id == player.id):
 			var view := PlayerView.new()
@@ -300,7 +304,22 @@ func apply_order(order: Dictionary) -> void:
 				Settings.session_rules[order.id] = order.value
 		"console":
 			console.execute(String(order.text))
+		"assign", "handover":
+			Assignments.apply(run, order)
+			run_changed.emit()
 	_update_hold()
+
+
+## Why the host refuses a player's order, or "" (GV 4I).
+func refusal(order: Dictionary) -> String:
+	return Assignments.refusal(self, order)
+
+
+## A message for one player, in their own view.
+func tell(player_id: int, text: String) -> void:
+	var view := view_of(player_id)
+	if view:
+		view.hud.flash_message(text)
 
 
 func checksum() -> int:
