@@ -208,6 +208,14 @@ anything Claude added tagged Ai-Generated-Proposal.
     steps back, as a click on nothing does. Built.
 
 - **G — Proposed (heromedel, 2026-11-05):** the settings menu gets tabs, as the settings grow.
+- **H — Proposed (heromedel, 2026-11-09):** ship status cards. Every ship a player commands has a small status
+  card of a fixed size; the Admiral has one for every ship of the squad. The battle view then never has to keep two
+  ships in sight: a player can select one of their ships, zoom to an enemy ship, and still see on the card when
+  their own ship is hit.
+  - A card shows a small deck plan. A room shows fire, a breach and damage with a tint and/or one icon (not every
+    tile of the room), its air with a tint, and intruders with icons. The card also has a hull bar and shield pips.
+  - Clicking a card jumps the camera to that ship.
+  - A card folds like the other HUD cards: it reopens when something changes on its ship and folds back.
 
 ## 15. Ranks and Titles
 
@@ -274,6 +282,11 @@ All built in the build of 2026-11-05.
    the keyboard player drops back in with any key, as a controller does with Start.
 5. **Settings tabs** (GV 14G): Game, Battle, Controls, HUD, Players, Display and Sound. Built.
 
+## Next build (after 2026-11-05)
+
+1. **Ship status cards** (GV 14H): a small card for every ship a player commands, with a deck plan that shows
+   fire, breaches, damage, air and intruders, a hull bar and shield pips; a click jumps to the ship.
+
 ## Later (the road map)
 
 - When the host quits a LAN game, hand the game to another player's machine instead of ending it (GDD 4N, Admiral
@@ -295,3 +308,4 @@ All built in the build of 2026-11-05.
 | 2026-11-01 | The 2026-11-01 build: the multiplayer groundwork and the rest of the Next build list. |
 | 2026-11-05 | The real battlefield (GV 3I, 3J), the player setup menu and assignments (GV 4H–4J), more battlesuit air (GV 8C), settings tabs (GV 14G); handing the game over on the road map. |
 | 2026-11-05 | The 2026-11-05 build: co-op fixes, the real battlefield, battlesuit air, the player setup menu with assignments, settings tabs. |
+| 2026-11-09 | Ship status cards (GV 14H) proposed and put on the Next build list. |
