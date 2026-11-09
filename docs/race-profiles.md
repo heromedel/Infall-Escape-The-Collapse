@@ -149,8 +149,8 @@ The starting race (GDD 7C). The name is deliberate, to avoid a plain Federation 
 - **Origin — Proposed (2026-10-23):** lost to time and somewhat of a mystery, but genetic evidence suggests they
   were Terran, bred to better fit inside semi-cybernetic mech suits. An accidental by-product of their creation,
   and possibly their personal power inside the mechs, made them immature, violent and greedy, like cruel children.
-  With Tabbys (GATOS Species setting), they are kitten-like rather than halfling-like, cruel like kittens rather
-  than children.
+  With Tabbys (GATOS Species setting), the genetic evidence suggests they were Tabbys rather than Terrans, and they
+  are kitten-like rather than halfling-like, cruel like kittens rather than children.
 - **Out of their suits — Proposed (2026-10-23):** incredibly bashful if not violent. Not truly shy, though: their
   overconfidence tends to override it. **Look — Proposed (2026-10-25):** heromedel's pilot art
   (`docs/art/mecha/pilot/`): petite, pale, purple hair and eyes, purple implant lights on the left shoulder and the
