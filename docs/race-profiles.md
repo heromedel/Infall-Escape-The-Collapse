@@ -22,13 +22,15 @@ How races treat each other: see Relations between races at the end.
 10. **Ship designs across tiers:** basic to advanced, since a race can be placed anywhere from the core to the
     rim and its strength comes from its placement (GDD 2N).
 
-## Terrans: The Galactic Alliance of Tabby Occupied Systems (G.A.T.O.S., "the GATOS") (draft, 2026-10-21)
+## Terrans: The Galactic Alliance of Terran Occupied Systems (G.A.T.O.S., "the GATOS") (draft, 2026-10-21)
 
 The starting race (GDD 7C). The name is deliberate, to avoid a plain Federation clone.
 
-- **Cats — Decided (heromedel, 2026-10-31):** the GATOS are officially cats, and G.A.T.O.S. stands for the
-  Galactic Alliance of Tabby Occupied Systems. This replaces the earlier draft, where they were a loose alliance of
-  humans and the name was the Galactic Alliance of Terran Occupied Systems.
+- **GATOS Species setting — Decided (heromedel, 2026-10-31):** `GATOS Species: Terrans > Tabbys`. With Terrans,
+  the default, the GATOS are a loose alliance of humans, the Galactic Alliance of Terran Occupied Systems. With
+  Tabbys they are cats, the Galactic Alliance of Tabby Occupied Systems. Where a point depends on the species it
+  gives both, e.g. "childlike (kitten-like with Tabbys)". This replaces "the GATOS are officially cats", decided
+  earlier the same day.
 
 1. **Tone and ship style — Proposed (2026-10-21):** when doing well, clean, soft Federation-like ships. When
    desperate, a grim, survivalist look built from seemingly borrowed or stolen technology.
@@ -146,7 +148,8 @@ The starting race (GDD 7C). The name is deliberate, to avoid a plain Federation 
   engineered humans, and oddly adorable for their viciousness.
 - **Origin — Proposed (2026-10-23):** lost to time and somewhat of a mystery, but genetic evidence suggests they
   were Terran, bred to better fit inside semi-cybernetic mech suits. An accidental by-product of their creation,
-  and possibly their personal power inside the mechs, made them immature, violent and greedy, like cruel children.
+  and possibly their personal power inside the mechs, made them immature, violent and greedy, like cruel children
+  (with Tabbys, cruel kittens: kitten-like rather than childlike, GATOS Species setting).
 - **Out of their suits — Proposed (2026-10-23):** incredibly bashful if not violent. Not truly shy, though: their
   overconfidence tends to override it. **Look — Proposed (2026-10-25):** heromedel's pilot art
   (`docs/art/mecha/pilot/`): petite, pale, purple hair and eyes, purple implant lights on the left shoulder and the

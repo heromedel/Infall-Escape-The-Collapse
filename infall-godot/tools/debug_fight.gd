@@ -24,6 +24,11 @@ func _ready() -> void:
 				s += " W[%s p=%s c=%.0f/%.0f tgt=%s]" % [w.def.id, w.powered, w.charge, w.charge_needed(enemy.tech), w.has_target()]
 			for c in enemy.crew:
 				s += " C[%s %s cell=%s task=%s hp=%d]" % [c.name, c.ship.name, c.cell, c.task, c.health]
+			if OS.get_environment("SHOW_PLAYER") != "":
+				for sys in player.systems:
+					s += " P.%s:%d/%d(d%d)" % [sys.def.id, player.system_power(sys), sys.level, sys.damage]
+				for w in player.weapons:
+					s += " PW[%s p=%s c=%.0f/%.0f tgt=%s]" % [w.def.id, w.powered, w.charge, w.charge_needed(player.tech), w.has_target()]
 			print(s, " shields=", enemy.shield_layers, " P.hull=", player.hull, " P.shields=", player.shield_layers, " E.hull=", enemy.hull)
 		if not encounter.outcome.is_empty():
 			print("outcome ", encounter.outcome, " at ", t / 20.0)

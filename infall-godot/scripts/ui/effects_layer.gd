@@ -6,6 +6,7 @@ extends Node2D
 
 var encounter: Encounter
 var alpha: float = 0.0
+var zoom: float = 1.0                # the first view's zoom, so minimap marks in the gap keep a readable size
 var particles: Array = []           # {position, velocity, life, max_life, size, colour, kind, glow, spin}
 var texts: Array = []               # {position, text, colour, life, size}
 var _glow := Node2D.new()
@@ -30,15 +31,20 @@ func _process(delta: float) -> void:
 	particles = particles.filter(func(p): return p.life > 0.0)
 	for text in texts:
 		text.life -= delta
-		text.position += Vector2(0, -26) * delta
+		text.position += Vector2(0, -26).rotated(-ShipView.view_turn) * delta   # up the screen
 	texts = texts.filter(func(t): return t.life > 0.0)
 	if encounter:
 		for shot in encounter.projectiles:
-			if shot.kind == "missile" and randf() < 0.7 and not encounter.in_barrier(shot.position):
-				var at := shot.previous_position.lerp(shot.position, alpha)
+			if shot.kind == "missile" and randf() < 0.7 and not encounter.in_gap(shot.position):
+				var at := _v(shot.previous_position.lerp(shot.position, alpha))
 				_add("smoke", at - shot.velocity.normalized() * 10.0, Vector2(randf_range(-8, 8), randf_range(-8, 8)), randf_range(0.6, 1.1), randf_range(3.0, 5.0), Color(0.75, 0.75, 0.8, 0.35), false)
 	queue_redraw()
 	_glow.queue_redraw()
+
+
+## Where a real point is drawn: the gap between the squads is squeezed in the views (GV 3I).
+func _v(world_point: Vector2) -> Vector2:
+	return encounter.to_view(world_point) if encounter else world_point
 
 
 func _add(kind: String, at: Vector2, velocity: Vector2, life: float, size: float, colour: Color, glow: bool) -> void:
@@ -48,6 +54,7 @@ func _add(kind: String, at: Vector2, velocity: Vector2, life: float, size: float
 
 
 func explosion(at: Vector2, scale: float = 1.0, colour: Color = Color(1.0, 0.6, 0.25)) -> void:
+	at = _v(at)
 	_add("flash", at, Vector2.ZERO, 0.18, 34.0 * scale, Color(1.0, 0.95, 0.8), true)
 	_add("ring", at, Vector2.ZERO, 0.45, 40.0 * scale, Color(colour, 0.8), true)
 	for index in int(14 * scale):
@@ -60,23 +67,27 @@ func explosion(at: Vector2, scale: float = 1.0, colour: Color = Color(1.0, 0.6, 
 
 
 func shield_sparks(at: Vector2, colour: Color) -> void:
+	at = _v(at)
 	_add("flash", at, Vector2.ZERO, 0.15, 22.0, Color(colour.lightened(0.5), 0.9), true)
 	for index in 10:
 		_add("spark", at, Vector2.from_angle(randf() * TAU) * randf_range(60, 180), randf_range(0.2, 0.45), 2.0, colour.lightened(0.3), true)
 
 
 func small_burst(at: Vector2, colour: Color) -> void:
+	at = _v(at)
 	_add("flash", at, Vector2.ZERO, 0.12, 16.0, Color(colour, 0.9), true)
 	for index in 6:
 		_add("spark", at, Vector2.from_angle(randf() * TAU) * randf_range(40, 120), randf_range(0.2, 0.4), 1.8, colour, true)
 
 
 func sparkle(at: Vector2, colour: Color) -> void:
+	at = _v(at)
 	for index in 12:
 		_add("spark", at + Vector2(randf_range(-14, 14), randf_range(-14, 14)), Vector2(0, -randf_range(20, 60)), randf_range(0.4, 0.8), 2.0, colour, true)
 
 
 func float_text(at: Vector2, text: String, colour: Color, size: int = 22) -> void:
+	at = _v(at)
 	texts.append({"position": at, "text": text, "colour": colour, "life": 1.3, "size": size})
 
 
@@ -99,9 +110,12 @@ func _draw() -> void:
 		var t: float = clampf(text.life / 1.3, 0.0, 1.0)
 		var font := UiKit.font_bold()
 		var size := font.get_string_size(text.text, HORIZONTAL_ALIGNMENT_LEFT, -1, text.size)
-		var at: Vector2 = text.position - Vector2(size.x * 0.5, 0)
+		# Words read the right way up however the view is turned (GV 3J)
+		draw_set_transform(text.position, -ShipView.view_turn, Vector2.ONE)
+		var at := Vector2(-size.x * 0.5, 0)
 		draw_string_outline(font, at, text.text, HORIZONTAL_ALIGNMENT_LEFT, -1, text.size, 5, Color(0, 0, 0, 0.8 * t))
 		draw_string(font, at, text.text, HORIZONTAL_ALIGNMENT_LEFT, -1, text.size, Color(text.colour, t))
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 
 
 func _draw_glow() -> void:
@@ -123,10 +137,11 @@ func _draw_glow() -> void:
 
 func _draw_solid_shots() -> void:
 	for shot in encounter.projectiles:
-		var at := shot.previous_position.lerp(shot.position, alpha)
+		var real := shot.previous_position.lerp(shot.position, alpha)
 		var direction := shot.velocity.normalized()
-		if _crossing(shot.kind, at):
-			continue
+		if encounter.in_gap(real):
+			continue   # in the bar: drawn as a minimap mark with the glowing shots
+		var at := _v(real)
 		match shot.kind:
 			"missile":
 				var side := direction.orthogonal()
@@ -145,9 +160,10 @@ func _draw_solid_shots() -> void:
 	for suit in encounter.suits:
 		if suit.gone:
 			continue
-		var at := suit.previous_position.lerp(suit.position, alpha)
-		if encounter.in_barrier(at):
+		var real := suit.previous_position.lerp(suit.position, alpha)
+		if encounter.in_gap(real):
 			continue
+		var at := _v(real)
 		var texture := Library.texture(suit.def.art_path) if not suit.def.art_path.is_empty() else null
 		if texture:
 			var size := texture.get_size() * suit.def.art_scale
@@ -160,14 +176,23 @@ func _draw_solid_shots() -> void:
 
 
 func _draw_glowing_shots() -> void:
-	var dashes: bool = Settings.get_value("shots_crossing_barrier", "Shown") == "Shown"
+	var pixel := 1.0 / maxf(zoom, 0.05)   # one screen pixel, so the minimap marks keep their size as the view zooms
 	for shot in encounter.projectiles:
-		var at := shot.previous_position.lerp(shot.position, alpha)
+		var real := shot.previous_position.lerp(shot.position, alpha)
 		var direction := shot.velocity.normalized()
-		if _crossing(shot.kind, at):
-			# Inside the barrier a shot is far away: only a tiny faint dash shows it is on its way (GDD 3R)
-			if dashes:
-				_glow.draw_line(at - direction * 6.0, at, Color(shot.colour.lightened(0.3), 0.35), 1.5, true)
+		var at := _v(real)
+		if encounter.in_gap(real):
+			# In the bar, the minimap of the gap (GV 3I): a mark for each shot on its way, at its real place
+			var mark := Color(shot.colour.lightened(0.35), 0.9)
+			var view_direction := (_v(real + direction * 100.0) - at).normalized()
+			match shot.kind:
+				"missile":
+					_glow.draw_circle(at, 2.6 * pixel, mark)
+					_glow.draw_line(at, at - view_direction * 7.0 * pixel, Color(1.0, 0.6, 0.3, 0.6), 1.6 * pixel, true)
+				"asteroid":
+					_glow.draw_circle(at, 3.0 * pixel, Color("#8b7d6b"))
+				_:
+					_glow.draw_line(at - view_direction * 8.0 * pixel, at, mark, 2.0 * pixel, true)
 			continue
 		match shot.kind:
 			"laser", "defense":
@@ -192,62 +217,35 @@ func _draw_glowing_shots() -> void:
 		var source: Ship = beam.source
 		var target: Ship = beam.target
 		var slot: WeaponSlot = beam.slot
-		var origin := encounter.mount_world_position(source, slot)
-		var hit_point := encounter.local_to_world(target, beam.point)
+		var origin := _v(encounter.mount_world_position(source, slot))
+		var hit_point := _v(encounter.local_to_world(target, beam.point))
 		var fade := clampf((beam.total + 6 - beam.ticks) / 6.0, 0.0, 1.0)
 		var colour: Color = beam.weapon.colour
 		var end_point := hit_point
 		if beam.blocked:
 			var radii := encounter.bubble_radii(target)
-			var centre := encounter.local_to_world(target, encounter.bubble_centre(target))
+			var centre := _v(encounter.local_to_world(target, encounter.bubble_centre(target)))
 			end_point = centre + (hit_point - centre).normalized() * minf(radii.x, radii.y) * 0.98
 			end_point = origin.lerp(hit_point, 0.92) if end_point.distance_to(origin) > origin.distance_to(hit_point) else end_point
-		for part in _outside_barrier(origin, end_point):
-			_glow.draw_line(part[0], part[1], Color(colour, 0.25 * fade), 16.0, true)
-			_glow.draw_line(part[0], part[1], Color(colour, 0.85 * fade), 5.0, true)
-			_glow.draw_line(part[0], part[1], Color(1, 1, 1, 0.8 * fade), 1.8, true)
+		_glow.draw_line(origin, end_point, Color(colour, 0.25 * fade), 16.0, true)
+		_glow.draw_line(origin, end_point, Color(colour, 0.85 * fade), 5.0, true)
+		_glow.draw_line(origin, end_point, Color(1, 1, 1, 0.8 * fade), 1.8, true)
 		_glow.draw_circle(end_point, 9.0 + 2.0 * sin(_time * 30.0), Color(colour.lightened(0.5), 0.8 * fade))
 		if not beam.blocked:
-			var start_world := encounter.local_to_world(target, beam.start)
+			var start_world := _v(encounter.local_to_world(target, beam.start))
 			_glow.draw_line(start_world, hit_point, Color(1.0, 0.4, 0.2, 0.5 * fade), 4.0, true)
 	for bomb in encounter.bombs:
 		var target: Ship = bomb.target
-		var at := encounter.local_to_world(target, target.rooms[bomb.room].centre_local(target.design))
+		var at := _v(encounter.local_to_world(target, target.rooms[bomb.room].centre_local(target.design)))
 		var t: float = 1.0 - bomb.ticks / 14.0
 		_glow.draw_circle(at, 18.0 * (1.0 - t) + 4.0, Color(0.7, 0.9, 1.0, 0.5 * t))
 		_glow.draw_arc(at, 22.0 * (1.0 - t) + 6.0, 0, TAU, 24, Color(0.8, 0.95, 1.0, 0.8 * t), 2.0, true)
 	for suit in encounter.suits:
 		if suit.gone:
 			continue
-		var at := suit.previous_position.lerp(suit.position, alpha)
-		if encounter.in_barrier(at):
-			if dashes:
-				_glow.draw_circle(at, 1.6, Color(0.75, 0.4, 1.0, 0.35))
+		var real := suit.previous_position.lerp(suit.position, alpha)
+		var at := _v(real)
+		if encounter.in_gap(real):
+			_glow.draw_circle(at, 3.2 * pixel, Color(0.75, 0.4, 1.0, 0.9))   # a battlesuit on the minimap
 			continue
 		_glow.draw_circle(at + Vector2(0, 10), 5.0 + sin(_time * 30.0), Color(0.75, 0.4, 1.0, 0.5))
-
-
-## Whether something is crossing the barrier, and so far away that it isn't drawn as itself.
-func _crossing(kind: String, at: Vector2) -> bool:
-	return Encounter.GATOMETERS_PER_SECOND.has(kind) and encounter.in_barrier(at)
-
-
-## The parts of a line outside the barrier: a beam is seen leaving its ship and arriving, not crossing.
-func _outside_barrier(a: Vector2, b: Vector2) -> Array:
-	var half := Encounter.BARRIER_HALF_DEPTH
-	if is_equal_approx(a.y, b.y):
-		return [] if encounter.in_barrier(a) else [[a, b]]
-	var cuts: Array[float] = [0.0]
-	for edge in [half, -half]:
-		var t: float = (edge - a.y) / (b.y - a.y)
-		if t > 0.0 and t < 1.0:
-			cuts.append(t)
-	cuts.append(1.0)
-	cuts.sort()
-	var parts: Array = []
-	for index in cuts.size() - 1:
-		var from := a.lerp(b, cuts[index])
-		var to := a.lerp(b, cuts[index + 1])
-		if not encounter.in_barrier(from.lerp(to, 0.5)):
-			parts.append([from, to])
-	return parts

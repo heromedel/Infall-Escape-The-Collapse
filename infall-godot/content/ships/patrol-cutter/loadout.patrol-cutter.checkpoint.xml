@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<loadout id="checkpoint" ship="patrol-cutter" name="GATOS Checkpoint Cutter" class="Checkpoint Cutter" inherit="patch" hull="16" value="296.5">
+<loadout id="checkpoint" ship="patrol-cutter" name="GATOS Checkpoint Cutter" class="Checkpoint Cutter" inherit="patch" hull="16">
 	<reactor type="core" level="3"/>
 	<system id="shields" tile="-2,-2" level="4" wall="west"/>
 	<system id="engines" tile="0,4" level="3" wall="south"/>

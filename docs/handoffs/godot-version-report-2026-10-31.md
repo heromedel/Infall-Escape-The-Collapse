@@ -75,9 +75,84 @@ in the Windows build sent at the end of the day.
   Medbay healing at any task, the movable HUD cards and their settings, and the area-weapon idea for
   `ideas.md` (2×2 "Blast").
 
-## 7. How to check it
+## 7. The evening build (the Next build list, GV doc)
+
+1. **Windows that rebuild** (store, ship screen, events, hail) empty at once, shrink to fit and scroll when tall.
+   Upgrade prices read as prices, with the low Mawjig warning. The hover box stays up while aiming.
+2. **Regions:** every race equal for now (the weights stay as data); the first region is the player's race. GATOS
+   space went from about 35–40% of clusters to 12–14%.
+3. **Battlefield:** a fixed 6-tile gap between every zone and the barrier; the barrier is 16 tiles deep.
+4. **Survivors** come only from surrendered ships and from enemy boarders who surrender when their ship is
+   destroyed, and the player always chooses.
+5. **Ship values** are worked out from their parts by Eco's rules (GV 8B), checked against Eco's F13 values: every
+   ship within 2.5 (most exact), the differences being where the shared room rule moves F13. Supershield 38.72
+   with upgrades 7.26 and 12.11.
+6. **The wiki's timings** (GV 7E): repair 12.5 s a bar, fire-fighting 10.4 s, teleporter 20/15/10 s.
+7. **Power comes back after repairs** (GV 3H). Found by the bot runs: weapons switched off by a hit stayed off
+   after the repair, so the starting ship lost to the band 1 Tentauri Pappus in 4 of 6 runs. Now power that damage
+   or ion took comes back by itself, as in the genre; after the fix the bots lost to it in 2 of 8 runs, at jumps 6
+   and 9 (the bots never upgrade, so later losses are expected).
+8. **The GATOS Species setting** (GV 7A): `GATOS Species: Terrans > Tabbys`. Human faces (M1 to M5) for GATOS crew
+   with Terrans; with Tabbys the cat head, the HalfMech kittens (K1 to K5) and holographic cat Senti. Event text
+   switches words (children or kittens, childishly or kittenishly); GATOS names include human or cat names.
+9. **Mercenaries on contract** (GV 7C): renewals cost a quarter more each time; after a battle that killed any of
+   their crew they leave three times in four unless paid to stay; they don't keep a run alive. Four new hiring
+   events (Mecha, Tentauri, Senti, Terran survivalists). Lori has been asked to check the words, Eco the prices.
+10. **Selection:** when the selected ship is destroyed or loses its crew mid-fight, the next ship is selected
+    (found by the chaos tester).
+11. **The chaos tester's 20 s finding** was the tester's own: it timed a chain of windows as one window, and big
+    windows whose way out its random clicks kept missing. It now times each window and presses a window's way
+    out before calling it stuck; no window was stuck in eight seeds since. Its runs also found the selection
+    problem above, and a save read while another test was writing it (reading an empty save no longer errors).
+
+## 8. The build of 2026-11-01 (the Next build list)
+
+1. **Always a server** (GV 4A, 4C): the host puts every player's orders and the clock's ticks into one stream;
+   every machine plays the same stream through the same simulation. Playing alone is hosting with nobody joined.
+   Solo play looks and plays as before.
+2. **LAN** by direct IP (Players menu: open this game to LAN players, or join one). A machine can join a run at any
+   time, mid-fight included: it is sent where the run began and everything since, and catches up. The host checks
+   every 5 s that every machine agrees. Tested with a host and a client on one computer.
+3. **Controllers are players** (GV 4C): Start on a new controller joins, with its own cursor in its own colour,
+   its own selection, camera and windows. Unplugging drops out; plugging back in and Start returns to its place.
+4. **Split screen** (GV 4F): left and right for two, quarters for three or four, every view keeping its shape;
+   `Local Co-op View: Split > Shared`.
+5. **The Admiral** (GV 4B, 4E): squad decisions (events, victories, hails, surrenders, jumps, pausing) are theirs;
+   others see the windows with the choices greyed. "Paused by" shows when more than one plays. If the Admiral's
+   machine drops out, the game pauses and saves. Players are "Admiral Name" and "Commodore Name".
+6. **Mouse Control and stepping back** (GV 14E, 14F): `Mouse Control: Left Selects, Right Orders > Left Selects and
+   Orders, Right Deselects`. Esc and a click on nothing step back: aiming, then the crew, then the ship (the ship
+   cards hide; every ship stays in the squad list), then the menu.
+7. **Crew ranks** (GV 15A): Sgt. to Cpt., one for each skill mastered, by Promote on the ship screen; a gold mark
+   on the crew card when one is due. For show only, kept apart from the name.
+8. **Cat heads** with coats (tabby, tuxedo, calico) and ear tufts, and more of the other faces.
+9. **Mercenaries** now decide whether to leave right after the fight.
+10. **Not built yet:** the Admiral assigning ships to players, the vote and lock-in settings, player profiles
+    (GV 4G); testing with real controllers (simulated here).
+
+## 9. The build of 2026-11-05
+
+1. **Co-op fixes:** a controller's stick no longer moves the keyboard player's camera (the arrow-key camera read
+   actions a controller also triggers), and over the windows every player sees a controller has its own cursor
+   instead of moving the real mouse, whose clicks landed in player 1's view. A selects as well as X, and orders
+   selected crew when it points at a room.
+2. **The real battlefield** (GV 3I): 16,000 squad to squad, 9,000 across; a standard gap of 5,000 pixels drawn
+   squeezed 1:10 into a bar, with shots crossing it as minimap marks; "5,000K Gatometers"; real flight times at
+   today's speeds (a laser about 5.6 s, a missile about 8 s); the background traced through the bar to real space.
+3. **Battlefield: Vertical > Horizontal** (GV 3J): horizontal puts your squad on the left; words and portraits stay
+   upright.
+4. **Battlesuits** carry 15 times their air.
+5. **Player setup** (GV 4H–4J): names, inputs, leaving for any player, and who commands each ship and crew member
+   (Any, or chosen players); the host refuses other orders and says why; a player who leaves hands theirs to the
+   Admiral.
+6. **Settings in tabs** (GV 14G).
+
+## 10. How to check it
 
 From `infall-godot/`: `tools/compile_check.sh` (script errors), `tools/input_test.tscn` (clicks, 14 checks),
-`tools/test_fight.tscn` (20 fights), `tools/galaxy_test.tscn`, `tools/flow_test.tscn` (screenshots of a run),
+`tools/test_fight.tscn` (20 fights), `tools/galaxy_test.tscn`, `tools/ship_value_test.tscn`,
+`tools/mercenary_test.tscn`, `tools/coop_test.tscn` (controllers and split screen),
+`tools/lan_test.tscn` (a host and a client: `ROLE=host`, then `ROLE=client`), `tools/portrait_sheet.tscn` (every face, both settings), `tools/flow_test.tscn`
+(screenshots of a run), `tools/auto_run.tscn` (bots play whole runs),
 `tools/chaos.sh` (the chaos tester). Run the scenes with `godot --path . <scene>`; the ones that draw need a
 display (`xvfb-run`).

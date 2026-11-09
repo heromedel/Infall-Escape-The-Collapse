@@ -22,13 +22,19 @@ func _process(delta: float) -> void:
 	_material.set_shader_parameter("screen_size", _rect.size)
 
 
-func follow_camera(camera_position: Vector2, zoom: float) -> void:
+## The real background (GV 3I): each pixel is traced back through the view's camera and out of the squeezed gap.
+func follow_camera(camera_position: Vector2, zoom: float, screen_to_view: Transform2D = Transform2D.IDENTITY, squeezed_half: float = 0.0, bar_scale: float = 10.0) -> void:
 	_material.set_shader_parameter("camera_offset", camera_position)
 	_material.set_shader_parameter("zoom", zoom)
+	_material.set_shader_parameter("view_x", screen_to_view.x)
+	_material.set_shader_parameter("view_y", screen_to_view.y)
+	_material.set_shader_parameter("view_origin", screen_to_view.origin)
+	_material.set_shader_parameter("squeezed_half", squeezed_half)
+	_material.set_shader_parameter("bar_scale", bar_scale)
 
 
 ## Gives the backdrop a cluster's look, picked from its seed: nebula colours, a planet or a star, the collapse.
-func set_cluster_look(look_seed: int, collapse_near: float, hazard: String) -> void:
+func set_cluster_look(look_seed: int, collapse_near: float, hazard: String, gap: float = 5000.0) -> void:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = look_seed
 	_material.set_shader_parameter("seed", float(look_seed % 997) * 0.37)
@@ -54,11 +60,15 @@ func set_cluster_look(look_seed: int, collapse_near: float, hazard: String) -> v
 	if hazard == "sun":
 		kind = 2.0
 	_material.set_shader_parameter("planet_kind", kind)
-	# Big and partly past a screen edge, as far planets look in the genre; a star sits further off
-	var left_side := rng.randf() < 0.5
-	_material.set_shader_parameter("planet_position", Vector2(rng.randf_range(-0.06, 0.1) if left_side else rng.randf_range(0.9, 1.06), rng.randf_range(0.15, 0.85)))
-	_material.set_shader_parameter("planet_radius", rng.randf_range(0.28, 0.42) if kind < 1.5 else 0.3)
-	_material.set_shader_parameter("light_direction", Vector2(1.0 if left_side else -1.0, rng.randf_range(-0.7, 0.3)))   # lit on the side facing the battle
+	# A planet sits in real space behind one squad or the other, big and partly past the battlefield's edge, so the
+	# other squad sees it squeezed or not at all (GV 3I). A star sits further off.
+	var depth := 0.3
+	_material.set_shader_parameter("depth", depth)
+	var behind_player := rng.randf() < 0.5
+	var along := (gap * 0.5 + rng.randf_range(1200.0, 4200.0)) * (1.0 if behind_player else -1.0)
+	var across := rng.randf_range(2800.0, 5200.0) * (1.0 if rng.randf() < 0.5 else -1.0)
+	_material.set_shader_parameter("planet_position", Vector2(across, along) * depth)
+	_material.set_shader_parameter("planet_radius", (rng.randf_range(2400.0, 3800.0) if kind < 1.5 else 1800.0) * depth)
 	var planet_colours := [Color(0.75, 0.45, 0.35), Color(0.35, 0.6, 0.8), Color(0.55, 0.7, 0.45), Color(0.8, 0.7, 0.5), Color(0.6, 0.45, 0.75)]
 	var planet: Color = planet_colours[rng.randi_range(0, planet_colours.size() - 1)]
 	if kind > 1.5:

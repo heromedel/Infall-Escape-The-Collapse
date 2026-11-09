@@ -114,11 +114,12 @@ func _check_invariants() -> void:
 				ships.append(ship)
 	for ship in ships:
 		_check_ship(ship)
-	var battle: BattleScreen = main.battle
+	var battle: PlayerView = _view()
 	if battle and battle.encounter and not battle.encounter.living(0).is_empty():
 		var selected := battle.selected_ship
 		if selected == null:
-			_fail("no ship is selected though the squad has %d living (after %s)" % [battle.encounter.living(0).size(), _action], "selected ship null")
+			if not battle.ship_deselected:   # a player who stepped back past their ship may have none (GV 14F)
+				_fail("no ship is selected though the squad has %d living (after %s)" % [battle.encounter.living(0).size(), _action], "selected ship null")
 		elif not battle.encounter.ships.has(selected):
 			_fail("the selected ship %s is not in the encounter (after %s)" % [selected.name, _action], "selected ship not in encounter")
 		elif selected.is_gone():
@@ -177,15 +178,32 @@ func _check_ship(ship: Ship) -> void:
 ## Input is blocked when a window is open or the battle is held; a window open for 20 s while the chaos keeps
 ## clicking every button means it is stuck. The battle held with no window, or running under one, is a bug too.
 func _track_blocking(delta: float) -> void:
-	var battle: BattleScreen = main.battle
+	var battle: PlayerView = _view()
 	if battle == null:
 		_blocked_for = 0.0
 		return
 	var windows := _windows()
 	var blocked := battle.hold_pause or not windows.is_empty()
+	# Time counts per window: a chain of events (a contract, the opening message, the cluster's event) is not one
+	# stuck window
+	var front: Control = windows.back() if not windows.is_empty() else null
+	if front != _blocked_window:
+		_blocked_window = front
+		_blocked_for = 0.0
 	_blocked_for = _blocked_for + delta if blocked else 0.0
 	if _blocked_for > STUCK_SECONDS:
-		_fail("input blocked for %d s: windows %s, hold_pause %s (after %s)" % [int(_blocked_for), _names(windows), battle.hold_pause, _action], "input blocked over 20 s")
+		# A big window (the ship screen has dozens of buttons) can stay open this long only because the random clicks
+		# keep missing its way out. So first press its way out; it is stuck only if it stays open after that.
+		var top := front
+		var way_out := _way_out(top)
+		if way_out and _way_out_tried != top:
+			_way_out_tried = top
+			_note("pressed '%s' after %d s" % [way_out.text, int(_blocked_for)])
+			way_out.pressed.emit()
+			_blocked_for = STUCK_SECONDS - 3.0
+			return
+		var tried := " (its '%s' button was pressed and it stayed open)" % way_out.text if way_out else ""
+		_fail("input blocked for %d s: windows %s, hold_pause %s%s (after %s)" % [int(_blocked_for), _names(windows), battle.hold_pause, tried, _action], "input blocked over 20 s")
 		_blocked_for = 0.0
 		_force_close_windows()
 	_held_without_window_for = _held_without_window_for + delta if battle.hold_pause and windows.is_empty() else 0.0
@@ -353,9 +371,9 @@ func _double_click() -> void:
 func _drag_box() -> void:
 	var from := _random_point()
 	var to := from + Vector2(rng.randf_range(-700, 700), rng.randf_range(-500, 500))
-	if rng.randf() < 0.5 and main.battle and main.battle.aim_mode == "":
+	if rng.randf() < 0.5 and main.battle and _view().aim_mode == "":
 		# A beam: arm a beam weapon if there is one, then press on an enemy and drag
-		var ship: Ship = main.battle.selected_ship
+		var ship: Ship = _view().selected_ship
 		if ship:
 			for index in ship.weapons.size():
 				if ship.weapons[index].def.type == "beam":
@@ -405,7 +423,7 @@ func _press_window_button() -> void:
 
 
 func _click_hud_region() -> void:
-	var battle: BattleScreen = main.battle
+	var battle: PlayerView = _view()
 	if battle == null or battle.hud._regions.is_empty():
 		return
 	var region: Dictionary = battle.hud._regions[rng.randi() % battle.hud._regions.size()]
@@ -415,7 +433,7 @@ func _click_hud_region() -> void:
 
 
 func _order_crew() -> void:
-	var battle: BattleScreen = main.battle
+	var battle: PlayerView = _view()
 	if battle == null or battle.encounter == null:
 		return
 	var crew: Array = []
@@ -439,7 +457,7 @@ func _order_crew() -> void:
 
 
 func _aim_weapon() -> void:
-	var battle: BattleScreen = main.battle
+	var battle: PlayerView = _view()
 	if battle == null or battle.selected_ship == null:
 		return
 	var count := battle.selected_ship.weapons.size()
@@ -516,7 +534,7 @@ func _buy_everything() -> void:
 		await _click_hud("Trade at", MOUSE_BUTTON_LEFT)
 		await _frames(3)
 	elif _windows().is_empty() and rng.randf() < 0.4:
-		main.open_store()   # a shortcut: stores are rare on the map, and the store's buttons are what is tested here
+		main.open_store(_view())   # a shortcut: stores are rare on the map, and the store's buttons are what is tested here
 		_note("store opened through the API at a cluster without one")
 		await _frames(3)
 	var store: StoreWindow = null
@@ -670,10 +688,10 @@ func _probe() -> void:
 
 ## A click on the HUD under an open window must not reach the HUD.
 func _probe_hud_under_window() -> void:
-	var battle: BattleScreen = main.battle
+	var battle: PlayerView = _view()
 	if battle == null or main.encounter.in_fight() or not _windows().is_empty():
 		return
-	main.open_ship_screen()
+	main.open_ship_screen(_view())
 	await _frames(3)
 	var window := _windows().filter(func(w): return w is ShipScreen)
 	if window.is_empty():
@@ -695,7 +713,7 @@ func _probe_hud_under_window() -> void:
 func _probe_space_on_focused_button() -> void:
 	if main.battle == null or not _windows().is_empty():
 		return
-	main.open_menu()
+	main.open_menu(_view())
 	await _frames(3)
 	var settings := _buttons().filter(func(b): return b.text == "Settings")
 	if settings.is_empty():
@@ -716,7 +734,7 @@ func _probe_space_on_focused_button() -> void:
 func _probe_escape_closes_map() -> void:
 	if main.battle == null or not _windows().is_empty():
 		return
-	main.open_map()
+	main.open_map(_view())
 	await _frames(3)
 	if _windows().filter(func(w): return w is MapScreen).is_empty():
 		return
@@ -730,16 +748,16 @@ func _probe_escape_closes_map() -> void:
 
 ## Press the middle button to pan, a window opens before the release: the camera must not keep panning.
 func _probe_drag_into_window() -> void:
-	var battle: BattleScreen = main.battle
+	var battle: PlayerView = _view()
 	if battle == null or not _windows().is_empty():
 		return
 	var from := Vector2(960, 500)
 	await _motion(from, Vector2.ZERO, 0)
 	await _button_event(from, MOUSE_BUTTON_MIDDLE, true)
 	if main.encounter.in_fight():
-		main.open_menu()
+		main.open_menu(_view())
 	else:
-		main.open_ship_screen()
+		main.open_ship_screen(_view())
 	await _frames(2)
 	await _button_event(from + Vector2(50, 0), MOUSE_BUTTON_MIDDLE, false)
 	for each in _windows():
@@ -775,7 +793,7 @@ func _probe_jump_right_after_win() -> void:
 	var jumps: int = main.run.jumps
 	if main.run.mawjig < Mawjig.JUMP_COST:
 		main.console._run("mawjig 2")   # the map only offers a jump the squad can pay for
-	main.open_map()
+	main.open_map(_view())
 	await _frames(2)
 	for window in _windows():
 		if window is MapScreen:
@@ -875,7 +893,7 @@ func _probe_jump_with_boarders_out() -> void:
 		return
 	var raider: Ship = raiders[0]
 	var enemy: Ship = main.encounter.living(1)[0]
-	main.battle.select_ship(raider)
+	_view().select_ship(raider)
 	main.battle.paused = false
 	var pad: int = raider.system_by("teleporter").room
 	for member in raider.crew:
@@ -901,7 +919,7 @@ func _probe_jump_with_boarders_out() -> void:
 		ship.jump_charge = Ship.JUMP_FULL   # the drive is charged, as it would be after a while
 	if main.run.mawjig < Mawjig.JUMP_COST:
 		main.console._run("mawjig 2")   # the map only offers a jump the squad can pay for
-	main.open_map()
+	main.open_map(_view())
 	await _frames(2)
 	for window in _windows():
 		if window is MapScreen:
@@ -929,7 +947,7 @@ func _probe_move_every_crew_member_off_a_ship() -> void:
 	if main.run.living_ships().size() < 2 or main.encounter.in_fight():
 		return
 	var donor: Ship = main.run.living_ships().back()
-	main.battle.select_ship(donor)
+	_view().select_ship(donor)
 	await _key(KEY_U)
 	await _frames(3)
 	for attempt in 8:
@@ -958,7 +976,7 @@ func _probe_move_every_crew_member_off_a_ship() -> void:
 
 func _click(at: Vector2, button: int, double: bool = false) -> void:
 	await _motion(at, Vector2.ZERO, 0)
-	if _is_dangerous(get_viewport().gui_get_hovered_control()):
+	if _is_dangerous(_hovered()):
 		_note("skipped a click on a quit button")
 		return
 	await _button_event(at, button, true, double)
@@ -967,7 +985,7 @@ func _click(at: Vector2, button: int, double: bool = false) -> void:
 
 func _drag(from: Vector2, to: Vector2, button: int) -> void:
 	await _motion(from, Vector2.ZERO, 0)
-	if _is_dangerous(get_viewport().gui_get_hovered_control()):
+	if _is_dangerous(_hovered()):
 		return
 	await _button_event(from, button, true)
 	var steps := rng.randi_range(2, 8)
@@ -1030,7 +1048,7 @@ func _key_event(code: int, pressed: bool) -> void:
 func _click_hud(tooltip_start: String, button: int) -> void:
 	if main.battle == null:
 		return
-	for region in main.battle.hud._regions:
+	for region in _view().hud._regions:
 		if String(region.tooltip).begins_with(tooltip_start):
 			await _click(region.rect.get_center(), button)
 			return
@@ -1042,10 +1060,21 @@ func _windows() -> Array:
 	var list: Array = []
 	if main == null:
 		return list
-	for child in main.overlays.get_children():
-		if is_instance_valid(child) and not child.is_queued_for_deletion() and not child is TitleScreen:
-			list.append(child)
+	var layers: Array = [main.overlays]
+	if _view():
+		layers.append(_view().overlays)
+	for layer in layers:
+		for child in layer.get_children():
+			if is_instance_valid(child) and not child.is_queued_for_deletion() and not child is TitleScreen and child is Control and child.visible:
+				list.append(child)
 	return list
+
+
+## The first player's view: where the chaos's mouse and keys go.
+func _view() -> PlayerView:
+	if main == null or main.battle == null or main.battle.player_views.is_empty():
+		return null
+	return main.battle.player_views[0]
 
 
 func _names(windows: Array) -> String:
@@ -1068,9 +1097,13 @@ func _buttons() -> Array:
 	if main == null:
 		return list
 	var open: Array = []
-	for child in main.overlays.get_children():
-		if is_instance_valid(child) and not child.is_queued_for_deletion():
-			open.append(child)
+	var layers: Array = [main.overlays]
+	if _view():
+		layers.push_front(_view().overlays)
+	for layer in layers:
+		for child in layer.get_children():
+			if is_instance_valid(child) and not child.is_queued_for_deletion() and child is Control and child.visible:
+				open.append(child)
 	if open.is_empty():
 		return list
 	if rng.randf() < 0.85:
@@ -1099,8 +1132,21 @@ func _owner_window(node: Node) -> String:
 	return _names([node]) if node else "?"
 
 
+## The control under the mouse: in the windows over everything, or in the first player's view.
+func _hovered() -> Control:
+	var control := get_viewport().gui_get_hovered_control()
+	if control == null and _view():
+		control = _view().viewport.gui_get_hovered_control()
+	return control
+
+
+## A control's middle on the screen: a control in a player's view is placed and scaled with the view.
 func _centre(control: Control) -> Vector2:
-	return control.get_global_rect().get_center()
+	var middle := control.get_global_rect().get_center()
+	var view := _view()
+	if view and control.get_viewport() == view.viewport:
+		return view.display.position + middle * view.view_scale
+	return middle
 
 
 func _random_point() -> Vector2:
@@ -1119,7 +1165,24 @@ func _random_ship(side: int = -1) -> Ship:
 
 
 func _ship_screen(ship: Ship, local: Vector2) -> Vector2:
-	return main.battle.world.get_global_transform_with_canvas() * main.encounter.local_to_world(ship, local)
+	var view := _view()
+	return view.display.position + view.world_to_screen(main.encounter.local_to_world(ship, local)) * view.view_scale
+
+
+const WAY_OUT_WORDS := ["DONE", "Continue", "CLOSE", "Close", "Leave", "Resume", "BACK", "Back"]
+var _way_out_tried: Control = null
+var _blocked_window: Control = null
+
+
+## The button that leaves a window (DONE, Continue...), or null.
+func _way_out(window: Control) -> Button:
+	if window == null or not is_instance_valid(window):
+		return null
+	for button in _buttons_in(window):
+		for words in WAY_OUT_WORDS:
+			if String(button.text).begins_with(words) or String(button.text).ends_with(". " + words + "..."):
+				return button
+	return null
 
 
 func _force_close_windows() -> void:

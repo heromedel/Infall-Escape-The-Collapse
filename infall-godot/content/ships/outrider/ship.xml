@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- SC-1 Outrider, the GATOS starting scout (docs/ship-suggestions.md). Layout converted from Arty's accepted floor
      plan; north is the bow and y grows toward the stern. Shields are given in bars: level 2 bars is one layer. -->
-<ship id="outrider" name="SC-1 Outrider" class="Scout Cruiser" race="terran" faction="gatos" style="terran" center="Tile" hull="30" value="181.42">
+<ship id="outrider" name="SC-1 Outrider" class="Scout Cruiser" race="terran" faction="gatos" style="terran" center="Tile" hull="30">
 	<reactor type="core" level="2"/>
 	<art hull="outrider-hull-2x.png" scale="0.5" center="230,362.5"/>
 	<description>A shuttle-shaped scout cruiser in white and pale grey with blue trim. It rides out ahead of the colony ship, an all-rounder with good sensors. Its power runs through a conduit wheel around an armoured core, so no single cut leaves a system dark.</description>

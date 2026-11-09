@@ -23,7 +23,7 @@
 		</choice>
 	</event>
 	<event id="PIRATE_DISTRESS_TRAP" title="A Call for Help" kind="hostile" races="terran,any" states="Doomed,Abandoned,Border" weight="1">
-		<text>A GATOS freighter is broadcasting a distress call: engines out, life support failing, children aboard. Your sensors read the freighter's hold as full of armed crew.</text>
+		<text>A GATOS freighter is broadcasting a distress call: engines out, life support failing, {gatos:children|kittens} aboard. Your sensors read the freighter's hold as full of armed crew.</text>
 		<choice text="Answer the call anyway, ready for a fight.">
 			<outcome><text>The "freighter" powers up weapons the moment you come in range.</text><fight squad="terran-pirates"/></outcome>
 		</choice>
@@ -47,7 +47,7 @@
 
 	<!-- Mecha: territorial, attack with the advantage, insist interlopers leave when outmatched (Mecha 2) -->
 	<event id="MECHA_TERRITORY" title="Mecha Territory" kind="hostile" races="mecha" states="Border,Doing Fine,Core,Occupied" weight="2">
-		<text>A pair of black Mecha frames slides out of the dark, purple lights pulsing along their blades. "This is Mecha territory," says a voice that sounds almost childishly pleased with itself. "You're trespassing. That makes your ship ours."</text>
+		<text>A pair of black Mecha frames slides out of the dark, purple lights pulsing along their blades. "This is Mecha territory," says a voice that sounds almost {gatos:childishly|kittenishly} pleased with itself. "You're trespassing. That makes your ship ours."</text>
 		<choice text="Come and take it."><outcome><fight/></outcome></choice>
 		<choice text="Offer them Mawjig to look the other way.">
 			<outcome weight="2"><text>They consider it. "Fine. Profit is profit." The frames peel away.</text><mawjig amount="-2.42"/></outcome>

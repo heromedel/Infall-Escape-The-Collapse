@@ -8,6 +8,7 @@ const MAX_CREW_PER_SHIP := 8
 const MAX_SQUAD := 6
 
 var run: RunState
+var mercenary: Ship = null   # the hired ship a contract event is about: {merc}, {price}, {jumps} ("3 jumps")
 
 
 func _init(owner: RunState) -> void:
@@ -76,10 +77,14 @@ func fill_text(text: String, crew_name: String = "") -> String:
 	var race: String = cluster.race if cluster.race != "" else "terran"
 	var result := text.replace("{race}", Library.race(race).name).replace("{cluster}", cluster.name)
 	result = result.replace("{ship}", run.living_ships()[0].name if not run.living_ships().is_empty() else "your ship")
+	if mercenary:
+		result = result.replace("{merc}", mercenary.name).replace("{price}", Mawjig.format(run.renewal_price(mercenary)))
+		var jumps := int(mercenary.contract.get("jumps", 0))
+		result = result.replace("{jumps}", "%d jump%s" % [jumps, "" if jumps == 1 else "s"])
 	if crew_name.is_empty():
 		var anyone := _any_crew()
 		crew_name = anyone.name if anyone else "your crew"
-	return result.replace("{crew}", crew_name)
+	return Species.words(result.replace("{crew}", crew_name))
 
 
 ## Whether the squad can take a choice; blue choices the squad can't take are not shown at all, as in the genre.
@@ -108,6 +113,8 @@ func can_take(choice: Dictionary) -> bool:
 			return run.living_ships().size() >= int(parts[1])
 		"collapse":
 			return collapse_known()
+		"renewal":
+			return mercenary != null and run.mawjig >= run.renewal_price(mercenary)
 	return true
 
 
@@ -141,6 +148,8 @@ func requirement_label(choice: Dictionary) -> String:
 			return "(%s)" % parts[1].capitalize()
 		"mawjig":
 			return "(%s Mawjig)" % parts[1]
+		"renewal":
+			return "(%s Mawjig)" % Mawjig.format(run.renewal_price(mercenary)) if mercenary else ""
 	return ""
 
 
@@ -179,6 +188,8 @@ func most_given_away(choice: Dictionary) -> int:
 		for effect in outcome.effects:
 			if effect.tag == "mawjig" and not effect.attrs.has("size"):
 				most = maxi(most, -Mawjig.amount(float(effect.attrs.get("amount", "0"))))
+			elif effect.tag == "renew_contract" and mercenary:
+				most = maxi(most, run.renewal_price(mercenary))
 	return mini(most, run.mawjig)
 
 
@@ -279,7 +290,20 @@ func _apply(tag: String, attrs: Dictionary, result: Dictionary) -> void:
 					ship.hull = clampi(int(attrs.hull), 1, ship.max_hull)
 				ship.name = attrs.get("name", ship.name)
 				run.squad.append(ship)
-				result.lines.append("+1 ship: the %s joins the squad" % ship.name)
+				if attrs.has("contract"):   # a mercenary, paid what the choice cost (GV 7C)
+					run.hire(ship, int(attrs.contract), Mawjig.amount(float(attrs.get("pay", "0"))))
+					result.lines.append("+1 ship: the %s signs on for %s jumps" % [ship.name, attrs.contract])
+				else:
+					result.lines.append("+1 ship: the %s joins the squad" % ship.name)
+		"renew_contract":
+			if mercenary:
+				var price := run.renewal_price(mercenary)
+				run.renew(mercenary)
+				result.lines.append("Mawjig -%s: the %s signs on for %d more jumps" % [Mawjig.format(price), mercenary.name, mercenary.contract.jumps])
+		"end_contract":
+			if mercenary:
+				run.release(mercenary)
+				result.lines.append("The %s leaves the squad" % mercenary.name)
 		"fight":
 			result.fight = attrs.get("squad", "")
 			result.fight_given = true
@@ -438,12 +462,26 @@ func fight_rewards(encounter: Encounter) -> Dictionary:
 			var weapon := ship.weapons[run.rng.randi_range(0, ship.weapons.size() - 1)].def
 			run.cargo.append(weapon.id)
 			lines.append("Salvaged weapon: %s" % weapon.display_name())
-	if beaten > 0 and run.rng.randf() < 0.08:
-		var ship := _ship_with_room()
-		if ship:
-			var race := Library.race(encounter.enemy_ships()[0].race.id)
-			var member := CrewMember.create(race, race.random_name(run.rng, []))
-			ship.add_crew(member)
-			ship.assign_stations()
-			lines.append("A survivor, %s (%s), asks to join your crew" % [member.name, race.singular])
-	return {"mawjig": total, "lines": lines}
+	# Survivors who may ask to join, for the player to accept or not (heromedel, 2026-10-31): boarders who surrendered
+	# when their ship was destroyed, and now and then someone from a ship that surrendered. Never from a wreck.
+	var survivors: Array = []
+	for member in encounter.surrendered_boarders:
+		survivors.append({"race": member.race.id, "name": member.name, "why": "surrendered when their ship was destroyed"})
+	for ship in encounter.enemy_ships():
+		if ship.surrendered and run.rng.randf() < 0.3:
+			var crew: Array = ship.crew.filter(func(m): return not m.dead)
+			if not crew.is_empty():
+				var member: CrewMember = crew[run.rng.randi_range(0, crew.size() - 1)]
+				survivors.append({"race": member.race.id, "name": member.name, "why": "has had enough of the %s" % ship.name})
+	return {"mawjig": total, "lines": lines, "survivors": survivors}
+
+
+## Takes a survivor aboard the first ship with room. Returns the ship, or null when every ship is full.
+func take_survivor(survivor: Dictionary) -> Ship:
+	var ship := _ship_with_room()
+	if ship == null:
+		return null
+	ship.add_crew(CrewMember.create(Library.race(survivor.race), survivor.name))
+	ship.assign_stations()
+	run.log_book.write("survivor_joined", survivor, "%s joined the crew." % survivor.name)
+	return ship

@@ -15,7 +15,7 @@ const FOLDED_HEIGHT := 26.0
 const FOLD_BACK_SECONDS := 5.0
 const OPACITY := {"85%": 0.86, "100%": 1.0, "70%": 0.7}
 
-var screen: BattleScreen
+var screen: PlayerView
 var box_rect := Rect2()
 var _regions: Array = []             # {rect, left: Callable, right: Callable, tooltip: String}
 var _hover_region: Dictionary = {}
@@ -114,7 +114,10 @@ func _draw() -> void:
 	var ship := screen.selected_ship
 	layout.rects.clear()
 	layout.hidden.clear()
-	for id in HudLayout.DEFAULTS:
+	# Corner cards first, so a card in the middle of an edge knows where they are and moves aside for them
+	var ids: Array = HudLayout.DEFAULTS.keys()
+	ids.sort_custom(func(a, b): return not layout.is_centred(a) and layout.is_centred(b))
+	for id in ids:
 		if id == "top" or (ship and not ship.is_gone()):
 			_draw_card(id, ship)
 	_draw_enemies()
@@ -348,10 +351,13 @@ func _draw_crew_list(ship: Ship, at: Vector2) -> void:
 	var y := at.y
 	for member in members:
 		var rect := Rect2(at.x, y, 290, 50)
-		var chosen := member.selected
+		var chosen := screen.selected_crew.has(member)   # this player's selection, not another's
 		UiKit.draw_frame(self, rect, UiColours.PANEL_LIGHT if chosen else _panel(), UiColours.POWER_GREEN if chosen else UiColours.BORDER_DIM, 6.0)
 		CrewPortraits.draw_token(self, member.race.id, member.name, rect.position + Vector2(22, 25), 16.0, UiColours.POWER_GREEN)
-		UiKit.draw_text(self, rect.position + Vector2(46, 20), member.name, 16, UiColours.TEXT, UiKit.font_bold())
+		UiKit.draw_text(self, rect.position + Vector2(46, 20), member.display_name(), 16, UiColours.TEXT, UiKit.font_bold())
+		if member.side == 0 and member.rank_due() >= 0:
+			var mark := rect.position + Vector2(rect.size.x - 12, 12)   # a gold diamond: a promotion is due
+			draw_colored_polygon(PackedVector2Array([mark + Vector2(0, -6), mark + Vector2(5, 0), mark + Vector2(0, 6), mark + Vector2(-5, 0)]), Color("#ffd46b"))
 		var fraction := member.health_fraction()
 		draw_rect(Rect2(rect.position + Vector2(46, 29), Vector2(120, 7)), UiColours.BAR_EMPTY)
 		draw_rect(Rect2(rect.position + Vector2(46, 29), Vector2(120 * fraction, 7)), UiColours.hull_colour(fraction))
@@ -436,7 +442,9 @@ func _room_label(ship: Ship, room_index: int) -> String:
 
 func _crew_tooltip(member: CrewMember) -> String:
 	var lines := PackedStringArray()
-	lines.append("%s, %s" % [member.name, member.race.singular])
+	lines.append("%s, %s" % [member.display_name(), member.race.singular])
+	if member.side == 0 and member.rank_due() >= 0:
+		lines.append("A promotion to %s is due: the ship screen's Promote." % CrewMember.RANK_TITLE[member.rank_due()])
 	lines.append("Health %d / %d" % [int(member.health), int(member.max_health)])
 	for skill in CrewMember.SKILLS:
 		var level := member.skill_level(skill)
@@ -557,30 +565,9 @@ func _draw_system_column(ship: Ship, system: ShipSystem, base: Vector2, column: 
 	var rect := Rect2(base + Vector2(0, -level * (bar_height + 2) - 30), Vector2(column - 4, level * (bar_height + 2) + 48))
 	var tooltip := _system_tooltip(ship, system)
 	if main and ship.reactor_type != "none":
-		_region(rect, func(): _add_power(ship, system), tooltip, func(): _remove_power(ship, system))
+		_region(rect, func(): screen.system_power(ship, system, true), tooltip, func(): screen.system_power(ship, system, false))
 	else:
 		_region(rect, Callable(), tooltip)
-
-
-func _add_power(ship: Ship, system: ShipSystem) -> void:
-	if ship.reactor_type == "core" and system.enabled:
-		_remove_power(ship, system)
-		return
-	if ship.add_power(system):
-		Sfx.play("power_up")
-	else:
-		Sfx.play("deny")
-		if ship.reactor_type == "core":
-			flash_message("The AZC is running all the systems it can. Switch another off first.")
-		elif system.power >= system.usable_bars():
-			flash_message("%s can't hold more power." % system.def.name)
-		else:
-			flash_message("No free reactor power.")
-
-
-func _remove_power(ship: Ship, system: ShipSystem) -> void:
-	if ship.remove_power(system):
-		Sfx.play("power_down")
 
 
 func _system_tooltip(ship: Ship, system: ShipSystem) -> String:
@@ -675,15 +662,7 @@ func _draw_weapon_slot(ship: Ship, slot: WeaponSlot, index: int, rect: Rect2) ->
 		var mark_colour := UiColours.ENEMY_RED if slot.autofire else UiColours.TARGET_YELLOW
 		draw_arc(rect.position + Vector2(rect.size.x - 22, 58), 7, 0, TAU, 16, mark_colour, 2.0, true)
 	var tooltip := "%s\n%s\n%s\nCharge %.1f s · Power %d · %s Mawjig a volley\nClick to aim, then click a tile of an enemy ship. Right click to power on or off." % [slot.def.display_name(), slot.def.description, slot.def.stat_line(), needed / 20.0, slot.def.power, Mawjig.format(slot.def.cost_per_volley)]
-	_region(rect, func(): screen.arm_weapon(slot), tooltip, func(): _toggle_weapon_power(ship, slot))
-
-
-func _toggle_weapon_power(ship: Ship, slot: WeaponSlot) -> void:
-	if ship.set_weapon_powered(slot, not slot.powered):
-		Sfx.play("power_up" if slot.powered else "power_down")
-	else:
-		Sfx.play("deny")
-		flash_message("Not enough weapon power.")
+	_region(rect, func(): screen.arm_weapon(slot), tooltip, func(): screen.weapon_power(ship, slot))
 
 
 # --- Specials, the drive and the squad's resources -------------------------------------------------------------
@@ -702,7 +681,7 @@ func _special_buttons(ship: Ship) -> Array:
 		buttons.append(["LAUNCH SUIT", func(): screen.start_suit_launch(), "A crew member in the EVB Dock room suits up and flies out to fight an enemy ship. Each launch uses a new suit (%s Mawjig). Hotkey: E" % Mawjig.format(Library.weapon(ship.suits[0]).cost_per_volley if not ship.suits.is_empty() else 21), not ship.suit_out and ship.evb_cooldown <= 0 and encounter.in_fight(), ship.evb_cooldown])
 	var cloak := ship.system_by("cloaking")
 	if cloak:
-		buttons.append(["CLOAK", func(): encounter.cloak(ship), "Hide the ship: most shots miss and its weapons hold their charge. Hotkey: C", ship.cloak_ticks <= 0 and ship.cloak_cooldown <= 0 and ship.system_power(cloak) > 0, ship.cloak_cooldown])
+		buttons.append(["CLOAK", func(): screen.cloak(ship), "Hide the ship: most shots miss and its weapons hold their charge. Hotkey: C", ship.cloak_ticks <= 0 and ship.cloak_cooldown <= 0 and ship.system_power(cloak) > 0, ship.cloak_cooldown])
 	if ship.has_system("doors"):
 		buttons.append(["OPEN DOORS", func(): screen.set_all_doors(ship, true, false), "Open every inner door.", ship.doors_controllable(), -1])
 		buttons.append(["CLOSE DOORS", func(): screen.set_all_doors(ship, false, false), "Close every door, airlocks too.", ship.doors_controllable(), -1])
@@ -750,12 +729,12 @@ func _draw_top_centre(at: Vector2) -> void:
 	var drive_text := "READY" if charge >= 1.0 else ("CHARGING" if _any_charging() else "NEEDS PILOT + ENGINES")
 	UiKit.draw_text(self, drive_at + Vector2(0, 56), drive_text, 12, UiColours.TEXT_DIM, UiKit.font_bold())
 	var can_jump := encounter.can_squad_jump() and screen.hold_pause == false
-	_button(Rect2(drive_at + Vector2(184, 6), Vector2(96, 44)), "JUMP", func(): screen.jump_pressed.emit(), "Open the map and jump the squad to another cluster (1.21 Mawjig). In a fight the drive must charge first, and needs a pilot. Hotkey: J", can_jump, can_jump and _time - floor(_time) < 0.5)
-	_button(Rect2(drive_at + Vector2(288, 6), Vector2(66, 21)), "SHIP", func(): screen.ship_screen_pressed.emit(), "Upgrade systems, manage weapons and crew. Hotkey: U", not fighting)
+	_button(Rect2(drive_at + Vector2(184, 6), Vector2(96, 44)), "JUMP", func(): screen.jump_pressed.emit(screen), "Open the map and jump the squad to another cluster (1.21 Mawjig). In a fight the drive must charge first, and needs a pilot. Hotkey: J", can_jump, can_jump and _time - floor(_time) < 0.5)
+	_button(Rect2(drive_at + Vector2(288, 6), Vector2(66, 21)), "SHIP", func(): screen.ship_screen_pressed.emit(screen), "Upgrade systems, manage weapons and crew. Hotkey: U", not fighting)
 	if fighting:
-		_button(Rect2(drive_at + Vector2(288, 29), Vector2(66, 21)), "HAIL", func(): screen.hail_pressed.emit(), "Hail the enemy squad: ask for surrender, or offer terms.", true)
+		_button(Rect2(drive_at + Vector2(288, 29), Vector2(66, 21)), "HAIL", func(): screen.hail_pressed.emit(screen), "Hail the enemy squad: ask for surrender, or offer terms.", true)
 	elif screen.store_here:
-		_button(Rect2(drive_at + Vector2(288, 29), Vector2(66, 21)), "STORE", func(): screen.store_pressed.emit(), "Trade at this cluster's store.", true)
+		_button(Rect2(drive_at + Vector2(288, 29), Vector2(66, 21)), "STORE", func(): screen.store_pressed.emit(screen), "Trade at this cluster's store.", true)
 	var pause_rect := Rect2(rect.end.x + 8, rect.position.y, 44, 32)
 	_button(pause_rect, "", func(): screen.toggle_pause(), "Pause or unpause. Hotkey: Space", true, screen.paused)
 	var middle := pause_rect.get_center()
@@ -765,9 +744,18 @@ func _draw_top_centre(at: Vector2) -> void:
 		draw_rect(Rect2(middle + Vector2(-7, -8), Vector2(5, 16)), UiColours.TEXT)
 		draw_rect(Rect2(middle + Vector2(2, -8), Vector2(5, 16)), UiColours.TEXT)
 	var menu_rect := Rect2(rect.end.x + 8, rect.position.y + 38, 44, 32)
-	_button(menu_rect, "", func(): screen.menu_pressed.emit(), "Menu. Hotkey: Esc", true)
+	_button(menu_rect, "", func(): screen.menu_pressed.emit(screen), "Menu. Hotkey: Esc", true)
 	for line in 3:
 		draw_rect(Rect2(menu_rect.get_center() + Vector2(-9, -7 + line * 6), Vector2(18, 2.5)), UiColours.TEXT)
+	# Players: a swatch for each player in the game, the Admiral's ringed (GV 4C). Hotkey P, or a controller's View
+	var players_rect := Rect2(rect.end.x + 60, rect.position.y, 44, 70)
+	_button(players_rect, "", func(): screen.players_pressed.emit(screen), "Players: who is in the game, the Admiral, LAN and controllers. Hotkey: P", true)
+	var others := screen.session.players.filter(func(p): return p.here) if screen.session else []
+	for index in mini(others.size(), 6):
+		var swatch := players_rect.position + Vector2(12 + (index % 2) * 18, 14 + (index / 2) * 18)
+		draw_circle(swatch, 6.5, Color(others[index].colour))
+		if screen.session.is_admiral(others[index].id):
+			draw_arc(swatch, 8.5, 0, TAU, 16, Color("#ffd46b"), 1.6, true)
 	if encounter.hazard != "":
 		var hazard_text: String = {"asteroids": "ASTEROID FIELD", "sun": "CLOSE TO A STAR: FLARES", "nebula": "NEBULA: SENSORS BLIND", "ion_storm": "ION STORM: HALF POWER", "collapse_edge": "COLLAPSE EDGE: HULL SHEAR"}.get(encounter.hazard, "")
 		UiKit.draw_text(self, Vector2(centre, rect.end.y + 22), hazard_text, 15, UiColours.WARNING, UiKit.font_bold(), HORIZONTAL_ALIGNMENT_CENTER, 0)
@@ -801,7 +789,7 @@ func _draw_enemies() -> void:
 ## arrow flies the camera there. Returns false when the ship is on screen.
 func _draw_offscreen_marker(ship: Ship) -> bool:
 	var centre_world := screen.encounter.local_to_world(ship, Formation.hull_bounds(ship.design).get_center())
-	var at: Vector2 = screen.world.get_global_transform_with_canvas() * centre_world
+	var at: Vector2 = screen.world_to_screen(centre_world)
 	if Rect2(Vector2.ZERO, size).grow(60.0).has_point(at):
 		return false
 	var inner := Rect2(Vector2(70, 110), size - Vector2(140, 280))
@@ -834,7 +822,7 @@ func _draw_floating_status(ship: Ship) -> void:
 	# Just past the ship's nose, in the open space toward the divider, where it hides nothing of the ship
 	var local_anchor := Vector2(floor_rect.get_center().x, bounds.position.y - 18.0)
 	var world_point := screen.encounter.local_to_world(ship, local_anchor)
-	var at: Vector2 = screen.world.get_global_transform_with_canvas() * world_point
+	var at: Vector2 = screen.world_to_screen(world_point)
 	var width := 230.0
 	var rect := Rect2(at - Vector2(width * 0.5, 62 if ship.side == 0 else 0), Vector2(width, 62))
 	rect.position.x = clampf(rect.position.x, PAD, size.x - width - PAD)
@@ -874,7 +862,8 @@ func _draw_floating_status(ship: Ship) -> void:
 		pip_x += 13
 	UiKit.draw_text(self, rect.position + Vector2(width - 10, 54), "%d/%d" % [ship.hull, ship.max_hull], 12, UiColours.TEXT_DIM, UiKit.font_bold(), HORIZONTAL_ALIGNMENT_RIGHT, 0)
 	if enemy:
-		_region(rect, func(): _look_at(ship), "%s (%s)\n%s\nHull %d / %d. Click to look at it." % [ship.name, ship.design.class_text, ship.design.description, ship.hull, ship.max_hull])
+		var contract := ("\n" + ship.contract_summary()) if ship.is_mercenary() else ""
+		_region(rect, func(): _look_at(ship), "%s (%s)\n%s\nHull %d / %d.%s Click to look at it." % [ship.name, ship.design.class_text, ship.design.description, ship.hull, ship.max_hull, contract])
 	else:
 		_region(rect, func(): screen.select_ship(ship), "%s: click to select this ship." % ship.name)
 
@@ -888,7 +877,13 @@ func _draw_overlays() -> void:
 	if screen.paused:
 		var text := "PAUSED"
 		UiKit.draw_text(self, Vector2(centre.x, 150), text, 44, Color(0.9, 0.95, 1.0, 0.9), UiKit.font_title(), HORIZONTAL_ALIGNMENT_CENTER, 0)
-		UiKit.draw_text(self, Vector2(centre.x, 178), "press Space to resume", 17, UiColours.TEXT_DIM, null, HORIZONTAL_ALIGNMENT_CENTER, 0)
+		# Who paused, when more than one plays (GDD 4L); only the Admiral unpauses (GDD 4H at its default)
+		var session := screen.session
+		var line := "press Space to resume"
+		if session and session.here_count() > 1:
+			var by := screen.battle.paused_by
+			line = ("paused by %s · " % session.titled_name(by) if by > 0 else "") + ("press Space to resume" if screen.is_admiral() else "%s resumes" % session.titled_name(session.admiral))
+		UiKit.draw_text(self, Vector2(centre.x, 178), line, 17, UiColours.TEXT_DIM, null, HORIZONTAL_ALIGNMENT_CENTER, 0)
 	if screen.aim_mode != "":
 		var hint: String = {"weapon": "Click a tile of an enemy ship to aim. Right click cancels.", "beam": "Press on an enemy tile and drag to aim the beam's sweep.", "teleport": "Click an enemy room to send boarders.", "suit": "Click an enemy ship to send the battlesuit."}.get(screen.aim_mode, "")
 		_draw_notice(hint, size.y - 300, UiColours.TARGET_YELLOW)
@@ -903,7 +898,7 @@ func _draw_overlays() -> void:
 	if box_rect.size.length() > 4.0:
 		draw_rect(box_rect, Color(UiColours.POWER_GREEN, 0.12))
 		draw_rect(box_rect, Color(UiColours.POWER_GREEN, 0.8), false, 1.5)
-	if screen.hover_ship and screen.hover_room >= 0 and _hover_region.is_empty() and screen.aim_mode == "":
+	if screen.hover_ship and screen.hover_room >= 0 and _hover_region.is_empty():   # aiming too: it names the target
 		_draw_room_info(screen.hover_ship, screen.hover_room)
 
 
