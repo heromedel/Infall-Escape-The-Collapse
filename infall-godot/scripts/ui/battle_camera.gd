@@ -13,6 +13,13 @@ var user_moved := false            # the player moved the camera; stop framing t
 var keys_free := true              # no window or text box has the keyboard, so the arrow keys pan
 
 
+## The view's turn (GV 3J): 0 with the battlefield vertical; a quarter turn shows it horizontal, the player's
+## squad on the left. Panning and zooming follow the turn, so the screen's directions stay the screen's.
+func set_turn(turn: float) -> void:
+	ignore_rotation = false
+	rotation = turn
+
+
 func _ready() -> void:
 	zoom = Vector2.ONE * target_zoom
 	position_smoothing_enabled = false
@@ -25,19 +32,24 @@ func _process(delta: float) -> void:
 	position = position.lerp(target_position, blend)
 	if _dragging and not Input.is_mouse_button_pressed(MOUSE_BUTTON_MIDDLE):
 		_dragging = false   # the release went to a window that opened mid-drag
-	var pan := Vector2(Input.get_axis("ui_left", "ui_right"), Input.get_axis("ui_up", "ui_down")) if keys_free else Vector2.ZERO
+	# The arrow keys only: the "ui" actions also answer a controller's stick, which belongs to its own player
+	var pan := Vector2(_key_axis(KEY_LEFT, KEY_RIGHT), _key_axis(KEY_UP, KEY_DOWN)) if keys_free else Vector2.ZERO
 	if pan != Vector2.ZERO:
-		target_position += pan * 900.0 * delta / zoom.x
+		target_position += (pan * 900.0 * delta / zoom.x).rotated(rotation)
 		user_moved = true
 
 
+func _key_axis(negative: Key, positive: Key) -> float:
+	return float(Input.is_physical_key_pressed(positive)) - float(Input.is_physical_key_pressed(negative))
+
+
 ## Frames a world rectangle in the area of the screen between the HUD bands.
-func frame(rect: Rect2, view_size: Vector2, margin_top: float = 70.0, margin_bottom: float = 150.0) -> void:
-	var usable := Vector2(view_size.x - 120.0, view_size.y - margin_top - margin_bottom)
+func frame(rect: Rect2, view_size: Vector2, margin_top: float = 70.0, margin_bottom: float = 150.0, margin_sides: float = 60.0) -> void:
+	var usable := Vector2(view_size.x - margin_sides * 2.0, view_size.y - margin_top - margin_bottom)
 	var fit := minf(usable.x / maxf(rect.size.x, 1.0), usable.y / maxf(rect.size.y, 1.0))
 	target_zoom = clampf(fit, MIN_ZOOM, MAX_ZOOM)
 	var screen_shift := Vector2(0, (margin_bottom - margin_top) * 0.5) / target_zoom
-	target_position = rect.get_center() + screen_shift
+	target_position = rect.get_center() + screen_shift.rotated(rotation)
 	user_moved = false
 
 
@@ -50,7 +62,7 @@ func zoom_at(screen_point: Vector2, factor: float, view_size: Vector2) -> void:
 
 
 func screen_to_world(screen_point: Vector2, view_size: Vector2, at_zoom: float, at_position: Vector2) -> Vector2:
-	return at_position + (screen_point - view_size * 0.5) / at_zoom
+	return at_position + ((screen_point - view_size * 0.5) / at_zoom).rotated(rotation)
 
 
 func handle_drag(event: InputEvent) -> bool:
@@ -58,7 +70,7 @@ func handle_drag(event: InputEvent) -> bool:
 		_dragging = event.pressed
 		return true
 	if event is InputEventMouseMotion and _dragging:
-		target_position -= event.relative / zoom.x
+		target_position -= (event.relative / zoom.x).rotated(rotation)
 		position = target_position
 		user_moved = true
 		return true

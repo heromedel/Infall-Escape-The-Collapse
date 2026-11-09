@@ -26,10 +26,11 @@ How races treat each other: see Relations between races at the end.
 
 The starting race (GDD 7C). The name is deliberate, to avoid a plain Federation clone.
 
-- **Species setting — Decided (heromedel, 2026-10-31; GV 7A):** `GATOS Species: Terrans > Tabbys`. With Terrans,
-  the default, the GATOS are humans, the Galactic Alliance of Terran Occupied Systems. With Tabbys they are cats, the
-  Galactic Alliance of Tabby Occupied Systems. Either way it is written G.A.T.O.S. and known as the GATOS. This
-  replaces "the GATOS are officially cats", decided earlier the same day.
+- **GATOS Species setting — Decided (heromedel, 2026-10-31; GV 7A):** `GATOS Species: Terrans > Tabbys`. With
+  Terrans, the default, the GATOS are humans, the Galactic Alliance of Terran Occupied Systems. With Tabbys they are
+  cats, the Galactic Alliance of Tabby Occupied Systems. Either way it is written G.A.T.O.S. and known as the GATOS.
+  Where a point depends on the species it gives both, e.g. "halfling-like (kitten-like with Tabbys)". This replaces
+  "the GATOS are officially cats", decided earlier the same day.
 
 1. **Tone and ship style — Proposed (2026-10-21):** when doing well, clean, soft Federation-like ships. When
    desperate, a grim, survivalist look built from seemingly borrowed or stolen technology.
@@ -148,6 +149,8 @@ The starting race (GDD 7C). The name is deliberate, to avoid a plain Federation 
 - **Origin — Proposed (2026-10-23):** lost to time and somewhat of a mystery, but genetic evidence suggests they
   were Terran, bred to better fit inside semi-cybernetic mech suits. An accidental by-product of their creation,
   and possibly their personal power inside the mechs, made them immature, violent and greedy, like cruel children.
+  With Tabbys (GATOS Species setting), they are kitten-like rather than halfling-like, cruel like kittens rather
+  than children.
 - **Out of their suits — Proposed (2026-10-23):** incredibly bashful if not violent. Not truly shy, though: their
   overconfidence tends to override it. **Look — Proposed (2026-10-25):** heromedel's pilot art
   (`docs/art/mecha/pilot/`): petite, pale, purple hair and eyes, purple implant lights on the left shoulder and the

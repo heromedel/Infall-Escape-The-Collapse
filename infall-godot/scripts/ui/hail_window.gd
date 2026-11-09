@@ -90,8 +90,7 @@ func _offer(hail: String, toll: int) -> void:
 
 
 func _result(text: String, outcome: String, paid: int) -> void:
-	for child in body.get_children():
-		child.queue_free()
+	clear(body)
 	add_title("HAIL")
 	add_text(text, 20)
 	add_button("Continue...", func(): decided.emit(outcome, paid); close())

@@ -5,6 +5,9 @@ extends Node2D
 ## crew as portrait tokens, and the shield bubble. It only reads the Ship; the battle screen owns input.
 
 const TOKEN_RADIUS := 12.5
+## How far the views turn the world on the screen (GV 3J): 0 with the battlefield vertical, a quarter turn with it
+## horizontal. Every view on this machine turns the same way.
+static var view_turn := 0.0
 
 var ship: Ship
 var encounter: Encounter
@@ -94,7 +97,7 @@ func shield_hit(world_point: Vector2, supershield: bool = false) -> void:
 
 func _process(delta: float) -> void:
 	time += delta
-	position = ship.world_position
+	position = encounter.to_view(ship.world_position)   # a ship sits whole on its side of the squeezed gap
 	rotation = PI if ship.facing_down else 0.0
 	for hit in _hits + _super_hits:
 		hit.age += delta
@@ -318,19 +321,27 @@ func _system_colour(system: ShipSystem) -> Color:
 
 
 ## Draws something that stays upright on enemy ships, which fly turned around.
+## Draws something that must read the right way up on the screen (words, portraits, symbols): turned back against
+## the ship's own turn and the view's (Battlefield: Horizontal turns the whole view, GV 3J).
 func _draw_upright(canvas: CanvasItem, at: Vector2, painter: Callable) -> void:
-	if ship.facing_down:
-		canvas.draw_set_transform(at, PI, Vector2.ONE)
+	var angle := -(PI if ship.facing_down else 0.0) - view_turn
+	if is_zero_approx(wrapf(angle, -PI, PI)):
+		painter.call(at)
+	else:
+		canvas.draw_set_transform(at, angle, Vector2.ONE)
 		painter.call(Vector2.ZERO)
 		canvas.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
-	else:
-		painter.call(at)
+
+
+## Up on the screen, in the ship's own drawing (flames rise toward it).
+func _screen_up() -> Vector2:
+	return Vector2.UP.rotated(-(PI if ship.facing_down else 0.0) - view_turn)
 
 
 func _draw_fire(canvas: CanvasItem, centre: Vector2, strength: float, cell: Vector2i) -> void:
 	var size := 0.85 + strength / 220.0
 	var seed := float(cell.x * 7 + cell.y * 13)
-	var up := Vector2.DOWN if ship.facing_down else Vector2.UP   # flames rise toward the top of the screen
+	var up := _screen_up()   # flames rise toward the top of the screen
 	var across := Vector2(-up.y, up.x)
 	var flicker := 0.85 + 0.15 * sin(time * 17.0 + seed) * sin(time * 11.0 + seed * 0.3)
 	# glow on the floor and walls around the tile
@@ -467,7 +478,7 @@ func _draw_crew() -> void:
 
 ## Small green crosses drifting up off a crew member a medbay is healing.
 func _draw_heal_sparks(canvas: CanvasItem, at: Vector2, seed: int) -> void:
-	var up := Vector2.DOWN if ship.facing_down else Vector2.UP
+	var up := _screen_up()
 	for index in 4:
 		var t := fposmod(time * 0.7 + index / 4.0 + (seed % 97) / 97.0, 1.0)
 		var side := Vector2(up.y, -up.x) * (sin(seed + index * 2.1) * 11.0)
@@ -482,7 +493,7 @@ func _draw_heal_sparks(canvas: CanvasItem, at: Vector2, seed: int) -> void:
 
 func _draw_member(canvas: CanvasItem, member: CrewMember, at: Vector2, ring: Color) -> void:
 	if member.selected:
-		canvas.draw_arc(at, TOKEN_RADIUS + 4.0, 0, TAU, 28, Color(UiColours.POWER_GREEN, 0.9), 2.0, true)
+		canvas.draw_arc(at, TOKEN_RADIUS + 4.0, 0, TAU, 28, Color(member.selection_colour, 0.9), 2.0, true)
 	CrewPortraits.draw_token(canvas, member.race.id, member.name, at, TOKEN_RADIUS, ring, 2.2 if member.side == 0 else 2.6)
 	var fraction := member.health_fraction()
 	if fraction < 0.999 or member.selected:

@@ -86,6 +86,6 @@ You are not alone. Three ships hang over the way out, darkened GATOS hulls with 
 		<text>Traffic control here is overwhelmed. Ships of every kind are queued for jumps outward, and the controllers have stopped asking where anyone is going.</text>
 	</event>
 	<event id="NOTHING_COLONY_SHIP" kind="nothing" bands="2-8" weight="0.8" unique="yes">
-		<text>A transmission from The Colony Ship finds you. "We're still behind you. Some of the children have started drawing your ships. They think you're heroes. Don't tell them otherwise."</text>
+		<text>A transmission from The Colony Ship finds you. "We're still behind you. Some of the {gatos:children|kittens} have started drawing your ships. They think you're heroes. Don't tell them otherwise."</text>
 	</event>
 </events>

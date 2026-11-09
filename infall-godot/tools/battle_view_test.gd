@@ -2,7 +2,9 @@ extends Node
 ## Shows a fight and saves screenshots. Environment: E (enemy ship ids, comma separated), SHOTS (seconds,
 ## comma separated), OUT (folder), P (player ship ids). Run with a display: xvfb-run godot --path . tools/battle_view_test.tscn
 
-var screen: BattleScreen
+var battle: BattleScreen
+var screen: PlayerView
+var tick_time := 0.0
 var shots: Array = []
 var elapsed := 0.0
 var out := ""
@@ -10,6 +12,8 @@ var zoom_ship: Ship = null
 
 
 func _ready() -> void:
+	if OS.get_environment("BATTLEFIELD") != "":
+		Settings._values["battlefield"] = OS.get_environment("BATTLEFIELD")
 	out = OS.get_environment("OUT") if OS.get_environment("OUT") != "" else "/tmp/claude-0/shots"
 	DirAccess.make_dir_recursive_absolute(out)
 	for value in (OS.get_environment("SHOTS") if OS.get_environment("SHOTS") != "" else "1,6,14").split(","):
@@ -28,9 +32,17 @@ func _ready() -> void:
 	encounter.wallet = run
 	encounter.hazard = OS.get_environment("HAZARD")
 	encounter.setup(players, enemies, 3)
-	screen = BattleScreen.new()
+	battle = BattleScreen.new()
+	add_child(battle)
+	screen = PlayerView.new()
+	screen.setup(battle, 1, Color.WHITE, true)
+	battle.player_views.append(screen)
 	add_child(screen)
-	screen.show_encounter(encounter, run, int(OS.get_environment("LOOK")) if OS.get_environment("LOOK") != "" else 12345, 0.3, true)
+	var layer := CanvasLayer.new()
+	add_child(layer)
+	layer.add_child(screen.display)
+	screen.place(Rect2(Vector2.ZERO, get_viewport().get_visible_rect().size), get_viewport().get_visible_rect().size.y)
+	battle.show_encounter(encounter, run, int(OS.get_environment("LOOK")) if OS.get_environment("LOOK") != "" else 12345, 0.3, true)
 	if not enemies.is_empty():
 		for ship in players:
 			for slot in ship.weapons:
@@ -60,6 +72,10 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	elapsed += delta
+	tick_time += delta
+	while tick_time >= BattleScreen.TICK_SECONDS:
+		tick_time -= BattleScreen.TICK_SECONDS
+		battle.step_tick()
 	if zoom_ship:
 		screen.camera.user_moved = true
 		screen.camera.target_zoom = float(OS.get_environment("ZOOM"))

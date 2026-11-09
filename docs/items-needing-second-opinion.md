@@ -12,17 +12,20 @@ reviewed its part on 2026-10-31; what was changed is under **Checked**, and what
 2. **The docs' own ships the Godot version lacks:** the Pickpocket (band 1 pirate), the Polyp (band 1 Malphen, with
    the docs' Flesh Mortar missile), the docs' Relay Picket with its AAA, the Vein Moth and the Scrap Hound. There is
    no band 1 Malphen squad until the Polyp is added.
-3. **Loadout values** (Chestnut 488.4, Tumour 302.6, Swollen Cyst 181.3, Archive Cruiser 305.2, Checkpoint, Siege,
-   Huntmaster, Marauder) have not been re-priced.
-4. **Burr's value:** Ship Designs' 188.81 against Eco's rebuild of 193.64.
+3. **Ship and loadout values** are now worked out from their parts by Eco's rules (GV 8B), so the typed values
+   (Chestnut 488.4, Burr 188.81 and the rest) are gone. Ship Designs may want to look at what the parts give.
 
 ### For Eco
 
 1. **Shield levels in ship.xml:** stored as bars (level 2 is one layer, as in the genre) while GDD 8H's shield test
    counts a level per layer. Which one the files mean needs settling.
-2. **The growth organ** (Malphen) has no price yet.
-3. **Repair 5.5 s a bar, 15 crew damage a hull point and teleporter cooldowns 30/20/10 s** are unchecked.
-4. **The event set pays less than the genre's:** 17 low, 6 medium, 2 high and 4 tiny, where the genre's events
+2. **The growth organ** (Malphen) is 6.05 as a placeholder until it has a table price (Eco).
+3. **15 crew damage a hull point** is unchecked. Repair, fire-fighting and the teleporter now use the wiki's
+   timings (GV 7E).
+4. **Mercenary prices** (Ai-Generated-Proposal): Lykario 9.66 for 3 jumps, Mecha 12.11 (7.26 haggled) for 4,
+   Tentauri 3.63 for 5, Senti 9.68 (or sensor logs, renewals from 4.84) for 4, Terran survivalists 6.05 for 4; each
+   renewal a quarter more than the last term.
+5. **The event set pays less than the genre's:** 17 low, 6 medium, 2 high and 4 tiny, where the genre's events
    lean to medium and high.
 
 ## Checked
@@ -45,6 +48,17 @@ reviewed its part on 2026-10-31; what was changed is under **Checked**, and what
 - Fine as they are: the Patrol Cutter, every ship's Medbay room, the Assault Frame's EVB Dock and weapon names, the
   Packrunner, the Tentauri Seedpod, and the other squads' budgets.
 
+### Lori, evening (2026-10-31)
+
+- Mercenary events: NEUTRAL_MERCENARY "will hunt with you"; MERCENARY_SENTI speaks as "We, The Senti-" (it is a
+  negotiation); "a battered pirate scrapper" in lower case; MERCENARY_CONTRACT_UP keeps numbers out of the prose,
+  with the term and price on the choice ("Renew the contract for another 3 jumps", singular for one).
+  MERCENARY_MECHA, MERCENARY_TENTAURI and MERCENARY_WALKOUT fine as they are.
+- Species words read right both ways. The GATOS names fit; "Captain Fluff" is now "Sir Fluff", so no name carries a
+  rank.
+- Kept: Lori suggested dropping "more gangs than federation" from the GATOS description, but race profile Terrans 1
+  says they are "like a loose alliance of gangs, not a federation" (Likely, 2026-10-27), so it stays.
+
 ### Lori (2026-10-31)
 
 - Events that speak of the collapse wait until it appears (GDD 2P): `after_collapse="yes"` on REFUGEE_FAILING_AIR,
@@ -60,7 +74,7 @@ reviewed its part on 2026-10-31; what was changed is under **Checked**, and what
   DISTRESS_TENTAURI_PAIR has no third Tentauri; MECHA_OUTMATCHED's line; NEUTRAL_REFUGEE_CONVOY "many races";
   NEUTRAL_COLONY_SHIP_SUPPLY's outcome finishes the story.
 - SENTI_DOOMED_ARCHIVE is for doomed Senti only; SENTI_PICKET is for border clusters and speaks plainly.
-- heromedel's answers (2026-10-31): the GATOS are officially cats, so DISTRESS_GATOS_FAMILY's kittens stay (GV 7A);
+- heromedel's answers (2026-10-31): the GATOS Species setting decides whether DISTRESS_GATOS_FAMILY has kittens or children (GV 7A);
   MECHA_TERRITORY's "HalfMech" line stays (GV 7B); mercenaries should work on contracts (GV 7C), not built yet.
   STRANDED keeps "1.21 Jigawatts" (the same thing as 1.21 Mawjig, GV 6A) and now says "you", not "we".
 

@@ -5,7 +5,7 @@ extends RefCounted
 
 var id: String
 var name: String                 # what the race is called, e.g. "GATOS"
-var singular: String             # one of them, e.g. "GATOS cat"
+var singular: String             # one of them, e.g. "GATOS crew"
 var max_health: float = 100.0
 var speed: float = 1.0
 var xp_rate: float = 1.0          # GDD 7H
@@ -24,6 +24,7 @@ var crew_price: int = 1089
 var portrait: String = "token"
 var tech: String = "mechanical"
 var names: PackedStringArray = []
+var species_names := {}            # GATOS Species setting value -> names only that species uses (GV 7A)
 var description: String = ""
 var traits_text: String = ""
 
@@ -50,10 +51,15 @@ static func from_xml(node: XmlTree) -> RaceDef:
 	def.crew_price = Mawjig.amount(node.get_float("crew_price", 10.89))
 	def.portrait = node.get_attr("portrait", "token")
 	def.tech = node.get_attr("tech", "mechanical")
-	var names_node := node.first("names")
-	if names_node:
+	for names_node in node.all("names"):
+		var species := names_node.get_attr("species")
+		var into: PackedStringArray = []
 		for raw_name in names_node.get_clean_text().split(",", false):
-			def.names.append(raw_name.strip_edges())
+			into.append(raw_name.strip_edges())
+		if species.is_empty():
+			def.names.append_array(into)
+		else:
+			def.species_names[species] = into
 	var description_node := node.first("description")
 	if description_node:
 		def.description = description_node.get_clean_text()
@@ -64,10 +70,12 @@ static func from_xml(node: XmlTree) -> RaceDef:
 
 
 func random_name(rng: RandomNumberGenerator, taken: Array) -> String:
-	if names.is_empty():
+	var pool := names.duplicate()
+	pool.append_array(species_names.get(Settings.get_value("gatos_species", "Terrans"), PackedStringArray()))
+	if pool.is_empty():
 		return singular
 	for attempt in 12:
-		var candidate := names[rng.randi_range(0, names.size() - 1)]
+		var candidate := pool[rng.randi_range(0, pool.size() - 1)]
 		if not taken.has(candidate):
 			return candidate
-	return names[rng.randi_range(0, names.size() - 1)]
+	return pool[rng.randi_range(0, pool.size() - 1)]

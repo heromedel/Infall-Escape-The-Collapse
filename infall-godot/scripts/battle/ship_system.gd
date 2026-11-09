@@ -16,6 +16,7 @@ var ion_ticks: int = 0
 var spored: bool = false           # Sporewing hit: off until cleared like a repair
 var spore_progress: float = 0.0
 var power: int = 0                 # bars given (reactor pool ships)
+var power_lost: int = 0            # bars damage or ion took, given back once they work again
 var enabled: bool = true           # switched on (core ships)
 var own_power: int = 0             # bars it carries itself (Mecha ships)
 var integration_bar: bool = false  # a Mecha crew member is integrated with it

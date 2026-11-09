@@ -14,8 +14,11 @@ const TICKS := 20
 const EVASION_BY_ENGINE_POWER := [0, 5, 10, 15, 20, 25, 28, 31, 35]
 const SHIELD_LAYER_TICKS := 40      # 2 s to raise a layer
 const DOOR_HEALTH_PER_LEVEL := 100.0
-const REPAIR_PER_TICK := 0.91       # 100 points is one bar: 5.5 s for one crew member
-const EXTINGUISH_PER_TICK := 1.5
+# The genre's community-wiki timings (heromedel, 2026-10-31, GV 7E; not timed in game): one untrained crew member
+# repairs a system bar in 12.5 s and puts out a full fire in 10.4 s. The fire keeps growing 0.2 a tick while fought.
+const REPAIR_PER_TICK := 0.4        # 100 points is one bar: 250 ticks
+const EXTINGUISH_PER_TICK := 0.68   # 100 / 208 ticks, plus the fire's own growth
+const TELEPORTER_COOLDOWN_TICKS := [400, 400, 300, 200]   # by power: 20, 20, 15, 10 s
 const PATCH_PER_TICK := 0.75
 const CONDUIT_REPAIR_PER_TICK := 1.0
 const SUFFOCATION_PER_TICK := 0.3   # 6 health a second with no air
@@ -65,6 +68,11 @@ var destroyed: bool = false
 var escaped: bool = false
 var surrendered: bool = false
 var crew_dead: bool = false
+## A hired mercenary's contract (GV 7C), empty for the squad's own ships: {id, jumps, jumps_left, pay, crew_at_start}.
+## `pay` is what the last term cost, in cents; renewing costs more each time (RunState.renewal_price).
+var contract: Dictionary = {}
+## Who commands this ship and its crew (GV 4I): player ids; empty is Any player. The Admiral always may.
+var assigned: Array = []
 var charging_escape: bool = false
 var hit_flash: int = 0
 var explosion_ticks: int = 0
@@ -243,6 +251,22 @@ func has_system(behaviour: String) -> bool:
 
 func room_at(cell: Vector2i) -> int:
 	return design.cell_room.get(cell, -1)
+
+
+## Whether a player may give this ship orders (GV 4I).
+func commanded_by(player_id: int) -> bool:
+	return assigned.is_empty() or assigned.has(player_id)
+
+
+func is_mercenary() -> bool:
+	return not contract.is_empty()
+
+
+func contract_summary() -> String:
+	var left := int(contract.get("jumps_left", 0))
+	if left <= 0:
+		return "Mercenary: the contract is up."
+	return "Mercenary: %d jump%s left on the contract." % [left, "" if left == 1 else "s"]
 
 
 func is_gone() -> bool:
@@ -514,6 +538,7 @@ func remove_power(system: ShipSystem) -> bool:
 					if weapons[index].powered:
 						return set_weapon_powered(weapons[index], false)
 				return false
+			system.power_lost = 0
 			if system.power <= 0:
 				return false
 			system.power -= 1
@@ -529,6 +554,11 @@ func _next_unpowered_weapon() -> WeaponSlot:
 		if not slot.powered and _weapon_fits(slot):
 			return slot
 	return null
+
+
+## Whether a weapon could be switched on now.
+func can_power_weapon(slot: WeaponSlot) -> bool:
+	return slot.powered or _weapon_fits(slot)
 
 
 func _weapon_fits(slot: WeaponSlot) -> bool:
@@ -548,6 +578,7 @@ func _weapon_fits(slot: WeaponSlot) -> bool:
 func set_weapon_powered(slot: WeaponSlot, on: bool) -> bool:
 	if slot == null:
 		return false
+	slot.power_lost = false   # the player's (or captain's) choice replaces what damage took
 	if on == slot.powered:
 		return true
 	if on and not _weapon_fits(slot):
@@ -615,7 +646,9 @@ func settle_power() -> void:
 	if reactor_type == "pool":
 		for system in systems:
 			if system.def.draws_power and system.behaviour != "weapons":
-				system.power = clampi(system.power, 0, maxi(0, system.usable_bars() - system.ion))
+				var kept := clampi(system.power, 0, maxi(0, system.usable_bars() - system.ion))
+				system.power_lost += system.power - kept
+				system.power = kept
 		while reactor_used() > reactor_total():
 			var dropped := false
 			for system in systems:
@@ -633,6 +666,37 @@ func settle_power() -> void:
 			break
 		if weapons[index].powered:
 			weapons[index].powered = false
+			weapons[index].power_lost = true
+
+
+## Gives back, as the genre does, the power damage or ion took once the bars work again. If the reactor's power has
+## gone elsewhere meanwhile, the player chose that, so it is forgotten.
+func give_back_power() -> void:
+	if reactor_type == "pool":
+		for system in systems:
+			while system.power_lost > 0 and system.power < system.usable_bars() - system.ion:
+				if reactor_free() <= 0:
+					system.power_lost = 0
+					break
+				system.power += 1
+				system.power_lost -= 1
+	for slot in weapons:
+		if not slot.power_lost or slot.powered:
+			continue
+		if _weapon_fits(slot):
+			slot.powered = true
+			slot.power_lost = false
+		elif reactor_type == "pool" and reactor_free() < slot.def.power and _weapon_room(slot):
+			slot.power_lost = false
+
+
+## Whether the weapons system itself has the bars for a weapon, whatever the reactor has free.
+func _weapon_room(slot: WeaponSlot) -> bool:
+	var system := system_by("weapons")
+	if system == null:
+		return false
+	var capacity := system.usable_bars() - system.ion if reactor_type == "pool" else weapon_capacity()
+	return powered_weapon_load() + slot.def.power <= capacity
 
 
 # --- Combat numbers -------------------------------------------------------------------------------------------
@@ -689,7 +753,11 @@ func sensor_level() -> int:
 
 ## Advances everything inside the ship by one tick. `in_fight` is false at a quiet cluster, where the jump
 ## drive is ready at once and there is nothing to dodge.
+var _in_fight: bool = false
+
+
 func tick(in_fight: bool, rng: RandomNumberGenerator) -> void:
+	_in_fight = in_fight
 	if destroyed:
 		explosion_ticks += 1
 		return
@@ -699,6 +767,7 @@ func tick(in_fight: bool, rng: RandomNumberGenerator) -> void:
 		system.tick_ion()
 	refresh_conduit_power()
 	settle_power()
+	give_back_power()
 	_tick_manning()
 	_tick_shields()
 	_tick_supershield()
@@ -794,6 +863,8 @@ func _tick_cooldowns() -> void:
 	var teleporter := system_by("teleporter")
 	if teleporter_cooldown > 0 and teleporter and system_power(teleporter) > 0:
 		teleporter_cooldown -= 1
+	if not _in_fight:
+		teleporter_cooldown = 0   # out of danger it is ready at once (the genre's wiki, GV 7E)
 	var dock := system_by("evb_dock")
 	if evb_cooldown > 0 and dock and system_power(dock) > 0:
 		evb_cooldown -= 1
@@ -1026,6 +1097,7 @@ func to_save() -> Dictionary:
 		"design": design.id, "name": name, "hull": hull, "max_hull": max_hull,
 		"reactor_type": reactor_type, "reactor_level": reactor_level,
 		"systems": [], "weapons": [], "suits": suits.duplicate(), "crew": [], "broken_conduits": [],
+		"contract": contract.duplicate(), "assigned": assigned.duplicate(),
 	}
 	for system in systems:
 		data.systems.append({"id": system.def.id, "label": system.label, "level": system.level, "damage": system.damage,
@@ -1079,6 +1151,9 @@ static func from_save(data: Dictionary, ship_side: int) -> Ship:
 			slot.powered = bool(entry.get("powered", false))
 			ship.weapons.append(slot)
 	ship.suits.assign(data.get("suits", []))
+	ship.assigned.assign(data.get("assigned", []).map(func(id): return int(id)))
+	for key in data.get("contract", {}):
+		ship.contract[key] = int(data.contract[key])
 	for entry in data.get("crew", []):
 		ship.add_crew(CrewMember.from_save(entry))
 	for cell in data.get("broken_conduits", []):

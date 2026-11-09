@@ -48,8 +48,18 @@ func _say(text: String) -> void:
 	_log.append_text(text + "\n")
 
 
+## A command typed here goes to the stream like any order, so every machine in the game runs it (GV 4C).
 func _run(line: String) -> void:
 	_input.clear()
+	if line.strip_edges().is_empty():
+		return
+	if main.run != null and main.session:
+		main.session.submit(main.session.first_local_id(), {"k": "console", "text": line})
+	else:
+		execute(line)
+
+
+func execute(line: String) -> void:
 	var words := line.strip_edges().split(" ", false)
 	if words.is_empty():
 		return

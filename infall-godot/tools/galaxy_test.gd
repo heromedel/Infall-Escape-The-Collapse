@@ -25,9 +25,21 @@ func _ready() -> void:
 					print("  long link %.0f from radius %.0f to %.0f" % [length, cluster.radius, galaxy.clusters[other].radius])
 		var reached := {}
 		galaxy._flood(galaxy.start_index, reached)
+		# How far outward a squad could go without leaving its home race's space
+		var home := {galaxy.start_index: true}
+		var queue: Array = [galaxy.start_index]
+		var farthest := 0.0
+		while not queue.is_empty():
+			var at: int = queue.pop_back()
+			farthest = maxf(farthest, galaxy.clusters[at].radius)
+			for other in galaxy.clusters[at].links:
+				if not home.has(other) and galaxy.clusters[other].race == galaxy.home_race:
+					home[other] = true
+					queue.append(other)
+		print("  home-race-only reach: %d clusters, %.1f bands outward" % [home.size(), (farthest - Galaxy.START_RADIUS) / Galaxy.BAND_DEPTH])
 		var start: Dictionary = galaxy.clusters[galaxy.start_index]
 		print("seed %d: %d clusters in %d ms, rim %d, reachable %d, longest link %.0f, unique names %d, start radius %.0f (%s), races %s" % [seed_number, galaxy.clusters.size(), took, rim, reached.size(), longest, names.size(), start.radius, start.race, races])
-		if reached.size() != galaxy.clusters.size() or names.size() != galaxy.clusters.size() or rim == 0 or start.race != "terran":
+		if reached.size() != galaxy.clusters.size() or names.size() != galaxy.clusters.size() or rim == 0 or start.race != galaxy.home_race:
 			failures += 1
 		# Heading straight inward for the opening jumps never reaches the first horizon
 		if start.radius - (Galaxy.OPENING_JUMPS - 1) * Galaxy.LINK_RANGE <= Galaxy.FIRST_COLLAPSE:

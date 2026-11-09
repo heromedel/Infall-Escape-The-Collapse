@@ -20,6 +20,8 @@ var stats := {"ships_destroyed": 0, "crews_killed": 0, "jumps": 0, "mawjig_earne
 var over: bool = false
 var won: bool = false
 var difficulty: String = "Normal"
+static var saves_here := true        # false on a machine that joined another's game
+var next_contract_id: int = 1
 var pending_fight: String = ""      # the squad being fought, if the run was saved mid-fight
 var log_book: LogBook
 
@@ -30,7 +32,7 @@ static func start(seed_number: int, ship_id: String) -> RunState:
 	run.rng.seed = seed_number
 	run.difficulty = Settings.get_value("difficulty", "Normal")
 	var band_count := 4 if Settings.get_value("run_length", "Standard") == "Short" else 8
-	run.galaxy = Galaxy.generate(seed_number, band_count)
+	run.galaxy = Galaxy.generate(seed_number, band_count, Library.ship(ship_id).race)
 	run.current = run.galaxy.start_index
 	run.galaxy.clusters[run.current].visited = true
 	run.mawjig = Mawjig.amount(START_MAWJIG + (6.03 if run.difficulty == "Easy" else 0.0))
@@ -103,6 +105,7 @@ func jump_to(index: int) -> void:
 	jumps += 1
 	stats.jumps += 1
 	galaxy.advance_collapse(jumps)
+	_count_contract_jump()
 	var arrived: Dictionary = cluster()
 	arrived.visited = true
 	log_book.write("jump", {"from": from, "to": index, "band": arrived.band, "mawjig": mawjig, "collapse": int(galaxy.collapse_radius)},
@@ -114,7 +117,94 @@ func wait() -> void:
 	earn(Mawjig.WAIT_GAIN)
 	jumps += 1
 	galaxy.advance_collapse(jumps)
+	_count_contract_jump()
 	log_book.write("wait", {"cluster": current, "mawjig": mawjig}, "The squad waited at %s and gathered 0.25 Mawjig." % cluster().name)
+
+
+# --- Mercenaries (GV 7C) --------------------------------------------------------------------------------------
+
+## Each renewal costs a quarter more than the term before (Ai-Generated-Proposal: "a price that rises each time").
+const RENEWAL_RISE := 1.25
+
+
+## The squad's own ships: mercenaries fly with it but don't keep a run alive (GDD 7G).
+func own_ships() -> Array[Ship]:
+	return living_ships().filter(func(ship: Ship): return not ship.is_mercenary())
+
+
+## Signs a ship on as a mercenary for some jumps, having been paid `pay` cents; its crew are on the contract too.
+func hire(ship: Ship, jumps_long: int, pay: int) -> void:
+	ship.contract = {"id": next_contract_id, "jumps": jumps_long, "jumps_left": jumps_long, "pay": pay, "crew_at_start": ship.crew.size()}
+	next_contract_id += 1
+	for member in ship.crew:
+		member.contract_id = ship.contract.id
+	log_book.write("hired_ship", {"ship": ship.name, "jumps": jumps_long, "pay": pay}, "The %s signed on for %d jumps." % [ship.name, jumps_long])
+
+
+func renewal_price(ship: Ship) -> int:
+	return roundi(int(ship.contract.get("pay", 0)) * RENEWAL_RISE)
+
+
+func renew(ship: Ship) -> void:
+	var price := renewal_price(ship)
+	mawjig -= price
+	ship.contract.pay = price
+	ship.contract.jumps_left = ship.contract.jumps
+	log_book.write("renewed", {"ship": ship.name, "pay": price}, "The %s's contract was renewed." % ship.name)
+
+
+## Mercenary ships whose contract has run out.
+func contracts_due() -> Array[Ship]:
+	return living_ships().filter(func(ship: Ship): return ship.is_mercenary() and int(ship.contract.jumps_left) <= 0)
+
+
+## Mercenary ships that lost any of their own crew in the last fight.
+func mercenaries_with_losses() -> Array[Ship]:
+	return living_ships().filter(func(ship: Ship): return ship.is_mercenary() and _contract_crew(ship).size() < int(ship.contract.crew_at_start))
+
+
+## Called as a fight starts, so losses can be told apart from crew who left earlier.
+func count_mercenary_crew() -> void:
+	for ship in living_ships():
+		if ship.is_mercenary():
+			ship.contract.crew_at_start = _contract_crew(ship).size()
+
+
+## The mercenaries leave: their ship, and their crew wherever they are. Anyone of yours aboard comes back first.
+func release(ship: Ship) -> void:
+	var id := int(ship.contract.id)
+	var others := own_ships()
+	for member in ship.crew.duplicate():
+		if member.contract_id != id and not member.dead and not others.is_empty():
+			ship.crew.erase(member)
+			var fewest: Ship = others[0]
+			for other in others:
+				if other.crew.size() < fewest.crew.size():
+					fewest = other
+			fewest.add_crew(member)
+			fewest.assign_stations()
+	for other in living_ships():
+		if other != ship:
+			for member in other.crew.duplicate():
+				if member.contract_id == id:
+					other.crew.erase(member)
+	squad.erase(ship)
+	log_book.write("released", {"ship": ship.name}, "The %s left the squad." % ship.name)
+
+
+func _contract_crew(ship: Ship) -> Array:
+	var found: Array = []
+	for each in living_ships():
+		for member in each.crew:
+			if member.contract_id == int(ship.contract.id) and not member.dead:
+				found.append(member)
+	return found
+
+
+func _count_contract_jump() -> void:
+	for ship in living_ships():
+		if ship.is_mercenary():
+			ship.contract.jumps_left = int(ship.contract.jumps_left) - 1
 
 
 func collapse_distance() -> float:
@@ -150,11 +240,13 @@ func to_save() -> Dictionary:
 	return {
 		"game": "Infall: Escape The Collapse", "version": 2, "seed": seed_value, "current": current, "jumps": jumps,
 		"mawjig": mawjig, "cargo": cargo.duplicate(), "used_events": used_events.duplicate(), "stats": stats.duplicate(),
-		"difficulty": difficulty, "pending_fight": pending_fight, "squad": ships, "galaxy": galaxy.to_save(), "rng_state": rng.state,
+		"difficulty": difficulty, "pending_fight": pending_fight, "next_contract_id": next_contract_id, "squad": ships, "galaxy": galaxy.to_save(), "rng_state": rng.state,
 	}
 
 
 func save_to_disk() -> void:
+	if not saves_here:
+		return   # a machine that joined another's game: only the host keeps the save (GV 4A)
 	if over:
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(SAVE_PATH))
 		return
@@ -165,17 +257,34 @@ func save_to_disk() -> void:
 
 
 static func has_save() -> bool:
-	if not FileAccess.file_exists(SAVE_PATH):
-		return false
-	var data = JSON.parse_string(FileAccess.get_file_as_string(SAVE_PATH))
+	var data = _read_save()
 	return typeof(data) == TYPE_DICTIONARY and int(data.get("galaxy", {}).get("version", 1)) >= 2
 
 
-static func load_from_disk() -> RunState:
+## The save file's contents, or null when there is none or it is empty (a save cut short).
+static func _read_save() -> Variant:
+	if not FileAccess.file_exists(SAVE_PATH):
+		return null
 	var text := FileAccess.get_file_as_string(SAVE_PATH)
-	var data = JSON.parse_string(text)
+	return null if text.strip_edges().is_empty() else JSON.parse_string(text)
+
+
+static func load_from_disk() -> RunState:
+	var data = saved_data()
+	return from_data(data) if data != null else null
+
+
+## The save as it was written, or null when there is none this build can read.
+static func saved_data() -> Variant:
+	var data = _read_save()
 	if typeof(data) != TYPE_DICTIONARY or int(data.get("galaxy", {}).get("version", 1)) < 2:
 		return null   # unreadable, or from a build with the old map
+	return data
+
+
+## A run from save data: the host's own save, or the host's sent to a machine joining (the same data, so both build
+## the same run).
+static func from_data(data: Dictionary) -> RunState:
 	var run := RunState.new()
 	run.seed_value = int(data.seed)
 	run.rng.seed = run.seed_value
@@ -189,6 +298,7 @@ static func load_from_disk() -> RunState:
 		run.stats[key] = int(data.stats[key])
 	run.difficulty = data.get("difficulty", "Normal")
 	run.pending_fight = data.get("pending_fight", "")
+	run.next_contract_id = int(data.get("next_contract_id", 1))
 	run.galaxy = Galaxy.from_save(data.galaxy)
 	for ship_data in data.squad:
 		run.squad.append(Ship.from_save(ship_data, 0))

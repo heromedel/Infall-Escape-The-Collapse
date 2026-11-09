@@ -5,21 +5,32 @@ extends Overlay
 
 var run: RunState
 var ship: Ship
-var _content := VBoxContainer.new()
+var give: Callable                    # sends a refit order to the stream (Refit); the window rebuilds when the run changes
+var _content: VBoxContainer          # the scrolling area, rebuilt after every change
+
+
+func _order(fields: Dictionary) -> void:
+	fields["k"] = "refit"
+	fields["sq"] = run.squad.find(ship)
+	give.call(fields)
 
 
 func open(run_state: RunState, selected: Ship) -> void:
 	run = run_state
 	ship = selected if selected and not selected.is_gone() else run.living_ships()[0]
 	place_panel(1320, 0)
-	body.add_child(_content)
+	_content = scrolling_area()
 	add_button("DONE", close)
 	_rebuild()
 
 
 func _rebuild() -> void:
-	for child in _content.get_children():
-		child.queue_free()
+	if not is_instance_valid(ship) or ship.is_gone() or not run.squad.has(ship):
+		ship = run.living_ships()[0] if not run.living_ships().is_empty() else null
+	if ship == null:
+		close()
+		return
+	clear(_content)
 	var header := HBoxContainer.new()
 	header.add_theme_constant_override("separation", 10)
 	header.add_child(UiKit.title_label(ship.name.to_upper(), 30))
@@ -36,6 +47,8 @@ func _rebuild() -> void:
 	header.add_child(money)
 	_content.add_child(header)
 	_content.add_child(UiKit.label("%s · %s · hull %d / %d · %s" % [ship.design.class_text, ship.race.name, ship.hull, ship.max_hull, _power_text()], 17, UiColours.TEXT_DIM))
+	if ship.is_mercenary():
+		_content.add_child(UiKit.label(ship.contract_summary(), 17, UiColours.WARNING))
 	var columns := HBoxContainer.new()
 	columns.add_theme_constant_override("separation", 18)
 	_content.add_child(columns)
@@ -67,16 +80,14 @@ func _systems_column() -> VBoxContainer:
 	if ship.reactor_type != "none":
 		var label := "Reactor: %d bars" % ship.reactor_level if ship.reactor_type == "pool" else "AZC: level %d" % ship.reactor_level
 		column.add_child(_upgrade_row(label, ship.reactor_level, 25 if ship.reactor_type == "pool" else 5, reactor_price, func():
-			if ShipOutfitter.upgrade_reactor(run, ship):
-				Sfx.play("upgrade")
-			_rebuild()))
+			_order({"op": "upgrade_reactor"})
+			Sfx.play("upgrade")))
 	var systems := ship.systems.filter(func(s): return s.behaviour != "power_core")
 	systems.sort_custom(func(a, b): return a.def.order < b.def.order)
 	for system in systems:
 		column.add_child(_upgrade_row(system.display_name(), system.level, system.def.max_level, ShipOutfitter.system_upgrade_price(system), func():
-			if ShipOutfitter.upgrade_system(run, ship, system):
-				Sfx.play("upgrade")
-			_rebuild(), system.def.level_note(system.level)))
+			_order({"op": "upgrade_system", "sys": ship.systems.find(system)})
+			Sfx.play("upgrade"), system.def.level_note(system.level)))
 	return column
 
 
@@ -100,8 +111,10 @@ func _upgrade_row(label: String, level: int, max_level: int, price: int, on_upgr
 	if not note.is_empty():
 		text.add_child(UiKit.label(note, 13, UiColours.TEXT_DIM))
 	row.add_child(text)
-	var button := UiKit.button("MAX" if price < 0 else "+%s" % Mawjig.format(price), on_upgrade, 100)
+	# The price of the next level, shown as the store shows prices: a cost, not a gain
+	var button := UiKit.button("MAX" if price < 0 else Mawjig.format(price), func(): LowMawjigWarning.confirm(self, run, price, on_upgrade), 100)
 	button.disabled = price < 0 or run.mawjig < price
+	button.tooltip_text = "" if price < 0 else "Upgrade one level for %s Mawjig." % Mawjig.format(price)
 	button.add_theme_color_override("font_color", Color("#ffd46b"))
 	row.add_child(button)
 	return card
@@ -121,10 +134,7 @@ func _weapons_column() -> VBoxContainer:
 		name_label.tooltip_text = slot.def.description + "\n" + slot.def.stat_line()
 		name_label.mouse_filter = Control.MOUSE_FILTER_PASS
 		row.add_child(name_label)
-		row.add_child(UiKit.button("TO HOLD", func():
-			ShipOutfitter.unfit_weapon(ship, slot)
-			run.cargo.append(slot.def.id)
-			_rebuild(), 110))
+		row.add_child(UiKit.button("TO HOLD", func(): _order({"op": "unfit", "w": ship.weapons.find(slot)}), 110))
 		column.add_child(row)
 	column.add_child(UiKit.label("Free mounts: %d" % ShipOutfitter.free_mounts(ship).size(), 15, UiColours.TEXT_DIM))
 	if not ship.suits.is_empty():
@@ -142,10 +152,7 @@ func _weapons_column() -> VBoxContainer:
 		name_label.tooltip_text = def.description + "\n" + def.stat_line()
 		name_label.mouse_filter = Control.MOUSE_FILTER_PASS
 		row.add_child(name_label)
-		var fit := UiKit.button("FIT", func():
-			if ShipOutfitter.fit_weapon(ship, def):
-				run.cargo.remove_at(index)
-			_rebuild(), 80)
+		var fit := UiKit.button("FIT", func(): _order({"op": "fit", "index": index}), 80)
 		fit.disabled = ShipOutfitter.free_mounts(ship).is_empty() or weapons_system == null
 		row.add_child(fit)
 		column.add_child(row)
@@ -161,7 +168,7 @@ func _crew_column() -> VBoxContainer:
 		card.add_theme_stylebox_override("panel", UiKit.box(UiColours.PANEL_LIGHT, UiColours.BORDER_DIM, 1, 4, 8))
 		var stack := VBoxContainer.new()
 		card.add_child(stack)
-		stack.add_child(UiKit.label("%s · %s · %d/%d" % [member.name, member.race.singular, int(member.health), int(member.max_health)], 16, UiColours.TEXT, true))
+		stack.add_child(UiKit.label("%s · %s · %d/%d" % [member.display_name(), member.race.singular, int(member.health), int(member.max_health)], 16, UiColours.TEXT, true))
 		var skills := PackedStringArray()
 		for skill in CrewMember.SKILLS:
 			var level: int = member.skill_level(skill)
@@ -171,17 +178,14 @@ func _crew_column() -> VBoxContainer:
 		var buttons := HBoxContainer.new()
 		for other in run.living_ships():
 			if other != ship and other.living_crew_count() < EventRunner.MAX_CREW_PER_SHIP and ship.living_crew_count() > 1:
-				buttons.add_child(UiKit.button("TO %s" % other.name.to_upper(), func():
-					ship.crew.erase(member)
-					other.add_crew(member)
-					member.station_room = -1
-					other.assign_stations()
-					ship.assign_stations()
-					_rebuild(), 0))
+				buttons.add_child(UiKit.button("TO %s" % other.name.to_upper(), func(): _order({"op": "crew_to", "crew": ship.crew.find(member), "to": run.squad.find(other)}), 0))
+		if member.rank_due() >= 0:
+			var promote := UiKit.button("PROMOTE TO %s" % CrewMember.RANK_TITLE[member.rank_due()].to_upper(), func(): _order({"op": "promote", "crew": ship.crew.find(member)}), 0)
+			promote.tooltip_text = "A rank is for show: it puts a title in front of their name and changes nothing else. One is earned for each skill mastered."
+			promote.add_theme_color_override("font_color", Color("#ffd46b"))
+			buttons.add_child(promote)
 		if ship.living_crew_count() > 1:
-			buttons.add_child(UiKit.button("DISMISS", func():
-				ship.crew.erase(member)
-				_rebuild(), 0))
+			buttons.add_child(UiKit.button("DISMISS", func(): _order({"op": "dismiss", "crew": ship.crew.find(member)}), 0))
 		stack.add_child(buttons)
 		column.add_child(card)
 	return column

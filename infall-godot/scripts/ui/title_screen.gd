@@ -6,6 +6,7 @@ signal new_run_pressed
 signal continue_pressed
 signal settings_pressed
 signal quit_pressed
+signal players_pressed
 
 var _time := 0.0
 var _stars: Array = []
@@ -35,6 +36,7 @@ func _ready() -> void:
 	if RunState.has_save():
 		menu.add_child(UiKit.button("CONTINUE RUN", func(): continue_pressed.emit(), 340))
 	menu.add_child(UiKit.button("NEW RUN", func(): new_run_pressed.emit(), 340))
+	menu.add_child(UiKit.button("PLAYERS AND LAN", func(): players_pressed.emit(), 340))
 	menu.add_child(UiKit.button("SETTINGS", func(): settings_pressed.emit(), 340))
 	menu.add_child(UiKit.button("QUIT", func(): quit_pressed.emit(), 340))
 	for child in menu.get_children():
