@@ -52,6 +52,8 @@ source doc carries the tag heromedel's words give it.
 - The Jigawatt Drive is the common jump drive, and it burns Mawjig. (GDD 6A; Proposed)
 - The jump drive's technical name is the Material to Energy, Space-Time JigaWatt Powered, Jump Drive. Its full name is the Mawjig Powered Jigawatt Drive, it is called the Jigawatt Drive, and its nickname is the Jig Drive. Some people call it the MawJig Drive. (GDD 6D; Decided)
 - The Jigawatt Drive needs 1.21 Mawjig to power a jump. (GDD 6C; Decided)
+- A Jigawatt and a Mawjig are the same thing, so a jump's 1.21 Mawjig is 1.21 Jigawatts. (GV 6A; Decided)
+- Every ship has some kind of power generation, whatever its race. (GV 6B; Decided)
 - A squad that waits in a cluster slowly gathers a little Mawjig, so it is never stranded for good. (GDD 6B; Likely)
 
 ## Technology
@@ -64,7 +66,8 @@ source doc carries the tag heromedel's words give it.
 
 ## Terrans (the GATOS)
 
-- The GATOS are cats. Their formal name is the Galactic Alliance of Tabby Occupied Systems, written G.A.T.O.S. and known as the GATOS. (Race profiles, Terrans; Decided, heromedel 2026-10-31)
+- By default the GATOS are Terrans, the Galactic Alliance of Terran Occupied Systems. With the GATOS Species setting on Tabbys, they are cats, the Galactic Alliance of Tabby Occupied Systems. Either way it is written G.A.T.O.S. and known as the GATOS. (GV 7A; Decided)
+- The GATOS are like a loose alliance of gangs, not a federation. (Race profiles, Terrans 1; Likely)
 - Terrans are believed to be the most common race in the galaxy. (Race profiles, Terrans 8; Proposed)
 - Terrans live in tight-knit core areas, with arms of colonies reaching out from them. (Race profiles, Terrans 8; Proposed)
 - In good times Terrans are accepted by others and are interested in trade and other cultures. (Race profiles, Terrans 2; Proposed)
@@ -134,6 +137,7 @@ source doc carries the tag heromedel's words give it.
 
 - The Mecha call themselves HalfMechs. They are not robots, but a small race of halfling-like, genetically modified cyborgs who live inside semi-cybernetic mech suits. (Race profiles, Mecha names, what they are; Proposed)
 - HalfMechs are halfling-like in size and childish in attitude, and oddly adorable for their viciousness. (Race profiles, Mecha what they are; Proposed)
+- With the GATOS Species setting on Tabbys, the HalfMechs are kitten-like rather than halfling-like. (GV 7D; Proposed)
 - The HalfMechs' origin is lost to time, but genetic evidence suggests they were Terran, bred to fit inside mech suits. Their creation, and possibly the power the suits give them, made them immature, violent and greedy, like cruel children. (Race profiles, Mecha origin; Proposed)
 - Outside their suits, HalfMechs are incredibly bashful if not violent, but their overconfidence keeps them from being truly shy. (Race profiles, Mecha out of their suits; Proposed)
 
@@ -159,6 +163,7 @@ source doc carries the tag heromedel's words give it.
 ## Senti-GPH
 
 - The Senti-GPH (Sentient Generative Pretrained Holograms) are holographic AI avatars originally made by Terrans, who became their own people. (Race profiles, Senti-GPH 1; Proposed)
+- With the GATOS Species setting on Tabbys, the Senti-GPH are holographic cats. (GV 7D; Proposed)
 - The Senti-GPH's technical name is Sentient Generative Pretrained Holograms. Their full name, Senti-GPH, is not usually used by people actually speaking. They are called Senti, The Senti, or The Senti-. (Race profiles, Senti-GPH names; Decided)
 - A single Senti speaks in the first person and uses words like I and me, but in negotiations the Senti have a habit of saying "We, The Senti-", as in "We, The Senti-, welcome you to look around our storage facilities if you would like to trade." (Race profiles, Senti-GPH names; Decided)
 - The Senti-GPH build, grow and multiply like other races. (Race profiles, Senti-GPH 1; Proposed)

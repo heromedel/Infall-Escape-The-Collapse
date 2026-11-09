@@ -22,13 +22,14 @@ How races treat each other: see Relations between races at the end.
 10. **Ship designs across tiers:** basic to advanced, since a race can be placed anywhere from the core to the
     rim and its strength comes from its placement (GDD 2N).
 
-## Terrans: The Galactic Alliance of Tabby Occupied Systems (G.A.T.O.S., "the GATOS") (draft, 2026-10-21)
+## Terrans: The Galactic Alliance of Terran Occupied Systems (G.A.T.O.S., "the GATOS") (draft, 2026-10-21)
 
 The starting race (GDD 7C). The name is deliberate, to avoid a plain Federation clone.
 
-- **Cats — Decided (heromedel, 2026-10-31):** the GATOS are officially cats, and G.A.T.O.S. stands for the
-  Galactic Alliance of Tabby Occupied Systems. This replaces the earlier draft, where they were a loose alliance of
-  humans and the name was the Galactic Alliance of Terran Occupied Systems.
+- **Species setting — Decided (heromedel, 2026-10-31; GV 7A):** `GATOS Species: Terrans > Tabbys`. With Terrans,
+  the default, the GATOS are humans, the Galactic Alliance of Terran Occupied Systems. With Tabbys they are cats, the
+  Galactic Alliance of Tabby Occupied Systems. Either way it is written G.A.T.O.S. and known as the GATOS. This
+  replaces "the GATOS are officially cats", decided earlier the same day.
 
 1. **Tone and ship style — Proposed (2026-10-21):** when doing well, clean, soft Federation-like ships. When
    desperate, a grim, survivalist look built from seemingly borrowed or stolen technology.
