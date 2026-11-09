@@ -49,6 +49,9 @@ then its structure, reactor, systems at their levels and weapons; crew are count
 | Each door | 2 | 0.48 |
 | Each weapon mount | — | **6.05** |
 
+- **Rooms — Ai-Generated-Proposal (2026-10-31), shared with Godot Version:** a room holding several systems counts
+  10% of its dearest system's level-1 price; the AZC counts as a room system at 18.15 (its level 1); a shields room
+  counts the shield test's level 1, one layer (54.46, so 5.45). Reference values per ship: `economy-findings.md`, F13.
 - **Weapon mounts — Proposed (heromedel, 2026-10-31):** a mount costs 25 scrap (**6.05**) to add at a store, and each
   mount a ship has counts at that price in its value. FHP counts mounts but doesn't price them. Replaces the first
   guess of 4.84 (`economy-findings.md`, F10).
@@ -77,9 +80,15 @@ guess.
 | Mutation system | Drone Control × 0.75 | 10.89 | 1.82, 3.63, 5.45, 8.17, 10.89, 14.52, 18.15 | 62.63 |
 | EVA Dock | Teleporter × 0.75 | 16.34 | 5.45, 10.89 | 16.34 |
 | AAA | Clone Bay + Backup DNA Bank augment (40 scrap) | 21.78 | 8.47, 10.89 | 19.36 |
-| Supershield Generator | Zoltan Shield augment (80 scrap) | 19.36 | none yet | — |
+| Supershield Generator | Zoltan Shield augment (80) + Shield Overcharger drone (60) + a third of Drone Control (20), 160 scrap | 38.72 | 7.26, 12.11 | 19.37 |
 
 The number of levels follows the analog until each system's levels are designed.
+
+**Supershield Generator — Proposed (heromedel, 2026-10-23; `economy-findings.md` F5, item 10):** 38.72. It starts
+each fight full like the Zoltan Shield and regrows layers in battle like the Shield Overcharger, so it is priced as
+both, plus a third of Drone Control (it can't launch other drones). **Upgrades — Ai-Generated-Proposal (2026-10-31):**
+7.26 and 12.11 for levels 2 and 3 (30 and 50 scrap, Cloaking's steps; FTL's three-level systems step about 30 then
+50). Each level regrows a layer faster; FTL's Overcharger regrows one every 15 s (`DRONE_SHIELD` data).
 
 Supershield Generator (Tentauri): FTL's Zoltan Shield as a ship system that recharges periodically, like the Shield
 Overcharger without a drone system. 2 bars (the Overcharger's player power). Capacity 5, as FTL's Zoltan Shield
