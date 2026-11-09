@@ -1,9 +1,9 @@
 # Cat Concept for Gatos
 
 **Date:** 2026-10-28
-**Status:** a concept: a cat take on the GATOS crew (heromedel: not a new race, as first briefed). When it was saved,
-the art rules said the GATOS were human; since 2026-10-31 the GATOS are officially cats (race profiles, Terrans), and
-that art rule is marked replaced (`docs/art/README.md`).
+**Status:** a concept: a cat take on the GATOS crew (heromedel: not a new race, as first briefed). Since 2026-10-31
+the GATOS are either: humans with the setting `GATOS Species: Terrans > Tabbys` on Terrans, cats on Tabbys (race
+profiles, Terrans). This concept is for Tabbys.
 
 ![Beside the Mecha and Tentauri crews](review/cat-merc-sheet.png)
 

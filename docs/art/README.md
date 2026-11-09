@@ -20,7 +20,7 @@ each with its SVG, PNG exports, review sheets, build tools and a notes README.
 | 2026-10-23 | Power conduit paths are kept on their own layer and exported as a separate file from the floor layout. |
 | 2026-10-23 | FTL is the bar for tone: clean, restrained and readable, never cheesy or cluttered. Show character through colours and shapes, at the Outrider's level of polish. |
 | 2026-10-23 | Nothing drips in space: no rust streaks or drips. Show wear sparingly, as scorching, pitting, faded or patchy paint, and a few replaced plates of a different shade. |
-| 2026-10-23 | ~~The GATOS are human; the cat pun is only in their name. No cat motifs on their ships.~~ **Replaced:** since 2026-10-31 the GATOS are officially cats (race profiles, Terrans; Decided). |
+| 2026-10-23 | The GATOS are human; the cat pun is only in their name. No cat motifs on their ships. This is the Terrans version: since 2026-10-31 the setting `GATOS Species: Terrans > Tabbys` can make them cats instead (race profiles, Terrans). |
 | 2026-10-23 | Stolen or foreign weapons look properly fitted on a real hardpoint, refitted into the hull, not clamped on. |
 | 2026-10-23 | Weapons are separate art, but ship previews and squad views show them mounted. Loadouts of one hull must look visibly different. |
 | 2026-10-23 | Conduit check, run before sending any conduit ship: every installed system's room is on the network and traces back to the AZC, and every single point of failure is listed in the piece's README (only intended weak points, such as a single spur, may remain). The floor plan tools fail the build otherwise. Every weapon hardpoint has a run back to the AZC too: whether mounts need power is **Open** (race profiles, Terrans 6), but heromedel asked to work as if they do. |

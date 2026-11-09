@@ -39,8 +39,8 @@ The first design (rejected by heromedel, 2026-10-23) was cluttered: rust streaks
 maw, and the stolen launcher clamped on as a moth with roots. Its loadouts looked the same. heromedel: "that ship
 is hideous, cluttered, the rust seems to drip but things don't drip in space, gatos are not cats, the weapon looks
 bolted in place and weird, it's almost dumb and cheesy compared to FTL and it looks like the same hull and weapons."
-That design was not kept. Its lessons are in `docs/art/README.md`. ("Gatos are not cats" predates 2026-10-31, when
-the GATOS became officially cats.)
+That design was not kept. Its lessons are in `docs/art/README.md`. ("Gatos are not cats" was said before the
+setting `GATOS Species: Terrans > Tabbys`; with Terrans they still aren't, with Tabbys they are.)
 
 This design started fresh. Concepts considered:
 
