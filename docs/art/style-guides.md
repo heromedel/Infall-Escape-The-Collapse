@@ -96,3 +96,11 @@ Reference: heromedel's sheet, `tentauri/crew/`.
   wavy lines (one pixel, plus a shade pixel), never wedges or triangles. Two long tentacles always hang; the eight
   short ones type, shoot, punch and reach out to other systems in the room (the reach prototype).
 - **Using a Tentauri system — Proposed (2026-10-25):** a grasping animation instead of typing (`docs/ideas.md`).
+
+## Terran and Tabby crew
+
+- **Emblems — Decided (heromedel, 2026-11-10):** there is no universal Terran or Tabby emblem. Each Terran or Tabby
+  crew design may wear an emblem of its own; the drifter of crew test 3 keeps its blue chevron
+  (`terran/crew-test-3`), and other designs get other emblems.
+- **Hands — Proposed (heromedel, 2026-11-10):** a hanging hand is drawn as a fist of about four pixels, not as a
+  flat hand.

@@ -13,6 +13,11 @@ A Terran seen from about 45 degrees above (the 1/2 view): a dark quiff, a brown 
 GATOS-blue bandana at the neck, an olive shirt, dark trousers and boots, and a blue scout chevron on the coat's back.
 The bandana and the chevron are the one accent, as purple is for the Mecha.
 
+- **Decided (heromedel, 2026-11-10):** this drifter keeps the chevron, but it is his own emblem: there is no
+  universal Terran or Tabby emblem, and other Terrans will wear other emblems.
+- **Proposed (heromedel, 2026-11-10):** the hands are fists of four pixels (they were flat, two pixels wide and one
+  tall).
+
 280 × 140 pixels: 35 × 35 frames, 8 per row, with the boots on the same line as the Mecha's feet. The rows follow
 the other sheets' order for the rows that exist:
 
