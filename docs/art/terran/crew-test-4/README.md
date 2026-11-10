@@ -17,8 +17,10 @@ feet a line.
 - His **quiff** is the head: dark hair with its highlight to one side and a single row of face under it.
 - The **blue bandana** is three pixels in the middle of the torso line. From behind, the **chevron** is three blue
   pixels on his back.
-- The **coat's tail** is two brown pixels beside his feet. When he steps toward the camera, the one on the stepping
-  side is covered (heromedel's "two brown dots that kick back when he steps").
+- The **coat's tail** facing the camera is two brown pixels beside his feet; when he steps, the one on the stepping
+  side is covered (heromedel's "two brown dots that kick back when he steps"). **From behind it is a hem**: a third
+  brown line under his back that hides his feet, with a boot showing only when he steps. (The two dots from behind
+  read as an X: heromedel, 2026-11-10.)
 - The pistol and the extinguisher are in his right hand at the end of a straight arm; his head turns a little with
   his aim.
 
@@ -49,19 +51,21 @@ It was drawn frame for frame against the genre's sheet, working from letter maps
 each frame. Measured afterwards, frame against frame in the same place on the sheet:
 
 - **No pixel has the genre's colour** except the white laser bar, which is plain white on both.
-- **The outlines nearly coincide on most rows:** 92–98% of the shape is shared on the walk, aim, fire, punch and
-  type rows. That is the "same construction, frame for frame" that was asked for, and it is also the closest this
-  project has come to the genre's own drawing. heromedel decides whether that is the right side of the repo's rule
-  (likeness and design may match exactly; lifting the art files is forbidden).
-- **Four rows are my own poses** and share about half their shape or less: repair (a crouch built from his own
-  side-view parts), the lying body in death, the teleport and the clone.
+- **The outlines nearly coincide on almost every row:** 92–98% of the shape is shared on the walk, aim, fire, punch
+  and type rows, **97% on death and 100% on repair**. Those last two were first drawn as my own poses; heromedel
+  found the repair senseless ("a severed hand or a vulture") and the death "dumb" (2026-11-10), so both now take the
+  genre's poses part for part, in his colours. This is the closest the project has come to the genre's own drawing.
+  heromedel decides whether that is the right side of the repo's rule (likeness and design may match exactly; lifting
+  the art files is forbidden), and whether this sheet stays a study or goes in the game.
+- **Two rows are worked out and share about half their shape:** the teleport (57%) and the clone (66%). Walking
+  away shares 86%, because of the hem.
 
 ## How it is made
 
 Every frame is placed by hand as text, one character a pixel, in `tools/topdown.py`; the colours are in
-`tools/pix.py`. An action frame is the standing grid with the rows of the acting arm replaced. Three things are worked
-out from drawn frames instead of drawn: the teleport (his own columns drawn upward and removed), the clone bay's
-greys, and the raised end of the falling body (columns lifted whole). `python3 tools/build.py`, run from this folder,
+`tools/pix.py`. An action frame is the standing grid with the rows of the acting arm replaced. Two things are worked
+out from drawn frames instead of drawn: the teleport (his own columns drawn upward and removed) and the clone bay's
+greys. `python3 tools/build.py`, run from this folder,
 rebuilds the sheet and the pictures in `review/`.
 
 ## Review pictures
