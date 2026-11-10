@@ -36,10 +36,10 @@ STAND_DOWN = grid([
     "...offffewwohhiiihhhhhhhoWwecccdo...",
     "..offfeeewwohhhiihhhhhhhoWWeecccdo..",
     "..offeeeeecohhhhhhhhhhhhoeeeccccdo..",
-    "..ofeeeeeccohtssssssstuhoeecccdddo..",
-    "..oeeeeccccottsssttssstuoeccccdddo..",
-    "..oeeecccccdotssssssttuodccccddddo..",
-    "..oecccccccddotssssstuoddcccdddddo..",
+    "..ofeeeeeccohtsssssssstuoeecccdddo..",
+    "..oeeeeccccotvvtssssuvvuoeccccdddo..",
+    "..oeeecccccdotsssstusstodccccddddo..",
+    "..oecccccccddotsuuuttuoddcccdddddo..",
     "...oooecdoeccanbBBBBbnaccdocddooo...",
     ".....oecdoeccaanbBBbnaaxcdocddo.....",
     ".....osstoecckkkkyykkkkccdottuo.....",
@@ -84,10 +84,10 @@ STAND_RIGHT = grid([
     "...ohhhiiijjiiihhhho..",
     "...ohhhhiiiiiihhhhho..",
     "...ohhhhhhiihhhhhsso..",
-    "...ohhhhhhhhhhhtssso..",
+    "...ohhhhhhhhhhhtvvso..",
     "...ohhhhhhhhhhttsssso.",
-    "...ohhhhhhhhhtssssto..",
-    "...ohhhhhhhhuttsssuo..",
+    "...ohhhhhhhhhtsssuto..",
+    "...ohhhhhhhhuttsuuso..",
     "....ohhhhhhuutttuuo...",
     ".....oohhhhuuuuooo....",
     "......oooowwWnbbBo....",
@@ -133,7 +133,18 @@ STEP_DOWN = change(STAND_DOWN, {      # the arm on the viewer's left comes forwa
     20: ".................ozzzzzo............",
     21: "..................ooooo.............",
 }, 36)
-STEP_DOWN_2 = grid(STAND_DOWN[:12] + [row[::-1] for row in STEP_DOWN[12:]], 36)
+STEP_DOWN_2 = change(STAND_DOWN, {    # the other arm and the other boot; drawn again, so the light stays on his left
+    12: "...ooooooоeccanbBBBBbnaccdocddooo...".replace("о", "o"),
+    13: ".........oeccaanbBBbnaaxcdocddo.....",
+    14: ".........oecckkkkyykkkkccdocddo.....",
+    15: ".........oecdppppmmppppcddocddo.....",
+    16: ".........oooooooooooooooooottuo.....",
+    17: ".........oecoZZzzzo....ocdotuuo.....",
+    18: "..........oooZzzzzo.....ooottuo.....",
+    19: "............ozzzzzo........ooo......",
+    20: "............ozzzzzo.................",
+    21: ".............ooooo..................",
+}, 36)
 STEP_UP = change(STAND_UP, {          # the arm on the viewer's left swings up past its shoulder; a boot shows under the hem
     0: "....ooooo.....ooooooo...............",
     1: "....ossto...oohiijihhoo.............",
@@ -153,7 +164,25 @@ STEP_UP = change(STAND_UP, {          # the arm on the viewer's left swings up p
     22: "............ozZzzo..................",
     23: ".............oooo...................",
 }, 36)
-STEP_UP_2 = grid([row[::-1] for row in STEP_UP], 36)
+STEP_UP_2 = change(STAND_UP, {        # the other arm and the other boot; his head and its highlight do not move
+    0: "..............ooooooo......ooooo....",
+    1: "............oohiijihhoo....ossto....",
+    2: "...........ohhiijjihhhho...ostto....",
+    3: "...........ohhiiijiihhhho..ottuo....",
+    4: "....oooooooohhiiiiihhhhhoooocddo....",
+    12: "...oooecdoeeccccccccccccddooooooo...",
+    13: ".....oecdoeecccccbbcccccddo.........",
+    14: ".....oecdoeeccccbbbbccccddo.........",
+    15: ".....oecdoeecccbbccbbcccddo.........",
+    16: ".....oecdoeeccccccccccccddo.........",
+    17: ".....oecdoeccccccccccccdddo.........",
+    18: "......ooooecccccccccccddddo.........",
+    19: "..........oeccccccccccdddo..........",
+    20: "...........oooooooozzzzoo...........",
+    21: "..................ozzzzo............",
+    22: "..................ozzZzo............",
+    23: "...................oooo.............",
+}, 36)
 
 
 def stand():

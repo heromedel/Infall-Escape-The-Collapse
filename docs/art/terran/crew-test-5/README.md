@@ -18,6 +18,13 @@ Rows 1 and 3 are this version; rows 2 and 4 are crew test 4 enlarged to the same
   head over his shoulders).
 - **Shapes are rounded by hand**: the head, the shoulders, the fists (three by three) and the boots.
 - **Room for the coat**: from behind it hangs seven rows below his shoulders, and the chevron is a clean mark.
+- **A face with features.** heromedel, 2026-11-10: at the higher resolution "blocks not suggesting real facial
+  features becomes more noticeable"; the first face was four rows of plain skin and looked melted. It now has a
+  forehead, eyes in the shadow of the brow, a nose and a mouth. The rule for every part at this size: a block has to
+  suggest the real thing it stands for.
+- **Nothing moves that should not.** The second step of each walk is drawn again, not mirrored, so the light stays on
+  his left and his hair's highlight does not jump (heromedel, 2026-11-10). The head is the same pixels in every
+  walking frame.
 
 ## Drawn so far
 
