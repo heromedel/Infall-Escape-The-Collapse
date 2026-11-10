@@ -230,19 +230,23 @@ SIDE_LEGS_FAR = part(17, [      # the far leg lands ahead, the near one trails
 
 # --- At a console: the arms come forward and the hands take turns ------------------------------------------------
 
-FRONT_TYPE = swap(FRONT, {
-    14: "..oeecepmpdcddo..",
-    15: "...ostPpmpmtuo...",
-    16: "...ottPpmpmtuo...",
+FRONT_TYPE = swap(FRONT, {       # both hands up in front of the chest, as over a console
+    11: ".oeecstaaxtucddo.",
+    12: ".oeecttkyktucddo.",
+    13: "..oocccpPmdccoo..",
+    14: "...occepmpdcco...",
+    15: "...occPpmpmdco...",
+    16: "...oecPpmpmdco...",
 })
-FRONT_TYPE_1 = swap(FRONT_TYPE, {
-    14: "..oestepmpdcddo..",
-    15: "...ottPpmpmtuo...",
-    16: "...oecPpmpmtuo...",
+FRONT_TYPE_1 = swap(FRONT_TYPE, {     # and they take turns, a pixel up and back
+    10: ".oeecstaAadcccdo.",
+    11: ".oeecttaaxtucddo.",
+    12: ".oeeccckyktucddo.",
 })
 FRONT_TYPE_2 = swap(FRONT_TYPE, {
-    14: "..oeecepmpdtudo..",
-    16: "...ottPpmpmdco...",
+    10: ".oeecccaAatuccdo.",
+    11: ".oeecstaaxtucddo.",
+    12: ".oeecttkykdccddo.",
 })
 BACK_TYPE = swap(BACK, {
     13: "..oocccccccccoo..",
@@ -258,19 +262,21 @@ BACK_TYPE_2 = swap(BACK_TYPE, {
     13: "..oocccccccccddo.",
     14: "...oecccccccdoo..",
 })
-SIDE_TYPE = swap(SIDE, {
-    10: "....oddeeecao....",
-    11: "....oddceeeesto..",
-    12: "....oddccccktuo..",
-    13: "....oddccccpoo...",
+SIDE_TYPE = swap(SIDE, {       # both hands out at chest height: the near one up, the far one showing past it
+    9: "....oddeeccAooo..",
+    10: "....oddeeeeesto..",
+    11: "....oddccccatuto.",
+    12: "....oddcccckooo..",
+    13: "....oddccccpo....",
     14: "....odcccccpo....",
     15: "....odcccccpo....",
 })
-SIDE_TYPE_1 = swap(SIDE_TYPE, {
-    10: "....oddeeeeesto..",
-    11: "....oddccccatuo..",
-    12: "....oddcccckoo...",
-    13: "....oddccccpo....",
+SIDE_TYPE_1 = swap(SIDE_TYPE, {    # and they change places
+    8: "....odcfecbaooo..",
+    9: "....oddeeccAsto..",
+    10: "....oddeeeeetuo..",
+    11: "....oddccccaooto.",
+    12: "....oddccccko.o..",
 })
 
 
@@ -312,109 +318,124 @@ def stand():
             compose((BACK_LEGS, 0), (BACK, 0)), mirror(compose((SIDE_LEGS, 0), (SIDE, 0)))]
 
 
-# --- Shooting: a pistol comes up, fires, and comes down ----------------------------------------------------------
+# --- Shooting, fire and fists: one arm acts, the rest of him stands as he stands ------------------------------------
+# The arm that acts is his right: on the viewer's left when he faces the camera, on the viewer's right from behind.
 
-SIDE_AIM = swap(SIDE, {
-    8: "....odcfecbaoo...",
-    9: "....oddeeeeestoo.",
-    10: "....oddccccatuo..",
-    11: "....oddccccaoo...",
-    12: "....oddccccko....",
-    13: "....oddccccpo....",
-    14: "....odcccccpo....",
-    15: "....odcccccpo....",
+FRONT_ARM_OUT = swap(FRONT, {     # facing the camera: that fist raised a little and a pixel out, ready to hold something
+    11: "oeeocccaaxdccddo.",
+    12: "ostoccckykdccddo.",
+    13: "ottocccpPmdccddo.",
+    14: ".oooccepmpdcctuo.",
+    15: "...occPpmpmdctuo.",
+    16: "...oecPpmpmdcooo.",
 })
-SIDE_FIRE = swap(SIDE_AIM, {
-    8: "....odcfecbaoo.F.",
-    9: "....oddeeeeestooF",
-    10: "....oddccccatuoF.",
-})
-SIDE_LOWER = swap(SIDE_ARM_FORWARD, {
-    15: "....odccccctuoo..",
-})
-FRONT_AIM = swap(FRONT, {
-    14: "..oeeeestddddo...",
-    15: "...occPtupmdco...",
-    16: "...oecPoopmdco...",
-})
-FRONT_FIRE = swap(FRONT_AIM, {
-    17: "...ooo.FF..ooo...",
-})
-BACK_AIM = swap(BACK, {      # the pistol goes up beside the head, pointing away
-    3: ".....ohiihho.o...",
-    4: ".....ohhhhho.oo..",
-    5: ".....othhhtootuo.",
-    6: "...oooohhhoootuo.",
+BACK_ARM_UP = swap(BACK, {        # facing away: that fist up beside his head
+    5: ".....othhhto.otuo",
+    6: "...oooohhhooootuo",
     7: "..offewwwWWccddo.",
     9: ".ofeecccbccccoo..",
     10: ".oeecccbBbccco...",
     11: ".oeeccbcccbcco...",
     12: ".oeeccccccccco...",
-    13: "..ooccccccccco...",
-    14: "...oecccccccdo...",
-    15: "...oecccccccdo...",
-    16: "...oecccccccdo...",
+    13: ".oeeccccccccco...",
+    14: ".ostccccccccco...",
+    15: ".ottecccccccdo...",
+    16: ".oooecccccccdo...",
 })
-BACK_FIRE = swap(BACK_AIM, {
-    1: ".......oiiho.F...",
-    2: ".....ooijiho.F...",
-})
+# What the fist holds is drawn two pixels left of the grid facing the camera, two right of it from behind.
+HELD = -2
+HELD_UP = 2
 
-
-def shoot_down():
-    legs = (FRONT_LEGS, 0)
-    return [compose(legs, (FRONT_AIM, 0)), compose(legs, (FRONT_FIRE, 0)), compose(legs, (FRONT_TYPE, 0))]
-
-
-def shoot_right():
-    legs = (SIDE_LEGS, 0)
-    return [compose(legs, (SIDE_AIM, 0)), compose(legs, (SIDE_FIRE, 0)), compose(legs, (SIDE_LOWER, 0))]
-
-
-def shoot_up():
-    legs = (BACK_LEGS, 0)
-    return [compose(legs, (BACK_AIM, 0)), compose(legs, (BACK_FIRE, 0)), compose(legs, (BACK_TYPE, 0))]
-
-
-# --- Fighting a fire: an extinguisher, and its spray ---------------------------------------------------------------
-
-SIDE_SPRAY = swap(SIDE, {
-    8: "....odcfecbaooo..",
-    9: "....oddeeccAo45o.6....",
-    10: "....oddeeeest45o6.6...",
-    11: "....oddcccctu45o.",
-    12: "....oddcccckooo..",
+# A pistol: aimed straight, a little to his right, a little to his left. As on the genre's sheet, these three
+# frames are three aims, not an animation, and there is no flash: the shot itself is the crew laser shot.
+PISTOL_DOWN = part(14, ["..oGko...........", "..oGko...........", "..oGko...........", "..oGko...........",
+                        "...oo............"])
+PISTOL_DOWN_RIGHT = part(14, ["..oGko...........", ".oGko............", ".oGko............", "oGko.............",
+                              ".oo.............."])
+PISTOL_DOWN_LEFT = part(14, ["..oGko...........", "...oGko..........", "...oGko..........", "....oGko.........",
+                             ".....oo.........."])
+PISTOL_UP = part(0, ["............oo...", "...........oGko..", "...........oGko..", "...........oGko..",
+                     "...........oGko.."])
+PISTOL_UP_RIGHT = part(0, ["..............oo.", ".............oGko", "............oGko.", "............oGko.",
+                           "...........oGko.."])
+PISTOL_UP_LEFT = part(0, ["..........oo.....", ".........oGko....", "..........oGko...", "..........oGko...",
+                          "...........oGko.."])
+SIDE_AIM = swap(SIDE, {
+    7: ".....owwWbBo.ooooo....",
+    8: "....odcfecbaoGGGGko...",
+    9: "....oddeeeeestkkoo....",
+    10: "....oddccccatuoo......",
+    11: "....oddccccaoo...",
+    12: "....oddccccko....",
     13: "....oddccccpo....",
     14: "....odcccccpo....",
     15: "....odcccccpo....",
 }, 22)
-SIDE_SPRAY_1 = swap(SIDE_SPRAY, {
-    9: "....oddeeccAo45o6.6...",
-    10: "....oddeeeest45o.6.6..",
+SIDE_AIM_LOW = swap(SIDE_AIM, {   # a little toward the camera: the arm a pixel lower
+    7: ".....owwWbBo.....",
+    8: "....odcfecbaoooooo....",
+    9: "....oddeeccAoGGGGko...",
+    10: "....oddeeeeestkkoo....",
+    11: "....oddccccatuoo......",
+    12: "....oddcccckoo...",
 }, 22)
-FRONT_SPRAY = swap(FRONT, {
-    14: "..oeece445dcddo..",
-    15: "...ocst445tuco...",
-    16: "...oett455tudo...",
-    17: "...ooo.666.ooo...",
-})
-FRONT_SPRAY_1 = swap(FRONT_SPRAY, {
-    17: "...ooo6.6.6ooo...",
-})
-BACK_SPRAY = swap(BACK_TYPE, {     # from behind only the canister shows, held at the hip
-    13: "..ooccccccccc45o.",
-    14: "...oecccccccd45o.",
-    15: "...oecccccccdooo.",
-})
-BACK_SPRAY_1 = swap(BACK_SPRAY, {
-    13: ".oeeccccccccc45o.",
-    14: "..ooecccccccd45o.",
-})
+SIDE_AIM_HIGH = swap(SIDE_AIM, {  # a little away from it: the arm a pixel higher
+    6: "......outtto.ooooo....",
+    7: ".....owwWbBooGGGGko...",
+    8: "....odcfeeeestkkoo....",
+    9: "....oddccccAtuoo......",
+    10: "....oddccccaoo...",
+    11: "....oddccccao....",
+}, 22)
+
+
+def shoot_down():
+    body = ((FRONT_LEGS, 0), (FRONT_ARM_OUT, 0))
+    return [compose(*body, (pistol, 0, HELD)) for pistol in (PISTOL_DOWN, PISTOL_DOWN_RIGHT, PISTOL_DOWN_LEFT)]
+
+
+def shoot_right():
+    legs = (SIDE_LEGS, 0)
+    return [compose(legs, (SIDE_AIM, 0)), compose(legs, (SIDE_AIM_LOW, 0)), compose(legs, (SIDE_AIM_HIGH, 0))]
+
+
+def shoot_up():
+    body = ((BACK_LEGS, 0), (BACK_ARM_UP, 0))
+    return [compose(*body, (pistol, 0, HELD_UP)) for pistol in (PISTOL_UP, PISTOL_UP_RIGHT, PISTOL_UP_LEFT)]
+
+
+# --- Fighting a fire: a red extinguisher in the same fist, aimed where the pistol was, and its spray -----------------
+
+CANISTER_DOWN = part(14, ["..o45o...........", "..o45o...........", "..o45o...........", "..o45o...........",
+                          "..okko..........."])
+PLUME_DOWN = part(19, ["...66............", "..6M66..........."])
+PLUME_DOWN_1 = part(19, ["..6666...........", ".66M666..........", "..6M66..........."])
+CANISTER_UP = part(0, ["...........okko..", "...........o45o..", "...........o45o..", "...........o45o..",
+                       "...........o45o.."])
+PLUME_UP = part(-2, ["...........6M66..", "............66..."])
+PLUME_UP_1 = part(-3, ["...........6M66..", "..........66M666.", "...........6666.."])
+SIDE_SPRAY = swap(SIDE, {
+    9: "....oddeeccAoooooooo..66..",
+    10: "....oddeeeeeest4444ko66M6.",
+    11: "....oddccccaotu5555ko6M66.",
+    12: "....oddcccckoooooooo..66..",
+    13: "....oddccccpo....",
+    14: "....odcccccpo....",
+    15: "....odcccccpo....",
+}, 26)
+SIDE_SPRAY_1 = swap(SIDE_SPRAY, {
+    8: "....odcfecbao..........6..",
+    9: "....oddeeccAoooooooo.66M66",
+    10: "....oddeeeeeest4444ko6M666",
+    11: "....oddccccaotu5555ko666M6",
+    12: "....oddcccckoooooooo.6M66.",
+    13: "....oddccccpo..........6..",
+}, 26)
 
 
 def fire_down():
-    legs = (FRONT_LEGS, 0)
-    return [compose(legs, (FRONT_SPRAY, 0)), compose(legs, (FRONT_SPRAY_1, 0))] * 2
+    body = ((FRONT_LEGS, 0), (FRONT_ARM_OUT, 0), (CANISTER_DOWN, 0, HELD))
+    return [compose(*body, (PLUME_DOWN, 0, HELD)), compose(*body, (PLUME_DOWN_1, 0, HELD))] * 2
 
 
 def fire_right():
@@ -423,41 +444,34 @@ def fire_right():
 
 
 def fire_up():
-    legs = (BACK_LEGS, 0)
-    return [compose(legs, (BACK_SPRAY, 0)), compose(legs, (BACK_SPRAY_1, 0))] * 2
+    body = ((BACK_LEGS, 0), (BACK_ARM_UP, 0), (CANISTER_UP, 0, HELD_UP))
+    return [compose(*body, (PLUME_UP, 0, HELD_UP)), compose(*body, (PLUME_UP_1, 0, HELD_UP))] * 2
 
 
-# --- A fist fight ------------------------------------------------------------------------------------------------
+# --- A fist fight: one fist draws back to the shoulder and comes straight out; the other arm hangs ------------------
 
-FRONT_GUARD = swap(FRONT, {
-    10: ".oeestcaAadtucdo.",
-    11: ".oeettcaaxdtuddo.",
-    13: "..oocccpPmdccoo..",
-    14: "...occepmpdcco...",
-    15: "...occPpmpmdco...",
-    16: "...oecPpmpmdco...",
-})
-FRONT_WINDUP = swap(FRONT_GUARD, {    # the fist on the viewer's left pulls back to the shoulder
+FRONT_WINDUP = swap(FRONT, {      # the fist on the viewer's left pulls back to the shoulder
     8: ".ostewWbBbWccddo.",
     9: ".ottccenbndccddo.",
-    10: ".oeecccaAadtucdo.",
-    11: ".oeecccaaxdtuddo.",
+    13: "..oocccpPmdccddo.",
+    14: "...occepmpdcctuo.",
+    15: "...occPpmpmdctuo.",
+    16: "...oecPpmpmdcooo.",
 })
-FRONT_PUNCH = swap(FRONT_GUARD, {     # and comes straight at the camera
-    10: ".oeecccaAadtucdo.",
-    11: ".oeecccaaxdtuddo.",
+FRONT_PUNCH = swap(FRONT, {       # and comes straight at the camera, so it shows large and low
     12: ".oeeeeckykdccddo.",
-    13: "..oosstpPmdccoo..",
-    14: "...osttpmpdcco...",
-    15: "...ottupmpmdco...",
+    13: "..oosstpPmdccddo.",
+    14: "...osttpmpdcctuo.",
+    15: "...ottupmpmdctuo.",
+    16: "...oecPpmpmdcooo.",
 })
-BACK_WINDUP = swap(BACK_TYPE, {       # the arm on the viewer's left draws back, its fist at the hip
-    13: ".oeecccccccccoo..",
-    14: ".ostecccccccdo...",
-    15: ".ottecccccccdo...",
-    16: ".oooecccccccdo...",
+BACK_WINDUP = swap(BACK, {        # facing away, the arm on the viewer's left bends, its elbow out
+    13: ".oeecccccccccddo.",
+    14: "..ooccccccccctuo.",
+    15: "...oecccccccdtuo.",
+    16: "...oecccccccdooo.",
 })
-BACK_PUNCH = swap(BACK_TYPE, {        # and is thrown forward: the fist shows above the shoulder
+BACK_PUNCH = swap(BACK, {         # and the fist goes out past his head
     4: "..oo.ohhhhho.....",
     5: ".ostoothhhto.....",
     6: ".ottooohhhoooo...",
@@ -466,83 +480,159 @@ BACK_PUNCH = swap(BACK_TYPE, {        # and is thrown forward: the fist shows ab
     10: "...occcbBbcccddo.",
     11: "...occbcccbccddo.",
     12: "...occcccccccddo.",
-    13: "...occcccccccoo..",
+    13: "...occcccccccddo.",
+    14: "...occccccccctuo.",
+    15: "...oecccccccdtuo.",
+    16: "...oecccccccdooo.",
 })
 
 
 def punch_down():
     legs = (FRONT_LEGS, 0)
-    return [compose(legs, (FRONT_GUARD, 0)), compose(legs, (FRONT_WINDUP, 0)), compose(legs, (FRONT_PUNCH, 1)),
-            compose(legs, (FRONT_PUNCH, 1)), compose(legs, (FRONT_GUARD, 0)), compose(legs, (FRONT, 0))]
+    stand, windup = compose(legs, (FRONT, 0)), compose(legs, (FRONT_WINDUP, 0))
+    return [stand, windup, compose(legs, (FRONT_PUNCH, 1)), windup, stand, stand]
 
 
 def punch_up():
     legs = (BACK_LEGS, 0)
-    return [compose(legs, (BACK_TYPE, 0)), compose(legs, (BACK_WINDUP, 0)), compose(legs, (BACK_PUNCH, 1)),
-            compose(legs, (BACK_PUNCH, 1)), compose(legs, (BACK_TYPE, 0)), compose(legs, (BACK, 0))]
+    stand, windup = compose(legs, (BACK, 0)), compose(legs, (BACK_WINDUP, 0))
+    return [stand, windup, compose(legs, (BACK_PUNCH, 0)), windup, stand, stand]
 
 
-# --- Repairs: a tool in the hand, working up and down --------------------------------------------------------------
+# --- Repairs: down on one knee, he swings a hammer onto the deck ---------------------------------------------------
 
-SIDE_REPAIR = swap(SIDE_TYPE, {
-    10: "....oddeeecao.oo.",
-    11: "....oddceeeestGGo",
-    12: "....oddccccktuoo.",
-})
-SIDE_REPAIR_HIGH = swap(SIDE_TYPE_1, {
-    9: "....oddeeccAo.oo.",
-    10: "....oddeeeeestGGo",
-    11: "....oddccccatuoo.",
-})
-SIDE_REPAIR_LOW = swap(SIDE_TYPE, {
-    10: "....oddeeccao....",
-    11: "....oddeeecao.oo.",
-    12: "....oddceeeestGGo",
-    13: "....oddccccptuoo.",
-    14: "....odcccccpoo...",
-})
+SIDE_KNEEL_LEGS = part(19, [    # the front foot under its knee, the back shin along the deck
+    "......oPPpo......",
+    "......oPpPPPPo...",
+    "...oZZppoooZzzo..",
+    "...oooooooooooo..",
+])
+SIDE_HAMMER_UP = swap(SIDE, {   # the hammer raised in front of his face
+    1: "......oooiio.ooooo....",
+    2: ".....ohhijiiooGGGo....",
+    3: ".....ohhhhso.okkko....",
+    4: ".....ohhtvso..oGo.....",
+    5: ".....ohutsstoosto.....",
+    6: "......outtto..otuo....",
+    7: ".....owwWbBoeeoo......",
+    8: "....odcfecbeeo...",
+    9: "....oddccccAo....",
+    10: "....oddccccao....",
+    11: "....oddccccao....",
+    12: "....oddccccko....",
+    13: "....oddccccpo....",
+    14: "....odcccccpo....",
+    15: "....odcccccpo....",
+}, 22)
+HAMMER_DOWN = part(15, [        # and brought down in front of him
+    ".............G.ooo....",
+    "..............GGGGo...",
+    "..............okkko...",
+    "...............ooo....",
+], 22)
+STRIKE = part(17, ["..................6...", "..............6....M6.", ".................6M..."], 22)
+STRIKE_1 = part(17, ["...................6..", ".............6M.....6.", "..................6..."], 22)
 
 
 def repair():
-    legs = (SIDE_LEGS, 0)
-    return [compose(legs, (SIDE_REPAIR_HIGH, 0)), compose(legs, (SIDE_REPAIR, 0)),
-            compose(legs, (SIDE_REPAIR_LOW, 0)), compose(legs, (SIDE_REPAIR, 0))]
+    legs = (SIDE_KNEEL_LEGS, 0)
+    up = compose(legs, (SIDE_HAMMER_UP, 2))
+    return [up, compose(legs, (SIDE_ARM_FORWARD, 2), (HAMMER_DOWN, 2), (STRIKE, 2)),
+            up, compose(legs, (SIDE_ARM_FORWARD, 2), (HAMMER_DOWN, 2), (STRIKE_1, 2))]
 
 
-# --- Dying: he staggers, drops to his knees, and falls on his back -------------------------------------------------
+# --- Dying: he reels, his knees go, he topples to his left and lands sprawled on his back --------------------------
 
 KNEEL_LEGS = part(20, [
     ".....oPpopmo.....",
     "...ozzPpopmzzo...",
     "...ooooooooooo...",
 ])
-# On the floor, head to the left, seen from above like everything else: nine rows tall, 25 long.
-FALLEN = part(14, [
-    "........ooooooooooo......",
-    "..ooooooofeeeeeeesto.....",
-    ".ohihtstWecccccccooooooo.",
-    "oihjhsvsbaaaaakPPPPPPZzo.",
-    "ohihsstBbAAAAymmmmmmooo..",
-    ".ohhhsvtbaaaaxkppppppzzo.",
-    ".ohhhutuWcccccccdooooooo.",
-    "..ooooooocdddddddtuo.....",
-    "........ooooooooooo......",
+# On the floor, head to the left, seen from above like everything else: one arm thrown up past his head, the other
+# down past it, legs apart. Thirteen rows tall, 25 long.
+FALLEN = part(11, [
+    "....oooo.................",
+    "...ostfeo................",
+    ".....ooefeoooooooo.......",
+    "..oooooofeeeeeeeeo.ooooo.",
+    ".ohihtstWecccccccooPPZzo.",
+    "oihjhsvsbaakPPPPPPPoooo..",
+    "ohihsstBbAayPmmmmmmo.....",
+    ".ohhhsvtbaxkpppppppoooo..",
+    ".ohhhutuWcccccccdooppzzo.",
+    "..oooooocddddddddo.ooooo.",
+    ".....oocdcoooooooo.......",
+    "...otucdo................",
+    "....oooo.................",
 ], 25)
+
+
+def leaning(image, top):
+    """The frame with each row slid left, the higher the further: `top` pixels at the top of his head, none at his
+    feet. Rows move whole, so no pixel is changed."""
+    out = Image.new("RGBA", image.size, (0, 0, 0, 0))
+    for y in range(FRAME):
+        shift = round(top * max(0, 31 - y) / 22)
+        for x in range(FRAME):
+            if image.getpixel((x, y))[3] and x - shift >= 0:
+                out.putpixel((x - shift, y), image.getpixel((x, y)))
+    return out
+
+
+def head_up(image, lifts):
+    """The fallen body with its head end still off the floor: columns left of each mark are lifted a pixel more."""
+    out = Image.new("RGBA", image.size, (0, 0, 0, 0))
+    for x in range(FRAME):
+        lift = sum(1 for mark in lifts if x < mark)
+        for y in range(FRAME):
+            if image.getpixel((x, y))[3] and y - lift >= 0:
+                out.putpixel((x, y - lift), image.getpixel((x, y)))
+    return out
 
 
 def death():
     stand = compose((FRONT_LEGS, 0), (FRONT, 0))
-    stagger = compose((FRONT_LEGS, 0), (FRONT_ARMS_A, 0, 1))
-    kneel = compose((KNEEL_LEGS, 0), (FRONT, 3))
-    slump = compose((KNEEL_LEGS, 0), (FRONT_ARMS_C, 4, -1))
-    landing = compose((FALLEN, -1, -4))
+    reel = leaning(stand, 2)
+    knees = leaning(compose((KNEEL_LEGS, 0), (FRONT, 3)), 5)
+    topple = leaning(compose((KNEEL_LEGS, 0), (FRONT, 4)), 9)
     down = compose((FALLEN, 0, -4))
-    return [stand, stagger, kneel, slump, landing, down, down, down]
+    return [stand, reel, knees, topple, head_up(down, (9, 13, 17, 21)), head_up(down, (11,)), down, down]
 
 
-# --- Teleporting: he turns to light, and the light breaks up and rises ---------------------------------------------
+# --- Teleporting, as on the other sheets: strings of his own pixels are pulled up into the sky ------------------------
+
+# How far each column is pulled, as a share of the frame's pull, across the figure from its left edge.
+PULLS = (0.5, 0.1, 1.0, 0.3, 0.0, 0.7, 0.2, 0.9, 0.0, 0.4, 1.0, 0.2, 0.6, 0.0, 0.8, 0.3, 1.0)
+
 
 def teleport():
+    """Eight frames: each column of him is dragged upward from the feet, a little at first, flickering, then a
+    long way. The whole column moves, so his face, bandana and belt slide up by different amounts from one column
+    to the next, and the top of the column draws out into a string."""
+    stand = compose((FRONT_LEGS, 0), (FRONT, 0))
+    frames = []
+    for pull in (0, 1, 2, 3, 5, 8, 12, 16):
+        image = Image.new("RGBA", (FRAME, FRAME), (0, 0, 0, 0))
+        for x in range(FRAME):
+            column = [stand.getpixel((x, y)) for y in range(FRAME) if stand.getpixel((x, y))[3]]
+            if not column:
+                continue
+            bottom = max(y for y in range(FRAME) if stand.getpixel((x, y))[3])
+            amount = round(pull * PULLS[(x - LEFT) % len(PULLS)])
+            high, tall = len(column), len(column) + amount
+            bend = (tall - 1) / max(1, high - 1)          # stretched most at the top, not at all at the feet
+            for step in range(tall):
+                source = round((high - 1) * (step / max(1, tall - 1)) ** bend)
+                y = bottom - (tall - 1) + step
+                if y >= 0:
+                    image.putpixel((x, y), column[source])
+        frames.append(image)
+    return frames
+
+
+# --- The alternative teleport heromedel asked to keep: he turns to light, and the light breaks up and rises --------
+
+def teleport_light():
     """Eight frames made from the standing frame's own shape: lit, then all light, then thinning bands of it."""
     stand = compose((FRONT_LEGS, 0), (FRONT, 0))
     shape = [(x, y) for y in range(FRAME) for x in range(FRAME) if stand.getpixel((x, y))[3]]

@@ -46,13 +46,13 @@ def actions(name, times=4, milliseconds=140):
     sets = [drifter.shoot_down(), drifter.shoot_right(), drifter.shoot_up(), left(drifter.shoot_right()),
             drifter.punch_down(), drifter.punch_up(), drifter.repair(),
             drifter.fire_down(), drifter.fire_right(), drifter.fire_up(), left(drifter.fire_right()),
-            drifter.teleport(), drifter.death(), drifter.clone()]
+            drifter.teleport(), drifter.death(), drifter.clone(), drifter.teleport_light()]
     pictures = []
     for index in range(24):
-        picture = floor(7 * FRAME * times, 2 * FRAME * times, times)
+        picture = floor(8 * FRAME * times, 2 * FRAME * times, times)
         for number, frames in enumerate(sets):
             f = frames[index % len(frames)]
-            picture.alpha_composite(scaled(f, times), ((number % 7) * FRAME * times, (number // 7) * FRAME * times))
+            picture.alpha_composite(scaled(f, times), (((number % 7) if number < 14 else 7) * FRAME * times, ((number // 7) if number < 14 else 1) * FRAME * times))
         pictures.append(picture.convert("RGB"))
     pictures[0].save(name, save_all=True, append_images=pictures[1:], duration=milliseconds, loop=0)
 
@@ -90,6 +90,9 @@ if __name__ == "__main__":
     ours = sheet()
     ours.save("terran-drifter-sheet.png")
     scaled(ours, 4).save("terran-drifter-sheet-4x.png")
+    light = strip(drifter.teleport_light())           # the alternative teleport, kept beside the sheet
+    light.save("terran-drifter-teleport-light.png")
+    scaled(light, 4).save("terran-drifter-teleport-light-4x.png")
     mecha = Image.open("../../mecha/crew/mecha-crew-sheet.png").convert("RGBA")
     tent = Image.open("../../tentauri/crew/tentauri-crew-sheet.png").convert("RGBA")
 
