@@ -79,24 +79,24 @@ FRONT_LEGS = part(17, [
     ".....oPpopmo.....",
     ".....oPpopmo.....",
     ".....oZzozzo.....",
-    "....oZZzozzzo....",
-    "....ooooooooo....",
+    ".....oZzozzo.....",
+    ".....ooooooo.....",
 ])
 FRONT_LEGS_A = part(17, [      # the leg on the viewer's left lands; the other trails, lifted and in shade
     ".....oPpopmo.....",
     ".....oPpommo.....",
     ".....oPpozzo.....",
     ".....oZzozzo.....",
-    "....oZZzoooo.....",
-    "....ooooo........",
+    ".....oZzoooo.....",
+    ".....oooo........",
 ])
 FRONT_LEGS_C = part(17, [
     ".....oPpopmo.....",
     ".....oppopmo.....",
     ".....oZzopmo.....",
     ".....oZzozzo.....",
-    ".....oooozzzo....",
-    "........ooooo....",
+    ".....oooozzo.....",
+    "........oooo.....",
 ])
 
 # --- Facing away -------------------------------------------------------------------------------------------------
