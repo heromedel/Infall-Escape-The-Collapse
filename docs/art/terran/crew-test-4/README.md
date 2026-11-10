@@ -21,8 +21,8 @@ feet a line.
   side is covered (heromedel's "two brown dots that kick back when he steps"). **From behind it is a hem**: a third
   brown line under his back that hides his feet, with a boot showing only when he steps. (The two dots from behind
   read as an X: heromedel, 2026-11-10.)
-- The pistol and the extinguisher are in his right hand at the end of a straight arm; his head turns a little with
-  his aim.
+- The pistol and the extinguisher are in his right hand at the end of a straight arm. His head stays still when he
+  aims: only the arm and pistol move (heromedel, 2026-11-10).
 
 ## The sheet
 

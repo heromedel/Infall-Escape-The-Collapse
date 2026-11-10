@@ -188,19 +188,18 @@ LEFT_AT = (2, 7)     # a left-facing grid is 21 wide, his mirrored figure in col
 STAND_LEFT = grid(["." * 8 + row[::-1] for row in STAND_RIGHT], 21)
 
 # --- Aiming: three aims, straight, a little to his right, a little to his left; no flash ----------------------------
-# The pistol is in his right hand, at the end of a straight arm. His head turns a little with the aim.
+# The pistol is in his right hand, at the end of a straight arm. His head stays still: only the arm and pistol move
+# (heromedel, 2026-11-10; the genre turns the head a pixel, which from behind reads as his hair moving).
 
 AIM_DOWN = over(STAND_DOWN, {
     7: (3, "oeco"), 8: (3, "oefcoppyppd"), 9: (4, "ofcoooooooo"), 10: (4, "oeoooomzZodo"),
     11: (5, "ooGooooo.o"), 12: (5, "ooDo"), 13: (5, "ooDo"), 14: (6, "oGo"), 15: (6, "oGo"), 16: (7, "o"),
 }, 21)
 AIM_DOWN_RIGHT = over(STAND_DOWN, {
-    3: (8, "tiihh"), 4: (8, "sthhh"), 5: (8, "sssuh"), 6: (9, "sth"),
     7: (2, "ofcoo"), 8: (2, "ofooceppyppd"), 9: (1, "oeco.ooooooooo"), 10: (1, "ooooo"),
     11: (1, "oGo"), 12: (1, "oDo"), 13: (0, "oGoo"), 14: (0, "oGo"), 15: (0, "oo"),
 }, 21)
 AIM_DOWN_LEFT = over(STAND_DOWN, {
-    3: (8, "hiiht"), 4: (8, "hhhss"), 5: (8, "htsss"), 6: (9, "sst"),
     7: (3, "oeco"), 8: (3, "oefooppyppd"), 9: (4, "ofcoooooooo"), 10: (4, "ofecoomzZodo"),
     11: (5, "oecooooo.o"), 12: (6, "oosoGo"), 13: (8, "ooDo"), 14: (9, "ooGo"), 15: (10, "oGo"), 16: (11, "oo"),
 }, 21)
@@ -210,26 +209,22 @@ AIM_UP = over(STAND_UP, {
 }, 21, 4)
 AIM_UP_RIGHT = over(STAND_UP, {
     -4: (19, "o"), -3: (18, "oGo"), -2: (17, "oDDo"), -1: (17, "oGo"), 0: (16, "oDoo"), 1: (15, "oooo"),
-    2: (13, "oooceo"), 3: (8, "hhiih"), 3.5: (0, ""), 7: (14, "ooo."), 8: (14, "oo.."), 9: (14, "o.."),
-} if False else {
-    -4: (19, "o"), -3: (18, "oGo"), -2: (17, "oDDo"), -1: (17, "oGo"), 0: (16, "oDoo"), 1: (15, "oooo"),
-    2: (13, "oooceo"), 3: [(8, "hhiih"), (17, "oo")], 7: (14, "ooo."), 8: (14, "oo.."), 9: (14, "o.."),
+    2: (13, "oooceo"), 3: (17, "oo"), 7: (14, "ooo."), 8: (14, "oo.."), 9: (14, "o.."),
 }, 21, 4)
 AIM_UP_LEFT = over(STAND_UP, {
     -4: (10, "o"), -3: (9, "oDoo"), -2: (10, "oGDo"), -1: (11, "oGGo"), 0: (9, "oooooo"), 1: (13, "ooo"),
-    2: (13, "oocoo"), 3: [(8, "iihhh"), (14, "ecddo")], 7: (14, "ooo."), 8: (14, "oo.."), 9: (14, "o.."),
+    2: (13, "oocoo"), 3: (14, "ecddo"), 7: (14, "ooo."), 8: (14, "oo.."), 9: (14, "o.."),
 }, 21, 4)
 AIM_RIGHT = over(STAND_RIGHT, {
     11: (3, "ofeecoooooooo"), 12: (3, "ofeecdooDDGGo"), 13: (3, "oeeccecosooo"), 14: (3, "odeccooooo"),
     15: (4, "oooooo..."), 16: (6, "...."), 17: (7, ".."),
 }, 21)
 AIM_RIGHT_LOW = over(STAND_RIGHT, {       # a little to his right is toward the camera: the pistol tips down the screen
-    8: (2, "ohhsssoo"), 9: (3, "oostobo"),
     13: (3, "oeeccecо".replace("о", "o")), 14: (3, "odeccooooo"), 15: (4, "ooooooDGDo"), 16: (6, "..oostDGo"),
     17: (7, "...ooooGo"), 18: (14, "oo"),
 }, 21)
 AIM_RIGHT_HIGH = over(STAND_RIGHT, {      # a little to his left is away from it: the pistol tips up
-    5: (2, "ohijitso"), 7: (14, "oo"), 8: (13, "oGGo"), 9: (12, "oDDo"), 10: (10, "ooDoo"), 11: (3, "ofeecoooooo"),
+    7: (14, "oo"), 8: (13, "oGGo"), 9: (12, "oDDo"), 10: (10, "ooDoo"), 11: (3, "ofeecoooooo"),
     12: (3, "ofeecdoooso"), 13: (3, "oeeccecooo"), 14: (3, "odeccooo"), 15: (4, "oooooo..."), 16: (6, "...."),
     17: (7, ".."),
 }, 21)
