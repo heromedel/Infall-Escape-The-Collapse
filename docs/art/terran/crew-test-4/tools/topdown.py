@@ -71,7 +71,7 @@ STEP_DOWN_2 = change(STAND_DOWN, {
 
 # --- Facing away ---------------------------------------------------------------------------------------------------
 
-STAND_UP = grid([         # from behind the long coat hides his feet: its hem is a third brown line
+STAND_UP = grid([         # from behind the long coat hides his feet: two more brown lines under his back
     ".........oooo........",
     "........ohiiho.......",
     "....oooohhiihoooo....",
@@ -82,6 +82,7 @@ STAND_UP = grid([         # from behind the long coat hides his feet: its hem is
     "...ooeoeecbcccodoo...",
     "...osooecbcbccooto...",
     "....o.oecccccdo.o....",
+    "......oeccccddo......",
     ".......ooooooo.......",
 ], 21)
 STEP_UP = change(STAND_UP, {          # the arm on the viewer's left swings forward, up past its shoulder; a boot shows
@@ -91,9 +92,10 @@ STEP_UP = change(STAND_UP, {          # the arm on the viewer's left swings forw
     7: "....oooeecbcccoocdo..",
     8: "......oecbcbccoocdo..",
     9: "......oecccccdo.oo...",
-    10: ".......ozzoooo.......",
-    11: ".......ozzo..........",
-    12: "........oo...........",
+    10: "......oeccccddo......",
+    11: ".......ozzoooo.......",
+    12: ".......ozzo..........",
+    13: "........oo...........",
 }, 21)
 STEP_UP_2 = change(STAND_UP, {
     0: ".........oooo...o....",
@@ -102,9 +104,10 @@ STEP_UP_2 = change(STAND_UP, {
     7: "..oecooeecbcccooo....",
     8: "..oecooecbcbcco......",
     9: "...oo.oecccccdo......",
-    10: ".......oooozzo.......",
-    11: "..........ozzo.......",
-    12: "...........oo........",
+    10: "......oeccccddo......",
+    11: ".......oooozzo.......",
+    12: "..........ozzo.......",
+    13: "...........oo........",
 }, 21)
 
 # --- Facing right ----------------------------------------------------------------------------------------------------
