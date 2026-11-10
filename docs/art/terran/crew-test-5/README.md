@@ -1,7 +1,9 @@
 # Terran crew test 5: the drifter from above, at twice the size
 
 **Date:** 2026-11-10
-**Status:** in progress. Asked for by heromedel on 2026-11-10: now that crew test 4 has the style and the view,
+**Status:** set aside (heromedel, 2026-11-10): at this size it takes too much work to stop it looking derpy, so
+the work goes back to the small sheet of crew test 4. Kept as a record of what was tried. It was in progress when
+stopped: Asked for by heromedel on 2026-11-10: now that crew test 4 has the style and the view,
 redo it at twice the size so the outlines can be cleaned and thinned and there is room for shading and details,
 and so it stops being a copy of the genre's drawing. Every frame is to be redrawn by hand, one at a time; nothing is
 enlarged or thinned automatically. Everything about the look is an **Ai-Generated-Proposal (2026-11-10)**.
