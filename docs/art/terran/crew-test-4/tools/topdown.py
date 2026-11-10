@@ -81,8 +81,8 @@ STAND_UP = grid([         # from behind the long coat hides his feet: its hem is
     "..oeccecowwWocdcddo..",
     "...ooeoeecbcccodoo...",
     "...osooecbcbccooto...",
-    "....o.oecccccdo.o....",
-    "......ooooooooo......",
+    "....o..occccco..o....",
+    ".......ooooooo.......",
 ], 21)
 STEP_UP = change(STAND_UP, {          # the arm on the viewer's left swings forward, up past its shoulder; a boot shows
     0: "....o....oooo........",
@@ -90,8 +90,8 @@ STEP_UP = change(STAND_UP, {          # the arm on the viewer's left swings forw
     2: "...oeooohhiihoooo....",
     7: "....oooeecbcccoocdo..",
     8: "......oecbcbccoocdo..",
-    9: "......oecccccdo.oo...",
-    10: "......oozzooooo......",
+    9: ".......occccco..oo...",
+    10: ".......ozzoooo.......",
     11: ".......ozzo..........",
     12: "........oo...........",
 }, 21)
@@ -101,8 +101,8 @@ STEP_UP_2 = change(STAND_UP, {
     2: "....oooohhiihooodo...",
     7: "..oecooeecbcccooo....",
     8: "..oecooecbcbcco......",
-    9: "...oo.oecccccdo......",
-    10: "......ooooozzoo......",
+    9: "...oo..occccco.......",
+    10: ".......oooozzo.......",
     11: "..........ozzo.......",
     12: "...........oo........",
 }, 21)
@@ -203,18 +203,18 @@ AIM_DOWN_LEFT = over(STAND_DOWN, {
 }, 21)
 AIM_UP = over(STAND_UP, {
     -3: (14, "oo"), -2: (14, "oGo"), -1: (14, "oGo"), 0: (14, "oDo"), 1: (13, "oooo"), 2: (13, "ooceo"),
-    7: (14, "ooo."), 8: (14, "oo.."), 9: (14, "o.."),
+    7: (14, "ooo."), 8: (14, "oo.."), 9: (14, "..."),
 }, 21, 4)
 AIM_UP_RIGHT = over(STAND_UP, {
     -4: (19, "o"), -3: (18, "oGo"), -2: (17, "oDDo"), -1: (17, "oGo"), 0: (16, "oDoo"), 1: (15, "oooo"),
-    2: (13, "oooceo"), 3: (8, "hhiih"), 3.5: (0, ""), 7: (14, "ooo."), 8: (14, "oo.."), 9: (14, "o.."),
+    2: (13, "oooceo"), 3: (8, "hhiih"), 3.5: (0, ""), 7: (14, "ooo."), 8: (14, "oo.."), 9: (14, "..."),
 } if False else {
     -4: (19, "o"), -3: (18, "oGo"), -2: (17, "oDDo"), -1: (17, "oGo"), 0: (16, "oDoo"), 1: (15, "oooo"),
-    2: (13, "oooceo"), 3: [(8, "hhiih"), (17, "oo")], 7: (14, "ooo."), 8: (14, "oo.."), 9: (14, "o.."),
+    2: (13, "oooceo"), 3: [(8, "hhiih"), (17, "oo")], 7: (14, "ooo."), 8: (14, "oo.."), 9: (14, "..."),
 }, 21, 4)
 AIM_UP_LEFT = over(STAND_UP, {
     -4: (10, "o"), -3: (9, "oDoo"), -2: (10, "oGDo"), -1: (11, "oGGo"), 0: (9, "oooooo"), 1: (13, "ooo"),
-    2: (13, "oocoo"), 3: [(8, "iihhh"), (14, "ecddo")], 7: (14, "ooo."), 8: (14, "oo.."), 9: (14, "o.."),
+    2: (13, "oocoo"), 3: [(8, "iihhh"), (14, "ecddo")], 7: (14, "ooo."), 8: (14, "oo.."), 9: (14, "..."),
 }, 21, 4)
 AIM_RIGHT = over(STAND_RIGHT, {
     11: (3, "ofeecoooooooo"), 12: (3, "ofeecdooDDGGo"), 13: (3, "oeeccecosooo"), 14: (3, "odeccooooo"),
@@ -267,7 +267,7 @@ FIRE_DOWN = [
     over(STAND_DOWN, {7: (3, "oeco"), 8: (3, "oefcoppyppd"), 9: (4, "ofcoooooooo"), 10: (4, "oeoooomzZodo"),
                       11: (5, "oo44oooo.o"), 12: (5, "oo45o"), 13: (6, "o4oo"), 14: (6, "ooko"), 15: (7, "ooo")}, 21),
 ]
-_FIRE_UP_BODY = {7: (14, "ooo."), 8: (14, "oo.."), 9: (14, "o..")}
+_FIRE_UP_BODY = {7: (14, "ooo."), 8: (14, "oo.."), 9: (14, "...")}
 FIRE_UP = [
     over(STAND_UP, {**_FIRE_UP_BODY, **{-3: (13, "oo"), -2: (13, "okoo"), -1: (13, "oo5o"), 0: (13, "o45o"),
                                           1: (13, "oooo"), 2: (13, "ooceo")}}, 21, 4),
@@ -323,7 +323,7 @@ TYPE_DOWN = [
     over(STAND_DOWN, {8: (3, "oeooeppyppdoodo"), 9: (3, "oecooooooooocdo"), 10: (3, ".oecoZzmzZotso."),
                       11: (3, ".ostoooooootuo."), 12: (3, ".otto.....ooo.."), 13: (5, "ooo")}, 21),
 ]
-_TYPE_UP_BODY = {2: (3, "ooooo"), 7: (3, ".oooeecbcccooo."), 8: (3, "..ooecbcbccoo.."), 9: (4, "..oecccccdo..")}
+_TYPE_UP_BODY = {2: (3, "ooooo"), 7: (3, ".oooeecbcccooo."), 8: (3, "..ooecbcbccoo.."), 9: (4, "...occccco...")}
 TYPE_UP = [
     over(STAND_UP, {**_TYPE_UP_BODY, **{-1: [(6, "ooo"), (14, "ooo")], 0: [(5, "osto"), (14, "otso")],
                                           1: [(5, "oeo"), (14, "ocdo")], 2: [(3, "ooooo"), (13, "ooooo")]}}, 21, 4),
