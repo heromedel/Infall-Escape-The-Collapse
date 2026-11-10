@@ -193,49 +193,49 @@ STAND_LEFT = grid(["." * 8 + row[::-1] for row in STAND_RIGHT], 21)
 
 AIM_DOWN = over(STAND_DOWN, {
     7: (3, "oeco"), 8: (3, "oefcoppyppd"), 9: (4, "ofcoooooooo"), 10: (4, "oeoooomzZodo"),
-    11: (5, "ooGooooo.o"), 12: (5, "ooDo"), 13: (5, "ooDo"), 14: (6, "oGo"), 15: (6, "oGo"), 16: (7, "o"),
+    11: (5, "oo7ooooo.o"), 12: (5, "oo8o"), 13: (5, "oo8o"), 14: (6, "o7o"), 15: (6, "o7o"), 16: (7, "o"),
 }, 21)
 AIM_DOWN_RIGHT = over(STAND_DOWN, {
     7: (2, "ofcoo"), 8: (2, "ofooceppyppd"), 9: (1, "oeco.ooooooooo"), 10: (1, "ooooo"),
-    11: (1, "oGo"), 12: (1, "oDo"), 13: (0, "oGoo"), 14: (0, "oGo"), 15: (0, "oo"),
+    11: (1, "o7o"), 12: (1, "o8o"), 13: (0, "o7oo"), 14: (0, "o7o"), 15: (0, "oo"),
 }, 21)
 AIM_DOWN_LEFT = over(STAND_DOWN, {
     7: (3, "oeco"), 8: (3, "oefooppyppd"), 9: (4, "ofcoooooooo"), 10: (4, "ofecoomzZodo"),
-    11: (5, "oecooooo.o"), 12: (6, "oosoGo"), 13: (8, "ooDo"), 14: (9, "ooGo"), 15: (10, "oGo"), 16: (11, "oo"),
+    11: (5, "oecooooo.o"), 12: (6, "ooso7o"), 13: (8, "oo8o"), 14: (9, "oo7o"), 15: (10, "o7o"), 16: (11, "oo"),
 }, 21)
 AIM_UP = over(STAND_UP, {
-    -3: (14, "oo"), -2: (14, "oGo"), -1: (14, "oGo"), 0: (14, "oDo"), 1: (13, "oooo"), 2: (13, "ooceo"),
+    -3: (14, "oo"), -2: (14, "o7o"), -1: (14, "o7o"), 0: (14, "o8o"), 1: (13, "oooo"), 2: (13, "ooceo"),
     7: (14, "ooo."), 8: (14, "oo.."), 9: (14, "o.."),
 }, 21, 4)
 AIM_UP_RIGHT = over(STAND_UP, {
-    -4: (19, "o"), -3: (18, "oGo"), -2: (17, "oDDo"), -1: (17, "oGo"), 0: (16, "oDoo"), 1: (15, "oooo"),
+    -4: (19, "o"), -3: (18, "o7o"), -2: (17, "o88o"), -1: (17, "o7o"), 0: (16, "o8oo"), 1: (15, "oooo"),
     2: (13, "oooceo"), 3: (17, "oo"), 7: (14, "ooo."), 8: (14, "oo.."), 9: (14, "o.."),
 }, 21, 4)
 AIM_UP_LEFT = over(STAND_UP, {
-    -4: (10, "o"), -3: (9, "oDoo"), -2: (10, "oGDo"), -1: (11, "oGGo"), 0: (9, "oooooo"), 1: (13, "ooo"),
+    -4: (10, "o"), -3: (9, "o8oo"), -2: (10, "o78o"), -1: (11, "o77o"), 0: (9, "oooooo"), 1: (13, "ooo"),
     2: (13, "oocoo"), 3: (14, "ecddo"), 7: (14, "ooo."), 8: (14, "oo.."), 9: (14, "o.."),
 }, 21, 4)
 AIM_RIGHT = over(STAND_RIGHT, {
-    11: (3, "ofeecoooooooo"), 12: (3, "ofeecdooDDGGo"), 13: (3, "oeeccecosooo"), 14: (3, "odeccooooo"),
+    11: (3, "ofeecoooooooo"), 12: (3, "ofeecdoo8877o"), 13: (3, "oeeccecosooo"), 14: (3, "odeccooooo"),
     15: (4, "oooooo..."), 16: (6, "...."), 17: (7, ".."),
 }, 21)
 AIM_RIGHT_LOW = over(STAND_RIGHT, {       # a little to his right is toward the camera: the pistol tips down the screen
-    13: (3, "oeeccecо".replace("о", "o")), 14: (3, "odeccooooo"), 15: (4, "ooooooDGDo"), 16: (6, "..oostDGo"),
-    17: (7, "...ooooGo"), 18: (14, "oo"),
+    13: (3, "oeeccecо".replace("о", "o")), 14: (3, "odeccooooo"), 15: (4, "oooooo878o"), 16: (6, "..oost87o"),
+    17: (7, "...oooo7o"), 18: (14, "oo"),
 }, 21)
 AIM_RIGHT_HIGH = over(STAND_RIGHT, {      # a little to his left is away from it: the pistol tips up
-    7: (14, "oo"), 8: (13, "oGGo"), 9: (12, "oDDo"), 10: (10, "ooDoo"), 11: (3, "ofeecoooooo"),
+    7: (14, "oo"), 8: (13, "o77o"), 9: (12, "o88o"), 10: (10, "oo8oo"), 11: (3, "ofeecoooooo"),
     12: (3, "ofeecdoooso"), 13: (3, "oeeccecooo"), 14: (3, "odeccooo"), 15: (4, "oooooo..."), 16: (6, "...."),
     17: (7, ".."),
 }, 21)
 AIM_LEFT = over(STAND_LEFT, {             # facing left his right hand is on the far side, so the pistol is up the screen
-    3: (5, "ooooo"), 4: (5, "oGGDDoo"), 5: (6, "oostco"), 6: (8, "oooo"),
+    3: (5, "ooooo"), 4: (5, "o7788oo"), 5: (6, "oostco"), 6: (8, "oooo"),
 }, 21)
 AIM_LEFT_LOW = over(STAND_LEFT, {
-    5: (8, "ooc"), 6: (7, "oDDoo"), 7: (6, "oGDsto"), 8: (5, "oGDoooo"), 9: (4, "oGDo"), 10: (5, "oo"),
+    5: (8, "ooc"), 6: (7, "o88oo"), 7: (6, "o78sto"), 8: (5, "o78oooo"), 9: (4, "o78o"), 10: (5, "oo"),
 }, 21)
 AIM_LEFT_HIGH = over(STAND_LEFT, {
-    0: (5, "oo"), 1: (4, "oGDoo"), 2: (5, "ooDGoooo"), 3: (7, "ooGo"), 4: (8, "oDoo"), 5: (8, "oso"), 6: (9, "oo"),
+    0: (5, "oo"), 1: (4, "o78oo"), 2: (5, "oo87oooo"), 3: (7, "oo7o"), 4: (8, "o8oo"), 5: (8, "oso"), 6: (9, "oo"),
 }, 21)
 
 
@@ -255,7 +255,7 @@ def aim_left():
     return [put(g, LEFT_AT) for g in (AIM_LEFT, AIM_LEFT_LOW, AIM_LEFT_HIGH)]
 
 
-# --- Fighting a fire: a red extinguisher on the same straight arm, swept from side to side; no spray -----------------
+# --- Fighting a fire: an extinguisher in power green on the same straight arm, swept from side to side; no spray -----------------
 
 FIRE_DOWN = [
     over(STAND_DOWN, {7: (2, "ofcoo"), 8: (2, "ofooceppyppd"), 9: (1, "oeco.ooooooooo"), 10: (1, "ooooo"),

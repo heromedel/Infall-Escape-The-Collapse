@@ -21,6 +21,8 @@ feet a line.
   side is covered (heromedel's "two brown dots that kick back when he steps"). **From behind it is a hem**: a third
   brown line under his back that hides his feet, with a boot showing only when he steps. (The two dots from behind
   read as an X: heromedel, 2026-11-10.)
+- The **pistol is metal in Mecha purple** and the **extinguisher is power green** (heromedel, 2026-11-10).
+  **Proposed (heromedel, 2026-11-10):** the extinguisher could take the power colour of whichever race is using it.
 - The pistol and the extinguisher are in his right hand at the end of a straight arm. His head stays still when he
   aims: only the arm and pistol move (heromedel, 2026-11-10).
 
@@ -34,7 +36,7 @@ same frame counts:
 | 1 | Walk down (4), walk right (4) |
 | 2 | Walk up (4), walk left (4) |
 | 3 | Aim down, right, up (3 each: straight, a little to his right, a little to his left; no flash) |
-| 4 | Fire down (4), fire right (4): the extinguisher swept from side to side, no spray |
+| 4 | Fire down (4), fire right (4): the green extinguisher swept from side to side, no spray |
 | 5 | Fire up (4), fire left (4) |
 | 6 | Repair (9 frames from 3 drawings, played 1 2 3 3 2 2 1 1 1) |
 | 7 | Punch down (6) |

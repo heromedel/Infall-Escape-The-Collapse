@@ -29,8 +29,10 @@ PALETTE = {
     "z": "#3a3038", "Z": "#5c5060",
     # console glow on the hands
     "g": "#66ff66",
-    # fire extinguisher, its spray, a tool or a pistol's metal, a muzzle flash
-    "4": "#d8382c", "5": "#8e1e1b", "6": "#f2f5f8", "G": "#7b8592", "D": "#4b525c", "F": "#fff0a0",
+    # the extinguisher (power green), its spray, a tool's metal, a muzzle flash
+    "4": "#66ff66", "5": "#2fae45", "6": "#f2f5f8", "G": "#7b8592", "D": "#4b525c", "F": "#fff0a0",
+    # the pistol: metal in Mecha purple
+    "7": "#a348e0", "8": "#5a1e8c",
     # teleport light
     "L": "#d4ecff", "M": "#7fb4f0",
     # the clone bay's plate
