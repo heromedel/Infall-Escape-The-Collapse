@@ -9,20 +9,52 @@ LINE = (0xae, 0xb5, 0xbe, 255)
 
 
 def sheet():
-    """Rows as on the Mecha and Tentauri sheets: walk down and right; walk up and left; type right and left; type
-    up and down."""
-    right, type_right = drifter.walk_right(), drifter.type_right()
+    """The rows of the Mecha and Tentauri sheets, in their order."""
+    def left(frames):
+        return [mirror(f) for f in frames]
+
+    walk, shoot, fire, typing = drifter.walk_right(), drifter.shoot_right(), drifter.fire_right(), drifter.type_right()
     rows = [
-        drifter.walk_down() + right,
-        drifter.walk_up() + [mirror(f) for f in right],
-        type_right + [mirror(f) for f in type_right],
+        drifter.walk_down() + walk,
+        drifter.walk_up() + left(walk),
+        drifter.shoot_down() + shoot,
+        drifter.shoot_up() + left(shoot),
+        drifter.fire_down() + fire,
+        drifter.fire_up() + left(fire),
+        drifter.punch_up(),
+        drifter.punch_down(),
+        typing + left(typing),
         drifter.type_up() + drifter.type_down(),
+        drifter.teleport(),
+        drifter.death(),
+        drifter.clone(),
+        [drifter.portrait(), drifter.laser_shot(), None] + drifter.repair(),
     ]
     out = Image.new("RGBA", (8 * FRAME, len(rows) * FRAME), (0, 0, 0, 0))
     for y, frames in enumerate(rows):
         for x, f in enumerate(frames):
-            out.alpha_composite(f, (x * FRAME, y * FRAME))
+            if f is not None:
+                out.alpha_composite(f, (x * FRAME, y * FRAME))
     return out
+
+
+def actions(name, times=4, milliseconds=140):
+    """Every other animation looping in one picture: shooting, fire, fists, repair, teleport, death, the clone bay."""
+    def left(frames):
+        return [mirror(f) for f in frames]
+
+    sets = [drifter.shoot_down(), drifter.shoot_right(), drifter.shoot_up(), left(drifter.shoot_right()),
+            drifter.punch_down(), drifter.punch_up(), drifter.repair(),
+            drifter.fire_down(), drifter.fire_right(), drifter.fire_up(), left(drifter.fire_right()),
+            drifter.teleport(), drifter.death(), drifter.clone()]
+    pictures = []
+    for index in range(24):
+        picture = floor(7 * FRAME * times, 2 * FRAME * times, times)
+        for number, frames in enumerate(sets):
+            f = frames[index % len(frames)]
+            picture.alpha_composite(scaled(f, times), ((number % 7) * FRAME * times, (number // 7) * FRAME * times))
+        pictures.append(picture.convert("RGB"))
+    pictures[0].save(name, save_all=True, append_images=pictures[1:], duration=milliseconds, loop=0)
 
 
 def cells(image, row, first):
@@ -69,7 +101,9 @@ if __name__ == "__main__":
 
     for times in (1, 2, 4):
         animation("review/walk-%dx.gif" % times, [walks(mecha), walks(ours), walks(tent)], times)
-        animation("review/console-%dx.gif" % times, [types(mecha, 8), types(ours, 2), types(tent, 8)], times, 160)
+        animation("review/console-%dx.gif" % times, [types(mecha, 8), types(ours, 8), types(tent, 8)], times, 160)
+    actions("review/actions-4x.gif")
+    actions("review/actions-2x.gif", 2)
     # one still picture: every race standing, at game size, twice and four times
     stills = [cells(mecha, 0, 0)[1], cells(ours, 0, 0)[1], cells(ours, 0, 4)[1], cells(ours, 1, 0)[1], cells(ours, 1, 4)[1],
               cells(tent, 0, 0)[1]]
