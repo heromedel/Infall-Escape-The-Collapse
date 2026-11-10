@@ -114,25 +114,25 @@ BACK = part(0, [
     ".ofeecccbccccddo.",
     ".oeecccbBbcccddo.",
     ".oeeccbcccbccddo.",
-    ".oeecccckccccddo.",
-    ".oeeccccdccccddo.",
-    ".ostccccdcccctuo.",
-    ".ottecccdcccdtuo.",
-    ".oooecccdcccdooo.",
+    ".oeecccccccccddo.",
+    ".oeecccccccccddo.",
+    ".ostccccccccctuo.",
+    ".ottecccccccdtuo.",
+    ".oooecccccccdooo.",
     "...ooo.....ooo...",
 ])
 BACK_ARMS_A = swap(BACK, {
-    13: ".ostccccdccccddo.",
-    14: ".ottccccdccccddo.",
-    15: ".oooecccdcccdtuo.",
-    16: "...oecccdcccdtuo.",
+    13: ".ostcccccccccddo.",
+    14: ".ottcccccccccddo.",
+    15: ".oooecccccccdtuo.",
+    16: "...oecccccccdtuo.",
     17: "...ooo.....ooooo.",
 })
 BACK_ARMS_C = swap(BACK, {
-    13: ".oeeccccdcccctuo.",
-    14: ".oeeccccdcccctuo.",
-    15: ".ostecccdcccdooo.",
-    16: ".ottecccdcccdo...",
+    13: ".oeeccccccccctuo.",
+    14: ".oeeccccccccctuo.",
+    15: ".ostecccccccdooo.",
+    16: ".ottecccccccdo...",
     17: ".ooooo.....ooo...",
 })
 BACK_LEGS = part(17, [
@@ -249,18 +249,18 @@ FRONT_TYPE_2 = swap(FRONT_TYPE, {
     16: "...ottPpmpmdco...",
 })
 BACK_TYPE = swap(BACK, {
-    13: "..ooccccdccccoo..",
-    14: "...oecccdcccdo...",
-    15: "...oecccdcccdo...",
-    16: "...oecccdcccdo...",
+    13: "..oocccccccccoo..",
+    14: "...oecccccccdo...",
+    15: "...oecccccccdo...",
+    16: "...oecccccccdo...",
 })
 BACK_TYPE_1 = swap(BACK_TYPE, {
-    13: ".oeeccccdccccoo..",
-    14: "..ooecccdcccdo...",
+    13: ".oeecccccccccoo..",
+    14: "..ooecccccccdo...",
 })
 BACK_TYPE_2 = swap(BACK_TYPE, {
-    13: "..ooccccdccccddo.",
-    14: "...oecccdcccdoo..",
+    13: "..oocccccccccddo.",
+    14: "...oecccccccdoo..",
 })
 SIDE_TYPE = swap(SIDE, {
     10: "....oddeeecao....",
