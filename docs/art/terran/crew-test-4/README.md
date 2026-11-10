@@ -42,10 +42,14 @@ same frame counts:
 | 7 | Punch down (6) |
 | 8 | Type right (4), type left (4) |
 | 9 | Type up (4), type down (4) |
-| 10 | Teleport (9: the streaks reach 0, 2, 5, 2, 5, 8, 13, 13, 13 rows while he loses columns) |
+| 10 | Teleport (9: his edge lights up, he turns all to light, and the light thins into bands, columns and rising sparks; the last frame is empty) |
 | 11 | Clone (6: a grey lump, a grey figure, the colour coming in from the feet) |
 | 12 | Aim left (3), punch up (6) |
 | 13 | Portrait (the standing frame), crew laser shot (a white bar), a gap, death (5, from the side) |
+
+- **Decided (heromedel, 2026-11-10):** the sheet's teleport is the light one, first made for crew test 3. The
+  genre's kind, where his own pixels are pulled upward, is kept beside the sheet as the alternative:
+  `terran-drifter-topdown-teleport-pulled.png` (9 frames in a row). `review/teleport-compare.png` shows both.
 
 ## How close it sits to the genre's sheet
 
@@ -59,15 +63,16 @@ each frame. Measured afterwards, frame against frame in the same place on the sh
   genre's poses part for part, in his colours. This is the closest the project has come to the genre's own drawing.
   heromedel decides whether that is the right side of the repo's rule (likeness and design may match exactly; lifting
   the art files is forbidden), and whether this sheet stays a study or goes in the game.
-- **Two rows are worked out and share about half their shape:** the teleport (57%) and the clone (66%). Walking
+- **Two rows are worked out and share little of their shape:** the teleport, which is now the light one and unlike
+  the genre's, and the clone (66%). Walking
   away shares 86%, because of the hem.
 
 ## How it is made
 
 Every frame is placed by hand as text, one character a pixel, in `tools/topdown.py`; the colours are in
 `tools/pix.py`. An action frame is the standing grid with the rows of the acting arm replaced. Two things are worked
-out from drawn frames instead of drawn: the teleport (his own columns drawn upward and removed) and the clone bay's
-greys. `python3 tools/build.py`, run from this folder,
+out from drawn frames instead of drawn: the teleport (his own shape turned to light and thinned out) and the clone
+bay's greys. `python3 tools/build.py`, run from this folder,
 rebuilds the sheet and the pictures in `review/`.
 
 ## Review pictures

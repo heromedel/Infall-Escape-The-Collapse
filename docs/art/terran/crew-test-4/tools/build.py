@@ -19,7 +19,7 @@ def rows():
         t.punch_down(),
         t.type_right() + t.type_left(),
         t.type_up() + t.type_down(),
-        t.teleport(),
+        t.teleport_light(),
         t.clone(),
         t.aim_left() + t.punch_up(),
         [t.portrait(), t.laser_shot(), None] + t.death(),
@@ -39,7 +39,7 @@ def animations(name, times=4, milliseconds=150):
     walk_left = t.walk_left()
     death = t.death()
     sets = [t.walk_down(), t.walk_right(), t.walk_up(), walk_left, t.punch_down(), t.punch_up(),
-            t.aim_down(), t.aim_right(), t.aim_up(), t.aim_left(), t.repair(), t.teleport(),
+            t.aim_down(), t.aim_right(), t.aim_up(), t.aim_left(), t.repair(), t.teleport_light(),
             t.fire_down(), t.fire_right(), t.fire_up(), t.fire_left(), t.clone(), death + death[-1:] * 4,
             t.type_down(), t.type_right(), t.type_up(), t.type_left()]
     pictures = []
@@ -56,6 +56,9 @@ if __name__ == "__main__":
     ours = sheet()
     ours.save("terran-drifter-topdown-sheet.png")
     scaled(ours, 4).save("terran-drifter-topdown-sheet-4x.png")
+    pulled = strip(t.teleport())                      # the genre's kind of teleport, kept beside the sheet
+    pulled.save("terran-drifter-topdown-teleport-pulled.png")
+    scaled(pulled, 4).save("terran-drifter-topdown-teleport-pulled-4x.png")
     animations("review/animations-4x.gif")
     animations("review/animations-2x.gif", 2)
     # beside the face-forward drifter of crew test 3, at game size, twice and four times

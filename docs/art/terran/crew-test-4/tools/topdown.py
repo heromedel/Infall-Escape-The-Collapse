@@ -616,7 +616,7 @@ def death():
     return [put(STAND_RIGHT, (5, 7))] + [put(g, (5, 8)) for g in FALLING]
 
 
-# --- Teleporting: he drops to the bottom of the frame, his own columns are drawn up, and he comes apart --------------
+# --- The genre's kind of teleport, kept as the alternative: his own columns are drawn up and he comes apart -----------
 
 SHARES = (0.6, 0.0, 1.0, 0.2, 0.7, 0.0, 0.4, 1.0, 0.1, 0.8, 0.3, 0.0, 0.9, 0.5, 0.0, 1.0, 0.3)
 ORDER = (5, 11, 1, 14, 8, 3, 16, 6, 12, 0, 9, 4, 15, 2, 10, 7, 13)     # which columns go first
@@ -646,11 +646,11 @@ def teleport():
     return frames
 
 
-# --- The light teleport of crew test 3, made the same way from this figure, for comparison ------------------------------
+# --- Teleporting, as on the sheet (heromedel, 2026-11-10): he turns to light, and the light thins and rises ------------
 
 def teleport_light():
     """Nine frames: he lights up at the edge, turns all to light, and the light thins into bands, columns and sparks
-    that rise. Not on the sheet: the sheet's teleport is the one above."""
+    that rise. The last frame is empty: he is gone."""
     stand = put(STAND_DOWN, DOWN_AT, down=8)
     shape = [(x, y) for y in range(FRAME) for x in range(FRAME) if stand.getpixel((x, y))[3]]
     edge = [p for p in shape if stand.getpixel(p) == rgba("o")]
