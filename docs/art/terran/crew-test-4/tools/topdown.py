@@ -71,7 +71,7 @@ STEP_DOWN_2 = change(STAND_DOWN, {
 
 # --- Facing away ---------------------------------------------------------------------------------------------------
 
-STAND_UP = grid([
+STAND_UP = grid([         # from behind the long coat hides his feet: its hem is a third brown line
     ".........oooo........",
     "........ohiiho.......",
     "....oooohhiihoooo....",
@@ -81,19 +81,18 @@ STAND_UP = grid([
     "..oeccecowwWocdcddo..",
     "...ooeoeecbcccodoo...",
     "...osooecbcbccooto...",
-    "....o.ooooooooo.o....",
-    ".....ocozzmzzodo.....",
-    "......o.ooooo.o......",
+    "....o.oecccccdo.o....",
+    "......ooooooooo......",
 ], 21)
-STEP_UP = change(STAND_UP, {          # the arm on the viewer's left swings forward, up past its shoulder
+STEP_UP = change(STAND_UP, {          # the arm on the viewer's left swings forward, up past its shoulder; a boot shows
     0: "....o....oooo........",
     1: "...oso..ohiiho.......",
     2: "...oeooohhiihoooo....",
     7: "....oooeecbcccoocdo..",
     8: "......oecbcbccoocdo..",
-    9: "......ooooooooo.oo...",
-    10: ".....ocozzo..odo.....",
-    11: "......oozzo...o......",
+    9: "......oecccccdo.oo...",
+    10: "......oozzooooo......",
+    11: ".......ozzo..........",
     12: "........oo...........",
 }, 21)
 STEP_UP_2 = change(STAND_UP, {
@@ -102,9 +101,9 @@ STEP_UP_2 = change(STAND_UP, {
     2: "....oooohhiihooodo...",
     7: "..oecooeecbcccooo....",
     8: "..oecooecbcbcco......",
-    9: "...oo.ooooooooo......",
-    10: ".....oco..ozzodo.....",
-    11: "......o...ozzoo......",
+    9: "...oo.oecccccdo......",
+    10: "......ooooozzoo......",
+    11: "..........ozzo.......",
     12: "...........oo........",
 }, 21)
 
@@ -324,7 +323,7 @@ TYPE_DOWN = [
     over(STAND_DOWN, {8: (3, "oeooeppyppdoodo"), 9: (3, "oecooooooooocdo"), 10: (3, ".oecoZzmzZotso."),
                       11: (3, ".ostoooooootuo."), 12: (3, ".otto.....ooo.."), 13: (5, "ooo")}, 21),
 ]
-_TYPE_UP_BODY = {2: (3, "ooooo"), 7: (3, ".oooeecbcccooo."), 8: (3, "..ooecbcbccoo.."), 9: (4, "..ooooooooo..")}
+_TYPE_UP_BODY = {2: (3, "ooooo"), 7: (3, ".oooeecbcccooo."), 8: (3, "..ooecbcbccoo.."), 9: (4, "..oecccccdo..")}
 TYPE_UP = [
     over(STAND_UP, {**_TYPE_UP_BODY, **{-1: [(6, "ooo"), (14, "ooo")], 0: [(5, "osto"), (14, "otso")],
                                           1: [(5, "oeo"), (14, "ocdo")], 2: [(3, "ooooo"), (13, "ooooo")]}}, 21, 4),
@@ -475,70 +474,148 @@ def punch_up():
     return [put(g, DOWN_AT, down=down) for g, down in poses]
 
 
-# --- Repairs: bent over, seen from above, his tool arm rising and falling; three drawings over nine frames ----------
+# --- Repairs: bent over his work, seen from above; the tool arm rises in three drawings over nine frames -------------
+# The pose is the genre's, part for part, in his colours: the far shoulder and the coat's back on the left, the head
+# in the middle, the tool arm on the right, the near hand on the deck below.
 
-REPAIR_BODY = grid([
-    ".......ooo...........",
-    "......ofeeo..........",
-    ".....offeeooooo......",
-    "....ofeeeohhiiho.....",
-    "....ofeecohijihoo....",
-    "...ofeeecohiihtso....",
-    "...ofeeccohhhtsso....",
-    ".ooofeeccoooooo......",
-    "oZzoeecccdbo.........",
-    "oZzoecccddoo.........",
-    ".ooooeccddo..........",
-    "....oecddoo..........",
-    ".....oodso...........",
-    ".......oo............",
-], 21)
-REPAIR_ARM = ((16, "oooo"), (15, "ecsto"), (15, "ootuGo"), (17, "oDGo"), (18, "oDo"), (19, "o"))
+REPAIR = [grid(rows, 25) for rows in ([
+    "..........ooo............",
+    ".........oecco...........",
+    "........oeeoooo..........",
+    ".......oeohhhhho.........",
+    ".......oeohhhhho.........",
+    "......oceoiihhhoo........",
+    "......oceoihhhhodo.......",
+    "...ooooceohhhhtoooo......",
+    "..oeccoceeoooooooso......",
+    "..occdoceeecodoooto......",
+    "...ooooocecdodo..oGo.....",
+    "....oo.oeeecoo....oGDo...",
+    "........oeecoooo...o.....",
+    ".........oecodto....o....",
+    "..........ooooo..........",
+], [
+    "..........ooo............",
+    ".........oecco...........",
+    "........oeeoooo..........",
+    ".......oeohhhhho.........",
+    ".......oeohhhhhoo........",
+    "......oceoiihhhodoo......",
+    "......oceoihhhhodtso.....",
+    "...ooooceohhhhtoooto.....",
+    "..oeccoceeooooo..oGo.....",
+    "..occdoceeecodo...oGo....",
+    "...ooooocecdodo....oD....",
+    "....oo.oeeecoo.....ooo...",
+    "........oeecoooo...o.o...",
+    ".........oecodto.........",
+    "..........ooooo..........",
+], [
+    "..........ooo............",
+    ".........oecco...........",
+    "........oeeoooo..........",
+    ".......oeohhhhhooo.oo....",
+    ".......oeohhhhhoddooo....",
+    "......oceoiihhhoddtto....",
+    "......oceoihhhhodooso....",
+    "...ooooceohhhhtoo..Go....",
+    "..oeccoceeooooo....Go....",
+    "..occdoceeecodo....Do....",
+    "...ooooocecdodo....ooo...",
+    "....oo.oeeecoo.....ooo...",
+    "........oeecoooo...o.o...",
+    ".........oecodto.........",
+    "..........ooooo..........",
+])]
 
 
 def repair():
-    drawings = []
-    for lower in (0, 1, 2):
-        rows = list(REPAIR_BODY)
-        for index, (column, text) in enumerate(REPAIR_ARM):
-            row = 6 + lower + index
-            rows[row] = rows[row][:column] + text + rows[row][column + len(text):]
-        drawings.append(put(grid(rows, 21), (5, 11)))
+    drawings = [put(g, (5, 11)) for g in REPAIR]
     return [drawings[i] for i in (0, 1, 2, 2, 1, 1, 0, 0, 0)]
 
 
-# --- Dying, from the side: he staggers, goes over backwards, lies along the frame, and settles -----------------------
+# --- Dying, from the side: he staggers, goes over backwards, is down, and settles ------------------------------------
+# The four falling poses are the genre's, part for part, in his colours: slate legs, brown coat, dark hair.
 
-LYING = grid([
-    "...........oooo........",
-    "...........ostoo.......",
-    ".oooooooooofeeoooo.....",
-    "oZzPPPPPoffeewotshio...",
-    "ommmmmmmmyabBbossijo...",
-    "ozzpppppoecccWotshho...",
-    ".ooooooooocddoooooo....",
-    "..........otuo.........",
-    "...........oo..........",
-], 23)
-
-
-def lifted(image, marks):
-    """The picture with its right-hand end raised: every column right of a mark is a pixel higher."""
-    out = Image.new("RGBA", image.size, (0, 0, 0, 0))
-    for x in range(FRAME):
-        lift = sum(1 for mark in marks if x >= mark)
-        for y in range(FRAME):
-            if image.getpixel((x, y))[3] and y - lift >= 0:
-                out.putpixel((x, y - lift), image.getpixel((x, y)))
-    return out
+FALLING = [grid(rows, 29) for rows in ([
+    "..........oooo...............",
+    "......ooooeceeo..............",
+    "....ooocccocceeo.............",
+    "....ottocommpmoooo...........",
+    ".....ooooomcohhhhho..........",
+    "........oocoshhhhho..........",
+    "......ooppbosshthio..........",
+    ".....opmpccosssthio..........",
+    "....opppmcccossstho..........",
+    "...oppmmomccoooooo...........",
+    "..ompmmmommpeeeo.............",
+    "..oomopmmoomceeo.............",
+    "...ooommotmceeeo.............",
+    "....opmmotoceeco.............",
+    "....opmmooooooo..............",
+    "....oooooo...................",
+], [
+    ".............................",
+    "......oooooooooo.............",
+    "......ostocceeeeoo...........",
+    "......osooccccceeeo..........",
+    ".......oo.oooooeeeoo.........",
+    "..............oepooooo.......",
+    "............ooeeohhhhho......",
+    "..........ooeeeeohhhhho......",
+    "........oooeccebosshhio......",
+    ".....ooomppoppeposshhio......",
+    "....ompmmmpoppepostthio......",
+    "....oooommpoppcppottto.......",
+    ".....ompmmmomcpooooooo.......",
+    "....ooppmmmmooooompmmo.......",
+    "....opmmmmmoostoppmoo........",
+    "....opommoo.ootopoo..........",
+    "....ooooo.....ooo............",
+], [
+    ".............................",
+    ".............................",
+    ".............................",
+    ".............................",
+    ".............................",
+    ".............................",
+    "................ooo..........",
+    ".............ooooeeoooo......",
+    "............osseeeeeeeeo.....",
+    "...........oottccoecccpoooo..",
+    "......oooooomooooooppppohhho.",
+    "....oopmmmmmmmmooooopoohhhho.",
+    "....oopmopmmmmmooemmbosshhio.",
+    "....ooppmoooooooppppmosthiho.",
+    ".....ooommmmmmoooooopootthho.",
+    ".......oooooooo..ottooooooo..",
+    "..................ooo........",
+], [
+    ".............................",
+    ".............................",
+    ".............................",
+    ".............................",
+    ".............................",
+    ".............................",
+    ".............................",
+    ".............................",
+    ".............................",
+    "...................oooo......",
+    "...........oooooooooeeeo.....",
+    ".........ooommmmmpoeeecoooo..",
+    "........omooooooooeeeccohhho.",
+    ".......ommoppmmmmoecccohhhho.",
+    ".......oooommmmmoecboosshhio.",
+    "..........oooomopppomosthiho.",
+    "..............oooooomootthho.",
+    ".............osstottooooooo..",
+    ".............ossooooo........",
+    "..............oo.............",
+])]
 
 
 def death():
-    stand = put(STAND_RIGHT, (5, 7))
-    stagger = put(over(STEP_RIGHT_2, {0: (4, "ooo."), 1: (3, "ofeeo."), 2: (2, "offeco.")}, 13), (6, 7))
-    lying = put(LYING, (9, 15))
-    settled = put(grid([row[:4] + row[7:] + "..." for row in LYING], 23), (12, 18))
-    return [stand, stagger, lifted(lying, (14, 17, 20, 23, 26)), lying, settled]
+    return [put(STAND_RIGHT, (5, 7))] + [put(g, (5, 8)) for g in FALLING]
 
 
 # --- Teleporting: he drops to the bottom of the frame, his own columns are drawn up, and he comes apart --------------
