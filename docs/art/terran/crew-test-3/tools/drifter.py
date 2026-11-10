@@ -1,14 +1,14 @@
 """The Terran drifter, drawn a pixel at a time: a 35 by 35 crew sprite seen from about 45 degrees above.
 
-Each part is rows of text, one character a pixel (the colours are in pix.py), on a grid 17 wide and 26 tall whose
-corner sits at (9, 6) in the frame, so the boots stand on the same line as the Mecha's. A frame is parts laid over
+Each part is rows of text, one character a pixel (the colours are in pix.py), on a grid 17 wide and 23 tall whose
+corner sits at (9, 9) in the frame, so the boots stand on the same line as the Mecha's. A frame is parts laid over
 each other; a walking frame moves the upper body a pixel down when a foot lands.
 """
 import sys
 sys.path.insert(0, "tools")
 from pix import *
 
-LEFT, TOP, WIDE = 9, 6, 17
+LEFT, TOP, WIDE = 9, 9, 17
 
 
 def part(first_row, rows):
@@ -51,33 +51,30 @@ FRONT = part(0, [
     ".offewWbBbWccddo.",
     ".ofeccenbndccddo.",
     ".oeecccaAadcccdo.",
-    ".oeecccaAadccddo.",
     ".oeecccaaxdccddo.",
     ".oeeccckykdccddo.",
     ".oeecccpPmdccddo.",
     ".ostccepmpdcctuo.",
     ".ottccPpmpmdctuo.",
     ".oooecPpmpmdcooo.",
-    "...oeePpmpmdco...",
     "...ooo.....ooo...",
 ])
 # the arm on the viewer's left swings back (its hand rises), the other comes forward (its hand drops)
 FRONT_ARMS_A = swap(FRONT, {
-    14: ".ostcccpPmdccddo.",
-    15: ".ottccepmpdccddo.",
-    16: ".oooccPpmpmdctuo.",
-    17: "...oecPpmpmdctuo.",
-    18: "...oeePpmpmdcooo.",
+    13: ".ostcccpPmdccddo.",
+    14: ".ottccepmpdccddo.",
+    15: ".oooccPpmpmdctuo.",
+    16: "...oecPpmpmdctuo.",
+    17: "...ooo.....ooooo.",
 })
 FRONT_ARMS_C = swap(FRONT, {
-    14: ".oeecccpPmdcctuo.",
-    15: ".oeeccepmpdcctuo.",
-    16: ".ostccPpmpmdcooo.",
-    17: ".ottecPpmpmdco...",
-    18: ".oooeePpmpmdco...",
+    13: ".oeecccpPmdcctuo.",
+    14: ".oeeccepmpdcctuo.",
+    15: ".ostccPpmpmdcooo.",
+    16: ".ottecPpmpmdco...",
+    17: ".ooooo.....ooo...",
 })
-FRONT_LEGS = part(19, [
-    ".....oPpopmo.....",
+FRONT_LEGS = part(17, [
     ".....oPpopmo.....",
     ".....oPpopmo.....",
     ".....oPpopmo.....",
@@ -85,8 +82,7 @@ FRONT_LEGS = part(19, [
     "....oZZzozzzo....",
     "....ooooooooo....",
 ])
-FRONT_LEGS_A = part(19, [      # the leg on the viewer's left lands; the other trails, lifted and in shade
-    ".....oPpopmo.....",
+FRONT_LEGS_A = part(17, [      # the leg on the viewer's left lands; the other trails, lifted and in shade
     ".....oPpopmo.....",
     ".....oPpommo.....",
     ".....oPpozzo.....",
@@ -94,8 +90,7 @@ FRONT_LEGS_A = part(19, [      # the leg on the viewer's left lands; the other t
     "....oZZzoooo.....",
     "....ooooo........",
 ])
-FRONT_LEGS_C = part(19, [
-    ".....oPpopmo.....",
+FRONT_LEGS_C = part(17, [
     ".....oPpopmo.....",
     ".....oppopmo.....",
     ".....oZzopmo.....",
@@ -119,31 +114,28 @@ BACK = part(0, [
     ".ofeecccbccccddo.",
     ".oeecccbBbcccddo.",
     ".oeeccbcccbccddo.",
-    ".oeecccccccccddo.",
     ".oeecccckccccddo.",
     ".oeeccccdccccddo.",
     ".ostccccdcccctuo.",
     ".ottecccdcccdtuo.",
     ".oooecccdcccdooo.",
-    "...oeeccdcccdo...",
     "...ooo.....ooo...",
 ])
 BACK_ARMS_A = swap(BACK, {
-    14: ".ostccccdccccddo.",
-    15: ".ottccccdccccddo.",
-    16: ".oooecccdcccdtuo.",
-    17: "...oecccdcccdtuo.",
-    18: "...oeeccdcccdooo.",
+    13: ".ostccccdccccddo.",
+    14: ".ottccccdccccddo.",
+    15: ".oooecccdcccdtuo.",
+    16: "...oecccdcccdtuo.",
+    17: "...ooo.....ooooo.",
 })
 BACK_ARMS_C = swap(BACK, {
+    13: ".oeeccccdcccctuo.",
     14: ".oeeccccdcccctuo.",
-    15: ".oeeccccdcccctuo.",
-    16: ".ostecccdcccdooo.",
-    17: ".ottecccdcccdo...",
-    18: ".oooeeccdcccdo...",
+    15: ".ostecccdcccdooo.",
+    16: ".ottecccdcccdo...",
+    17: ".ooooo.....ooo...",
 })
-BACK_LEGS = part(19, [
-    ".....oPpopmo.....",
+BACK_LEGS = part(17, [
     ".....oPpopmo.....",
     ".....oPpopmo.....",
     ".....oPpopmo.....",
@@ -151,8 +143,7 @@ BACK_LEGS = part(19, [
     ".....oZzozzo.....",
     ".....ooooooo.....",
 ])
-BACK_LEGS_A = part(19, [       # walking away: the leading leg is the far one, so it ends higher
-    ".....oPpopmo.....",
+BACK_LEGS_A = part(17, [      # walking away: the leading leg is the far one, so it ends higher
     ".....oPpopmo.....",
     ".....oPpopmo.....",
     ".....oZzopmo.....",
@@ -160,8 +151,7 @@ BACK_LEGS_A = part(19, [       # walking away: the leading leg is the far one, s
     ".....oooozzo.....",
     "........oooo.....",
 ])
-BACK_LEGS_C = part(19, [
-    ".....oPpopmo.....",
+BACK_LEGS_C = part(17, [
     ".....oPpopmo.....",
     ".....oPpopmo.....",
     ".....oPpozzo.....",
@@ -182,7 +172,6 @@ SIDE = part(0, [
     "......outtto.....",
     ".....owwWbBo.....",
     "....odcfecbao....",
-    "....oddeeccao....",
     "....oddeeccAo....",
     "....oddeeccao....",
     "....oddeeccao....",
@@ -191,29 +180,27 @@ SIDE = part(0, [
     "....odcstccpo....",
     "...oddctuccpo....",
     "...oddccccepo....",
-    "...odcccccepo....",
-    "...oooo...oo.....",
+    "...oooo...ooo....",
 ])
 SIDE_ARM_BACK = swap(SIDE, {     # the near arm swings back
+    10: "....odeedccao....",
     11: "....odeedccao....",
-    12: "....odeedccao....",
-    13: "...oeedcdccko....",
-    14: "...oeedcdccpo....",
-    15: "..ostdcccccpo....",
-    16: "..otudcccccpo....",
+    12: "...oeedcdccko....",
+    13: "...oeedcdccpo....",
+    14: "..ostdcccccpo....",
+    15: "..otudcccccpo....",
 })
-SIDE_ARM_FORWARD = swap(SIDE, {  # the near arm swings forward
-    10: "....oddceecAo....",
-    11: "....oddceecao....",
-    12: "....oddcceeao....",
-    13: "....oddcceeeo....",
-    14: "....oddccceeo....",
-    15: "....odccccpsto...",
-    16: "...oddccccctuo...",
-    17: "...oddcccceooo...",
+SIDE_ARM_FORWARD = swap(SIDE, {     # the near arm swings forward
+    9: "....oddceecAo....",
+    10: "....oddceecao....",
+    11: "....oddcceeao....",
+    12: "....oddcceeeo....",
+    13: "....oddccceeo....",
+    14: "....odccccpsto...",
+    15: "...oddccccctuo...",
+    16: "...oddcccceooo...",
 })
-SIDE_LEGS = part(19, [
-    "......oPpmo......",
+SIDE_LEGS = part(17, [
     "......oPpmo......",
     "......oPpmo......",
     "......oPpmo......",
@@ -221,8 +208,7 @@ SIDE_LEGS = part(19, [
     "......oZzzzo.....",
     "......oooooo.....",
 ])
-SIDE_LEGS_PASS = part(19, [      # one foot lifts past the standing leg
-    "......oPpmo......",
+SIDE_LEGS_PASS = part(17, [      # one foot lifts past the standing leg
     "......oPpmo......",
     "......oPpmo......",
     ".....ozPpmo......",
@@ -230,16 +216,14 @@ SIDE_LEGS_PASS = part(19, [      # one foot lifts past the standing leg
     "......oZzzzo.....",
     "......oooooo.....",
 ])
-SIDE_LEGS_NEAR = part(19, [      # the near leg lands ahead, the far one trails
-    "......ommPpo.....",
+SIDE_LEGS_NEAR = part(17, [      # the near leg lands ahead, the far one trails
     ".....ommoPpo.....",
     "....ommo.oPpo....",
     "...ozzo...oZzo...",
     "...ozzzo..oZzzo..",
     "...ooooo..ooooo..",
 ])
-SIDE_LEGS_FAR = part(19, [       # the far leg lands ahead, the near one trails
-    "......oPpmmo.....",
+SIDE_LEGS_FAR = part(17, [      # the far leg lands ahead, the near one trails
     ".....oPpommo.....",
     "....oPpo.ommo....",
     "...oZzo...ozzo...",
@@ -251,47 +235,46 @@ SIDE_LEGS_FAR = part(19, [       # the far leg lands ahead, the near one trails
 # --- At a console: the arms come forward and the hands take turns ------------------------------------------------
 
 FRONT_TYPE = swap(FRONT, {
-    15: "..oeecepmpdcddo..",
-    16: "...ostPpmpmtuo...",
-    17: "...ottPpmpmtuo...",
+    14: "..oeecepmpdcddo..",
+    15: "...ostPpmpmtuo...",
+    16: "...ottPpmpmtuo...",
 })
 FRONT_TYPE_1 = swap(FRONT_TYPE, {
-    15: "..oestepmpdcddo..",
-    16: "...ottPpmpmtuo...",
-    17: "...oecPpmpmtuo...",
+    14: "..oestepmpdcddo..",
+    15: "...ottPpmpmtuo...",
+    16: "...oecPpmpmtuo...",
 })
 FRONT_TYPE_2 = swap(FRONT_TYPE, {
-    15: "..oeecepmpdtudo..",
-    16: "...ostPpmpmtuo...",
-    17: "...ottPpmpmdco...",
+    14: "..oeecepmpdtudo..",
+    16: "...ottPpmpmdco...",
 })
 BACK_TYPE = swap(BACK, {
-    14: "..ooccccdccccoo..",
+    13: "..ooccccdccccoo..",
+    14: "...oecccdcccdo...",
     15: "...oecccdcccdo...",
     16: "...oecccdcccdo...",
-    17: "...oecccdcccdo...",
 })
 BACK_TYPE_1 = swap(BACK_TYPE, {
-    14: ".oeeccccdccccoo..",
-    15: "..ooecccdcccdo...",
+    13: ".oeeccccdccccoo..",
+    14: "..ooecccdcccdo...",
 })
 BACK_TYPE_2 = swap(BACK_TYPE, {
-    14: "..ooccccdccccddo.",
-    15: "...oecccdcccdoo..",
+    13: "..ooccccdccccddo.",
+    14: "...oecccdcccdoo..",
 })
 SIDE_TYPE = swap(SIDE, {
-    11: "....oddeeecao....",
-    12: "....oddceeeesto..",
-    13: "....oddccccktuo..",
-    14: "....oddccccpoo...",
-    15: "....odcccccpo....",
-    16: "...oddcccccpo....",
+    10: "....oddeeecao....",
+    11: "....oddceeeesto..",
+    12: "....oddccccktuo..",
+    13: "....oddccccpoo...",
+    14: "....odcccccpo....",
+    15: "...oddcccccpo....",
 })
 SIDE_TYPE_1 = swap(SIDE_TYPE, {
-    11: "....oddeeeeesto..",
-    12: "....oddccccatuo..",
-    13: "....oddcccckoo...",
-    14: "....oddccccpo....",
+    10: "....oddeeeeesto..",
+    11: "....oddccccatuo..",
+    12: "....oddcccckoo...",
+    13: "....oddccccpo....",
 })
 
 

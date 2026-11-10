@@ -17,6 +17,8 @@ The bandana and the chevron are the one accent, as purple is for the Mecha.
   universal Terran or Tabby emblem, and other Terrans will wear other emblems.
 - **Proposed (heromedel, 2026-11-10):** the hands are fists of four pixels (they were flat, two pixels wide and one
   tall).
+- **Proposed (heromedel, 2026-11-10):** he stands 23 pixels tall, two shorter than the Mecha in its suit (he was 26,
+  a pixel taller than it). A row came out of the chest, one out of the coat's skirt and one out of the legs.
 
 280 × 140 pixels: 35 × 35 frames, 8 per row, with the boots on the same line as the Mecha's feet. The rows follow
 the other sheets' order for the rows that exist:
