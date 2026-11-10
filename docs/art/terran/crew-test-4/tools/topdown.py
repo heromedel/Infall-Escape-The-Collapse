@@ -646,6 +646,38 @@ def teleport():
     return frames
 
 
+# --- The light teleport of crew test 3, made the same way from this figure, for comparison ------------------------------
+
+def teleport_light():
+    """Nine frames: he lights up at the edge, turns all to light, and the light thins into bands, columns and sparks
+    that rise. Not on the sheet: the sheet's teleport is the one above."""
+    stand = put(STAND_DOWN, DOWN_AT, down=8)
+    shape = [(x, y) for y in range(FRAME) for x in range(FRAME) if stand.getpixel((x, y))[3]]
+    edge = [p for p in shape if stand.getpixel(p) == rgba("o")]
+    inside = [p for p in shape if p not in edge]
+
+    def picture(pixels):
+        image = Image.new("RGBA", (FRAME, FRAME), (0, 0, 0, 0))
+        for (x, y), code in pixels:
+            if 0 <= x < FRAME and 0 <= y < FRAME:
+                image.putpixel((x, y), rgba(code))
+        return image
+
+    lit = stand.copy()
+    for p in edge:
+        lit.putpixel(p, rgba("M"))
+    glow = picture([(p, "M") for p in edge] + [(p, "L") for p in inside])
+    bands = picture([(p, "L" if p in inside else "M") for p in shape if p[1] % 2 == 0])
+    columns = picture([((x, y - 1), "L") for (x, y) in shape if x % 2 == 0 and y % 2 == 0]
+                      + [((x, y - 2), "M") for (x, y) in shape if x % 2 == 0 and y % 4 == 0])
+    rising = picture([((x, y - 3), "L") for (x, y) in shape if x % 4 == 1 and y % 2 == 0]
+                     + [((x, y - 5), "M") for (x, y) in shape if x % 4 == 1 and y % 4 == 0])
+    sparks = picture([((x, y - 6), "L") for (x, y) in shape if x % 4 == 1 and y % 6 == 0]
+                     + [((x, y - 8), "6") for (x, y) in shape if x % 8 == 1 and y % 6 == 0])
+    last = picture([((x, y - 9), "6") for (x, y) in shape if x % 8 == 5 and y % 8 == 0])
+    return [stand, lit, glow, bands, columns, rising, sparks, last, picture([])]
+
+
 # --- The clone bay: a grey lump, a grey figure, and the colour coming in from the feet -------------------------------
 
 GREYS = ("#4a4650", "#646070", "#7e7a88", "#9a98a4")
