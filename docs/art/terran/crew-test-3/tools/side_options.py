@@ -40,6 +40,14 @@ def two_lines(a_part):
     return part(0, rows)
 
 
+def corners_off(a_part):
+    """One pixel off each of the torso's four corners."""
+    rows = rows_of(a_part)
+    rows[8] = "....." + "o" + rows[8][6:11] + "o" + "....."
+    rows[17] = "." + rows[17][:4].replace("o", ".")[1:] + "." + rows[17][5:12] + "." + rows[17][13:]
+    return part(0, rows)
+
+
 def frames(side, back, forward, typing, typing_1, legs, legs_pass):
     stand = compose((legs, 0), (side, 0))
     walk = [compose((d.SIDE_LEGS_NEAR, 1), (back, 1)), compose((legs_pass, 0), (side, 0)),
@@ -50,6 +58,7 @@ def frames(side, back, forward, typing, typing_1, legs, legs_pass):
 uppers = [d.SIDE, d.SIDE_ARM_BACK, d.SIDE_ARM_FORWARD, d.SIDE_TYPE, d.SIDE_TYPE_1]
 A = frames(*[trimmed(p) for p in uppers], d.SIDE_LEGS, d.SIDE_LEGS)
 B = frames(*[two_lines(trimmed(p)) for p in uppers], d.SIDE_LEGS, d.SIDE_LEGS)
+A2 = frames(*[corners_off(trimmed(p)) for p in uppers], d.SIDE_LEGS, d.SIDE_LEGS)
 
 C_SIDE = part(0, [
     "........ooo......",
@@ -135,3 +144,26 @@ if __name__ == "__main__":
             picture.alpha_composite(scaled(walk[index], 4), (column * FRAME * 4, 0))
         pictures.append(picture.convert("RGB"))
     pictures[0].save("review/side-options-walk.gif", save_all=True, append_images=pictures[1:], duration=130, loop=0)
+    # A beside A with the torso's corners off
+    pair = [("A", A), ("A2", A2)]
+    times = 8
+    out = Image.new("RGBA", (7 * (FRAME * times - 60) + 60, len(pair) * (FRAME * times - 40)), BACKGROUND)
+    draw = ImageDraw.Draw(out)
+    for index, (label, (stand, walk, typing)) in enumerate(pair):
+        y = index * (FRAME * times - 40) - 30
+        draw.text((8, y + 150), label, fill=(20, 20, 30, 255))
+        for column, f in enumerate([stand] + walk + typing):
+            out.alpha_composite(scaled(f, times), (10 + column * (FRAME * times - 60), y))
+    out.save("review/side-corners.png")
+    small = Image.new("RGBA", (7 * FRAME * 2, 2 * FRAME * 2), BACKGROUND)
+    for index, (label, (stand, walk, typing)) in enumerate(pair):
+        for column, f in enumerate([stand] + walk + typing):
+            small.alpha_composite(scaled(f, 2), (column * FRAME * 2, index * FRAME * 2))
+    small.save("review/side-corners-2x.png")
+    pictures = []
+    for index in range(4):
+        picture = Image.new("RGBA", (2 * FRAME * 5, FRAME * 5), BACKGROUND)
+        for column, (label, (stand, walk, typing)) in enumerate(pair):
+            picture.alpha_composite(scaled(walk[index], 5), (column * FRAME * 5, 0))
+        pictures.append(picture.convert("RGB"))
+    pictures[0].save("review/side-corners-walk.gif", save_all=True, append_images=pictures[1:], duration=130, loop=0)
