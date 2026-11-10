@@ -40,10 +40,11 @@ def two_lines(a_part):
     return part(0, rows)
 
 
-def corners_off(a_part):
-    """One pixel off each of the torso's four corners."""
+def corners_off(a_part, top=True):
+    """One pixel off each of the torso's corners: all four, or only the two at the hem."""
     rows = rows_of(a_part)
-    rows[8] = "....." + "o" + rows[8][6:11] + "o" + "....."
+    if top:
+        rows[8] = "....." + "o" + rows[8][6:11] + "o" + "....."
     rows[17] = "." + rows[17][:4].replace("o", ".")[1:] + "." + rows[17][5:12] + "." + rows[17][13:]
     return part(0, rows)
 
@@ -59,6 +60,7 @@ uppers = [d.SIDE, d.SIDE_ARM_BACK, d.SIDE_ARM_FORWARD, d.SIDE_TYPE, d.SIDE_TYPE_
 A = frames(*[trimmed(p) for p in uppers], d.SIDE_LEGS, d.SIDE_LEGS)
 B = frames(*[two_lines(trimmed(p)) for p in uppers], d.SIDE_LEGS, d.SIDE_LEGS)
 A2 = frames(*[corners_off(trimmed(p)) for p in uppers], d.SIDE_LEGS, d.SIDE_LEGS)
+A3 = frames(*[corners_off(trimmed(p), False) for p in uppers], d.SIDE_LEGS, d.SIDE_LEGS)
 
 C_SIDE = part(0, [
     "........ooo......",
@@ -144,8 +146,8 @@ if __name__ == "__main__":
             picture.alpha_composite(scaled(walk[index], 4), (column * FRAME * 4, 0))
         pictures.append(picture.convert("RGB"))
     pictures[0].save("review/side-options-walk.gif", save_all=True, append_images=pictures[1:], duration=130, loop=0)
-    # A beside A with the torso's corners off
-    pair = [("A", A), ("A2", A2)]
+    # A beside A with the two corners at the hem off
+    pair = [("A", A), ("hem", A3)]
     times = 8
     out = Image.new("RGBA", (7 * (FRAME * times - 60) + 60, len(pair) * (FRAME * times - 40)), BACKGROUND)
     draw = ImageDraw.Draw(out)
