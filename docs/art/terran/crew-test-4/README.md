@@ -43,13 +43,17 @@ same frame counts:
 | 8 | Type right (4), type left (4) |
 | 9 | Type up (4), type down (4) |
 | 10 | Teleport (9: his edge lights up, he turns all to light, and the light thins into bands, columns and rising sparks; the last frame is empty) |
-| 11 | Clone (6: a grey lump, a grey figure, the colour coming in from the feet) |
+| 11 | Clone (6: a lump and a bare figure in muted power green with a bright edge that fades, then his colours coming in from the feet) |
 | 12 | Aim left (3), punch up (6) |
 | 13 | Portrait (the standing frame), crew laser shot (a white bar), a gap, death (5, from the side) |
 
 - **Decided (heromedel, 2026-11-10):** the sheet's teleport is the light one, first made for crew test 3. The
   genre's kind, where his own pixels are pulled upward, is kept beside the sheet as the alternative:
   `terran-drifter-topdown-teleport-pulled.png` (9 frames in a row). `review/teleport-compare.png` shows both.
+
+- **Proposed (heromedel, 2026-11-10):** a clone grows in its race's power colour, toned down, with a bright edge of
+  it that fades as the figure fills in. For this Terran that is power green. `review/clone-compare.png` shows the
+  grey first version, the muted green alone, and the muted green with the fading edge that is on the sheet.
 
 ## How close it sits to the genre's sheet
 

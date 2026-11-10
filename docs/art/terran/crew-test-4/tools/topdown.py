@@ -678,40 +678,52 @@ def teleport_light():
     return [stand, lit, glow, bands, columns, rising, sparks, last, picture([])]
 
 
-# --- The clone bay: a grey lump, a grey figure, and the colour coming in from the feet -------------------------------
+# --- The clone bay: a lump, a bare figure, and his colours coming in from the feet -------------------------------------
+# He grows in his race's power colour, toned down, with a bright edge of it that fades as he fills in (heromedel,
+# 2026-11-10). For a Terran that is power green. The grey of the first version is kept as a choice.
 
 GREYS = ("#4a4650", "#646070", "#7e7a88", "#9a98a4")
+POWER_TONES = ("#1f4a2a", "#2f6b3c", "#45904f", "#66b56a")      # power green, muted, dark to light
+POWER_EDGES = ("#66ff66", "#66ff66", "#3fae4a")                 # the edge on the first three frames, fading
 LUMP = grid([".ooooo.", "o21120o", "o11211o", "o21121o", ".o112o.", "..ooo.."], 7)
 
 
-def clone():
+def clone(tones=POWER_TONES, edges=POWER_EDGES):
     stand = put(STAND_DOWN, DOWN_AT)
+    line = rgba("o")
 
-    def grey(colour):
-        light = (colour[0] * 3 + colour[1] * 4 + colour[2]) // 8
-        code = GREYS[min(3, light // 52)]
+    def colour(code):
         return tuple(int(code[i:i + 2], 16) for i in (1, 3, 5)) + (255,)
 
-    def figure(colour_from):
+    def toned(pixel):
+        light = (pixel[0] * 3 + pixel[1] * 4 + pixel[2]) // 8
+        return colour(tones[min(3, light // 52)])
+
+    def figure(colour_from, edge=None):
         image = Image.new("RGBA", (FRAME, FRAME), (0, 0, 0, 0))
         for y in range(FRAME):
             for x in range(FRAME):
-                colour = stand.getpixel((x, y))
-                if colour[3]:
-                    image.putpixel((x, y), colour if y >= colour_from or colour == rgba("o") else grey(colour))
+                pixel = stand.getpixel((x, y))
+                if not pixel[3]:
+                    continue
+                if pixel == line:
+                    image.putpixel((x, y), colour(edge) if edge and y < colour_from else line)
+                else:
+                    image.putpixel((x, y), pixel if y >= colour_from else toned(pixel))
         return image
 
     lump = Image.new("RGBA", (FRAME, FRAME), (0, 0, 0, 0))
     for y, row in enumerate(LUMP):
         for x, code in enumerate(row):
             if code != ".":
-                lump.putpixel((14 + x, 14 + y), rgba("o") if code == "o" else grey((int(code) * 70,) * 3))
-    bare = figure(99)
-    for y in range(FRAME):                              # the first grey figure has no fists or feet yet
+                shade = colour(edges[0]) if code == "o" and edges else line if code == "o" else toned((int(code) * 70,) * 3)
+                lump.putpixel((14 + x, 14 + y), shade)
+    bare = figure(99, edges[1] if edges else None)
+    for y in range(FRAME):                              # the first figure has no fists or feet yet
         for x in range(FRAME):
             if y >= DOWN_AT[1] + 9 and bare.getpixel((x, y))[3]:
                 bare.putpixel((x, y), (0, 0, 0, 0))
-    return [lump, bare, figure(99), figure(DOWN_AT[1] + 7), figure(DOWN_AT[1] + 3), stand]
+    return [lump, bare, figure(99, edges[2] if edges else None), figure(DOWN_AT[1] + 7), figure(DOWN_AT[1] + 3), stand]
 
 
 def portrait():
