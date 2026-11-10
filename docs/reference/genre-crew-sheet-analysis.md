@@ -142,8 +142,9 @@ From the definitions. "Drawings" is how many different pictures the frames reall
 - Frame 1 is the standing figure **moved eight rows down the frame** (one pixel differs), to leave room above.
 - Then **columns of his own pixels are drawn out upward**: white from the pads, brown from the hair, skin from the
   face. No colour is added: every streak is one of his ten colours **(heromedel: real pixels dragged up, no light)**.
-- It flickers before it goes: small, larger, small, larger, then two big steps, and the last drawing is held for
-  three frames. His height goes from 12 rows to 25.
+- **His body stays the same size and in the same place throughout**: 17 wide, feet on the same row in every frame.
+  What changes is how far the streaks reach above his head: 2 rows, then 5, then **2 again, then 5 again** (frames 4
+  and 5 are frames 2 and 3 repeated), then 8, then 13, and the last drawing is held for three frames.
 - **He comes apart as it happens.** Of his 144 standing pixels, 118 are still in place in the small frame, 102 in
   the larger, 65 in the next and 39 at the end: the lower body breaks into separate columns with gaps between.
 
