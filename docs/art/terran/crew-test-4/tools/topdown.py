@@ -678,7 +678,7 @@ def teleport_light():
     return [stand, lit, glow, bands, columns, rising, sparks, last, picture([])]
 
 
-# --- The clone bay: a lump, a bare figure, and his colours coming in from the feet -------------------------------------
+# --- The clone bay: a lump, a bare figure, and his colours coming in from the head down -------------------------------------
 # He grows in his race's power colour, toned down, with a bright edge of it that fades as he fills in (heromedel,
 # 2026-11-10). For a Terran that is power green. The grey of the first version is kept as a choice.
 
@@ -699,7 +699,7 @@ def clone(tones=POWER_TONES, edges=POWER_EDGES):
         light = (pixel[0] * 3 + pixel[1] * 4 + pixel[2]) // 8
         return colour(tones[min(3, light // 52)])
 
-    def figure(colour_from, edge=None):
+    def figure(colour_to, edge=None, glow=None):
         image = Image.new("RGBA", (FRAME, FRAME), (0, 0, 0, 0))
         for y in range(FRAME):
             for x in range(FRAME):
@@ -707,9 +707,9 @@ def clone(tones=POWER_TONES, edges=POWER_EDGES):
                 if not pixel[3]:
                     continue
                 if pixel == line:
-                    image.putpixel((x, y), colour(edge) if edge and y < colour_from else line)
+                    image.putpixel((x, y), colour(edge) if edge and y >= colour_to else line)
                 else:
-                    image.putpixel((x, y), pixel if y >= colour_from else toned(pixel))
+                    image.putpixel((x, y), pixel if y < colour_to else colour(glow) if glow else toned(pixel))
         return image
 
     lump = Image.new("RGBA", (FRAME, FRAME), (0, 0, 0, 0))
@@ -718,12 +718,15 @@ def clone(tones=POWER_TONES, edges=POWER_EDGES):
             if code != ".":
                 shade = colour(edges[0]) if code == "o" and edges else line if code == "o" else toned((int(code) * 70,) * 3)
                 lump.putpixel((14 + x, 14 + y), shade)
-    bare = figure(99, edges[1] if edges else None)
+    bare = figure(0, edges[1] if edges else None)
     for y in range(FRAME):                              # the first figure has no fists or feet yet
         for x in range(FRAME):
             if y >= DOWN_AT[1] + 9 and bare.getpixel((x, y))[3]:
                 bare.putpixel((x, y), (0, 0, 0, 0))
-    return [lump, bare, figure(99, edges[2] if edges else None), figure(DOWN_AT[1] + 7), figure(DOWN_AT[1] + 3), stand]
+    # He grows head first, so his colours follow the same way and his feet are the last of him still green.
+    # On that frame they glow in the bright power colour.
+    return [lump, bare, figure(0, edges[2] if edges else None), figure(DOWN_AT[1] + 5),
+            figure(DOWN_AT[1] + 9, glow=edges[0] if edges else None), stand]
 
 
 def portrait():

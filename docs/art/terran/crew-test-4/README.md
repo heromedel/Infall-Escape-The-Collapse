@@ -43,7 +43,7 @@ same frame counts:
 | 8 | Type right (4), type left (4) |
 | 9 | Type up (4), type down (4) |
 | 10 | Teleport (9: his edge lights up, he turns all to light, and the light thins into bands, columns and rising sparks; the last frame is empty) |
-| 11 | Clone (6: a lump and a bare figure in muted power green with a bright edge that fades, then his colours coming in from the feet) |
+| 11 | Clone (6: a lump and a bare figure in muted power green with a bright edge that fades, then his colours coming in from the head down, his feet last) |
 | 12 | Aim left (3), punch up (6) |
 | 13 | Portrait (the standing frame), crew laser shot (a white bar), a gap, death (5, from the side) |
 
@@ -53,7 +53,9 @@ same frame counts:
 
 - **Proposed (heromedel, 2026-11-10):** a clone grows in its race's power colour, toned down, with a bright edge of
   it that fades as the figure fills in. For this Terran that is power green. `review/clone-compare.png` shows the
-  grey first version, the muted green alone, and the muted green with the fading edge that is on the sheet.
+  grey first version, the muted green alone, and the muted green with the fading edge that is on the sheet. He grows head first, so his colours come in
+  from the head down and his feet are the last part still green, glowing in the bright power colour on
+  that frame (heromedel, 2026-11-11).
 
 ## How close it sits to the genre's sheet
 
