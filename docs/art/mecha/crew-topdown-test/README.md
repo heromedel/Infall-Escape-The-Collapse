@@ -7,7 +7,9 @@ human sheet to follow?
 
 ![The four views beside the drifter](review/beside-the-drifter.png)
 
-A HalfMech in its suit, standing and walking in the four directions, at the drifter's frame size (35 by 35).
+A HalfMech in its suit, standing and walking in the four directions, at the drifter's frame size (35 by 35). He is larger
+than the drifter, 27 pixels across with his spikes against 17, and that is intended: a suit is supposed to be
+larger than a Terran (heromedel, 2026-11-11).
 
 - `mecha-topdown-walk-sheet.png` (and `-4x`): row 1 walk down then walk right, row 2 walk up then walk left, four
   frames each.
@@ -37,8 +39,9 @@ Mecha crew palette (`docs/art/palette.md`):
   wide sits under them, one tone darker than the armour. It is meant to be hard to notice.
 - **Helm shading:** the tones fall off from the top left to the bottom right. They were in columns either side of
   the ridge, the same fault the feet had. `review/helm-shading-before-after-16x.png` shows front and back, before
-  then after. The side view's helm was regraded the same way after its ridge moved up a row, which had left
-  the wider face below the ridge one flat dark block: `review/side-helm-shading-before-after-16x.png`.
+  then after. The same regrade was tried on the side view's helm after its ridge moved up a row;
+  heromedel found it worse, so the side helm keeps its plain shading, lit above the ridge and dark below
+  (2026-11-11).
 - The feet are two pixels long and stand apart from the torso and from each other, each with its own outline
   (heromedel, 2026-11-11). A stepping foot reaches a pixel further and the other draws in a pixel. Each
   foot is shaded from the top left (one lit pixel, armour, shadow at the bottom right), not in columns, which read

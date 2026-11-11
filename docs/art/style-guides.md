@@ -61,6 +61,8 @@ Reference: heromedel's sheet, `mecha/crew/`.
   silhouette (crest head, blade forearms, short legs), near-black armour from the Mecha palette with one accent, the
   purple (visor bar, chest lights). At sprite size the texture is gritty and broken up, and detail is hinted by a pixel
   or two. Menace comes from the silhouette and the dark palette, not from faces, eyes, grilles or bolts.
+- **Size — Decided (heromedel, 2026-11-11):** a HalfMech in its suit is larger than a Terran crew member. The top-down
+  test (`mecha/crew-topdown-test`) is 27 pixels across with its spikes against the drifter's 17.
 - **Powering a system — Decided (2026-10-25):** the power-pulse typing rows: a pulse runs from the HalfMech into the
   console, purple turning power green as it arrives.
 
