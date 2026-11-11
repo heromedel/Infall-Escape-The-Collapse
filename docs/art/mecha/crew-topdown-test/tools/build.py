@@ -9,7 +9,7 @@ FLOOR = (0xC4, 0xCA, 0xD2, 255)
 
 
 def sheet():
-    """Eight frames a row and sixteen rows: the genre's layout, with a row of its own for each direction of powering
+    """Eight frames a row and seventeen rows: the genre's layout, with a row of its own for each direction of powering
     a console, which takes eight frames. Rows not drawn yet are left empty, so every frame is where it will stay."""
     empty = []
     rows = [m.walk_down() + m.walk_right(), m.walk_up() + m.walk_left(),
@@ -18,7 +18,7 @@ def sheet():
             empty, empty,                                  # punching
             m.power_right(), m.power_left(), m.power_up(), m.power_down(),
             empty, empty,                                  # teleport, death
-            m.clone(),
+            m.clone()[:8], m.clone()[8:],                  # the clone bay runs ten frames, over two rows
             [m.portrait(), m.laser_shot(), None] + m.repair()]
     picture = Image.new("RGBA", (8 * FRAME, len(rows) * FRAME), (0, 0, 0, 0))
     for y, frames in enumerate(rows):
@@ -80,7 +80,7 @@ if __name__ == "__main__":
     clone = m.clone()
     moving("review/clone-10x.gif", [clone + clone[-1:] * 5], 10, 150)
     moving("review/clone-slow-10x.gif", [clone + clone[-1:] * 2], 10, 500)
-    strip(clone[4:6], 16, 0, FLOOR).save("review/pilot-16x.png")
+    strip(clone[4:8], 12, 0, FLOOR).save("review/pilot-12x.png")
     moving("review/repair-8x.gif", [m.repair()], 8, 200)
     strip(clone, 8, 0, FLOOR).save("review/clone-8x.png")
     strip(m.power_down(), 8, 0, FLOOR).save("review/powering-down-8x.png")

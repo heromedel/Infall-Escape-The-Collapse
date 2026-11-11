@@ -10,8 +10,8 @@ human sheet to follow?
 A HalfMech in its suit at the drifter's frame size (35 by 35). He is larger than the drifter, 27 pixels across with
 his spikes against 17, and that is intended: a suit is supposed to be larger than a Terran (heromedel, 2026-11-11).
 
-- `mecha-topdown-sheet.png` (and `-4x`), eight frames a row and sixteen rows: the genre's layout, with a row of its
-  own for each direction of powering a console. Rows not drawn yet are left empty, so every frame is already where
+- `mecha-topdown-sheet.png` (and `-4x`), eight frames a row and seventeen rows: the genre's layout, with a row of
+  its own for each direction of powering a console and two for the clone bay. Rows not drawn yet are left empty, so every frame is already where
   it will stay:
 
   | Row | Frames |
@@ -24,14 +24,14 @@ his spikes against 17, and that is intended: a suit is supposed to be larger tha
   | 7, 8 | Punching up and down: to come |
   | 9, 10, 11, 12 | Powering a console: right, left, up, down (8 each) |
   | 13, 14 | Teleport and death: to come |
-  | 15 | The clone bay (8) |
-  | 16 | Portrait, crew laser shot, a gap, repair (4) |
+  | 15, 16 | The clone bay (10: eight, then two) |
+  | 17 | Portrait, crew laser shot, a gap, repair (4) |
 
 - `mecha-topdown-laser-shot.png`: his crew laser shot, the genre's bar in Mecha purple with a hot core.
 - `review/walks-8x.gif` and `-4x.gif`: the four walks moving. `review/aims-8x.gif`: the four aims, each held a
   while. `review/powering-8x.gif` and `-slow-8x.gif`: powering a console in the four directions, the
   clamp-on once and the pulse three times. `review/clone-10x.gif` and `review/clone-slow-10x.gif`: the clone bay at
-  game speed and slowed. `review/pilot-16x.png`: the two frames with the pilot. `review/repair-8x.gif`: the repair. `review/aims-down-up-8x.png` and `review/aims-right-left-8x.png`: the aim frames laid out.
+  game speed and slowed. `review/pilot-12x.png`: the four frames with the pilot. `review/repair-8x.gif`: the repair. `review/aims-down-up-8x.png` and `review/aims-right-left-8x.png`: the aim frames laid out.
   `review/views-10x.png`: the four standing views. `review/beside-the-drifter.png`: both figures at game size, twice
   and four times. `review/beside-heromedels-drawing.png`: the front view beside the drawing it follows.
 - `reference/heromedel-mecha-topdown.png` (and `-8x`): heromedel's own drawing of the suit from above, standing and
@@ -122,16 +122,18 @@ claw opens on the work, closes, turns it a pixel while the far claw steadies, an
 
 **Proposed (heromedel, 2026-11-11):** the clone animation shows a suit being put together, and a brief glimpse of a
 small HalfMech jumping into the back of it. She is drawn like the top-down Terran, in HalfMech colours, and is a
-girl. Eight frames:
+girl. Ten frames:
 
 - Frames 1 to 4: the suit is built, not grown. It goes together in its own colours, unlit, a piece at a time: feet
   and torso, shoulder plates, arms and claws, helm. Each piece wears a bright purple edge only on the frame it
   arrives. heromedel was in two minds about a purple outline on a suit that is being constructed, not cloned
   (2026-11-11); the first version tinted the whole suit purple, and this keeps the colour to the arriving piece.
-- Frame 5: the pilot shows above the back of the suit, mid jump. From almost straight above, the back of the suit is
-  its top edge on the screen.
-- Frame 6: she drops in; only her ponytail and the top of her head still show.
-- Frame 7: the lights come up dim, in deep purple. Frame 8: he stands. The first version flashed the lights pale for
+- Frames 5 and 6: the pilot is on the ground behind the suit before she jumps (heromedel, 2026-11-11). She walks up
+  a little to one side, the top of her head and her ponytail showing over the helm, then stands in place and dips
+  to jump. From almost straight above, the back of the suit is its top edge on the screen.
+- Frame 7: she is in the air, all of her clear of the helm.
+- Frame 8: she drops in; only her ponytail still shows.
+- Frame 9: the lights come up dim, in deep purple. Frame 10: he stands. The first version flashed the lights pale for
   a frame, which read as the suit staying white before powering (heromedel, 2026-11-11).
 - **The pilot:** purple hair in a ponytail that swings out to one side from a bright tie, pale skin, dark clothes,
   narrow shoulders with a hand at each side, one implant light; the colours of heromedel's HalfMech pilot art

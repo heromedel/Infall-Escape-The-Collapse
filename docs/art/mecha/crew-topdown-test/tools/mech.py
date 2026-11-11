@@ -349,10 +349,10 @@ def repair():
 
 
 # --- The clone bay: the suit is put together, and its pilot jumps in (heromedel, 2026-11-11) ----------------------
-# The one glimpse of a HalfMech out of the suit. Eight frames. The suit is built, not grown: it goes together in its
+# The one glimpse of a HalfMech out of the suit. Ten frames. The suit is built, not grown: it goes together in its
 # own colours, unlit, a piece at a time (feet and torso, shoulder plates, arms and claws, helm), and each piece wears
-# a bright purple edge only on the frame it arrives. Then the pilot shows above the back of it, mid jump, her
-# ponytail flying out to one side, and drops in. Then the lights come up, dim purple first, and he stands.
+# a bright purple edge only on the frame it arrives. Then the pilot comes up behind it on the ground, the top of her
+# head showing over the helm, dips, jumps clear of it with her ponytail flying, and drops in. Then the lights come up, dim purple first, and he stands.
 # She is a girl (heromedel): long hair in a ponytail is what says so at this size. Her colours are those of
 # heromedel's HalfMech pilot art: purple hair, pale skin, dark clothes, one implant light.
 
@@ -365,8 +365,11 @@ PILOT = [".......oo..",
          ".ooTSSSToo.",
          ".oSknnLkSo.",          # narrow shoulders, a hand at each side, her implant light
          "..ooooooo.."]
-PILOT_IN = PILOT[:5]                          # dropping in: only her ponytail and the top of her head still show
-PILOT_AT, PILOT_IN_AT = (8, -4), (8, 0)       # behind the helm: first clear of its top, then half behind it
+PILOT_HEAD = PILOT[:6]                        # all that shows of her over the helm when she is behind the suit
+# Where she is, frame by frame, behind the helm: walking up on the ground a little to one side, the top of her head
+# over the helm; in place and dipping to jump; in the air, all of her clear of the helm; dropping in, only her
+# ponytail left.
+PILOT_WALKS_UP, PILOT_DIPS, PILOT_JUMPS, PILOT_DROPS_IN = (6, -1), (8, 0), (8, -4), (8, 2)
 
 
 def unlit(rows):
@@ -411,8 +414,10 @@ def clone():
             built(("feet", "torso"), ("plates",)),
             built(("feet", "torso", "plates"), ("arms",)),
             built(("feet", "torso", "plates", "arms"), ("helm",)),
-            built(whole, behind=[(PILOT, PILOT_AT)]),
-            built(whole, behind=[(PILOT_IN, PILOT_IN_AT)]),
+            built(whole, behind=[(PILOT_HEAD, PILOT_WALKS_UP)]),
+            built(whole, behind=[(PILOT_HEAD, PILOT_DIPS)]),
+            built(whole, behind=[(PILOT, PILOT_JUMPS)]),
+            built(whole, behind=[(PILOT_HEAD, PILOT_DROPS_IN)]),
             recoloured(figure(), {"v": "q"}),
             figure()]
 
