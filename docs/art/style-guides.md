@@ -65,10 +65,17 @@ Reference: heromedel's sheet, `mecha/crew/`.
   test (`mecha/crew-topdown-test`) is 27 pixels across with its spikes against the drifter's 17.
 - **Powering a system — Decided (2026-10-25):** the power-pulse typing rows: a pulse runs from the HalfMech into the
   console, purple turning power green as it arrives.
+  - **Proposed (heromedel, 2026-11-11):** those rows were made for a figure with a longer bar down the arm. On the
+    top-down figure he clamps on with both claws and stays clamped, pulsing; the light still lands in power green.
+- **Repairing — Proposed (heromedel, 2026-11-11):** he uses the clamp claw and no wrench.
 
 ## HalfMech people (out of their suits)
 
 Reference: heromedel's art, `mecha/pilot/`. There are no current plans to show HalfMechs out of their suits.
+
+- **A glimpse in the clone bay — Proposed (heromedel, 2026-11-11):** the one exception. The Mecha clone animation
+  shows a suit being put together and, for one frame, a small HalfMech jumping into the back of it, drawn like the
+  top-down Terran in HalfMech colours (`mecha/crew-topdown-test`).
 
 - **Look — Proposed (2026-10-25, heromedel's art):** a petite pilot, about half an FTL human's size (9 px wide, 13 px
   tall), pale skin, dark purple hair, purple eyes, and purple implant lights on the left shoulder and the back of the

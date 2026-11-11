@@ -9,13 +9,22 @@ FLOOR = (0xC4, 0xCA, 0xD2, 255)
 
 
 def sheet():
-    """The genre's layout, eight frames a row: walks on rows 1 and 2, aims on rows 3 and 4. The rest are to come."""
+    """The genre's layout, eight frames a row and fourteen rows. Rows not drawn yet are left empty, so every frame
+    is already where it will stay."""
+    empty = []
     rows = [m.walk_down() + m.walk_right(), m.walk_up() + m.walk_left(),
-            m.aims_down() + m.aims_right(), m.aims_up() + m.aims_left()]
+            m.aims_down() + m.aims_right(), m.aims_up() + m.aims_left(),
+            empty, empty,                                  # fighting fire
+            empty, empty,                                  # punching
+            m.power_right() + m.power_left(), m.power_up() + m.power_down(),
+            empty, empty,                                  # teleport, death
+            m.clone(),
+            [m.portrait(), m.laser_shot(), None] + m.repair()]
     picture = Image.new("RGBA", (8 * FRAME, len(rows) * FRAME), (0, 0, 0, 0))
     for y, frames in enumerate(rows):
         for x, frame in enumerate(frames):
-            picture.alpha_composite(frame, (x * FRAME, y * FRAME))
+            if frame:
+                picture.alpha_composite(frame, (x * FRAME, y * FRAME))
     return picture
 
 
@@ -51,6 +60,10 @@ def beside_the_drifter(name):
     picture.save(name)
 
 
+def powering(name, times):
+    moving(name, [m.power_down(), m.power_right(), m.power_up(), m.power_left()], times, 200)
+
+
 if __name__ == "__main__":
     picture = sheet()
     picture.save("mecha-topdown-sheet.png")
@@ -59,6 +72,15 @@ if __name__ == "__main__":
     walks("review/walks-4x.gif", 4)
     walks("review/walks-8x.gif", 8)
     aims("review/aims-8x.gif", 8)
+    powering("review/powering-8x.gif", 8)
+    clone = m.clone()
+    moving("review/clone-10x.gif", [clone[:1] * 2 + clone[1:2] * 2 + clone[2:3] * 2 + clone[3:4] + clone[4:5] * 2
+                                    + clone[5:] * 6], 10, 150)
+    moving("review/clone-slow-10x.gif", [clone + clone[5:] * 2], 10, 500)
+    moving("review/repair-8x.gif", [m.repair()], 8, 200)
+    strip(clone, 8, 0, FLOOR).save("review/clone-8x.png")
+    strip(m.power_down() + m.power_up(), 8, 0, FLOOR).save("review/powering-down-up-8x.png")
+    strip(m.power_right() + m.repair(), 8, 0, FLOOR).save("review/powering-right-and-repair-8x.png")
     strip(m.aims_down() + m.aims_up(), 8, 0, FLOOR).save("review/aims-down-up-8x.png")
     strip(m.aims_right() + m.aims_left(), 8, 0, FLOOR).save("review/aims-right-left-8x.png")
     views = [m.walk_down()[0], m.walk_right()[0], m.walk_up()[0], m.walk_left()[0]]

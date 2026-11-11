@@ -20,6 +20,10 @@ PALETTE = {                      # the Mecha crew palette, docs/art/palette.md
     "j": "#EBE1FA",              # purple pale
     "g": "#66FF66",              # power green, where his power reaches another race's console
     "w": "#F5EBFF",              # purple white, the hot core of his laser shot
+    # the pilot, from heromedel's HalfMech pilot art (docs/art/mecha/pilot)
+    "H": "#4A2C5E", "I": "#7A4A9A",      # hair, hair light
+    "S": "#F0CDB8", "T": "#C99A8C",      # skin, skin shade
+    "L": "#C77DFF",                      # implant light
 }
 
 
@@ -265,3 +269,133 @@ def aims_left():
 def laser_shot():
     """His crew laser shot: the genre's bar, in Mecha purple with a hot core."""
     return frame([(["qvq"] + ["vwv"] * 9 + ["qvq"], (0, 0))], (16, 12))
+
+
+# --- Powering a console: both claws clamped on, and staying clamped, pulsing (heromedel, 2026-11-11) --------------
+# Four frames that loop while he holds on: the clamps at rest, the wrist bands flashing pale and spreading, the light
+# running down the claws, and the light landing at the tips in power green, so it works on any race's console.
+
+def claw(right, pulse=0):
+    body = "oeaao" if right else "oeeao"
+    return [["onvno", body, ".oeo.", "..o.."],
+            ["ovjvo", body, ".oeo.", "..o.."],
+            ["onvno", "ovvvo", ".ovo.", "..o.."],
+            ["onvno", body, ".ogo.", "..g.."]][pulse]
+
+
+def side_claw_pulsing(near, pulse, reach):
+    tones = ("e", "e", "a") if near else ("e", "a", "a")
+    rows = [[".oo..", "on" + tones[0] + "o.", "kve" + tones[1] + "o", "on" + tones[2] + "o.", ".oo.."],
+            [".oo..", "ov" + tones[0] + "o.", "kje" + tones[1] + "o", "ov" + tones[2] + "o.", ".oo.."],
+            [".oo..", "onvo.", "kvvvo", "onvo.", ".oo.."],
+            [".oo..", "on" + tones[0] + "o.", "kvegg", "on" + tones[2] + "o.", ".oo.."]][pulse]
+    return [arm * reach + row for arm, row in zip(".oko.", rows)]
+
+
+def power_down():
+    # both shoulders forward, both arms a row longer and a pixel in, onto the console in front of him
+    return [figure(left_plate=1, right_plate=1, left_arm=([ARM, ARM] + claw(False, pulse), 1, 1),
+                   right_arm=([ARM, ARM] + claw(True, pulse), -1, 1)) for pulse in range(4)]
+
+
+def power_up():
+    # from behind, both claws rise from under the far edges of the plates, between the helm and the spikes
+    frames = []
+    for pulse in range(4):
+        left = upside_down([ARM, ARM, ARM] + claw(False, pulse))
+        right = upside_down([ARM, ARM, ARM] + claw(True, pulse))
+        frames.append(figure(True, left_plate=-1, right_plate=-1, left_arm=(left, 1, -len(left) - 6),
+                             right_arm=(right, -1, -len(right) - 6)))
+    return frames
+
+
+def power_right():
+    return [side(1, 1, (side_claw_pulsing(False, pulse, 2), 0, 0), (side_claw_pulsing(True, pulse, 2), 0, 0))
+            for pulse in range(4)]
+
+
+def power_left():
+    return facing_left(power_right())
+
+
+# --- Repairing: the clamp claw and no wrench (heromedel, 2026-11-11) -----------------------------------------------
+# Side on, four frames: the near claw opens on the work, closes, turns it a pixel while the far claw steadies, and
+# comes back.
+
+def repair():
+    reach = lambda rows: [arm * 2 + row for arm, row in zip(".oko.", rows)]
+    opened, closed = side_claw(True, 2, True), side_claw(True, 2)
+    return [side(0, 1, None, (opened, 0, 0)),
+            side(0, 1, None, (closed, 0, 0)),
+            side(1, 1, (side_claw(False, 1), 0, 0), (closed, 0, 1)),
+            side(0, 1, None, (closed, 0, 0))]
+
+
+# --- The clone bay: the suit is put together, and its pilot jumps in (heromedel, 2026-11-11) ----------------------
+# The one glimpse of a HalfMech out of the suit. The suit goes together empty, in his race's power colour toned down
+# with a bright edge that fades (the drifter's clone, in Mecha purple): feet and torso, then plates and claws, then
+# the helm. Then it stands in its own colours, unlit, and the pilot shows above the back of it for one frame, mid
+# jump: purple hair, pale skin, dark clothes, one implant light, drawn in the top-down build at about half a Terran's
+# size. Then she is in, the lights flash on, and he stands.
+
+PILOT = [".o.......o.",
+         "oSo.ooo.oSo",
+         "okooHIHooko",
+         "okkoHHHokko",
+         ".oooSSTooo.",
+         "...oknLo...",
+         "....ooo...."]
+PILOT_AT = (8, -1)                       # behind the helm, her head and raised fists clear of its top
+CLONE_TONES = ("#24143A", "#37205A", "#4E2E80", "#6A42A6")       # power purple, muted, dark to light
+CLONE_EDGES = ("#AA28EB", "#7C24B4", "#3A1560")                  # the edge on the first three frames, fading
+
+
+def _colour(code):
+    return tuple(int(code[i:i + 2], 16) for i in (1, 3, 5)) + (255,)
+
+
+def toned(image, edge):
+    """A frame in the muted clone tones, its outline in the edge colour."""
+    out = Image.new("RGBA", image.size, (0, 0, 0, 0))
+    line = rgba("o")
+    for y in range(image.height):
+        for x in range(image.width):
+            pixel = image.getpixel((x, y))
+            if not pixel[3]:
+                continue
+            light = (pixel[0] * 3 + pixel[1] * 4 + pixel[2]) // 8
+            out.putpixel((x, y), _colour(edge) if pixel == line else _colour(CLONE_TONES[min(3, light // 30)]))
+    return out
+
+
+def recoloured(image, change):
+    """A frame with some palette colours swapped, e.g. the lights put out or flashing."""
+    swap = {rgba(old): rgba(new) for old, new in change.items()}
+    out = image.copy()
+    for y in range(image.height):
+        for x in range(image.width):
+            pixel = image.getpixel((x, y))
+            if pixel in swap:
+                out.putpixel((x, y), swap[pixel])
+    return out
+
+
+def clone():
+    arms = [([ARM] + CLAW_LEFT, ARM_LEFT_AT), ([ARM] + CLAW_RIGHT, ARM_RIGHT_AT)]
+    feet = [(FOOT_LEFT, FOOT_LEFT_AT), (FOOT_RIGHT, FOOT_RIGHT_AT)]
+    plates = [(PLATE_LEFT, PLATE_LEFT_AT), (PLATE_RIGHT, PLATE_RIGHT_AT)]
+    torso, helm = [(TORSO, TORSO_AT)], [(HELM, HELM_AT)]
+    suit = arms + feet + plates + torso + helm
+    unlit = {"v": "k", "q": "k"}
+    pilot = frame([(PILOT, PILOT_AT)], AT)
+    pilot.alpha_composite(recoloured(frame(suit, AT), unlit))
+    return [toned(frame(feet + torso, AT), CLONE_EDGES[0]),
+            toned(frame(arms + feet + plates + torso, AT), CLONE_EDGES[1]),
+            toned(frame(suit, AT), CLONE_EDGES[2]),
+            pilot,
+            recoloured(frame(suit, AT), {"v": "j"}),
+            figure()]
+
+
+def portrait():
+    return figure()

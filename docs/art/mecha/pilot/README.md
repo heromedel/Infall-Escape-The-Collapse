@@ -2,7 +2,8 @@
 
 **Date:** 2026-10-25
 **Status:** heromedel's art, saved to the project for reference. There are no current plans for HalfMechs to ever be
-out of their suits in the game. Source: https://claude.ai/artifact/TAqoUS9c2WW7HTYkkkkD5n
+out of their suits in the game. One exception is **Proposed (heromedel, 2026-11-11):** a one-frame glimpse of a pilot jumping
+into the back of a suit in the Mecha clone animation (`../crew-topdown-test`). Source: https://claude.ai/artifact/TAqoUS9c2WW7HTYkkkkD5n
 
 ![The base designs at 8x](halfmech-pilot-base-8x.png)
 

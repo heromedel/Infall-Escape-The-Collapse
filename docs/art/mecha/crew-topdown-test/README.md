@@ -7,11 +7,11 @@ human sheet to follow?
 
 ![The four views beside the drifter](review/beside-the-drifter.png)
 
-A HalfMech in its suit at the drifter's frame size (35 by 35): standing, walking and aiming in the four directions
-so far. He is larger than the drifter, 27 pixels across with his spikes against 17, and that is intended: a suit is
-supposed to be larger than a Terran (heromedel, 2026-11-11).
+A HalfMech in its suit at the drifter's frame size (35 by 35). He is larger than the drifter, 27 pixels across with
+his spikes against 17, and that is intended: a suit is supposed to be larger than a Terran (heromedel, 2026-11-11).
 
-- `mecha-topdown-sheet.png` (and `-4x`), eight frames a row in the genre's layout:
+- `mecha-topdown-sheet.png` (and `-4x`), eight frames a row and fourteen rows in the genre's layout. Rows not drawn
+  yet are left empty, so every frame is already where it will stay:
 
   | Row | Frames |
   |---|---|
@@ -19,11 +19,18 @@ supposed to be larger than a Terran (heromedel, 2026-11-11).
   | 2 | Walk up (4), walk left (4) |
   | 3 | Aim down (3), aim right (3) |
   | 4 | Aim up (3), aim left (3) |
+  | 5, 6 | Fighting fire: to come |
+  | 7, 8 | Punching up and down: to come |
+  | 9 | Powering a console, right (4) and left (4) |
+  | 10 | Powering a console, up (4) and down (4) |
+  | 11, 12 | Teleport and death: to come |
+  | 13 | Clone (6) |
+  | 14 | Portrait, crew laser shot, a gap, repair (4) |
 
-  Still to come: fighting fire, punching, powering a console, teleport, death, clone, portrait and repair.
 - `mecha-topdown-laser-shot.png`: his crew laser shot, the genre's bar in Mecha purple with a hot core.
 - `review/walks-8x.gif` and `-4x.gif`: the four walks moving. `review/aims-8x.gif`: the four aims, each held a
-  while. `review/aims-down-up-8x.png` and `review/aims-right-left-8x.png`: the aim frames laid out.
+  while. `review/powering-8x.gif`: powering a console in the four directions. `review/clone-10x.gif` and
+  `review/clone-slow-10x.gif`: the clone bay at game speed and slowed. `review/repair-8x.gif`: the repair. `review/aims-down-up-8x.png` and `review/aims-right-left-8x.png`: the aim frames laid out.
   `review/views-10x.png`: the four standing views. `review/beside-the-drifter.png`: both figures at game size, twice
   and four times. `review/beside-heromedels-drawing.png`: the front view beside the drawing it follows.
 - `reference/heromedel-mecha-topdown.png` (and `-8x`): heromedel's own drawing of the suit from above, standing and
@@ -90,12 +97,37 @@ little to his right and a little to his left, with no flash, and the shot a spri
 - Facing away, the claw rises from under the far edge of his shoulder plate, between the helm and the spike.
 - Facing left is the mirror of facing right with the other arm aiming, so it is still his right arm.
 
-## Powering a console (not drawn yet)
+## Powering a console
 
 The style guide's power-pulse rows were made for an earlier figure with a longer bar down the arm (heromedel,
-2026-11-11). Ideas for this one, all **Proposed (heromedel, 2026-11-11)**: the purple dot on the wrist extends and
-flashes; the clamp opens and closes; he clamps on with both claws and stays clamped, pulsing. Purple turning power
-green where it reaches the console is kept from the Decided entry.
+2026-11-11). For this one, **Proposed (heromedel, 2026-11-11):** he clamps on with both claws and stays clamped,
+pulsing. Four frames that loop while he holds on: the clamps at rest; the wrist bands flash pale and spread; the
+light runs down the claws; it lands at the tips in power green. Purple turning power green where it reaches the
+console is kept from the Decided entry, so it works on any race's console. Other ideas from the same talk, not
+drawn: the clamp opening and closing as he powers.
+
+## Repairing
+
+**Proposed (heromedel, 2026-11-11):** he repairs with the clamp claw and no wrench. Side on, four frames: the near
+claw opens on the work, closes, turns it a pixel while the far claw steadies, and comes back.
+
+## The clone bay
+
+**Proposed (heromedel, 2026-11-11):** the clone animation shows a suit being put together, and a brief glimpse of a
+small HalfMech jumping into the back of it. She is drawn like the top-down Terran, in HalfMech colours, and is
+probably a girl.
+
+- Frames 1 to 3: the suit goes together empty: feet and torso, then shoulder plates and claws, then the helm. It is
+  in muted power purple with a bright edge that fades, the drifter's clone decision in the Mecha's colour.
+- Frame 4: the suit stands in its own colours, unlit, and the pilot shows above the back of it, mid jump, her fists
+  raised. From almost straight above, the back of the suit is its top edge on the screen.
+- Frame 5: she is in, and the visor, chest lights and wrist bands flash pale.
+- Frame 6: he stands.
+- The pilot's colours are those of heromedel's HalfMech pilot art (`docs/art/mecha/pilot`): purple hair, pale skin,
+  dark clothes, one implant light. She is 11 pixels across with her arms up and 7 tall; that art gives a pilot as
+  about half a human's size.
+- This is the one place a HalfMech is seen out of the suit. The style guide and the pilot's README said there were
+  no plans to show one; both now note this glimpse.
 
 ## What I think of it
 
