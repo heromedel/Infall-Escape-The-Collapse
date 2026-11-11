@@ -10,8 +10,8 @@ human sheet to follow?
 A HalfMech in its suit at the drifter's frame size (35 by 35). He is larger than the drifter, 27 pixels across with
 his spikes against 17, and that is intended: a suit is supposed to be larger than a Terran (heromedel, 2026-11-11).
 
-- `mecha-topdown-sheet.png` (and `-4x`), eight frames a row and seventeen rows: the genre's layout, with a row of
-  its own for each direction of powering a console and two for the clone bay. Rows not drawn yet are left empty, so every frame is already where
+- `mecha-topdown-sheet.png` (and `-4x`), eight frames a row and sixteen rows: the genre's layout, with a row of its
+  own for each direction of powering a console. Rows not drawn yet are left empty, so every frame is already where
   it will stay:
 
   | Row | Frames |
@@ -24,14 +24,18 @@ his spikes against 17, and that is intended: a suit is supposed to be larger tha
   | 7, 8 | Punching up and down: to come |
   | 9, 10, 11, 12 | Powering a console: right, left, up, down (8 each) |
   | 13, 14 | Teleport and death: to come |
-  | 15, 16 | The clone bay (12: eight, then four) |
-  | 17 | Portrait, crew laser shot, a gap, repair (4) |
+  | 15 | The clone bay: the suit's own frames (7) |
+  | 16 | Portrait, crew laser shot, a gap, repair (4) |
 
+- `halfmech-pilot-topdown-sheet.png` (and `-4x`): the pilot out of her suit, a sprite of her own. Row 1 run down (4)
+  and run right (4), row 2 run up (4) and run left (4), row 3 her jump (1).
 - `mecha-topdown-laser-shot.png`: his crew laser shot, the genre's bar in Mecha purple with a hot core.
 - `review/walks-8x.gif` and `-4x.gif`: the four walks moving. `review/aims-8x.gif`: the four aims, each held a
   while. `review/powering-8x.gif` and `-slow-8x.gif`: powering a console in the four directions, the
-  clamp-on once and the pulse three times. `review/clone-10x.gif` and `review/clone-slow-10x.gif`: the clone bay at
-  game speed and slowed. `review/pilot-9x.png`: the six frames with the pilot. `review/repair-8x.gif`: the repair. `review/aims-down-up-8x.png` and `review/aims-right-left-8x.png`: the aim frames laid out.
+  clamp-on once and the pulse three times. `review/clone-bay-8x.gif` and `-slow-8x.gif`: the clone bay as the game
+  would play it, the pilot running to her suit and jumping in. `review/clone-suit-8x.png`: the suit's seven clone
+  frames. `review/pilot-run-10x.gif`, `review/pilot-run-down-up-10x.png` and
+  `review/pilot-run-right-left-jump-10x.png`: the pilot's own frames. `review/repair-8x.gif`: the repair. `review/aims-down-up-8x.png` and `review/aims-right-left-8x.png`: the aim frames laid out.
   `review/views-10x.png`: the four standing views. `review/beside-the-drifter.png`: both figures at game size, twice
   and four times. `review/beside-heromedels-drawing.png`: the front view beside the drawing it follows.
 - `reference/heromedel-mecha-topdown.png` (and `-8x`): heromedel's own drawing of the suit from above, standing and
@@ -122,33 +126,49 @@ claw opens on the work, closes, turns it a pixel while the far claw steadies, an
 
 **Proposed (heromedel, 2026-11-11):** the clone animation shows a suit being put together, and a brief glimpse of a
 small HalfMech jumping into the back of it. She is drawn like the top-down Terran, in HalfMech colours, and is a
-girl. Twelve frames:
+girl.
+
+**In the game she will probably have to be scripted to run from the clone bay to the suit and jump (heromedel,
+2026-11-11).** So the art is in two parts that the game puts together, and `review/clone-bay-8x.gif` shows the whole
+of it played that way.
+
+The suit's frames, seven, on its own sheet:
 
 - Frames 1 to 4: the suit is built, not grown. It goes together in its own colours, unlit, a piece at a time: feet
   and torso, shoulder plates, arms and claws, helm. Each piece wears a bright purple edge only on the frame it
   arrives. heromedel was in two minds about a purple outline on a suit that is being constructed, not cloned
   (2026-11-11); the first version tinted the whole suit purple, and this keeps the colour to the arriving piece.
-- Frames 5 and 6: the pilot comes up low, on the ground: beside the suit, her feet on the floor level with its
-  feet, then a step closer.
-- Frame 7: she vaults up past its shoulder.
-- Frame 8: she is at the top of her jump, above the back of the suit. Seen from almost straight above, a thing that
-  is higher sits further up the screen, so the top of her jump is above the helm.
-- Frames 9 and 10: she drops down behind the helm and in. She is drawn whole each time and the suit hides what it
-  hides, more of her each frame, until only her ponytail shows.
-- Frame 11: the lights come up dim, in deep purple. Frame 12: he stands. The first version flashed the lights pale
-  for a frame, which read as the suit staying white before powering (heromedel, 2026-11-11).
-- How this staging was reached (heromedel, 2026-11-11): she approaches low, jumps to that point and drops in. Two
-  tries in between were wrong. One showed only her hair over the helm as she came up, which read as hair floating
-  in with no face or body; the other stood her whole on the floor straight behind the suit, with no feet drawn and
-  no real jump. Both came from drawing only the few pixels of her that the drop leaves visible. The test for
-  ground against air is to imagine the floor tiles round the suit, or her shadow on them.
-- **The pilot:** purple hair in a ponytail that swings out to one side from a bright tie, pale skin, dark clothes,
-  narrow shoulders with a hand at each side, bare legs and feet, one implant light; the colours of heromedel's HalfMech pilot art
-  (`docs/art/mecha/pilot`). The ponytail is what says "girl" at this size. The first pilot had her fists raised
-  above her head, which read as a boy making a rude gesture with both hands (heromedel, 2026-11-11); a second try
-  with a ponytail straight up read as a pointed hat.
-- This is the one place a HalfMech is seen out of the suit. The style guide and the pilot's README said there were
-  no plans to show one; both now note this glimpse.
+- Frame 5: it stands whole and unlit. The game holds this frame until the pilot is in.
+- Frame 6: the lights come up dim, in deep purple. Frame 7: he stands. The first version flashed the lights pale for
+  a frame, which read as the suit staying white before powering (heromedel, 2026-11-11).
+
+The pilot's frames, on a sheet of her own (`tools/pilot.py`):
+
+- A run in the four directions, four frames each, and one frame in the air with her legs drawn up.
+- **How she looks:** purple hair in a ponytail that swings out to one side from a bright tie, pale skin, dark
+  clothes, narrow shoulders with a hand at each side, bare legs and feet, one implant light; the colours of
+  heromedel's HalfMech pilot art (`docs/art/mecha/pilot`). The ponytail is what says "girl" at this size. The first
+  pilot had her fists raised above her head, which read as a boy making a rude gesture with both hands (heromedel,
+  2026-11-11); a second try with a ponytail straight up read as a pointed hat. From behind, the ponytail hangs down
+  her back.
+
+How the game would play it (heromedel, 2026-11-11: she comes up low, on the ground; jumps to the point above the back
+of the suit; and drops down and in):
+
+1. She runs along the floor to the suit, her feet level with its feet.
+2. She vaults up past its shoulder, drawn in front of the suit, to a point above its back. Seen from almost straight
+   above, a thing that is higher sits further up the screen, so the top of her jump is above the helm.
+3. From there she is drawn behind the suit and drops; the suit hides what it hides, more of her each frame, until
+   only her ponytail shows. She is always drawn whole.
+4. The suit's lights come up.
+
+Two tries on the way were wrong: one showed only her hair over the helm as she came up, which read as hair floating
+in with no face or body; the other stood her on the floor straight behind the suit with no feet drawn and no real
+jump. Both came from drawing only the few pixels of her that the drop leaves visible. The test for ground against
+air is to imagine the floor tiles round the suit, or her shadow on them (heromedel, 2026-11-11).
+
+This is the one place a HalfMech is seen out of the suit. The style guide and the pilot's README said there were no
+plans to show one; both now note this glimpse.
 
 ## What I think of it
 

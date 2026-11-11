@@ -3,13 +3,14 @@ import sys
 sys.path.insert(0, "tools")
 sys.path.insert(0, "../../terran/crew-test-4/tools")
 import mech as m
+import pilot
 from pix import Image, FRAME, scaled, strip
 
 FLOOR = (0xC4, 0xCA, 0xD2, 255)
 
 
 def sheet():
-    """Eight frames a row and seventeen rows: the genre's layout, with a row of its own for each direction of powering
+    """Eight frames a row and sixteen rows: the genre's layout, with a row of its own for each direction of powering
     a console, which takes eight frames. Rows not drawn yet are left empty, so every frame is where it will stay."""
     empty = []
     rows = [m.walk_down() + m.walk_right(), m.walk_up() + m.walk_left(),
@@ -18,7 +19,7 @@ def sheet():
             empty, empty,                                  # punching
             m.power_right(), m.power_left(), m.power_up(), m.power_down(),
             empty, empty,                                  # teleport, death
-            m.clone()[:8], m.clone()[8:],                  # the clone bay runs twelve frames, over two rows
+            m.clone(),                                     # the suit's own clone frames; its pilot is pilot.py
             [m.portrait(), m.laser_shot(), None] + m.repair()]
     picture = Image.new("RGBA", (8 * FRAME, len(rows) * FRAME), (0, 0, 0, 0))
     for y, frames in enumerate(rows):
@@ -60,6 +61,49 @@ def beside_the_drifter(name):
     picture.save(name)
 
 
+def pilot_sheet():
+    """The pilot's own sheet: her run on rows 1 and 2 in the suit's layout, her jump on row 3."""
+    rows = [pilot.run_down() + pilot.run_right(), pilot.run_up() + pilot.run_left(), [pilot.jump()]]
+    picture = Image.new("RGBA", (8 * FRAME, len(rows) * FRAME), (0, 0, 0, 0))
+    for y, frames in enumerate(rows):
+        for x, frame in enumerate(frames):
+            picture.alpha_composite(frame, (x * FRAME, y * FRAME))
+    return picture
+
+
+def clone_bay(name, times, milliseconds=150):
+    """How the game would play it: the suit is built and waits; the pilot runs to it from the side the clone bay is
+    on, vaults up, hangs above its back and drops in behind it; the lights come up. A stretch of floor 80 by 40."""
+    suit, run, jump = m.clone(), pilot.run_right(), pilot.jump()
+    suit_at = (43, 5)
+    script = [(0, None), (1, None), (2, None), (3, None)]                    # (suit frame, pilot)
+    for step in range(7):                                                    # she runs in along the floor
+        script.append((m.CLONE_WAITING, (run[step % 4], (-10 + 4 * step, 10), True)))
+    script += [(m.CLONE_WAITING, (jump, (24, 4), True)),                     # vaulting, in front of the suit
+               (m.CLONE_WAITING, (jump, (36, -3), True)),
+               (m.CLONE_WAITING, (jump, (43, -6), False)),                   # above its back: drawn behind it
+               (m.CLONE_WAITING, (jump, (43, -2), False)),                   # dropping in
+               (m.CLONE_WAITING, (jump, (43, 2), False)),
+               (m.CLONE_WAITING, None), (5, None)] + [(6, None)] * 5
+    pictures = []
+    for suit_frame, her in script:
+        picture = Image.new("RGBA", (80, 40), FLOOR)
+        if her and not her[2]:
+            picture.alpha_composite(her[0], her[1]) if min(her[1]) >= 0 else paste_clipped(picture, her[0], her[1])
+        picture.alpha_composite(suit[suit_frame], suit_at)
+        if her and her[2]:
+            paste_clipped(picture, her[0], her[1])
+        pictures.append(scaled(picture, times).convert("RGB"))
+    pictures[0].save(name, save_all=True, append_images=pictures[1:], duration=milliseconds, loop=0)
+
+
+def paste_clipped(picture, image, at):
+    """Set an image on a picture where part of it may fall off the edge."""
+    layer = Image.new("RGBA", picture.size, (0, 0, 0, 0))
+    layer.paste(image, at)
+    picture.alpha_composite(layer)
+
+
 def powering(name, times, milliseconds=200):
     # he clamps on once (frames 1 and 2), then the pulse (frames 3 to 8) loops three times
     played = lambda frames: frames[:2] + frames[2:] * 3
@@ -78,11 +122,18 @@ if __name__ == "__main__":
     powering("review/powering-8x.gif", 8)
     powering("review/powering-slow-8x.gif", 8, 450)
     clone = m.clone()
-    moving("review/clone-10x.gif", [clone + clone[-1:] * 5], 10, 150)
-    moving("review/clone-slow-10x.gif", [clone + clone[-1:] * 2], 10, 500)
-    strip(clone[4:10], 9, 0, FLOOR).save("review/pilot-9x.png")
+    strip(clone, 8, 0, FLOOR).save("review/clone-suit-8x.png")
+    clone_bay("review/clone-bay-8x.gif", 8)
+    clone_bay("review/clone-bay-slow-8x.gif", 8, 400)
+    her = pilot_sheet()
+    her.save("halfmech-pilot-topdown-sheet.png")
+    scaled(her, 4).save("halfmech-pilot-topdown-sheet-4x.png")
+    moving("review/pilot-run-10x.gif", [pilot.run_down(), pilot.run_right(), pilot.run_up(), pilot.run_left()], 10)
+    crop = lambda frames: [f.crop((8, 8, 28, 28)) for f in frames]
+    strip(crop(pilot.run_down() + pilot.run_up()), 10, 0, FLOOR).save("review/pilot-run-down-up-10x.png")
+    strip(crop(pilot.run_right() + pilot.run_left() + [pilot.jump()]), 10, 0, FLOOR).save(
+        "review/pilot-run-right-left-jump-10x.png")
     moving("review/repair-8x.gif", [m.repair()], 8, 200)
-    strip(clone, 8, 0, FLOOR).save("review/clone-8x.png")
     strip(m.power_down(), 8, 0, FLOOR).save("review/powering-down-8x.png")
     strip(m.power_up(), 8, 0, FLOOR).save("review/powering-up-8x.png")
     strip(m.power_right(), 8, 0, FLOOR).save("review/powering-right-8x.png")

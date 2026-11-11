@@ -349,34 +349,12 @@ def repair():
 
 
 # --- The clone bay: the suit is put together, and its pilot jumps in (heromedel, 2026-11-11) ----------------------
-# The one glimpse of a HalfMech out of the suit. Twelve frames. The suit is built, not grown: it goes together in its
-# own colours, unlit, a piece at a time (feet and torso, shoulder plates, arms and claws, helm), and each piece wears
-# a bright purple edge only on the frame it arrives. Then the pilot comes up beside it on the ground, vaults up
-# past its shoulder to a point above its back, and drops down and in. Then the lights come up, dim purple first, and he stands.
-# She is a girl (heromedel): long hair in a ponytail is what says so at this size. Her colours are those of
-# heromedel's HalfMech pilot art: purple hair, pale skin, dark clothes, one implant light.
-
-PILOT = [".......oo..",
-         "......oIHo.",          # her ponytail, swinging out to one side
-         ".....oIHo..",
-         "...oooLoo..",          # a bright tie where it leaves her head
-         "..oHHIHHo..",
-         "..oHIHHHo..",
-         ".ooTSSSToo.",
-         ".oSknnLkSo.",          # narrow shoulders, a hand at each side, her implant light
-         "..oknnnko..",
-         "...oSoSo...",          # bare legs
-         "...okoko...",          # and her feet
-         "....o.o...."]
-# Where she is, frame by frame (heromedel, 2026-11-11: she comes up low, on the ground; jumps to the point above the
-# back of the suit; and drops down and in). She is always drawn whole: on the ground and vaulting she is in front of
-# the suit; above and behind it, the suit itself hides what it hides, more of her each frame as she drops.
-# Think of the floor tiles: her feet are on the floor in the first two, level with the suit's feet, and nowhere near
-# it in the next four.
-PILOT_ON_THE_GROUND = [(-3, 16), (-1, 15)]            # beside the suit, then a step closer
-PILOT_VAULTS = (2, 2)                                 # up past its shoulder
-PILOT_BEHIND = [(8, -5), (8, -1), (8, 2)]             # at the top of her jump above its back, then dropping in
-
+# The suit's own frames, seven of them: it is built, not grown. It goes together in its own colours, unlit, a piece
+# at a time (feet and torso, shoulder plates, arms and claws, helm), and each piece wears a bright purple edge only
+# on the frame it arrives. Then it stands whole and unlit, waiting. Then the lights come up, dim purple first, and he
+# stands. The pilot is not in these frames: in the game she has to run from the clone bay to the suit and jump
+# (heromedel, 2026-11-11), so she is a sprite of her own (pilot.py) that the game moves. While she is in the air
+# behind the suit the game draws her before it, and the suit hides what it hides.
 
 def unlit(rows):
     return [row.replace("v", "k").replace("q", "k") for row in rows]
@@ -398,6 +376,9 @@ def recoloured(image, change):
     return out
 
 
+CLONE_WAITING = 4                 # the frame the suit holds, whole and unlit, until its pilot is in
+
+
 def clone():
     pieces = {"arms": [([ARM] + CLAW_LEFT, ARM_LEFT_AT), ([ARM] + CLAW_RIGHT, ARM_RIGHT_AT)],
               "feet": [(FOOT_LEFT, FOOT_LEFT_AT), (FOOT_RIGHT, FOOT_RIGHT_AT)],
@@ -406,26 +387,20 @@ def clone():
               "helm": [(HELM, HELM_AT)]}
     order = ("arms", "feet", "plates", "torso", "helm")          # back to front, as in every other frame
 
-    def built(have, new=(), behind=(), over=()):
-        parts = list(behind)
+    def built(have, new=()):
+        parts = []
         for name in order:
             if name in new:
                 parts += [(arriving(rows), at) for rows, at in pieces[name]]
             elif name in have:
                 parts += [(unlit(rows), at) for rows, at in pieces[name]]
-        return frame(parts + list(over), AT)
+        return frame(parts, AT)
 
-    whole = order
     return [built((), ("feet", "torso")),
             built(("feet", "torso"), ("plates",)),
             built(("feet", "torso", "plates"), ("arms",)),
             built(("feet", "torso", "plates", "arms"), ("helm",)),
-            built(whole, over=[(PILOT, PILOT_ON_THE_GROUND[0])]),
-            built(whole, over=[(PILOT, PILOT_ON_THE_GROUND[1])]),
-            built(whole, over=[(PILOT, PILOT_VAULTS)]),
-            built(whole, behind=[(PILOT, PILOT_BEHIND[0])]),
-            built(whole, behind=[(PILOT, PILOT_BEHIND[1])]),
-            built(whole, behind=[(PILOT, PILOT_BEHIND[2])]),
+            built(order),
             recoloured(figure(), {"v": "q"}),
             figure()]
 
