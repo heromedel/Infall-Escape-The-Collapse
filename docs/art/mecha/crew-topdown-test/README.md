@@ -33,6 +33,11 @@ Mecha crew palette (`docs/art/palette.md`):
 - Two chest lights under the visor, on a torso four rows deep, and two pointed feet. The torso was two rows;
   heromedel had it extended down two pixels with the lights left where they were (2026-11-11). The back view has
   the same torso. Its two bottom outline corners are trimmed, as on the drifter's coat (heromedel, 2026-11-11).
+- **A hint of a face (heromedel, 2026-11-11):** on the front the two chest lights are eyes, and a mouth three pixels
+  wide sits under them, one tone darker than the armour. It is meant to be hard to notice.
+- **Helm shading:** the tones fall off from the top left to the bottom right. They were in columns either side of
+  the ridge, the same fault the feet had.  shows front and back, before
+  then after.
 - The feet are two pixels long and stand apart from the torso and from each other, each with its own outline
   (heromedel, 2026-11-11). A stepping foot reaches a pixel further and the other draws in a pixel. Each
   foot is shaded from the top left (one lit pixel, armour, shadow at the bottom right), not in columns, which read
@@ -43,8 +48,8 @@ Mecha crew palette (`docs/art/palette.md`):
 
 How the other views follow from it:
 
-- From behind there is no visor and no chest light: the ridge runs the whole helm and down the back plate. The claws
-  keep their bands.
+- From behind there is no visor and no chest light. The crest still runs the whole helm, but the back plate is plain
+  dark shading with no pale line down it (heromedel, 2026-11-11). The claws keep their bands.
 - Facing right is the front view turned a quarter: one shoulder plate above the helm and one below, the spikes
   sweeping back and out, the claws pointing straight ahead, the visor on the helm's front edge.
 - Standing side on, both feet show ahead of the helm, so he is not so thin (heromedel, 2026-11-11).
