@@ -349,10 +349,10 @@ def repair():
 
 
 # --- The clone bay: the suit is put together, and its pilot jumps in (heromedel, 2026-11-11) ----------------------
-# The one glimpse of a HalfMech out of the suit. Ten frames. The suit is built, not grown: it goes together in its
+# The one glimpse of a HalfMech out of the suit. Twelve frames. The suit is built, not grown: it goes together in its
 # own colours, unlit, a piece at a time (feet and torso, shoulder plates, arms and claws, helm), and each piece wears
-# a bright purple edge only on the frame it arrives. Then the pilot walks up behind it on the ground, whole, stands
-# there, jumps onto its back, and goes in. Then the lights come up, dim purple first, and he stands.
+# a bright purple edge only on the frame it arrives. Then the pilot comes up beside it on the ground, vaults up
+# past its shoulder to a point above its back, and drops down and in. Then the lights come up, dim purple first, and he stands.
 # She is a girl (heromedel): long hair in a ponytail is what says so at this size. Her colours are those of
 # heromedel's HalfMech pilot art: purple hair, pale skin, dark clothes, one implant light.
 
@@ -364,12 +364,18 @@ PILOT = [".......oo..",
          "..oHIHHHo..",
          ".ooTSSSToo.",
          ".oSknnLkSo.",          # narrow shoulders, a hand at each side, her implant light
-         "..ooooooo.."]
-PILOT_HEAD = PILOT[:5]                        # her ponytail and the top of her head: all that is left as she goes in
-# Where she is, frame by frame. Seen from above, the ground behind the suit is the floor above it on the screen, and
-# nothing there is hidden: she walks up whole, a little to one side, then stands right behind it. Then she is in the
-# air over its back, drawn over the helm, and then going in, only the top of her head left.
-PILOT_WALKS_UP, PILOT_STANDS, PILOT_JUMPS, PILOT_GOES_IN = (4, -5), (8, -5), (8, -1), (8, 2)
+         "..oknnnko..",
+         "...oSoSo...",          # bare legs
+         "...okoko...",          # and her feet
+         "....o.o...."]
+# Where she is, frame by frame (heromedel, 2026-11-11: she comes up low, on the ground; jumps to the point above the
+# back of the suit; and drops down and in). She is always drawn whole: on the ground and vaulting she is in front of
+# the suit; above and behind it, the suit itself hides what it hides, more of her each frame as she drops.
+# Think of the floor tiles: her feet are on the floor in the first two, level with the suit's feet, and nowhere near
+# it in the next four.
+PILOT_ON_THE_GROUND = [(-3, 16), (-1, 15)]            # beside the suit, then a step closer
+PILOT_VAULTS = (2, 2)                                 # up past its shoulder
+PILOT_BEHIND = [(8, -5), (8, -1), (8, 2)]             # at the top of her jump above its back, then dropping in
 
 
 def unlit(rows):
@@ -414,10 +420,12 @@ def clone():
             built(("feet", "torso"), ("plates",)),
             built(("feet", "torso", "plates"), ("arms",)),
             built(("feet", "torso", "plates", "arms"), ("helm",)),
-            built(whole, behind=[(PILOT, PILOT_WALKS_UP)]),
-            built(whole, behind=[(PILOT, PILOT_STANDS)]),
-            built(whole, over=[(PILOT, PILOT_JUMPS)]),
-            built(whole, over=[(PILOT_HEAD, PILOT_GOES_IN)]),
+            built(whole, over=[(PILOT, PILOT_ON_THE_GROUND[0])]),
+            built(whole, over=[(PILOT, PILOT_ON_THE_GROUND[1])]),
+            built(whole, over=[(PILOT, PILOT_VAULTS)]),
+            built(whole, behind=[(PILOT, PILOT_BEHIND[0])]),
+            built(whole, behind=[(PILOT, PILOT_BEHIND[1])]),
+            built(whole, behind=[(PILOT, PILOT_BEHIND[2])]),
             recoloured(figure(), {"v": "q"}),
             figure()]
 

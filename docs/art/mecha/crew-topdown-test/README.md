@@ -24,14 +24,14 @@ his spikes against 17, and that is intended: a suit is supposed to be larger tha
   | 7, 8 | Punching up and down: to come |
   | 9, 10, 11, 12 | Powering a console: right, left, up, down (8 each) |
   | 13, 14 | Teleport and death: to come |
-  | 15, 16 | The clone bay (10: eight, then two) |
+  | 15, 16 | The clone bay (12: eight, then four) |
   | 17 | Portrait, crew laser shot, a gap, repair (4) |
 
 - `mecha-topdown-laser-shot.png`: his crew laser shot, the genre's bar in Mecha purple with a hot core.
 - `review/walks-8x.gif` and `-4x.gif`: the four walks moving. `review/aims-8x.gif`: the four aims, each held a
   while. `review/powering-8x.gif` and `-slow-8x.gif`: powering a console in the four directions, the
   clamp-on once and the pulse three times. `review/clone-10x.gif` and `review/clone-slow-10x.gif`: the clone bay at
-  game speed and slowed. `review/pilot-12x.png`: the four frames with the pilot. `review/repair-8x.gif`: the repair. `review/aims-down-up-8x.png` and `review/aims-right-left-8x.png`: the aim frames laid out.
+  game speed and slowed. `review/pilot-9x.png`: the six frames with the pilot. `review/repair-8x.gif`: the repair. `review/aims-down-up-8x.png` and `review/aims-right-left-8x.png`: the aim frames laid out.
   `review/views-10x.png`: the four standing views. `review/beside-the-drifter.png`: both figures at game size, twice
   and four times. `review/beside-heromedels-drawing.png`: the front view beside the drawing it follows.
 - `reference/heromedel-mecha-topdown.png` (and `-8x`): heromedel's own drawing of the suit from above, standing and
@@ -122,23 +122,28 @@ claw opens on the work, closes, turns it a pixel while the far claw steadies, an
 
 **Proposed (heromedel, 2026-11-11):** the clone animation shows a suit being put together, and a brief glimpse of a
 small HalfMech jumping into the back of it. She is drawn like the top-down Terran, in HalfMech colours, and is a
-girl. Ten frames:
+girl. Twelve frames:
 
 - Frames 1 to 4: the suit is built, not grown. It goes together in its own colours, unlit, a piece at a time: feet
   and torso, shoulder plates, arms and claws, helm. Each piece wears a bright purple edge only on the frame it
   arrives. heromedel was in two minds about a purple outline on a suit that is being constructed, not cloned
   (2026-11-11); the first version tinted the whole suit purple, and this keeps the colour to the arriving piece.
-- Frames 5 and 6: the pilot is on the ground behind the suit before she jumps (heromedel, 2026-11-11). She walks up
-  whole, a little to one side, then stands right behind it. Seen from almost straight above, the ground behind the
-  suit is the floor above it on the screen, and nothing there is hidden. A first try showed only her hair over the
-  helm, as if the helm were a wall in front of her; that is a side view's logic, and it read as hair floating in
-  with no face or body (heromedel, 2026-11-11).
-- Frame 7: she jumps onto its back, drawn over the top of the helm.
-- Frame 8: she goes in; only her ponytail and the top of her head are left.
-- Frame 9: the lights come up dim, in deep purple. Frame 10: he stands. The first version flashed the lights pale for
-  a frame, which read as the suit staying white before powering (heromedel, 2026-11-11).
+- Frames 5 and 6: the pilot comes up low, on the ground: beside the suit, her feet on the floor level with its
+  feet, then a step closer.
+- Frame 7: she vaults up past its shoulder.
+- Frame 8: she is at the top of her jump, above the back of the suit. Seen from almost straight above, a thing that
+  is higher sits further up the screen, so the top of her jump is above the helm.
+- Frames 9 and 10: she drops down behind the helm and in. She is drawn whole each time and the suit hides what it
+  hides, more of her each frame, until only her ponytail shows.
+- Frame 11: the lights come up dim, in deep purple. Frame 12: he stands. The first version flashed the lights pale
+  for a frame, which read as the suit staying white before powering (heromedel, 2026-11-11).
+- How this staging was reached (heromedel, 2026-11-11): she approaches low, jumps to that point and drops in. Two
+  tries in between were wrong. One showed only her hair over the helm as she came up, which read as hair floating
+  in with no face or body; the other stood her whole on the floor straight behind the suit, with no feet drawn and
+  no real jump. Both came from drawing only the few pixels of her that the drop leaves visible. The test for
+  ground against air is to imagine the floor tiles round the suit, or her shadow on them.
 - **The pilot:** purple hair in a ponytail that swings out to one side from a bright tie, pale skin, dark clothes,
-  narrow shoulders with a hand at each side, one implant light; the colours of heromedel's HalfMech pilot art
+  narrow shoulders with a hand at each side, bare legs and feet, one implant light; the colours of heromedel's HalfMech pilot art
   (`docs/art/mecha/pilot`). The ponytail is what says "girl" at this size. The first pilot had her fists raised
   above her head, which read as a boy making a rude gesture with both hands (heromedel, 2026-11-11); a second try
   with a ponytail straight up read as a pointed hat.
