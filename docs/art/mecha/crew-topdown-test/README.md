@@ -50,7 +50,8 @@ How the other views follow from it:
 - Standing side on, both feet show ahead of the helm, so he is not so thin (heromedel, 2026-11-11).
 - Side on is not a strict quarter turn (heromedel, 2026-11-11): his left shoulder, the far one at the top when he
   faces right, is a row shorter where it meets the helm, and his feet sit toward the near side, the left foot a
-  row down and the right foot two.
+  row down and the right foot two. The ridge, the visor and the crest's point sit one row above the helm's
+  middle, toward the far side; the helm's own shape is unchanged.
 - **The walk swings (heromedel, 2026-11-11).** The first walks lengthened and shortened the arms and legs, which
   read as pistons. Now every part keeps its shape and moves as a piece: a shoulder plate swings a row forward with
   its spike and claw, the other swings a row back and its claw tucks up under it, and the foot opposite the forward

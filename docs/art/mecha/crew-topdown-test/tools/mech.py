@@ -194,6 +194,7 @@ STEP_UP_2 = grid([
 # the claws pointing straight ahead, the ridge running front to back and the visor on the helm's front edge.
 # It is not a strict quarter turn (heromedel, 2026-11-11): his left shoulder, the far one, is a row shorter where it
 # meets the helm, and his feet sit toward the near side, the left foot a row down and the right foot two.
+# The ridge, the visor and the point sit a row above the helm's middle, toward the far side.
 
 STAND_RIGHT = grid([         # both feet show ahead of the helm, so he is not so thin (heromedel, 2026-11-11)
     ".....................",
@@ -207,10 +208,10 @@ STAND_RIGHT = grid([         # both feet show ahead of the helm, so he is not so
     "........onkko.oo.....",
     ".......oooooo........",
     "......oaaaano........",
-    ".....onaaaanoooo.....",
-    ".....onaaaavoano.....",
-    "....oeeeeeevonno.....",
-    ".....onnnnnvoooo.....",
+    ".....onaaaavoooo.....",
+    "....oeeeeeevoano.....",
+    ".....onnnnnvonno.....",
+    ".....onnnnnkoooo.....",
     ".....onnnnkkoooo.....",
     "......onkkkkonno.....",
     ".......oooooonko.....",
@@ -236,10 +237,10 @@ STEP_RIGHT = grid([         # the near shoulder and claw swing forward, the far 
     ".......onkkoo........",
     ".......oooooo........",
     "......oaaaano........",
-    ".....onaaaanooooo....",
-    ".....onaaaavokano....",
-    "....oeeeeeevoknno....",
-    ".....onnnnnvooooo....",
+    ".....onaaaavooooo....",
+    "....oeeeeeevokano....",
+    ".....onnnnnvoknno....",
+    ".....onnnnnkooooo....",
     ".....onnnnkkooo......",
     "......onkkkkono......",
     ".......ooooooko......",
@@ -265,10 +266,10 @@ STEP_RIGHT_2 = grid([
     ".........onkko..oo...",
     ".......oooooo........",
     "......oaaaano........",
-    ".....onaaaanooo......",
-    ".....onaaaavoao......",
-    "....oeeeeeevono......",
-    ".....onnnnnvooo......",
+    ".....onaaaavooo......",
+    "....oeeeeeevoao......",
+    ".....onnnnnvono......",
+    ".....onnnnnkooo......",
     ".....onnnnkkooooo....",
     "......onkkkkoknno....",
     ".......ooooooknko....",
