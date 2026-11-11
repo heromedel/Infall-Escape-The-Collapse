@@ -26,6 +26,7 @@ var _weapons_layer := Node2D.new()
 var _hull_layer: Node2D
 var _floor_layer := Node2D.new()
 var _crew_layer := Node2D.new()
+var _facings: Dictionary = {}       # crew member -> the way they last faced on the screen (GV 7F)
 var _shield_layer := Node2D.new()
 var _shield_rect := ColorRect.new()
 var _shield_material: ShaderMaterial
@@ -60,6 +61,7 @@ func setup(view_ship: Ship, owner: Encounter) -> void:
 	add_child(_floor_layer)
 	_floor_layer.draw.connect(_draw_floor)
 	add_child(_crew_layer)
+	_crew_layer.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST   # crew sprites are pixel art (GV 7F)
 	_crew_layer.draw.connect(_draw_crew)
 	add_child(_shield_layer)
 	_setup_bubbles()
@@ -463,7 +465,8 @@ func _draw_crew() -> void:
 			continue
 		var at := member.previous_position.lerp(member.position, alpha)
 		var ring := UiColours.POWER_GREEN if member.side == 0 else UiColours.enemy_power(member.home.faction, member.home.race)
-		if member.teleporting_ticks > 0:
+		var sheet := CrewArt.sheet_for(member.race)
+		if member.teleporting_ticks > 0 and sheet.is_empty():
 			var t := member.teleporting_ticks / float(Encounter.TELEPORT_TICKS)
 			canvas.draw_circle(at, TOKEN_RADIUS * (1.0 + t), Color(0.6, 0.9, 1.0, 0.35 * t))
 			for index in 6:
@@ -471,6 +474,12 @@ func _draw_crew() -> void:
 				canvas.draw_circle(spark, 1.6, Color(0.85, 0.95, 1.0, t))
 			if t > 0.5:
 				continue
+		if not sheet.is_empty():
+			var facing := _member_facing(member)
+			_draw_upright(canvas, at, func(p: Vector2): _draw_member_sprite(canvas, member, p, ring, sheet, facing))
+			if member.healing:
+				_draw_heal_sparks(canvas, at, member.name.hash())
+			continue
 		_draw_upright(canvas, at, func(p: Vector2): _draw_member(canvas, member, p, ring))
 		if member.healing:
 			_draw_heal_sparks(canvas, at, member.name.hash())
@@ -491,15 +500,67 @@ func _draw_heal_sparks(canvas: CanvasItem, at: Vector2, seed: int) -> void:
 		canvas.draw_line(p - Vector2(0, arm), p + Vector2(0, arm), colour, 2.5)
 
 
-func _draw_member(canvas: CanvasItem, member: CrewMember, at: Vector2, ring: Color) -> void:
+## Which way a crew member faces on the screen (GV 7F): the way they last moved, or toward the wall their console
+## is on. Ships fly turned round and the view can be turned, so it is worked out on the screen, not on the deck.
+func _member_facing(member: CrewMember) -> String:
+	var heading := member.position - member.previous_position
+	if heading.length() < 0.05 and member.task == "manning":
+		for system in ship.systems:
+			if system.cell == member.cell:
+				heading = Vector2(ShipDesign.DIRECTIONS.get(system.wall, Vector2i.ZERO))
+	if heading.length() >= 0.05:
+		var on_screen := heading.rotated((PI if ship.facing_down else 0.0) + view_turn)
+		var facing := ("right" if on_screen.x > 0.0 else "left") if absf(on_screen.x) > absf(on_screen.y) else ("down" if on_screen.y > 0.0 else "up")
+		_facings[member] = facing
+	return _facings.get(member, "down")
+
+
+## The animation a crew member's task calls for; "" is standing.
+func _member_animation(member: CrewMember) -> String:
+	if (member.position - member.previous_position).length() >= 0.05:
+		return "walk"
+	match member.task:
+		"manning":
+			return "type"
+		"repairing", "patching":
+			return "repair"
+		"extinguishing":
+			return "fire"
+		"fighting":
+			return "aim"
+		"breaking", "sabotaging":
+			return "punch"
+	return ""
+
+
+## A crew member drawn from their race's sprite sheet (GV 7F). The ring under them shows whose they are, as the
+## token's rim does; a badge is kept only for what the sheet has no animation for.
+func _draw_member_sprite(canvas: CanvasItem, member: CrewMember, at: Vector2, ring: Color, sheet: Dictionary, facing: String) -> void:
+	var half := CrewArt.frame * 0.5
 	if member.selected:
-		canvas.draw_arc(at, TOKEN_RADIUS + 4.0, 0, TAU, 28, Color(member.selection_colour, 0.9), 2.0, true)
-	CrewPortraits.draw_token(canvas, member.race.id, member.name, at, TOKEN_RADIUS, ring, 2.2 if member.side == 0 else 2.6)
+		canvas.draw_arc(at, half - 0.5, 0, TAU, 32, Color(member.selection_colour, 0.95), 2.0, true)
+	canvas.draw_arc(at, half - 3.0, 0, TAU, 32, Color(ring, 0.55), 1.4 if member.side == 0 else 2.0, true)
+	var animation := _member_animation(member)
+	var clock := time + (absi(member.name.hash()) % 97) / 97.0       # so a room of crew don't move as one
+	var region: Rect2
+	if member.teleporting_ticks > 0:
+		region = CrewArt.region(sheet, "teleport", facing, clock, member.teleporting_ticks / float(Encounter.TELEPORT_TICKS))
+	else:
+		region = CrewArt.region(sheet, animation, facing, clock)
+	canvas.draw_texture_rect_region(sheet.texture, Rect2(at - Vector2(half, half), Vector2(CrewArt.frame, CrewArt.frame)), region)
 	var fraction := member.health_fraction()
 	if fraction < 0.999 or member.selected:
-		var bar := Rect2(at + Vector2(-12, TOKEN_RADIUS + 3), Vector2(24, 4))
+		var bar := Rect2(at + Vector2(-12, half + 1.0), Vector2(24, 4))
 		canvas.draw_rect(bar, Color(0, 0, 0, 0.75))
 		canvas.draw_rect(Rect2(bar.position, Vector2(bar.size.x * fraction, bar.size.y)), UiColours.hull_colour(fraction))
+	var badge := _member_badge(member)
+	var shown_by_sprite: String = {"repair": "repair", "fire": "fire", "fight": "aim"}.get(badge, "")
+	if not badge.is_empty() and not (not shown_by_sprite.is_empty() and CrewArt.has_animation(sheet, shown_by_sprite)):
+		_draw_badge(canvas, at + Vector2(half * 0.75, -half * 0.75), badge)
+
+
+## The small badge that says what a crew member is doing or suffering; "" for none.
+func _member_badge(member: CrewMember) -> String:
 	var badge := ""
 	match member.task:
 		"repairing", "patching":
@@ -512,6 +573,19 @@ func _draw_member(canvas: CanvasItem, member: CrewMember, at: Vector2, ring: Col
 			badge = "stun"
 	if member.suffocating:
 		badge = "air"
+	return badge
+
+
+func _draw_member(canvas: CanvasItem, member: CrewMember, at: Vector2, ring: Color) -> void:
+	if member.selected:
+		canvas.draw_arc(at, TOKEN_RADIUS + 4.0, 0, TAU, 28, Color(member.selection_colour, 0.9), 2.0, true)
+	CrewPortraits.draw_token(canvas, member.race.id, member.name, at, TOKEN_RADIUS, ring, 2.2 if member.side == 0 else 2.6)
+	var fraction := member.health_fraction()
+	if fraction < 0.999 or member.selected:
+		var bar := Rect2(at + Vector2(-12, TOKEN_RADIUS + 3), Vector2(24, 4))
+		canvas.draw_rect(bar, Color(0, 0, 0, 0.75))
+		canvas.draw_rect(Rect2(bar.position, Vector2(bar.size.x * fraction, bar.size.y)), UiColours.hull_colour(fraction))
+	var badge := _member_badge(member)
 	if not badge.is_empty():
 		_draw_badge(canvas, at + Vector2(TOKEN_RADIUS * 0.8, -TOKEN_RADIUS * 0.8), badge)
 

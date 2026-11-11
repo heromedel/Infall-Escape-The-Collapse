@@ -23,13 +23,14 @@ var heals_slowly: bool = false
 var crew_price: int = 1089
 var portrait: String = "token"
 var tech: String = "mechanical"
+var crew_art: Array = []           # sprite sheets for the Art Style setting (GV 7F): {style, species, sheet, layout}
 var names: PackedStringArray = []
 var species_names := {}            # GATOS Species setting value -> names only that species uses (GV 7A)
 var description: String = ""
 var traits_text: String = ""
 
 
-static func from_xml(node: XmlTree) -> RaceDef:
+static func from_xml(node: XmlTree, folder: String = "") -> RaceDef:
 	var def := RaceDef.new()
 	def.id = node.get_attr("id")
 	def.name = node.get_attr("name", def.id.capitalize())
@@ -51,6 +52,9 @@ static func from_xml(node: XmlTree) -> RaceDef:
 	def.crew_price = Mawjig.amount(node.get_float("crew_price", 10.89))
 	def.portrait = node.get_attr("portrait", "token")
 	def.tech = node.get_attr("tech", "mechanical")
+	for art_node in node.all("crew_art"):
+		def.crew_art.append({"style": art_node.get_attr("style"), "species": art_node.get_attr("species"),
+				"sheet": folder.path_join(art_node.get_attr("sheet")), "layout": art_node.get_attr("layout")})
 	for names_node in node.all("names"):
 		var species := names_node.get_attr("species")
 		var into: PackedStringArray = []

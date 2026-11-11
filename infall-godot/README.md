@@ -72,7 +72,7 @@ the Last Fleet. Lose when every scout ship is gone (GDD 1F).
   ships that unlock as you get farther (GDD 7C).
 - **Art:** the hull art from `docs/art/` (Outrider, Pirate Hijacker and Cutpurse, Mecha Light Attack Frame, Tentauri
   scout) and its weapon art, lined up to the ship files' floor plans. Ships without art get a hull drawn from their
-  floor plan in their race's style (GDD 5K). Crew are portrait tokens; the GATOS Species setting (Terrans > Tabbys) makes the GATOS humans or cats.
+  floor plan in their race's style (GDD 5K). Crew are drawn as the Art Style setting says (GV 7F): `Art Style: Top Down > Facing > Tokens`, top-down sprites, facing sprites or the round portrait tokens; a race with no sheet in the chosen style shows its token. The GATOS Species setting (Terrans > Tabbys) makes the GATOS humans or cats.
 - **Sound:** every effect and the three music tracks are synthesized by `tools/make_audio.py`.
 
 ## Filled in from the genre or the lore (Ai-Generated-Proposals, 2026-10-31)
@@ -118,6 +118,23 @@ and crew member to Any player or to chosen players; any player can change their 
 - The Tech victory and other victory paths (ideas); the win is reaching the rim.
 - Augments and drones (the design moves drones into EVB suits and race systems).
 
+## Crew art still to fill in (GV 7F)
+
+The Art Style setting shows a token for any race with no sheet in the chosen style.
+
+| Race | Top Down | Facing |
+|---|---|---|
+| GATOS as Terrans | The drifter; its repair and death rows are left out until they are redrawn | The drifter |
+| GATOS as Tabbys | None | Standing only, in four directions: no animations |
+| Mecha | The suit | The older crew sheet |
+| Tentauri | None | The crew sheet |
+| Azurethea, Malphen, Lykario, Senti-GPH | None | None |
+
+- Every Terran is the same drifter until there are more designs.
+- The game does not play a death or a clone-bay animation yet, and the sheets' extra rows (the Tentauri typing at
+  several systems, the HalfMech's clamp-on frames) are not used.
+- Stunned, healing and out of air have no frames: the small badges and sparks show them, as with tokens.
+
 ## Tools
 
 - `tools/check_content.tscn` lists the content and any problems in the XML.
@@ -126,6 +143,10 @@ and crew member to Any player or to chosen players; any player can change their 
   screenshots and simulated clicks (need a display, e.g. `xvfb-run`).
 - `tools/compile_check.sh` rebuilds the script cache and prints script errors.
 - `tools/make_audio.py` remakes the sounds and music.
+- `tools/import_crew_art.py` copies the crew sprite sheets from `docs/art` into `content/races` and checks each
+  against its layout in `content/crew-layouts.xml`. Run it after a sheet changes, then let Godot import the files.
+- `tools/battle_view_test.tscn` takes `ART_STYLE` and `SPECIES` to set those two settings, and `ZOOM` (with
+  `ZOOM_ENEMY`) for a close-up of a deck.
 - The admin console: press the backtick key (`) in game; `help` lists its commands.
 - Debug: run with `INFALL_SMOKE=1` to load the content, start a run and quit; `INFALL_SEED=<number>` fixes a new
   run's seed.

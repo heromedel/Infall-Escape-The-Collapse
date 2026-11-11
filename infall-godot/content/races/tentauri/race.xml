@@ -4,4 +4,6 @@
 	<description>Octojellies: quiet, diplomatic beings who travel in pairs and force their way wherever they wish to go.</description>
 	<traits>Run up to four systems in the same room at once. Learn each skill slowly.</traits>
 	<names>Oolu, Mirrel, Shoal, Pellucid, Ivri, Coralle, Nacre, Tullo, Spindle, Wisp, Plume, Aurel, Loquo, Tessaly</names>
+	<!-- Crew sprites for the Art Style setting (GV 7F); layouts are in content/crew-layouts.xml. A style with no sheet shows tokens. -->
+	<crew_art style="Facing" sheet="crew-facing.png" layout="eight-wide"/>
 </race>

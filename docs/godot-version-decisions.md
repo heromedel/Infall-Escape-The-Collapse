@@ -164,6 +164,19 @@ anything Claude added tagged Ai-Generated-Proposal.
   in game): repair 12.5 s a system bar for an untrained crew member, fire-fighting 10.4 s, teleporter cooldowns
   20, 15 and 10 s by level (were 5.5 s, about 6 s and 30/20/10 s). The teleporter's cooldown resets outside
   fights. Built.
+- **F — Proposed (heromedel, 2026-11-11):** a setting, `Art Style: Top Down > Facing > Tokens`, so both sprite
+  styles can be playtested without asking for a build of each. It can be taken out before a release if needed.
+  - **Top Down — Decided as the default (heromedel, 2026-11-11):** crew drawn from almost straight above, as the
+    genre draws them (`docs/art/terran/crew-test-4`, `docs/art/mecha/crew-topdown-test`).
+  - **Facing:** crew drawn standing, facing the viewer (`docs/art/terran/crew-test-3`, `docs/art/mecha/crew`,
+    `docs/art/tentauri/crew`, the Tabby of `docs/art/terran/cat-concept-for-gatos`).
+  - **Tokens:** the round portrait tokens the game has drawn until now.
+  - A race with no sheet in the chosen style is drawn as its token, so the game plays the same in every style and
+    a new sheet shows up by itself. As sheets are added to the game, gaps, missing frames and fixes get filled in
+    (heromedel, 2026-11-11); what is missing is listed in `infall-godot/README.md`.
+  - How it is built: a race names its sheets in its `race.xml` (`<crew_art style="…" sheet="…" layout="…"/>`), and
+    `content/crew-layouts.xml` says where each animation's frames sit on a sheet. Frames are 35 pixels, the size of
+    a deck tile, so a sprite fills its tile one pixel for one.
 
 ## 8. Weapons and Systems
 
@@ -287,6 +300,11 @@ All built in the build of 2026-11-05.
 1. **Ship status cards** (GV 14H): a small card for every ship a player commands, with a deck plan that shows
    fire, breaches, damage, air and intruders, a hull bar and shield pips; a click jumps to the ship.
 
+2. **Art Style** (GV 7F): built 2026-11-11 with the five sheets that exist and the standing Tabby. Still to fill in:
+   top-down Tabbys; the Tabby's animations in the Facing style; top-down Tentauri; any sheet at all for the
+   Azurethea, Malphen, Lykario and Senti-GPH; the top-down drifter's repair and death rows, which are left out of
+   the game until they are redrawn; death and clone-bay animations, which the game does not play yet.
+
 ## Later (the road map)
 
 - When the host quits a LAN game, hand the game to another player's machine instead of ending it (GDD 4N, Admiral
@@ -309,3 +327,4 @@ All built in the build of 2026-11-05.
 | 2026-11-05 | The real battlefield (GV 3I, 3J), the player setup menu and assignments (GV 4H–4J), more battlesuit air (GV 8C), settings tabs (GV 14G); handing the game over on the road map. |
 | 2026-11-05 | The 2026-11-05 build: co-op fixes, the real battlefield, battlesuit air, the player setup menu with assignments, settings tabs. |
 | 2026-11-09 | Ship status cards (GV 14H) proposed and put on the Next build list. |
+| 2026-11-11 | The Art Style setting, Top Down > Facing > Tokens, with Top Down the default (GV 7F); built the same day. |

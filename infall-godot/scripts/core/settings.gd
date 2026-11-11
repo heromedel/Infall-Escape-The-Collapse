@@ -25,6 +25,7 @@ const OPTIONS := {
 	"mouse_control": ["Left Selects, Right Orders", ["Left Selects, Right Orders", "Left Selects and Orders, Right Deselects"], "Mouse Control"],
 	"local_coop_view": ["Split", ["Split", "Shared"], "Local Co-op View"],
 	"battlefield": ["Vertical", ["Vertical", "Horizontal"], "Battlefield"],
+	"art_style": ["Top Down", ["Top Down", "Facing", "Tokens"], "Art Style"],
 	"fullscreen": [false, [false, true], "Fullscreen"],
 	"master_volume": [0.8, [], "Master Volume"],
 	"music_volume": [0.6, [], "Music Volume"],
@@ -38,7 +39,7 @@ const TABS := {
 	"Controls": ["mouse_control", "map_zoom"],
 	"HUD": ["hud_layout", "hud_card_opacity", "collapsed_cards_reopen", "reopened_cards_fold_back"],
 	"Players": ["local_coop_view"],
-	"Display and Sound": ["fullscreen", "master_volume", "music_volume", "effects_volume"],
+	"Display and Sound": ["art_style", "fullscreen", "master_volume", "music_volume", "effects_volume"],
 }
 
 ## Settings that change what happens in a run, not just how it looks: in a session every machine uses the host's

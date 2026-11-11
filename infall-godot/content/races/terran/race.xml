@@ -6,4 +6,8 @@
 	<names>Ginger, Sable, Marlowe, Juniper, Pepper, Saffron, Calloway, Cleo, Oscar, Jasper, Luna, Milo, Hazel, Clementine, Tom Avery, Willa, Ozzie, Ronan, Moxie, Kit Delacroix, Wren, Lionel, Felix Okoro, Tabitha, Bramble</names>
 	<names species="Terrans">Dana Reyes, Mack Holloway, Iris Vance, Jun Park, Sasha Petrov, Cole Mbeki, Ada Quinn, Rafe Moreno, Tess Lindqvist, Omar Haddad, Nell Brody, Arlo Finch, Priya Nair, Bo Kowalski, Yara Osei</names>
 	<names species="Tabbys">Tibbs, Mittens, Rusty, Smokey, Nala, Bastet, Biscuit, Socks, Marmalade, Pounce, Sir Fluff, Pumpkin, Shadow, Nutmeg, Thistle</names>
+	<!-- Crew sprites for the Art Style setting (GV 7F); layouts are in content/crew-layouts.xml. A style with no sheet shows tokens. -->
+	<crew_art style="Top Down" sheet="crew-top-down.png" layout="nine-wide"/>
+	<crew_art style="Facing" sheet="crew-facing.png" layout="eight-wide"/>
+	<crew_art style="Facing" species="Tabbys" sheet="crew-facing-tabby.png" layout="standing"/>
 </race>
