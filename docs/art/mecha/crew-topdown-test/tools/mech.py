@@ -414,8 +414,9 @@ def clone():
 # 2026-11-10): Mecha purple.
 
 CANISTER = ["onvno",             # his wrist band
-            "oeveo",             # the clamp's two prongs on the canister's neck
-            "ovvqo",
+            "oeeao",             # the claw, grey, closed on the canister's neck
+            "oLvqo",             # the canister: a pale edge, purple, a dark side
+            "oLvqo",
             "ovvqo",
             ".oko.",             # its nozzle
             "..o.."]
@@ -423,8 +424,12 @@ SWEEP = (0, -1, 0, 1)
 
 
 def side_canister(near):
-    prong = "e" if near else "a"
-    return [".ooooo.", "on" + prong + "vvo.", "kvvvvko", "on" + prong + "qqo.", ".ooooo."]
+    claw = ("e", "e", "a") if near else ("e", "a", "a")
+    return [".oooooo..",
+            "on" + claw[0] + "LLvo..",          # band, claw, the canister's pale edge
+            "kv" + claw[1] + "vvvko.",          # arm, band, claw, canister, nozzle
+            "on" + claw[2] + "qqqo..",
+            ".oooooo.."]
 
 
 def fire_down():
@@ -512,34 +517,41 @@ def teleport():
     return [stand, lit, glow, bands, columns, rising, sparks, last]
 
 
-# --- Dying: the lights go out and the suit comes down in a heap --------------------------------------------------
+# --- Dying: the lights fail, he stumbles, and the suit falls in a heap ---------------------------------------------
 # Eight frames. Seen from almost straight above, a thing that falls moves down the screen to the floor, where his
-# feet are. The lights dim, then go out; the shoulders sag and the claws reach the floor; the helm drops onto the
-# torso; the plates come down either side; it ends a low, dark heap with its spikes still standing out of it.
+# feet are. He does not crumble straight down (heromedel, 2026-11-11): the lights dim as he takes a stumbling step;
+# they go out and he lurches to one side; the helm and the shoulder on that side go first and furthest; the other
+# shoulder follows; the claws hit the floor and slide out. It ends a low, dark heap leaning to that side, one spike
+# propped up and the other flat.
 
 def death():
-    def fallen(helm, torso, plates, arms, out=0, lights="out"):
-        """Each part by how many rows it has come down; the claws also slide `out` to the sides."""
-        parts = [(TORSO, moved(TORSO_AT, 0, torso)),
-                 (FOOT_LEFT, FOOT_LEFT_AT), (FOOT_RIGHT, FOOT_RIGHT_AT),          # his feet stay where they stood
-                 ([ARM] + CLAW_LEFT, moved(ARM_LEFT_AT, -out, arms)),
-                 ([ARM] + CLAW_RIGHT, moved(ARM_RIGHT_AT, out, arms)),
-                 (PLATE_LEFT, moved(PLATE_LEFT_AT, 0, plates)),
-                 (PLATE_RIGHT, moved(PLATE_RIGHT_AT, 0, plates)),
-                 (HELM, moved(HELM_AT, 0, helm))]
+    def fallen(helm, torso, left, right, left_claw, right_claw, stepping=False, lights="out"):
+        """Each part by how far it has moved (across, down) from where it stands."""
+        feet = [(["...."] + FOOT_LEFT[1:], moved(FOOT_LEFT_AT, 0, -1)),
+                ([LEG] + FOOT_RIGHT, moved(FOOT_RIGHT_AT, 1, 0))] if stepping else \
+               [(FOOT_LEFT, FOOT_LEFT_AT), (FOOT_RIGHT, moved(FOOT_RIGHT_AT, 1, 1))]
+        parts = [(TORSO, moved(TORSO_AT, *torso))] + feet + [
+                 ([ARM] + CLAW_LEFT, moved(ARM_LEFT_AT, *left_claw)),
+                 ([ARM] + CLAW_RIGHT, moved(ARM_RIGHT_AT, *right_claw)),
+                 (PLATE_LEFT, moved(PLATE_LEFT_AT, *left)),
+                 (PLATE_RIGHT, moved(PLATE_RIGHT_AT, *right)),
+                 (HELM, moved(HELM_AT, *helm))]
         if lights == "out":
             parts = [(unlit(rows), at) for rows, at in parts]
         image = frame(parts, AT)
         return recoloured(image, {"v": "q"}) if lights == "dim" else image
 
+    # The helm and both shoulders lurch to the side together, so the heap stays in one piece; what differs is how
+    # far each has come down.
+    #              helm    torso   left    right   left claw  right claw
     return [figure(),
-            fallen(0, 0, 1, 1, lights="dim"),          # the lights dim and the shoulders sag
-            fallen(1, 0, 2, 2),                        # the lights go out
-            fallen(3, 1, 4, 4, 1),                     # the claws reach the floor and slide out
-            fallen(5, 2, 6, 6, 2),                     # the helm drops onto the torso
-            fallen(6, 3, 7, 7, 2),                     # the plates come down either side of it
-            fallen(6, 3, 8, 7, 2),
-            fallen(7, 3, 8, 7, 2)]                     # a low, dark heap, its spikes still standing out of it
+            fallen((0, 0), (0, 0), (0, -1), (0, 1), (0, -2), (0, 1), stepping=True, lights="dim"),
+            fallen((1, 1), (1, 0), (1, 0), (1, 2), (1, 0), (1, 2), stepping=True),
+            fallen((2, 3), (1, 1), (2, 2), (2, 4), (1, 3), (3, 4)),
+            fallen((3, 5), (2, 2), (3, 4), (3, 6), (1, 5), (4, 6)),
+            fallen((3, 6), (2, 3), (3, 6), (3, 8), (0, 6), (4, 7)),
+            fallen((3, 7), (2, 3), (3, 7), (3, 8), (0, 7), (4, 7)),
+            fallen((3, 7), (2, 3), (3, 7), (3, 9), (0, 7), (4, 7))]
 
 
 def portrait():

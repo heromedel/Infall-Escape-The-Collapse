@@ -111,9 +111,12 @@ little to his right and a little to his left, with no flash, and the shot a spri
 Staging after the genre's sheets: four frames a direction, a canister swept from side to side (straight, a little to
 his right, straight, a little to his left), with no spray.
 
-- **Ai-Generated-Proposal (2026-11-11):** he holds the canister in his right clamp, the two prongs on its neck. It is
-  Mecha purple, following the idea proposed for the drifter's that an extinguisher takes the power colour of the race
-  using it (heromedel, 2026-11-10).
+- **Ai-Generated-Proposal (2026-11-11):** he holds the canister in his right clamp. It is Mecha purple, following
+  the idea proposed for the drifter's that an extinguisher takes the power colour of the race using it (heromedel,
+  2026-11-10).
+- The canister is a plain cylinder with a pale edge and a dark side, hanging from the claw, which stays grey. A
+  first version wrapped purple prongs round a purple canister, and his hand read as a purple blotch (heromedel,
+  2026-11-11).
 - The pose is the aim's: the shoulder of that arm forward, the arm reaching. Facing left it is still his right arm.
 
 ## Punching
@@ -121,7 +124,8 @@ his right, straight, a little to his left), with no spray.
 Six frames, after the genre's sheets: ready, the shoulder drawn back with the claw tucked under it, the strike with
 the arm at full reach, the arm coming back, ready, ready. He strikes with a closed claw. The whole shoulder line
 turns into the blow and the opposite foot steps with it, as in his walk. The genre has only the two directions,
-toward the camera and away.
+toward the camera and away. heromedel is content with it as it is (2026-11-11): making every race punch or hook toward the
+centre of the tile would get strange.
 
 ## Teleport
 
@@ -131,12 +135,17 @@ to light, and the light thins into bands, columns and sparks that rise. After th
 
 ## Death
 
-**Ai-Generated-Proposal (2026-11-11):** the lights go out and the suit comes down in a heap. Eight frames: the
-lights dim and the shoulders sag; the lights go out; the claws reach the floor and slide out to the sides; the helm
-drops onto the torso; the shoulder plates come down either side of it; it ends a low, dark heap with its spikes
-still standing out of it. Seen from almost straight above, a thing that falls moves down the screen to the floor,
-where his feet are, so every part moves toward his feet and they stay where they stood. The pilot is not shown. The
-old Mecha crew sheet's death melted from the feet up.
+**Ai-Generated-Proposal (2026-11-11), with heromedel's change the same day:** the lights fail, he stumbles, and the
+suit falls in a heap. Eight frames:
+
+- The lights dim as he takes a stumbling step. They go out and he lurches to one side.
+- The helm and both shoulders go over to that side together, so the suit stays in one piece, but the shoulder on
+  that side comes down first and furthest. The claws hit the floor and slide out.
+- It ends a low, dark heap leaning to that side, one spike propped up and the other lower.
+- A first version came straight down, which heromedel liked but said looked like crumbling, not falling; the step
+  and the lean are from that.
+- Seen from almost straight above, a thing that falls moves down the screen to the floor, where his feet are. The
+  pilot is not shown. The old Mecha crew sheet's death melted from the feet up.
 
 ## Powering a console
 
@@ -211,8 +220,8 @@ plans to show one; both now note this glimpse.
 - The front and back views read as heromedel's suit at game size, and they carry most of the rows.
 - The side view is still the weakest. It carries walk right and left, aim, fire and power right and left, and the
   repair.
-- Rows I would look at first: the repair, whose movement is only a pixel or two; fighting fire up, where the
-  canister crosses the spike on two frames; and the death, which is the most invented of the rows.
+- Rows I would look at first: the repair, whose movement is only a pixel or two, and fighting fire up, where the
+  canister crosses the spike on two frames. heromedel has passed the punch and the teleport (2026-11-11).
 - None of it has been seen on a real deck. Near-black armour with a near-black outline may sink into a dark Mecha
   floor.
 - The style guide's Decided look for suits still says "crest head, blade forearms". If this figure becomes the
