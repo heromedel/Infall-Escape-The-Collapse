@@ -25,6 +25,7 @@ LEGS = ["...oSoSo...",            # bare legs
         "....o.o...."]
 # Running: one hand swings back out of sight and the leg under it reaches a row further; the other leg draws up.
 BODY_RUN = [".ooknnLkSo.", "..oknnnko.."]
+BODY_RUN_OTHER = [".oSknnLkoo.", "..oknnnko.."]       # the other hand back; her implant light stays where it is
 LEGS_RUN = ["...oSoko...", "...oSooo...", "...oko.....", "....o......"]
 LEGS_TUCKED = ["...okoko...", "....o.o...."]            # in the air, her legs drawn up
 
@@ -33,6 +34,7 @@ LEGS_TUCKED = ["...okoko...", "....o.o...."]            # in the air, her legs d
 BACK_HEAD = ["...ooooo...", "..oHHIHHo..", "..oHIHHHo..", ".ooooLoooo."]
 BACK_BODY = [".oSknIHkSo.", "..oknHnko.."]
 BACK_BODY_RUN = [".ooknIHkSo.", "..oknHnko.."]
+BACK_BODY_RUN_OTHER = [".oSknIHkoo.", "..oknHnko.."]
 
 # --- Facing right ------------------------------------------------------------------------------------------------
 # One shoulder above her head and one below; the ponytail trails behind her; a foot shows ahead when she runs.
@@ -64,18 +66,12 @@ def patched(rows, patches):
     return rows
 
 
-def facing_down(body=BODY, legs=LEGS, flipped=False):
-    lower = stacked(body, legs)
-    if flipped:                  # the other hand and the other leg; her head and ponytail stay as they are
-        lower = mirrored(lower)
-    return frame([(stacked(HEAD, lower), (0, 0))], AT)
+def facing_down(body=BODY, legs=LEGS):
+    return frame([(stacked(HEAD, body, legs), (0, 0))], AT)
 
 
-def facing_up(body=BACK_BODY, legs=LEGS, flipped=False):
-    lower = stacked(body, legs)
-    if flipped:
-        lower = mirrored(lower)
-    return frame([(stacked(BACK_HEAD, lower), (0, 3))], AT)
+def facing_up(body=BACK_BODY, legs=LEGS):
+    return frame([(stacked(BACK_HEAD, body, legs), (0, 3))], AT)
 
 
 def facing_right(patches=()):
@@ -83,11 +79,14 @@ def facing_right(patches=()):
 
 
 def run_down():
-    return [facing_down(), facing_down(BODY_RUN, LEGS_RUN), facing_down(), facing_down(BODY_RUN, LEGS_RUN, True)]
+    # on the second step only her legs are mirrored: her head, ponytail and implant light never change sides
+    return [facing_down(), facing_down(BODY_RUN, LEGS_RUN), facing_down(),
+            facing_down(BODY_RUN_OTHER, mirrored(LEGS_RUN))]
 
 
 def run_up():
-    return [facing_up(), facing_up(BACK_BODY_RUN, LEGS_RUN), facing_up(), facing_up(BACK_BODY_RUN, LEGS_RUN, True)]
+    return [facing_up(), facing_up(BACK_BODY_RUN, LEGS_RUN), facing_up(),
+            facing_up(BACK_BODY_RUN_OTHER, mirrored(LEGS_RUN))]
 
 
 def run_right():
