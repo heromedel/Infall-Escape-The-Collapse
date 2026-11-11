@@ -51,11 +51,11 @@ same frame counts:
   genre's kind, where his own pixels are pulled upward, is kept beside the sheet as the alternative:
   `terran-drifter-topdown-teleport-pulled.png` (9 frames in a row). `review/teleport-compare.png` shows both.
 
-- **Proposed (heromedel, 2026-11-10):** a clone grows in its race's power colour, toned down, with a bright edge of
-  it that fades as the figure fills in. For this Terran that is power green. `review/clone-compare.png` shows the
-  grey first version, the muted green alone, and the muted green with the fading edge that is on the sheet. He grows head first, so his colours come in
-  from the head down and his feet are the last part still green, glowing in the bright power colour on
-  that frame (heromedel, 2026-11-11).
+- **Decided (heromedel, 2026-11-11):** a clone grows in its race's power colour, toned down, with a bright edge of
+  it that fades as the figure fills in. For this Terran that is power green. He grows head first, so his colours
+  come in from the head down, and his feet are the last part still green, glowing in the bright power colour on
+  that frame. `review/clone-12x.gif` and `review/clone-slow-12x.gif` show it moving. `review/clone-compare.png`
+  shows the grey first version and the muted green without the edge beside it.
 
 ## How close it sits to the genre's sheet
 
@@ -78,7 +78,7 @@ each frame. Measured afterwards, frame against frame in the same place on the sh
 Every frame is placed by hand as text, one character a pixel, in `tools/topdown.py`; the colours are in
 `tools/pix.py`. An action frame is the standing grid with the rows of the acting arm replaced. Two things are worked
 out from drawn frames instead of drawn: the teleport (his own shape turned to light and thinned out) and the clone
-bay's greys. `python3 tools/build.py`, run from this folder,
+bay's toned power colour and fading edge. `python3 tools/build.py`, run from this folder,
 rebuilds the sheet and the pictures in `review/`.
 
 ## Review pictures
