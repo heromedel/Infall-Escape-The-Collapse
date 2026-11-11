@@ -19,6 +19,7 @@ PALETTE = {                      # the Mecha crew palette, docs/art/palette.md
     "q": "#5A128C",              # purple deep
     "j": "#EBE1FA",              # purple pale
     "g": "#66FF66",              # power green, where his power reaches another race's console
+    "w": "#F5EBFF",              # purple white, the hot core of his laser shot
 }
 
 
@@ -79,6 +80,19 @@ def moved(at, across=0, down=0):
 
 def upside_down(rows):
     return rows[::-1]
+
+
+def joined(parts):
+    """One part made of several, each (rows, (x, y)); later ones over earlier ones."""
+    wide = max(x + len(row) for rows, (x, y) in parts for row in rows)
+    high = max(y + len(rows) for rows, (x, y) in parts)
+    grid = [["."] * wide for _ in range(high)]
+    for rows, (x, y) in parts:
+        for j, row in enumerate(rows):
+            for i, code in enumerate(row):
+                if code != ".":
+                    grid[y + j][x + i] = code
+    return ["".join(row) for row in grid]
 
 
 def figure(back=False, left_plate=0, right_plate=0, left_arm=None, right_arm=None, left_foot=None, right_foot=None,
@@ -185,3 +199,69 @@ def walk_right():
 
 def walk_left():
     return facing_left(walk_right())
+
+
+# --- Aiming: three aims, straight, a little to his right, a little to his left; no flash -------------------------
+# He has no pistol: he aims a claw, his right one, with the clamp open on the emitter between its prongs. The shoulder
+# of that arm swings forward a row and the arm reaches three rows; aimed aside, the arm steps two pixels over on the
+# way. Nothing else moves. Staging after the genre's sheets: three still aims a direction, the shot a sprite of its
+# own.
+
+def reaching(lean=0, length=3):
+    """An arm reaching down the screen to an open claw; `lean` -1 or 1 steps it two pixels left or right."""
+    steps = [0, 1, 1, 2][:length] + [2]
+    places = [step * lean for step in steps]
+    low = min(places)
+    parts = [([ARM], (place - low, row)) for row, place in enumerate(places[:-1])]
+    return joined(parts + [(CLAW_OPEN, (places[-1] - low, length))]), low
+
+
+def aim_down(lean=0):
+    arm, across = reaching(lean)                      # his right arm is on the viewer's left
+    return figure(left_plate=1, left_arm=([], 0, 0), over=[(arm, moved(ARM_LEFT_AT, across, 1))])
+
+
+def aim_up(lean=0):
+    arm, across = reaching(-lean)                     # from behind, his right arm is on the viewer's right
+    arm = upside_down(arm)                            # it reaches up the screen, out from under the plate's far edge
+    # a pixel in from where it hangs, so it rises between the helm and the spike; its last row hides under the plate
+    return figure(True, right_plate=-1, right_arm=(arm, across - 1, -len(arm) - 6))
+
+
+def side_reaching(near, lean=0, length=3):
+    """An arm reaching right to an open claw; `lean` -1 or 1 steps it two pixels up or down the screen."""
+    steps = [0, 1, 1, 2][:length] + [2]
+    places = [step * lean for step in steps]
+    low = min(places)
+    parts = [(["o", "k", "o"], (column, 1 + place - low)) for column, place in enumerate(places[:-1])]
+    return joined(parts + [(side_claw(near, 0, True), (length, places[-1] - low))]), low
+
+
+def aim_right(lean=0, far=False):
+    """Facing right he aims his near arm, which is his right. `far` aims the other one: mirrored, that is his right
+    arm when he faces left."""
+    arm, down = side_reaching(not far, -lean if far else lean)
+    if far:
+        return side(far_plate=1, far_claw=(arm, 0, down))
+    return side(near_plate=1, near_claw=(arm, 0, down))
+
+
+def aims_down():
+    return [aim_down(0), aim_down(-1), aim_down(1)]   # straight, to his right, to his left
+
+
+def aims_up():
+    return [aim_up(0), aim_up(-1), aim_up(1)]
+
+
+def aims_right():
+    return [aim_right(0), aim_right(1), aim_right(-1)]
+
+
+def aims_left():
+    return facing_left([aim_right(0, True), aim_right(1, True), aim_right(-1, True)])
+
+
+def laser_shot():
+    """His crew laser shot: the genre's bar, in Mecha purple with a hot core."""
+    return frame([(["qvq"] + ["vwv"] * 9 + ["qvq"], (0, 0))], (16, 12))

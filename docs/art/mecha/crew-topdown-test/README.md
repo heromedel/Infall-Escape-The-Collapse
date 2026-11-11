@@ -7,15 +7,25 @@ human sheet to follow?
 
 ![The four views beside the drifter](review/beside-the-drifter.png)
 
-A HalfMech in its suit, standing and walking in the four directions, at the drifter's frame size (35 by 35). He is larger
-than the drifter, 27 pixels across with his spikes against 17, and that is intended: a suit is supposed to be
-larger than a Terran (heromedel, 2026-11-11).
+A HalfMech in its suit at the drifter's frame size (35 by 35): standing, walking and aiming in the four directions
+so far. He is larger than the drifter, 27 pixels across with his spikes against 17, and that is intended: a suit is
+supposed to be larger than a Terran (heromedel, 2026-11-11).
 
-- `mecha-topdown-walk-sheet.png` (and `-4x`): row 1 walk down then walk right, row 2 walk up then walk left, four
-  frames each.
-- `review/walks-8x.gif` and `-4x.gif`: the four walks moving. `review/views-10x.png`: the four standing views.
-  `review/beside-the-drifter.png`: both figures at game size, twice and four times.
-  `review/beside-heromedels-drawing.png`: the front view beside the drawing it follows.
+- `mecha-topdown-sheet.png` (and `-4x`), eight frames a row in the genre's layout:
+
+  | Row | Frames |
+  |---|---|
+  | 1 | Walk down (4), walk right (4) |
+  | 2 | Walk up (4), walk left (4) |
+  | 3 | Aim down (3), aim right (3) |
+  | 4 | Aim up (3), aim left (3) |
+
+  Still to come: fighting fire, punching, powering a console, teleport, death, clone, portrait and repair.
+- `mecha-topdown-laser-shot.png`: his crew laser shot, the genre's bar in Mecha purple with a hot core.
+- `review/walks-8x.gif` and `-4x.gif`: the four walks moving. `review/aims-8x.gif`: the four aims, each held a
+  while. `review/aims-down-up-8x.png` and `review/aims-right-left-8x.png`: the aim frames laid out.
+  `review/views-10x.png`: the four standing views. `review/beside-the-drifter.png`: both figures at game size, twice
+  and four times. `review/beside-heromedels-drawing.png`: the front view beside the drawing it follows.
 - `reference/heromedel-mecha-topdown.png` (and `-8x`): heromedel's own drawing of the suit from above, standing and
   facing the camera, 86 by 48 pixels, about four times game size. It was offered as one more inspiration, not as
   law.
@@ -67,6 +77,26 @@ How the other views follow from it:
   arm swings forward on a pixel of leg while the other draws back under the torso. The genre's rock crew, the
   nearest build to this one, walks the same way: its whole shoulder line tilts with each step.
 
+## Aiming
+
+Staging after the genre's sheets (its lanius sheet for the row layout): three still aims a direction, straight, a
+little to his right and a little to his left, with no flash, and the shot a sprite of its own. No pixels are taken.
+
+- **Ai-Generated-Proposal (2026-11-11):** he has no pistol. He aims his right claw with the clamp open on a
+  deep-purple emitter between its two prongs, and the shot leaves from there. The old Mecha crew sheet also fires
+  from the arm.
+- The shoulder of the aiming arm swings forward a row and the arm reaches three rows. Aimed aside, the arm steps two
+  pixels over on the way. Nothing else moves.
+- Facing away, the claw rises from under the far edge of his shoulder plate, between the helm and the spike.
+- Facing left is the mirror of facing right with the other arm aiming, so it is still his right arm.
+
+## Powering a console (not drawn yet)
+
+The style guide's power-pulse rows were made for an earlier figure with a longer bar down the arm (heromedel,
+2026-11-11). Ideas for this one, all **Proposed (heromedel, 2026-11-11)**: the purple dot on the wrist extends and
+flashes; the clamp opens and closes; he clamps on with both claws and stays clamped, pulsing. Purple turning power
+green where it reaches the console is kept from the Decided entry.
+
 ## What I think of it
 
 - The front and back views read as heromedel's suit at game size.
@@ -75,5 +105,6 @@ How the other views follow from it:
 
 ## Tools
 
-`python3 tools/build.py`, run from this folder, rebuilds the sheet and the pictures. `tools/mech.py` holds the frames
-as text, one character a pixel. The build borrows the picture helpers of `docs/art/terran/crew-test-4/tools/pix.py`.
+`python3 tools/build.py`, run from this folder, rebuilds the sheet and the pictures. `tools/mech.py` holds his parts
+as text, one character a pixel (helm, torso, each shoulder plate, each claw, each foot), and builds every frame by
+setting the same parts at different places, so a change to one part carries into every frame. The build borrows the picture helpers of `docs/art/terran/crew-test-4/tools/pix.py`.
