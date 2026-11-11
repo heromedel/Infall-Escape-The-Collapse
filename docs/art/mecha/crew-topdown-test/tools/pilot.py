@@ -40,16 +40,17 @@ BACK_BODY_RUN_OTHER = [".oSknIHkoo.", "..oknHnko.."]
 # One shoulder above her head and one below; the ponytail trails behind her; a foot shows ahead when she runs.
 SIDE = ["....ooo....",
         "...oknko...",            # far shoulder
-        ".ooooooo...",
-        "oIHLHIHSo..",            # ponytail, tie, hair, face
+        "...oooooo..",
+        ".oooHIHTo..",            # her head is four rows across: a row of hair wider toward the far side
+        "oIHLHHHSo..",            # ponytail, tie, hair, face
         ".oooHHHTo..",
         "...oHIHSo..",
         "...oooooo..",
-        "...oknnko..",            # near shoulder, a row deeper: her head sits a pixel up, toward the far side
+        "...oknnko..",            # near shoulder
         "...oknLSo..",            # implant light, hand
         "....oooo..."]
-SIDE_RUN_NEAR_FOOT = [(9, 5, "oo"), (9, 6, "Sko"), (9, 7, "oo")]      # the near foot reaches ahead of her
-SIDE_RUN_FAR_FOOT = [(9, 3, "oo"), (9, 4, "Sko"), (9, 5, "oo")]       # then the far one
+SIDE_RUN_NEAR_FOOT = [(9, 7, "oo"), (9, 8, "Sko"), (9, 9, "oo")]      # the near foot reaches ahead of her
+SIDE_RUN_FAR_FOOT = [(9, 5, "oo"), (9, 6, "Sko"), (9, 7, "oo")]       # then the far one
 
 
 def mirrored(rows):
@@ -76,7 +77,7 @@ def facing_up(body=BACK_BODY, legs=LEGS):
 
 
 def facing_right(patches=()):
-    return frame([(patched(SIDE, patches), (0, 1))], AT)
+    return frame([(patched(SIDE, patches), (0, 0))], AT)
 
 
 def run_down():
