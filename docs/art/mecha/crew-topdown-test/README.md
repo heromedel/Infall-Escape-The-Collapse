@@ -115,8 +115,9 @@ little to his right and a little to his left, with no flash, and the shot a spri
 - The pose is the aim's. What tells the two apart is the claw's lights. To shoot, the wrist light and the emitter
   between the prongs are both purple. To put out a fire only the wrist light is lit, and the emitter in front of it
   is grey like the clamp.
-- **Proposed (heromedel, 2026-11-11):** the light flickers as he extinguishes, white to red or purple. It is drawn
-  white and bright purple, frame about; red would be a one-letter change.
+- **Decided (heromedel, 2026-11-11):** the light flickers as he extinguishes: purple, extinguisher red, purple,
+  with no white. The red is the palette's extinguisher red (`#D62218`). A try in white and bright purple came
+  first.
 - Earlier versions: a purple canister in the clamp, which made his hand read as a purple blotch; a cleaner cylinder;
   then the open claw with both lights white.
 

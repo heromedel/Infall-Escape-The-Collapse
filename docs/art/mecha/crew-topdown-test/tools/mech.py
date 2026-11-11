@@ -26,6 +26,7 @@ PALETTE = {                      # the Mecha crew palette, docs/art/palette.md
     "L": "#C77DFF",                      # implant light; also the bright purple of a power pulse
     "P": "#9370BF", "Q": "#7DB792",      # a pulse turning from purple to power green (docs/art/palette.md)
     "t": "#D4ECFF", "u": "#7FB4F0", "x": "#F2F5F8",      # teleport light, as on the drifter's sheet
+    "R": "#D62218",                      # extinguisher red (docs/art/palette.md)
 }
 
 
@@ -408,15 +409,15 @@ def clone():
             figure()]
 
 
-# --- Fighting fire: he holds nothing; he aims his own claw, the clamp open and its wrist light white ------------
+# --- Fighting fire: he holds nothing; he aims his own claw, the clamp open, its wrist light flickering red ------
 # (heromedel, 2026-11-11.) Staging after the genre's sheets: four frames a direction, the claw swept from side to
 # side (straight, a little to his right, straight, a little to his left), with no spray. The pose is the aim's; what
 # tells the two apart is the claw's lights. To shoot, the wrist light and the emitter between the prongs are purple.
-# To put out a fire there is one light only: the wrist light, flickering white and bright purple as he works, and the
-# emitter in front of it is grey like the clamp.
+# To put out a fire there is one light only: the wrist light, flickering from purple to extinguisher red and back
+# as he works (no white), and the emitter in front of it is grey like the clamp.
 
 SWEEP = (0, -1, 0, 1)
-FLICKER = ("x", "L", "x", "L")          # the wrist light on each frame of the sweep: white, bright purple
+FLICKER = ("v", "R", "v", "R")          # the wrist light on each frame of the sweep: purple, extinguisher red
 
 
 def fire_claw(light):
