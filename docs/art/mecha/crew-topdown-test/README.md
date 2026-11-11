@@ -39,6 +39,7 @@ How the other views follow from it:
   keep their bands.
 - Facing right is the front view turned a quarter: one shoulder plate above the helm and one below, the spikes
   sweeping back and out, the claws pointing straight ahead, the visor on the helm's front edge.
+- Standing side on, both feet show a little ahead of the helm, so he is not so thin (heromedel, 2026-11-11).
 - The walk moves only the claws and the feet, as the drifter's moves only fists and feet.
 
 ## What I think of it

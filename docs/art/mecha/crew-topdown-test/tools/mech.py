@@ -164,7 +164,7 @@ STEP_UP_2 = grid([
 # The front view turned a quarter: one shoulder plate above the helm and one below, the spikes sweeping back and out,
 # the claws pointing straight ahead, the ridge running front to back and the visor on the helm's front edge.
 
-STAND_RIGHT = grid([
+STAND_RIGHT = grid([         # both feet show a little ahead of the helm, so he is not so thin (heromedel, 2026-11-11)
     "...oo..............",
     "...oao.............",
     "....oao............",
@@ -175,13 +175,13 @@ STAND_RIGHT = grid([
     ".......onkko.oo....",
     ".......onkko.......",
     "......oooooo.......",
-    ".....oaaaano.......",
-    "....onaaaano.......",
-    "....onaaaavo.......",
-    "....oeeeeevo.......",
-    "....onnnnnvo.......",
-    "....onnnnkko.......",
-    ".....onkkkko.......",
+    ".....oaaaanooo.....",
+    "....onaaaanoao.....",
+    "....onaaaavono.....",
+    "....oeeeeevooo.....",
+    "....onnnnnvono.....",
+    "....onnnnkkoko.....",
+    ".....onkkkkooo.....",
     "......oooooo.......",
     ".......oaano.......",
     ".......oaano.oo....",
@@ -193,7 +193,7 @@ STAND_RIGHT = grid([
     "...oao.............",
     "...oo..............",
 ], 19)
-STEP_RIGHT = grid([         # the near claw reaches forward, the far one draws back; a foot shows ahead of the helm
+STEP_RIGHT = grid([         # the near claw reaches forward, the far one draws back; the near foot steps ahead
     "...oo..............",
     "...oao.............",
     "....oao............",
@@ -204,13 +204,13 @@ STEP_RIGHT = grid([         # the near claw reaches forward, the far one draws b
     ".......onkkooo.....",
     ".......onkko.......",
     "......oooooo.......",
-    ".....oaaaano.......",
-    "....onaaaano.......",
-    "....onaaaavo.......",
-    "....oeeeeevo.......",
-    "....onnnnnvooo.....",
-    "....onnnnkkoano....",
-    ".....onkkkkooo.....",
+    ".....oaaaanooo.....",
+    "....onaaaanoao.....",
+    "....onaaaavono.....",
+    "....oeeeeevoooo....",
+    "....onnnnnvonno....",
+    "....onnnnkkokko....",
+    ".....onkkkkoooo....",
     "......oooooo.......",
     ".......oaano.......",
     ".......oaano..oo...",
@@ -233,13 +233,13 @@ STEP_RIGHT_2 = grid([
     ".......onkko..oo...",
     ".......onkko.......",
     "......oooooo.......",
-    ".....oaaaanooo.....",
-    "....onaaaanoano....",
-    "....onaaaavooo.....",
-    "....oeeeeevo.......",
-    "....onnnnnvo.......",
-    "....onnnnkko.......",
-    ".....onkkkko.......",
+    ".....oaaaanoooo....",
+    "....onaaaanoaao....",
+    "....onaaaavonno....",
+    "....oeeeeevoooo....",
+    "....onnnnnvono.....",
+    "....onnnnkkoko.....",
+    ".....onkkkkooo.....",
     "......oooooo.......",
     ".......oaano.......",
     ".......oaanooo.....",
@@ -251,7 +251,6 @@ STEP_RIGHT_2 = grid([
     "...oao.............",
     "...oo..............",
 ], 19)
-
 
 
 def facing_left(frames):
