@@ -1,43 +1,51 @@
 # Mecha crew, top-down test
 
 **Date:** 2026-11-11
-**Status:** a test, shown to heromedel, not yet judged. It answers one question: can the nearly top-down view that
-worked for the Terran drifter (`docs/art/terran/crew-test-4`) be drawn for a race that has no human sheet to follow?
+**Status:** a test, second version, shown to heromedel and not yet judged. It answers one question: can the nearly
+top-down view that worked for the Terran drifter (`docs/art/terran/crew-test-4`) be drawn for a race that has no
+human sheet to follow?
 
 ![The four views beside the drifter](review/beside-the-drifter.png)
 
-A HalfMech in its suit, standing and walking in the four directions, at the drifter's size (35 by 35 frames).
+A HalfMech in its suit, standing and walking in the four directions, at the drifter's frame size (35 by 35).
 
 - `mecha-topdown-walk-sheet.png` (and `-4x`): row 1 walk down then walk right, row 2 walk up then walk left, four
   frames each.
 - `review/walks-8x.gif` and `-4x.gif`: the four walks moving. `review/views-10x.png`: the four standing views.
   `review/beside-the-drifter.png`: both figures at game size, twice and four times.
+  `review/beside-heromedels-drawing.png`: the front view beside the drawing it follows.
+- `reference/heromedel-mecha-topdown.png` (and `-8x`): heromedel's own drawing of the suit from above, standing and
+  facing the camera, 86 by 48 pixels, about four times game size. It was offered as one more inspiration, not as
+  law.
 
-## How it was drawn
+## The design
 
-Nothing was traced and no other sheet was followed frame for frame. The design is the Mecha crew sheet's
-(`docs/art/mecha/crew`, style guide "HalfMechs in their suits"): crest head, blade forearms, short legs, near-black
-armour with one accent, the purple visor bar and chest lights. The build is the drifter's, part for part:
+After heromedel's drawing, brought down to game size by hand (nothing is scaled or traced), in the colours of the
+Mecha crew palette (`docs/art/palette.md`):
 
-| The drifter | The HalfMech |
-|---|---|
-| Head, hair | A helm shaped like a kite, its crest a light ridge down the middle, the visor bar on its front edge |
-| Two coat shoulders | Two pauldrons, a blade rising up and out of each |
-| A fist under each cuff | A claw under each pauldron |
-| Two-line torso | Two-line chest with the three lights |
-| Feet a line | Feet a line |
+- A boxy helm with a pale ridge down the middle and a short purple visor bar on its front edge.
+- A wing pauldron each side, with a thin spike sweeping up and out of its outer corner.
+- An arm coming down and out from under each wing to a grey powered clamp claw with a purple band. heromedel likes
+  the clamp claws (2026-11-11).
+- Two chest lights under the visor, and two pointed feet.
+- **The X (heromedel, 2026-11-11):** spikes go up and out, arms go down and out. The first version of this test
+  hung each claw straight under a blade that stood straight above it, and on a still frame the two read as one
+  stacked piece.
 
-- The colours are the Mecha crew palette (`docs/art/palette.md`), nothing else.
+How the other views follow from it:
+
+- From behind there is no visor and no chest light: the ridge runs the whole helm and down the back plate. The claws
+  keep their bands.
+- Facing right is the front view turned a quarter: one wing above the helm and one below, the spikes sweeping back
+  and out, the claws reaching forward and out, the visor on the helm's front edge.
 - The walk moves only the claws and the feet, as the drifter's moves only fists and feet.
-- From behind there is no visor and no chest light: the ridge runs the whole helm and down the back plate.
-- Facing right, one pauldron sits above the helm and one below, each with its blade pointing away, and the visor is
-  on the helm's front edge.
 
 ## What I think of it
 
-- The front view reads as the same Mecha as the crew sheet, seen from above.
-- The back view is hard to tell from the front at game size; only the purple is missing.
-- The side view is the weakest: it reads as a dart with a visor more than as a figure.
+- The front and back views read as heromedel's suit at game size.
+- The side view is still the weakest. It is correct as a turn of the front view, but with the wings as long as they
+  are it reads as a bracket more than as a figure.
+- The chest is two rows where the drawing gives it room; at this size the helm takes most of the height.
 
 ## Tools
 
