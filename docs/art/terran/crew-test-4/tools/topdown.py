@@ -47,25 +47,25 @@ STAND_DOWN = grid([
     "..ofeecotsssuoccddo..",
     "..oeccecosttocdcddo..",
     "...ooeoeabBbadodoo...",
-    "...osooeppyppdooto...",
-    "....o.ooooooooo.o....",
-    ".....oeoZzmzZodo.....",
+    "...ostoeppyppdotto...",
+    "...otsoooooooootuo...",
+    "....ooeoZzmzZodoo....",
     "......o.ooooo.o......",
 ], 21)
 STEP_DOWN = change(STAND_DOWN, {      # the arm on the viewer's left comes forward, the other foot with it
     7: "...ooooeabBbadodoo...",
     8: "...oecoeppyppdoo.....",
-    9: "...oeoooooooooo......",
-    10: "...osoeo..oZzo.......",
-    11: "....o.o...ozo........",
+    9: "...ostooooooooo......",
+    10: "...otsoo..oZzo.......",
+    11: "....oo....ozo........",
     12: "..........ooo........",
 }, 21)
 STEP_DOWN_2 = change(STAND_DOWN, {
     7: "...ooeoeabBbadoooo...",
     8: ".....ooeppyppdocdo...",
-    9: "......oooooooooodo...",
-    10: ".......oZzo..odoto...",
-    11: "........ozo...o.o....",
+    9: "......oooooooootuo...",
+    10: ".......oZzo...outo...",
+    11: "........ozo....oo....",
     12: "........ooo..........",
 }, 21)
 
@@ -80,19 +80,19 @@ STAND_UP = grid([         # from behind the long coat hides his feet: two more b
     "..ofeecoohhhooccddo..",
     "..oeccecohhhocdcddo..",
     "...ooeoeecbcccodoo...",
-    "...osooecbcbccooto...",
-    "....o.oecccccdo.o....",
-    "......oeccccddo......",
+    "...ostoecbcbccotto...",
+    "...otsoecccccdotuo...",
+    "....oooeccccddooo....",
     ".......ooooooo.......",
 ], 21)
 # Walking away, the hem kicks: it drops a row over the trailing leg and lifts a row on the other side. It moves up
 # and down only, never sideways (heromedel, 2026-11-11).
 STEP_UP = change(STAND_UP, {          # the arm on the viewer's left swings forward, up past its shoulder; a boot shows
-    0: "....o....oooo........",
-    1: "...oso..ohiiho.......",
-    2: "...oeooohhiihoooo....",
+    0: "...oo....oooo........",
+    1: "..osto..ohiiho.......",
+    2: "..ofeooohhiihoooo....",
     7: "....oooeecbcccoocdo..",
-    8: "......oecbcbccoocdo..",
+    8: "......oecbcbccootuo..",
     9: "......oecccccdo.oo...",
     10: "......oeccccooo......",
     11: "......oeccooo........",
@@ -100,11 +100,11 @@ STEP_UP = change(STAND_UP, {          # the arm on the viewer's left swings forw
     13: "........oo...........",
 }, 21)
 STEP_UP_2 = change(STAND_UP, {
-    0: ".........oooo...o....",
-    1: "........ohiiho..oto..",
-    2: "....oooohhiihooodo...",
+    0: ".........oooo...oo...",
+    1: "........ohiiho.otuo..",
+    2: "....oooohhiihooocdo..",
     7: "..oecooeecbcccooo....",
-    8: "..oecooecbcbcco......",
+    8: "..ostooecbcbcco......",
     9: "...oo.oecccccdo......",
     10: "......ooocccddo......",
     11: "........ooocddo......",
@@ -207,15 +207,15 @@ AIM_DOWN_LEFT = over(STAND_DOWN, {
 }, 21)
 AIM_UP = over(STAND_UP, {
     -3: (14, "oo"), -2: (14, "o7o"), -1: (14, "o7o"), 0: (14, "o8o"), 1: (13, "oooo"), 2: (13, "ooceo"),
-    7: (14, "ooo."), 8: (14, "oo.."), 9: (14, "o.."),
+    7: (14, "ooo."), 8: (14, "oo.."), 9: (14, "o..."), 10: (14, "o.."),
 }, 21, 4)
 AIM_UP_RIGHT = over(STAND_UP, {
     -4: (19, "o"), -3: (18, "o7o"), -2: (17, "o88o"), -1: (17, "o7o"), 0: (16, "o8oo"), 1: (15, "oooo"),
-    2: (13, "oooceo"), 3: (17, "oo"), 7: (14, "ooo."), 8: (14, "oo.."), 9: (14, "o.."),
+    2: (13, "oooceo"), 3: (17, "oo"), 7: (14, "ooo."), 8: (14, "oo.."), 9: (14, "o..."), 10: (14, "o.."),
 }, 21, 4)
 AIM_UP_LEFT = over(STAND_UP, {
     -4: (10, "o"), -3: (9, "o8oo"), -2: (10, "o78o"), -1: (11, "o77o"), 0: (9, "oooooo"), 1: (13, "ooo"),
-    2: (13, "oocoo"), 3: (14, "ecddo"), 7: (14, "ooo."), 8: (14, "oo.."), 9: (14, "o.."),
+    2: (13, "oocoo"), 3: (14, "ecddo"), 7: (14, "ooo."), 8: (14, "oo.."), 9: (14, "o..."), 10: (14, "o.."),
 }, 21, 4)
 AIM_RIGHT = over(STAND_RIGHT, {
     11: (3, "ofeecoooooooo"), 12: (3, "ofeecdoo8877o"), 13: (3, "oeeccecosooo"), 14: (3, "odeccooooo"),
@@ -267,7 +267,7 @@ FIRE_DOWN = [
     over(STAND_DOWN, {7: (3, "oeco"), 8: (3, "oefcoppyppd"), 9: (4, "ofcoooooooo"), 10: (4, "oeoooomzZodo"),
                       11: (5, "oo44oooo.o"), 12: (5, "oo45o"), 13: (6, "o4oo"), 14: (6, "ooko"), 15: (7, "ooo")}, 21),
 ]
-_FIRE_UP_BODY = {7: (14, "ooo."), 8: (14, "oo.."), 9: (14, "o..")}
+_FIRE_UP_BODY = {7: (14, "ooo."), 8: (14, "oo.."), 9: (14, "o..."), 10: (14, "o..")}
 FIRE_UP = [
     over(STAND_UP, {**_FIRE_UP_BODY, **{-3: (13, "oo"), -2: (13, "okoo"), -1: (13, "oo5o"), 0: (13, "o45o"),
                                           1: (13, "oooo"), 2: (13, "ooceo")}}, 21, 4),
@@ -323,7 +323,8 @@ TYPE_DOWN = [
     over(STAND_DOWN, {8: (3, "oeooeppyppdoodo"), 9: (3, "oecooooooooocdo"), 10: (3, ".oecoZzmzZotso."),
                       11: (3, ".ostoooooootuo."), 12: (3, ".otto.....ooo.."), 13: (5, "ooo")}, 21),
 ]
-_TYPE_UP_BODY = {2: (3, "ooooo"), 7: (3, ".oooeecbcccooo."), 8: (3, "..ooecbcbccoo.."), 9: (4, "..oecccccdo..")}
+_TYPE_UP_BODY = {2: (3, "ooooo"), 7: (3, ".oooeecbcccooo."), 8: (3, "..ooecbcbccoo.."), 9: (3, "...oecccccdo..."),
+                 10: (4, "..oeccccddo..")}
 TYPE_UP = [
     over(STAND_UP, {**_TYPE_UP_BODY, **{-1: [(6, "ooo"), (14, "ooo")], 0: [(5, "osto"), (14, "otso")],
                                           1: [(5, "oeo"), (14, "ocdo")], 2: [(3, "ooooo"), (13, "ooooo")]}}, 21, 4),
@@ -728,7 +729,7 @@ def clone(tones=POWER_TONES, edges=POWER_EDGES):
     # He grows head first, so his colours follow the same way and his feet are the last of him still green.
     # On that frame they glow in the bright power colour.
     return [lump, bare, figure(0, edges[2] if edges else None), figure(DOWN_AT[1] + 5),
-            figure(DOWN_AT[1] + 9, glow=edges[0] if edges else None), stand]
+            figure(DOWN_AT[1] + 10, glow=edges[0] if edges else None), stand]
 
 
 def portrait():

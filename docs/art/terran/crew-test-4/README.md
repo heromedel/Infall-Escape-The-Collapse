@@ -62,6 +62,10 @@ same frame counts:
   and turned down. `review/walk-up-kick-choices.png` shows the flat hem and four up-or-down kicks; the third column
   is the one on the sheet.
 
+- **Hands (heromedel, 2026-11-11):** a hanging hand is a fist two pixels by two, straight under its cuff, as the
+  style guide proposes for Terrans. The genre's one-pixel fist, set a pixel out from the cuff, read as a nub. The
+  walking frames and every action frame that keeps a hanging hand carry the same fist.
+
 ## How close it sits to the genre's sheet
 
 It was drawn frame for frame against the genre's sheet, working from letter maps of where each of its parts sits in
