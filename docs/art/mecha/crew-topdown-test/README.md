@@ -31,6 +31,8 @@ Mecha crew palette (`docs/art/palette.md`):
 - Two chest lights under the visor, on a torso four rows deep, and two pointed feet. The torso was two rows;
   heromedel had it extended down two pixels with the lights left where they were (2026-11-11). The back view has
   the same torso.
+- The feet are two pixels long and stand apart from the torso and from each other, each with its own outline
+  (heromedel, 2026-11-11). A stepping foot reaches a pixel further and the other draws in a pixel.
 - **Spikes and arms at different angles (heromedel, 2026-11-11):** the spike leans out from the plate's outer
   corner and the claw hangs straight from under its middle. The first version of this test hung each claw straight
   under a blade that stood straight above it, and on a still frame the two read as one stacked piece.
@@ -41,7 +43,7 @@ How the other views follow from it:
   keep their bands.
 - Facing right is the front view turned a quarter: one shoulder plate above the helm and one below, the spikes
   sweeping back and out, the claws pointing straight ahead, the visor on the helm's front edge.
-- Standing side on, both feet show a little ahead of the helm, so he is not so thin (heromedel, 2026-11-11).
+- Standing side on, both feet show ahead of the helm, so he is not so thin (heromedel, 2026-11-11).
 - The walk moves only the claws and the feet, as the drifter's moves only fists and feet.
 
 ## What I think of it

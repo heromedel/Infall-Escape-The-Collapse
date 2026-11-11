@@ -69,7 +69,9 @@ STAND_DOWN = grid([
     "...onvno.onnnnnkko.onvno...",
     "...oeeao.onnnnnkko.oeaao...",
     "....oeo..onnnnkkko..oeo....",
-    ".....o...oanooonko...o.....",
+    ".....o...ooooooooo...o.....",
+    ".........oano.onko.........",
+    ".........oano.onko.........",
     "..........oo...oo..........",
 ], 27)
 STEP_DOWN = grid([         # the claw on the viewer's left swings forward and hangs lower, the other lifts; a foot steps
@@ -86,8 +88,10 @@ STEP_DOWN = grid([         # the claw on the viewer's left swings forward and ha
     "....oko..onnnnnkko.oeaao...",
     "...onvno.onnnnnkko..oeo....",
     "...oeeao.onnnnkkko...o.....",
-    "....oeo..ooooooonko........",
-    ".....o........onko.........",
+    "....oeo..ooooooooo.........",
+    ".....o...oano.onko.........",
+    "..........oo..onko.........",
+    "..............onko.........",
     "...............oo..........",
 ], 27)
 STEP_DOWN_2 = grid([
@@ -104,8 +108,10 @@ STEP_DOWN_2 = grid([
     "...oeeao.onnnnnkko..oko....",
     "....oeo..onnnnnkko.onvno...",
     ".....o...onnnnkkko.oeaao...",
-    ".........oanoooooo..oeo....",
-    ".........oano........o.....",
+    ".........ooooooooo..oeo....",
+    ".........oano.onko...o.....",
+    ".........oano..oo..........",
+    ".........oano..............",
     "..........oo...............",
 ], 27)
 
@@ -126,7 +132,9 @@ STAND_UP = grid([
     "...onvno.onnnenkko.onvno...",
     "...oeeao.onnnenkko.oeaao...",
     "....oeo..onnnekkko..oeo....",
-    ".....o...oanooonko...o.....",
+    ".....o...ooooooooo...o.....",
+    ".........oano.onko.........",
+    ".........oano.onko.........",
     "..........oo...oo..........",
 ], 27)
 STEP_UP = grid([
@@ -143,8 +151,10 @@ STEP_UP = grid([
     "...oeeao.onnnenkko..oko....",
     "....oeo..onnnenkko.onvno...",
     ".....o...onnnekkko.oeaao...",
-    ".........oanoooooo..oeo....",
-    ".........oano........o.....",
+    ".........ooooooooo..oeo....",
+    ".........oano.onko...o.....",
+    ".........oano..oo..........",
+    ".........oano..............",
     "..........oo...............",
 ], 27)
 STEP_UP_2 = grid([
@@ -161,8 +171,10 @@ STEP_UP_2 = grid([
     "....oko..onnnenkko.oeaao...",
     "...onvno.onnnenkko..oeo....",
     "...oeeao.onnnekkko...o.....",
-    "....oeo..ooooooonko........",
-    ".....o........onko.........",
+    "....oeo..ooooooooo.........",
+    ".....o...oano.onko.........",
+    "..........oo..onko.........",
+    "..............onko.........",
     "...............oo..........",
 ], 27)
 
@@ -170,7 +182,7 @@ STEP_UP_2 = grid([
 # The front view turned a quarter: one shoulder plate above the helm and one below, the spikes sweeping back and out,
 # the claws pointing straight ahead, the ridge running front to back and the visor on the helm's front edge.
 
-STAND_RIGHT = grid([         # both feet show a little ahead of the helm, so he is not so thin (heromedel, 2026-11-11)
+STAND_RIGHT = grid([         # both feet show ahead of the helm, so he is not so thin (heromedel, 2026-11-11)
     "...oo..............",
     "...oao.............",
     "....oao............",
@@ -181,13 +193,13 @@ STAND_RIGHT = grid([         # both feet show a little ahead of the helm, so he 
     ".......onkko.oo....",
     ".......onkko.......",
     "......oooooo.......",
-    ".....oaaaanooo.....",
-    "....onaaaanoao.....",
-    "....onaaaavono.....",
-    "....oeeeeevooo.....",
-    "....onnnnnvono.....",
-    "....onnnnkkoko.....",
-    ".....onkkkkooo.....",
+    ".....oaaaanoooo....",
+    "....onaaaanoaao....",
+    "....onaaaavonno....",
+    "....oeeeeevoooo....",
+    "....onnnnnvonno....",
+    "....onnnnkkokko....",
+    ".....onkkkkoooo....",
     "......oooooo.......",
     ".......oaano.......",
     ".......oaano.oo....",
@@ -199,7 +211,7 @@ STAND_RIGHT = grid([         # both feet show a little ahead of the helm, so he 
     "...oao.............",
     "...oo..............",
 ], 19)
-STEP_RIGHT = grid([         # the near claw reaches forward, the far one draws back; the near foot steps ahead
+STEP_RIGHT = grid([         # the near claw reaches forward, the far one draws back; the near foot steps ahead, the far one draws in
     "...oo..............",
     "...oao.............",
     "....oao............",
@@ -213,10 +225,10 @@ STEP_RIGHT = grid([         # the near claw reaches forward, the far one draws b
     ".....oaaaanooo.....",
     "....onaaaanoao.....",
     "....onaaaavono.....",
-    "....oeeeeevoooo....",
-    "....onnnnnvonno....",
-    "....onnnnkkokko....",
-    ".....onkkkkoooo....",
+    "....oeeeeevooooo...",
+    "....onnnnnvonnno...",
+    "....onnnnkkokkko...",
+    ".....onkkkkooooo...",
     "......oooooo.......",
     ".......oaano.......",
     ".......oaano..oo...",
@@ -239,10 +251,10 @@ STEP_RIGHT_2 = grid([
     ".......onkko..oo...",
     ".......onkko.......",
     "......oooooo.......",
-    ".....oaaaanoooo....",
-    "....onaaaanoaao....",
-    "....onaaaavonno....",
-    "....oeeeeevoooo....",
+    ".....oaaaanooooo...",
+    "....onaaaanoaaao...",
+    "....onaaaavonnno...",
+    "....oeeeeevooooo...",
     "....onnnnnvono.....",
     "....onnnnkkoko.....",
     ".....onkkkkooo.....",
