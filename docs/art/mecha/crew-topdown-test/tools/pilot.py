@@ -45,10 +45,11 @@ SIDE = ["....ooo....",
         ".oooHHHTo..",
         "...oHIHSo..",
         "...oooooo..",
-        "...oknLSo..",            # near shoulder, implant light, hand
+        "...oknnko..",            # near shoulder, a row deeper: her head sits a pixel up, toward the far side
+        "...oknLSo..",            # implant light, hand
         "....oooo..."]
-SIDE_RUN_NEAR_FOOT = [(9, 4, "oo"), (9, 5, "Sko"), (9, 6, "oo")]      # the near foot reaches ahead of her
-SIDE_RUN_FAR_FOOT = [(9, 2, "oo"), (9, 3, "Sko"), (9, 4, "oo")]       # then the far one
+SIDE_RUN_NEAR_FOOT = [(9, 5, "oo"), (9, 6, "Sko"), (9, 7, "oo")]      # the near foot reaches ahead of her
+SIDE_RUN_FAR_FOOT = [(9, 3, "oo"), (9, 4, "Sko"), (9, 5, "oo")]       # then the far one
 
 
 def mirrored(rows):
@@ -75,7 +76,7 @@ def facing_up(body=BACK_BODY, legs=LEGS):
 
 
 def facing_right(patches=()):
-    return frame([(patched(SIDE, patches), (0, 2))], AT)
+    return frame([(patched(SIDE, patches), (0, 1))], AT)
 
 
 def run_down():
