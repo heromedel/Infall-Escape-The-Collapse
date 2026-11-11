@@ -108,16 +108,14 @@ little to his right and a little to his left, with no flash, and the shot a spri
 
 ## Fighting fire
 
-Staging after the genre's sheets: four frames a direction, a canister swept from side to side (straight, a little to
-his right, straight, a little to his left), with no spray.
+**Decided (heromedel, 2026-11-11):** he holds nothing. He aims his own claw, the clamp open and its lights white.
 
-- **Ai-Generated-Proposal (2026-11-11):** he holds the canister in his right clamp. It is Mecha purple, following
-  the idea proposed for the drifter's that an extinguisher takes the power colour of the race using it (heromedel,
-  2026-11-10).
-- The canister is a plain cylinder with a pale edge and a dark side, hanging from the claw, which stays grey. A
-  first version wrapped purple prongs round a purple canister, and his hand read as a purple blotch (heromedel,
-  2026-11-11).
-- The pose is the aim's: the shoulder of that arm forward, the arm reaching. Facing left it is still his right arm.
+- Staging after the genre's sheets: four frames a direction, the claw swept from side to side (straight, a little to
+  his right, straight, a little to his left), with no spray.
+- The pose is the aim's. What tells the two apart is the colour of the claw's two lights, the wrist band and the
+  emitter between the prongs: purple to shoot, white to put out a fire.
+- Two versions with a purple canister in the clamp came first. In the first his hand read as a purple blotch
+  (heromedel, 2026-11-11); the second, a cleaner cylinder, was dropped for this.
 
 ## Punching
 
@@ -125,7 +123,7 @@ Six frames, after the genre's sheets: ready, the shoulder drawn back with the cl
 the arm at full reach, the arm coming back, ready, ready. He strikes with a closed claw. The whole shoulder line
 turns into the blow and the opposite foot steps with it, as in his walk. The genre has only the two directions,
 toward the camera and away. heromedel is content with it as it is (2026-11-11): making every race punch or hook toward the
-centre of the tile would get strange.
+centre of the tile could get strange.
 
 ## Teleport
 

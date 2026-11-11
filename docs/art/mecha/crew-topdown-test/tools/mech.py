@@ -408,34 +408,24 @@ def clone():
             figure()]
 
 
-# --- Fighting fire: a canister held in the clamp, swept from side to side; no spray ------------------------------
-# Staging after the genre's sheets: four frames a direction, the canister straight, a little to his right, straight,
-# a little to his left. The canister is in his race's power colour, as proposed for the drifter's (heromedel,
-# 2026-11-10): Mecha purple.
+# --- Fighting fire: he holds nothing; he aims his own claw, the clamp open and its lights white ------------------
+# (heromedel, 2026-11-11.) Staging after the genre's sheets: four frames a direction, the claw swept from side to
+# side (straight, a little to his right, straight, a little to his left), with no spray. The pose is the aim's; what
+# tells the two apart is the colour of the claw's two lights, the wrist band and the emitter between the prongs:
+# purple to shoot, white to put out a fire.
 
-CANISTER = ["onvno",             # his wrist band
-            "oeeao",             # the claw, grey, closed on the canister's neck
-            "oLvqo",             # the canister: a pale edge, purple, a dark side
-            "oLvqo",
-            "ovvqo",
-            ".oko.",             # its nozzle
-            "..o.."]
+CLAW_OPEN_WHITE = [row.replace("v", "x").replace("q", "x") for row in CLAW_OPEN]
 SWEEP = (0, -1, 0, 1)
 
 
-def side_canister(near):
-    claw = ("e", "e", "a") if near else ("e", "a", "a")
-    return [".oooooo..",
-            "on" + claw[0] + "LLvo..",          # band, claw, the canister's pale edge
-            "kv" + claw[1] + "vvvko.",          # arm, band, claw, canister, nozzle
-            "on" + claw[2] + "qqqo..",
-            ".oooooo.."]
+def side_claw_white(near):
+    return [row.replace("v", "x").replace("q", "x") for row in side_claw(near, 0, True)]
 
 
 def fire_down():
     frames = []
     for lean in SWEEP:
-        arm, across = reaching(lean, 2, CANISTER)
+        arm, across = reaching(lean, 3, CLAW_OPEN_WHITE)
         frames.append(figure(left_plate=1, left_arm=([], 0, 0), over=[(arm, moved(ARM_LEFT_AT, across, 1))]))
     return frames
 
@@ -443,7 +433,7 @@ def fire_down():
 def fire_up():
     frames = []
     for lean in SWEEP:
-        arm, across = reaching(-lean, 3, CANISTER)
+        arm, across = reaching(-lean, 3, CLAW_OPEN_WHITE)
         arm = upside_down(arm)
         frames.append(figure(True, right_plate=-1, right_arm=(arm, across - 1, -len(arm) - 6)))
     return frames
@@ -452,7 +442,7 @@ def fire_up():
 def fire_right(far=False):
     frames = []
     for lean in SWEEP:
-        arm, down = side_reaching(not far, -lean if far else lean, 2, side_canister(not far))
+        arm, down = side_reaching(not far, -lean if far else lean, 3, side_claw_white(not far))
         frames.append(side(far_plate=1, far_claw=(arm, 0, down)) if far else side(near_plate=1, near_claw=(arm, 0, down)))
     return frames
 
