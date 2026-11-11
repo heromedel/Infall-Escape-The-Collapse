@@ -43,6 +43,14 @@ static func has_animation(sheet: Dictionary, animation: String) -> bool:
 	return sheet.layout.has(animation)
 
 
+## Whether the sheet can show this animation with the crew member facing this way; an animation drawn one way only
+## ("any") suits every facing. Without it the crew member is shown standing, and the game says what they are doing
+## some other way.
+static func has_pose(sheet: Dictionary, animation: String, facing: String) -> bool:
+	var entry: Dictionary = sheet.layout.get(animation, {})
+	return entry.has(facing) or entry.has("any")
+
+
 ## Where on the sheet the frame to show now sits. `seconds` is the animation's own clock; `progress` (0 to 1), when
 ## given, picks the frame by how far through the animation is, for one that plays once. A sheet without the
 ## animation, or without that facing of it, shows the crew member standing: the first frame of the walk.

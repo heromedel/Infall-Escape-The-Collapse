@@ -466,7 +466,8 @@ func _draw_crew() -> void:
 		var at := member.previous_position.lerp(member.position, alpha)
 		var ring := UiColours.POWER_GREEN if member.side == 0 else UiColours.enemy_power(member.home.faction, member.home.race)
 		var sheet := CrewArt.sheet_for(member.race)
-		if member.teleporting_ticks > 0 and sheet.is_empty():
+		# the glow and sparks of a teleport, for a token and for a sheet with no teleport frames of its own
+		if member.teleporting_ticks > 0 and (sheet.is_empty() or not CrewArt.has_animation(sheet, "teleport")):
 			var t := member.teleporting_ticks / float(Encounter.TELEPORT_TICKS)
 			canvas.draw_circle(at, TOKEN_RADIUS * (1.0 + t), Color(0.6, 0.9, 1.0, 0.35 * t))
 			for index in 6:
@@ -543,7 +544,7 @@ func _draw_member_sprite(canvas: CanvasItem, member: CrewMember, at: Vector2, ri
 	var animation := _member_animation(member)
 	var clock := time + (absi(member.name.hash()) % 97) / 97.0       # so a room of crew don't move as one
 	var region: Rect2
-	if member.teleporting_ticks > 0:
+	if member.teleporting_ticks > 0 and CrewArt.has_animation(sheet, "teleport"):
 		region = CrewArt.region(sheet, "teleport", facing, clock, member.teleporting_ticks / float(Encounter.TELEPORT_TICKS))
 	else:
 		region = CrewArt.region(sheet, animation, facing, clock)
@@ -557,8 +558,9 @@ func _draw_member_sprite(canvas: CanvasItem, member: CrewMember, at: Vector2, ri
 		canvas.draw_rect(bar, Color(0, 0, 0, 0.75))
 		canvas.draw_rect(Rect2(bar.position, Vector2(bar.size.x * fraction, bar.size.y)), UiColours.hull_colour(fraction))
 	var badge := _member_badge(member)
-	var shown_by_sprite: String = {"repair": "repair", "fire": "fire", "fight": "aim"}.get(badge, "")
-	if not badge.is_empty() and not (not shown_by_sprite.is_empty() and CrewArt.has_animation(sheet, shown_by_sprite)):
+	# A badge for their task is left off only when the sprite is showing that task now: its animation, this facing.
+	var sprite_shows_task := animation != "" and animation != "walk" and CrewArt.has_pose(sheet, animation, facing)
+	if not badge.is_empty() and not (sprite_shows_task and badge in ["repair", "fire", "fight"]):
 		_draw_badge(canvas, at + Vector2(half * 0.75, -half * 0.75), badge)
 
 

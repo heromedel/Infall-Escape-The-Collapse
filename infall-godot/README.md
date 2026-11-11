@@ -134,6 +134,9 @@ The Art Style setting shows a token for any race with no sheet in the chosen sty
 - The top-down drifter's death is a bad placeholder (heromedel, 2026-11-11), to be made again from scratch.
 - The game does not play a death or a clone-bay animation yet, and the sheets' extra rows (the Tentauri typing at
   several systems, the HalfMech's clamp-on frames) are not used.
+- When a sheet has no frames for what a crew member is doing, or none for the way they face (punching is only
+  drawn toward and away from the camera), they stand and the small badge says what they are doing, as with tokens.
+  A sheet with no teleport frames gets the tokens' glow and sparks.
 - Stunned, healing and out of air have no frames: the small badges and sparks show them, as with tokens.
 - Welding sparks are the game's, not the sheet's: a layout gives the point (`sparks="x,y"` on an animation) and
   the game flickers sparks there. Only the top-down drifter's repair uses it so far.
