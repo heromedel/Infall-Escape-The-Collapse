@@ -180,9 +180,20 @@ anything Claude added tagged Ai-Generated-Proposal.
   - **Tokens from sprites — Decided for the Tentauri (heromedel, 2026-11-11):** a race's token can be a circle cut
     from one frame of its sheet (`<token style="…" frame="row,column" centre="x,y" radius="…"/>` in `race.xml`),
     in place of a drawn face. The Tentauri's is the bell of the Facing sheet's standing frame.
-  - **Colour variants — Proposed (heromedel, 2026-11-11):** a sheet can list the same sheet in other colours
-    (`variants="…"` on `<crew_art>`). A crew member's name picks one, for the sprite and the token alike; the
-    race's own names take them in turn. The Tentauri have six (`docs/art/style-guides.md`).
+  - **Subtypes — Decided (heromedel, 2026-11-11):** a crew member has a subtype that names the colours they
+    wear, one for each part of their race's sheet. A Tentauri's is bell and tentacles, picked separately, e.g.
+    `blue/forest`. It is for show only, is saved with the run, and a clone keeps it.
+    - A newcomer takes, at random, a planned subtype nobody in the squad wears; once all are worn, a combination
+      of the listed colours nobody in the squad wears. No weights, so a bell can turn up with tentacles of its own
+      colour. An enemy squad does the same among itself.
+    - Past every combination (36 for the Tentauri) the colours are made up at random: one too close to a subtype
+      already worn is thrown and tried again, and the third try stands whatever it is (heromedel). What counts as
+      too close is an **Ai-Generated-Proposal**: every part within 25 degrees of hue of the other's.
+    - A Tentauri for sale at a store shows the subtype they will have.
+    - More planned subtypes can be added later; other races have none yet.
+    - How it is built: the race's `race.xml` lists each part (`<skin_part>`: the sheet's own colour codes for it
+      and the colours it can take) and the planned subtypes (`<subtype wears="…"/>`). The sheet is kept as an SVG,
+      and the game changes its colour codes and draws it, once for each subtype worn (`CrewSkins`, `CrewArt`).
 
 ## 8. Weapons and Systems
 
@@ -334,4 +345,5 @@ All built in the build of 2026-11-05.
 | 2026-11-05 | The 2026-11-05 build: co-op fixes, the real battlefield, battlesuit air, the player setup menu with assignments, settings tabs. |
 | 2026-11-09 | Ship status cards (GV 14H) proposed and put on the Next build list. |
 | 2026-11-11 | The Art Style setting, Top Down > Facing > Tokens, with Top Down the default (GV 7F); built the same day. |
-| 2026-11-11 | Tentauri tokens are cut from the Facing sheet's standing frame, and the sheet has colour variants (GV 7F). |
+| 2026-11-11 | Tentauri tokens are cut from the Facing sheet's standing frame (GV 7F). |
+| 2026-11-11 | Crew subtypes: a Tentauri's bell and tentacle colours, planned pairs first, then unused combinations, one of each to a squad (GV 7F). |

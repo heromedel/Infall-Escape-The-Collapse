@@ -9,6 +9,7 @@ const BASE_SPEED_TILES := 2.2      # tiles a second at speed 1.0: the genre's us
 
 var name: String
 var race: RaceDef
+var subtype: String = ""           # the colours they wear, e.g. "blue/forest" (CrewSkins, GV 7F); "" for a race without
 var health: float = 100.0
 var max_health: float = 100.0
 var xp: Dictionary = {}            # skill -> XP, kept in decimals, shown whole
@@ -125,7 +126,7 @@ func is_boarding() -> bool:
 
 
 func to_save() -> Dictionary:
-	return {"name": name, "race": race.id, "health": health, "xp": xp.duplicate(), "station": station_room, "contract": contract_id, "rank": rank, "assigned": assigned.duplicate(), "own_assignment": own_assignment}
+	return {"name": name, "race": race.id, "health": health, "xp": xp.duplicate(), "station": station_room, "contract": contract_id, "rank": rank, "assigned": assigned.duplicate(), "own_assignment": own_assignment, "subtype": subtype}
 
 
 static func from_save(data: Dictionary) -> CrewMember:
@@ -137,6 +138,7 @@ static func from_save(data: Dictionary) -> CrewMember:
 	member.station_room = int(data.get("station", -1))
 	member.contract_id = int(data.get("contract", 0))
 	member.rank = int(data.get("rank", -1))
+	member.subtype = data.get("subtype", "")
 	member.assigned.assign(data.get("assigned", []).map(func(id): return int(id)))
 	member.own_assignment = bool(data.get("own_assignment", false))
 	return member

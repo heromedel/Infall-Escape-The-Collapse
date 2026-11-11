@@ -170,6 +170,12 @@ func count_mercenary_crew() -> void:
 			ship.contract.crew_at_start = _contract_crew(ship).size()
 
 
+## Crew who join the squad between encounters get their subtype at once (GV 7F); the rest get theirs when an
+## encounter is set up.
+func dress_crew() -> void:
+	CrewSkins.dress(squad, rng)
+
+
 ## The mercenaries leave: their ship, and their crew wherever they are. Anyone of yours aboard comes back first.
 func release(ship: Ship) -> void:
 	var id := int(ship.contract.id)

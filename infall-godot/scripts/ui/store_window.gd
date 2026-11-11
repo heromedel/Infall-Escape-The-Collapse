@@ -72,7 +72,8 @@ func _rebuild() -> void:
 		var race := Library.race(stock.crew[index])
 		var price := Mawjig.amount(race.crew_price * _price_scale() / 100.0)
 		var sold: bool = stock.sold.has("crew:%d" % index)
-		left.add_child(_card("%s crew member" % race.name, race.traits_text, price, sold, func(): _buy_crew(race, index, price)))
+		var subtype := Refit.subtype_for_sale(run, index) if not sold else ""
+		left.add_child(_card("%s crew member" % race.name, race.traits_text, price, sold, func(): _buy_crew(race, index, price), _token(race, subtype) if subtype != "" else null))
 	right.add_child(_section("SYSTEMS"))
 	for system_id in stock.systems:
 		var def := Library.system(system_id)
@@ -134,12 +135,22 @@ func _section(text: String) -> Label:
 	return label
 
 
-func _card(title: String, detail: String, price: int, sold: bool, on_buy: Callable) -> PanelContainer:
+## The token of a crew member for sale whose race has subtypes (GV 7F), so the buyer sees the colours they come in.
+func _token(race: RaceDef, subtype: String) -> Control:
+	var token := Control.new()
+	token.custom_minimum_size = Vector2(44, 44)
+	token.draw.connect(func(): CrewPortraits.draw_token(token, race.id, "", Vector2(22, 22), 18.0, UiColours.POWER_GREEN, 2.0, subtype))
+	return token
+
+
+func _card(title: String, detail: String, price: int, sold: bool, on_buy: Callable, picture: Control = null) -> PanelContainer:
 	var card := PanelContainer.new()
 	card.add_theme_stylebox_override("panel", UiKit.box(UiColours.PANEL_LIGHT if not sold else UiColours.PANEL_DARK, UiColours.BORDER_DIM, 1, 4, 10))
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 10)
 	card.add_child(row)
+	if picture:
+		row.add_child(picture)
 	var text := VBoxContainer.new()
 	text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	text.add_child(UiKit.label(title, 18, UiColours.TEXT if not sold else UiColours.TEXT_DIM, true))

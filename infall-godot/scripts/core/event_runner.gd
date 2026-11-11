@@ -243,6 +243,7 @@ func _apply(tag: String, attrs: Dictionary, result: Dictionary) -> void:
 				var member := CrewMember.create(race, race.random_name(run.rng, ship.crew.map(func(c): return c.name)))
 				ship.add_crew(member)
 				ship.assign_stations()
+				run.dress_crew()
 				result.lines.append("+1 crew: %s (%s) joins the %s" % [member.name, race.singular, ship.name])
 		"crew_hurt":
 			var member := _any_crew()
@@ -483,5 +484,6 @@ func take_survivor(survivor: Dictionary) -> Ship:
 		return null
 	ship.add_crew(CrewMember.create(Library.race(survivor.race), survivor.name))
 	ship.assign_stations()
+	run.dress_crew()
 	run.log_book.write("survivor_joined", survivor, "%s joined the crew." % survivor.name)
 	return ship

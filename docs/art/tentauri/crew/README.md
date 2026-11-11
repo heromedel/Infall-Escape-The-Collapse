@@ -47,16 +47,15 @@ grow out, and each pair taps alternately like two hands. A tentacle pulls back i
 [`tentauri-reach-body-sheet.png`](tentauri-reach-body-sheet.png) is the body sheet embedded in the prototype:
 280 × 280, indexed by direction × tentacles out (0–3) × bob frame.
 
-## Colour variants
+## Subtypes
 
-![The six colours](review/variants.png)
+![The planned subtypes](review/subtypes.png)
 
-Colour variants were asked for by heromedel (Proposed, 2026-11-11), who picked these pairs of bell and tentacle
-colours the same day (Likely): gold with indigo, pearl with sky blue, blue with forest green, coral with teal and
-violet with gold, beside the teal reference with its lavender. `tools/variants.py` makes them from the sheet by
-swapping the bell's four tones and the tentacles' four tones for another set, so a change to the sheet carries into
-all of them. The outline, eyes, pink rim and crew laser shot stay as they are. Run it from this folder:
-`python3 tools/variants.py`.
+A Tentauri's bell and tentacles each take a colour (Decided, heromedel, 2026-11-11; GV 7F). The planned pairs
+above are heromedel's pick (Likely). The colours and the pairs are listed in the game's content,
+`infall-godot/content/races/tentauri/race.xml`, and the game recolours the SVG sheet itself by changing its colour
+codes, so there are no recoloured sheets to keep. `tools/subtypes.py` draws the planned pairs from that file for
+review: `python3 tools/subtypes.py`, from this folder.
 
 ## Files
 
@@ -66,5 +65,4 @@ all of them. The outline, eyes, pink rim and crew laser shot stay as they are. R
 | `tentauri-crew-sheet.png`, `-4x.png` | Renders at 1x and 4x |
 | `tentauri-reach-prototype.html` | Tentacle-to-system reach prototype |
 | `tentauri-reach-body-sheet.png` | The prototype's body sheet |
-| `variants/tentauri-crew-sheet-<colour>.png` | The sheet in gold, pearl, blue, coral and violet |
-| `tools/variants.py` | Makes the variants and `review/variants.png` |
+| `tools/subtypes.py` | Draws the planned subtypes as `review/subtypes.png` |

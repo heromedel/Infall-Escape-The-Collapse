@@ -53,6 +53,12 @@ func setup(player_ships: Array, enemy_ships: Array, seed_value: int) -> void:
 	for ship in enemy_ships:
 		ships.append(ship)
 		ai[ship] = ShipAI.new(ship, self)
+	# Crew with no subtype yet get one here (GV 7F), each side as a squad, from numbers of their own so the fight's
+	# numbers stay as they were.
+	var dresser := RandomNumberGenerator.new()
+	dresser.seed = seed_value
+	CrewSkins.dress(player_ships, dresser)
+	CrewSkins.dress(enemy_ships, dresser)
 	for ship in ships:
 		ship.event_sink = note
 		ship.visitors.clear()

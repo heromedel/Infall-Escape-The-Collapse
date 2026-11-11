@@ -465,7 +465,7 @@ func _draw_crew() -> void:
 			continue
 		var at := member.previous_position.lerp(member.position, alpha)
 		var ring := UiColours.POWER_GREEN if member.side == 0 else UiColours.enemy_power(member.home.faction, member.home.race)
-		var sheet := CrewArt.sheet_for(member.race, member.name)
+		var sheet := CrewArt.sheet_for(member.race, member.subtype)
 		# the glow and sparks of a teleport, for a token and for a sheet with no teleport frames of its own
 		if member.teleporting_ticks > 0 and (sheet.is_empty() or not CrewArt.has_animation(sheet, "teleport")):
 			var t := member.teleporting_ticks / float(Encounter.TELEPORT_TICKS)
@@ -601,7 +601,7 @@ func _member_badge(member: CrewMember) -> String:
 func _draw_member(canvas: CanvasItem, member: CrewMember, at: Vector2, ring: Color) -> void:
 	if member.selected:
 		canvas.draw_arc(at, TOKEN_RADIUS + 4.0, 0, TAU, 28, Color(member.selection_colour, 0.9), 2.0, true)
-	CrewPortraits.draw_token(canvas, member.race.id, member.name, at, TOKEN_RADIUS, ring, 2.2 if member.side == 0 else 2.6)
+	CrewPortraits.draw_token(canvas, member.race.id, member.name, at, TOKEN_RADIUS, ring, 2.2 if member.side == 0 else 2.6, member.subtype)
 	var fraction := member.health_fraction()
 	if fraction < 0.999 or member.selected:
 		var bar := Rect2(at + Vector2(-12, TOKEN_RADIUS + 3), Vector2(24, 4))

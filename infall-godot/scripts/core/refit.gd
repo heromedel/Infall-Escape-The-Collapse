@@ -39,6 +39,7 @@ static func apply(run: RunState, order: Dictionary) -> void:
 				ensure_stock(run)
 				run.cluster().store_stock.sold.append("crew:%d" % int(order.index))
 				var member := CrewMember.create(race, race.random_name(run.rng, target.crew.map(func(c): return c.name)))
+				member.subtype = subtype_for_sale(run, int(order.index))
 				target.add_crew(member)
 				target.assign_stations()
 				run.log_book.write("hired", {"race": race.id, "name": member.name}, "%s joined the %s." % [member.name, target.name])
@@ -110,6 +111,26 @@ static func _member(ship: Ship, order: Dictionary) -> CrewMember:
 static func repair_price(run: RunState) -> int:
 	var band := run.band()
 	return 48 if band <= 3 else (73 if band <= 6 else 97)
+
+
+## The subtype (GV 7F) the crew member in one of the store's slots will have: one nobody in the squad wears, nor
+## anyone for sale in a slot before it. Picked with the cluster's own numbers, so the store's picture, the crew
+## member bought and every machine agree. "" for a race without subtypes.
+static func subtype_for_sale(run: RunState, slot: int) -> String:
+	var stock: Dictionary = run.cluster().store_stock
+	var spoken_for := {}        # race id -> subtypes worn in the squad or by those for sale before this slot
+	var subtype := ""
+	for index in mini(slot + 1, stock.crew.size()):
+		if index < slot and stock.sold.has("crew:%d" % index):
+			continue
+		var race := Library.race(stock.crew[index])
+		if not spoken_for.has(race.id):
+			spoken_for[race.id] = CrewSkins.worn(run.squad, race)
+		var rng := RandomNumberGenerator.new()
+		rng.seed = int(run.cluster().seed) + 78 + index
+		subtype = CrewSkins.pick(race, spoken_for[race.id], rng)
+		spoken_for[race.id].append(subtype)
+	return subtype
 
 
 ## What the cluster's store sells, worked out once from the cluster's seed. Stock depends on the cluster's race and

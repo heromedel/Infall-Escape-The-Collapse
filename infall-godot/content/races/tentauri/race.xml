@@ -5,10 +5,34 @@
 	<traits>Run up to four systems in the same room at once. Learn each skill slowly.</traits>
 	<names>Oolu, Mirrel, Shoal, Pellucid, Ivri, Coralle, Nacre, Tullo, Spindle, Wisp, Plume, Aurel, Loquo, Tessaly</names>
 	<!-- Crew sprites for the Art Style setting (GV 7F); layouts are in content/crew-layouts.xml. A style with no sheet shows tokens.
-	     A sheet's variants are the same sheet in other colours; a crew member's name picks which one they wear. -->
-	<crew_art style="Facing" sheet="crew-facing.png" layout="eight-wide"
-			variants="crew-facing-gold.png, crew-facing-pearl.png, crew-facing-blue.png, crew-facing-coral.png, crew-facing-violet.png"/>
+	     A sheet kept as an SVG can be worn in other colours (the subtypes below). -->
+	<crew_art style="Facing" sheet="crew-facing.svg" layout="eight-wide"/>
 	<!-- The token is a circle cut from one frame (row, column) of the crew member's own sheet in that style:
 	     its centre and radius in the frame's pixels. -->
 	<token style="Facing" frame="1,1" centre="17.5,13" radius="11.5"/>
+	<!-- Subtypes (GV 7F): a crew member wears one colour for each part, written bell/tentacles. A part gives the
+	     sheet's own colour codes for it, lightest first, and each colour it can take, tone for tone. A squad hands
+	     out the planned subtypes first, then the other combinations, and never one somebody in it already wears. -->
+	<skin_part id="bell" sheet_tones="#e2fffa, #92e4e0, #50bac4, #2e7a96">
+		<colour id="teal" tones="#e2fffa, #92e4e0, #50bac4, #2e7a96"/>
+		<colour id="gold" tones="#fff8d6, #ffe08a, #f0b340, #b06c34"/>
+		<colour id="pearl" tones="#ffffff, #f3eef8, #cfc6e2, #8f86b6"/>
+		<colour id="blue" tones="#e0eeff, #9cc0ff, #5584e6, #3350a8"/>
+		<colour id="coral" tones="#ffeede, #ffbc9c, #f0845c, #aa4a4c"/>
+		<colour id="violet" tones="#f2e4ff, #d2a6ff, #a26ae6, #6238a8"/>
+	</skin_part>
+	<skin_part id="tentacles" sheet_tones="#c8aaff, #886ad6, #765ac4, #543c94">
+		<colour id="lavender" tones="#c8aaff, #886ad6, #765ac4, #543c94"/>
+		<colour id="indigo" tones="#a8b4ff, #6470dc, #5058c8, #363c94"/>
+		<colour id="sky" tones="#a0e0ff, #50a8e0, #3c90cc, #2c6a9c"/>
+		<colour id="forest" tones="#7cc08a, #35804e, #2a6c42, #1b4c32"/>
+		<colour id="teal" tones="#92e4e0, #50bac4, #3c9aae, #2e7a96"/>
+		<colour id="gold" tones="#ffe08a, #f0b340, #d6962e, #a86a2c"/>
+	</skin_part>
+	<subtype wears="teal/lavender"/>
+	<subtype wears="gold/indigo"/>
+	<subtype wears="pearl/sky"/>
+	<subtype wears="blue/forest"/>
+	<subtype wears="coral/teal"/>
+	<subtype wears="violet/gold"/>
 </race>

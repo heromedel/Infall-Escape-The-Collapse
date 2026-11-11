@@ -2,7 +2,11 @@
 
 The sheets are made in docs/art (each folder has its own build script). The game reads copies beside each race's
 race.xml. Run from infall-godot/ after a sheet changes:   python3 tools/import_crew_art.py
-It fails, naming the sheet and the animation, if a layout points at an empty frame or off the edge of a sheet.
+It fails, naming the sheet and the animation, if a layout points at an empty frame or off the edge of a sheet,
+or if a race's subtypes (its skin parts, colours and planned subtypes, GV 7F) don't fit its sheet.
+
+A sheet the game recolours for subtypes is copied as its SVG; its PNG render beside it in docs/art is what gets
+checked against the layout.
 """
 import os
 import shutil
@@ -18,11 +22,10 @@ SOURCES = {        # the game's copy: the sheet it is copied from
     "content/races/terran/crew-facing.png": "terran/crew-test-3/terran-drifter-sheet.png",
     "content/races/mecha/crew-top-down.png": "mecha/crew-topdown-test/mecha-topdown-sheet.png",
     "content/races/mecha/crew-facing.png": "mecha/crew/mecha-crew-sheet.png",
-    "content/races/tentauri/crew-facing.png": "tentauri/crew/tentauri-crew-sheet.png",
+    "content/races/tentauri/crew-facing.svg": "tentauri/crew/tentauri-crew-sheet.svg",
 }
-for colour in ("gold", "pearl", "blue", "coral", "violet"):        # made by docs/art/tentauri/crew/tools/variants.py
-    SOURCES["content/races/tentauri/crew-facing-%s.png" % colour] = "tentauri/crew/variants/tentauri-crew-sheet-%s.png" % colour
 FACINGS = ("down", "right", "up", "left", "any")
+failed = False
 
 
 def tabby_standing(path):
@@ -33,6 +36,36 @@ def tabby_standing(path):
     for number, view in enumerate(("down", "right", "up", "left")):
         sheet.alpha_composite(cat.image(cat.pixels(view), (0, 0, 0, 0)), (number * cat.FRAME, 0))
     sheet.save(path)
+
+
+def picture_of(race, sheet):
+    """The picture to check a race's sheet by: the sheet itself, or for an SVG its PNG render in docs/art."""
+    if not sheet.endswith(".svg"):
+        return os.path.join(GAME, "content", "races", race, sheet)
+    return os.path.join(ART, SOURCES["content/races/%s/%s" % (race, sheet)][:-len(".svg")] + ".png")
+
+
+def subtype_problems(root, race_folder):
+    """A race's skin parts must name colour codes its SVG sheets use, give every colour as many tones as the part
+    has, and plan only subtypes made of its colours."""
+    problems = []
+    parts = root.findall("skin_part")
+    sheets = [open(os.path.join(race_folder, art.get("sheet"))).read() for art in root.iter("crew_art") if art.get("sheet").endswith(".svg")]
+    if parts and not sheets:
+        problems.append("subtypes need a sheet kept as an SVG")
+    for part in parts:
+        tones = [code.strip() for code in part.get("sheet_tones").split(",")]
+        for code in tones:
+            if any(code not in sheet for sheet in sheets):
+                problems.append("%s: a sheet doesn't use %s" % (part.get("id"), code))
+        for colour in part.findall("colour"):
+            if len(colour.get("tones").split(",")) != len(tones):
+                problems.append("%s %s: needs %d tones" % (part.get("id"), colour.get("id"), len(tones)))
+    for subtype in root.findall("subtype"):
+        wears = subtype.get("wears").split("/")
+        if len(wears) != len(parts) or any(part.find("colour[@id='%s']" % colour) is None for part, colour in zip(parts, wears)):
+            problems.append("planned subtype %s isn't made of the parts' colours" % subtype.get("wears"))
+    return problems
 
 
 def layouts():
@@ -58,32 +91,34 @@ def check(sheet_path, layout, frame):
     return problems
 
 
+def report(label, what, problems):
+    global failed
+    print("%-32s %-22s %s" % (label, what, "ok" if not problems else "PROBLEMS"))
+    for problem in problems:
+        failed = True
+        print("    " + problem)
+
+
 if __name__ == "__main__":
     for target, source in SOURCES.items():
         shutil.copyfile(os.path.join(ART, source), os.path.join(GAME, target))
     tabby_standing(os.path.join(GAME, "content/races/terran/crew-facing-tabby.png"))
     frame, known = layouts()
-    failed = False
     races = os.path.join(GAME, "content", "races")
     for race in sorted(os.listdir(races)):
         root = ET.parse(os.path.join(races, race, "race.xml")).getroot()
         for art in root.iter("crew_art"):
-            variants = [name.strip() for name in art.get("variants", "").split(",") if name.strip()]
-            for sheet in [art.get("sheet")] + variants:
-                sheet_path = os.path.join(races, race, sheet)
-                if art.get("layout") not in known:
-                    problems = ["no layout called " + art.get("layout")]
-                elif not os.path.exists(sheet_path):
-                    problems = ["the sheet is missing"]
-                else:
-                    problems = check(sheet_path, known[art.get("layout")], frame)
-                label = "%s, %s%s" % (race, art.get("style"), ", " + art.get("species") if art.get("species") else "")
-                print("%-32s %-26s %s" % (label, sheet, "ok" if not problems else "PROBLEMS"))
-                for problem in problems:
-                    failed = True
-                    print("    " + problem)
-        for token in root.iter("token"):
-            if not any(art.get("style") == token.get("style") for art in root.iter("crew_art")):
-                failed = True
-                print("%-32s PROBLEMS\n    the token is cut from a %s sheet the race doesn't have" % (race + ", token", token.get("style")))
+            picture = picture_of(race, art.get("sheet"))
+            if art.get("layout") not in known:
+                problems = ["no layout called " + art.get("layout")]
+            elif not os.path.exists(picture):
+                problems = ["the sheet is missing"]
+            else:
+                problems = check(picture, known[art.get("layout")], frame)
+            label = "%s, %s%s" % (race, art.get("style"), ", " + art.get("species") if art.get("species") else "")
+            report(label, art.get("sheet"), problems)
+        if root.find("token") is not None and not any(art.get("style") == root.find("token").get("style") for art in root.iter("crew_art")):
+            report(race + ", token", "", ["the token is cut from a %s sheet the race doesn't have" % root.find("token").get("style")])
+        if root.find("skin_part") is not None:
+            report(race + ", subtypes", "%d planned" % len(root.findall("subtype")), subtype_problems(root, os.path.join(races, race)))
     sys.exit(1 if failed else 0)

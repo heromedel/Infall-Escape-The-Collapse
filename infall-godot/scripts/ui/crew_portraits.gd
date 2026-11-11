@@ -4,17 +4,18 @@ extends RefCounted
 ## animated sprites. The GATOS Species setting (GV 7A, 7D) chooses the GATOS faces (mercenary humans, or the
 ## approved pixel-art cat head), the HalfMechs' (a helmet, or dark cyborg kittens) and the Senti's (a hologram, or a
 ## holographic cat). A race can instead have its token cut from its crew sprite sheet (race.xml's <token>), as the
-## Tentauri do. A crew member's look comes from their name, so it stays the same all run.
+## Tentauri do, in the colours of the crew member's subtype (GV 7F). A drawn face's look comes from the crew member's
+## name, so it stays the same all run.
 
 const CUT_FILLS := 0.92      # a token cut from a sheet reaches the ring; a drawn face sits inside it
 const CUT_POINTS := 32
 
 
 
-static func draw_token(canvas: CanvasItem, race_id: String, seed_text: String, centre: Vector2, radius: float, ring: Color, rim_width: float = 2.0) -> void:
+static func draw_token(canvas: CanvasItem, race_id: String, seed_text: String, centre: Vector2, radius: float, ring: Color, rim_width: float = 2.0, subtype: String = "") -> void:
 	canvas.draw_circle(centre + Vector2(0, radius * 0.12), radius * 1.02, Color(0, 0, 0, 0.45))
 	canvas.draw_circle(centre, radius, Color("#1a2333"))
-	var cut := CrewArt.token_for(Library.race(race_id), seed_text)
+	var cut := CrewArt.token_for(Library.race(race_id), subtype)
 	if cut.is_empty():
 		draw_face(canvas, race_id, seed_text, centre, radius * 0.86)
 	else:

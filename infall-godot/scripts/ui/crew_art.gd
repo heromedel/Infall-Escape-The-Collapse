@@ -13,52 +13,69 @@ const FACINGS := ["down", "right", "up", "left"]
 static var frame := 35.0                 # a frame's side, the size of a deck tile
 static var _layouts: Dictionary = {}     # layout id -> {animation id -> {"ms": float, facing -> [row, column, frames]}}
 static var _loaded := false
+static var _recoloured: Dictionary = {}  # "sheet path subtype" -> an SVG sheet's picture in that subtype's colours
 
 
 static func style() -> String:
 	return Settings.get_value("art_style", "Top Down")
 
 
-## The sheet a crew member is drawn from in the chosen style: {"texture", "layout"}, or {} for tokens.
-static func sheet_for(race: RaceDef, crew_name: String) -> Dictionary:
+## The sheet a crew member is drawn from in the chosen style, in their subtype's colours: {"texture", "layout"},
+## or {} for tokens.
+static func sheet_for(race: RaceDef, subtype: String) -> Dictionary:
 	var wanted := style()
-	return {} if wanted == "Tokens" else _sheet(race, wanted, crew_name)
+	return {} if wanted == "Tokens" else _sheet(race, wanted, subtype)
 
 
 ## A token cut from the crew member's own sheet, for a race whose token is its sprite's face:
 ## {"texture", "centre", "radius"}, the circle to show in the sheet's pixels. {} for a race whose face is drawn.
-static func token_for(race: RaceDef, crew_name: String) -> Dictionary:
+static func token_for(race: RaceDef, subtype: String) -> Dictionary:
 	if race.token.is_empty():
 		return {}
-	var sheet := _sheet(race, race.token.style, crew_name)
+	var sheet := _sheet(race, race.token.style, subtype)
 	if sheet.is_empty():
 		return {}
 	var corner := Vector2(race.token.column - 1, race.token.row - 1) * frame
 	return {"texture": sheet.texture, "centre": corner + race.token.centre, "radius": race.token.radius}
 
 
-## A race's sheet in one style, in the colour variant the crew member's name picks, so they wear it all run.
-## A sheet for one GATOS species (GV 7A) is used only with that species; a sheet that names none suits the
-## default, Terrans, and any race the species setting doesn't change.
-static func _sheet(race: RaceDef, wanted: String, crew_name: String) -> Dictionary:
+## A race's sheet in one style. A sheet for one GATOS species (GV 7A) is used only with that species; a sheet that
+## names none suits the default, Terrans, and any race the species setting doesn't change.
+static func _sheet(race: RaceDef, wanted: String, subtype: String) -> Dictionary:
 	var species: String = Settings.get_value("gatos_species", "Terrans") if race.id == "terran" else ""
 	for art in race.crew_art:
 		var for_species: String = art.species if not String(art.species).is_empty() else ("Terrans" if race.id == "terran" else "")
 		if art.style != wanted or for_species != species:
 			continue
 		var layout: Dictionary = _layout(art.layout)
-		var texture := Library.texture(art.sheets[_variant(race, crew_name) % art.sheets.size()])
+		var texture := _texture(art.sheet, race, subtype)
 		if texture == null or layout.is_empty():
 			return {}
 		return {"texture": texture, "layout": layout}
 	return {}
 
 
-## Which colour variant a name wears. The race's own names take the variants in turn, so a crew shows a spread of
-## them; any other name gets one from its letters.
-static func _variant(race: RaceDef, crew_name: String) -> int:
-	var listed := race.names.find(crew_name)
-	return listed if listed >= 0 else absi(hash(crew_name))
+## A sheet's picture. A sheet kept as an SVG is drawn from its text, with its colour codes changed to the
+## subtype's (GV 7F), once for each subtype worn.
+static func _texture(path: String, race: RaceDef, subtype: String) -> Texture2D:
+	if path.get_extension() != "svg":
+		return Library.texture(path)
+	var key := path + " " + subtype
+	if not _recoloured.has(key):
+		var text := FileAccess.get_file_as_string(path)
+		var changes := CrewSkins.colour_changes(race, subtype)
+		var codes := changes.keys()
+		for index in codes.size():       # in two steps, so a code one part gives up can be another part's new one
+			text = text.replace(codes[index], "{colour %d}" % index)
+		for index in codes.size():
+			text = text.replace("{colour %d}" % index, changes[codes[index]])
+		var image := Image.new()
+		if text.is_empty() or image.load_svg_from_string(text) != OK:
+			_recoloured[key] = null
+		else:
+			image.fix_alpha_edges()      # so the see-through pixels beside the sprite don't show as a pale fringe
+			_recoloured[key] = ImageTexture.create_from_image(image)
+	return _recoloured[key]
 
 
 static func has_animation(sheet: Dictionary, animation: String) -> bool:

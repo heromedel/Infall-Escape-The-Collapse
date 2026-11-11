@@ -107,10 +107,13 @@ Reference: heromedel's sheet, `tentauri/crew/`.
 - **Using a Tentauri system — Proposed (2026-10-25):** a grasping animation instead of typing (`docs/ideas.md`).
 - **Token — Decided (heromedel, 2026-11-11):** the round token is cut from the sheet's standing frame: the whole
   bell, the pink rim and the top of the tentacles.
-- **Colour variants — Proposed (heromedel, 2026-11-11):** the sheet in other colours, so crew can be told apart.
-  - **The colours — Likely (heromedel, 2026-11-11):** bell with tentacles: gold with indigo, pearl with sky blue,
-    blue with forest green, coral with teal and violet with gold, beside the teal reference with its lavender.
-    The outline, eyes and pink rim stay (`tentauri/crew/variants/`, `tentauri/crew/review/variants.png`).
+- **Subtypes — Decided (heromedel, 2026-11-11):** a Tentauri's bell and tentacles each take a colour, so crew can
+  be told apart (GV 7F). The outline, eyes and pink rim stay.
+  - **Planned subtypes — Likely (heromedel, 2026-11-11):** bell with tentacles: teal with lavender (the
+    reference), gold with indigo, pearl with sky blue, blue with forest green, coral with teal, violet with gold
+    (`tentauri/crew/review/subtypes.png`).
+  - Bell colours: teal, gold, pearl, blue, coral, violet. Tentacle colours: lavender, indigo, sky, forest, teal,
+    gold. Any bell can go with any tentacles once the planned ones are worn.
 
 ## Terran and Tabby crew
 

@@ -114,6 +114,7 @@ func execute(line: String) -> void:
 			var race := Library.race(words[1] if words.size() > 1 else "terran")
 			var ship: Ship = run.living_ships()[0]
 			ship.add_crew(CrewMember.create(race, race.random_name(run.rng, [])))
+			run.dress_crew()
 			ship.assign_stations()
 			main.arrive_at_cluster()
 			_say("Added a %s crew member." % race.singular)

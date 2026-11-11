@@ -353,7 +353,7 @@ func _draw_crew_list(ship: Ship, at: Vector2) -> void:
 		var rect := Rect2(at.x, y, 290, 50)
 		var chosen := screen.selected_crew.has(member)   # this player's selection, not another's
 		UiKit.draw_frame(self, rect, UiColours.PANEL_LIGHT if chosen else _panel(), UiColours.POWER_GREEN if chosen else UiColours.BORDER_DIM, 6.0)
-		CrewPortraits.draw_token(self, member.race.id, member.name, rect.position + Vector2(22, 25), 16.0, UiColours.POWER_GREEN)
+		CrewPortraits.draw_token(self, member.race.id, member.name, rect.position + Vector2(22, 25), 16.0, UiColours.POWER_GREEN, 2.0, member.subtype)
 		UiKit.draw_text(self, rect.position + Vector2(46, 20), member.display_name(), 16, UiColours.TEXT, UiKit.font_bold())
 		if member.side == 0 and member.rank_due() >= 0:
 			var mark := rect.position + Vector2(rect.size.x - 12, 12)   # a gold diamond: a promotion is due
