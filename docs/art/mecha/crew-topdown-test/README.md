@@ -32,7 +32,9 @@ Mecha crew palette (`docs/art/palette.md`):
   heromedel had it extended down two pixels with the lights left where they were (2026-11-11). The back view has
   the same torso.
 - The feet are two pixels long and stand apart from the torso and from each other, each with its own outline
-  (heromedel, 2026-11-11). A stepping foot reaches a pixel further and the other draws in a pixel.
+  (heromedel, 2026-11-11). A stepping foot reaches a pixel further and the other draws in a pixel. Each
+  foot is shaded from the top left (one lit pixel, armour, shadow at the bottom right), not in columns, which read
+  as vertical stripes.
 - **Spikes and arms at different angles (heromedel, 2026-11-11):** the spike leans out from the plate's outer
   corner and the claw hangs straight from under its middle. The first version of this test hung each claw straight
   under a blade that stood straight above it, and on a still frame the two read as one stacked piece.
