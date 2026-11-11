@@ -4,6 +4,11 @@
 	<description>Octojellies: quiet, diplomatic beings who travel in pairs and force their way wherever they wish to go.</description>
 	<traits>Run up to four systems in the same room at once. Learn each skill slowly.</traits>
 	<names>Oolu, Mirrel, Shoal, Pellucid, Ivri, Coralle, Nacre, Tullo, Spindle, Wisp, Plume, Aurel, Loquo, Tessaly</names>
-	<!-- Crew sprites for the Art Style setting (GV 7F); layouts are in content/crew-layouts.xml. A style with no sheet shows tokens. -->
-	<crew_art style="Facing" sheet="crew-facing.png" layout="eight-wide"/>
+	<!-- Crew sprites for the Art Style setting (GV 7F); layouts are in content/crew-layouts.xml. A style with no sheet shows tokens.
+	     A sheet's variants are the same sheet in other colours; a crew member's name picks which one they wear. -->
+	<crew_art style="Facing" sheet="crew-facing.png" layout="eight-wide"
+			variants="crew-facing-gold.png, crew-facing-pearl.png, crew-facing-blue.png, crew-facing-coral.png, crew-facing-violet.png"/>
+	<!-- The token is a circle cut from one frame (row, column) of the crew member's own sheet in that style:
+	     its centre and radius in the frame's pixels. -->
+	<token style="Facing" frame="1,1" centre="17.5,13" radius="11.5"/>
 </race>

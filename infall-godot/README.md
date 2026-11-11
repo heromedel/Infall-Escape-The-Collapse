@@ -127,10 +127,13 @@ The Art Style setting shows a token for any race with no sheet in the chosen sty
 | GATOS as Terrans | The drifter | The drifter |
 | GATOS as Tabbys | None | Standing only, in four directions: no animations |
 | Mecha | The suit | The older crew sheet |
-| Tentauri | None | The crew sheet |
+| Tentauri | None | The crew sheet, in six colours |
 | Azurethea, Malphen, Lykario, Senti-GPH | None | None |
 
 - Every Terran is the same drifter until there are more designs.
+- The Tentauri's token is cut from their Facing sheet, in the crew member's own colour. The other races' tokens
+  are still drawn faces.
+- Two Tentauri on one ship can wear the same colour: the colour comes from the name alone.
 - The top-down drifter's death is a bad placeholder (heromedel, 2026-11-11), to be made again from scratch.
 - The game does not play a death or a clone-bay animation yet, and the sheets' extra rows (the Tentauri typing at
   several systems, the HalfMech's clamp-on frames) are not used.
@@ -151,6 +154,7 @@ The Art Style setting shows a token for any race with no sheet in the chosen sty
 - `tools/make_audio.py` remakes the sounds and music.
 - `tools/import_crew_art.py` copies the crew sprite sheets from `docs/art` into `content/races` and checks each
   against its layout in `content/crew-layouts.xml`. Run it after a sheet changes, then let Godot import the files.
+  The Tentauri colour variants are made first, by `docs/art/tentauri/crew/tools/variants.py`.
 - `tools/battle_view_test.tscn` takes `ART_STYLE` and `SPECIES` to set those two settings, and `ZOOM` (with
   `ZOOM_ENEMY`) for a close-up of a deck.
 - The admin console: press the backtick key (`) in game; `help` lists its commands.

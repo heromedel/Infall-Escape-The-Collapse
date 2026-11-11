@@ -105,6 +105,12 @@ Reference: heromedel's sheet, `tentauri/crew/`.
   wavy lines (one pixel, plus a shade pixel), never wedges or triangles. Two long tentacles always hang; the eight
   short ones type, shoot, punch and reach out to other systems in the room (the reach prototype).
 - **Using a Tentauri system — Proposed (2026-10-25):** a grasping animation instead of typing (`docs/ideas.md`).
+- **Token — Decided (heromedel, 2026-11-11):** the round token is cut from the sheet's standing frame: the whole
+  bell, the pink rim and the top of the tentacles.
+- **Colour variants — Proposed (heromedel, 2026-11-11):** the sheet in other colours, so crew can be told apart.
+  - **The colours — Ai-Generated-Proposal (2026-11-11):** gold, pearl, blue, coral and violet beside the teal
+    reference. Only the bell changes; the outline, eyes, pink rim and lavender tentacles stay, except that the
+    violet one takes teal tentacles (`tentauri/crew/variants/`, `tentauri/crew/review/variants.png`).
 
 ## Terran and Tabby crew
 

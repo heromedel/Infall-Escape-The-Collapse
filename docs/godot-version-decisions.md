@@ -177,6 +177,13 @@ anything Claude added tagged Ai-Generated-Proposal.
   - How it is built: a race names its sheets in its `race.xml` (`<crew_art style="…" sheet="…" layout="…"/>`), and
     `content/crew-layouts.xml` says where each animation's frames sit on a sheet. Frames are 35 pixels, the size of
     a deck tile, so a sprite fills its tile one pixel for one.
+  - **Tokens from sprites — Decided for the Tentauri (heromedel, 2026-11-11):** a race's token can be a circle cut
+    from one frame of its sheet (`<token style="…" frame="row,column" centre="x,y" radius="…"/>` in `race.xml`),
+    in place of a drawn face. The Tentauri's is the bell of the Facing sheet's standing frame.
+  - **Colour variants — Proposed (heromedel, 2026-11-11):** a sheet can list the same sheet in other colours
+    (`variants="…"` on `<crew_art>`). A crew member's name picks one, for the sprite and the token alike; the
+    race's own names take them in turn. The Tentauri have six (the five new colours are an Ai-Generated-Proposal,
+    `docs/art/style-guides.md`).
 
 ## 8. Weapons and Systems
 
@@ -328,3 +335,4 @@ All built in the build of 2026-11-05.
 | 2026-11-05 | The 2026-11-05 build: co-op fixes, the real battlefield, battlesuit air, the player setup menu with assignments, settings tabs. |
 | 2026-11-09 | Ship status cards (GV 14H) proposed and put on the Next build list. |
 | 2026-11-11 | The Art Style setting, Top Down > Facing > Tokens, with Top Down the default (GV 7F); built the same day. |
+| 2026-11-11 | Tentauri tokens are cut from the Facing sheet's standing frame, and the sheet has colour variants (GV 7F). |

@@ -47,6 +47,16 @@ grow out, and each pair taps alternately like two hands. A tentacle pulls back i
 [`tentauri-reach-body-sheet.png`](tentauri-reach-body-sheet.png) is the body sheet embedded in the prototype:
 280 × 280, indexed by direction × tentacles out (0–3) × bob frame.
 
+## Colour variants
+
+![The six colours](review/variants.png)
+
+Colour variants were asked for by heromedel (Proposed, 2026-11-11); the five colours are an Ai-Generated-Proposal.
+`tools/variants.py` makes them from the sheet by swapping the bell's four tones for another set, so a change to the
+sheet carries into all of them. The outline, eyes, pink rim, crew laser shot and lavender tentacles stay as they
+are; the violet one takes teal tentacles, since a violet bell would be lost against lavender. Run it from this
+folder: `python3 tools/variants.py`.
+
 ## Files
 
 | File | What |
@@ -55,3 +65,5 @@ grow out, and each pair taps alternately like two hands. A tentacle pulls back i
 | `tentauri-crew-sheet.png`, `-4x.png` | Renders at 1x and 4x |
 | `tentauri-reach-prototype.html` | Tentacle-to-system reach prototype |
 | `tentauri-reach-body-sheet.png` | The prototype's body sheet |
+| `variants/tentauri-crew-sheet-<colour>.png` | The sheet in gold, pearl, blue, coral and violet |
+| `tools/variants.py` | Makes the variants and `review/variants.png` |

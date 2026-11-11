@@ -465,7 +465,7 @@ func _draw_crew() -> void:
 			continue
 		var at := member.previous_position.lerp(member.position, alpha)
 		var ring := UiColours.POWER_GREEN if member.side == 0 else UiColours.enemy_power(member.home.faction, member.home.race)
-		var sheet := CrewArt.sheet_for(member.race)
+		var sheet := CrewArt.sheet_for(member.race, member.name)
 		# the glow and sparks of a teleport, for a token and for a sheet with no teleport frames of its own
 		if member.teleporting_ticks > 0 and (sheet.is_empty() or not CrewArt.has_animation(sheet, "teleport")):
 			var t := member.teleporting_ticks / float(Encounter.TELEPORT_TICKS)

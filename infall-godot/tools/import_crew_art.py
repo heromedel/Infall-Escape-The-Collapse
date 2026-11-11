@@ -20,6 +20,8 @@ SOURCES = {        # the game's copy: the sheet it is copied from
     "content/races/mecha/crew-facing.png": "mecha/crew/mecha-crew-sheet.png",
     "content/races/tentauri/crew-facing.png": "tentauri/crew/tentauri-crew-sheet.png",
 }
+for colour in ("gold", "pearl", "blue", "coral", "violet"):        # made by docs/art/tentauri/crew/tools/variants.py
+    SOURCES["content/races/tentauri/crew-facing-%s.png" % colour] = "tentauri/crew/variants/tentauri-crew-sheet-%s.png" % colour
 FACINGS = ("down", "right", "up", "left", "any")
 
 
@@ -64,17 +66,24 @@ if __name__ == "__main__":
     failed = False
     races = os.path.join(GAME, "content", "races")
     for race in sorted(os.listdir(races)):
-        for art in ET.parse(os.path.join(races, race, "race.xml")).getroot().iter("crew_art"):
-            sheet_path = os.path.join(races, race, art.get("sheet"))
-            if art.get("layout") not in known:
-                problems = ["no layout called " + art.get("layout")]
-            elif not os.path.exists(sheet_path):
-                problems = ["the sheet is missing"]
-            else:
-                problems = check(sheet_path, known[art.get("layout")], frame)
-            label = "%s, %s%s" % (race, art.get("style"), ", " + art.get("species") if art.get("species") else "")
-            print("%-32s %-22s %s" % (label, art.get("sheet"), "ok" if not problems else "PROBLEMS"))
-            for problem in problems:
+        root = ET.parse(os.path.join(races, race, "race.xml")).getroot()
+        for art in root.iter("crew_art"):
+            variants = [name.strip() for name in art.get("variants", "").split(",") if name.strip()]
+            for sheet in [art.get("sheet")] + variants:
+                sheet_path = os.path.join(races, race, sheet)
+                if art.get("layout") not in known:
+                    problems = ["no layout called " + art.get("layout")]
+                elif not os.path.exists(sheet_path):
+                    problems = ["the sheet is missing"]
+                else:
+                    problems = check(sheet_path, known[art.get("layout")], frame)
+                label = "%s, %s%s" % (race, art.get("style"), ", " + art.get("species") if art.get("species") else "")
+                print("%-32s %-26s %s" % (label, sheet, "ok" if not problems else "PROBLEMS"))
+                for problem in problems:
+                    failed = True
+                    print("    " + problem)
+        for token in root.iter("token"):
+            if not any(art.get("style") == token.get("style") for art in root.iter("crew_art")):
                 failed = True
-                print("    " + problem)
+                print("%-32s PROBLEMS\n    the token is cut from a %s sheet the race doesn't have" % (race + ", token", token.get("style")))
     sys.exit(1 if failed else 0)

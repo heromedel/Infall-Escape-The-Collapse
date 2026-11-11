@@ -23,7 +23,9 @@ var heals_slowly: bool = false
 var crew_price: int = 1089
 var portrait: String = "token"
 var tech: String = "mechanical"
-var crew_art: Array = []           # sprite sheets for the Art Style setting (GV 7F): {style, species, sheet, layout}
+var crew_art: Array = []           # sprite sheets for the Art Style setting (GV 7F): {style, species, sheets, layout};
+								   # sheets are the sheet and then its colour variants
+var token: Dictionary = {}         # a token cut from a sheet: {style, row, column, centre, radius}; empty for a drawn face
 var names: PackedStringArray = []
 var species_names := {}            # GATOS Species setting value -> names only that species uses (GV 7A)
 var description: String = ""
@@ -53,8 +55,17 @@ static func from_xml(node: XmlTree, folder: String = "") -> RaceDef:
 	def.portrait = node.get_attr("portrait", "token")
 	def.tech = node.get_attr("tech", "mechanical")
 	for art_node in node.all("crew_art"):
+		var sheets: Array = [folder.path_join(art_node.get_attr("sheet"))]
+		for variant in art_node.get_attr("variants").split(",", false):
+			sheets.append(folder.path_join(variant.strip_edges()))
 		def.crew_art.append({"style": art_node.get_attr("style"), "species": art_node.get_attr("species"),
-				"sheet": folder.path_join(art_node.get_attr("sheet")), "layout": art_node.get_attr("layout")})
+				"sheets": sheets, "layout": art_node.get_attr("layout")})
+	var token_node := node.first("token")
+	if token_node:
+		var cell := token_node.get_attr("frame", "1,1").split(",")
+		var centre := token_node.get_attr("centre").split(",")
+		def.token = {"style": token_node.get_attr("style"), "row": int(cell[0]), "column": int(cell[1]),
+				"centre": Vector2(float(centre[0]), float(centre[1])), "radius": token_node.get_float("radius", 11.5)}
 	for names_node in node.all("names"):
 		var species := names_node.get_attr("species")
 		var into: PackedStringArray = []
