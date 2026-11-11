@@ -23,7 +23,8 @@ PALETTE = {                      # the Mecha crew palette, docs/art/palette.md
     # the pilot, from heromedel's HalfMech pilot art (docs/art/mecha/pilot)
     "H": "#4A2C5E", "I": "#7A4A9A",      # hair, hair light
     "S": "#F0CDB8", "T": "#C99A8C",      # skin, skin shade
-    "L": "#C77DFF",                      # implant light
+    "L": "#C77DFF",                      # implant light; also the bright purple of a power pulse
+    "P": "#9370BF", "Q": "#7DB792",      # a pulse turning from purple to power green (docs/art/palette.md)
 }
 
 
@@ -271,47 +272,63 @@ def laser_shot():
     return frame([(["qvq"] + ["vwv"] * 9 + ["qvq"], (0, 0))], (16, 12))
 
 
-# --- Powering a console: both claws clamped on, and staying clamped, pulsing (heromedel, 2026-11-11) --------------
-# Four frames that loop while he holds on: the clamps at rest, the wrist bands flashing pale and spreading, the light
-# running down the claws, and the light landing at the tips in power green, so it works on any race's console.
+# --- Powering a console: both claws clamp on and stay clamped, pulsing (heromedel, 2026-11-11) -------------------
+# Eight frames. Two to clamp on: he reaches with the clamps open, then sets them on the console. Six that loop while
+# he holds: the clamps closed; the wrist bands flare bright purple; the light runs down into the claws; at the tips
+# it begins to turn; it lands, green, on the console; the green lingers there. So it works on any race's console.
 
-def claw(right, pulse=0):
+POWER_FRAMES = 8
+
+
+def power_claw(right, stage):
     body = "oeaao" if right else "oeeao"
-    return [["onvno", body, ".oeo.", "..o.."],
-            ["ovjvo", body, ".oeo.", "..o.."],
-            ["onvno", "ovvvo", ".ovo.", "..o.."],
-            ["onvno", body, ".ogo.", "..g.."]][pulse]
+    return [CLAW_OPEN,
+            CLAW_OPEN,
+            ["onvno", body, ".oeo.", "..o.."],
+            ["ovLvo", body, ".oeo.", "..o.."],
+            ["onvno", "ovLvo", ".ovo.", "..o.."],
+            ["onvno", body, ".oPo.", "..o.."],
+            ["onvno", body, ".oQo.", "..g.."],
+            ["onvno", body, ".oeo.", "..g.."]][stage]
 
 
-def side_claw_pulsing(near, pulse, reach):
-    tones = ("e", "e", "a") if near else ("e", "a", "a")
-    rows = [[".oo..", "on" + tones[0] + "o.", "kve" + tones[1] + "o", "on" + tones[2] + "o.", ".oo.."],
-            [".oo..", "ov" + tones[0] + "o.", "kje" + tones[1] + "o", "ov" + tones[2] + "o.", ".oo.."],
-            [".oo..", "onvo.", "kvvvo", "onvo.", ".oo.."],
-            [".oo..", "on" + tones[0] + "o.", "kvegg", "on" + tones[2] + "o.", ".oo.."]][pulse]
+def side_power_claw(near, stage, reach):
+    if stage < 2:
+        return side_claw(near, reach, True)
+    a, b, c = ("e", "e", "a") if near else ("e", "a", "a")
+    rows = {2: [".oo..", "on" + a + "o.", "kve" + b + "o", "on" + c + "o.", ".oo.."],
+            3: [".oo..", "ov" + a + "o.", "kLe" + b + "o", "ov" + c + "o.", ".oo.."],
+            4: [".oo..", "onvo.", "kvLvo", "onvo.", ".oo.."],
+            5: [".oo..", "on" + a + "o.", "kvePo", "on" + c + "o.", ".oo.."],
+            6: [".oo..", "on" + a + "o.", "kveQg", "on" + c + "o.", ".oo.."],
+            7: [".oo..", "on" + a + "o.", "kve" + b + "g", "on" + c + "o.", ".oo.."]}[stage]
     return [arm * reach + row for arm, row in zip(".oko.", rows)]
 
 
 def power_down():
-    # both shoulders forward, both arms a row longer and a pixel in, onto the console in front of him
-    return [figure(left_plate=1, right_plate=1, left_arm=([ARM, ARM] + claw(False, pulse), 1, 1),
-                   right_arm=([ARM, ARM] + claw(True, pulse), -1, 1)) for pulse in range(4)]
+    frames = []
+    for stage in range(POWER_FRAMES):
+        reach, across = ([ARM], 0) if stage == 0 else ([ARM, ARM], 1)      # then a row longer and a pixel in
+        frames.append(figure(left_plate=1, right_plate=1, left_arm=(reach + power_claw(False, stage), across, 1),
+                             right_arm=(reach + power_claw(True, stage), -across, 1)))
+    return frames
 
 
 def power_up():
     # from behind, both claws rise from under the far edges of the plates, between the helm and the spikes
     frames = []
-    for pulse in range(4):
-        left = upside_down([ARM, ARM, ARM] + claw(False, pulse))
-        right = upside_down([ARM, ARM, ARM] + claw(True, pulse))
-        frames.append(figure(True, left_plate=-1, right_plate=-1, left_arm=(left, 1, -len(left) - 6),
-                             right_arm=(right, -1, -len(right) - 6)))
+    for stage in range(POWER_FRAMES):
+        reach, across = ([ARM, ARM], 0) if stage == 0 else ([ARM, ARM, ARM], 1)
+        left = upside_down(reach + power_claw(False, stage))
+        right = upside_down(reach + power_claw(True, stage))
+        frames.append(figure(True, left_plate=-1, right_plate=-1, left_arm=(left, across, -len(left) - 6),
+                             right_arm=(right, -across, -len(right) - 6)))
     return frames
 
 
 def power_right():
-    return [side(1, 1, (side_claw_pulsing(False, pulse, 2), 0, 0), (side_claw_pulsing(True, pulse, 2), 0, 0))
-            for pulse in range(4)]
+    return [side(1, 1, (side_power_claw(False, stage, 1 if stage == 0 else 2), 0, 0),
+                 (side_power_claw(True, stage, 1 if stage == 0 else 2), 0, 0)) for stage in range(POWER_FRAMES)]
 
 
 def power_left():
@@ -332,44 +349,36 @@ def repair():
 
 
 # --- The clone bay: the suit is put together, and its pilot jumps in (heromedel, 2026-11-11) ----------------------
-# The one glimpse of a HalfMech out of the suit. The suit goes together empty, in his race's power colour toned down
-# with a bright edge that fades (the drifter's clone, in Mecha purple): feet and torso, then plates and claws, then
-# the helm. Then it stands in its own colours, unlit, and the pilot shows above the back of it for one frame, mid
-# jump: purple hair, pale skin, dark clothes, one implant light, drawn in the top-down build at about half a Terran's
-# size. Then she is in, the lights flash on, and he stands.
+# The one glimpse of a HalfMech out of the suit. Eight frames. The suit is built, not grown: it goes together in its
+# own colours, unlit, a piece at a time (feet and torso, shoulder plates, arms and claws, helm), and each piece wears
+# a bright purple edge only on the frame it arrives. Then the pilot shows above the back of it, mid jump, her
+# ponytail flying out to one side, and drops in. Then the lights come up, dim purple first, and he stands.
+# She is a girl (heromedel): long hair in a ponytail is what says so at this size. Her colours are those of
+# heromedel's HalfMech pilot art: purple hair, pale skin, dark clothes, one implant light.
 
-PILOT = [".o.......o.",
-         "oSo.ooo.oSo",
-         "okooHIHooko",
-         "okkoHHHokko",
-         ".oooSSTooo.",
-         "...oknLo...",
-         "....ooo...."]
-PILOT_AT = (8, -1)                       # behind the helm, her head and raised fists clear of its top
-CLONE_TONES = ("#24143A", "#37205A", "#4E2E80", "#6A42A6")       # power purple, muted, dark to light
-CLONE_EDGES = ("#AA28EB", "#7C24B4", "#3A1560")                  # the edge on the first three frames, fading
-
-
-def _colour(code):
-    return tuple(int(code[i:i + 2], 16) for i in (1, 3, 5)) + (255,)
+PILOT = [".......oo..",
+         "......oIHo.",          # her ponytail, swinging out to one side
+         ".....oIHo..",
+         "...oooLoo..",          # a bright tie where it leaves her head
+         "..oHHIHHo..",
+         "..oHIHHHo..",
+         ".ooTSSSToo.",
+         ".oSknnLkSo.",          # narrow shoulders, a hand at each side, her implant light
+         "..ooooooo.."]
+PILOT_IN = PILOT[:5]                          # dropping in: only her ponytail and the top of her head still show
+PILOT_AT, PILOT_IN_AT = (8, -4), (8, 0)       # behind the helm: first clear of its top, then half behind it
 
 
-def toned(image, edge):
-    """A frame in the muted clone tones, its outline in the edge colour."""
-    out = Image.new("RGBA", image.size, (0, 0, 0, 0))
-    line = rgba("o")
-    for y in range(image.height):
-        for x in range(image.width):
-            pixel = image.getpixel((x, y))
-            if not pixel[3]:
-                continue
-            light = (pixel[0] * 3 + pixel[1] * 4 + pixel[2]) // 8
-            out.putpixel((x, y), _colour(edge) if pixel == line else _colour(CLONE_TONES[min(3, light // 30)]))
-    return out
+def unlit(rows):
+    return [row.replace("v", "k").replace("q", "k") for row in rows]
+
+
+def arriving(rows):
+    return [row.replace("o", "v") for row in unlit(rows)]
 
 
 def recoloured(image, change):
-    """A frame with some palette colours swapped, e.g. the lights put out or flashing."""
+    """A frame with some palette colours swapped, e.g. the lights dim."""
     swap = {rgba(old): rgba(new) for old, new in change.items()}
     out = image.copy()
     for y in range(image.height):
@@ -381,19 +390,30 @@ def recoloured(image, change):
 
 
 def clone():
-    arms = [([ARM] + CLAW_LEFT, ARM_LEFT_AT), ([ARM] + CLAW_RIGHT, ARM_RIGHT_AT)]
-    feet = [(FOOT_LEFT, FOOT_LEFT_AT), (FOOT_RIGHT, FOOT_RIGHT_AT)]
-    plates = [(PLATE_LEFT, PLATE_LEFT_AT), (PLATE_RIGHT, PLATE_RIGHT_AT)]
-    torso, helm = [(TORSO, TORSO_AT)], [(HELM, HELM_AT)]
-    suit = arms + feet + plates + torso + helm
-    unlit = {"v": "k", "q": "k"}
-    pilot = frame([(PILOT, PILOT_AT)], AT)
-    pilot.alpha_composite(recoloured(frame(suit, AT), unlit))
-    return [toned(frame(feet + torso, AT), CLONE_EDGES[0]),
-            toned(frame(arms + feet + plates + torso, AT), CLONE_EDGES[1]),
-            toned(frame(suit, AT), CLONE_EDGES[2]),
-            pilot,
-            recoloured(frame(suit, AT), {"v": "j"}),
+    pieces = {"arms": [([ARM] + CLAW_LEFT, ARM_LEFT_AT), ([ARM] + CLAW_RIGHT, ARM_RIGHT_AT)],
+              "feet": [(FOOT_LEFT, FOOT_LEFT_AT), (FOOT_RIGHT, FOOT_RIGHT_AT)],
+              "plates": [(PLATE_LEFT, PLATE_LEFT_AT), (PLATE_RIGHT, PLATE_RIGHT_AT)],
+              "torso": [(TORSO, TORSO_AT)],
+              "helm": [(HELM, HELM_AT)]}
+    order = ("arms", "feet", "plates", "torso", "helm")          # back to front, as in every other frame
+
+    def built(have, new=(), behind=()):
+        parts = list(behind)
+        for name in order:
+            if name in new:
+                parts += [(arriving(rows), at) for rows, at in pieces[name]]
+            elif name in have:
+                parts += [(unlit(rows), at) for rows, at in pieces[name]]
+        return frame(parts, AT)
+
+    whole = order
+    return [built((), ("feet", "torso")),
+            built(("feet", "torso"), ("plates",)),
+            built(("feet", "torso", "plates"), ("arms",)),
+            built(("feet", "torso", "plates", "arms"), ("helm",)),
+            built(whole, behind=[(PILOT, PILOT_AT)]),
+            built(whole, behind=[(PILOT_IN, PILOT_IN_AT)]),
+            recoloured(figure(), {"v": "q"}),
             figure()]
 
 
