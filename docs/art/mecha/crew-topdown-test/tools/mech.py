@@ -52,7 +52,7 @@ def change(rows, changes, wide):
 # After heromedel's own top-down drawing (reference/): a boxy helm with a pale ridge and a short visor bar on its front
 # edge, a shoulder plate each side (they are shoulders, not wings), a thick spike sweeping up and out of each plate's
 # outer corner, an arm straight down from under each plate to a grey powered clamp claw with a purple band, two chest
-# lights, two pointed feet. The spike leans out and the claw hangs straight, so the two never read as one stacked
+# lights on a torso four rows deep, two pointed feet. The spike leans out and the claw hangs straight, so the two never read as one stacked
 # piece.
 
 STAND_DOWN = grid([
@@ -67,9 +67,10 @@ STAND_DOWN = grid([
     "...ooooooooooooooooooooo...",
     "....oko..onnvnvnko..oko....",
     "...onvno.onnnnnkko.onvno...",
-    "...oeeao.oanooonko.oeaao...",
-    "....oeo...oo...oo...oeo....",
-    ".....o...............o.....",
+    "...oeeao.onnnnnkko.oeaao...",
+    "....oeo..onnnnkkko..oeo....",
+    ".....o...oanooonko...o.....",
+    "..........oo...oo..........",
 ], 27)
 STEP_DOWN = grid([         # the claw on the viewer's left swings forward and hangs lower, the other lifts; a foot steps
     "oo.......................oo",
@@ -83,10 +84,11 @@ STEP_DOWN = grid([         # the claw on the viewer's left swings forward and ha
     "...ooooooooooooooooooooo...",
     "....oko..onnvnvnko.onvno...",
     "....oko..onnnnnkko.oeaao...",
-    "...onvno.ooooooonko..oeo...",
-    "...oeeao......onko....o....",
-    "....oeo........oo..........",
-    ".....o.....................",
+    "...onvno.onnnnnkko..oeo....",
+    "...oeeao.onnnnkkko...o.....",
+    "....oeo..ooooooonko........",
+    ".....o........onko.........",
+    "...............oo..........",
 ], 27)
 STEP_DOWN_2 = grid([
     "oo.......................oo",
@@ -100,10 +102,11 @@ STEP_DOWN_2 = grid([
     "...ooooooooooooooooooooo...",
     "...onvno.onnvnvnko..oko....",
     "...oeeao.onnnnnkko..oko....",
-    "....oeo..oanoooooo.onvno...",
-    ".....o...oano......oeaao...",
-    "..........oo........oeo....",
-    ".....................o.....",
+    "....oeo..onnnnnkko.onvno...",
+    ".....o...onnnnkkko.oeaao...",
+    ".........oanoooooo..oeo....",
+    ".........oano........o.....",
+    "..........oo...............",
 ], 27)
 
 # --- Facing away ---------------------------------------------------------------------------------------------------
@@ -121,9 +124,10 @@ STAND_UP = grid([
     "...ooooooooooooooooooooo...",
     "....oko..onnnennko..oko....",
     "...onvno.onnnenkko.onvno...",
-    "...oeeao.oanooonko.oeaao...",
-    "....oeo...oo...oo...oeo....",
-    ".....o...............o.....",
+    "...oeeao.onnnenkko.oeaao...",
+    "....oeo..onnnekkko..oeo....",
+    ".....o...oanooonko...o.....",
+    "..........oo...oo..........",
 ], 27)
 STEP_UP = grid([
     "oo.......................oo",
@@ -137,10 +141,11 @@ STEP_UP = grid([
     "...ooooooooooooooooooooo...",
     "...onvno.onnnennko..oko....",
     "...oeeao.onnnenkko..oko....",
-    "....oeo..oanoooooo.onvno...",
-    ".....o...oano......oeaao...",
-    "..........oo........oeo....",
-    ".....................o.....",
+    "....oeo..onnnenkko.onvno...",
+    ".....o...onnnekkko.oeaao...",
+    ".........oanoooooo..oeo....",
+    ".........oano........o.....",
+    "..........oo...............",
 ], 27)
 STEP_UP_2 = grid([
     "oo.......................oo",
@@ -154,10 +159,11 @@ STEP_UP_2 = grid([
     "...ooooooooooooooooooooo...",
     "....oko..onnnennko.onvno...",
     "....oko..onnnenkko.oeaao...",
-    "...onvno.ooooooonko..oeo...",
-    "...oeeao......onko....o....",
-    "....oeo........oo..........",
-    ".....o.....................",
+    "...onvno.onnnenkko..oeo....",
+    "...oeeao.onnnekkko...o.....",
+    "....oeo..ooooooonko........",
+    ".....o........onko.........",
+    "...............oo..........",
 ], 27)
 
 # --- Facing right --------------------------------------------------------------------------------------------------

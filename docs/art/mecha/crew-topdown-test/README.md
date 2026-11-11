@@ -28,7 +28,9 @@ Mecha crew palette (`docs/art/palette.md`):
   HalfMech suits do not have wings (heromedel, 2026-11-11).
 - An arm straight down from under each plate to a grey powered clamp claw with a purple band. heromedel likes the
   clamp claws, and asked for them straight, not bent, and for the thicker spikes of the first version (2026-11-11).
-- Two chest lights under the visor, and two pointed feet.
+- Two chest lights under the visor, on a torso four rows deep, and two pointed feet. The torso was two rows;
+  heromedel had it extended down two pixels with the lights left where they were (2026-11-11). The back view has
+  the same torso.
 - **Spikes and arms at different angles (heromedel, 2026-11-11):** the spike leans out from the plate's outer
   corner and the claw hangs straight from under its middle. The first version of this test hung each claw straight
   under a blade that stood straight above it, and on a still frame the two read as one stacked piece.
@@ -47,7 +49,6 @@ How the other views follow from it:
 - The front and back views read as heromedel's suit at game size.
 - The side view is still the weakest. It is correct as a turn of the front view, but with the shoulder plates as long as
   they are it reads as a bracket more than as a figure.
-- The chest is two rows where the drawing gives it room; at this size the helm takes most of the height.
 
 ## Tools
 
