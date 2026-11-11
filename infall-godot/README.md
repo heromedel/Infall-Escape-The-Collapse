@@ -134,6 +134,8 @@ The Art Style setting shows a token for any race with no sheet in the chosen sty
 - The game does not play a death or a clone-bay animation yet, and the sheets' extra rows (the Tentauri typing at
   several systems, the HalfMech's clamp-on frames) are not used.
 - Stunned, healing and out of air have no frames: the small badges and sparks show them, as with tokens.
+- Welding sparks are the game's, not the sheet's: a layout gives the point (`sparks="x,y"` on an animation) and
+  the game flickers sparks there. Only the top-down drifter's repair uses it so far.
 
 ## Tools
 

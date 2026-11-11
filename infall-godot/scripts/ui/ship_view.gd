@@ -548,6 +548,9 @@ func _draw_member_sprite(canvas: CanvasItem, member: CrewMember, at: Vector2, ri
 	else:
 		region = CrewArt.region(sheet, animation, facing, clock)
 	canvas.draw_texture_rect_region(sheet.texture, Rect2(at - Vector2(half, half), Vector2(CrewArt.frame, CrewArt.frame)), region)
+	var sparks: Variant = CrewArt.sparks_at(sheet, animation) if member.teleporting_ticks <= 0 else null
+	if sparks != null:
+		_draw_tool_sparks(canvas, at - Vector2(half, half) + sparks, absi(member.name.hash()))
 	var fraction := member.health_fraction()
 	if fraction < 0.999 or member.selected:
 		var bar := Rect2(at + Vector2(-12, half + 1.0), Vector2(24, 4))
@@ -557,6 +560,23 @@ func _draw_member_sprite(canvas: CanvasItem, member: CrewMember, at: Vector2, ri
 	var shown_by_sprite: String = {"repair": "repair", "fire": "fire", "fight": "aim"}.get(badge, "")
 	if not badge.is_empty() and not (not shown_by_sprite.is_empty() and CrewArt.has_animation(sheet, shown_by_sprite)):
 		_draw_badge(canvas, at + Vector2(half * 0.75, -half * 0.75), badge)
+
+
+## Welding sparks at the end of a crew member's tool (GV 7F): the sheet draws the tool and the game makes the light,
+## so it can flicker freely. A hot point at the nozzle and a few sparks thrown ahead of it, a sprite pixel each,
+## changing fourteen times a second and dark now and then.
+func _draw_tool_sparks(canvas: CanvasItem, nozzle: Vector2, seed: int) -> void:
+	var beat := int(time * 14.0)
+	if hash(seed * 31 + beat) % 6 == 0:
+		return
+	var origin := nozzle.floor()
+	canvas.draw_rect(Rect2(origin, Vector2.ONE), Color("#f2f5f8"))
+	var colours := [Color("#fff0a0"), Color("#fff0a0"), Color("#e0b850")]
+	for index in 4:
+		var roll := absi(hash(seed * 131 + beat * 17 + index))
+		var reach := 1 + roll % 4
+		var spread := (roll / 5) % (reach + 1) - reach / 2
+		canvas.draw_rect(Rect2(origin + Vector2(reach, spread), Vector2.ONE), colours[(roll / 37) % colours.size()])
 
 
 ## The small badge that says what a crew member is doing or suffering; "" for none.

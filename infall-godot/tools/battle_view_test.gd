@@ -1,6 +1,6 @@
 extends Node
 ## Shows a fight and saves screenshots. Environment: E (enemy ship ids, comma separated), SHOTS (seconds,
-## comma separated), OUT (folder), P (player ship ids), ART_STYLE and SPECIES (those settings). Run with a display: xvfb-run godot --path . tools/battle_view_test.tscn
+## comma separated), OUT (folder), P (player ship ids), ART_STYLE and SPECIES (those settings), BREAK (a system id to break, so the crew repair it). Run with a display: xvfb-run godot --path . tools/battle_view_test.tscn
 
 var battle: BattleScreen
 var screen: PlayerView
@@ -68,6 +68,11 @@ func _ready() -> void:
 			if sensors:
 				sensors.enabled = false
 			CrewBrain.order_to_room(ship.crew[0], medbay.room, true)
+	if OS.get_environment("BREAK") != "":
+		# a broken system for the crew to repair, by its id
+		var broken: ShipSystem = (players[0] as Ship).system_by(OS.get_environment("BREAK"))
+		if broken:
+			broken.damage = broken.level
 	if OS.get_environment("ZOOM") != "":
 		zoom_ship = enemies[0] if OS.get_environment("ZOOM_ENEMY") != "" and not enemies.is_empty() else players[0]
 	if OS.get_environment("SELECT") != "":

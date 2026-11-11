@@ -475,14 +475,16 @@ def punch_up():
     return [put(g, DOWN_AT, down=down) for g, down in poses]
 
 
-# --- Repairs: his own side view, welding: a torch in his near hand, his far hand on the work --------------------------
+# --- Repairs: his own side view, welding: a welding gun in his near hand, his far hand on the work --------------------
 # Redrawn from his own frames (heromedel, 2026-11-11). The first version of this row took the genre's crouched pose
 # part for part, which must not go in the game; a second, with a hammer swung on a thin handle, read as waving a
-# melted spatula. He stands side on, as he does at a console and with the extinguisher. What says "repair" is the
-# torch's sparks: a small flame, a burst, sparks flying off. Played as the genre plays its three drawings over nine
-# frames: 1 2 3 3 2 2 1 1 1.
+# melted spatula. He stands side on, as he does at a console and with the extinguisher, holding a welding gun: a dark
+# grip in his fist, a grey neck, a brass nozzle, and its cable trailing back to the floor behind him.
+# No sparks are drawn on the sheet (heromedel, 2026-11-11): the game makes them, at SPARKS_AT, so they can flicker
+# as they like. The three drawings only move the gun along the seam: at rest, pushed forward, tipped down. Played as
+# the genre plays its three drawings over nine frames: 1 2 3 3 2 2 1 1 1.
 
-_REPAIR_BODY = grid([
+_WELDER = [
     ".....ooo.............",
     "....ofeeo............",
     "...offeco............",
@@ -494,30 +496,33 @@ _REPAIR_BODY = grid([
     "..ohhhutoo...........",
     "...ooooobo...........",
     "...offecao...........",
-    "...ofeecooooooooo....",
-    "...ofeecdotsDGGoo....",          # his near fist, two by two, and the torch: a dark grip, a grey barrel
+]
+REPAIR = [grid(_WELDER + rows, 21) for rows in ([
+    "...ofeecoooooooo.....",
+    "...ofeecdotsDDGoo....",          # his near fist, two by two, on the grip; the neck
+    "...oeeccecstDDGGyo...",          # the brass nozzle
+    "...odeccooooDooooo...",
+    "....oooooo.oDo.......",          # the cable, down from the grip
+    ".........kkko........",          # and away along the floor behind him
+    ".....................",
+], [
+    "...ofeecooooooooo....",          # pushed a pixel forward
+    "...ofeecdootsDDGoo...",
+    "...oeecceecstDDGGyo..",
+    "...odeccoooooDooooo..",
+    "....oooooo..oDo......",
+    ".........kkkko.......",
+    ".....................",
+], [
+    "...ofeecoooooooo.....",          # tipped down: the nozzle a row lower
+    "...ofeecdotsDDGo.....",
     "...oeeccecstDDGGo....",
-    "...odeccooooooooo....",
-    "....oooooo...........",
+    "...odeccooooDoGyo....",
+    "....oooooo.oDooo.....",
+    ".........kkko........",
     ".....................",
-    ".....................",
-], 21)
-# The torch's light at the end of its barrel, as (column, row, colour): F and 6 are hot, y is a spark cooling.
-_SPARKS = [[(16, 13, "F"), (17, 13, "y")],
-           [(16, 13, "6"), (17, 13, "6"), (16, 12, "F"), (17, 12, "F"), (17, 14, "F"), (18, 13, "F"),
-            (18, 11, "y"), (19, 14, "y")],
-           [(16, 13, "F"), (18, 12, "F"), (17, 15, "F"), (19, 11, "y"), (19, 15, "y"), (20, 13, "y")]]
-
-
-def lit(rows, pixels):
-    """A grid with some pixels of light set on it; light has no outline."""
-    cells = [list(row) for row in rows]
-    for x, y, code in pixels:
-        cells[y][x] = code
-    return ["".join(row) for row in cells]
-
-
-REPAIR = [grid(lit(_REPAIR_BODY, sparks), 21) for sparks in _SPARKS]
+])]
+SPARKS_AT = (SIDE_AT[0] + 18, SIDE_AT[1] + 13)        # just ahead of the nozzle, in the frame: where the game's sparks start
 
 
 def repair():
@@ -525,51 +530,56 @@ def repair():
     return [drawings[i] for i in (0, 1, 2, 2, 1, 1, 0, 0, 0)]
 
 
-# --- Dying: he stumbles, lurches, his knees go, he tips over and lies on his side ------------------------------------
+# --- Dying: he stumbles, topples over to one side, and lies on his side ----------------------------------------------
 # Redrawn from his own frames (heromedel, 2026-11-11). The first version took the genre's four falling poses part for
-# part, which must not go in the game; a second ended with the big face-on sprawl from his face-forward sheet, which
-# heromedel called terrible and said he should lie on his side. Six frames, all in this sheet's own style: a
-# stumbling step; a lurch the other way; his knees go, his arms flung out; he tips over, head and shoulders still
-# higher than his legs; he is down on his side; he settles. His head ends where he fell toward and his feet stay
-# near where he stood.
+# part, which must not go in the game. Then three redraws that each read wrong: one switched to a face-on sprawl
+# ("terrible"); one sank at the knees and then showed a figure lying the other way ("he melts one way and then a
+# dummy falls the other way"); one moved his parts down piece by piece, as the HalfMech suit's death does ("he just
+# falls apart": a man is not a suit of plates).
+# So it is one topple, all one way and all in one piece. He takes a stumbling step. He leans over, the standing
+# figure itself slid across row by row, his head furthest; then further. He goes over, his body on the slant, his
+# head still higher than his legs, which show now that he is no longer upright. He is down on his side, and settles.
 
-KNEES_GO = change(STAND_DOWN, {      # sunk two rows, both arms flung out, the hem spread on the floor
-    7: ".oooeoeabBbadodooo...",
-    8: "otsooeeppyppddoosto..",
-    9: "ootoeecooooocddotoo..",
-    10: "..oooecccccccdooo....",
-    11: "....ooooooooooo......",
-}, 21)
 TIPPING = grid([                     # going over: his head leads, his legs are on the floor already
-    "..oooo...................",
-    ".ohiiho..................",
-    "ohhijhhooooo.............",
-    "ohiihhhwffeeoooo.........",
-    "ohhtsshWfeeeecdoo........",
-    "ohutssobeecccccdooooo....",
-    ".ooooooBaeccccddpppPoo...",
-    ".......oooecsoddoppmzZo..",
-    ".........oooooooopmmzzo..",
-    "................opPmoo...",
-    "................ozZo.....",
-    ".................ooo.....",
+    "...................oooo..",
+    "..................ohiiho.",
+    ".............ooooohhjihho",
+    ".........ooooeeffwhhhiiho",
+    "........oodceeeefWhssthho",
+    "....ooooodccccceebosstuho",
+    "...ooPpppddcccceaBoooooo.",
+    "..oZzmppoddosceooo.......",
+    "..ozzmmpoooooooo.........",
+    "...oomPpo................",
+    ".....oZzo................",
+    ".....ooo.................",
 ], 25)
-LYING = grid([                       # on his side, facing the camera: an arm in front of him, his legs bent
-    "..oooo...oooooooo........",
-    ".ohiihooofeeeeecdoooo....",
-    "ohhijhhwffeeecccdppPpoo..",
-    "ohiihhhWfeeccccddpppmzZo.",
-    "ohhtsshbeecccdddoopmmzzo.",
-    "ohutssoBaecooooo.opPmoo..",
-    ".oooooooecsto....ozZo....",
-    "........ooooo.....ooo....",
+LYING = grid([                     # on his side, facing the camera: an arm in front of him, his legs bent
+    "........oooooooo...oooo..",
+    "....oooodceeeeefooohiiho.",
+    "..oopPppdccceeeffwhhjihho",
+    ".oZzmpppddcccceefWhhhiiho",
+    ".ozzmmpoodddccceebhssthho",
+    "..oomPpo.oooooceaBosstuho",
+    "....oZzo....otsceooooooo.",
+    "....ooo.....ooooo........",
 ], 25)
-LYING_AT = (5, 14)
+
+
+def leaning(shifts, down=0):
+    """The standing figure leaning over: each of its rows slid across by its own amount, the top ones furthest."""
+    low, high = min(shifts), max(shifts)
+    rows = [("." * (shift - low) + row + "." * (high - shift)) for row, shift in zip(STAND_DOWN, shifts)]
+    return put(rows, (DOWN_AT[0] + low, DOWN_AT[1] + down))
 
 
 def death():
-    return [put(STEP_DOWN, DOWN_AT), put(STEP_DOWN_2, DOWN_AT, across=1), put(KNEES_GO, DOWN_AT, down=2),
-            put(TIPPING, LYING_AT, down=-4), put(LYING, LYING_AT, down=-1), put(LYING, LYING_AT)]
+    return [put(STEP_DOWN_2, DOWN_AT),
+            leaning([3, 3, 2, 2, 1, 1, 1, 0, 0, 0, -1, -1]),
+            leaning([6, 6, 5, 4, 4, 3, 2, 2, 1, 0, -1, -1], 1),
+            put(TIPPING, (8, 11)),
+            put(LYING, (7, 14)),
+            put(LYING, (7, 15))]
 
 
 # --- The genre's kind of teleport, kept as the alternative: his own columns are drawn up and he comes apart -----------

@@ -61,6 +61,12 @@ static func region(sheet: Dictionary, animation: String, facing: String, seconds
 	return Rect2((cells[1] - 1 + index) * frame, (cells[0] - 1) * frame, frame, frame)
 
 
+## Where in the frame the game draws its own sparks for an animation, for a sheet that draws none; null if it
+## doesn't ask for any.
+static func sparks_at(sheet: Dictionary, animation: String) -> Variant:
+	return sheet.layout.get(animation, {}).get("sparks")
+
+
 static func _layout(id: String) -> Dictionary:
 	if not _loaded:
 		_loaded = true
@@ -71,6 +77,9 @@ static func _layout(id: String) -> Dictionary:
 				var animations := {}
 				for node in layout_node.all("animation"):
 					var entry := {"ms": node.get_float("ms", 150.0)}
+					if node.has_attr("sparks"):
+						var point := node.get_attr("sparks").split(",")
+						entry["sparks"] = Vector2(float(point[0]), float(point[1]))
 					for facing in FACINGS + ["any"]:
 						if node.has_attr(facing):
 							var cells: Array = []
