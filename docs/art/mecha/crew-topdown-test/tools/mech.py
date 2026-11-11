@@ -351,8 +351,8 @@ def repair():
 # --- The clone bay: the suit is put together, and its pilot jumps in (heromedel, 2026-11-11) ----------------------
 # The one glimpse of a HalfMech out of the suit. Ten frames. The suit is built, not grown: it goes together in its
 # own colours, unlit, a piece at a time (feet and torso, shoulder plates, arms and claws, helm), and each piece wears
-# a bright purple edge only on the frame it arrives. Then the pilot comes up behind it on the ground, the top of her
-# head showing over the helm, dips, jumps clear of it with her ponytail flying, and drops in. Then the lights come up, dim purple first, and he stands.
+# a bright purple edge only on the frame it arrives. Then the pilot walks up behind it on the ground, whole, stands
+# there, jumps onto its back, and goes in. Then the lights come up, dim purple first, and he stands.
 # She is a girl (heromedel): long hair in a ponytail is what says so at this size. Her colours are those of
 # heromedel's HalfMech pilot art: purple hair, pale skin, dark clothes, one implant light.
 
@@ -365,11 +365,11 @@ PILOT = [".......oo..",
          ".ooTSSSToo.",
          ".oSknnLkSo.",          # narrow shoulders, a hand at each side, her implant light
          "..ooooooo.."]
-PILOT_HEAD = PILOT[:6]                        # all that shows of her over the helm when she is behind the suit
-# Where she is, frame by frame, behind the helm: walking up on the ground a little to one side, the top of her head
-# over the helm; in place and dipping to jump; in the air, all of her clear of the helm; dropping in, only her
-# ponytail left.
-PILOT_WALKS_UP, PILOT_DIPS, PILOT_JUMPS, PILOT_DROPS_IN = (6, -1), (8, 0), (8, -4), (8, 2)
+PILOT_HEAD = PILOT[:5]                        # her ponytail and the top of her head: all that is left as she goes in
+# Where she is, frame by frame. Seen from above, the ground behind the suit is the floor above it on the screen, and
+# nothing there is hidden: she walks up whole, a little to one side, then stands right behind it. Then she is in the
+# air over its back, drawn over the helm, and then going in, only the top of her head left.
+PILOT_WALKS_UP, PILOT_STANDS, PILOT_JUMPS, PILOT_GOES_IN = (4, -5), (8, -5), (8, -1), (8, 2)
 
 
 def unlit(rows):
@@ -400,24 +400,24 @@ def clone():
               "helm": [(HELM, HELM_AT)]}
     order = ("arms", "feet", "plates", "torso", "helm")          # back to front, as in every other frame
 
-    def built(have, new=(), behind=()):
+    def built(have, new=(), behind=(), over=()):
         parts = list(behind)
         for name in order:
             if name in new:
                 parts += [(arriving(rows), at) for rows, at in pieces[name]]
             elif name in have:
                 parts += [(unlit(rows), at) for rows, at in pieces[name]]
-        return frame(parts, AT)
+        return frame(parts + list(over), AT)
 
     whole = order
     return [built((), ("feet", "torso")),
             built(("feet", "torso"), ("plates",)),
             built(("feet", "torso", "plates"), ("arms",)),
             built(("feet", "torso", "plates", "arms"), ("helm",)),
-            built(whole, behind=[(PILOT_HEAD, PILOT_WALKS_UP)]),
-            built(whole, behind=[(PILOT_HEAD, PILOT_DIPS)]),
-            built(whole, behind=[(PILOT, PILOT_JUMPS)]),
-            built(whole, behind=[(PILOT_HEAD, PILOT_DROPS_IN)]),
+            built(whole, behind=[(PILOT, PILOT_WALKS_UP)]),
+            built(whole, behind=[(PILOT, PILOT_STANDS)]),
+            built(whole, over=[(PILOT, PILOT_JUMPS)]),
+            built(whole, over=[(PILOT_HEAD, PILOT_GOES_IN)]),
             recoloured(figure(), {"v": "q"}),
             figure()]
 

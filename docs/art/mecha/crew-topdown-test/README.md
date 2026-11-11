@@ -129,10 +129,12 @@ girl. Ten frames:
   arrives. heromedel was in two minds about a purple outline on a suit that is being constructed, not cloned
   (2026-11-11); the first version tinted the whole suit purple, and this keeps the colour to the arriving piece.
 - Frames 5 and 6: the pilot is on the ground behind the suit before she jumps (heromedel, 2026-11-11). She walks up
-  a little to one side, the top of her head and her ponytail showing over the helm, then stands in place and dips
-  to jump. From almost straight above, the back of the suit is its top edge on the screen.
-- Frame 7: she is in the air, all of her clear of the helm.
-- Frame 8: she drops in; only her ponytail still shows.
+  whole, a little to one side, then stands right behind it. Seen from almost straight above, the ground behind the
+  suit is the floor above it on the screen, and nothing there is hidden. A first try showed only her hair over the
+  helm, as if the helm were a wall in front of her; that is a side view's logic, and it read as hair floating in
+  with no face or body (heromedel, 2026-11-11).
+- Frame 7: she jumps onto its back, drawn over the top of the helm.
+- Frame 8: she goes in; only her ponytail and the top of her head are left.
 - Frame 9: the lights come up dim, in deep purple. Frame 10: he stands. The first version flashed the lights pale for
   a frame, which read as the suit staying white before powering (heromedel, 2026-11-11).
 - **The pilot:** purple hair in a ponytail that swings out to one side from a bright tie, pale skin, dark clothes,
