@@ -46,7 +46,11 @@ How the other views follow from it:
 - Facing right is the front view turned a quarter: one shoulder plate above the helm and one below, the spikes
   sweeping back and out, the claws pointing straight ahead, the visor on the helm's front edge.
 - Standing side on, both feet show ahead of the helm, so he is not so thin (heromedel, 2026-11-11).
-- The walk moves only the claws and the feet, as the drifter's moves only fists and feet.
+- **The walk swings (heromedel, 2026-11-11).** The first walks lengthened and shortened the arms and legs, which
+  read as pistons. Now every part keeps its shape and moves as a piece: a shoulder plate swings a row forward with
+  its spike and claw, the other swings a row back and its claw tucks up under it, and the foot opposite the forward
+  arm swings forward on a pixel of leg while the other draws back under the torso. The genre's rock crew, the
+  nearest build to this one, walks the same way: its whole shoulder line tilts with each step.
 
 ## What I think of it
 
