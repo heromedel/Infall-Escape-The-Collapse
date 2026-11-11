@@ -475,11 +475,12 @@ def punch_up():
     return [put(g, DOWN_AT, down=down) for g, down in poses]
 
 
-# --- Repairs: his own side view, one hand steadying the work and a tool in the other ---------------------------------
-# Redrawn from his own frames (heromedel, 2026-11-11): the first version of this row took the genre's crouched pose
-# part for part, which must not go in the game. He stands side on, as he does at a console; his far hand holds the
-# work steady and his near hand swings a small hammer: raised, level, struck. Played as the genre plays its three
-# drawings over nine frames: 1 2 3 3 2 2 1 1 1.
+# --- Repairs: his own side view, welding: a torch in his near hand, his far hand on the work --------------------------
+# Redrawn from his own frames (heromedel, 2026-11-11). The first version of this row took the genre's crouched pose
+# part for part, which must not go in the game; a second, with a hammer swung on a thin handle, read as waving a
+# melted spatula. He stands side on, as he does at a console and with the extinguisher. What says "repair" is the
+# torch's sparks: a small flame, a burst, sparks flying off. Played as the genre plays its three drawings over nine
+# frames: 1 2 3 3 2 2 1 1 1.
 
 _REPAIR_BODY = grid([
     ".....ooo.............",
@@ -493,33 +494,30 @@ _REPAIR_BODY = grid([
     "..ohhhutoo...........",
     "...ooooobo...........",
     "...offecao...........",
-    "...ofeecoo...........",
-    "...ofeecdoooo........",
-    "...oeeccecsto........",          # his near arm and fist
-    "...odeccoooo.........",
+    "...ofeecooooooooo....",
+    "...ofeecdotsDGGoo....",          # his near fist, two by two, and the torch: a dark grip, a grey barrel
+    "...oeeccecstDDGGo....",
+    "...odeccooooooooo....",
     "....oooooo...........",
     ".....................",
     ".....................",
 ], 21)
-# The hammer, from the fist outward: a dark handle and a grey head, as (column, row, colour).
-_HAMMER = [[(12, 12, "D"), (13, 11, "D"), (14, 10, "G"), (15, 10, "G"), (14, 9, "G")],          # raised
-           [(12, 13, "D"), (13, 13, "D"), (14, 13, "G"), (14, 12, "G"), (14, 14, "G")],          # level
-           [(12, 14, "D"), (13, 15, "D"), (14, 16, "G"), (13, 16, "G"), (15, 16, "G")]]          # struck
+# The torch's light at the end of its barrel, as (column, row, colour): F and 6 are hot, y is a spark cooling.
+_SPARKS = [[(16, 13, "F"), (17, 13, "y")],
+           [(16, 13, "6"), (17, 13, "6"), (16, 12, "F"), (17, 12, "F"), (17, 14, "F"), (18, 13, "F"),
+            (18, 11, "y"), (19, 14, "y")],
+           [(16, 13, "F"), (18, 12, "F"), (17, 15, "F"), (19, 11, "y"), (19, 15, "y"), (20, 13, "y")]]
 
 
-def holding(rows, pixels):
-    """A grid with some pixels added and an outline drawn round them wherever nothing else is."""
+def lit(rows, pixels):
+    """A grid with some pixels of light set on it; light has no outline."""
     cells = [list(row) for row in rows]
     for x, y, code in pixels:
         cells[y][x] = code
-    for x, y, code in pixels:
-        for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
-            if 0 <= y + dy < len(cells) and 0 <= x + dx < len(cells[0]) and cells[y + dy][x + dx] == ".":
-                cells[y + dy][x + dx] = "o"
     return ["".join(row) for row in cells]
 
 
-REPAIR = [grid(holding(_REPAIR_BODY, hammer), 21) for hammer in _HAMMER]
+REPAIR = [grid(lit(_REPAIR_BODY, sparks), 21) for sparks in _SPARKS]
 
 
 def repair():
@@ -527,13 +525,13 @@ def repair():
     return [drawings[i] for i in (0, 1, 2, 2, 1, 1, 0, 0, 0)]
 
 
-# --- Dying: he stumbles, lurches, his knees go, and he lands sprawled on his back ------------------------------------
-# Redrawn from his own frames (heromedel, 2026-11-11): the first version took the genre's four falling poses part for
-# part, which must not go in the game. Six frames. The first three are his top-down figure: a stumbling step, a lurch
-# the other way, and his knees going, his arms flung out. The last three are the end of the fall from his
-# face-forward sheet (crew test 3): flat on his back, arms and legs sprawled, bouncing once and settling. A man lying
-# on his back, seen from above, is seen whole and face on, so that drawing is the right one here; it is set in the
-# middle of the tile.
+# --- Dying: he stumbles, lurches, his knees go, he tips over and lies on his side ------------------------------------
+# Redrawn from his own frames (heromedel, 2026-11-11). The first version took the genre's four falling poses part for
+# part, which must not go in the game; a second ended with the big face-on sprawl from his face-forward sheet, which
+# heromedel called terrible and said he should lie on his side. Six frames, all in this sheet's own style: a
+# stumbling step; a lurch the other way; his knees go, his arms flung out; he tips over, head and shoulders still
+# higher than his legs; he is down on his side; he settles. His head ends where he fell toward and his feet stay
+# near where he stood.
 
 KNEES_GO = change(STAND_DOWN, {      # sunk two rows, both arms flung out, the hem spread on the floor
     7: ".oooeoeabBbadodooo...",
@@ -542,18 +540,36 @@ KNEES_GO = change(STAND_DOWN, {      # sunk two rows, both arms flung out, the h
     10: "..oooecccccccdooo....",
     11: "....ooooooooooo......",
 }, 21)
+TIPPING = grid([                     # going over: his head leads, his legs are on the floor already
+    "..oooo...................",
+    ".ohiiho..................",
+    "ohhijhhooooo.............",
+    "ohiihhhwffeeoooo.........",
+    "ohhtsshWfeeeecdoo........",
+    "ohutssobeecccccdooooo....",
+    ".ooooooBaeccccddpppPoo...",
+    ".......oooecsoddoppmzZo..",
+    ".........oooooooopmmzzo..",
+    "................opPmoo...",
+    "................ozZo.....",
+    ".................ooo.....",
+], 25)
+LYING = grid([                       # on his side, facing the camera: an arm in front of him, his legs bent
+    "..oooo...oooooooo........",
+    ".ohiihooofeeeeecdoooo....",
+    "ohhijhhwffeeecccdppPpoo..",
+    "ohiihhhWfeeccccddpppmzZo.",
+    "ohhtsshbeecccdddoopmmzzo.",
+    "ohutssoBaecooooo.opPmoo..",
+    ".oooooooecsto....ozZo....",
+    "........ooooo.....ooo....",
+], 25)
+LYING_AT = (5, 14)
 
 
 def death():
-    fallen = Image.open("../crew-test-3/terran-drifter-sheet.png").convert("RGBA")
-    lying = []
-    for column in (4, 5, 7):                       # down, the bounce, settled
-        cell = fallen.crop((column * FRAME, 11 * FRAME, (column + 1) * FRAME, 12 * FRAME))
-        box = cell.getbbox()
-        image = Image.new("RGBA", (FRAME, FRAME), (0, 0, 0, 0))
-        image.alpha_composite(cell.crop(box), ((FRAME - (box[2] - box[0])) // 2, 19 - (33 - box[1]) + 14 - 7))
-        lying.append(image)
-    return [put(STEP_DOWN, DOWN_AT), put(STEP_DOWN_2, DOWN_AT, across=1), put(KNEES_GO, DOWN_AT, down=2)] + lying
+    return [put(STEP_DOWN, DOWN_AT), put(STEP_DOWN_2, DOWN_AT, across=1), put(KNEES_GO, DOWN_AT, down=2),
+            put(TIPPING, LYING_AT, down=-4), put(LYING, LYING_AT, down=-1), put(LYING, LYING_AT)]
 
 
 # --- The genre's kind of teleport, kept as the alternative: his own columns are drawn up and he comes apart -----------
