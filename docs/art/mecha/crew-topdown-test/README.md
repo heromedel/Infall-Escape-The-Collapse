@@ -36,7 +36,7 @@ Mecha crew palette (`docs/art/palette.md`):
 - **A hint of a face (heromedel, 2026-11-11):** on the front the two chest lights are eyes, and a mouth three pixels
   wide sits under them, one tone darker than the armour. It is meant to be hard to notice.
 - **Helm shading:** the tones fall off from the top left to the bottom right. They were in columns either side of
-  the ridge, the same fault the feet had.  shows front and back, before
+  the ridge, the same fault the feet had. `review/helm-shading-before-after-16x.png` shows front and back, before
   then after.
 - The feet are two pixels long and stand apart from the torso and from each other, each with its own outline
   (heromedel, 2026-11-11). A stepping foot reaches a pixel further and the other draws in a pixel. Each
