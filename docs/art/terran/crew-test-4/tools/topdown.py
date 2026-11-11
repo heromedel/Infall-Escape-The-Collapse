@@ -475,148 +475,85 @@ def punch_up():
     return [put(g, DOWN_AT, down=down) for g, down in poses]
 
 
-# --- Repairs: bent over his work, seen from above; the tool arm rises in three drawings over nine frames -------------
-# The pose is the genre's, part for part, in his colours: the far shoulder and the coat's back on the left, the head
-# in the middle, the tool arm on the right, the near hand on the deck below.
+# --- Repairs: his own side view, one hand steadying the work and a tool in the other ---------------------------------
+# Redrawn from his own frames (heromedel, 2026-11-11): the first version of this row took the genre's crouched pose
+# part for part, which must not go in the game. He stands side on, as he does at a console; his far hand holds the
+# work steady and his near hand swings a small hammer: raised, level, struck. Played as the genre plays its three
+# drawings over nine frames: 1 2 3 3 2 2 1 1 1.
 
-REPAIR = [grid(rows, 25) for rows in ([
-    "..........ooo............",
-    ".........oecco...........",
-    "........oeeoooo..........",
-    ".......oeohhhhho.........",
-    ".......oeohhhhho.........",
-    "......oceoiihhhoo........",
-    "......oceoihhhhodo.......",
-    "...ooooceohhhhtoooo......",
-    "..oeccoceeoooooooso......",
-    "..occdoceeecodoooto......",
-    "...ooooocecdodo..oGo.....",
-    "....oo.oeeecoo....oGDo...",
-    "........oeecoooo...o.....",
-    ".........oecodto....o....",
-    "..........ooooo..........",
-], [
-    "..........ooo............",
-    ".........oecco...........",
-    "........oeeoooo..........",
-    ".......oeohhhhho.........",
-    ".......oeohhhhhoo........",
-    "......oceoiihhhodoo......",
-    "......oceoihhhhodtso.....",
-    "...ooooceohhhhtoooto.....",
-    "..oeccoceeooooo..oGo.....",
-    "..occdoceeecodo...oGo....",
-    "...ooooocecdodo....oD....",
-    "....oo.oeeecoo.....ooo...",
-    "........oeecoooo...o.o...",
-    ".........oecodto.........",
-    "..........ooooo..........",
-], [
-    "..........ooo............",
-    ".........oecco...........",
-    "........oeeoooo..........",
-    ".......oeohhhhhooo.oo....",
-    ".......oeohhhhhoddooo....",
-    "......oceoiihhhoddtto....",
-    "......oceoihhhhodooso....",
-    "...ooooceohhhhtoo..Go....",
-    "..oeccoceeooooo....Go....",
-    "..occdoceeecodo....Do....",
-    "...ooooocecdodo....ooo...",
-    "....oo.oeeecoo.....ooo...",
-    "........oeecoooo...o.o...",
-    ".........oecodto.........",
-    "..........ooooo..........",
-])]
+_REPAIR_BODY = grid([
+    ".....ooo.............",
+    "....ofeeo............",
+    "...offeco............",
+    "...ooooowoooo........",
+    "..ohhiihoecsto.......",          # his far hand out ahead, on the work
+    "..ohijihhoctuo.......",
+    "..ohiihtsooooo.......",
+    "..ohhhtssoo..........",
+    "..ohhhutoo...........",
+    "...ooooobo...........",
+    "...offecao...........",
+    "...ofeecoo...........",
+    "...ofeecdoooo........",
+    "...oeeccecsto........",          # his near arm and fist
+    "...odeccoooo.........",
+    "....oooooo...........",
+    ".....................",
+    ".....................",
+], 21)
+# The hammer, from the fist outward: a dark handle and a grey head, as (column, row, colour).
+_HAMMER = [[(12, 12, "D"), (13, 11, "D"), (14, 10, "G"), (15, 10, "G"), (14, 9, "G")],          # raised
+           [(12, 13, "D"), (13, 13, "D"), (14, 13, "G"), (14, 12, "G"), (14, 14, "G")],          # level
+           [(12, 14, "D"), (13, 15, "D"), (14, 16, "G"), (13, 16, "G"), (15, 16, "G")]]          # struck
+
+
+def holding(rows, pixels):
+    """A grid with some pixels added and an outline drawn round them wherever nothing else is."""
+    cells = [list(row) for row in rows]
+    for x, y, code in pixels:
+        cells[y][x] = code
+    for x, y, code in pixels:
+        for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            if 0 <= y + dy < len(cells) and 0 <= x + dx < len(cells[0]) and cells[y + dy][x + dx] == ".":
+                cells[y + dy][x + dx] = "o"
+    return ["".join(row) for row in cells]
+
+
+REPAIR = [grid(holding(_REPAIR_BODY, hammer), 21) for hammer in _HAMMER]
 
 
 def repair():
-    drawings = [put(g, (5, 11)) for g in REPAIR]
+    drawings = [put(g, SIDE_AT) for g in REPAIR]
     return [drawings[i] for i in (0, 1, 2, 2, 1, 1, 0, 0, 0)]
 
 
-# --- Dying, from the side: he staggers, goes over backwards, is down, and settles ------------------------------------
-# The four falling poses are the genre's, part for part, in his colours: slate legs, brown coat, dark hair.
+# --- Dying: he stumbles, lurches, his knees go, and he lands sprawled on his back ------------------------------------
+# Redrawn from his own frames (heromedel, 2026-11-11): the first version took the genre's four falling poses part for
+# part, which must not go in the game. Six frames. The first three are his top-down figure: a stumbling step, a lurch
+# the other way, and his knees going, his arms flung out. The last three are the end of the fall from his
+# face-forward sheet (crew test 3): flat on his back, arms and legs sprawled, bouncing once and settling. A man lying
+# on his back, seen from above, is seen whole and face on, so that drawing is the right one here; it is set in the
+# middle of the tile.
 
-FALLING = [grid(rows, 29) for rows in ([
-    "..........oooo...............",
-    "......ooooeceeo..............",
-    "....ooocccocceeo.............",
-    "....ottocommpmoooo...........",
-    ".....ooooomcohhhhho..........",
-    "........oocoshhhhho..........",
-    "......ooppbosshthio..........",
-    ".....opmpccosssthio..........",
-    "....opppmcccossstho..........",
-    "...oppmmomccoooooo...........",
-    "..ompmmmommpeeeo.............",
-    "..oomopmmoomceeo.............",
-    "...ooommotmceeeo.............",
-    "....opmmotoceeco.............",
-    "....opmmooooooo..............",
-    "....oooooo...................",
-], [
-    ".............................",
-    "......oooooooooo.............",
-    "......ostocceeeeoo...........",
-    "......osooccccceeeo..........",
-    ".......oo.oooooeeeoo.........",
-    "..............oepooooo.......",
-    "............ooeeohhhhho......",
-    "..........ooeeeeohhhhho......",
-    "........oooeccebosshhio......",
-    ".....ooomppoppeposshhio......",
-    "....ompmmmpoppepostthio......",
-    "....oooommpoppcppottto.......",
-    ".....ompmmmomcpooooooo.......",
-    "....ooppmmmmooooompmmo.......",
-    "....opmmmmmoostoppmoo........",
-    "....opommoo.ootopoo..........",
-    "....ooooo.....ooo............",
-], [
-    ".............................",
-    ".............................",
-    ".............................",
-    ".............................",
-    ".............................",
-    ".............................",
-    "................ooo..........",
-    ".............ooooeeoooo......",
-    "............osseeeeeeeeo.....",
-    "...........oottccoecccpoooo..",
-    "......oooooomooooooppppohhho.",
-    "....oopmmmmmmmmooooopoohhhho.",
-    "....oopmopmmmmmooemmbosshhio.",
-    "....ooppmoooooooppppmosthiho.",
-    ".....ooommmmmmoooooopootthho.",
-    ".......oooooooo..ottooooooo..",
-    "..................ooo........",
-], [
-    ".............................",
-    ".............................",
-    ".............................",
-    ".............................",
-    ".............................",
-    ".............................",
-    ".............................",
-    ".............................",
-    ".............................",
-    "...................oooo......",
-    "...........oooooooooeeeo.....",
-    ".........ooommmmmpoeeecoooo..",
-    "........omooooooooeeeccohhho.",
-    ".......ommoppmmmmoecccohhhho.",
-    ".......oooommmmmoecboosshhio.",
-    "..........oooomopppomosthiho.",
-    "..............oooooomootthho.",
-    ".............osstottooooooo..",
-    ".............ossooooo........",
-    "..............oo.............",
-])]
+KNEES_GO = change(STAND_DOWN, {      # sunk two rows, both arms flung out, the hem spread on the floor
+    7: ".oooeoeabBbadodooo...",
+    8: "otsooeeppyppddoosto..",
+    9: "ootoeecooooocddotoo..",
+    10: "..oooecccccccdooo....",
+    11: "....ooooooooooo......",
+}, 21)
 
 
 def death():
-    return [put(STAND_RIGHT, (5, 7))] + [put(g, (5, 8)) for g in FALLING]
+    fallen = Image.open("../crew-test-3/terran-drifter-sheet.png").convert("RGBA")
+    lying = []
+    for column in (4, 5, 7):                       # down, the bounce, settled
+        cell = fallen.crop((column * FRAME, 11 * FRAME, (column + 1) * FRAME, 12 * FRAME))
+        box = cell.getbbox()
+        image = Image.new("RGBA", (FRAME, FRAME), (0, 0, 0, 0))
+        image.alpha_composite(cell.crop(box), ((FRAME - (box[2] - box[0])) // 2, 19 - (33 - box[1]) + 14 - 7))
+        lying.append(image)
+    return [put(STEP_DOWN, DOWN_AT), put(STEP_DOWN_2, DOWN_AT, across=1), put(KNEES_GO, DOWN_AT, down=2)] + lying
 
 
 # --- The genre's kind of teleport, kept as the alternative: his own columns are drawn up and he comes apart -----------

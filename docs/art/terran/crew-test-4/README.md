@@ -38,14 +38,14 @@ same frame counts:
 | 3 | Aim down, right, up (3 each: straight, a little to his right, a little to his left; no flash) |
 | 4 | Fire down (4), fire right (4): the green extinguisher swept from side to side, no spray |
 | 5 | Fire up (4), fire left (4) |
-| 6 | Repair (9 frames from 3 drawings, played 1 2 3 3 2 2 1 1 1) |
+| 6 | Repair (9 frames from 3 drawings, played 1 2 3 3 2 2 1 1 1): side on, his far hand on the work, his near hand swinging a small hammer (raised, level, struck) |
 | 7 | Punch down (6) |
 | 8 | Type right (4), type left (4) |
 | 9 | Type up (4), type down (4) |
 | 10 | Teleport (9: his edge lights up, he turns all to light, and the light thins into bands, columns and rising sparks; the last frame is empty) |
 | 11 | Clone (6: a lump and a bare figure in muted power green with a bright edge that fades, then his colours coming in from the head down, his feet last) |
 | 12 | Aim left (3), punch up (6) |
-| 13 | Portrait (the standing frame), crew laser shot (a white bar), a gap, death (5, from the side) |
+| 13 | Portrait (the standing frame), crew laser shot (a white bar), a gap, death (6: a stumbling step, a lurch, his knees go, then flat on his back, a bounce, settled) |
 
 - **Decided (heromedel, 2026-11-10):** the sheet's teleport is the light one, first made for crew test 3. The
   genre's kind, where his own pixels are pulled upward, is kept beside the sheet as the alternative:
@@ -72,12 +72,20 @@ It was drawn frame for frame against the genre's sheet, working from letter maps
 each frame. Measured afterwards, frame against frame in the same place on the sheet:
 
 - **No pixel has the genre's colour** except the white laser bar, which is plain white on both.
-- **The outlines nearly coincide on almost every row:** 92–98% of the shape is shared on the walk, aim, fire, punch
-  and type rows, **97% on death and 100% on repair**. Those last two were first drawn as my own poses; heromedel
-  found the repair senseless ("a severed hand or a vulture") and the death "dumb" (2026-11-10), so both now take the
-  genre's poses part for part, in his colours. This is the closest the project has come to the genre's own drawing.
-  heromedel decides whether that is the right side of the repo's rule (likeness and design may match exactly; lifting
-  the art files is forbidden), and whether this sheet stays a study or goes in the game.
+- **The outlines nearly coincide on the rows drawn against the genre's:** 92–98% of the shape is shared on the walk,
+  aim, fire, punch and type rows.
+- **Repair and death are his own (heromedel, 2026-11-11).** For a day both took the genre's poses part for part, in
+  his colours (100% and 97% shared), after heromedel found my first own repair senseless ("a severed hand or a
+  vulture") and my first own death "dumb" (2026-11-10). That was a recolour of the genre's drawing, which the repo's
+  rule forbids, so both were redrawn from his own frames:
+  - **Repair** is his own side view, as he stands at a console, with his far hand on the work and a small hammer in
+    his near hand.
+  - **Death** opens with three of his top-down frames (a stumbling step, a lurch the other way, his knees going with
+    his arms flung out) and ends with the fall from his own face-forward sheet (crew test 3): flat on his back,
+    sprawled, bouncing once and settling. A man lying on his back, seen from above, is seen whole and face on, so
+    that drawing is the right one here.
+  - Measured again, frame against frame in the same cell, the shape they share with the genre's frames is 37–44%
+    for repair and 31–53% for death, which is what any two figures standing in the middle of the same tile share.
 - **Two rows are worked out and share little of their shape:** the teleport, which is now the light one and unlike
   the genre's, and the clone (66%). Walking
   away shares 86%, because of the hem.

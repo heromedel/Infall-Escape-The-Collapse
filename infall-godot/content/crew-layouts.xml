@@ -23,16 +23,17 @@
 		<animation id="clone" any="13,1,6" ms="150"/>
 		<animation id="repair" any="14,4,4" ms="170"/>
 	</layout>
-	<!-- The genre's nine-column human layout: the top-down Terran drifter. Its repair (row 6) and death (row 13) are
-	     left out until they are redrawn: those two rows still use the genre's own poses, which must not go in the game. -->
+	<!-- The genre's nine-column human layout: the top-down Terran drifter. -->
 	<layout id="nine-wide">
 		<animation id="walk" down="1,1,4" right="1,5,4" up="2,1,4" left="2,5,4" ms="150"/>
 		<animation id="aim" down="3,1,3" right="3,4,3" up="3,7,3" left="12,1,3" ms="500"/>
 		<animation id="fire" down="4,1,4" right="4,5,4" up="5,1,4" left="5,5,4" ms="220"/>
+		<animation id="repair" any="6,1,9" ms="110"/>
 		<animation id="punch" down="7,1,6" up="12,4,6" ms="130"/>
 		<animation id="type" right="8,1,4" left="8,5,4" up="9,1,4" down="9,5,4" ms="170"/>
 		<animation id="teleport" any="10,1,8" ms="50"/>
 		<animation id="clone" any="11,1,6" ms="150"/>
+		<animation id="death" any="13,4,6" ms="150"/>
 	</layout>
 	<!-- The top-down HalfMech suit: the eight-column layout with a row for each direction of powering a console
 	     (its first two frames clamp on and are played once; the game loops the other six). -->

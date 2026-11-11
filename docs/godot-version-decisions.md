@@ -302,8 +302,8 @@ All built in the build of 2026-11-05.
 
 2. **Art Style** (GV 7F): built 2026-11-11 with the five sheets that exist and the standing Tabby. Still to fill in:
    top-down Tabbys; the Tabby's animations in the Facing style; top-down Tentauri; any sheet at all for the
-   Azurethea, Malphen, Lykario and Senti-GPH; the top-down drifter's repair and death rows, which are left out of
-   the game until they are redrawn; death and clone-bay animations, which the game does not play yet.
+   Azurethea, Malphen, Lykario and Senti-GPH; death and clone-bay animations, which the game does not play
+   yet. The top-down drifter's repair and death rows were redrawn from his own frames the same day and are in.
 
 ## Later (the road map)
 

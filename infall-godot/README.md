@@ -124,7 +124,7 @@ The Art Style setting shows a token for any race with no sheet in the chosen sty
 
 | Race | Top Down | Facing |
 |---|---|---|
-| GATOS as Terrans | The drifter; its repair and death rows are left out until they are redrawn | The drifter |
+| GATOS as Terrans | The drifter | The drifter |
 | GATOS as Tabbys | None | Standing only, in four directions: no animations |
 | Mecha | The suit | The older crew sheet |
 | Tentauri | None | The crew sheet |
