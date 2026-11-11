@@ -25,6 +25,7 @@ PALETTE = {                      # the Mecha crew palette, docs/art/palette.md
     "S": "#F0CDB8", "T": "#C99A8C",      # skin, skin shade
     "L": "#C77DFF",                      # implant light; also the bright purple of a power pulse
     "P": "#9370BF", "Q": "#7DB792",      # a pulse turning from purple to power green (docs/art/palette.md)
+    "t": "#D4ECFF", "u": "#7FB4F0", "x": "#F2F5F8",      # teleport light, as on the drifter's sheet
 }
 
 
@@ -212,13 +213,14 @@ def walk_left():
 # way. Nothing else moves. Staging after the genre's sheets: three still aims a direction, the shot a sprite of its
 # own.
 
-def reaching(lean=0, length=3):
-    """An arm reaching down the screen to an open claw; `lean` -1 or 1 steps it two pixels left or right."""
+def reaching(lean=0, length=3, end=None):
+    """An arm reaching down the screen to an open claw, or to `end`; `lean` -1 or 1 steps it two pixels left or
+    right."""
     steps = [0, 1, 1, 2][:length] + [2]
     places = [step * lean for step in steps]
     low = min(places)
     parts = [([ARM], (place - low, row)) for row, place in enumerate(places[:-1])]
-    return joined(parts + [(CLAW_OPEN, (places[-1] - low, length))]), low
+    return joined(parts + [(end or CLAW_OPEN, (places[-1] - low, length))]), low
 
 
 def aim_down(lean=0):
@@ -233,13 +235,14 @@ def aim_up(lean=0):
     return figure(True, right_plate=-1, right_arm=(arm, across - 1, -len(arm) - 6))
 
 
-def side_reaching(near, lean=0, length=3):
-    """An arm reaching right to an open claw; `lean` -1 or 1 steps it two pixels up or down the screen."""
+def side_reaching(near, lean=0, length=3, end=None):
+    """An arm reaching right to an open claw, or to `end`; `lean` -1 or 1 steps it two pixels up or down the
+    screen."""
     steps = [0, 1, 1, 2][:length] + [2]
     places = [step * lean for step in steps]
     low = min(places)
     parts = [(["o", "k", "o"], (column, 1 + place - low)) for column, place in enumerate(places[:-1])]
-    return joined(parts + [(side_claw(near, 0, True), (length, places[-1] - low))]), low
+    return joined(parts + [(end or side_claw(near, 0, True), (length, places[-1] - low))]), low
 
 
 def aim_right(lean=0, far=False):
@@ -403,6 +406,140 @@ def clone():
             built(order),
             recoloured(figure(), {"v": "q"}),
             figure()]
+
+
+# --- Fighting fire: a canister held in the clamp, swept from side to side; no spray ------------------------------
+# Staging after the genre's sheets: four frames a direction, the canister straight, a little to his right, straight,
+# a little to his left. The canister is in his race's power colour, as proposed for the drifter's (heromedel,
+# 2026-11-10): Mecha purple.
+
+CANISTER = ["onvno",             # his wrist band
+            "oeveo",             # the clamp's two prongs on the canister's neck
+            "ovvqo",
+            "ovvqo",
+            ".oko.",             # its nozzle
+            "..o.."]
+SWEEP = (0, -1, 0, 1)
+
+
+def side_canister(near):
+    prong = "e" if near else "a"
+    return [".ooooo.", "on" + prong + "vvo.", "kvvvvko", "on" + prong + "qqo.", ".ooooo."]
+
+
+def fire_down():
+    frames = []
+    for lean in SWEEP:
+        arm, across = reaching(lean, 2, CANISTER)
+        frames.append(figure(left_plate=1, left_arm=([], 0, 0), over=[(arm, moved(ARM_LEFT_AT, across, 1))]))
+    return frames
+
+
+def fire_up():
+    frames = []
+    for lean in SWEEP:
+        arm, across = reaching(-lean, 3, CANISTER)
+        arm = upside_down(arm)
+        frames.append(figure(True, right_plate=-1, right_arm=(arm, across - 1, -len(arm) - 6)))
+    return frames
+
+
+def fire_right(far=False):
+    frames = []
+    for lean in SWEEP:
+        arm, down = side_reaching(not far, -lean if far else lean, 2, side_canister(not far))
+        frames.append(side(far_plate=1, far_claw=(arm, 0, down)) if far else side(near_plate=1, near_claw=(arm, 0, down)))
+    return frames
+
+
+def fire_left():
+    return facing_left(fire_right(True))          # mirrored, the far arm is his right arm
+
+
+# --- Punching: he strikes with a closed claw ---------------------------------------------------------------------
+# Six frames, after the genre's sheets: ready, the shoulder drawn back, the strike, the arm coming back, ready,
+# ready. The whole shoulder line turns into the blow and the opposite foot steps with it, as in his walk.
+
+def punch_down():
+    drawn_back = figure(left_plate=-1, right_plate=1, left_arm=(CLAW_LEFT, -1, -1))
+    strike = figure(left_plate=2, right_plate=-1, left_arm=([ARM] * 4 + CLAW_LEFT, 1, 2),
+                    right_arm=([ARM] + CLAW_RIGHT, 1, -2), right_foot=([LEG] + FOOT_RIGHT, -1, 0))
+    coming_back = figure(left_plate=1, left_arm=([ARM, ARM] + CLAW_LEFT, 1, 1))
+    return [figure(), drawn_back, strike, coming_back, figure(), figure()]
+
+
+def punch_up():
+    # from behind his right arm is on the viewer's right, and forward is up the screen
+    def rising(length):
+        arm = upside_down([ARM] * length + CLAW_RIGHT)
+        return (arm, -1, -len(arm) - 6)
+    drawn_back = figure(True, left_plate=-1, right_plate=1, right_arm=(CLAW_RIGHT, 1, 1))
+    strike = figure(True, left_plate=1, right_plate=-2, right_arm=(rising(6)[0], -1, rising(6)[2] - 1),
+                    left_foot=([LEG] + FOOT_LEFT, 1, 0))
+    coming_back = figure(True, right_plate=-1, right_arm=rising(4))
+    return [figure(True), drawn_back, strike, coming_back, figure(True), figure(True)]
+
+
+# --- Teleporting: he turns to light, and the light thins and rises -----------------------------------------------
+# The drifter's light teleport on his shape, in the same light: it is the ship's teleporter, not his own power.
+# Eight frames; after the last he is gone.
+
+def teleport():
+    stand = figure()
+    shape = [(x, y) for y in range(FRAME) for x in range(FRAME) if stand.getpixel((x, y))[3]]
+    edge = [p for p in shape if stand.getpixel(p) == rgba("o")]
+    inside = [p for p in shape if p not in edge]
+
+    def picture(pixels):
+        image = Image.new("RGBA", (FRAME, FRAME), (0, 0, 0, 0))
+        for (x, y), code in pixels:
+            if 0 <= x < FRAME and 0 <= y < FRAME:
+                image.putpixel((x, y), rgba(code))
+        return image
+
+    lit = stand.copy()
+    for p in edge:
+        lit.putpixel(p, rgba("u"))
+    glow = picture([(p, "u") for p in edge] + [(p, "t") for p in inside])
+    bands = picture([(p, "t" if p in inside else "u") for p in shape if p[1] % 2 == 0])
+    columns = picture([((x, y - 1), "t") for (x, y) in shape if x % 2 == 0 and y % 2 == 0]
+                      + [((x, y - 2), "u") for (x, y) in shape if x % 2 == 0 and y % 4 == 0])
+    rising = picture([((x, y - 3), "t") for (x, y) in shape if x % 4 == 1 and y % 2 == 0]
+                     + [((x, y - 5), "u") for (x, y) in shape if x % 4 == 1 and y % 4 == 0])
+    sparks = picture([((x, y - 6), "t") for (x, y) in shape if x % 4 == 1 and y % 6 == 0]
+                     + [((x, y - 8), "x") for (x, y) in shape if x % 8 == 1 and y % 6 == 0])
+    last = picture([((x, y - 9), "x") for (x, y) in shape if x % 8 == 5 and y % 8 == 0])
+    return [stand, lit, glow, bands, columns, rising, sparks, last]
+
+
+# --- Dying: the lights go out and the suit comes down in a heap --------------------------------------------------
+# Eight frames. Seen from almost straight above, a thing that falls moves down the screen to the floor, where his
+# feet are. The lights dim, then go out; the shoulders sag and the claws reach the floor; the helm drops onto the
+# torso; the plates come down either side; it ends a low, dark heap with its spikes still standing out of it.
+
+def death():
+    def fallen(helm, torso, plates, arms, out=0, lights="out"):
+        """Each part by how many rows it has come down; the claws also slide `out` to the sides."""
+        parts = [(TORSO, moved(TORSO_AT, 0, torso)),
+                 (FOOT_LEFT, FOOT_LEFT_AT), (FOOT_RIGHT, FOOT_RIGHT_AT),          # his feet stay where they stood
+                 ([ARM] + CLAW_LEFT, moved(ARM_LEFT_AT, -out, arms)),
+                 ([ARM] + CLAW_RIGHT, moved(ARM_RIGHT_AT, out, arms)),
+                 (PLATE_LEFT, moved(PLATE_LEFT_AT, 0, plates)),
+                 (PLATE_RIGHT, moved(PLATE_RIGHT_AT, 0, plates)),
+                 (HELM, moved(HELM_AT, 0, helm))]
+        if lights == "out":
+            parts = [(unlit(rows), at) for rows, at in parts]
+        image = frame(parts, AT)
+        return recoloured(image, {"v": "q"}) if lights == "dim" else image
+
+    return [figure(),
+            fallen(0, 0, 1, 1, lights="dim"),          # the lights dim and the shoulders sag
+            fallen(1, 0, 2, 2),                        # the lights go out
+            fallen(3, 1, 4, 4, 1),                     # the claws reach the floor and slide out
+            fallen(5, 2, 6, 6, 2),                     # the helm drops onto the torso
+            fallen(6, 3, 7, 7, 2),                     # the plates come down either side of it
+            fallen(6, 3, 8, 7, 2),
+            fallen(7, 3, 8, 7, 2)]                     # a low, dark heap, its spikes still standing out of it
 
 
 def portrait():

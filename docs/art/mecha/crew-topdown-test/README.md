@@ -11,8 +11,7 @@ A HalfMech in its suit at the drifter's frame size (35 by 35). He is larger than
 his spikes against 17, and that is intended: a suit is supposed to be larger than a Terran (heromedel, 2026-11-11).
 
 - `mecha-topdown-sheet.png` (and `-4x`), eight frames a row and sixteen rows: the genre's layout, with a row of its
-  own for each direction of powering a console. Rows not drawn yet are left empty, so every frame is already where
-  it will stay:
+  own for each direction of powering a console. Every row is drawn:
 
   | Row | Frames |
   |---|---|
@@ -20,10 +19,13 @@ his spikes against 17, and that is intended: a suit is supposed to be larger tha
   | 2 | Walk up (4), walk left (4) |
   | 3 | Aim down (3), aim right (3) |
   | 4 | Aim up (3), aim left (3) |
-  | 5, 6 | Fighting fire: to come |
-  | 7, 8 | Punching up and down: to come |
+  | 5 | Fighting fire down (4) and right (4) |
+  | 6 | Fighting fire up (4) and left (4) |
+  | 7 | Punching up (6) |
+  | 8 | Punching down (6) |
   | 9, 10, 11, 12 | Powering a console: right, left, up, down (8 each) |
-  | 13, 14 | Teleport and death: to come |
+  | 13 | Teleport (8) |
+  | 14 | Death (8) |
   | 15 | The clone bay: the suit's own frames (7) |
   | 16 | Portrait, crew laser shot, a gap, repair (4) |
 
@@ -35,7 +37,9 @@ his spikes against 17, and that is intended: a suit is supposed to be larger tha
   clamp-on once and the pulse three times. `review/clone-bay-8x.gif` and `-slow-8x.gif`: the clone bay as the game
   would play it, the pilot running to her suit and jumping in. `review/clone-suit-8x.png`: the suit's seven clone
   frames. `review/pilot-run-10x.gif`, `review/pilot-run-down-up-10x.png` and
-  `review/pilot-run-right-left-jump-10x.png`: the pilot's own frames. `review/repair-8x.gif`: the repair. `review/aims-down-up-8x.png` and `review/aims-right-left-8x.png`: the aim frames laid out.
+  `review/pilot-run-right-left-jump-10x.png`: the pilot's own frames. `review/repair-8x.gif`: the repair. `review/fire-8x.gif`, `review/punch-8x.gif`,
+  `review/teleport-8x.gif` and `review/death-8x.gif`: those rows moving, each with its frames laid out in a
+  picture of the same name. `review/aims-down-up-8x.png` and `review/aims-right-left-8x.png`: the aim frames laid out.
   `review/views-10x.png`: the four standing views. `review/beside-the-drifter.png`: both figures at game size, twice
   and four times. `review/beside-heromedels-drawing.png`: the front view beside the drawing it follows.
 - `reference/heromedel-mecha-topdown.png` (and `-8x`): heromedel's own drawing of the suit from above, standing and
@@ -101,6 +105,38 @@ little to his right and a little to his left, with no flash, and the shot a spri
   pixels over on the way. Nothing else moves.
 - Facing away, the claw rises from under the far edge of his shoulder plate, between the helm and the spike.
 - Facing left is the mirror of facing right with the other arm aiming, so it is still his right arm.
+
+## Fighting fire
+
+Staging after the genre's sheets: four frames a direction, a canister swept from side to side (straight, a little to
+his right, straight, a little to his left), with no spray.
+
+- **Ai-Generated-Proposal (2026-11-11):** he holds the canister in his right clamp, the two prongs on its neck. It is
+  Mecha purple, following the idea proposed for the drifter's that an extinguisher takes the power colour of the race
+  using it (heromedel, 2026-11-10).
+- The pose is the aim's: the shoulder of that arm forward, the arm reaching. Facing left it is still his right arm.
+
+## Punching
+
+Six frames, after the genre's sheets: ready, the shoulder drawn back with the claw tucked under it, the strike with
+the arm at full reach, the arm coming back, ready, ready. He strikes with a closed claw. The whole shoulder line
+turns into the blow and the opposite foot steps with it, as in his walk. The genre has only the two directions,
+toward the camera and away.
+
+## Teleport
+
+**Ai-Generated-Proposal (2026-11-11):** the drifter's light teleport on his shape, in the same pale blue light, on
+the reasoning that it is the ship's teleporter and not his own power. Eight frames: he lights at the edge, turns all
+to light, and the light thins into bands, columns and sparks that rise. After the last he is gone.
+
+## Death
+
+**Ai-Generated-Proposal (2026-11-11):** the lights go out and the suit comes down in a heap. Eight frames: the
+lights dim and the shoulders sag; the lights go out; the claws reach the floor and slide out to the sides; the helm
+drops onto the torso; the shoulder plates come down either side of it; it ends a low, dark heap with its spikes
+still standing out of it. Seen from almost straight above, a thing that falls moves down the screen to the floor,
+where his feet are, so every part moves toward his feet and they stay where they stood. The pilot is not shown. The
+old Mecha crew sheet's death melted from the feet up.
 
 ## Powering a console
 
@@ -172,9 +208,15 @@ plans to show one; both now note this glimpse.
 
 ## What I think of it
 
-- The front and back views read as heromedel's suit at game size.
-- The side view is still the weakest. It is correct as a turn of the front view, but with the shoulder plates as long as
-  they are it reads as a bracket more than as a figure.
+- The front and back views read as heromedel's suit at game size, and they carry most of the rows.
+- The side view is still the weakest. It carries walk right and left, aim, fire and power right and left, and the
+  repair.
+- Rows I would look at first: the repair, whose movement is only a pixel or two; fighting fire up, where the
+  canister crosses the spike on two frames; and the death, which is the most invented of the rows.
+- None of it has been seen on a real deck. Near-black armour with a near-black outline may sink into a dark Mecha
+  floor.
+- The style guide's Decided look for suits still says "crest head, blade forearms". If this figure becomes the
+  Mecha, that entry needs changing; that is heromedel's call.
 
 ## Tools
 

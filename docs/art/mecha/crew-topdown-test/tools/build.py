@@ -11,14 +11,13 @@ FLOOR = (0xC4, 0xCA, 0xD2, 255)
 
 def sheet():
     """Eight frames a row and sixteen rows: the genre's layout, with a row of its own for each direction of powering
-    a console, which takes eight frames. Rows not drawn yet are left empty, so every frame is where it will stay."""
-    empty = []
+    a console, which takes eight frames."""
     rows = [m.walk_down() + m.walk_right(), m.walk_up() + m.walk_left(),
             m.aims_down() + m.aims_right(), m.aims_up() + m.aims_left(),
-            empty, empty,                                  # fighting fire
-            empty, empty,                                  # punching
+            m.fire_down() + m.fire_right(), m.fire_up() + m.fire_left(),
+            m.punch_up(), m.punch_down(),
             m.power_right(), m.power_left(), m.power_up(), m.power_down(),
-            empty, empty,                                  # teleport, death
+            m.teleport(), m.death(),
             m.clone(),                                     # the suit's own clone frames; its pilot is pilot.py
             [m.portrait(), m.laser_shot(), None] + m.repair()]
     picture = Image.new("RGBA", (8 * FRAME, len(rows) * FRAME), (0, 0, 0, 0))
@@ -134,6 +133,16 @@ if __name__ == "__main__":
     strip(crop(pilot.run_right() + pilot.run_left() + [pilot.jump()]), 10, 0, FLOOR).save(
         "review/pilot-run-right-left-jump-10x.png")
     moving("review/repair-8x.gif", [m.repair()], 8, 200)
+    moving("review/fire-8x.gif", [m.fire_down(), m.fire_right(), m.fire_up(), m.fire_left()], 8, 250)
+    moving("review/punch-8x.gif", [m.punch_down(), m.punch_up()], 8, 150)
+    moving("review/teleport-8x.gif", [m.teleport() + [Image.new("RGBA", (FRAME, FRAME))] * 3], 8, 120)
+    moving("review/death-8x.gif", [m.death() + m.death()[-1:] * 5], 8, 150)
+    strip(m.fire_down() + m.fire_up(), 8, 0, FLOOR).save("review/fire-down-up-8x.png")
+    strip(m.fire_right() + m.fire_left(), 8, 0, FLOOR).save("review/fire-right-left-8x.png")
+    strip(m.punch_down(), 8, 0, FLOOR).save("review/punch-down-8x.png")
+    strip(m.punch_up(), 8, 0, FLOOR).save("review/punch-up-8x.png")
+    strip(m.teleport(), 8, 0, FLOOR).save("review/teleport-8x.png")
+    strip(m.death(), 8, 0, FLOOR).save("review/death-8x.png")
     strip(m.power_down(), 8, 0, FLOOR).save("review/powering-down-8x.png")
     strip(m.power_up(), 8, 0, FLOOR).save("review/powering-up-8x.png")
     strip(m.power_right(), 8, 0, FLOOR).save("review/powering-right-8x.png")
