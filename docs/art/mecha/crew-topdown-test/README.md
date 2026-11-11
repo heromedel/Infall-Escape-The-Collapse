@@ -23,7 +23,9 @@ A HalfMech in its suit, standing and walking in the four directions, at the drif
 After heromedel's drawing, brought down to game size by hand (nothing is scaled or traced), in the colours of the
 Mecha crew palette (`docs/art/palette.md`):
 
-- A boxy helm with a pale ridge down the middle and a short purple visor bar on its front edge.
+- A boxy helm with a pale ridge down the middle and a short purple visor bar on its front edge. The ridge reaches
+  one pixel past the top of the helm, a slight point, with the outline pixel there pushed up one (heromedel,
+  2026-11-11). Side on, the same point shows at the back of the helm.
 - A shoulder plate each side, with a thick spike sweeping up and out of its outer corner. They are shoulders:
   HalfMech suits do not have wings (heromedel, 2026-11-11).
 - An arm straight down from under each plate to a grey powered clamp claw with a purple band. heromedel likes the

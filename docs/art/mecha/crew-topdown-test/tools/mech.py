@@ -62,8 +62,8 @@ def change(rows, changes, wide):
 
 STAND_DOWN = grid([         # the top row is spare: a shoulder that swings back lifts its spike into it
     "...........................",
-    "oo.......................oo",
-    "oeo........ooooo........ono",
+    "oo...........o...........oo",
+    "oeo........ooeoo........ono",
     ".oeo......oaaeano......ono.",
     "..oeoo...onaaeanko...oono..",
     "...oeaoooonaaeankooooano...",
@@ -82,8 +82,8 @@ STAND_DOWN = grid([         # the top row is spare: a shoulder that swings back 
 ], 27)
 STEP_DOWN = grid([         # the shoulder on the viewer's left swings forward, the other back; the opposite foot swings forward
     ".........................oo",
-    "........................ono",
-    "oo.........ooooo.......ono.",
+    ".............o..........ono",
+    "oo.........ooeoo.......ono.",
     "oeo.......oaaeano....oono..",
     ".oeo.....onaaeankooooano...",
     "..oeoo...onaaeankoaannko...",
@@ -103,8 +103,8 @@ STEP_DOWN = grid([         # the shoulder on the viewer's left swings forward, t
 ], 27)
 STEP_DOWN_2 = grid([
     "oo.........................",
-    "oeo........................",
-    ".oeo.......ooooo.........oo",
+    "oeo..........o.............",
+    ".oeo.......ooeoo.........oo",
     "..oeoo....oaaeano.......ono",
     "...oeaoooonaaeanko.....ono.",
     "...oeaannonaaeanko...oono..",
@@ -128,8 +128,8 @@ STEP_DOWN_2 = grid([
 
 STAND_UP = grid([
     "...........................",
-    "oo.......................oo",
-    "oeo........ooooo........ono",
+    "oo...........o...........oo",
+    "oeo........ooeoo........ono",
     ".oeo......oaaeano......ono.",
     "..oeoo...onaaeanko...oono..",
     "...oeaoooonaaeankooooano...",
@@ -148,8 +148,8 @@ STAND_UP = grid([
 ], 27)
 STEP_UP = grid([
     "oo.........................",
-    "oeo........................",
-    ".oeo.......ooooo.........oo",
+    "oeo..........o.............",
+    ".oeo.......ooeoo.........oo",
     "..oeoo....oaaeano.......ono",
     "...oeaoooonaaeanko.....ono.",
     "...oeaannonaaeanko...oono..",
@@ -169,8 +169,8 @@ STEP_UP = grid([
 ], 27)
 STEP_UP_2 = grid([
     ".........................oo",
-    "........................ono",
-    "oo.........ooooo.......ono.",
+    ".............o..........ono",
+    "oo.........ooeoo.......ono.",
     "oeo.......oaaeano....oono..",
     ".oeo.....onaaeankooooano...",
     "..oeoo...onaaeankoaannko...",
@@ -207,7 +207,7 @@ STAND_RIGHT = grid([         # both feet show ahead of the helm, so he is not so
     "......oaaaanoooo.....",
     ".....onaaaanoano.....",
     ".....onaaaavonno.....",
-    ".....oeeeeevoooo.....",
+    "....oeeeeeevoooo.....",
     ".....onnnnnvonno.....",
     ".....onnnnkkonko.....",
     "......onkkkkoooo.....",
@@ -236,7 +236,7 @@ STEP_RIGHT = grid([         # the near shoulder and claw swing forward, the far 
     "......oaaaanooooo....",
     ".....onaaaanokano....",
     ".....onaaaavoknno....",
-    ".....oeeeeevooooo....",
+    "....oeeeeeevooooo....",
     ".....onnnnnvono......",
     ".....onnnnkkoko......",
     "......onkkkkooo......",
@@ -265,7 +265,7 @@ STEP_RIGHT_2 = grid([
     "......oaaaanooo......",
     ".....onaaaanoao......",
     ".....onaaaavono......",
-    ".....oeeeeevooooo....",
+    "....oeeeeeevooooo....",
     ".....onnnnnvoknno....",
     ".....onnnnkkoknko....",
     "......onkkkkooooo....",
