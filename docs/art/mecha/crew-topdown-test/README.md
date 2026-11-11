@@ -30,7 +30,7 @@ Mecha crew palette (`docs/art/palette.md`):
   clamp claws, and asked for them straight, not bent, and for the thicker spikes of the first version (2026-11-11).
 - Two chest lights under the visor, on a torso four rows deep, and two pointed feet. The torso was two rows;
   heromedel had it extended down two pixels with the lights left where they were (2026-11-11). The back view has
-  the same torso.
+  the same torso. Its two bottom outline corners are trimmed, as on the drifter's coat (heromedel, 2026-11-11).
 - The feet are two pixels long and stand apart from the torso and from each other, each with its own outline
   (heromedel, 2026-11-11). A stepping foot reaches a pixel further and the other draws in a pixel. Each
   foot is shaded from the top left (one lit pixel, armour, shadow at the bottom right), not in columns, which read
