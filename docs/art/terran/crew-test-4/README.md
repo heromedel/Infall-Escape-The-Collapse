@@ -38,14 +38,14 @@ same frame counts:
 | 3 | Aim down, right, up (3 each: straight, a little to his right, a little to his left; no flash) |
 | 4 | Fire down (4), fire right (4): the green extinguisher swept from side to side, no spray |
 | 5 | Fire up (4), fire left (4) |
-| 6 | Repair (9 frames from 3 drawings, played 1 2 3 3 2 2 1 1 1): side on, a welding gun in his near hand and his far hand on the work; the gun at rest, pushed forward, tipped down. No sparks on the sheet: the game draws them |
+| 6 | Repair (9 frames from 3 drawings, played 1 2 3 3 2 2 1 1 1): side on, a welding gun in his near hand and his far hand on the work; the gun at rest, a pixel forward, a pixel down, the same shape in all three. No sparks on the sheet: the game draws them |
 | 7 | Punch down (6) |
 | 8 | Type right (4), type left (4) |
 | 9 | Type up (4), type down (4) |
 | 10 | Teleport (9: his edge lights up, he turns all to light, and the light thins into bands, columns and rising sparks; the last frame is empty) |
 | 11 | Clone (6: a lump and a bare figure in muted power green with a bright edge that fades, then his colours coming in from the head down, his feet last) |
 | 12 | Aim left (3), punch up (6) |
-| 13 | Portrait (the standing frame), crew laser shot (a white bar), a gap, death (6: a stumbling step, he leans over, leans further, goes over, is down on his side, settles; all one way) |
+| 13 | Portrait (the standing frame), crew laser shot (a white bar), a gap, death (4, a test: a stumbling step, he goes over, is down on his side, settles; all one way) |
 
 - **Decided (heromedel, 2026-11-10):** the sheet's teleport is the light one, first made for crew test 3. The
   genre's kind, where his own pixels are pulled upward, is kept beside the sheet as the alternative:
@@ -90,6 +90,11 @@ each frame. Measured afterwards, frame against frame in the same place on the sh
     (heromedel, 2026-11-11): a face-on sprawl from his face-forward sheet ("terrible"); sinking at the knees and then
     a figure lying the other way ("he melts one way and then a dummy falls the other way"); and his parts coming
     down piece by piece, as the HalfMech suit's do ("he just falls apart").
+  - **A test (heromedel, 2026-11-11):** the two leaning frames are out of the death, leaving the stumble, the going
+    over and the lying. With them he read as standing, going diagonal, and only then falling. `leaning` is kept in
+    the tool so they can be put back.
+  - The gun is one fixed shape; only where his fist holds it changes. It had been redrawn shorter on the tipped
+    drawing, which made it seem to change size (heromedel, 2026-11-11).
   - Measured again, frame against frame in the same cell, the shape they share with the genre's frames is under
     half, which is what any two figures in the middle of the same tile share.
 - **Two rows are worked out and share little of their shape:** the teleport, which is now the light one and unlike

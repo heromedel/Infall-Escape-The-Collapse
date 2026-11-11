@@ -497,31 +497,38 @@ _WELDER = [
     "...ooooobo...........",
     "...offecao...........",
 ]
-REPAIR = [grid(_WELDER + rows, 21) for rows in ([
-    "...ofeecoooooooo.....",
-    "...ofeecdotsDDGoo....",          # his near fist, two by two, on the grip; the neck
-    "...oeeccecstDDGGyo...",          # the brass nozzle
-    "...odeccooooDooooo...",
-    "....oooooo.oDo.......",          # the cable, down from the grip
-    ".........kkko........",          # and away along the floor behind him
-    ".....................",
-], [
-    "...ofeecooooooooo....",          # pushed a pixel forward
-    "...ofeecdootsDDGoo...",
-    "...oeecceecstDDGGyo..",
-    "...odeccoooooDooooo..",
-    "....oooooo..oDo......",
-    ".........kkkko.......",
-    ".....................",
-], [
-    "...ofeecoooooooo.....",          # tipped down: the nozzle a row lower
-    "...ofeecdotsDDGo.....",
-    "...oeeccecstDDGGo....",
-    "...odeccooooDoGyo....",
-    "....oooooo.oDooo.....",
-    ".........kkko........",
-    ".....................",
-])]
+# The gun is one shape in all three drawings (heromedel asked whether it changed size, 2026-11-11: the tipped
+# drawing had been redrawn shorter). Only where his fist holds it changes: at rest, a pixel forward, a pixel down.
+_ARM_AND_GUN = {
+    "at rest": [
+        "...ofeecoooooooo.....",
+        "...ofeecdotsDDGoo....",          # his near fist, two by two, on the grip; the neck
+        "...oeeccecstDDGGyo...",          # the brass nozzle
+        "...odeccooooDooooo...",
+        "....oooooo.oDo.......",          # the cable, down from the grip
+        ".........kkko........",          # and away along the floor behind him
+        ".....................",
+    ],
+    "forward": [
+        "...ofeecooooooooo....",
+        "...ofeecdootsDDGoo...",
+        "...oeecceecstDDGGyo..",
+        "...odeccoooooDooooo..",
+        "....oooooo..oDo......",
+        ".........kkkko.......",
+        ".....................",
+    ],
+    "down": [
+        "...ofeecoo...........",
+        "...ofeecdooooooo.....",
+        "...oeeccdotsDDGoo....",
+        "...odeccecstDDGGyo...",
+        "....ooooooooDooooo...",
+        "...........oDo.......",
+        ".........kkko........",
+    ],
+}
+REPAIR = [grid(_WELDER + _ARM_AND_GUN[place], 21) for place in ("at rest", "forward", "down")]
 SPARKS_AT = (SIDE_AT[0] + 18, SIDE_AT[1] + 13)        # just ahead of the nozzle, in the frame: where the game's sparks start
 
 
@@ -574,9 +581,9 @@ def leaning(shifts, down=0):
 
 
 def death():
+    # A test (heromedel, 2026-11-11): the two leaning frames are left out. They read as him standing, going
+    # diagonal, and only then falling; `leaning` is kept so they can be put back.
     return [put(STEP_DOWN_2, DOWN_AT),
-            leaning([3, 3, 2, 2, 1, 1, 1, 0, 0, 0, -1, -1]),
-            leaning([6, 6, 5, 4, 4, 3, 2, 2, 1, 0, -1, -1], 1),
             put(TIPPING, (8, 11)),
             put(LYING, (7, 14)),
             put(LYING, (7, 15))]
