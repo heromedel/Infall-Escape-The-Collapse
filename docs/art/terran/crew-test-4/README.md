@@ -45,7 +45,7 @@ same frame counts:
 | 10 | Teleport (9: his edge lights up, he turns all to light, and the light thins into bands, columns and rising sparks; the last frame is empty) |
 | 11 | Clone (6: a lump and a bare figure in muted power green with a bright edge that fades, then his colours coming in from the head down, his feet last) |
 | 12 | Aim left (3), punch up (6) |
-| 13 | Portrait (the standing frame), crew laser shot (a white bar), a gap, death (4, a test: a stumbling step, he goes over, is down on his side, settles; all one way) |
+| 13 | Portrait (the standing frame), crew laser shot (a white bar), a gap, death (4): **a bad placeholder**, to be made again from scratch: a stumbling step, he goes over, is down on his side, settles |
 
 - **Decided (heromedel, 2026-11-10):** the sheet's teleport is the light one, first made for crew test 3. The
   genre's kind, where his own pixels are pulled upward, is kept beside the sheet as the alternative:
@@ -79,8 +79,9 @@ each frame. Measured afterwards, frame against frame in the same place on the sh
   vulture") and my first own death "dumb" (2026-11-10). That was a recolour of the genre's drawing, which the repo's
   rule forbids, so both were redrawn from his own frames:
   - **Repair** is his own side view, as he stands at a console and with the extinguisher: a welding gun in his near
-    hand (a dark grip, a grey neck, a brass nozzle, its cable trailing to the floor behind him) and his far hand on
-    the work. **No sparks are drawn on the sheet (heromedel, 2026-11-11):** the game makes them at the nozzle, so
+    hand (a dark grip, a grey neck, a brass nozzle) and his far hand on the work. A cable hung from the grip at
+    first; it made a ring by his hand that came undone when he reached forward, so it was removed (heromedel,
+    2026-11-11). **No sparks are drawn on the sheet (heromedel, 2026-11-11):** the game makes them at the nozzle, so
     they can flicker freely; `tools/topdown.py` gives the point as `SPARKS_AT` and the game's layout file carries
     it. Two redraws came before: a hammer swung on a thin handle, which read as waving a melted spatula, and a thin
     torch with sparks drawn in.
@@ -90,6 +91,8 @@ each frame. Measured afterwards, frame against frame in the same place on the sh
     (heromedel, 2026-11-11): a face-on sprawl from his face-forward sheet ("terrible"); sinking at the knees and then
     a figure lying the other way ("he melts one way and then a dummy falls the other way"); and his parts coming
     down piece by piece, as the HalfMech suit's do ("he just falls apart").
+  - **The death is a bad placeholder (heromedel, 2026-11-11):** not great, but it works for now; it is kept until a
+    new one is made from scratch.
   - **A test (heromedel, 2026-11-11):** the two leaning frames are out of the death, leaving the stumble, the going
     over and the lying. With them he read as standing, going diagonal, and only then falling. `leaning` is kept in
     the tool so they can be put back.

@@ -479,7 +479,8 @@ def punch_up():
 # Redrawn from his own frames (heromedel, 2026-11-11). The first version of this row took the genre's crouched pose
 # part for part, which must not go in the game; a second, with a hammer swung on a thin handle, read as waving a
 # melted spatula. He stands side on, as he does at a console and with the extinguisher, holding a welding gun: a dark
-# grip in his fist, a grey neck, a brass nozzle, and its cable trailing back to the floor behind him.
+# grip in his fist, a grey neck and a brass nozzle. It had a cable hanging from the grip, which made a ring by his
+# hand that came undone when he reached forward; the cable is gone (heromedel, 2026-11-11).
 # No sparks are drawn on the sheet (heromedel, 2026-11-11): the game makes them, at SPARKS_AT, so they can flicker
 # as they like. The three drawings only move the gun along the seam: at rest, pushed forward, tipped down. Played as
 # the genre plays its three drawings over nine frames: 1 2 3 3 2 2 1 1 1.
@@ -504,18 +505,18 @@ _ARM_AND_GUN = {
         "...ofeecoooooooo.....",
         "...ofeecdotsDDGoo....",          # his near fist, two by two, on the grip; the neck
         "...oeeccecstDDGGyo...",          # the brass nozzle
-        "...odeccooooDooooo...",
-        "....oooooo.oDo.......",          # the cable, down from the grip
-        ".........kkko........",          # and away along the floor behind him
+        "...odeccoooooooooo...",
+        "....oooooo...........",
+        ".....................",
         ".....................",
     ],
     "forward": [
         "...ofeecooooooooo....",
         "...ofeecdootsDDGoo...",
         "...oeecceecstDDGGyo..",
-        "...odeccoooooDooooo..",
-        "....oooooo..oDo......",
-        ".........kkkko.......",
+        "...odeccooooooooooo..",
+        "....oooooo...........",
+        ".....................",
         ".....................",
     ],
     "down": [
@@ -523,9 +524,9 @@ _ARM_AND_GUN = {
         "...ofeecdooooooo.....",
         "...oeeccdotsDDGoo....",
         "...odeccecstDDGGyo...",
-        "....ooooooooDooooo...",
-        "...........oDo.......",
-        ".........kkko........",
+        "....oooooooooooooo...",
+        ".....................",
+        ".....................",
     ],
 }
 REPAIR = [grid(_WELDER + _ARM_AND_GUN[place], 21) for place in ("at rest", "forward", "down")]
@@ -538,6 +539,8 @@ def repair():
 
 
 # --- Dying: he stumbles, topples over to one side, and lies on his side ----------------------------------------------
+# A BAD PLACEHOLDER (heromedel, 2026-11-11): it is not great but works for now. It stays until a new death is made
+# from scratch.
 # Redrawn from his own frames (heromedel, 2026-11-11). The first version took the genre's four falling poses part for
 # part, which must not go in the game. Then three redraws that each read wrong: one switched to a face-on sprawl
 # ("terrible"); one sank at the knees and then showed a figure lying the other way ("he melts one way and then a

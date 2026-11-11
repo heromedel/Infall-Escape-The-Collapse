@@ -131,6 +131,7 @@ The Art Style setting shows a token for any race with no sheet in the chosen sty
 | Azurethea, Malphen, Lykario, Senti-GPH | None | None |
 
 - Every Terran is the same drifter until there are more designs.
+- The top-down drifter's death is a bad placeholder (heromedel, 2026-11-11), to be made again from scratch.
 - The game does not play a death or a clone-bay animation yet, and the sheets' extra rows (the Tentauri typing at
   several systems, the HalfMech's clamp-on frames) are not used.
 - Stunned, healing and out of air have no frames: the small badges and sparks show them, as with tokens.

@@ -36,6 +36,7 @@
 		<animation id="type" right="8,1,4" left="8,5,4" up="9,1,4" down="9,5,4" ms="170"/>
 		<animation id="teleport" any="10,1,8" ms="50"/>
 		<animation id="clone" any="11,1,6" ms="150"/>
+		<!-- The drifter's death is a bad placeholder (heromedel, 2026-11-11), to be made again from scratch. -->
 		<animation id="death" any="13,4,4" ms="150"/>
 	</layout>
 	<!-- The top-down HalfMech suit: the eight-column layout with a row for each direction of powering a console
