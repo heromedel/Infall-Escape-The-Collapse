@@ -684,7 +684,7 @@ def teleport_light():
 
 GREYS = ("#4a4650", "#646070", "#7e7a88", "#9a98a4")
 POWER_TONES = ("#1f4a2a", "#2f6b3c", "#45904f", "#66b56a")      # power green, muted, dark to light
-POWER_EDGES = ("#66ff66", "#66ff66", "#3fae4a")                 # the edge on the first three frames, fading
+POWER_EDGES = ("#66ff66", "#48c653", "#143820")                 # the edge on the first three frames, fading to the outline
 LUMP = grid([".ooooo.", "o21120o", "o11211o", "o21121o", ".o112o.", "..ooo.."], 7)
 
 
