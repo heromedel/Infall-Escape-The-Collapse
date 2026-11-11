@@ -182,8 +182,7 @@ anything Claude added tagged Ai-Generated-Proposal.
     in place of a drawn face. The Tentauri's is the bell of the Facing sheet's standing frame.
   - **Colour variants — Proposed (heromedel, 2026-11-11):** a sheet can list the same sheet in other colours
     (`variants="…"` on `<crew_art>`). A crew member's name picks one, for the sprite and the token alike; the
-    race's own names take them in turn. The Tentauri have six (the five new colours are an Ai-Generated-Proposal,
-    `docs/art/style-guides.md`).
+    race's own names take them in turn. The Tentauri have six (`docs/art/style-guides.md`).
 
 ## 8. Weapons and Systems
 

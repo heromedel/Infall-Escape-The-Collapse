@@ -1,8 +1,8 @@
 """Colour variants of the Tentauri crew sheet, so crew can be told apart.
 
 The sheet beside this folder is heromedel's and is the reference: a teal bell, a pink rim, lavender tentacles.
-Each variant swaps the bell's colours for another set, tone for tone, and keeps everything else: the outline, the
-eyes, the pink rim (the Tentauri's power colour), the crew laser shot and, in all but one, the lavender tentacles.
+Each variant swaps the bell's colours and the tentacles' colours for another set, tone for tone, and keeps
+everything else: the outline, the eyes, the pink rim (the Tentauri's power colour) and the crew laser shot.
 
 Run from docs/art/tentauri/crew:   python3 tools/variants.py
 It writes variants/tentauri-crew-sheet-<name>.png and review/variants.png.
@@ -19,14 +19,13 @@ FRAME = 35
 BELL = ("#e2fffa", "#92e4e0", "#50bac4", "#2e7a96")
 TENTACLES = ("#c8aaff", "#886ad6", "#765ac4", "#543c94")
 
-# name: (bell, tentacles); None keeps the reference's colours.
+# name: (bell, tentacles), each lightest first. The pairs are heromedel's pick (2026-11-11).
 VARIANTS = {
-    "gold":   (("#fff8d6", "#ffe08a", "#f0b340", "#b06c34"), None),
-    "pearl":  (("#ffffff", "#f3eef8", "#cfc6e2", "#8f86b6"), None),
-    "blue":   (("#e0eeff", "#9cc0ff", "#5584e6", "#3350a8"), None),
-    "coral":  (("#ffeede", "#ffbc9c", "#f0845c", "#aa4a4c"), None),
-    # The reference turned around: a violet bell would be lost against lavender tentacles, so they take the teal.
-    "violet": (("#f2e4ff", "#d2a6ff", "#a26ae6", "#6238a8"), ("#92e4e0", "#50bac4", "#3c9aae", "#2e7a96")),
+    "gold":   (("#fff8d6", "#ffe08a", "#f0b340", "#b06c34"), ("#a8b4ff", "#6470dc", "#5058c8", "#363c94")),   # indigo
+    "pearl":  (("#ffffff", "#f3eef8", "#cfc6e2", "#8f86b6"), ("#a0e0ff", "#50a8e0", "#3c90cc", "#2c6a9c")),   # sky
+    "blue":   (("#e0eeff", "#9cc0ff", "#5584e6", "#3350a8"), ("#7cc08a", "#35804e", "#2a6c42", "#1b4c32")),   # forest
+    "coral":  (("#ffeede", "#ffbc9c", "#f0845c", "#aa4a4c"), ("#92e4e0", "#50bac4", "#3c9aae", "#2e7a96")),   # teal
+    "violet": (("#f2e4ff", "#d2a6ff", "#a26ae6", "#6238a8"), ("#ffe08a", "#f0b340", "#d6962e", "#a86a2c")),   # gold
 }
 
 
@@ -35,9 +34,7 @@ def rgb(colour):
 
 
 def recoloured(sheet, bell, tentacles):
-    swap = {rgb(old): rgb(new) for old, new in zip(BELL, bell)}
-    if tentacles:
-        swap.update({rgb(old): rgb(new) for old, new in zip(TENTACLES, tentacles)})
+    swap = {rgb(old): rgb(new) for old, new in zip(BELL + TENTACLES, bell + tentacles)}
     out = sheet.copy()
     pixels = out.load()
     for y in range(out.height):

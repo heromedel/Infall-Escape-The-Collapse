@@ -51,11 +51,12 @@ grow out, and each pair taps alternately like two hands. A tentacle pulls back i
 
 ![The six colours](review/variants.png)
 
-Colour variants were asked for by heromedel (Proposed, 2026-11-11); the five colours are an Ai-Generated-Proposal.
-`tools/variants.py` makes them from the sheet by swapping the bell's four tones for another set, so a change to the
-sheet carries into all of them. The outline, eyes, pink rim, crew laser shot and lavender tentacles stay as they
-are; the violet one takes teal tentacles, since a violet bell would be lost against lavender. Run it from this
-folder: `python3 tools/variants.py`.
+Colour variants were asked for by heromedel (Proposed, 2026-11-11), who picked these pairs of bell and tentacle
+colours the same day (Likely): gold with indigo, pearl with sky blue, blue with forest green, coral with teal and
+violet with gold, beside the teal reference with its lavender. `tools/variants.py` makes them from the sheet by
+swapping the bell's four tones and the tentacles' four tones for another set, so a change to the sheet carries into
+all of them. The outline, eyes, pink rim and crew laser shot stay as they are. Run it from this folder:
+`python3 tools/variants.py`.
 
 ## Files
 
