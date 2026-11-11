@@ -39,9 +39,8 @@ BACK_BODY_RUN_OTHER = [".oSknIHkoo.", "..oknHnko.."]
 # --- Facing right ------------------------------------------------------------------------------------------------
 # One shoulder above her head and one below; the ponytail trails behind her; a foot shows ahead when she runs.
 SIDE = ["....ooo....",
-        "...oknko...",            # far shoulder
-        "...oooooo..",
-        ".oooHIHTo..",            # her head is four rows across: a row of hair wider toward the far side
+        "...oknkoo..",            # far shoulder: only a cap on the top of her head, so she is not so wide side on
+        ".oooHIHTo..",            # her head is four rows across
         "oIHLHHHSo..",            # ponytail, tie, hair, face
         ".oooHHHTo..",
         "...oHIHSo..",
@@ -49,14 +48,14 @@ SIDE = ["....ooo....",
         "...oknnko..",            # near shoulder
         "...oknLSo..",            # implant light, hand
         "....oooo..."]
-SIDE_RUN_NEAR_FOOT = [(9, 7, "oo"), (9, 8, "Sko"), (9, 9, "oo")]      # the near foot reaches ahead of her
-SIDE_RUN_FAR_FOOT = [(9, 5, "oo"), (9, 6, "Sko"), (9, 7, "oo")]       # then the far one
+SIDE_RUN_NEAR_FOOT = [(9, 6, "oo"), (9, 7, "Sko"), (9, 8, "oo")]      # the near foot reaches ahead of her
+SIDE_RUN_FAR_FOOT = [(9, 4, "oo"), (9, 5, "Sko"), (9, 6, "oo")]       # then the far one
 # Her arms swing against her legs: the arm on the other side from the leading foot comes forward, a hand showing
 # ahead of its shoulder, and the arm on the same side goes back, its hand showing behind.
-SIDE_FAR_ARM_FORWARD = [(4, 0, "ooooo"), (3, 1, "oknkSo")]
+SIDE_FAR_ARM_FORWARD = [(4, 0, "oooooo"), (3, 1, "oknkoSo")]
 SIDE_FAR_ARM_BACK = [(3, 0, "oooo"), (2, 1, "oSknko")]
-SIDE_NEAR_ARM_FORWARD = [(3, 9, "oknLkSo"), (4, 10, "oooooo")]
-SIDE_NEAR_ARM_BACK = [(2, 9, "oSknLko"), (3, 10, "ooooo")]
+SIDE_NEAR_ARM_FORWARD = [(3, 8, "oknLkSo"), (4, 9, "oooooo")]
+SIDE_NEAR_ARM_BACK = [(2, 8, "oSknLko"), (3, 9, "ooooo")]
 
 
 def mirrored(rows):
@@ -83,7 +82,7 @@ def facing_up(body=BACK_BODY, legs=LEGS):
 
 
 def facing_right(patches=()):
-    return frame([(patched(SIDE, patches), (0, 0))], AT)
+    return frame([(patched(SIDE, patches), (0, 1))], AT)
 
 
 def run_down():
