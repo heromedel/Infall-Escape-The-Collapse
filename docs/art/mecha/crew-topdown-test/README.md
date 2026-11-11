@@ -37,7 +37,8 @@ Mecha crew palette (`docs/art/palette.md`):
   wide sits under them, one tone darker than the armour. It is meant to be hard to notice.
 - **Helm shading:** the tones fall off from the top left to the bottom right. They were in columns either side of
   the ridge, the same fault the feet had. `review/helm-shading-before-after-16x.png` shows front and back, before
-  then after.
+  then after. The side view's helm was regraded the same way after its ridge moved up a row, which had left
+  the wider face below the ridge one flat dark block: `review/side-helm-shading-before-after-16x.png`.
 - The feet are two pixels long and stand apart from the torso and from each other, each with its own outline
   (heromedel, 2026-11-11). A stepping foot reaches a pixel further and the other draws in a pixel. Each
   foot is shaded from the top left (one lit pixel, armour, shadow at the bottom right), not in columns, which read
