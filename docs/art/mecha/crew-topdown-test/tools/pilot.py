@@ -51,6 +51,12 @@ SIDE = ["....ooo....",
         "....oooo..."]
 SIDE_RUN_NEAR_FOOT = [(9, 7, "oo"), (9, 8, "Sko"), (9, 9, "oo")]      # the near foot reaches ahead of her
 SIDE_RUN_FAR_FOOT = [(9, 5, "oo"), (9, 6, "Sko"), (9, 7, "oo")]       # then the far one
+# Her arms swing against her legs: the arm on the other side from the leading foot comes forward, a hand showing
+# ahead of its shoulder, and the arm on the same side goes back, its hand showing behind.
+SIDE_FAR_ARM_FORWARD = [(4, 0, "ooooo"), (3, 1, "oknkSo")]
+SIDE_FAR_ARM_BACK = [(3, 0, "oooo"), (2, 1, "oSknko")]
+SIDE_NEAR_ARM_FORWARD = [(3, 9, "oknLkSo"), (4, 10, "oooooo")]
+SIDE_NEAR_ARM_BACK = [(2, 9, "oSknLko"), (3, 10, "ooooo")]
 
 
 def mirrored(rows):
@@ -92,7 +98,10 @@ def run_up():
 
 
 def run_right():
-    return [facing_right(), facing_right(SIDE_RUN_NEAR_FOOT), facing_right(), facing_right(SIDE_RUN_FAR_FOOT)]
+    return [facing_right(),
+            facing_right(SIDE_RUN_NEAR_FOOT + SIDE_FAR_ARM_FORWARD + SIDE_NEAR_ARM_BACK),
+            facing_right(),
+            facing_right(SIDE_RUN_FAR_FOOT + SIDE_NEAR_ARM_FORWARD + SIDE_FAR_ARM_BACK)]
 
 
 def run_left():
