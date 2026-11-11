@@ -57,6 +57,11 @@ same frame counts:
   that frame. `review/clone-12x.gif` and `review/clone-slow-12x.gif` show it moving. `review/clone-compare.png`
   shows the grey first version and the muted green without the edge beside it.
 
+- **Walking away, the coat kicks (heromedel, 2026-11-11):** the hem drops a row over the trailing leg and lifts a row
+  on the other side, so it swings as he steps. It moves up and down only; a tail kicked out sideways was tried first
+  and turned down. `review/walk-up-kick-choices.png` shows the flat hem and four up-or-down kicks; the third column
+  is the one on the sheet.
+
 ## How close it sits to the genre's sheet
 
 It was drawn frame for frame against the genre's sheet, working from letter maps of where each of its parts sits in
