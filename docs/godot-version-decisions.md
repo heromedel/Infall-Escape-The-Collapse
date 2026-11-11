@@ -180,6 +180,10 @@ anything Claude added tagged Ai-Generated-Proposal.
   - **Tokens from sprites — Decided for the Tentauri (heromedel, 2026-11-11):** a race's token can be a circle cut
     from one frame of its sheet (`<token style="…" frame="row,column" centre="x,y" radius="…"/>` in `race.xml`),
     in place of a drawn face. The Tentauri's is the bell of the Facing sheet's standing frame.
+  - **Crew for sale — Decided (heromedel, 2026-11-11):** every crew card in a store shows a picture of the crew
+    member, drawn as the Art Style setting draws them aboard: their sprite standing on a deck tile, or their
+    token where the style is Tokens or the race has no sheet in it. It is the crew member the buyer gets: their
+    name and subtype are settled before the sale, though the card doesn't show the name.
   - **Subtypes — Decided (heromedel, 2026-11-11):** a crew member has a subtype that names the colours they
     wear, one for each part of their race's sheet. A Tentauri's is bell and tentacles, picked separately, e.g.
     `blue/forest`. It is for show only, is saved with the run, and a clone keeps it.
@@ -346,4 +350,5 @@ All built in the build of 2026-11-05.
 | 2026-11-09 | Ship status cards (GV 14H) proposed and put on the Next build list. |
 | 2026-11-11 | The Art Style setting, Top Down > Facing > Tokens, with Top Down the default (GV 7F); built the same day. |
 | 2026-11-11 | Tentauri tokens are cut from the Facing sheet's standing frame (GV 7F). |
+| 2026-11-11 | Every crew card in a store shows the crew member's picture, following the Art Style setting (GV 7F). |
 | 2026-11-11 | Crew subtypes: a Tentauri's bell and tentacle colours, planned pairs first, then unused combinations, one of each to a squad (GV 7F). |

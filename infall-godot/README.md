@@ -133,7 +133,7 @@ The Art Style setting shows a token for any race with no sheet in the chosen sty
 - Every Terran is the same drifter until there are more designs.
 - The Tentauri's token is cut from their Facing sheet, in the colours of the crew member's subtype (GV 7F). The
   other races' tokens are still drawn faces, and no other race has subtypes yet.
-- A store shows a token only for crew whose race has subtypes; the other crew for sale have no picture.
+- A store's crew cards show the crew member as the Art Style setting draws them: sprite or token.
 - The top-down drifter's death is a bad placeholder (heromedel, 2026-11-11), to be made again from scratch.
 - The game does not play a death or a clone-bay animation yet, and the sheets' extra rows (the Tentauri typing at
   several systems, the HalfMech's clamp-on frames) are not used.
