@@ -108,14 +108,17 @@ little to his right and a little to his left, with no flash, and the shot a spri
 
 ## Fighting fire
 
-**Decided (heromedel, 2026-11-11):** he holds nothing. He aims his own claw, the clamp open and its lights white.
+**Decided (heromedel, 2026-11-11):** he holds nothing. He aims his own claw, the clamp open, with one light on it.
 
 - Staging after the genre's sheets: four frames a direction, the claw swept from side to side (straight, a little to
   his right, straight, a little to his left), with no spray.
-- The pose is the aim's. What tells the two apart is the colour of the claw's two lights, the wrist band and the
-  emitter between the prongs: purple to shoot, white to put out a fire.
-- Two versions with a purple canister in the clamp came first. In the first his hand read as a purple blotch
-  (heromedel, 2026-11-11); the second, a cleaner cylinder, was dropped for this.
+- The pose is the aim's. What tells the two apart is the claw's lights. To shoot, the wrist light and the emitter
+  between the prongs are both purple. To put out a fire only the wrist light is lit, and the emitter in front of it
+  is grey like the clamp.
+- **Proposed (heromedel, 2026-11-11):** the light flickers as he extinguishes, white to red or purple. It is drawn
+  white and bright purple, frame about; red would be a one-letter change.
+- Earlier versions: a purple canister in the clamp, which made his hand read as a purple blotch; a cleaner cylinder;
+  then the open claw with both lights white.
 
 ## Punching
 

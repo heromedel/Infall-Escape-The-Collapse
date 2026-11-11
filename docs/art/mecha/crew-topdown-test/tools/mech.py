@@ -408,32 +408,37 @@ def clone():
             figure()]
 
 
-# --- Fighting fire: he holds nothing; he aims his own claw, the clamp open and its lights white ------------------
+# --- Fighting fire: he holds nothing; he aims his own claw, the clamp open and its wrist light white ------------
 # (heromedel, 2026-11-11.) Staging after the genre's sheets: four frames a direction, the claw swept from side to
 # side (straight, a little to his right, straight, a little to his left), with no spray. The pose is the aim's; what
-# tells the two apart is the colour of the claw's two lights, the wrist band and the emitter between the prongs:
-# purple to shoot, white to put out a fire.
+# tells the two apart is the claw's lights. To shoot, the wrist light and the emitter between the prongs are purple.
+# To put out a fire there is one light only: the wrist light, flickering white and bright purple as he works, and the
+# emitter in front of it is grey like the clamp.
 
-CLAW_OPEN_WHITE = [row.replace("v", "x").replace("q", "x") for row in CLAW_OPEN]
 SWEEP = (0, -1, 0, 1)
+FLICKER = ("x", "L", "x", "L")          # the wrist light on each frame of the sweep: white, bright purple
 
 
-def side_claw_white(near):
-    return [row.replace("v", "x").replace("q", "x") for row in side_claw(near, 0, True)]
+def fire_claw(light):
+    return [row.replace("v", light).replace("q", "e") for row in CLAW_OPEN]
+
+
+def side_fire_claw(near, light):
+    return [row.replace("v", light).replace("q", "e") for row in side_claw(near, 0, True)]
 
 
 def fire_down():
     frames = []
-    for lean in SWEEP:
-        arm, across = reaching(lean, 3, CLAW_OPEN_WHITE)
+    for lean, light in zip(SWEEP, FLICKER):
+        arm, across = reaching(lean, 3, fire_claw(light))
         frames.append(figure(left_plate=1, left_arm=([], 0, 0), over=[(arm, moved(ARM_LEFT_AT, across, 1))]))
     return frames
 
 
 def fire_up():
     frames = []
-    for lean in SWEEP:
-        arm, across = reaching(-lean, 3, CLAW_OPEN_WHITE)
+    for lean, light in zip(SWEEP, FLICKER):
+        arm, across = reaching(-lean, 3, fire_claw(light))
         arm = upside_down(arm)
         frames.append(figure(True, right_plate=-1, right_arm=(arm, across - 1, -len(arm) - 6)))
     return frames
@@ -441,8 +446,8 @@ def fire_up():
 
 def fire_right(far=False):
     frames = []
-    for lean in SWEEP:
-        arm, down = side_reaching(not far, -lean if far else lean, 3, side_claw_white(not far))
+    for lean, light in zip(SWEEP, FLICKER):
+        arm, down = side_reaching(not far, -lean if far else lean, 3, side_fire_claw(not far, light))
         frames.append(side(far_plate=1, far_claw=(arm, 0, down)) if far else side(near_plate=1, near_claw=(arm, 0, down)))
     return frames
 
