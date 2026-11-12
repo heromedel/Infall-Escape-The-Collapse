@@ -35,6 +35,28 @@ def rgba(code):
     return tuple(int(code[at:at + 2], 16) for at in (1, 3, 5)) + (255,)
 
 
+CONCEPT_GAP = (24, 30)        # one deck pixel between his boot and tail in the concept's standing view: left as drawn
+
+
+def sealed(picture):
+    """The picture with any speck of deck shut in by the figure (one or two pixels no path reaches from the frame's
+    edge) filled with outline, so no frame has a hole in it."""
+    pixels = picture.load()
+    reached, waiting = set(), [(x, y) for x in range(FRAME) for y in (0, FRAME - 1)] + [(x, y) for y in range(FRAME) for x in (0, FRAME - 1)]
+    while waiting:
+        x, y = waiting.pop()
+        if (x, y) in reached or not (0 <= x < FRAME and 0 <= y < FRAME) or pixels[x, y][3]:
+            continue
+        reached.add((x, y))
+        waiting += [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)]
+    shut_in = [(x, y) for y in range(FRAME) for x in range(FRAME) if not pixels[x, y][3] and (x, y) not in reached]
+    if len(shut_in) <= 3:
+        for place in shut_in:
+            if place != CONCEPT_GAP:
+                picture.putpixel(place, rgba(KEY["#"]))
+    return picture
+
+
 def frame(*parts):
     """A frame from parts drawn back to front. A part is (grid, column, row): where its top left corner goes in the
     standing figure's grid. '.' is see-through."""
@@ -45,7 +67,7 @@ def frame(*parts):
             for i, character in enumerate(line):
                 if character != ".":
                     picture.putpixel((LEFT + column + i, TOP + row + j), rgba(KEY[character]))
-    return picture
+    return sealed(picture)
 
 
 def mirrored(picture):
