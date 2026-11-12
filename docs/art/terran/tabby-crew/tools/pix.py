@@ -28,7 +28,6 @@ KEY = {
     "G": "#b8b8c0",                                    # the strap's buckle
     "g": "#62626e",                                    # the pistol's lit steel: darker than a light deck
     "r": "#d62218", "M": "#8c1610",                    # the fire extinguisher: lit, shade
-    "u": "#f0faff", "v": "#3aa0e8",                    # its spray
 }
 
 
@@ -99,11 +98,33 @@ def tail(path):
     return (["".join(row) for row in grid], left, top)
 
 
-def dots(points):
-    """Loose pixels, such as spray: (column, row, character) in the figure's grid. Returns a part for frame()."""
-    left = min(x for x, y, c in points)
-    top = min(y for x, y, c in points)
-    grid = [["."] * (max(x for x, y, c in points) + 1 - left) for row in range(max(y for x, y, c in points) + 1 - top)]
-    for x, y, c in points:
-        grid[y - top][x - left] = c
-    return (["".join(row) for row in grid], left, top)
+
+OUTLINE = rgba(KEY["#"])
+
+
+def turned(picture, degrees):
+    """A drawn figure turned clockwise by an angle that is not a quarter turn, for a figure in mid-fall. Each pixel is
+    made eight times larger, the picture is turned, and each pixel of the result takes the colour most of its
+    eight-by-eight block has; then any gap the turn opened in the outline is closed. The result is checked by eye."""
+    size = picture.width * 3
+    canvas = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    canvas.alpha_composite(picture, (picture.width, picture.height))
+    big = canvas.resize((size * 8, size * 8), Image.NEAREST).rotate(-degrees, resample=Image.NEAREST)
+    out = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+    source = big.load()
+    for y in range(size):
+        for x in range(size):
+            counts = {}
+            for dy in range(8):
+                for dx in range(8):
+                    colour = source[x * 8 + dx, y * 8 + dy]
+                    counts[colour] = counts.get(colour, 0) + 1
+            colour = max(counts, key=counts.get)
+            if colour[3]:
+                out.putpixel((x, y), colour)
+    pixels = out.load()
+    gaps = [(x, y) for y in range(1, size - 1) for x in range(1, size - 1) if not pixels[x, y][3]
+            and any(pixels[x + dx, y + dy][3] and pixels[x + dx, y + dy] != OUTLINE for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)))]
+    for place in gaps:
+        out.putpixel(place, OUTLINE)
+    return out.crop(out.getbbox())
