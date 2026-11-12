@@ -210,6 +210,17 @@ anything Claude added tagged Ai-Generated-Proposal.
     - How it is built: the race's `race.xml` lists each part (`<skin_part>`: the sheet's own colour codes for it
       and the colours it can take) and the planned subtypes (`<subtype wears="…"/>`). The sheet is kept as an SVG,
       and the game changes its colour codes and draws it, once for each subtype worn (`CrewSkins`, `CrewArt`).
+- **G — Proposed (heromedel, 2026-11-12):** crew fights as the genre has them (`docs/reference/genre-crew-fights/`).
+  Not built; planning only.
+  - **Likely (heromedel, 2026-11-12):** fighters walk onto an enemy's tile and pair up, one from each side to a
+    tile. The two on a tile punch; a fighter with nobody on his tile aims and fires, and a small bolt flies from
+    about the gun to the target.
+  - **Proposed (heromedel, 2026-11-12):** if a player moves a paired crew member to another tile, the enemy, if
+    still willing to fight, follows to go on with the melee. The genre had no need of this: it has no
+    tile-to-tile orders.
+  - **Open (heromedel, 2026-11-12):** how crew and system symbols fit in one tile. How Infall draws them was not
+    compared with the genre before; the comparison is in the reference folder. To be worked out before the
+    fights are built.
 
 ## 8. Weapons and Systems
 

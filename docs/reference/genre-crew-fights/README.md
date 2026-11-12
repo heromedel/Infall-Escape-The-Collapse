@@ -63,6 +63,24 @@ Everyone in a room with an enemy damages the nearest enemy every tick from where
 an enemy's tile, every fighter plays the aiming pose, and no shot or hit mark is drawn
 (`infall-godot/scripts/battle/crew_brain.gd`, `scripts/ui/ship_view.gd`).
 
+## Crew in a tile: the genre beside Infall (2026-11-12)
+
+`06-crew-in-a-tile-compared.jpg`: the genre's crew at engines, weapons and piloting, then Infall's piloting and
+engine rooms in each Art Style. heromedel asked for this look before the fights are changed, since how Infall
+draws crew and system symbols in a tile had not been compared with the genre.
+
+| | Genre | Infall now |
+|---|---|---|
+| System symbol | One for the room, large (most of a tile), flat dark grey on the floor at the room's middle. | One for each system on its own tile: a dark disc with the symbol lit in the power colour, at the tile's middle. |
+| Console | Drawn at the wall of one tile; the crew member stands on that tile in front of it. | A desk at the wall edge of the system's tile, with a blank dark screen. |
+| A crew member at a station | Stands clear of the room's symbol, which stays in view. | Stands at the tile's middle, on top of the symbol, which is hidden. Which system they are on is only said in words in the crew panel. |
+| Size in a 35-pixel tile | About 20 wide and 18 tall, floor showing all round. | Top-down sprite about 24 wide; the Facing sprite 23 tall and reaching the tile's lower edge; a token about 30 across with its ring. |
+| Marks round the crew member | A thin outline that hugs the sprite. | A soft ring, a second ring when manning, and a conduit line through the tile. |
+| Two fighters on a tile | Drawn apart, one in the upper half and one in the lower. | Not done yet. |
+
+No note was found of an agreed symbol beside a crew member to say which system they are on, in this repo's docs or
+in the older Deck Collapse version; the Godot version says it in words in the crew panel.
+
 ## How the recordings were made
 
 So the next session can repeat or extend them. Nothing below is in the repo; it all lived in the session's scratch
