@@ -222,8 +222,8 @@ def walk_up():
 # one piece; the sleeve from the shoulder leans to meet them. The pistol is a slide with its sight on top.
 SLEEVES_UP = {                # columns 15 on, rows 10-12, by the column the forearm stands at
     16: ["#Jj#", "CJj#", "j##."],
-    17: [".#Jj#", "CJJj#", "j###."],
-    18: ["..#Jj#", "CJJJj#", "j####."],
+    17: [".#Jj#", "CJJj#", "jjj#.", ".##.."],        # where it runs sideways it is two pixels deep, like the rest of
+    18: ["..#Jj#", "CJJJj#", "jjjj#.", ".###.."],    # the arm
 }
 FOREARM_UP_PISTOL = [         # rows 4-9: pistol, paw, cuff
     ".#..",

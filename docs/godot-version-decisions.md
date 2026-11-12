@@ -180,6 +180,9 @@ anything Claude added tagged Ai-Generated-Proposal.
   - **Tokens from sprites — Decided for the Tentauri (heromedel, 2026-11-11):** a race's token can be a circle cut
     from one frame of its sheet (`<token style="…" frame="row,column" centre="x,y" radius="…"/>` in `race.xml`),
     in place of a drawn face. The Tentauri's is the bell of the Facing sheet's standing frame.
+  - **Particles — Proposed (heromedel, 2026-11-12):** all particles could be made in the game instead of being
+    drawn on the sheets: extinguisher spray, welding sparks and the like. Today the game only draws sparks, for a
+    repair whose layout gives a point; the Tabby sheet (`docs/art/terran/tabby-crew`) is drawn with no spray.
   - **Crew for sale — Decided (heromedel, 2026-11-11):** every crew card in a store shows a picture of the crew
     member, drawn as the Art Style setting draws them aboard: their sprite standing on a deck tile, or their
     token where the style is Tokens or the race has no sheet in it. It is the crew member the buyer gets: their
