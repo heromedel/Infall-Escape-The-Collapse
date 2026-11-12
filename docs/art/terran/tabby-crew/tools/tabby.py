@@ -36,10 +36,10 @@ STAND = [                     # rows 10-22: collar, jacket, paws, pants, boots
     "..#bBBB#...#bBBB#..",
     "..######...######..",
 ]
-# A step with the leg on our left coming toward us. The body sinks a pixel onto it (rows 11-23), and that boot lands
-# a pixel below the standing line, showing more of its top; the other leg is behind, its boot lifted, smaller and
-# darker. The arms swing against the legs: the arm on our left goes back (a row shorter, its paw tucked at the hem
-# in shade), the arm on our right comes forward with the whole paw showing.
+# A step with the leg on our left coming toward us. The body sinks a pixel onto it (rows 11-22) and that knee
+# bends, so its boot stays on the deck's line and shows more of its top; the other leg is behind, its boot lifted
+# and smaller. The arms swing against the legs: the arm on our left goes back (a row shorter, its paw tucked at
+# the hem in shade), the arm on our right comes forward with the whole paw showing.
 STEP_LEFT = [
     "...#CCC#####CCC#...",
     "..#CCcCJJZJJCcCC#..",
@@ -50,7 +50,6 @@ STEP_LEFT = [
     "...##qPPPPpP#WWW#..",
     "...#qPXPPpPPPPp#...",
     "..#qPTTPp#pPPp#....",
-    "..#qPPp#..#ppp#....",
     "..#bbBB#..#BBB#....",
     "..#bBBBB#..###.....",
     "..#######..........",
@@ -66,7 +65,6 @@ STEP_RIGHT = [
     "..#WWW#PPPpPPp##...",
     "...#qPXPPpPPPPp#...",
     "...#pTTp##pPPPPp#..",
-    "....#ppp#..#PPPp#..",
     "....#BBB#..#bbBB#..",
     ".....###..#bBBBB#..",
     "..........#######..",
@@ -80,12 +78,11 @@ TAIL_REST = [
     ".oO##.",
     ".###..",
 ]
-TAIL_OUT = [
+TAIL_OUT = [                  # swung out from his leg, the tip flicked up
     ".#....",
     "#O#...",
-    "#o#...",
-    ".#O#..",
-    ".#o#Y#",
+    "#o##..",
+    ".#O#Y#",
     "..#O#.",
     "...#..",
 ]
@@ -111,23 +108,7 @@ def walk_down():
 # out from his side so the pistol hangs over the deck, clear of his leg. Three aims, as on the other sheets:
 # straight, a little to his right, a little to his left. The forearm, paw and pistol move as one piece from the
 # elbow; the pistol itself never changes shape. The body is rows 10-22, starting a column left of the figure.
-ARM_OUT_BODY = [              # his right arm out from the shoulder to the elbow; the forearm is laid over it
-    "....#CCC#####CCC#...",
-    "...#CCcCJJZJJCcCC#..",
-    "..#QJJ#cJjZjTcJJj#..",
-    "..#QeJ#JJjZTJ#JJj#..",
-    ".....#JJJjGjJ#JJj#..",
-    ".....#RRRTRRR#jjj#..",
-    ".....#qPPPPpP#wWW#..",
-    "....#qPTPPpPPPPp#...",
-    "...#qPTTPp#pPPPPp#..",
-    "...#qPPPp#.#pPPPp#..",
-    "....#ppp#...#ppp#...",
-    "...#bBBB#...#bBBB#..",
-    "...######...######..",
-]
-FOREARM_PISTOL = [            # rows 14-21: forearm, cuff, paw, pistol
-    "#QJJ#",
+FOREARM_PISTOL = [            # rows 14-20: forearm, cuff, paw, pistol
     "#QJJ#",
     "#jjj#",
     "#WWw#",
@@ -138,21 +119,28 @@ FOREARM_PISTOL = [            # rows 14-21: forearm, cuff, paw, pistol
 ]
 
 
-ARM_OUT_BODY_WIDE = ARM_OUT_BODY[:4] + [   # with the forearm swung out, his side shows a pixel more of jacket
-    ".....JJJJjGjJ#JJj#..",
-    ".....RRRRTRRR#jjj#..",
-    ".....qqPPPPpP#wWW#..",
-] + ARM_OUT_BODY[7:]
-
-
-def arm_down(forearm, swing=0):
-    """Facing us with his right forearm holding something; swing moves the forearm out (-1) or in (1)."""
-    body = ARM_OUT_BODY_WIDE if swing < 0 else ARM_OUT_BODY
+def arm_down(forearm, swing=-1):
+    """Facing us with his right arm out from his side, holding something. swing is how far the forearm stands out:
+    -1 straight, -2 further out, 0 in beside his leg. The upper arm follows it, and his side fills in behind."""
+    out = -swing
+    upper = "." * (2 - out // 2) + "#%s#" + "J" * (out // 2) + "%s#.."
+    body = ["....#CCC#####CCC#...",
+            "...#CCcCJJZJJCcCC#..",
+            upper % ("QJJ", "cJjZjTcJJj"),
+            upper % ("QeJ", "JJjZTJ#JJj")]
+    for fill, rest in (("J", "JJJjGjJ#JJj#.."), ("R", "RRRTRRR#jjj#.."), ("q", "qPPPPpP#wWW#..")):
+        body.append("." * 5 + "#" + rest if out == 0 else "." * (6 - out) + fill * out + rest)
+    body += ["....#qPTPPpPPPPp#...",
+             "...#qPTTPp#pPPPPp#..",
+             "...#qPPPp#.#pPPPp#..",
+             "....#ppp#...#ppp#...",
+             "...#bBBB#...#bBBB#..",
+             "...######...######.."]
     return frame((TAIL_REST, 16, 15), (HEAD, 0, 0), (body, -1, 10), (forearm, swing, 14))
 
 
 def aim_down():
-    return [arm_down(FOREARM_PISTOL, swing) for swing in (0, -1, 1)]
+    return [arm_down(FOREARM_PISTOL, swing) for swing in (-1, -2, 0)]
 
 
 # --- Facing up (away from the viewer) --------------------------------------------------------------------------
@@ -185,7 +173,7 @@ BACK_STAND = [
     "..######...######..",
 ]
 # Walking away, the leg on our left trails toward us (low and big, its heel to us) and the other steps away (short,
-# its boot lifted). His arms stay ahead of him, out of sight, as when he stands. The body sinks a pixel: rows 11-23.
+# its boot lifted). His arms stay ahead of him, out of sight, as when he stands. The body sinks a pixel: rows 11-22.
 BACK_STEP_LEFT = [
     "...#CCCCCcCCCcc#...",
     "..#CCcCCCCCCCcCC#..",
@@ -196,7 +184,6 @@ BACK_STEP_LEFT = [
     "...#qPPPPpPPPPp#...",
     "...#qPPPPpPPPPp#...",
     "..#qPPPPp#pPPp#....",
-    "..#qPPp#..#ppp#....",
     "..#BBBB#..#DDD#....",
     "..#BBBBB#..###.....",
     "..#######..........",
@@ -211,7 +198,6 @@ BACK_STEP_RIGHT = [
     "...#qPPPPpPPPPp#...",
     "...#qPPPPpPPPPp#...",
     "....#pPPp#pPPPPp#..",
-    "....#ppp#..#PPPp#..",
     "....#DDD#..#BBBB#..",
     ".....###..#BBBBB#..",
     "..........#######..",
@@ -231,31 +217,37 @@ def walk_up():
             frame((BACK_HEAD, 0, 1), (BACK_STEP_RIGHT, 0, 11), tail(BACK_TAIL_DOWN))]
 
 
-# Aiming away from us: his right arm (on our right from behind) goes out from the shoulder and up, the pistol above
-# the paw, with deck showing between it and his head so it doesn't sit at his ear. The forearm, paw and pistol move
-# as one piece; the sleeve from the shoulder reaches out to meet them.
+# Aiming away from us: his right arm (on our right from behind) reaches out ahead of him, which from here is up
+# beside his head, leaning out a little so deck shows between it and his ear. The forearm, paw and pistol move as
+# one piece; the sleeve from the shoulder leans to meet them. The pistol is a slide with its sight on top.
 SLEEVES_UP = {                # columns 15 on, rows 10-12, by the column the forearm stands at
-    17: ["...#Jj#", "CJJj##.", "j####.."],
-    18: ["....#Jj#", "CJJJj###", "j#####.."],
-    19: [".....#Jj#", "CJJJJj###", "j######.."],
+    16: ["#Jj#", "CJj#", "j##."],
+    17: [".#Jj#", "CJJj#", "j###."],
+    18: ["..#Jj#", "CJJJj#", "j####."],
 }
 FOREARM_UP_PISTOL = [         # rows 4-9: pistol, paw, cuff
-    ".##.",
-    "#gX#",
+    ".#..",
+    "#X#.",
     "#gX#",
     "#gX#",
     "#Oo#",
     "#jj#",
 ]
+FOREARM_UP_PAW = [            # a fist, for the punch
+    ".##.",
+    "#Oo#",
+    "#Oo#",
+    "#jj#",
+]
 
 
-def arm_up(forearm, at=18):
-    """From behind with his right forearm raised; `at` is its column: 17 nearer his head, 19 further out."""
-    return frame((BACK_HEAD, 0, 0), (BACK_STAND, 0, 10), tail(BACK_TAIL_REST), (SLEEVES_UP[at], 15, 10), (forearm, at, 4))
+def arm_up(forearm, at=17, top=4):
+    """From behind with his right forearm raised; `at` is its column: 16 against his head, 18 furthest out."""
+    return frame((BACK_HEAD, 0, 0), (BACK_STAND, 0, 10), tail(BACK_TAIL_REST), (SLEEVES_UP[at], 15, 10), (forearm, at, top))
 
 
 def aim_up():
-    return [arm_up(FOREARM_UP_PISTOL, at) for at in (18, 17, 19)]
+    return [arm_up(FOREARM_UP_PISTOL, at) for at in (17, 16, 18)]
 
 
 # --- Facing right (left is the same, mirrored) -----------------------------------------------------------------
@@ -299,25 +291,25 @@ SIDE_STRIDE_NEAR = [
     "...#Oo#qPPPPPp#....",
     "...#qXPPPPPPPp#....",
     "..#ppT###qPPPPp#...",
-    ".#ppp#...##qPPPp#..",
-    "#DDD#......#BBBBBb#",
-    "#####......########",
+    "..#ppp#..#qPPPp#...",
+    ".#DDD#....#BBBBBb#.",
+    ".#####....########.",
 ]
 # The other stride: the far leg forward (darker, thinner), the near leg trailing. The near arm swings forward, bent,
-# the forearm across his chest and the paw out ahead of it, well above his belt.
+# the forearm across his chest and the paw at its front edge, well above his belt.
 SIDE_STRIDE_FAR = [
     "....#CCCCCCCCC#....",
     "...#CCQJJCCCCC#....",
-    "...#QJQeJdJJTj###..",
-    "...#QJJQQQQQQjOo#..",
-    "...#QJJdjjjjjj###..",
+    "...#QJQeJdJJTj#....",
+    "...#QJJQQQQjOo#....",
+    "...#QJJdjjjjdj#....",
     "...#jRRRRRRRRj#....",
     "...#qPPPPPPPPp#....",
     "...#qXPPPPPPPp#....",
     "..#qPTPP##pppp#....",
-    "#qPPPp##..##ppp#...",
-    "#BBBBBb#...#DDDDD#.",
-    "########...#######.",
+    ".#qPPPp#..#ppp#....",
+    ".#BBBBBb#.#DDDD#...",
+    ".########.######...",
 ]
 # The tail stands up behind him, curling at the tip; it leans back on one stride and stands straighter on the other.
 SIDE_TAIL_REST = [(3, 17), (2, 17), (2, 16), (2, 15), (1, 14), (1, 13), (2, 12)]
@@ -342,7 +334,7 @@ def walk_left():
 SIDE_AIM = [                  # two columns wider than the figure, for the pistol
     "....#CCCCCCCCC#......",
     "...#CCQJJCCCCC######.",
-    "...#QJQeQQQQQjOgggg#.",
+    "...#QJQeQQQQQjgggX#..",
     "...#QJJJJJJJJjOoX##..",
     "...#QJdddddddj####...",
     "...#jRRRRRRRRj#......",
@@ -351,7 +343,7 @@ SIDE_AIM = [                  # two columns wider than the figure, for the pisto
 ]
 SIDE_AIM_HIGH = [
     "....#CCCCCCCCC######.",
-    "...#CCQJJCQQQjOgggg#.",
+    "...#CCQJJCQQQjgggX#..",
     "...#QJQeQQJJJjOoX##..",
     "...#QJJJJJdddj####...",
     "...#QJddddJTJj#......",
@@ -363,7 +355,7 @@ SIDE_AIM_LOW = [
     "....#CCCCCCCCC#......",
     "...#CCQJJCCCCC#......",
     "...#QJQeQQJJJZ######.",
-    "...#QJJJJJQQQjOgggg#.",
+    "...#QJJJJJQQQjgggX#..",
     "...#QJddddJJJjOoX##..",
     "...#jRRRRRdddj####...",
     "...#qPPPPPPPPp#......",
@@ -384,8 +376,7 @@ def aim_left():
 # --- Fighting a fire: the aiming arm with a red extinguisher, sweeping across the fire --------------------------
 # No spray is drawn: the game adds it (heromedel, 2026-11-12). The nozzle is the dark tip beyond the red.
 
-FOREARM_EXTINGUISHER = [      # rows 14-22: forearm, cuff, paw, the canister, its nozzle
-    "#QJJ#",
+FOREARM_EXTINGUISHER = [      # rows 14-21: forearm, cuff, paw, the canister, its nozzle
     "#QJJ#",
     "#jjj#",
     "#WWw#",
@@ -405,15 +396,15 @@ FOREARM_UP_EXTINGUISHER = [   # rows 4-9
 ]
 def with_extinguisher(aim):
     """A side aim with the red canister in place of the pistol; its dark nozzle is the tip."""
-    return [row.replace("Ogggg#.", "OrrrX#.").replace("OoX##..", "oMMM#..") for row in aim]
+    return [row.replace("gggX#..", "OOrrX#.").replace("OoX##..", "OoMM##.") for row in aim]
 
 
 def fire_down():
-    return [arm_down(FOREARM_EXTINGUISHER, swing) for swing in (0, -1, 0, 1)]
+    return [arm_down(FOREARM_EXTINGUISHER, swing) for swing in (-1, -2, -1, 0)]
 
 
 def fire_up():
-    return [arm_up(FOREARM_UP_EXTINGUISHER, at) for at in (18, 17, 18, 19)]
+    return [arm_up(FOREARM_UP_EXTINGUISHER, at) for at in (17, 16, 17, 18)]
 
 
 def fire_right():
@@ -440,19 +431,18 @@ PUNCH_DOWN_BACK = [           # rows 10-16
     "..#WWw#RTRRR#jjj#..",
     "...####PPPpP#wWW#..",
 ]
-PUNCH_DOWN_STRIKE = [         # rows 11-23: the whole body below the head, stepped in and sunk a pixel; the arm
-    "...#CCC#####CCC#...",    # is no longer than at rest, but the paw is nearer us, so twice as tall
+PUNCH_DOWN_STRIKE = [         # rows 11-22: the whole body below the head, stepped in and sunk a pixel
+    "...#CCC#####CCC#...",
     "..#CCcCJJZJJCcCC#..",
     "..#QJJcJjZjTcJJj#..",
     "..#QeJ#JjZTJ#JJj#..",
     "..#QJJ#JjGjJ#jjj#..",
-    "..#jjj#RTRRR##ww#..",
-    "..#WWw#PPPpPPp##...",
-    "..#WWw#PPpPPPPp#...",
-    "...###Tp##pPPPPp#..",
-    "....#ppp#..#PPPp#..",
-    "....#BBB#..#bbBB#..",
-    ".....###..#bBBBB#..",
+    "..#QJJ#RTRRR##ww#..",
+    "..#jjj#PPPpPPp##...",
+    ".#WWWw#PPpPPPPp#...",
+    ".#WWww#p##pPPPPp#..",
+    "..####B#...#bbBB#..",
+    ".....##...#bBBBB#..",
     "..........#######..",
 ]
 PUNCH_DOWN_HOME = [           # rows 10-17: the arm coming back, a row longer than at rest
@@ -471,8 +461,8 @@ def punch_down():
     stand = frame((TAIL_REST, 16, 15), (HEAD, 0, 0), (STAND, 0, 10))
     return [stand,
             frame((TAIL_IN, 16, 15), (LEGS, 0, 17), (PUNCH_DOWN_BACK, 1, 10), (HEAD, 1, 0)),
-            frame((TAIL_OUT, 15, 16), (PUNCH_DOWN_STRIKE, -1, 11), (HEAD, -1, 1)),
-            frame((TAIL_OUT, 15, 16), (PUNCH_DOWN_STRIKE, -1, 11), (HEAD, -1, 2)),
+            frame((TAIL_REST, 15, 16), (PUNCH_DOWN_STRIKE, -1, 11), (HEAD, -1, 1)),
+            frame((TAIL_REST, 15, 16), (PUNCH_DOWN_STRIKE, -1, 11), (HEAD, -1, 2)),
             frame((TAIL_REST, 16, 15), (HEAD, 0, 0), (LEGS, 0, 17), (PUNCH_DOWN_HOME, 0, 10)),
             stand]
 
@@ -481,32 +471,27 @@ def punch_down():
 # pokes out at his side; then he steps in and sinks as the arm goes out ahead of him, up beside his head.
 BACK_TORSO, BACK_LEGS = BACK_STAND[:6], BACK_STAND[6:]        # rows 10-15 and 16-22
 ARM_DRAWN_BACK = [            # columns 15-18, rows 11-16: the arm back at his side toward us, the paw at his hip
-    "CJj#",
+    "CJ#.",
     "jJj#",
     "jJj#",
     "jjj#",
     "ROo#",
     "###.",
 ]
-ARM_PUNCH_UP = [              # columns 15-19: paw, cuff, sleeve
-    ".##..",
-    "#Oo#.",
-    "#Oo#.",
-    "#jj#.",
-    "#Jj#.",
-    "CJj#.",
-    "j##..",
-]
-ARM_PUNCH_UP_FAR = ARM_PUNCH_UP[:4] + ["#Jj#."] + ARM_PUNCH_UP[4:]
 
 
 def punch_up():
     stand = frame((BACK_HEAD, 0, 0), (BACK_STAND, 0, 10), tail(BACK_TAIL_REST))
-    stepped = [(x + 1, y + 1) for x, y in BACK_TAIL_REST]
+
+    def strike(top):
+        """Stepped in and sunk a pixel, the fist out ahead of him; the sleeve grows a row for the further reach."""
+        sleeve = SLEEVES_UP[17]
+        return frame((BACK_HEAD, 1, 1), (BACK_STEP_RIGHT, 1, 11), tail([(x + 1, y + 1) for x, y in BACK_TAIL_REST]),
+                     ([sleeve[0]] * (8 - top) + sleeve, 16, top + 3), (FOREARM_UP_PAW, 18, top))
     return [stand,
             frame((BACK_LEGS, 0, 16), (BACK_TORSO, -1, 10), (BACK_HEAD, -1, 0), tail(BACK_TAIL_REST), (ARM_DRAWN_BACK, 14, 11)),
-            frame((BACK_HEAD, 1, 1), (BACK_STEP_RIGHT, 1, 11), tail(stepped), (ARM_PUNCH_UP, 16, 7)),
-            frame((BACK_HEAD, 1, 1), (BACK_STEP_RIGHT, 1, 11), tail(stepped), (ARM_PUNCH_UP_FAR, 16, 6)),
+            strike(8),
+            strike(7),
             frame((BACK_HEAD, 0, 0), (BACK_STAND, 0, 10), tail(BACK_TAIL_REST), (ARM_DRAWN_BACK, 15, 11)),
             stand]
 
@@ -535,7 +520,7 @@ SIDE_TYPE_NEAR_DOWN = [
     "...#qPPPPPPPPp#....",
     "...#qXPPPPPPPp#....",
 ]
-SIDE_TAIL_FLICK = [(3, 17), (2, 17), (2, 16), (2, 15), (1, 14), (0, 13), (0, 12)]
+SIDE_TAIL_FLICK = [(3, 17), (2, 17), (2, 16), (2, 15), (1, 14), (1, 13), (1, 12)]      # only the tip straightens
 
 
 def type_right():
@@ -549,24 +534,24 @@ def type_left():
     return [mirrored(picture) for picture in type_right()]
 
 
-# Toward us: the elbows bend and the forearms come at us, the paws side by side over his chest and tapping in turn,
+# Toward us: the elbows bend and the forearms come at us, a paw held up either side of his zip and tapping in turn,
 # clear above his belt. Rows 10-16.
 TYPE_DOWN_LEFT = [            # the paw on our left is down, the other up
     "...#CCC#####CCC#...",
     "..#CCcCJJZJJCcCC#..",
     "..#QJJcJjZjTcJJj#..",
-    "..#QeJjjjZwWW#Jj#..",
-    "..#QJ#WWwG###Jjj#..",
-    "..#jj####RRRRjj##..",
+    "..#QeJjjjZjwW#Jj#..",
+    "..#QJ#WwjGj##Jjj#..",
+    "..#jj###RRRRRjj##..",
     "...##qPPPPpPPp##...",
 ]
 TYPE_DOWN_RIGHT = [
     "...#CCC#####CCC#...",
     "..#CCcCJJZJJCcCC#..",
     "..#QJJcJjZjTcJJj#..",
-    "..#Qe#WWwZjjjJJj#..",
-    "..#QJJ###GwWW#Jj#..",
-    "..##jjRRRR####jj#..",
+    "..#Qe#WwjZjjjJJj#..",
+    "..#QJJ##jGjwW#Jj#..",
+    "..##jjRRRRR###jj#..",
     "...##qPPPPpPPp##...",
 ]
 
@@ -575,7 +560,7 @@ def type_down():
     def pose(arms, the_tail):
         return frame((the_tail, 16, 15), (HEAD, 0, 0), (LEGS, 0, 17), (arms, 0, 10))
     return [pose(TYPE_DOWN_LEFT, TAIL_REST), pose(TYPE_DOWN_RIGHT, TAIL_REST),
-            pose(TYPE_DOWN_LEFT, TAIL_OUT), pose(TYPE_DOWN_RIGHT, TAIL_REST)]
+            pose(TYPE_DOWN_LEFT, TAIL_IN), pose(TYPE_DOWN_RIGHT, TAIL_REST)]
 
 
 # Away from us his paws are out of sight at the console; his elbows work in turn and his tail tip flicks.
@@ -632,12 +617,12 @@ HAMMER_UP = [                 # columns 16-21, rows 7-13: the handle slants up a
     "#T#...",
     "T#....",
 ]
-HAMMER_FORWARD = [            # columns 16-20: the handle level, the head on end
-    "..##.",
-    "##gX#",
-    "TTgX#",
-    "##gX#",
-    "..##.",
+HAMMER_FORWARD = [            # columns 16-21: the handle level, the head on end
+    "...##.",
+    "###gX#",
+    "TTTgX#",
+    "###gX#",
+    "...##.",
 ]
 HAMMER_DOWN = [               # columns 15-20: the handle slants down, the head on the work, above the deck
     ".#....",
@@ -771,11 +756,11 @@ LAID_OUT = HEAD_SHUT + [
     "..#bBBB#...#bBBB#..",
     "..######...######..",
 ]
-TAIL_LIMP = [(17, 16), (18, 16), (19, 17), (20, 17), (21, 18), (22, 18)]      # trailing from his hip onto the deck
+TAIL_LIMP = [(17, 15), (18, 16), (18, 17), (19, 18), (19, 19)]                # slack, curving away from his hip
 
 
 def death():
-    hit = frame((TAIL_OUT, 16, 15), (FLUNG, -1, 10), (HEAD_SHUT, 0, 0))
+    hit = frame(tail(TAIL_LIMP), (FLUNG[:8], -1, 10), (LAID_OUT[18:], 0, 18), (HEAD_SHUT, 0, 0))   # the same legs as lying
     hit = hit.crop(hit.getbbox())
     limp = frame(tail(TAIL_LIMP), (LAID_OUT, 0, 0))
     limp = limp.crop(limp.getbbox())

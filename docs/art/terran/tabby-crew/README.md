@@ -33,15 +33,16 @@ Terran drifter's. The standing views are that concept's, unchanged; every animat
 ## How each animation is staged
 
 - **Walk:** the first frame of each direction is him standing. On a step the body sinks a pixel onto the leading
-  leg. Toward us, the leading boot lands a pixel below the standing line and shows more of its top, and the
-  trailing boot is lifted, smaller and darker; the arms swing against the legs by a pixel. Away from us his arms
-  stay ahead of him, out of sight, as when he stands. From the side the near and far legs stride in turn with the
-  deck showing between them, and the near arm swings back to the holster and forward past his belly. The tail
-  follows a beat behind: it sways beside his hip, flicks across his calf, or leans and straightens behind him.
+  leg, whose knee bends so its boot stays on the deck's line. Toward us the leading boot shows more of its top and
+  the trailing boot is lifted and smaller; the arms swing against the legs by a pixel. Away from us his arms stay
+  ahead of him, out of sight, as when he stands. From the side the near and far legs stride in turn with the deck
+  showing between them, and the near arm swings back to the holster and forward across his chest. The tail follows
+  a beat behind: it sways beside his hip, flicks across his calf, or leans and straightens behind him.
 - **Aim:** he draws the pistol, so the holster hangs empty. One arm acts, as on the other sheets. Toward us the arm
-  is out from his side so the pistol hangs over the deck, clear of his leg. Between the three aims the forearm, paw
-  and pistol move as one piece from the elbow; the pistol never changes shape (heromedel, 2026-11-12: the first
-  version bent the gun and left the arm still).
+  is out from his side so the pistol hangs over the deck, clear of his leg; away from us it rises beside his head,
+  leaning out so deck shows between it and his ear; from the side the paw sits under the pistol's slide. Between
+  the three aims the whole arm swings and the pistol never changes shape (heromedel, 2026-11-12: the first version
+  bent the gun and left the arm still).
 - **Fight fire:** the aiming arm with a red extinguisher, sweeping straight, one way, straight, the other way. No
   spray is drawn: the game adds it (heromedel, 2026-11-12). The nozzle is the dark tip beyond the red; in the
   frame's own pixels it is at about (10, 31) toward us, (25, 22) to the right and (25, 14) away from us.
@@ -75,7 +76,10 @@ folder, rebuilds the sheet and the pictures in `review/`.
 
 - `review/walk-4x.gif`, `walk-1x.gif`: walking down, right, up and left.
 - `review/work-4x.gif`: typing down, right and up, repairing, and fighting fire down, right and up.
-- Every row was shown to a blind checker (a reader told nothing about what each strip is meant to be) before it
-  went to heromedel, from 2026-11-12 on.
+- From 2026-11-12 every row is shown to a blind checker (a reader told nothing about what each strip is meant to
+  be) before it goes to heromedel. Two passes so far. What it still reads loosely, and why it was left: seen from
+  behind, the raised arm with a pistol or a fist is not clearly aiming or punching (it is the same staging as the
+  other sheets); the lying figure is recognisably the standing one turned; the kneel is compact; and in the back
+  view the tail starts where the strap ends, as in the concept's standing drawing.
 - `review/fight-4x.gif`: the three aims down, right and up, then punching down and up.
 - `review/death-4x.gif`, `review/teleport-clone-4x.gif`.
