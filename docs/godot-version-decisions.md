@@ -180,9 +180,15 @@ anything Claude added tagged Ai-Generated-Proposal.
   - **Tokens from sprites — Decided for the Tentauri (heromedel, 2026-11-11):** a race's token can be a circle cut
     from one frame of its sheet (`<token style="…" frame="row,column" centre="x,y" radius="…"/>` in `race.xml`),
     in place of a drawn face. The Tentauri's is the bell of the Facing sheet's standing frame.
-  - **Particles — Proposed (heromedel, 2026-11-12):** all particles could be made in the game instead of being
-    drawn on the sheets: extinguisher spray, welding sparks and the like. Today the game only draws sparks, for a
-    repair whose layout gives a point; the Tabby sheet (`docs/art/terran/tabby-crew`) is drawn with no spray.
+  - **Particles — Likely (heromedel, 2026-11-12):** all particles are made in the game instead of being drawn on
+    the sheets (extinguisher spray, welding sparks and the like), and the ones already drawn on sheets come off:
+    it is more consistent and easier to change. Today the game only draws sparks, for a repair whose layout gives
+    a point; the Tabby sheet (`docs/art/terran/tabby-crew`) is drawn with no spray.
+    - **Proposed (heromedel, 2026-11-12):** as an example of what this allows, repair sparks could always be the
+      ship's power colour.
+    - Drawn on sheets today (looked at 2026-11-12): the Facing drifter's spray and repair sparks; the Tentauri's
+      repair sparks and the small sparkles at its tentacle tips when it shoots; the Mecha Facing sheet's flash at
+      the claw in one aiming frame each way. The top-down drifter and top-down Mecha have none.
   - **Crew for sale — Decided (heromedel, 2026-11-11):** every crew card in a store shows a picture of the crew
     member, drawn as the Art Style setting draws them aboard: their sprite standing on a deck tile, or their
     token where the style is Tokens or the race has no sheet in it. It is the crew member the buyer gets: their

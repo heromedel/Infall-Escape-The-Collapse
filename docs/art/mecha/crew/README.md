@@ -1,7 +1,8 @@
 # Mecha crew sprite sheet
 
 **Date:** 2026-10-25
-**Status:** heromedel's sheet, saved as the reference for Mecha (HalfMech) crew. Source:
+**Status:** the sheet another Claude session made with heromedel's guidance (heromedel, 2026-11-12: not his own
+drawing), saved as the reference for Mecha (HalfMech) crew. Source:
 https://claude.ai/artifact/Rac3hEG59XfS34BkiFTWXy
 
 ![The sheet at 4x](mecha-crew-sheet-4x.png)

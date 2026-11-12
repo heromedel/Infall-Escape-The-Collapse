@@ -55,9 +55,10 @@ Reference: the sleek battle-cross frame, `mecha/light-attack-frame/pixel-redo/ba
 
 ## HalfMechs in their suits (crew)
 
-Reference: heromedel's sheet, `mecha/crew/`.
+Reference: the sheet in `mecha/crew/`, drawn by another Claude session with heromedel's guidance (heromedel,
+2026-11-12: not his own drawing).
 
-- **Look — Decided (2026-10-25, heromedel's sheet):** low-res pixel art at true crew size, a Gundam-like mech
+- **Look — Decided (2026-10-25, the sheet made with heromedel's guidance):** low-res pixel art at true crew size, a Gundam-like mech
   silhouette (crest head, blade forearms, short legs), near-black armour from the Mecha palette with one accent, the
   purple (visor bar, chest lights). At sprite size the texture is gritty and broken up, and detail is hinted by a pixel
   or two. Menace comes from the silhouette and the dark palette, not from faces, eyes, grilles or bolts.
