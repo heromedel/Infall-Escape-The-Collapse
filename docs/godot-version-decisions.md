@@ -218,9 +218,29 @@ anything Claude added tagged Ai-Generated-Proposal.
   - **Proposed (heromedel, 2026-11-12):** if a player moves a paired crew member to another tile, the enemy, if
     still willing to fight, follows to go on with the melee. The genre had no need of this: it has no
     tile-to-tile orders.
-  - **Open (heromedel, 2026-11-12):** how crew and system symbols fit in one tile. How Infall draws them was not
-    compared with the genre before; the comparison is in the reference folder. To be worked out before the
-    fights are built.
+  - **Decided (heromedel, 2026-11-12):** no extra outlines round a crew member. The second ring drawn when
+    someone mans a system goes: the console's art and its powered symbol are enough, and a crew member standing
+    there is plainly manning it.
+  - **Likely (heromedel, 2026-11-12):** crew are the genre's size in a tile.
+  - **Open (heromedel, 2026-11-12):** how crew and system symbols fit in one tile. heromedel's leaning: a small
+    symbol beside or above a crew member while manning may be enough, but consoles with the symbol in them were
+    already drawn in the art sessions. What was found (2026-11-12):
+    - The art sessions settled where the symbol goes: in the console. The Outrider's floor layout test 4 has
+      "a pale desk that blends into the floor, with a small symbol on its screen"; the pirate ships have wall
+      desks with the symbol; the Tentauri have an organic base for each system with the symbol lit in a dark
+      bulb (Decided, `docs/art/style-guides.md`); the Mecha console is a pixel tower with the symbol on its
+      screen (Decided). The art rule (`docs/art/README.md`, 2026-10-25): a console sits against its wall, at
+      most about half the tile deep, and crew stand and work on the console's own tile.
+    - The Godot version uses none of that console art. It draws a plain desk with a blank screen and puts the
+      symbol on a dark disc in the middle of the tile, which is GDD 14C's stand-in "until console art exists".
+      A crew member stands on the tile's middle, on top of it.
+    - Symbols: 14 agreed symbol files are at the repo root (`content/systems/<id>/symbol.svg`, from the first
+      coding version). The Godot version redraws its symbols in code. Weapons, Medbay, Piloting, Sensors and
+      Doors match; Shields, Engines and Life Support are drawn differently.
+    - Size: the top-down drifter is already exactly the genre human's size in the frame (17 by 12 pixels facing
+      down, 9 by 18 facing sideways). What makes crew look bigger is the ring round each one, about 29 pixels
+      across. The Facing sprites are taller by design (22 to 31 pixels), and a token with its rim is about 30
+      across.
 
 ## 8. Weapons and Systems
 
