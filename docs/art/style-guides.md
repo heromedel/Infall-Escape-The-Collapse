@@ -98,9 +98,10 @@ Reference: the Tentauri scout, `tentauri/scout/`.
 
 ## Tentauri crew
 
-Reference: heromedel's sheet, `tentauri/crew/`.
+Reference: the sheet in `tentauri/crew/`, drawn by another Claude session with heromedel's guidance (heromedel,
+2026-11-12: not his own drawing).
 
-- **Look — Decided (2026-10-25, heromedel's sheet):** a soft jellyfish from above: a rounded teal bell with a light
+- **Look — Decided (2026-10-25, the sheet made with heromedel's guidance):** a soft jellyfish from above: a rounded teal bell with a light
   highlight and a dark outline, two dot eyes, a pink rim at the base, and lavender tentacles. The tentacles are thin,
   wavy lines (one pixel, plus a shade pixel), never wedges or triangles. Two long tentacles always hang; the eight
   short ones type, shoot, punch and reach out to other systems in the room (the reach prototype).

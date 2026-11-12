@@ -1,7 +1,8 @@
 # Tentauri crew sprite sheet
 
 **Date:** 2026-10-25
-**Status:** heromedel's sheet and reach prototype, saved as the reference for Tentauri crew. Sources:
+**Status:** the sheet and reach prototype another Claude session made with heromedel's guidance (heromedel,
+2026-11-12: not his own drawing), saved as the reference for Tentauri crew. Sources:
 - Sheet: https://claude.ai/artifact/JxheWdQk6QJDtxcp6wcu7L
 - Reach prototype: https://claude.ai/artifact/RZGZgFGBDQ5Jrs55PTJGeV
 

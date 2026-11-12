@@ -1,6 +1,7 @@
 """A picture of the Tentauri's planned subtypes: the crew sheet in each planned pair of bell and tentacle colours.
 
-The sheet beside this folder is heromedel's and is the reference: a teal bell, a pink rim, lavender tentacles.
+The sheet beside this folder, made with heromedel's guidance, is the reference: a teal bell, a pink rim, lavender
+tentacles.
 The colours and the planned pairs live in the game's content (infall-godot/content/races/tentauri/race.xml), which
 recolours the sheet itself; this only draws them for review.
 
