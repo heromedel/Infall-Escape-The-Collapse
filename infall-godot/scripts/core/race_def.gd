@@ -23,7 +23,8 @@ var heals_slowly: bool = false
 var crew_price: int = 1089
 var portrait: String = "token"
 var tech: String = "mechanical"
-var crew_art: Array = []           # sprite sheets for the Art Style setting (GV 7F): {style, species, sheet, layout}
+var crew_art: Array = []           # sprite sheets for the Art Style setting (GV 7F): {style, species, sheet, layout,
+								   # particles}; particles is {animation: {kind, facing or "any": point in the frame}}
 var token: Dictionary = {}         # a token cut from a sheet: {style, row, column, centre, radius}; empty for a drawn face
 var skin_parts: Array = []         # the parts of its sheet that take a colour, in a subtype's order (CrewSkins):
 								   # {id, sheet_tones, colours: {id: tones}}, tones being colour codes, lightest first
@@ -57,8 +58,17 @@ static func from_xml(node: XmlTree, folder: String = "") -> RaceDef:
 	def.portrait = node.get_attr("portrait", "token")
 	def.tech = node.get_attr("tech", "mechanical")
 	for art_node in node.all("crew_art"):
+		var particles := {}
+		for particles_node in art_node.all("particles"):
+			var starts := {"kind": particles_node.get_attr("kind")}
+			for facing in ["down", "right", "up", "left", "any"]:
+				if particles_node.has_attr(facing):
+					var point := particles_node.get_attr(facing).split(",")
+					starts[facing] = Vector2(float(point[0]), float(point[1]))
+			particles[particles_node.get_attr("animation")] = starts
 		def.crew_art.append({"style": art_node.get_attr("style"), "species": art_node.get_attr("species"),
-				"sheet": folder.path_join(art_node.get_attr("sheet")), "layout": art_node.get_attr("layout")})
+				"sheet": folder.path_join(art_node.get_attr("sheet")), "layout": art_node.get_attr("layout"),
+				"particles": particles})
 	var token_node := node.first("token")
 	if token_node:
 		var cell := token_node.get_attr("frame", "1,1").split(",")

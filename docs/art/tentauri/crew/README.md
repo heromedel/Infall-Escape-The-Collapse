@@ -37,6 +37,10 @@ to other systems.
 | 19 | Typing with 3 other systems: right, left |
 | 20 | Typing with 3 other systems: up, down |
 
+No particles are drawn on the sheet (heromedel, 2026-11-12): the yellow sparks in the four repair frames and the
+sparkles at the tentacle tips in four shooting frames came off the PNG, its 4x render and the SVG, and the game
+makes particles itself (GV 7F). Nothing else on the sheet changed.
+
 ## Reach prototype
 
 [`tentauri-reach-prototype.html`](tentauri-reach-prototype.html) is a self-contained page. The Tentauri types at its

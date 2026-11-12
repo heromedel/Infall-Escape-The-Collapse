@@ -141,8 +141,10 @@ The Art Style setting shows a token for any race with no sheet in the chosen sty
   drawn toward and away from the camera), they stand and the small badge says what they are doing, as with tokens.
   A sheet with no teleport frames gets the tokens' glow and sparks.
 - Stunned, healing and out of air have no frames: the small badges and sparks show them, as with tokens.
-- Welding sparks are the game's, not the sheet's: a layout gives the point (`sparks="x,y"` on an animation) and
-  the game flickers sparks there. Only the top-down drifter's repair uses it so far.
+- Particles are the game's, not the sheets' (GV 7F): no sheet draws sparks, spray or a shooting flash. Each sheet's
+  entry in its `race.xml` gives the point where they start (`<particles kind="sparks" animation="repair" …/>`,
+  `<particles kind="spray" animation="fire" down="…" right="…" up="…"/>`). Repair sparks take the ship's power
+  colour; extinguisher spray is white and pale blue. The game does not draw a crew member's shot yet.
 
 ## Tools
 

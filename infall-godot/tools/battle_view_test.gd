@@ -58,7 +58,8 @@ func _ready() -> void:
 		if OS.get_environment("STAGE") != "heal":
 			for room in ship.rooms.slice(1, 3):
 				room.fires[room.cells[0]] = 60.0
-		ship.rooms[3].scorch[ship.rooms[3].cells[0]] = true
+		var scorched: ShipRoom = ship.rooms[mini(3, ship.rooms.size() - 1)]
+		scorched.scorch[scorched.cells[0]] = true
 		var medbay := ship.system_by("medbay")
 		if medbay:
 			ship.crew[0].health = 30.0

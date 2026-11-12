@@ -5,6 +5,9 @@ extends Node2D
 ## crew as portrait tokens, and the shield bubble. It only reads the Ship; the battle screen owns input.
 
 const TOKEN_RADIUS := 12.5
+const FACING_STEP := {"down": Vector2.DOWN, "right": Vector2.RIGHT, "up": Vector2.UP, "left": Vector2.LEFT}   # on the sheet
+const SPRAY_DROPLETS := 10
+const SPRAY_REACH := 8.0          # sprite pixels a droplet travels from the nozzle
 ## How far the views turn the world on the screen (GV 3J): 0 with the battlefield vertical, a quarter turn with it
 ## horizontal. Every view on this machine turns the same way.
 static var view_turn := 0.0
@@ -549,9 +552,14 @@ func _draw_member_sprite(canvas: CanvasItem, member: CrewMember, at: Vector2, ri
 	else:
 		region = CrewArt.region(sheet, animation, facing, clock)
 	canvas.draw_texture_rect_region(sheet.texture, Rect2(at - Vector2(half, half), Vector2(CrewArt.frame, CrewArt.frame)), region)
-	var sparks: Variant = CrewArt.sparks_at(sheet, animation) if member.teleporting_ticks <= 0 else null
-	if sparks != null:
-		_draw_tool_sparks(canvas, at - Vector2(half, half) + sparks, absi(member.name.hash()))
+	var particles := CrewArt.particles_at(sheet, animation, facing) if member.teleporting_ticks <= 0 else {}
+	if not particles.is_empty():
+		var start: Vector2 = at - Vector2(half, half) + particles.at
+		match particles.kind:
+			"sparks":
+				_draw_tool_sparks(canvas, start, absi(member.name.hash()))
+			"spray":
+				_draw_spray(canvas, start, FACING_STEP[facing], absi(member.name.hash()))
 	var fraction := member.health_fraction()
 	if fraction < 0.999 or member.selected:
 		var bar := Rect2(at + Vector2(-12, half + 1.0), Vector2(24, 4))
@@ -564,21 +572,35 @@ func _draw_member_sprite(canvas: CanvasItem, member: CrewMember, at: Vector2, ri
 		_draw_badge(canvas, at + Vector2(half * 0.75, -half * 0.75), badge)
 
 
-## Welding sparks at the end of a crew member's tool (GV 7F): the sheet draws the tool and the game makes the light,
-## so it can flicker freely. A hot point at the nozzle and a few sparks thrown ahead of it, a sprite pixel each,
-## changing fourteen times a second and dark now and then.
+## Sparks at the end of a crew member's tool (GV 7F): the sheet draws the tool and the game makes the light, so it
+## can flicker freely and take this ship's power colour. A hot point at the tool and a few sparks thrown ahead of
+## it, a sprite pixel each, changing fourteen times a second and dark now and then.
 func _draw_tool_sparks(canvas: CanvasItem, nozzle: Vector2, seed: int) -> void:
 	var beat := int(time * 14.0)
 	if hash(seed * 31 + beat) % 6 == 0:
 		return
 	var origin := nozzle.floor()
 	canvas.draw_rect(Rect2(origin, Vector2.ONE), Color("#f2f5f8"))
-	var colours := [Color("#fff0a0"), Color("#fff0a0"), Color("#e0b850")]
+	var colours := [power_colour.lightened(0.45), power_colour, power_colour.darkened(0.25)]
 	for index in 4:
 		var roll := absi(hash(seed * 131 + beat * 17 + index))
 		var reach := 1 + roll % 4
 		var spread := (roll / 5) % (reach + 1) - reach / 2
 		canvas.draw_rect(Rect2(origin + Vector2(reach, spread), Vector2.ONE), colours[(roll / 37) % colours.size()])
+
+
+## An extinguisher's spray (GV 7F), made by the game from the nozzle the sheet gives: droplets a sprite pixel each,
+## leaving the nozzle the way the crew member faces, spreading and thinning as they go.
+func _draw_spray(canvas: CanvasItem, nozzle: Vector2, heading: Vector2, seed: int) -> void:
+	var origin := nozzle.floor()
+	var across := Vector2(-heading.y, heading.x)
+	for index in SPRAY_DROPLETS:
+		var roll := absi(hash(seed * 71 + index * 13))
+		var travelled := fposmod(time * 1.8 + index / float(SPRAY_DROPLETS) + (roll % 7) / 31.0, 1.0)
+		var reach := 1.0 + travelled * SPRAY_REACH
+		var drift := ((roll / 7) % 7 - 3) * travelled * 0.8       # a cone: wider the further it has gone
+		var colour := Color("#f2f8ff") if (roll / 3) % 3 > 0 else Color("#9fd4f5")
+		canvas.draw_rect(Rect2((origin + heading * reach + across * drift).floor(), Vector2.ONE), Color(colour, 1.0 - travelled * 0.7))
 
 
 ## The small badge that says what a crew member is doing or suffering; "" for none.

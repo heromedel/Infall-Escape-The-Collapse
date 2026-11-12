@@ -20,8 +20,8 @@ static func style() -> String:
 	return Settings.get_value("art_style", "Top Down")
 
 
-## The sheet a crew member is drawn from in the chosen style, in their subtype's colours: {"texture", "layout"},
-## or {} for tokens.
+## The sheet a crew member is drawn from in the chosen style, in their subtype's colours: {"texture", "layout",
+## "particles"}, or {} for tokens.
 static func sheet_for(race: RaceDef, subtype: String) -> Dictionary:
 	var wanted := style()
 	return {} if wanted == "Tokens" else _sheet(race, wanted, subtype)
@@ -51,7 +51,7 @@ static func _sheet(race: RaceDef, wanted: String, subtype: String) -> Dictionary
 		var texture := _texture(art.sheet, race, subtype)
 		if texture == null or layout.is_empty():
 			return {}
-		return {"texture": texture, "layout": layout}
+		return {"texture": texture, "layout": layout, "particles": art.particles}
 	return {}
 
 
@@ -108,10 +108,15 @@ static func region(sheet: Dictionary, animation: String, facing: String, seconds
 	return Rect2((cells[1] - 1 + index) * frame, (cells[0] - 1) * frame, frame, frame)
 
 
-## Where in the frame the game draws its own sparks for an animation, for a sheet that draws none; null if it
-## doesn't ask for any.
-static func sparks_at(sheet: Dictionary, animation: String) -> Variant:
-	return sheet.layout.get(animation, {}).get("sparks")
+## The particles the game makes while an animation plays (the sheets draw none): {"kind", "at"}, the point in the
+## frame they start from for the way the crew member faces, or {} for none. Facing left, a sheet that gives no point
+## of its own uses its right-facing one mirrored, as its left-facing frames are.
+static func particles_at(sheet: Dictionary, animation: String, facing: String) -> Dictionary:
+	var starts: Dictionary = sheet.particles.get(animation, {})
+	var at: Variant = starts.get(facing, starts.get("any"))
+	if at == null and facing == "left" and starts.has("right"):
+		at = Vector2(frame - 1.0 - starts.right.x, starts.right.y)
+	return {} if at == null else {"kind": starts.kind, "at": at}
 
 
 static func _layout(id: String) -> Dictionary:
@@ -124,9 +129,6 @@ static func _layout(id: String) -> Dictionary:
 				var animations := {}
 				for node in layout_node.all("animation"):
 					var entry := {"ms": node.get_float("ms", 150.0)}
-					if node.has_attr("sparks"):
-						var point := node.get_attr("sparks").split(",")
-						entry["sparks"] = Vector2(float(point[0]), float(point[1]))
 					for facing in FACINGS + ["any"]:
 						if node.has_attr(facing):
 							var cells: Array = []

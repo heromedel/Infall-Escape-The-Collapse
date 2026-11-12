@@ -14,6 +14,10 @@ blade forearms raised beside the head, short legs) with new armour and colours, 
 
 280 × 560 pixels: 35 × 35 frames, 8 per row, 16 rows.
 
+No particles are drawn on the sheet (heromedel, 2026-11-12): the purple flash at the claw in one aiming frame each
+way (down, right, left) came off the PNG, its 4x render and the SVG, and the game makes particles itself (GV 7F).
+Nothing else on the sheet changed.
+
 | Row | Frames |
 |---|---|
 | 1 | Walk down, then walk right |

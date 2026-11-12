@@ -181,14 +181,17 @@ anything Claude added tagged Ai-Generated-Proposal.
     from one frame of its sheet (`<token style="…" frame="row,column" centre="x,y" radius="…"/>` in `race.xml`),
     in place of a drawn face. The Tentauri's is the bell of the Facing sheet's standing frame.
   - **Particles — Likely (heromedel, 2026-11-12):** all particles are made in the game instead of being drawn on
-    the sheets (extinguisher spray, welding sparks and the like), and the ones already drawn on sheets come off:
-    it is more consistent and easier to change. Today the game only draws sparks, for a repair whose layout gives
-    a point; the Tabby sheet (`docs/art/terran/tabby-crew`) is drawn with no spray.
-    - **Proposed (heromedel, 2026-11-12):** as an example of what this allows, repair sparks could always be the
-      ship's power colour.
-    - Drawn on sheets today (looked at 2026-11-12): the Facing drifter's spray and repair sparks; the Tentauri's
-      repair sparks and the small sparkles at its tentacle tips when it shoots; the Mecha Facing sheet's flash at
-      the claw in one aiming frame each way. The top-down drifter and top-down Mecha have none.
+    the sheets (extinguisher spray, welding sparks and the like), and the ones that were drawn on sheets came off:
+    it is more consistent and easier to change. Built 2026-11-12.
+    - Repair sparks are the ship's power colour (heromedel's example, built). Extinguisher spray is white and
+      pale blue (**Ai-Generated-Proposal**).
+    - Taken off the sheets: the Facing drifter's spray and repair sparks; the Tentauri's repair sparks and the
+      sparkles at its tentacle tips when it shoots; the Mecha Facing sheet's flash at the claw in one aiming frame
+      each way. The top-down drifter and top-down Mecha had none. The shooting flashes are not replaced yet: the
+      game does not draw a crew member's shot.
+    - How it is built: a sheet's `<crew_art>` in its `race.xml` holds `<particles kind="…" animation="…" …/>` with
+      the point in the frame where they start for each way the crew member faces ("any" for all; left is right
+      mirrored unless given). The points were read off the art and are good to a pixel or so.
   - **Crew for sale — Decided (heromedel, 2026-11-11):** every crew card in a store shows a picture of the crew
     member, drawn as the Art Style setting draws them aboard: their sprite standing on a deck tile, or their
     token where the style is Tokens or the race has no sheet in it. It is the crew member the buyer gets: their
@@ -359,5 +362,6 @@ All built in the build of 2026-11-05.
 | 2026-11-09 | Ship status cards (GV 14H) proposed and put on the Next build list. |
 | 2026-11-11 | The Art Style setting, Top Down > Facing > Tokens, with Top Down the default (GV 7F); built the same day. |
 | 2026-11-11 | Tentauri tokens are cut from the Facing sheet's standing frame (GV 7F). |
+| 2026-11-12 | Particles are made in the game, not drawn on the sheets; repair sparks in the ship's power colour (GV 7F). |
 | 2026-11-11 | Every crew card in a store shows the crew member's picture, following the Art Style setting (GV 7F). |
 | 2026-11-11 | Crew subtypes: a Tentauri's bell and tentacle colours, planned pairs first, then unused combinations, one of each to a squad (GV 7F). |

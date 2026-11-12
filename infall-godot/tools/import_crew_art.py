@@ -115,6 +115,12 @@ if __name__ == "__main__":
                 problems = ["the sheet is missing"]
             else:
                 problems = check(picture, known[art.get("layout")], frame)
+            for particles in art.iter("particles"):
+                if art.get("layout") in known and known[art.get("layout")].find("animation[@id='%s']" % particles.get("animation")) is None:
+                    problems.append("particles for %s, which the layout doesn't have" % particles.get("animation"))
+                for facing in FACINGS:
+                    if particles.get(facing) and not all(0 <= float(value) < frame for value in particles.get(facing).split(",")):
+                        problems.append("%s particles start outside the frame facing %s" % (particles.get("animation"), facing))
             label = "%s, %s%s" % (race, art.get("style"), ", " + art.get("species") if art.get("species") else "")
             report(label, art.get("sheet"), problems)
         if root.find("token") is not None and not any(art.get("style") == root.find("token").get("style") for art in root.iter("crew_art")):

@@ -404,48 +404,36 @@ def shoot_up():
     return [compose(*body, (pistol, 0, HELD_UP)) for pistol in (PISTOL_UP, PISTOL_UP_RIGHT, PISTOL_UP_LEFT)]
 
 
-# --- Fighting a fire: a red extinguisher in the same fist, aimed where the pistol was, and its spray -----------------
+# --- Fighting a fire: a red extinguisher in the same fist, aimed where the pistol was ---------------------------------
+# No spray is drawn: the game makes every particle (heromedel, 2026-11-12), so the four frames of a direction are
+# one drawing.
 
 CANISTER_DOWN = part(14, ["..o45o...........", "..o45o...........", "..o45o...........", "..o45o...........",
                           "..okko..........."])
-PLUME_DOWN = part(19, ["...66............", "..6M66..........."])
-PLUME_DOWN_1 = part(19, ["..6666...........", ".66M666..........", "..6M66..........."])
 CANISTER_UP = part(0, ["...........okko..", "...........o45o..", "...........o45o..", "...........o45o..",
                        "...........o45o.."])
-PLUME_UP = part(-2, ["...........6M66..", "............66..."])
-PLUME_UP_1 = part(-3, ["...........6M66..", "..........66M666.", "...........6666.."])
-SIDE_SPRAY = swap(SIDE, {
-    9: "....oddeeccAoooooooo..66..",
-    10: "....oddeeeeeest4444ko66M6.",
-    11: "....oddccccaotu5555ko6M66.",
-    12: "....oddcccckoooooooo..66..",
+SIDE_EXTINGUISHER = swap(SIDE, {
+    9: "....oddeeccAoooooooo......",
+    10: "....oddeeeeeest4444ko.....",
+    11: "....oddccccaotu5555ko.....",
+    12: "....oddcccckoooooooo......",
     13: "....oddccccpo....",
     14: "....odcccccpo....",
     15: "....odcccccpo....",
 }, 26)
-SIDE_SPRAY_1 = swap(SIDE_SPRAY, {
-    8: "....odcfecbao..........6..",
-    9: "....oddeeccAoooooooo.66M66",
-    10: "....oddeeeeeest4444ko6M666",
-    11: "....oddccccaotu5555ko666M6",
-    12: "....oddcccckoooooooo.6M66.",
-    13: "....oddccccpo..........6..",
-}, 26)
 
 
 def fire_down():
-    body = ((FRONT_LEGS, 0), (FRONT_ARM_OUT, 0), (CANISTER_DOWN, 0, HELD))
-    return [compose(*body, (PLUME_DOWN, 0, HELD)), compose(*body, (PLUME_DOWN_1, 0, HELD))] * 2
+    return [compose((FRONT_LEGS, 0), (FRONT_ARM_OUT, 0), (CANISTER_DOWN, 0, HELD))] * 4
 
 
 def fire_right():
-    legs = (SIDE_LEGS, 0)
-    return [compose(legs, (SIDE_SPRAY, 0)), compose(legs, (SIDE_SPRAY_1, 0))] * 2
+    return [compose((SIDE_LEGS, 0), (SIDE_EXTINGUISHER, 0))] * 4
 
 
 def fire_up():
-    body = ((BACK_LEGS, 0), (BACK_ARM_UP, 0), (CANISTER_UP, 0, HELD_UP))
-    return [compose(*body, (PLUME_UP, 0, HELD_UP)), compose(*body, (PLUME_UP_1, 0, HELD_UP))] * 2
+    return [compose((BACK_LEGS, 0), (BACK_ARM_UP, 0), (CANISTER_UP, 0, HELD_UP))] * 4
+
 
 
 # --- A fist fight: one fist draws back to the shoulder and comes straight out; the other arm hangs ------------------
@@ -530,15 +518,14 @@ HAMMER_DOWN = part(15, [        # and brought down in front of him
     "..............okkko...",
     "...............ooo....",
 ], 22)
-STRIKE = part(17, ["..................6...", "..............6....M6.", ".................6M..."], 22)
-STRIKE_1 = part(17, ["...................6..", ".............6M.....6.", "..................6..."], 22)
 
 
 def repair():
+    """No sparks are drawn where the hammer lands: the game makes them (heromedel, 2026-11-12)."""
     legs = (SIDE_KNEEL_LEGS, 0)
     up = compose(legs, (SIDE_HAMMER_UP, 2))
-    return [up, compose(legs, (SIDE_ARM_FORWARD, 2), (HAMMER_DOWN, 2), (STRIKE, 2)),
-            up, compose(legs, (SIDE_ARM_FORWARD, 2), (HAMMER_DOWN, 2), (STRIKE_1, 2))]
+    down = compose(legs, (SIDE_ARM_FORWARD, 2), (HAMMER_DOWN, 2))
+    return [up, down, up, down]
 
 
 # --- Dying: he reels, his knees go, he topples to his left and lands sprawled on his back --------------------------

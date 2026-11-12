@@ -11,8 +11,7 @@
      fire (putting out a fire), punch (breaking a door, sabotage), type (working a console), repair, teleport,
      death, clone. A sheet that lacks one shows the crew member standing.
 
-     sparks="x,y" on an animation is where the game draws its own flickering sparks while that animation plays: the
-     pixel in the frame just ahead of the tool, for a sheet whose repair is drawn with no sparks of its own. -->
+     Sheets draw no particles. Where the game starts sparks and spray is given for each sheet, in its race.xml. -->
 <crew_layouts frame="35">
 	<!-- The genre's eight-column layout: the Facing sheets of the Terran drifter, the Mecha and the Tentauri. -->
 	<layout id="eight-wide">
@@ -31,7 +30,7 @@
 		<animation id="walk" down="1,1,4" right="1,5,4" up="2,1,4" left="2,5,4" ms="150"/>
 		<animation id="aim" down="3,1,3" right="3,4,3" up="3,7,3" left="12,1,3" ms="500"/>
 		<animation id="fire" down="4,1,4" right="4,5,4" up="5,1,4" left="5,5,4" ms="220"/>
-		<animation id="repair" any="6,1,9" ms="110" sparks="26,20"/>
+		<animation id="repair" any="6,1,9" ms="110"/>
 		<animation id="punch" down="7,1,6" up="12,4,6" ms="130"/>
 		<animation id="type" right="8,1,4" left="8,5,4" up="9,1,4" down="9,5,4" ms="170"/>
 		<animation id="teleport" any="10,1,8" ms="50"/>

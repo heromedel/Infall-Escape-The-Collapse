@@ -29,7 +29,7 @@ the order of the Mecha and Tentauri sheets, so the game can read all three the s
 | 2 | Walk up, then walk left |
 | 3 | Shoot down, then shoot right (a pistol aimed straight, a little to his right, a little to his left) |
 | 4 | Shoot up, then shoot left |
-| 5 | Fight fire down, then right (a red extinguisher in the same fist, and its spray) |
+| 5 | Fight fire down, then right (a red extinguisher in the same fist; no spray drawn, the game adds it) |
 | 6 | Fight fire up, then left |
 | 7 | Punch up (one fist draws back and goes out; the other arm hangs) |
 | 8 | Punch down |
@@ -39,6 +39,9 @@ the order of the Mecha and Tentauri sheets, so the game can read all three the s
 | 12 | Death (he reels, his knees go, he topples to his left and lands sprawled on his back) |
 | 13 | Clone (a plate lowers and he stands there) |
 | 14 | Portrait, crew laser shot, a gap, then repair (on one knee, a hammer up and down, 4 frames) |
+
+No particles are drawn on the sheet (heromedel, 2026-11-12): the extinguisher's spray and the sparks where the
+hammer lands came off, and the game makes them (GV 7F).
 
 - **Decided (heromedel, 2026-11-10):** the three shooting frames are three aims, as on the genre's sheet, not an
   animation, and they have no flash or particle.
