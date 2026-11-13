@@ -35,10 +35,12 @@ static func unfit_weapon(ship: Ship, slot: WeaponSlot) -> void:
 	ship.weapons.erase(slot)
 
 
+const DOCKS := ["evb_dock", "eva_dock"]     # systems whose crew leave the ship in a suit, by the airlock on their tile
+
 ## Why a system may not be installed in a room, or "" when it may (Ship Designs' placement rules for a purchase):
 ## - a system needs a tile of its own;
 ## - a Medbay shares a room only with systems crew can't man, so nobody heals while manning one (GDD 5B);
-## - an EVB Dock sits in a room with an airlock, for its suits to leave by.
+## - an EVA or EVB Dock sits on a tile that has an airlock: the crew member suits up there and goes out it (GDD 5D).
 static func install_refusal(ship: Ship, def: SystemDef, room_index: int) -> String:
 	if room_index < 0 or room_index >= ship.rooms.size() or _free_console_cell(ship, room_index) == Vector2i(999, 999):
 		return "No free tile in that room."
@@ -48,9 +50,20 @@ static func install_refusal(ship: Ship, def: SystemDef, room_index: int) -> Stri
 			return "Crew man %s in this room, and crew can't heal while they man a system, so %s can't go here." % [system.def.name, _with_article(def.name)]
 		if def.manned and system.behaviour == "medbay":
 			return "This room has %s, and crew can't heal while they man a system, so %s can't go here." % [_with_article(system.def.name), def.name]
-	if def.behaviour == "evb_dock" and not ship.doors.any(func(door: ShipDoor): return door.to_space and room.cells.has(door.cell_a)):
-		return "An EVB Dock needs a room with an airlock."
+	if def.behaviour in DOCKS and _free_airlock_cell(ship, room_index) == Vector2i(999, 999):
+		return "%s goes on a tile with an airlock, and this room has none free." % _with_article(def.name).capitalize()
 	return ""
+
+
+## A tile of the room that has an airlock and no system on it, for a dock; (999, 999) when there is none.
+static func _free_airlock_cell(ship: Ship, room_index: int) -> Vector2i:
+	var used := {}
+	for system in ship.systems:
+		used[system.cell] = true
+	for door in ship.doors:
+		if door.to_space and not used.has(door.cell_a) and ship.room_at(door.cell_a) == room_index:
+			return door.cell_a
+	return Vector2i(999, 999)
 
 
 static func _with_article(name: String) -> String:
@@ -73,7 +86,7 @@ static func room_for_new_system(ship: Ship, def: SystemDef = null) -> int:
 
 
 static func install_system(ship: Ship, def: SystemDef, room_index: int) -> ShipSystem:
-	var cell := _free_console_cell(ship, room_index)
+	var cell := _free_airlock_cell(ship, room_index) if def.behaviour in DOCKS else _free_console_cell(ship, room_index)
 	var system := ShipSystem.new()
 	system.def = def
 	system.behaviour = def.behaviour

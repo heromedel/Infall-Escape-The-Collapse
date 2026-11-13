@@ -12,6 +12,13 @@
 		<conduct surrender_chance="45" surrender_hull="0.35" escape_chance="30" escape_hull="0.25" targets="weapons,piloting" hail="pirate"/>
 		<description>Doomed GATOS turned criminal: they want your ship intact, so they stop your weapons and board.</description>
 	</squad>
+	<!-- The pirates' other band 1 and 2 squad (heromedel, 2026-11-13: the Scrapper stays where it plays well): a lone
+	     Scrapper with no boarders, beside the Pickpocket's boarding party. -->
+	<squad id="terran-scrappers" name="GATOS Scrappers" race="terran" faction="pirate" where_races="terran,mecha,any" where_states="Doomed,Struggling,Border,Abandoned,Refugee,Occupied,Unclaimed">
+		<tier bands="1-2"><ship design="pirate-scrapper" count="1"/></tier>
+		<conduct surrender_chance="45" surrender_hull="0.35" escape_chance="30" escape_hull="0.25" targets="weapons,piloting" hail="pirate"/>
+		<description>Doomed GATOS in a patched-up hull, out for whatever a passing ship can be made to drop.</description>
+	</squad>
 	<squad id="gatos-checkpoint" name="GATOS Checkpoint" race="terran" faction="gatos" where_races="terran" where_states="Doomed,Struggling">
 		<tier bands="2-3"><ship design="patrol-cutter" count="1"/></tier>
 		<tier bands="4-6"><ship design="patrol-cutter.checkpoint" count="1"/></tier>
@@ -69,7 +76,8 @@
 		<description>A hunt. They board, and they keep going.</description>
 	</squad>
 	<squad id="malphen-growth" name="Malphen Growth" race="malphen" faction="malphen" where_races="malphen,any" where_states="Abandoned,Doing Fine,Struggling,Doomed,Unclaimed">
-		<tier bands="1-2"><ship design="polyp" count="2"/><ship design="polyp.flak" count="1"/></tier>
+		<tier bands="1"><ship design="polyp" count="1"/><ship design="polyp.flak" count="1"/></tier>
+		<tier bands="2"><ship design="polyp" count="2"/><ship design="polyp.flak" count="1"/></tier>
 		<tier bands="3"><ship design="spawnling" count="1"/></tier>
 		<tier bands="4"><ship design="spawnling.swollen" count="1"/></tier>
 		<tier bands="5-6"><ship design="spawnling.broodmass" count="1"/></tier>
