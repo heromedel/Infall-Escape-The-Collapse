@@ -11,7 +11,9 @@ const OPTIONS := {
 	"event_auto_pause": [true, [true, false], "Events Pause the Game"],
 	"terran_conduits": [true, [true, false], "Terran Ship Conduits"],
 	"player_power_colour": ["Default (Green)", ["Default (Green)", "Racial", "Specific Color"], "Player Power Color"],
-	"player_power_specific": ["Blue", ["Blue", "Cyan", "Yellow", "Orange", "Pink", "Purple", "White"], "Specific Power Color"],
+	"player_power_specific": ["GATOS Green", ["GATOS Green", "Pirate Orange", "Mecha Purple", "Tentauri Pink", "Azurethea Blue",
+			"Senti Yellow-Green", "Lykario Silver", "Malphen Pink-Orange", "Custom"], "Specific Power Color"],
+	"player_power_custom": ["#4FA8FF", ["#4FA8FF"], "Custom Power Color"],     # picked with a colour picker, not from a list
 	"enemy_terran_colour": ["Pirate Power Orange", ["Pirate Power Orange", "Power Green"], "Enemy Terran Color"],
 	"run_length": ["Standard", ["Standard", "Short"], "Run Length"],
 	"difficulty": ["Normal", ["Normal", "Easy", "Hard"], "Difficulty"],

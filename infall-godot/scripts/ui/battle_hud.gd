@@ -192,8 +192,11 @@ func _card_size(id: String, ship: Ship) -> Vector2:
 			var count := _special_buttons(ship).size()
 			return Vector2(170, count * 38.0 + 40.0) if count > 0 else Vector2.ZERO
 		"status":
-			var count := _status_ships().size()
-			return Vector2(STATUS_CARD.x + 16.0, count * (STATUS_CARD.y + 6.0) + 24.0) if count > 0 else Vector2.ZERO
+			var ships := _status_ships()
+			var tall := 24.0
+			for each in ships:
+				tall += (STATUS_CARD.y if _status_card_open(each) else STATUS_FOLDED) + 6.0
+			return Vector2(STATUS_CARD.x + 16.0, tall) if not ships.is_empty() else Vector2.ZERO
 	return Vector2.ZERO
 
 
@@ -283,6 +286,11 @@ func _panel() -> Color:
 const STATUS_CARD := Vector2(176, 118)          # every ship's status card is this size
 const STATUS_PLAN_TALL := Rect2(96, 8, 72, 102)  # where the deck plan sits: beside the bars when ships point up
 const STATUS_PLAN_WIDE := Rect2(8, 46, 160, 64)  # and under them when the battlefield is turned on its side
+const STATUS_FOLDED := 30.0                      # a folded status card: the ship's name and its hull bar
+
+var _status_folded: Dictionary = {}    # ship -> true while the player has its status card folded
+var _status_trouble_seen: Dictionary = {}   # ship -> how much was wrong aboard at the last look
+var _status_shown_at: Dictionary = {}  # folded ship -> when its card last showed itself
 
 
 ## The ships this player has a status card for: every living ship they command; the Admiral commands them all.
@@ -313,8 +321,63 @@ func _draw_status_cards(at: Vector2) -> void:
 	var whole := Rect2(at, _card_size("status", null))
 	UiKit.draw_frame(self, whole, _panel())
 	UiKit.draw_text(self, at + Vector2(10, 16), "SHIP STATUS", 12, UiColours.TEXT_DIM, UiKit.font_bold())
-	for index in ships.size():
-		_draw_status_card(ships[index], at + Vector2(8, 22 + index * (STATUS_CARD.y + 6.0)))
+	var y := 22.0
+	for ship: Ship in ships:
+		var open := _status_card_open(ship)
+		if open:
+			_draw_status_card(ship, at + Vector2(8, y))
+		else:
+			_draw_folded_status_card(ship, at + Vector2(8, y))
+		# its own fold button, at the card's top right
+		var fold := Rect2(at + Vector2(8 + STATUS_CARD.x - 20, y + 4), Vector2(15, 13))
+		draw_rect(fold, Color(0.04, 0.06, 0.1, 0.8))
+		draw_rect(fold, UiColours.BORDER_DIM, false, 1.0)
+		draw_line(fold.get_center() + Vector2(-4, 0), fold.get_center() + Vector2(4, 0), UiColours.TEXT_DIM, 1.5)
+		if _status_folded.get(ship, false):
+			draw_line(fold.get_center() + Vector2(0, -4), fold.get_center() + Vector2(0, 4), UiColours.TEXT_DIM, 1.5)
+		_region(fold, func():
+			_status_folded[ship] = not _status_folded.get(ship, false)
+			_status_shown_at.erase(ship), "Fold this ship's card, or open it. A folded card opens by itself when the ship is hit, burning, breached or boarded.")
+		y += (STATUS_CARD.y if open else STATUS_FOLDED) + 6.0
+
+
+## Whether a ship's status card shows in full. A card the player folded opens by itself when things get worse
+## aboard (a hit, a fire, a breach, damage, boarders), stays open while the ship burns, is breached or has
+## intruders, and folds again five quiet seconds later (heromedel, 2026-11-13; the same settings as the HUD's
+## other cards).
+func _status_card_open(ship: Ship) -> bool:
+	var trouble := _status_trouble(ship)
+	var worse := trouble > float(_status_trouble_seen.get(ship, trouble)) + 0.01
+	_status_trouble_seen[ship] = trouble
+	if not _status_folded.get(ship, false):
+		return true
+	if not Settings.get_value("collapsed_cards_reopen", true):
+		return false
+	var in_danger := false
+	for room in ship.rooms:
+		in_danger = in_danger or not room.fires.is_empty() or not room.breaches.is_empty() or not ship.crew_in_room(room.index, 1 - ship.side).is_empty()
+	if worse or in_danger:
+		_status_shown_at[ship] = _time
+	if not _status_shown_at.has(ship):
+		return false
+	if Settings.get_value("reopened_cards_fold_back", true) and _time - float(_status_shown_at[ship]) > FOLD_BACK_SECONDS:
+		_status_shown_at.erase(ship)
+		return false
+	return true
+
+
+## A folded status card: the ship's name and hull in one line. A click still selects the ship and jumps to it.
+func _draw_folded_status_card(ship: Ship, at: Vector2) -> void:
+	var rect := Rect2(at, Vector2(STATUS_CARD.x, STATUS_FOLDED))
+	var chosen := ship == screen.selected_ship
+	UiKit.draw_frame(self, rect, UiColours.PANEL_LIGHT if chosen else UiColours.PANEL_DARK, UiColours.BORDER if chosen else UiColours.BORDER_DIM, 5.0)
+	UiKit.draw_text(self, at + Vector2(8, 15), ship.name.left(18), 12, UiColours.TEXT, UiKit.font_bold())
+	var fraction := float(ship.hull) / maxf(1.0, ship.max_hull)
+	draw_rect(Rect2(at + Vector2(8, 20), Vector2(STATUS_CARD.x - 34, 5)), UiColours.BAR_EMPTY)
+	draw_rect(Rect2(at + Vector2(8, 20), Vector2((STATUS_CARD.x - 34) * fraction, 5)), UiColours.hull_colour(fraction))
+	_region(rect, func():
+		screen.select_ship(ship)
+		screen.focus_ship(ship), "%s: hull %d of %d. Click to select the ship and look at it." % [ship.name, ship.hull, ship.max_hull])
 
 
 func _draw_status_card(ship: Ship, at: Vector2) -> void:

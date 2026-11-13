@@ -37,9 +37,10 @@ const UNSEEN_FLOOR := Color("#2a3140")
 const LOW_AIR := Color(1.0, 0.25, 0.3)
 
 
-## The colours the Specific Color choice of Player Power Color offers (GDD 14D). No red: red is damage.
-const SPECIFIC_POWER := {"Blue": "#4FA8FF", "Cyan": "#4FE8E0", "Yellow": "#FFE14D", "Orange": "#FF8500", "Pink": "#FF5ECA",
-		"Purple": "#AA28EB", "White": "#F2F5F8"}
+## The Specific Color choices of Player Power Color (GDD 14D) that are a race's own power colour, by race id;
+## GATOS Green and Pirate Orange are the two the Terrans show, and Custom is the player's own pick.
+const SPECIFIC_POWER_RACES := {"Mecha Purple": "mecha", "Tentauri Pink": "tentauri", "Azurethea Blue": "azurethea",
+		"Senti Yellow-Green": "senti", "Lykario Silver": "lykario", "Malphen Pink-Orange": "malphen"}
 
 
 ## The colour of the player's powered systems, power bars and system symbols (GDD 14D): `Player Power Color:
@@ -49,7 +50,13 @@ static func player_power(race: RaceDef = null) -> Color:
 		"Racial":
 			return race.power_colour if race else POWER_GREEN
 		"Specific Color":
-			return Color(SPECIFIC_POWER.get(Settings.get_value("player_power_specific", "Blue"), "#4FA8FF"))
+			var picked: String = Settings.get_value("player_power_specific", "GATOS Green")
+			if picked == "Custom":
+				return Color(String(Settings.get_value("player_power_custom", "#4FA8FF")))
+			if picked == "Pirate Orange":
+				return PIRATE_ORANGE
+			if SPECIFIC_POWER_RACES.has(picked):
+				return Library.race(SPECIFIC_POWER_RACES[picked]).power_colour
 	return POWER_GREEN
 
 
