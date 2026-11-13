@@ -222,9 +222,16 @@ anything Claude added tagged Ai-Generated-Proposal.
     someone mans a system goes: the console's art and its powered symbol are enough, and a crew member standing
     there is plainly manning it.
   - **Likely (heromedel, 2026-11-12):** crew are the genre's size in a tile.
-  - **Open (heromedel, 2026-11-12):** how crew and system symbols fit in one tile. heromedel's leaning: a small
-    symbol beside or above a crew member while manning may be enough, but consoles with the symbol in them were
-    already drawn in the art sessions. What was found (2026-11-12):
+  - **Likely (heromedel, 2026-11-13, "if you can make it work"):** crew and system share a tile the way the art
+    sessions settled it: the console at the wall with the symbol in it, the crew member in front, and no symbol
+    disc at the tile's middle. A mockup with the real console art and crew sheets
+    (`docs/art/mockups/crew-at-console/`, Ai-Generated-Proposal) shows it fits if the crew member is drawn about
+    6 pixels back from the console's wall, a south-wall console is drawn over a Facing sprite, and tokens shrink
+    to about 21 pixels across. Not built yet.
+  - **Open (heromedel, 2026-11-12):** what marks whose crew a crew member is, now that extra rings go. The ring
+    under each one is 29 pixels across and would cross the console.
+  - What was found about consoles, symbols and size (2026-11-12), before the point above was answered.
+    heromedel's first leaning was a small symbol beside or above a crew member while manning:
     - The art sessions settled where the symbol goes: in the console. The Outrider's floor layout test 4 has
       "a pale desk that blends into the floor, with a small symbol on its screen"; the pirate ships have wall
       desks with the symbol; the Tentauri have an organic base for each system with the symbol lit in a dark
