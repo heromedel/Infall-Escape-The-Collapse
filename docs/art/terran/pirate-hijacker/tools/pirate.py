@@ -20,7 +20,7 @@ HULL = "#545b65"
 HULL_DARK = "#434951"
 HULL_LIGHT = "#68707b"
 PLATE_B = "#4c535c"       # replaced plates, a slightly different shade
-ACCENT = "#8e2a26"        # oxblood, the one accent colour
+ACCENT = "#ff8500"        # the one accent colour: pirate power orange (heromedel, 2026-11-13; oxblood before)
 STEEL = "#7c838d"
 DARK = "#2b3037"
 GLASS = "#1e2a3a"
@@ -165,7 +165,7 @@ def build(spec):
     body = symmetric(spec["body_half"], CX)
     radii = spec["body_radii"] + spec["body_radii"][1:-1][::-1]
     bd = []
-    # a darker dorsal plate band down the spine and the one oxblood accent
+    # a darker dorsal plate band down the spine and the one accent
     bd.append(poly(spec["spine"], HULL_DARK, .9))
     for stripe in spec.get("stripes", []):
         bd.append(poly(stripe, ACCENT))
@@ -272,7 +272,16 @@ def cutpurse():
     return s
 
 
-VERSIONS = {"hijacker": hijacker, "cutpurse": cutpurse}
+def pickpocket():
+    """The band 1 loadout (Ship Designs, 2026-10-29): the Cutpurse hull with the Twinshot on mount 3, on the
+    faired-over port bay, and no Sporewing."""
+    s = cutpurse()
+    s["mounts"] = [(m[0], m[1], m[2], "Gat 2.1 Twinshot" if m[0] == "mount-3" else
+                    ("" if m[0] == "mount-4" else m[3]), m[4]) for m in s["mounts"]]
+    return s
+
+
+VERSIONS = {"hijacker": hijacker, "cutpurse": cutpurse, "pickpocket": pickpocket}
 
 if __name__ == "__main__":
     out = sys.argv[1]

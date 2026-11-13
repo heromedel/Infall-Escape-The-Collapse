@@ -6,6 +6,19 @@ suggestion disagree (race profiles, ship suggestions, earlier art notes), **this
 suggestions in particular (gunmetal with yellow and orange hazard markings, stencils, bolts, industrial plating) are
 replaced. Tags follow `docs/tag-styles.md`. The general art rules stay in `README.md`; the colours in `palette.md`.
 
+## GATOS ships
+
+- **Decided (2026-11-13, heromedel):** the GATOS are a loose alliance of mercenaries: their ships are not clean, white,
+  Federation-like or "American clean-cut" vessels, and not earthy ones either. A rugged, lived-in mercenary look
+  (Firefly, or a less well-known sci-fi faction, as the kind of reference), with wings or nacelles rather than a tall
+  vertical shape. This replaces the race profile's "clean, soft Federation-like ships" and "white and pale grey with
+  blue trim" for art (Terrans 1, Proposed and Ai-Generated-Proposal), and the Outrider's look is no longer the model.
+- **Proposed (2026-11-13, heromedel):** a ship's name shapes its look: a cutter gets a sharp look, e.g. sharp wings.
+- **Decided (2026-11-13, heromedel):** a GATOS hull's coloured stripes are in its power colour: power green on a
+  player's ship, pirate power orange on a non-player vessel (the Patrol Cutter's wing stripes; the pirate hulls' nose
+  stripes and fin bands, oxblood before). Grey: the Pirate Hijacker's gunmetal, a little metallic.
+- Reference: the Patrol Cutter (`terran/patrol-cutter/`), approved by heromedel (2026-11-13).
+
 ## Mecha ships
 
 Reference: the sleek battle-cross frame, `mecha/light-attack-frame/pixel-redo/battle-cross/` (built by

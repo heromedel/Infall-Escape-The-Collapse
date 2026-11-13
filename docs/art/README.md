@@ -44,14 +44,16 @@ each with its SVG, PNG exports, review sheets, build tools and a notes README.
 `tools/` holds what every piece uses: `render.js` (SVG to PNG: `node render.js in.svg out.png [scale] [background]`),
 `sheet.js` (side-by-side review sheets), `art_kit.py` (the vector hull drawing kit) and `check_mounts.py` (checks
 every mount sits on the hull's edge with a clear line forward, and that a hull plans at least 4).
-`palette.py` holds the shared colours.
+`palette.py` holds the shared colours. The order of work for a ship: `ship-art-process.md`; for a sprite:
+`sprite-process.md`.
 
 ## Pieces
 
 | Piece | Status |
 |---|---|
 | [`terran/outrider/`](terran/outrider/) | SC-1 Outrider hull: accepted by Ship Designs (pass 7, six edge mounts, re-accepted 2026-10-26). Floor layout test 4 in `floor-layout-tests/` (tests 1–3 in git history). |
-| [`terran/pirate-hijacker/`](terran/pirate-hijacker/) | Terran Pirate Hijacker hull, Hijacker and Cutpurse loadouts, squad view and floor plans: accepted by Ship Designs (one-tile AZC, six edge mounts, no hull hatches: re-accepted 2026-10-26). |
+| [`terran/patrol-cutter/`](terran/patrol-cutter/) | GATOS Patrol Cutter hull (and its Checkpoint loadout): approved by heromedel and accepted by Ship Designs (2026-11-13), a rugged merc cutter with forward-swept blade wings; sent to the Godot Version. The reference for the GATOS look (`style-guides.md`). |
+| [`terran/pirate-hijacker/`](terran/pirate-hijacker/) | Terran Pirate Hijacker hull, Hijacker and Cutpurse loadouts, squad view and floor plans: accepted by Ship Designs (one-tile AZC, six edge mounts, no hull hatches: re-accepted 2026-10-26). Accent stripes changed from oxblood to pirate power orange (heromedel, 2026-11-13), re-accepted. The Pickpocket (band 1) preview added and the floor plans redrawn to Ship Designs' 2026-10-27 layout (2026-11-13), sent to Ship Designs. |
 | [`terran/crew-test-2/`](terran/crew-test-2/) | Test folder: the GATOS crew experiments (the drifter at 2x, its back and side views, typing in four directions, at game size). Not final art. |
 | [`terran/cat-concept-for-gatos/`](terran/cat-concept-for-gatos/) | Cat Concept for Gatos: a mercenary cat crew sprite (cute but tough) in four facings, a concept for the GATOS crew. |
 | [`tentauri/scout/`](tentauri/scout/) | Tentauri scout hull, armed preview and floor plan with organic consoles: accepted by Ship Designs, including the later changes (segmented Defense Laser, edge mounts, organs on the walls; 2026-10-25), then six edge mounts, toned-down side thrusters and Tentauri pink symbols (2026-10-26). |

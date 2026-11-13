@@ -32,6 +32,8 @@ one place.
   and the mockup in `mockups/system-symbol-colours/`.
 - **Decided (2026-10-25):** enemy ships show their own race's power colour (symbols, conduits and core glow):
   Mecha power purple on Mecha ships, pirate power orange on pirate ships. Player ships use power green.
+- **Decided (2026-11-13, heromedel):** GATOS hull stripes follow the same rule: power green on a player's ship, pirate
+  power orange on a non-player vessel (`style-guides.md`, GATOS ships).
 
 ## Mecha hull ramp
 

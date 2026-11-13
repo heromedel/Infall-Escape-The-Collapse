@@ -8,14 +8,16 @@
 
 ## What it is
 
-A doomed-Terran pirate cruiser: clean and restrained, in dark gunmetal with a single oxblood accent. One hull, two
+A doomed-Terran pirate cruiser: clean and restrained, in dark gunmetal with a single accent in pirate power orange
+(`#FF8500`; oxblood until 2026-11-13, heromedel). One hull, two
 loadouts. The side weapon bays are modules that come with the loadout (**Ai-Generated-Proposal**, accepted by Ship
 Designs):
 
 | Loadout | Bands | Bay modules | Weapons | Look |
 |---|---|---|---|---|
-| Hijacker | 4–6 | both bays | Twinshot (port), Sporewing (starboard) | oxblood nose stripes |
-| Cutpurse | 1–3 | starboard only; port bay faired over flush | Sporewing | plainer, no stripes, leaner and lopsided |
+| Hijacker | 4–6 | both bays | Twinshot (port), Sporewing (starboard) | pirate-orange nose stripes |
+| Cutpurse | 2–3 | starboard only; port bay faired over flush | Sporewing | plainer, no stripes, leaner and lopsided |
+| Pickpocket | 1 | the Cutpurse hull (Ship Designs, 2026-10-29) | Twinshot on mount 3 (on the faired-over port bay), no Sporewing | as the Cutpurse; `pirate-pickpocket-armed-preview.*` |
 
 - **Hull only** in `pirate-*-hull.svg`: top-down, nose up, 480 × 760. Weapon mounts are hidden points in the
   `weapon-mounts` group. The weapons are separate art in `docs/art/weapons/` (`sporewing/`, `twinshot/`).
@@ -64,59 +66,37 @@ Terran designs for a while (race profiles, Terrans 1, Likely). See `docs/art/REA
 
 ## Floor plans
 
-**Accepted by Ship Designs (2026-10-23).** `floor-plans/floorplans.png` shows both loadouts side by side.
+**Redrawn 2026-11-13** to Ship Designs' layout of 2026-10-27 (`docs/ship-suggestions.md`, Terran Pirate Hijacker,
+step 8, and the Cutpurse and Pickpocket patches); the plans accepted on 2026-10-23 and 2026-10-26 are in git history.
+`floor-plans/floorplans.png` shows the three loadouts side by side.
 
 ![Floor plans](floor-plans/floorplans.png)
 
-- **Layout:** one layout of 11 rooms on 35 px tiles, four columns wide:
-  - bridge (Piloting, Sensors)
-  - Doors room
-  - Shields
-  - Weapons, beside the starboard Sporewing pod
-  - the 2×2 core room with the AZC on one tile (its only tile free of doors), with empty 1×2 flank rooms
-  - Medbay
-  - Crew Teleporter
-  - an aft hall with four airlock doors to space
-  - an engine room (Engines, Life Support)
-- **Rooms by loadout:** systems go into rooms of the player's choice (GDD 5E). The Cutpurse has no Sensors, Doors or
-  Medbay, so its Doors and Medbay rooms stand empty and stripped (darker, bare floor).
-- **Conduits:** a plain ring from the AZC through the system rooms. Every weapon hardpoint is wired:
-  - **Twinshot (Hijacker):** fed twice, by a run from the weapons room across to the port hardpoint and a tap off the
-    ring, so no single cut drops it. It is Terran-built and wired properly.
-  - **Sporewing (both):** one spur from the weapons room out to the starboard hardpoint: the readable weak point,
-    a crude refit of stolen tech.
-  - The plans show everything intact and powered. A separate mockup, `mockup-damage-14c`, clearly labelled, shows the
-    Sporewing spur cut with the GDD 14C red flash and the cut-off hardpoint turned red.
-- **Weapon mounts:** whether conduits must reach each weapon mount on the hull, or only the Weapons room, is
-  **Open** (race profiles, Terrans 6). heromedel asked to work as if mounts need power, so they are wired here.
-- **Conduit check** (`floorplan.py` runs it before drawing):
-
-  | Loadout | Systems on the network | Hardpoints wired | Single points of failure |
-  |---|---|---|---|
-  | Hijacker | 9 of 9 | 2 of 2 | the Sporewing spur (intended) |
-  | Cutpurse | 6 of 6 | 1 of 1 | the Sporewing spur (intended) |
-
-  The ring has two AZC exits, so two cuts beside the core would unpower the ship: accepted for a mid-tier pirate,
-  tougher than a spine and weaker than the Outrider's wheel.
-- **Fix (2026-10-23):** the first accepted plans left the Twinshot hardpoint unwired, and the Sporewing spur began on a
-  tile the ring didn't reach. heromedel spotted the first; the new check caught the second.
-- **Rules:** no console sits on a door tile. Consoles are wall desks with the system symbol in pirate power orange
-  (`#FF8500`, `docs/art/palette.md`), the colour of a powered, intact pirate system (light steel until 2026-10-25); not
-  red, since red means a cut-off system (GDD 14C).
+- **Layout:** unchanged: 11 rooms on 35 px tiles, four columns wide (the bridge, a doors room, the shields and weapons
+  rooms, the core room with the one-tile AZC between two 1×2 flank rooms, the medbay, the teleporter room, an aft
+  hall with four airlocks, and the engine room). Consoles sit against the walls the layout gives them.
+- **Systems by loadout:** Hijacker, all of them, with the Twinshot's Weapons A in the weapons room and the
+  Sporewing's own Weapons B in the starboard flank room, by its launcher. Cutpurse: no Sensors, Doors, Weapons A or
+  Medbay. Pickpocket: no Sensors, Doors, Weapons B or Medbay. Rooms a loadout leaves empty stand stripped.
+- **Conduits feed systems, not weapon mounts (GDD 5H):** the layout's conduit list, tile by tile: a ring from the AZC
+  through the system rooms, and one spur from the weapons room to Weapons B (the readable weak point). The Pickpocket
+  has no spur. The build checks every installed system traces back to the AZC and that the spur is the only single
+  point of failure (Hijacker and Cutpurse: Weapons B, two segments; Pickpocket: none).
+- **Flagged to Ship Designs:** Weapons B sits on (2, -1), where the layout puts it, but both tiles of the starboard
+  flank room are door tiles, against the art rule (no controlled system's console on a door tile). Drawn as given;
+  the build names it.
+- Everything is shown intact and powered. `mockup-damage-14c` (a labelled mockup, not a plan) shows the Weapons B spur
+  cut, with the GDD 14C red flash.
 - **Files:** each loadout has a floor layer (`floor-*.svg`), a conduit layer (`conduits-*.svg`, its own file as the
   art rules ask) and a combined plan (`plan-*.svg`).
-- **Dark core hatch** (race profiles, Proposed): left off for now, at Ship Designs' call.
-- **One-tile AZC (2026-10-26, art rules: no system takes more than one tile):** the AZC was a 2×2 block filling the
-  core room; it is now one tile, (2, 5), the room's only tile free of doors, and the ring passes through it. The build
-  checks it is one tile, off every door tile and console. The conduit check is unchanged (above).
 
 ## Tools
 
 | File | What it does |
 |---|---|
-| `tools/pirate.py` | Builds the hulls: `python3 pirate.py OUT_DIR hijacker cutpurse` |
+| `tools/pirate.py` | Builds the hulls: `python3 pirate.py OUT_DIR hijacker cutpurse pickpocket` (the Pickpocket is the Cutpurse hull with its own mount data) |
 | `tools/weapons.py` | Builds the weapon files (Twinshot and Sporewing) |
 | `tools/compose.py` | Places weapons at a hull's mounts, slid out and under the hull: `python3 compose.py HULL.svg OUT.svg` |
 | `tools/squad.py` | Builds the squad view against the Outrider |
-| `tools/floorplan.py` | Builds the floor plans: `python3 floorplan.py HIJACKER_ARMED.svg CUTPURSE_ARMED.svg OUT_DIR` |
+| `tools/floorplan.py` | Builds the floor plans and runs their checks: `python3 floorplan.py HIJACKER_ARMED.svg CUTPURSE_ARMED.svg PICKPOCKET_ARMED.svg OUT_DIR` |
 | `docs/art/tools/` | Shared: `art_kit.py` (drawing kit), `render.js` (SVG to PNG), `sheet.js` (review sheets), `check_mounts.py` (the mount check: `python3 ../../../tools/check_mounts.py ../pirate-*-hull.svg`) |
