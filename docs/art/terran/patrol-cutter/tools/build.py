@@ -18,20 +18,23 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, os.path.join(HERE, "..", "..", "..", "tools"))
+sys.path.insert(0, os.path.join(HERE, "..", "..", ".."))           # docs/art, for palette.py
 sys.path.insert(0, HERE)
 from art_kit import Hull, rounded_path, shade, INK  # noqa: E402
 import layout  # noqa: E402
+import palette  # noqa: E402
 
 W, H, CX, CY = layout.W, layout.H, layout.CX, layout.CY
 
-PLATE = "#7a7266"          # the main hull plates: warm grey-olive, sun-faded
-WING = "#6d6a61"
-DARK = "#4c4842"           # nacelles, the prow blade, armour
-STEEL = "#8b8d8c"
-RUST = "#a85a2e"           # faded rust-ochre markings
-GLASS = "#22302f"
+# pass 4 (heromedel, 2026-11-13): the Pirate Hijacker's gunmetal greys (its tools/pirate.py), a little more metallic
+PLATE = "#545b65"          # the main hull plates
+WING = "#434951"           # the wings shade toward this, a step darker
+DARK = "#2b3037"           # nacelles and armour
+STEEL = "#7c838d"
+GLASS = "#1e2a3a"
 GLINT = "#e2b36c"
 ENGINE_GLOW = "#bfe6ff"
+STRIPE = palette.POWER_GREEN      # a player ship; pirate power orange on a non-player one
 
 
 def sym(half, radius=0):
@@ -67,8 +70,6 @@ def scorch(x, y, rx, ry):
 HULL = [(214, 12), (160, 78), (158, 104), (146, 124), (22, 114), (34, 150), (124, 300), (150, 322), (160, 344),
         (160, 404), (182, 434)]
 HULL_RADII = [2, 4, 8, 10, 0, 2, 8, 8, 4, 6, 6]
-# the port wing's panel inside the outline (a step darker, no outline of its own)
-WING_PANEL = [(150, 128), (22, 114), (34, 150), (124, 300), (150, 318)]
 # the port nacelle, tucked under the wing's trailing edge, its nozzle set into its tail
 NACELLE_PORT = [(140, 220), (116, 240), (114, 384), (126, 396), (154, 396), (158, 384), (158, 230)]
 
@@ -88,19 +89,34 @@ def build(edge=None):
         x = sum(p[0] for p in half) / len(half)
         h.plate(name, rounded_path(half, 4), DARK, bevel=3, shadow=3,
                 details=seam(x - 14, 330, x + 14, 330, DARK) + nozzle(x, 383, 30))
-    # the hull: body and wings as one plate; the wings a step darker (no panel line along their roots: it traced the
-    # old column again), a rust-ochre band raked along each leading edge, the body's seams, soft scorching aft, the stern nozzles set in
-    wings = ""
+    # the hull: body and wings as one plate. Pass 4: the wings shade into the body on a smooth gradient, darker toward
+    # the tips (a hard tone edge traced the old column); a metallic sheen and a pale rim, as on the Pirate Hijacker.
+    # The stripe raked along each wing's leading edge is in the ship's power colour: power green on a player ship,
+    # pirate power orange on a non-player one (palette.md).
+    h.add_def("wing-blend", f'<linearGradient id="wing-blend" x1="0" y1="0" x2="{W}" y2="0" gradientUnits="userSpaceOnUse">'
+                            f'<stop offset="0" stop-color="{WING}" stop-opacity=".95"/>'
+                            f'<stop offset=".34" stop-color="{WING}" stop-opacity="0"/>'
+                            f'<stop offset=".66" stop-color="{WING}" stop-opacity="0"/>'
+                            f'<stop offset="1" stop-color="{WING}" stop-opacity=".95"/></linearGradient>')
+    h.add_def("sheen", '<linearGradient id="sheen" x1="0" y1="0" x2="1" y2="1">'
+                       '<stop offset="0" stop-color="#ffffff" stop-opacity=".22"/>'
+                       '<stop offset=".45" stop-color="#ffffff" stop-opacity="0"/>'
+                       '<stop offset=".55" stop-color="#dfe6ee" stop-opacity=".12"/>'
+                       '<stop offset=".7" stop-color="#000000" stop-opacity="0"/>'
+                       '<stop offset="1" stop-color="#000000" stop-opacity=".3"/></linearGradient>')
+    hull_d = sym(HULL, HULL_RADII)
+    stripes = ""
     for port in (True, False):
         s = 1 if port else -1
         sx = lambda x: CX + s * (x - CX)
-        pts = " L".join(f"{sx(x)},{y}" for x, y in WING_PANEL)
-        wings += (f'<path d="M{pts} Z" fill="{shade(WING, .92)}" opacity=".55"/>'
-                  + f'<path d="M{sx(28)},124 L{sx(140)},140 L{sx(140)},150 L{sx(36)},140 Z" fill="{RUST}" opacity=".85"/>'
-                  + seam(sx(60), 164, sx(140), 182, WING) + seam(sx(84), 204, sx(142), 220, WING))
-    details = (wings + seam(162, 150, 278, 150, PLATE) + seam(160, 300, 280, 300, PLATE) + seam(160, 370, 280, 370, PLATE)
-               + scorch(220, 424, 40, 8) + nozzle(206, 423, 18) + nozzle(234, 423, 18))
-    h.plate("hull", sym(HULL, HULL_RADII), PLATE, bevel=5, shadow=4, details=details)
+        stripes += (f'<path d="M{sx(28)},124 L{sx(140)},140 L{sx(140)},146 L{sx(34)},134 Z" fill="{STRIPE}"/>'
+                    + seam(sx(60), 164, sx(140), 182, PLATE) + seam(sx(84), 204, sx(142), 220, PLATE))
+    details = (f'<path d="{hull_d}" fill="url(#wing-blend)"/><path d="{hull_d}" fill="url(#sheen)"/>'
+               + stripes + seam(162, 150, 278, 150, PLATE) + seam(160, 300, 280, 300, PLATE)
+               + seam(160, 370, 280, 370, PLATE) + scorch(220, 424, 40, 8) + nozzle(206, 423, 18) + nozzle(234, 423, 18)
+               + f'<path d="{hull_d}" fill="none" stroke="#b4bcc6" stroke-width="3" opacity=".35"/>'
+               + f'<path d="{hull_d}" fill="none" stroke="#eef2f6" stroke-width=".9" opacity=".3"/>')
+    h.plate("hull", hull_d, PLATE, bevel=5, shadow=4, details=details)
     # the canopy: a narrow wedge of dark glass set into the chisel bow (pass 2: no separate prow blade, simpler)
     canopy = sym([(216, 50), (196, 78), (196, 100), (212, 106)], 2)
     h.plate("cockpit", canopy, GLASS, bevel=2, outline=1.6,
@@ -112,7 +128,7 @@ def build(edge=None):
     panel = rounded_path([(ax - 34, ay - 26), (ax + 34, ay - 26), (ax + 38, ay + 22), (ax - 38, ay + 22)], 4)
     h.plate("azc", panel, DARK, bevel=3, outline=1.8, shadow=1.5,
             details="".join(f'<rect x="{ax - 22}" y="{ay - 12 + i * 14}" width="44" height="5" rx="2" fill="#24221f"/>'
-                            f'<rect x="{ax - 20}" y="{ay - 11 + i * 14}" width="40" height="1.6" rx=".8" fill="{RUST}" '
+                            f'<rect x="{ax - 20}" y="{ay - 11 + i * 14}" width="40" height="1.6" rx=".8" fill="{STEEL}" '
                             f'opacity=".55"/>' for i in range(2)))
     # the engines' glow, behind the nozzles set into the nacelles and the stern
     h.raw("engines", {5: "".join(f'<ellipse cx="{x}" cy="{y}" rx="{w}" ry="9" fill="{ENGINE_GLOW}" opacity=".5" '

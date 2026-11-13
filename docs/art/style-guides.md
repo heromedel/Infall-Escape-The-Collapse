@@ -14,6 +14,9 @@ replaced. Tags follow `docs/tag-styles.md`. The general art rules stay in `READM
   vertical shape. This replaces the race profile's "clean, soft Federation-like ships" and "white and pale grey with
   blue trim" for art (Terrans 1, Proposed and Ai-Generated-Proposal), and the Outrider's look is no longer the model.
 - **Proposed (2026-11-13, heromedel):** a ship's name shapes its look: a cutter gets a sharp look, e.g. sharp wings.
+- **Decided (2026-11-13, heromedel):** a GATOS hull's coloured stripes are in its power colour: power green on a
+  player's ship, pirate power orange on a non-player vessel (the Patrol Cutter's wing stripes; the pirate hulls' nose
+  stripes and fin bands, oxblood before). Grey: the Pirate Hijacker's gunmetal, a little metallic.
 - Reference: the Patrol Cutter, round 2 (`terran/patrol-cutter/`), until heromedel picks one.
 
 ## Mecha ships

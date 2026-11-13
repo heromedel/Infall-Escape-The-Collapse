@@ -8,13 +8,14 @@
 
 ## What it is
 
-A doomed-Terran pirate cruiser: clean and restrained, in dark gunmetal with a single oxblood accent. One hull, two
+A doomed-Terran pirate cruiser: clean and restrained, in dark gunmetal with a single accent in pirate power orange
+(`#FF8500`; oxblood until 2026-11-13, heromedel). One hull, two
 loadouts. The side weapon bays are modules that come with the loadout (**Ai-Generated-Proposal**, accepted by Ship
 Designs):
 
 | Loadout | Bands | Bay modules | Weapons | Look |
 |---|---|---|---|---|
-| Hijacker | 4–6 | both bays | Twinshot (port), Sporewing (starboard) | oxblood nose stripes |
+| Hijacker | 4–6 | both bays | Twinshot (port), Sporewing (starboard) | pirate-orange nose stripes |
 | Cutpurse | 1–3 | starboard only; port bay faired over flush | Sporewing | plainer, no stripes, leaner and lopsided |
 
 - **Hull only** in `pirate-*-hull.svg`: top-down, nose up, 480 × 760. Weapon mounts are hidden points in the
