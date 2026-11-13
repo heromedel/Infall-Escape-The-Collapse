@@ -595,6 +595,9 @@ func _system_tooltip(ship: Ship, system: ShipSystem) -> String:
 			lines.append("Switch it on to heal crew standing in it; another system may need to go off first.")
 		else:
 			lines.append("Give it power to heal crew standing in it.")
+	if system.def.draws_power and not system.def.hotkey.is_empty():
+		var takes := "Remove power: Shift + %s" % system.def.hotkey
+		lines.append(takes if PlayerView.KEYS_WITH_OTHER_USES.has(system.def.hotkey) else "Add power: %s  ·  %s" % [system.def.hotkey, takes])
 	if system.def.draws_power and ship.reactor_type == "pool":
 		lines.append("Click to add power, right click to remove.")
 	elif system.def.draws_power and ship.reactor_type == "core":
@@ -681,7 +684,7 @@ func _special_buttons(ship: Ship) -> Array:
 	if cloak:
 		buttons.append(["CLOAK", func(): screen.cloak(ship), "Hide the ship: most shots miss and its weapons hold their charge. Hotkey: C", ship.cloak_ticks <= 0 and ship.cloak_cooldown <= 0 and ship.system_power(cloak) > 0, ship.cloak_cooldown])
 	if ship.has_system("doors"):
-		buttons.append(["OPEN DOORS", func(): screen.set_all_doors(ship, true, false), "Open every inner door.", ship.doors_controllable(), -1])
+		buttons.append(["OPEN DOORS", func(): screen.set_all_doors(ship, true, false), "Open every inner door. Pressed again with them all open, it opens the airlocks too.", ship.doors_controllable(), -1])
 		buttons.append(["CLOSE DOORS", func(): screen.set_all_doors(ship, false, false), "Close every door, airlocks too.", ship.doors_controllable(), -1])
 		buttons.append(["VENT", func(): screen.set_all_doors(ship, true, true), "Open the airlocks to vent air and fires into space.", ship.doors_controllable(), -1])
 	return buttons
@@ -854,6 +857,11 @@ func _draw_floating_status(ship: Ship) -> void:
 	var layers := ship.system_by("shields").level / 2 if ship.system_by("shields") else 0
 	for index in layers:
 		draw_circle(rect.position + Vector2(pip_x + 6, 49), 6, UiColours.SHIELD_BLUE if index < ship.shield_layers else Color(0.15, 0.15, 0.25))
+		# the layer coming back shows how far along it is, as a bar under its empty pip (reference frame 17)
+		if index == ship.shield_layers and index < ship.max_shield_layers():
+			var bar := Rect2(rect.position + Vector2(pip_x, 57), Vector2(12, 3))
+			draw_rect(bar, Color(0.15, 0.15, 0.25))
+			draw_rect(Rect2(bar.position, Vector2(bar.size.x * clampf(ship.shield_progress / Ship.SHIELD_LAYER_TICKS, 0.0, 1.0), bar.size.y)), UiColours.SHIELD_BLUE)
 		pip_x += 16
 	for index in (5 if ship.has_system("supershield") else 0):
 		draw_circle(rect.position + Vector2(pip_x + 5, 49), 5, UiColours.SUPERSHIELD if index < ship.supershield else Color(0.25, 0.12, 0.22))

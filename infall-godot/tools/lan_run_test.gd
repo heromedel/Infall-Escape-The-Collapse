@@ -133,6 +133,12 @@ func _admiral(order: Dictionary) -> void:
 ## Answers whatever shared window is open, as the Admiral (the host's player).
 func _answer() -> void:
 	for attempt in 6:
+		# a window of the Admiral's own (a store an event opened, the map) holds the game too: close it
+		var view: PlayerView = main.view_of(main.session.admiral)
+		if view:
+			for own in view.overlays.get_children():
+				if not own.is_queued_for_deletion() and own.has_method("close"):
+					own.close()
 		var open: Array = main.overlays.get_children().filter(func(w): return w is Overlay and w.shared and w.visible and not w.is_queued_for_deletion())
 		if open.is_empty():
 			return

@@ -920,6 +920,19 @@ func door_max_health() -> float:
 	return DOOR_HEALTH_PER_LEVEL * maxi(1, system_power(doors_system))
 
 
+## How readily fire crosses from one tile to the next room's tile (0 to 1). Fire spreads between rooms through
+## their doors, never through a wall: freely through an open door or with no working Doors system; a closed door
+## slows it 1.75 times, and a closed blast door (Doors at level 2 or more) 10 times, the genre's figures.
+func _fire_through(from: Vector2i, to: Vector2i) -> float:
+	for link in links.get(from, []):
+		if link.cell != to or link.door == null:
+			continue
+		if link.door.is_open() or not doors_controllable():
+			return 1.0
+		return 0.1 if system_by("doors").level >= 2 else 1.0 / 1.75
+	return 0.0
+
+
 func doors_controllable() -> bool:
 	var doors_system := system_by("doors")
 	return doors_system != null and system_power(doors_system) > 0
@@ -977,7 +990,7 @@ func _tick_fires(rng: RandomNumberGenerator) -> void:
 					var next_room := room_at(next)
 					if next_room < 0:
 						continue
-					if next_room == room.index or rng.randf() < 0.25:
+					if next_room == room.index or rng.randf() < _fire_through(cell, next):
 						new_fires.append(next)
 						break
 		room.fire_system_damage += 0.004 * room.fires.size()

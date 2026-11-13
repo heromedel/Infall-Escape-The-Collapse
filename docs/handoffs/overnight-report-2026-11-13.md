@@ -188,3 +188,25 @@ Eco also reminded that events need the genre's full reward curve by band; that i
 **Not done from Eco's answers:** shield levels as layers in the ship files (answer 1). It changes what every
 ship file's shield number means and how upgrades step, so it is left for heromedel to say go on.
 
+### B2, B4, B5 and B6. Closer to the genre
+
+- **System power keys.** A system's own key gives it power and Shift with the key takes power away, as the genre's
+  tooltip says. The keys were already in each system's file (Shields A, Engines S, Weapons W, Medbay D and so on)
+  and nothing read them. The system's tooltip now shows them. Where a key already does something else in Infall
+  (C cloaks, T teleports, E launches a suit, F looks at the ship, Z sends crew to stations), that use stays and
+  only Shift with the key works, to take power away. The input test checks Shift + A and A on Shields.
+- **The aiming cursor.** While the mouse player aims, the arrow is hidden and the reticle is the cursor; it comes
+  back when the aim ends or a window opens. Not seen in a screenshot (a screenshot does not show the system
+  cursor), so this one wants a look in play.
+- **Enemy shield pips show recharge:** a small bar under the empty pip that is coming back.
+- **Fire spreads between rooms through doors only** (heromedel), not through walls: freely through an open door,
+  or when the ship has no working Doors system; a closed door slows it 1.75 times and a closed blast door (Doors
+  at level 2 or more) 10 times, the genre's wiki figures. "Blast door at Doors level 2" is this session's reading.
+- **Open Doors pressed again, with every inner door already open, opens the airlocks too,** as players describe
+  the genre's button. The separate Vent button stays.
+- Not changed: crew fight fires from where they stand (already so), and the gap between a volley's shots (no
+  figure found).
+- The wider LAN test now also closes a window of the Admiral's own (a store an event opens), which had made it
+  fail now and then by holding the game. Fight test 20 of 20; crew fight rules hold; LAN run passes three times
+  running; input test 22 of 22; one chaos seed clean.
+

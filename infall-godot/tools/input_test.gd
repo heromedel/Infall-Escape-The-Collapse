@@ -61,6 +61,15 @@ func _ready() -> void:
 		var medbay_region := _hud_region(medbay.display_name() + " (level")
 		await _click(medbay_region.rect.get_center(), MOUSE_BUTTON_LEFT)
 		_check("click switches the Medbay on", medbay.enabled)
+	# 5b. A system's own key: Shift with it takes its power away, the key alone gives it back (Shields is A)
+	var shields: ShipSystem = ship.system_by("shields")
+	var shields_before := ship.system_power(shields)
+	await _key(KEY_A, true)
+	await _wait(0.2)
+	_check("Shift + A takes power from Shields", ship.system_power(shields) < shields_before)
+	await _key(KEY_A)
+	await _wait(0.2)
+	_check("A gives Shields its power back", ship.system_power(shields) == shields_before)
 	# 6. A door click
 	var door: ShipDoor = ship.doors[0]
 	var door_point: Vector2 = ship.design.cell_centre(door.cell_a) + Vector2(door.direction) * ShipDesign.TILE * 0.5
@@ -173,10 +182,11 @@ func _drag(from: Vector2, to: Vector2) -> void:
 	await _wait(0.1)
 
 
-func _key(code: int) -> void:
+func _key(code: int, shift: bool = false) -> void:
 	for pressed in [true, false]:
 		var event := InputEventKey.new()
 		event.keycode = code
+		event.shift_pressed = shift
 		event.pressed = pressed
 		Input.parse_input_event(event)
 		await _wait(0.05)

@@ -14,6 +14,8 @@ signal store_pressed(view: PlayerView)
 signal menu_pressed(view: PlayerView)
 signal players_pressed(view: PlayerView)
 
+## Letters that are a system's key in its file and also do something else in this view: the other use wins.
+const KEYS_WITH_OTHER_USES := ["C", "E", "F", "J", "P", "T", "U", "V", "Z"]
 var player_id: int = 1
 var colour := Color.WHITE
 var battle: BattleScreen
@@ -169,7 +171,23 @@ func encounter_changed(reframe: bool = true) -> void:
 		frame_everything(true)
 
 
+## While the mouse player aims, the reticle is the cursor, as in the genre: the arrow is hidden until the aim ends
+## or a window opens.
+func _show_or_hide_the_arrow() -> void:
+	if not uses_keys:
+		return
+	var wanted := Input.MOUSE_MODE_HIDDEN if encounter != null and aim_mode != "" and not hold_pause and not has_window() else Input.MOUSE_MODE_VISIBLE
+	if Input.mouse_mode != wanted:
+		Input.mouse_mode = wanted
+
+
+func _exit_tree() -> void:
+	if uses_keys and Input.mouse_mode == Input.MOUSE_MODE_HIDDEN:
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+
 func _process(delta: float) -> void:
+	_show_or_hide_the_arrow()
 	if encounter == null:
 		return
 	_apply_turn()
@@ -434,7 +452,26 @@ func _aim_is_autofire() -> bool:
 	return autofire_default != (uses_keys and Input.is_key_pressed(KEY_CTRL))
 
 
+## A system's own key gives it power and Shift with the key takes power away, as the genre's system tooltip says
+## ("Add Power: A / Remove Power: Shift + A"). The keys are in each system's file. A key the view already uses for
+## something else (C cloaks, T teleports, E launches a suit, F looks at the ship, Z sends crew to their stations)
+## keeps that use; Shift with it still takes the system's power away.
+func _system_key(event: InputEventKey) -> bool:
+	if selected_ship == null or event.keycode < KEY_A or event.keycode > KEY_Z:
+		return false
+	var letter := OS.get_keycode_string(event.keycode)
+	if not event.shift_pressed and KEYS_WITH_OTHER_USES.has(letter):
+		return false
+	for system in selected_ship.systems:
+		if system.def.hotkey == letter and system.def.draws_power:
+			system_power(selected_ship, system, not event.shift_pressed)
+			return true
+	return false
+
+
 func _key(event: InputEventKey) -> void:
+	if _system_key(event):
+		return
 	match event.keycode:
 		KEY_SPACE:
 			toggle_pause()
