@@ -171,7 +171,8 @@ step, not to every line; points he agreed to are tagged.
    even if the 3-shot laser with good sensors is a bit powerful. An FTL Kestrel-level all-rounder with one scouting strength: Sensors 2, since
    sensor level sets how far beacons are visible (GDD 2E). 3 crew, like the Kestrel.
 7. **Variation:** standard for the race (the Terran starting ship).
-8. **Layout and systems:** a shuttle-shaped cruiser in white and pale grey with blue trim. Hull 30, as every FTL
+8. **Layout and systems:** a shuttle-shaped cruiser in white and pale grey with blue trim (superseded for art by the
+   GATOS mercenary look, Decided 2026-11-13; race profile Terrans 1). Hull 30, as every FTL
    player ship. **Rooms — Likely (2026-10-23):** 10 bigger rooms rather than
    the Kestrel's many small ones, from Arty's floor layout test 3: the bridge holds Piloting, Weapons and Shields;
    one room holds Sensors and Doors; the engine room holds Engines and Life Support; Medbay and the AZC core room
@@ -429,7 +430,8 @@ Default tag: **Ai-Generated-Proposal (2026-10-22)**; not reviewed yet.
    Door 1: (1,-4)   Facing: South
    Door 2: (-1,-2)  Facing: East
    Door 3: (-2,-2)  Facing: South
-   Door 4: (2,-2)   Facing: South
+   Door 4: removed  (2026-11-13: it made (2,-1), Weapons B's console tile, a door tile; the starboard flank
+                    is reached from the core room by door 6)
    Door 5: (-1,-1)  Facing: West
    Door 6: (1,0)    Facing: East
    Door 7: (-1,-2)  Facing: South
@@ -1103,18 +1105,20 @@ Malphen breathe); whether a squad of three is too much for a first fight.
 Default tag: **Ai-Generated-Proposal (2026-10-29)**. First drafted for Deck Collapse.
 
 1. **Race:** Senti-GPH.
-2. **Band:** 3 (low tier, but its AAA is new tech, and at 181.84 it is over band 2's budget).
+2. **Band:** 3 (low tier, but its AAA is new tech, and at 175.78 it is over band 2's budget).
 3. **State:** doing fine, guarding a relay or broadcast station.
-4. **Race info used:** Terran-like tech with conduits and an AZC (maybe slightly worse); the AAA stores and
+4. **Race info used:** Terran-like tech with conduits, but a core that works by bars (Senti-GPH 6, Proposed 2026-11-13); Backup Batteries; the AAA stores and
    broadcasts their avatars, and damage to it drops avatars until repaired; low tech is beams, good sensors and a
    small AAA; crew have half HP, need no oxygen and are immune to fire; ion disrupts them; silhouette centred on the
    AAA; weapon names are number codes.
 5. **Function:** a station picket. Ideas considered: an archive courier, a relay picket, a survey ship, a data
    collector. The picket fits their dense clusters around relay stations.
-6. **Kinds of systems and crew:** two beams, Sensors 2, an AAA hosting 2 avatars, 2 crew; no Life Support or Medbay.
+6. **Kinds of systems and crew:** two beams, Sensors 2, an AAA hosting 2 avatars, a Backup Battery, 2 crew; no Life Support or
+   Medbay.
 7. **Variation:** standard for the race at low tier.
-8. **Layout and systems:** hull 10. AZC level 2; 4 systems draw power (Shields, Engines, AAA, Weapons), so all run
-   at once. No Life Support: Senti don't breathe (GDD 5L: an unlisted system doesn't exist). The AAA sits in the
+8. **Layout and systems:** hull 10. **Updated (2026-11-13), Ai-Generated-Proposal:** a Senti core of 7 bars:
+   Shields 1 (a Senti Shield Projector, one bar per layer; GDD 8H, Proposed), Engines 1, AAA 2, Weapons 3. A Backup
+   Battery (the genre's, ship-wide) adds power for a short time. Earlier: AZC level 2. No Life Support: Senti don't breathe (GDD 5L: an unlisted system doesn't exist). The AAA sits in the
    middle of the big central room, with the core, Shields and Weapons around it: a breach there drains no air they
    need, and fire doesn't hurt them.
 
@@ -1124,7 +1128,7 @@ Default tag: **Ai-Generated-Proposal (2026-10-29)**. First drafted for Deck Coll
    Ship: Relay Picket
    Center: Tile                    (5 x 5 tiles)
    Hull: 10
-   Reactor: AZC level 2
+   Reactor: Senti core, 7 bars
 
    Room 0: (-1,-2),(1,-2)          bridge
    Room 1: (-1,-1),(1,1)           array room
@@ -1136,8 +1140,9 @@ Default tag: **Ai-Generated-Proposal (2026-10-29)**. First drafted for Deck Coll
    Sensors(1,-2)         Level 2   Location: North Wall
    Weapons(-1,-1)        Level 3   Location: West Wall
    AAA(0,0)              Level 2   Rotation: None (stands in the middle)
-   AZC(-1,1)             Level 2
-   Shields(1,1)          Level 1 (2 bars)   Location: East Wall
+   Core(-1,1)            7 bars
+   Shield Projector(1,1) Level 1 (1 bar)    Location: East Wall
+   Backup Battery(1,-1)  Level 1   Location: East Wall
    Engines(-1,2)         Level 1   Location: South Wall
 
    Door 0: (0,-2)   Facing: South
@@ -1168,11 +1173,13 @@ Default tag: **Ai-Generated-Proposal (2026-10-29)**. First drafted for Deck Coll
    - **Shield check:** one layer cuts each beam by 1, so the 1B 02 V1 still lands 1 damage; the 2B 01 V1 lands once
      the layer is down.
 10. **Price:** Shields 54.46 · Sensors level 2 15.73 · AAA level 2 (buy 21.78 + 8.47) 30.25 ·
-    Weapon Control level 3 20.57 · AZC level 2 42.36 · 2B 01 V1 7.19 · 1B 02 V1 11.28 = **181.84**. Band 3 (414):
-    two pickets (363.68). Crew are extra: 2 Senti-GPH at 15.73, 31.46.
+    Weapon Control level 3 20.57 · Senti core, 7 bars 27.83 · Backup Battery 8.47 · 2B 01 V1 7.19 ·
+    1B 02 V1 11.28 = **175.78** (Shield Projector layer 1 priced as a Generator layer). Band 3 (414): two pickets
+    (351.56). Earlier, with the AZC: 181.84. Crew are extra: 2 Senti-GPH at 15.73, 31.46.
 11. **New rules recorded:** none.
 
-Judgment calls: band 3; no Life Support or Medbay; one avatar per AAA level.
+Judgment calls: band 3; no Life Support or Medbay; one avatar per AAA level; the AAA drawing a bar per level;
+the Backup Battery tile at (1,-1), a free tile with no door.
 
 ## Whispwraith "Mote": not written up for Infall (2026-10-29)
 

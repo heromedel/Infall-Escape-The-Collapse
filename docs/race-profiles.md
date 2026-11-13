@@ -32,16 +32,24 @@ The starting race (GDD 7C). The name is deliberate, to avoid a plain Federation 
   Where a point depends on the species it gives both, e.g. "halfling-like (kitten-like with Tabbys)". This replaces
   "the GATOS are officially cats", decided earlier the same day.
 
-1. **Tone and ship style — Proposed (2026-10-21):** when doing well, clean, soft Federation-like ships. When
-   desperate, a grim, survivalist look built from seemingly borrowed or stolen technology.
+1. **Tone and ship style — Decided (2026-11-13, heromedel):** the GATOS are a loose alliance of mercenaries, and
+   their ships look it: rugged and lived-in, not clean, white, Federation-like or "American clean-cut", and not
+   earthy either (`docs/art/style-guides.md`, GATOS ships). **Likely (2026-11-13, heromedel):** at most some ships
+   in clusters that are doing well look cleaner. When desperate, a grim, survivalist look built from seemingly
+   borrowed or stolen technology (Proposed, 2026-10-21). This replaces the earlier proposal of clean, soft
+   Federation-like ships when doing well.
+   - **A ship's name shapes its look — Proposed (2026-11-13, heromedel):** e.g. a cutter gets sharp wings.
    - **Silhouette — Proposed (2026-10-22):** classic spaceship shapes, from large shuttles to cruisers and rockets.
+     **Decided (2026-11-13, heromedel):** wings or nacelles rather than a tall vertical shape.
    - **Armoured core hatch — Proposed (2026-10-23):** a visible armoured housing over the AZC, like the Outrider's,
      is common on Terran vessels but not mandatory. Its variants can show the ship's state: clean and plated when
      doing well, worn when struggling, dark and scorched on doomed or pirate ships.
    - **No rockets for a while — Likely (2026-10-23):** these are spaceships, not Earth-to-orbit rockets. After the
      Outrider and the pirate hull, no more rocket-like Terran designs for a while.
-   - **Colours — Ai-Generated-Proposal (2026-10-22):** white and pale grey with blue trim; desperate ships add rust
-     and mismatched panels from other races.
+   - **Colours — Decided (2026-11-13, heromedel):** gunmetal and other worn metals, not white with blue trim;
+     coloured stripes are in the ship's power colour: power green on a player's ship, pirate power orange on a
+     non-player vessel (`docs/art/palette.md`). Desperate ships add rust and mismatched panels from other races
+     (Ai-Generated-Proposal, 2026-10-22). Replaces the earlier white and pale grey with blue trim.
    - **Darker colours and scarier emblems — Decided (2026-10-23):** as the GATOS fall from struggling toward doomed,
      they use darker or black colours and scarier emblems.
    - **No standard emblem — Decided (2026-10-23):** there is no standard GATOS emblem, because they are an alliance,
@@ -327,6 +335,13 @@ Homeworlds. (Earlier: octopus-like, working label "Octopods".)
    stores and broadcasts their holographic avatars. If it is damaged, fewer avatars can be broadcast, so the ship
    has fewer holographic crew until it is repaired; they don't die from this unless the ship is destroyed. They
    don't usually use ion weapons themselves.
+   - **Senti core — Proposed (2026-11-13, heromedel):** unlike the Terran AZC, a Senti core works by bars: a pool of
+     power bars, as the biomechanical races have, but delivered through the same power conduits. So a layer of the
+     Senti Shield Projector takes one bar (GDD 8H).
+   - **Backup Batteries — Proposed (2026-11-13, heromedel):** Senti like installing Backup Batteries for their ships
+     or systems, especially their AAA. **Ai-Generated-Proposal (2026-11-13):** two kinds: the genre's ship-wide
+     Backup Battery (extra power for a short time; vanilla, any band), and a **system battery** bound to one
+     system, most often the AAA, that keeps it powered when the core or its conduit is cut (new, from band 3).
    - **Weapon names — Proposed (2026-10-22):** number codes. Beams give rooms swept, type, damage and version,
      e.g. 3B 01 V2 (3-room beam, 1 damage, version 2). Other weapons can start with the shot count instead (e.g.
      2L 02 V1, a 2-shot laser with 2 damage); a guideline, not an absolute rule.

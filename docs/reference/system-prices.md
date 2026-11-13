@@ -69,6 +69,22 @@ One level per layer; each level takes 2 power and 2 damage to lose, and is price
 | 3 | 3 | levels 5–6 | 100 | 24.21 |
 | 4 | 4 | levels 7–8 | 180 | 43.56 |
 
+## Senti Shield Projector — Proposed (2026-11-13, heromedel)
+
+Senti only, instead of the shield system above (the Mawjig Shield Generator). One power and one damage per layer;
+layers recover twice as slowly; maximum level double the Generator's (8 layers).
+
+**Likely (2026-11-13, heromedel):** each layer is priced as a Generator layer of the same number, so a Projector
+layer costs no less than a Generator layer and budgets limit how many a ship carries.
+
+| Level | Layers | Mawjig |
+|---|---|---|
+| 1 | 1 | 54.46 |
+| 2 | 2 | 12.11 |
+| 3 | 3 | 24.21 |
+| 4 | 4 | 43.56 |
+| 5–8 | 5–8 | **Open:** "crazy expensive" (heromedel); no genre price exists above 4 layers, so Eco sets these |
+
 ## New Infall systems (suggested, from FTL analogs)
 
 Each is priced from the closest FTL system. A weaker analog ("sucks more") takes × 0.75 of its price, a first
@@ -81,6 +97,7 @@ guess.
 | EVA Dock | Teleporter × 0.75 | 16.34 | 5.45, 10.89 | 16.34 |
 | AAA | Clone Bay + Backup DNA Bank augment (40 scrap) | 21.78 | 8.47, 10.89 | 19.36 |
 | Supershield Generator | Zoltan Shield augment (80) + Shield Overcharger drone (60) + a third of Drone Control (20), 160 scrap | 38.72 | 7.26, 12.11 | 19.37 |
+| System battery (Senti) | Backup Battery × 0.75 (powers one system only) | 6.35 | 9.08 | 9.08 |
 
 The number of levels follows the analog until each system's levels are designed.
 
@@ -119,6 +136,9 @@ added by integrated Mecha crew are priced separately, as their mech upgrades (`e
 
 Replaces the earlier rule (Ai-Generated-Proposal, 2026-10-23) that priced these bars as ordinary reactor bars
 (3.63 each for bars 1–5, 4.84 for 6–10, …).
+
+Senti core (Ai-Generated-Proposal, 2026-11-13): it works by bars (race profiles, Senti-GPH 6), so it is priced
+per bar as the standard reactor below.
 
 ## Standard reactor (per bar)
 

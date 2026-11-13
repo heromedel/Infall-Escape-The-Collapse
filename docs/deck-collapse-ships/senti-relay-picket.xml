@@ -4,12 +4,13 @@
      a small AAA). Gap references are listed in README.md. -->
 <ship name="Relay Picket" race="Senti-GPH" faction="Senti-GPH" color="#D2FF00" hull="10" missiles="0">
   <note>Holographic crew broadcast by an Armoured Avatar Array: damage the AAA and avatars drop out until it is repaired. No Life Support, since Senti don't breathe; ion disrupts them.</note>
-  <power kind="AZC" level="2"/>                                     <!-- G2: Terran-like core, maybe slightly worse -->
+  <power kind="pool" level="7"/>                                   <!-- Senti core by bars (race profile 6, Proposed 2026-11-13) -->
   <system type="piloting" level="1" draws="false"/>
   <system type="sensors" level="2" draws="false"/>
-  <system type="shields" level="1"/>
+  <system type="shields" level="1" kind="projector"/>   <!-- G29: Senti Shield Projector, one bar per layer (GDD 8H) -->
   <system type="engines" level="1"/>
   <system type="aaa" level="2"/>                                     <!-- G12: hosts 3 Senti per level (built in Deck Collapse, 2026-10-30) -->
+  <system type="battery" level="1"/>                                 <!-- Senti like Backup Batteries -->
   <system type="weapon" id="weapons" name="Weapons" level="3">        <!-- G3 -->
     <weapon name="2B 01 V1" kind="beam" power="1" shots="1" damage="1" rooms="2"/>   <!-- G4, G16 -->
     <weapon name="1B 02 V1" kind="beam" power="2" shots="1" damage="2" rooms="1"/>
