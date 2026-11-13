@@ -1159,7 +1159,9 @@ Default tag: **Ai-Generated-Proposal (2026-10-29)**. First drafted for Deck Coll
    Crew: 2 Senti-GPH
    ```
 
-   **AAA levels — Ai-Generated-Proposal (2026-10-29):** one avatar per level, as a first guess.
+   **AAA levels — Decided (heromedel, 2026-11-13):** one avatar per level, "so a single shot doesn't make you
+   lose 3 crew members". (Deck Collapse's notes, `deck-collapse-ships/README.md` G12, have 3 per working level;
+   that is not the design.)
 9. **Weapons:** two new beams:
 
    **2B 01 V1:** Beam, Damage, Mechanical, Senti-GPH · 2 rooms · Damage 1 · Power 1. Charge 16.0 s. Price 7.19.
