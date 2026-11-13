@@ -117,6 +117,13 @@ func _ready() -> void:
 	await _wait(0.2)
 	_check("Promote makes them a Lieutenant", veteran.rank == 1 and veteran.display_name().begins_with("Lt. "))
 	get_viewport().get_texture().get_image().save_png("/tmp/claude-0/input_test.png")
+	# A player alone who leaves comes back in with any key (GDD 4F)
+	main.session.remove_local_player(main.session.first_local_id())
+	await _wait(0.3)
+	_check("leaving alone takes the view away", main.battle.player_views.is_empty())
+	await _key(KEY_HOME)
+	await _wait(0.4)
+	_check("any key brings the keyboard player back in", main.battle.player_views.size() == 1)
 	get_tree().quit()
 
 

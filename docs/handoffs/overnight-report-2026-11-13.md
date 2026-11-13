@@ -6,7 +6,7 @@ numbered questions for heromedel are added at the end.
 ## Summary
 
 Everything in Plans A, B and C that was settled got built, except the items listed under "Not done". Every test
-passes at the end as at the start, and three bugs that predate the night were found and fixed.
+passes at the end as at the start, and four bugs that predate the night were found and fixed.
 
 ### Built
 
@@ -38,6 +38,9 @@ passes at the end as at the start, and three bugs that predate the night were fo
 1. **No beam weapon dealt damage** since tile targeting was built (C9's log entry).
 2. **A machine joining a LAN game while the host was mid-jump fell out of step** (A4's log entry).
 3. **Five and six local players were placed off the screen** (A2).
+4. **A player alone who pressed LEAVE could never come back.** "Any key brings the keyboard player back in" was
+   unreachable when no player had a view, so the game sat there with no HUD. The last chaos round found it (the
+   tester pressed LEAVE). Fixed; the input test now leaves and rejoins.
 
 ### Not done
 
@@ -67,12 +70,15 @@ passes at the end as at the start, and three bugs that predate the night were fo
 - **Q8.** The Pickpocket replaced the Pirate Scrapper as the pirates' band 1 ship (Ship Designs' squad table). The
   Scrapper is now met only as a mercenary. Fine, or keep it somewhere?
 - **Q9.** Want a Windows build of all this?
+- **Q10.** Lori could not find "an EVB Dock needs a room with an airlock" in the GDD or the profiles. Ship Designs
+  gave it from `docs/art-review-checks.md` ("EVA and EVB Docks by an airlock — Decided (2026-10-26, heromedel)"),
+  which is about floor plans. Should a player's purchase be held to it too? It is, as built.
 
 ### Each Ai-Generated-Proposal made tonight
 
 The Specific Power Color list; "blast door" meaning Doors at level 2 or more; which event rewards moved up; the
 status cards folding as one and their marks; the 5% repair bonus (Eco's placeholder); the one-line descriptions of
-the four new ships and three new weapons; the Polyp squad of two Polyps and a flak Polyp for bands 1 and 2; the
+the three new weapons (the four ships' lines are Lori's); the Polyp squad of two Polyps and a flak Polyp for bands 1 and 2; the
 Vein Moth taking the Wardens' bands 1 and 2 from the Moth Skiff; the Lantern's beam length and the three new
 weapons' cost per volley (worked from the cost table).
 
@@ -83,11 +89,12 @@ weapons' cost per volley (worked from the cost table).
 | Compile, content, galaxy, mercenary, ship value | pass | pass |
 | Crew fight rules | all 13 hold | all 13 hold |
 | Fight test | 20 of 20, 42.7 s | 20 of 20, 42.7 s |
-| Input test | 20 checks | 22 checks, all pass |
+| Input test | 20 checks | 24 checks, all pass |
 | Co-op test | 17 checks | 22 checks, all pass |
 | LAN test | pass, in step | pass, in step |
 | LAN run test | (new) | pass |
 | Six bot runs | lost at jumps 6, 13, 11, 9, 19, 19 | lost at jumps 6, 7, 11, 9, 12, 19 |
+| Chaos seeds | 5 clean | 1 to 4 clean after the LEAVE fix, a two-player seed clean |
 
 The bot's runs end a little sooner on two seeds. Bands 1 and 2 are harder for a captain who never orders crew:
 boarders arrive in band 1 now, the Polyp swarm is there, and beams work.
@@ -382,3 +389,26 @@ crew member's own tentacle colour (subtypes). Drawing only.
   race file's systems_at_once is 4, so three more).
 - Checked by screenshot on the Tentauri scout in the Facing and Tokens styles.
 
+### What Lori answered, and what was done
+
+1. The Lykario line: use "…Animal Senses: they sense Life Signs on other ships, without sensors and even in
+   hazards.", the profile's own wording; drop "Fast and" unless the game makes them faster. **Done**; "Fast and" is
+   kept because the game does make them faster (their race file's speed is 1.3).
+2. The system key line: fine.
+3. The Open Doors tooltip: "Opens every inner door. Press again while they are all open to open the airlocks
+   too." **Done.**
+4. The room picker's refusals now say the reason the same way both ways, as Lori wrote them: "Crew man Shields in
+   this room, and crew can't heal while they man a system, so a Medbay can't go here." and "This room has a Medbay,
+   and crew can't heal while they man a system, so Doors can't go here." **Done.** The EVB Dock line is Q10.
+5. Ship names take "the" in the Players menu line. **Done** (crew names don't; Lori read the example's crew member
+   as a ship).
+6. The setting names: fine.
+7. Lori's one-line descriptions are in for the Pickpocket, the Scrap Hound and the Vein Moth. For the Polyp only
+   her first sentence ("A small living ship that hunts in threes.") is used: her second, "Kill its crew and it
+   grows more", is the docs' design but not what the game does yet.
+
+### The last chaos round
+
+Seeds 2 and 3 and a two-player seed were clean. Seed 1 failed: the tester pressed LEAVE as the only player, and
+from then on nothing had a view. That was bug 4 above. After the fix seeds 1 and 4 are clean, and the tester now
+presses a key to come back in when it has left.

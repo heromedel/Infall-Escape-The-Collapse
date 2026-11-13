@@ -300,6 +300,9 @@ func _random_action() -> void:
 		["save_continue", 3, _save_and_continue], ["console", 3, _console], ["let_it_run", 5, _let_it_run],
 		["probe", 3, _probe],
 	]
+	if _view() == null:
+		await _do("rejoin", func(): await _key(KEY_HOME))     # the only player pressed LEAVE: any key brings them back
+		return
 	if players > 1:
 		_keep_pad_players()
 		choices.append_array([["pad", 14, _pad_player], ["pad_orders", 6, _pad_orders], ["pad_leaves", 2, _pad_leaves_and_returns]])

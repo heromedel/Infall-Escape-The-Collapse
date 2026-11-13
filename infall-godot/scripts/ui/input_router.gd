@@ -39,15 +39,16 @@ func _input(event: InputEvent) -> void:
 		return
 	if not (event is InputEventMouse or event is InputEventKey):
 		return
-	if _root_has_the_input():
-		return
 	var view := _keys_view()
-	if view == null:
-		# Nobody has the keyboard and mouse: a key or a click brings their player back in (GDD 4F)
+	if view == null and main.battle != null and not _a_window_has_the_input():
+		# Nobody has the keyboard and mouse: a key or a click brings their player back in (GDD 4F). This comes before
+		# the check below, which is also true when no player has a view at all: the player who left alone.
 		var pressed: bool = (event is InputEventKey or event is InputEventMouseButton) and event.pressed
-		if pressed and main.battle != null:
+		if pressed:
 			main.session.add_local_player("keys")
 			get_viewport().set_input_as_handled()
+		return
+	if _root_has_the_input() or view == null:
 		return
 	var routed := event.duplicate()
 	if routed is InputEventMouse:
@@ -66,6 +67,11 @@ func _input(event: InputEvent) -> void:
 func _root_has_the_input() -> bool:
 	if main.battle == null or main.battle.player_views.is_empty():
 		return true
+	return _a_window_has_the_input()
+
+
+## The console or a window over the whole screen (an event, the title) is open and takes the keys and the mouse.
+func _a_window_has_the_input() -> bool:
 	if main.console.visible:
 		return true
 	return main.overlays.get_children().any(func(w): return w is Control and w.visible and not w.is_queued_for_deletion())

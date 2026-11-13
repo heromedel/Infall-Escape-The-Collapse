@@ -91,7 +91,7 @@ static func remembered_text(run: RunState, player_id: int) -> String:
 	var names: Array = []
 	for ship in remembered.get("ships", {}):
 		if run.squad.has(ship) and not ship.is_gone():
-			names.append(ship.name)
+			names.append("the " + ship.name)
 	for member in remembered.get("crew", {}):
 		if not member.dead and run.squad.has(member.home):
 			names.append(member.display_name())

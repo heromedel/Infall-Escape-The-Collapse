@@ -6,7 +6,7 @@
      tech. -->
 <ship id="vein-moth" name="Azurethea Vein Moth" class="Vein Moth" race="azurethea" faction="azurethea" style="azurethea" center_x="Point" center_y="Point" hull="10">
 	<reactor type="pool" level="8"/>
-	<description>A small winged explorer with a light shield, a seed-pod missile and a short beam.</description>
+	<description>An Azurethea explorer. It rarely starts a fight, and when it must, it picks one system and stings it.</description>
 	<room id="0" from="-1,-2" to="1,-1" name="Forward"/>
 	<room id="1" from="2,-1" to="2,1" name="Starboard wing"/>
 	<room id="2" from="-1,1" to="1,2" name="Aft"/>

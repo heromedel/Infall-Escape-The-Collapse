@@ -6,7 +6,7 @@
 <loadout id="pickpocket" ship="pirate-hijacker" name="Pirate Pickpocket" inherit="patch" class="Pickpocket" hull="9">
 	<reactor type="core" level="2"/>
 	<art hull="pirate-cutpurse-hull-2x.png" scale="0.5" center="240,352.5"/>
-	<description>A pirate cruiser run on a shoestring: its port bay faired over, one twin laser, a teleporter and three boarders. No Doors and no Medbay, so fire is its weakness.</description>
+	<description>A light pirate boarder. One twin-shot laser keeps your shields busy while its crew teleport aboard.</description>
 	<system id="piloting" tile="-1,-6" level="1" wall="north"/>
 	<system id="sensors" removed="yes"/>
 	<system id="doors" removed="yes"/>

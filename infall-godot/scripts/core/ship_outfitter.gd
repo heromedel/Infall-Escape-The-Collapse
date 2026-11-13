@@ -45,12 +45,16 @@ static func install_refusal(ship: Ship, def: SystemDef, room_index: int) -> Stri
 	var room := ship.rooms[room_index]
 	for system in room.systems:
 		if def.behaviour == "medbay" and system.def.manned:
-			return "It heals crew, so it can't share a room with %s, which crew man." % system.def.name
+			return "Crew man %s in this room, and crew can't heal while they man a system, so %s can't go here." % [system.def.name, _with_article(def.name)]
 		if def.manned and system.behaviour == "medbay":
-			return "Crew man it, so it can't share a room with %s, which heals them." % system.def.name
+			return "This room has %s, and crew can't heal while they man a system, so %s can't go here." % [_with_article(system.def.name), def.name]
 	if def.behaviour == "evb_dock" and not ship.doors.any(func(door: ShipDoor): return door.to_space and room.cells.has(door.cell_a)):
 		return "An EVB Dock needs a room with an airlock."
 	return ""
+
+
+static func _with_article(name: String) -> String:
+	return ("an " if name.left(1).to_lower() in ["a", "e", "i", "o", "u"] else "a ") + name
 
 
 ## The room a new system goes into: an empty room if there is one, else the room with the fewest systems that

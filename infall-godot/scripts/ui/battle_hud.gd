@@ -791,7 +791,7 @@ func _special_buttons(ship: Ship) -> Array:
 	if cloak:
 		buttons.append(["CLOAK", func(): screen.cloak(ship), "Hide the ship: most shots miss and its weapons hold their charge. Hotkey: C", ship.cloak_ticks <= 0 and ship.cloak_cooldown <= 0 and ship.system_power(cloak) > 0, ship.cloak_cooldown])
 	if ship.has_system("doors"):
-		buttons.append(["OPEN DOORS", func(): screen.set_all_doors(ship, true, false), "Open every inner door. Pressed again with them all open, it opens the airlocks too.", ship.doors_controllable(), -1])
+		buttons.append(["OPEN DOORS", func(): screen.set_all_doors(ship, true, false), "Opens every inner door. Press again while they are all open to open the airlocks too.", ship.doors_controllable(), -1])
 		buttons.append(["CLOSE DOORS", func(): screen.set_all_doors(ship, false, false), "Close every door, airlocks too.", ship.doors_controllable(), -1])
 		buttons.append(["VENT", func(): screen.set_all_doors(ship, true, true), "Open the airlocks to vent air and fires into space.", ship.doors_controllable(), -1])
 	return buttons
