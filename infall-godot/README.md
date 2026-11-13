@@ -39,7 +39,11 @@ the Last Fleet. Lose when every scout ship is gone (GDD 1F).
 | Player setup: players, inputs, who commands what, LAN | P or the players button by the menu | View / Select |
 | Join as another player | | Start on a new controller |
 | Ship screen (upgrades, weapons, crew) | U or SHIP | |
-| Give a system power, or take it away | The system's key (in its tooltip), Shift with it to take away | |
+| Give a system power, or take it away | The system's key (in its tooltip: Shields A, Engines S, Weapons W, Medbay D, Life Support F, Cloaking H, Teleporter G), Shift with it to take away | |
+| Open the inner doors, then the airlocks; close every door | Z, Z again; X | |
+| Send and recall boarders; cloak; launch a battlesuit | T and R; C; B | |
+| Crew back to their stations; look at the ship | Enter; Q | |
+| Take an event's choice | Its number | |
 | Menu | Esc | Menu / Start |
 
 ## What is in this build

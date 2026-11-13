@@ -14,8 +14,7 @@ signal store_pressed(view: PlayerView)
 signal menu_pressed(view: PlayerView)
 signal players_pressed(view: PlayerView)
 
-## Letters that are a system's key in its file and also do something else in this view: the other use wins.
-const KEYS_WITH_OTHER_USES := ["C", "E", "F", "J", "P", "T", "U", "V", "Z"]
+
 var player_id: int = 1
 var colour := Color.WHITE
 var battle: BattleScreen
@@ -453,15 +452,14 @@ func _aim_is_autofire() -> bool:
 
 
 ## A system's own key gives it power and Shift with the key takes power away, as the genre's system tooltip says
-## ("Add Power: A / Remove Power: Shift + A"). The keys are in each system's file. A key the view already uses for
-## something else (C cloaks, T teleports, E launches a suit, F looks at the ship, Z sends crew to their stations)
-## keeps that use; Shift with it still takes the system's power away.
+## ("Add Power: A / Remove Power: Shift + A"). The keys are in each system's file and are the genre's: Shields A,
+## Engines S, Weapons W, Medbay D, Life Support F, Cloaking H, Crew Teleporter G; the EVB Dock has the drone bay's E.
+## The keys below that do things (C cloaks, T and R send and recall boarders, Z and X open and close the doors)
+## are the genre's too, so none of them is a system's key.
 func _system_key(event: InputEventKey) -> bool:
 	if selected_ship == null or event.keycode < KEY_A or event.keycode > KEY_Z:
 		return false
 	var letter := OS.get_keycode_string(event.keycode)
-	if not event.shift_pressed and KEYS_WITH_OTHER_USES.has(letter):
-		return false
 	for system in selected_ship.systems:
 		if system.def.hotkey == letter and system.def.draws_power:
 			system_power(selected_ship, system, not event.shift_pressed)
@@ -485,7 +483,7 @@ func _key(event: InputEventKey) -> void:
 			cycle_ship()
 		KEY_HOME:
 			frame_everything()
-		KEY_F:
+		KEY_Q:
 			if selected_ship:
 				focus_ship(selected_ship)
 		KEY_J:
@@ -494,12 +492,20 @@ func _key(event: InputEventKey) -> void:
 			ship_screen_pressed.emit(self)
 		KEY_T:
 			start_teleport()
-		KEY_E:
+		KEY_R:
+			recall_boarders()
+		KEY_B:
 			start_suit_launch()
 		KEY_C:
 			if selected_ship:
 				cloak(selected_ship)
 		KEY_Z:
+			if selected_ship:
+				set_all_doors(selected_ship, true, false)       # pressed again, it opens the airlocks too
+		KEY_X:
+			if selected_ship:
+				set_all_doors(selected_ship, false, false)
+		KEY_ENTER, KEY_KP_ENTER:
 			return_to_stations()
 		KEY_P:
 			players_pressed.emit(self)

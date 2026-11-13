@@ -480,7 +480,7 @@ func _draw_crew_list(ship: Ship, at: Vector2) -> void:
 		_region(rect, func(): screen.select_crew_member(member, Input.is_key_pressed(KEY_SHIFT)), _crew_tooltip(member))
 		y += 54
 	var buttons_at := Vector2(at.x, y + 4)
-	_button(Rect2(buttons_at, Vector2(142, 32)), "STATIONS", func(): screen.return_to_stations(), "Send this ship's crew back to their saved stations. Hotkey: Z")
+	_button(Rect2(buttons_at, Vector2(142, 32)), "STATIONS", func(): screen.return_to_stations(), "Send this ship's crew back to their saved stations. Hotkey: Enter")
 	_button(Rect2(buttons_at + Vector2(148, 0), Vector2(142, 32)), "SAVE POSTS", func(): screen.save_stations(), "Save where every crew member stands now as their station.")
 
 
@@ -703,8 +703,7 @@ func _system_tooltip(ship: Ship, system: ShipSystem) -> String:
 		else:
 			lines.append("Give it power to heal crew standing in it.")
 	if system.def.draws_power and not system.def.hotkey.is_empty():
-		var takes := "Remove power: Shift + %s" % system.def.hotkey
-		lines.append(takes if PlayerView.KEYS_WITH_OTHER_USES.has(system.def.hotkey) else "Add power: %s  ·  %s" % [system.def.hotkey, takes])
+		lines.append("Add power: %s  ·  Remove power: Shift + %s" % [system.def.hotkey, system.def.hotkey])
 	if system.def.draws_power and ship.reactor_type == "pool":
 		lines.append("Click to add power, right click to remove.")
 	elif system.def.draws_power and ship.reactor_type == "core":
@@ -783,16 +782,16 @@ func _special_buttons(ship: Ship) -> Array:
 	if teleporter:
 		var ready := encounter.can_teleport(ship)
 		buttons.append(["BOARD", func(): screen.start_teleport(), "Send the crew standing in the teleporter room to an enemy room. Hotkey: T", ready and encounter.in_fight(), ship.teleporter_cooldown])
-		buttons.append(["RECALL", func(): screen.recall_boarders(), "Bring every boarder home.", ready, -1])
+		buttons.append(["RECALL", func(): screen.recall_boarders(), "Bring every boarder home. Hotkey: R", ready, -1])
 	var dock := ship.system_by("evb_dock")
 	if dock:
-		buttons.append(["LAUNCH SUIT", func(): screen.start_suit_launch(), "A crew member in the EVB Dock room suits up and flies out to fight an enemy ship. Each launch uses a new suit (%s Mawjig). Hotkey: E" % Mawjig.format(Library.weapon(ship.suits[0]).cost_per_volley if not ship.suits.is_empty() else 21), not ship.suit_out and ship.evb_cooldown <= 0 and encounter.in_fight(), ship.evb_cooldown])
+		buttons.append(["LAUNCH SUIT", func(): screen.start_suit_launch(), "A crew member in the EVB Dock room suits up and flies out to fight an enemy ship. Each launch uses a new suit (%s Mawjig). Hotkey: B" % Mawjig.format(Library.weapon(ship.suits[0]).cost_per_volley if not ship.suits.is_empty() else 21), not ship.suit_out and ship.evb_cooldown <= 0 and encounter.in_fight(), ship.evb_cooldown])
 	var cloak := ship.system_by("cloaking")
 	if cloak:
 		buttons.append(["CLOAK", func(): screen.cloak(ship), "Hide the ship: most shots miss and its weapons hold their charge. Hotkey: C", ship.cloak_ticks <= 0 and ship.cloak_cooldown <= 0 and ship.system_power(cloak) > 0, ship.cloak_cooldown])
 	if ship.has_system("doors"):
-		buttons.append(["OPEN DOORS", func(): screen.set_all_doors(ship, true, false), "Opens every inner door. Press again while they are all open to open the airlocks too.", ship.doors_controllable(), -1])
-		buttons.append(["CLOSE DOORS", func(): screen.set_all_doors(ship, false, false), "Close every door, airlocks too.", ship.doors_controllable(), -1])
+		buttons.append(["OPEN DOORS", func(): screen.set_all_doors(ship, true, false), "Opens every inner door. Press again while they are all open to open the airlocks too. Hotkey: Z", ship.doors_controllable(), -1])
+		buttons.append(["CLOSE DOORS", func(): screen.set_all_doors(ship, false, false), "Close every door, airlocks too. Hotkey: X", ship.doors_controllable(), -1])
 		buttons.append(["VENT", func(): screen.set_all_doors(ship, true, true), "Open the airlocks to vent air and fires into space.", ship.doors_controllable(), -1])
 	return buttons
 

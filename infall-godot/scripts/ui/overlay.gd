@@ -125,6 +125,29 @@ func add_button(text: String, on_press: Callable, colour: Color = UiColours.TEXT
 	return button
 
 
+## A number key presses the choice with that number, as the genre's event windows do ("1. Continue..."); in a
+## window with one unnumbered button, 1 presses it.
+func _unhandled_key_input(event: InputEvent) -> void:
+	if not (event is InputEventKey) or not event.pressed or event.echo or not visible or is_queued_for_deletion():
+		return
+	var number := 0
+	if event.keycode >= KEY_1 and event.keycode <= KEY_9:
+		number = event.keycode - KEY_0
+	elif event.keycode >= KEY_KP_1 and event.keycode <= KEY_KP_9:
+		number = event.keycode - KEY_KP_0
+	if number == 0 or get_parent() == null or get_parent().get_children().filter(func(w): return w is Overlay and w.visible and not w.is_queued_for_deletion()).back() != self:
+		return
+	var buttons: Array = body.get_children().filter(func(node): return node is Button and node.visible and not node.disabled)
+	for button: Button in buttons:
+		if button.text.begins_with("%d. " % number):
+			get_viewport().set_input_as_handled()
+			button.pressed.emit()
+			return
+	if number == 1 and buttons.size() == 1 and not buttons[0].text.left(2).is_valid_int():
+		get_viewport().set_input_as_handled()
+		buttons[0].pressed.emit()
+
+
 ## A press of a shared window's button, asked for here: it goes to the stream (after the low Mawjig warning).
 func _ask(my_page: int, index: int, cost: int) -> void:
 	if press_shared.is_valid():
