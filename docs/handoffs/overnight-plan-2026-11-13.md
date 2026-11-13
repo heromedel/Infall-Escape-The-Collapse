@@ -1,7 +1,9 @@
 # Overnight plan for the Godot version (2026-11-13)
 
 For **Infall: Godot Version**, asked for by heromedel: a large plan to work through while he sleeps, covering
-co-op testing, matching the genre's feel, and design points the game lacks. Not started until he says go.
+co-op testing, matching the genre's feel, and design points the game lacks. Started the same evening on his
+answers, which are worked in below and marked (heromedel, 2026-11-13). Progress is logged in
+`overnight-report-2026-11-13.md`.
 
 Every item below was checked by this session in the docs or the code (helpers' reports were used only as leads;
 one of their claims was wrong and is not here). Where an item still rests on something unchecked, it says so.
@@ -13,15 +15,16 @@ one of their claims was wrong and is not here). Where an item still rests on som
 2. **No new design decisions.** Where a settled point leaves a number or a detail open, either park the item or
    pick the smallest sensible value, tag it Ai-Generated-Proposal in the docs and list it in the morning report.
    (heromedel chooses which, Q3.)
-3. **Check the genre before copying it.** heromedel's copy of the genre's game runs here under Wine
-   (`docs/reference/genre-crew-fights/README.md` says how). Anything the reference notes don't already record is
-   looked at there first and written into `docs/reference/`.
+3. **Check the genre before copying it,** without new recordings (heromedel, 2026-11-13): the reference notes,
+   the screenshots already taken, earlier research in the docs, and what can be read online. Most of it is
+   obvious to him; his own answers are under Plan B.
 4. **One step, one commit, pushed** to `Cloud-C-Godot-Version`. A step that changes the simulation also runs the
    fight test, the crew fight test and the LAN test before its commit. A step that only changes drawing gets a
    compile check and a screenshot.
-5. **Helpers are fact-checked.** Anything Infall: Eco, Infall: Ship Designs or Infall: Lori says is checked against
-   the docs or the genre's data before it is used. Their own rule stands: they change no doc without asking
-   heromedel. What they propose that needs his decision goes to the morning report, not into the game.
+5. **The helper sessions** (Infall: Eco, Infall: Ship Designs, Infall: Lori) generally know what they are talking
+   about (heromedel, 2026-11-13): go with what they say, then report what it was and what was done with it. To
+   find out what a session does, ask Infall: Manager. Where a settled point gives no number, look it up first or
+   ask the right session (his answer to Q3).
 6. **Stop and park** anything that turns out bigger or less settled than it looked, with a note of why.
 7. The hard rule on the genre's name, code, art and text holds as always.
 
@@ -51,13 +54,15 @@ machine when the host quits (the road map's "Later").
 
 ## Plan B: closer to the genre
 
-1. **Look first.** In the genre's game, check and record what the reference notes don't cover:
-   a. whether crew walk onto a burning or breached tile to work on it (Infall's work from wherever they stand);
-   b. whether fire spreads into the next room through a wall or only through a door (Infall: through walls);
-   c. what the open-all-doors button does with airlocks (Infall has separate Open Doors and Vent buttons);
-   d. the gap between the shots of one volley (the docs call 0.2 s a guess; the code uses 0.25 s);
-   e. the colour of a partly damaged system (Infall: orange until broken, then red);
-   f. number keys for event choices, and the keys that add and remove a system's power.
+1. **Look first,** with heromedel's answers (2026-11-13):
+   a. Crew do not walk to a fire to fight it ("they would be in the fire if they did"), and he doesn't think
+      they leave it either. Infall already works this way: nothing to change.
+   b. Fire spreads to rooms connected by doors. Infall lets it through any wall: to change.
+   c. Open-all-doors vents all the air, fairly fast: check online what it does with airlocks.
+   d. The gap between a volley's shots: check online or in the earlier research.
+   e. A damaged system is red. Infall shows orange until it is broken: to change, after a look at the
+      screenshots already taken.
+   f. Event and power keys: check online.
 2. **System power keys.** Each `system.xml` already names a `hotkey`, and nothing reads it. Make the key add power
    and Shift with it remove power, and show the key in the system's tooltip, as reference frame 12 shows.
 3. **Number keys for event choices** (if step 1f confirms them).
@@ -77,8 +82,8 @@ Quick ones first.
    setting is listed and nothing reads it.
 2. **Enemy Terran ships show pirate orange** (GDD 14D, Likely, default confirmed 2026-10-31), with the setting
    `Enemy Terran Color: Pirate Power Orange > Power Green`. Today only the pirate faction is orange.
-3. **Mawjig never ends in a zero** (GDD 8C, Decided: "anything that lands on x.x0 must add or subtract 0.01"). The
-   squad's pool is not adjusted after a jump or a purchase.
+3. ~~Mawjig never ends in a zero in the squad's pool.~~ **Dropped (heromedel, 2026-11-13):** that rule is
+   Eco's and is about prices, which never end in a zero; the pool in play may land on one.
 4. **The Medbay room rule when buying a system** (GDD 5B, Decided): a Medbay shares a room only with systems crew
    can't man. The shipped ships obey it; the room picker does not check it.
 5. **Abandoned clusters have no store** (GDD 2R, Decided): "No store; derelicts and wreckage to salvage." A
@@ -128,9 +133,8 @@ Asked at the start, so answers are back when they are needed.
 A1, D (messages out), A2–A8, C1–C7, B1, B2–B6, C8, C9, C10, B7, C11, E. The list is longer than one night is
 likely to hold; it is in order of value, each step stands alone, and the work stops wherever the night ends.
 
-## Questions before starting
+## Questions, as answered (heromedel, 2026-11-13)
 
-- **Q1.** Go ahead with the plan as written, or drop or reorder any part?
-- **Q2.** A Windows build at the end, so it can be played in the morning?
-- **Q3.** Where a settled point gives no number (C6's "slightly faster"), pick a small value and tag it
-  Ai-Generated-Proposal, or park the item?
+- **Q1.** Go ahead, with the changes worked in above.
+- **Q2.** A Windows build at the end: not answered, so none is made.
+- **Q3.** Where a settled point gives no number: look it up first, or ask the right session.
