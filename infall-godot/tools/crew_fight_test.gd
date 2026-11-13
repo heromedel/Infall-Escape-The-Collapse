@@ -56,6 +56,30 @@ func _ready() -> void:
 	run(200)
 	check("the enemy does not follow out of the room", player.room_at(boarder.cell) == bridge and player.room_at(walker.cell) != bridge)
 
+	# Two boarders on the bridge, shooting it out with the two at their stations
+	var second: CrewMember = enemy.crew[1]
+	second.health = second.max_health * 50.0
+	CrewBrain.order_to_room(boarder, bridge)
+	encounter._land(second, player, bridge)
+	run(Encounter.TELEPORT_TICKS + 200)
+	var gunner: CrewMember = player.crew[1]
+	var held := [pilot.aim_at, gunner.aim_at, boarder.aim_at, second.aim_at]
+	var changes := 0
+	for tick in 300:
+		run(1)
+		if [pilot.aim_at, gunner.aim_at, boarder.aim_at, second.aim_at] != held:
+			changes += 1
+			held = [pilot.aim_at, gunner.aim_at, boarder.aim_at, second.aim_at]
+	check("a shooter stays on one foe (%d changes of target in 15 s)" % changes, changes == 0 and pilot.aim_at != null)
+	pilot.aim_at = boarder
+	boarder.aim_at = gunner
+	CrewBrain._hit(second, pilot, encounter)
+	check("hit by another foe while their own is busy elsewhere, they turn on the one who hit them", pilot.aim_at == second)
+	pilot.aim_at = boarder
+	boarder.aim_at = pilot
+	CrewBrain._hit(second, pilot, encounter)
+	check("hit by another foe while their own is shooting at them, they stay on their own", pilot.aim_at == boarder)
+
 	print("crew fight rules: %s" % ("all hold" if failed == 0 else "%d FAILED" % failed))
 	get_tree().quit(failed)
 

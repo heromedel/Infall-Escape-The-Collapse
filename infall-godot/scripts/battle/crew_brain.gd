@@ -7,7 +7,9 @@ extends RefCounted
 ##
 ## Fights (GV 7G, docs/reference/genre-crew-fights): a tile holds one fighter from each side. Whoever walks into a
 ## room with foes in it goes onto a foe's tile, and the two punch. A fighter with no foe on their tile stays where
-## they are and shoots at the foes in the room, changing targets. A punch or a shot lands about once a second.
+## they are and shoots at one foe in the room until that foe is dead or gone, turning on someone else only to fight
+## back (heromedel, 2026-11-13; the genre's shooters change targets more freely). A punch or a shot lands about
+## once a second.
 
 const HIT_TICKS := 20               # ticks between one fighter's punches or shots
 const HIT_DAMAGE := 5.6             # health a hit costs at melee 1.0: a second of fighting, as before hits were counted
@@ -260,18 +262,38 @@ static func _fight(member: CrewMember, foes: Array[CrewMember], encounter: Encou
 		return
 	var partner := ship.standing_on(member.cell, 1 - member.side)
 	member.melee_with = partner
+	if partner:
+		member.aim_at = null
+	elif not foes.has(member.aim_at):
+		member.aim_at = _first_target(member, foes)
 	if member.attack_cooldown > 0:
 		return
 	if partner:
 		member.attack_cooldown = HIT_TICKS
 		_hit(member, partner, encounter)
 	elif member.shot_ticks <= 0:
-		var target: CrewMember = foes[encounter.rng.randi_range(0, foes.size() - 1)]
+		var target := member.aim_at
 		member.attack_cooldown = HIT_TICKS
-		member.aim_at = target
 		member.shot_at = target
 		member.shot_flight = maxi(1, ceili(member.position.distance_to(target.position) / SHOT_PIXELS_PER_TICK))
 		member.shot_ticks = member.shot_flight
+
+
+## The foe a fighter who shoots takes on first, and again when theirs is dead or gone: one already shooting at
+## them if there is one, the nearest of those, or else the nearest foe in the room.
+static func _first_target(member: CrewMember, foes: Array[CrewMember]) -> CrewMember:
+	var target: CrewMember = null
+	for foe in foes:
+		if target == null:
+			target = foe
+			continue
+		var after_us := foe.aim_at == member
+		if after_us != (target.aim_at == member):
+			if after_us:
+				target = foe
+		elif member.position.distance_squared_to(foe.position) < member.position.distance_squared_to(target.position):
+			target = foe
+	return target
 
 
 ## A fighter whose foe has walked off their shared tile goes after them, to go on with the melee (GV 7G: the genre
@@ -306,10 +328,14 @@ static func _fly_shot(member: CrewMember, encounter: Encounter) -> void:
 		_hit(member, target, encounter)
 
 
-## A punch or a shot lands.
+## A punch or a shot lands. A fighter who shoots fights back: hit by someone other than the foe they are shooting
+## at, they turn on the one who hit them, unless their own foe is shooting at them too (or two foes shooting at one
+## fighter would have them changing target at every hit).
 static func _hit(member: CrewMember, target: CrewMember, encounter: Encounter) -> void:
 	target.health -= HIT_DAMAGE * member.race.melee * (1.0 + 0.1 * member.skill_level("combat"))
 	target.hit_ticks = HIT_MARK_TICKS
+	if target.melee_with == null and target.aim_at != member and (target.aim_at == null or target.aim_at.aim_at != target):
+		target.aim_at = member
 	if target.health <= 0.0 and not target.dead:
 		member.kills += 1
 		if member.gain_xp("combat", XP_COMBAT):

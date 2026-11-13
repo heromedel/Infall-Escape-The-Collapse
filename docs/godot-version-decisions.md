@@ -228,8 +228,17 @@ anything Claude added tagged Ai-Generated-Proposal.
       they order: onto a foe's tile to punch, any other tile to shoot.
     - Crew beamed in land on a tile with no foe on it when there is one, so they start by shooting, as in the
       recordings.
-    - A shooter picks a foe in the room at random for each shot. The bolt takes a quarter of a second a tile
-      and always lands.
+    - **Decided (heromedel, 2026-11-13), built:** a shooter concentrates on one foe until that foe is dead or
+      gone, unless they are hit by someone else, when they fight back and turn on the one who hit them. This is
+      Infall's own rule: in the recording the genre's shooter changed target five times in fourteen shots, and
+      turned on a foe who never touched him.
+      - **Ai-Generated-Proposal (agreed by heromedel, 2026-11-13):** they turn on the one who hit them only if
+        their own target is not shooting at them too; otherwise two foes shooting at one fighter would have
+        them changing target at every hit. A punch needs no rule: a foe who walks onto a shooter's tile is
+        paired with them, and they punch back.
+      - **Ai-Generated-Proposal (agreed by heromedel, 2026-11-13):** the first target is a foe already shooting
+        at them if there is one, otherwise the nearest.
+    - The bolt takes a quarter of a second a tile and always lands.
     - Following: only crew no player commands follow, and only inside the room. A player's own crew wait for
       orders.
     - Drawing: the two on a tile are drawn apart, the other side's above and facing the camera, the player's
@@ -447,3 +456,4 @@ All built in the build of 2026-11-05.
 | 2026-11-13 | Consoles drawn from the art sessions' art with the symbol on them, crew drawn back from the wall, no ring under sprites, health bars coloured by side, a thin outline for a selected sprite, smaller tokens (GV 7G); built the same day. |
 | 2026-11-13 | The Tabby's full Facing sheet is in the game, in place of the four standing views. |
 | 2026-11-13 | Crew fights as the genre has them: pairing on a tile, punches, shots, hit marks, and the enemy following a moved crew member (GV 7G); built the same day. |
+| 2026-11-13 | A crew member who shoots concentrates on one foe, and fights back when hit by another (GV 7G). |
