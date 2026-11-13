@@ -29,8 +29,6 @@ WING = "#6d6a61"
 DARK = "#4c4842"           # nacelles, the prow blade, armour
 STEEL = "#8b8d8c"
 RUST = "#a85a2e"           # faded rust-ochre markings
-PATCH_A = "#6a7062"        # replaced panels, a slightly different shade
-PATCH_B = "#86776a"
 GLASS = "#22302f"
 GLINT = "#e2b36c"
 ENGINE_GLOW = "#bfe6ff"
@@ -63,41 +61,46 @@ def scorch(x, y, rx, ry):
     return f'<ellipse cx="{x}" cy="{y}" rx="{rx}" ry="{ry}" fill="#1c1a17" opacity=".28" filter="url(#soft)"/>'
 
 
-# the body round the rooms: a wedge prow over the bridge, straight flanks, a stern tapering in round the engine room
-BODY = [(214, 12), (160, 78), (156, 150), (152, 300), (160, 330), (160, 404), (182, 434)]   # pass 2: a chisel bow
-# the port wing, forward-swept: its root along the body's flank, its leading edge raking forward to a sharp tip
-WING_PORT = [(158, 134), (122, 140), (22, 114), (34, 150), (124, 300), (154, 316)]
-# the port nacelle, tucked against the body under the wing's trailing edge
-# pass 2: wider and merged into the wing root (the thin stubs read as landing legs)
-NACELLE_PORT = [(140, 220), (116, 240), (114, 372), (128, 384), (152, 384), (156, 372), (156, 230)]
+# pass 3 (heromedel: the wings should merge with the centre so it reads as one whole ship, not a column): one hull
+# outline for the body and both wings, a smooth fillet where they meet. Its left half, top to bottom: the chisel bow,
+# the wing root, the forward-swept leading edge to the sharp tip, the trailing edge back in to the stern.
+HULL = [(214, 12), (160, 78), (158, 104), (146, 124), (22, 114), (34, 150), (124, 300), (150, 322), (160, 344),
+        (160, 404), (182, 434)]
+HULL_RADII = [2, 4, 8, 10, 0, 2, 8, 8, 4, 6, 6]
+# the port wing's panel inside the outline (a step darker, no outline of its own)
+WING_PANEL = [(150, 128), (22, 114), (34, 150), (124, 300), (150, 318)]
+# the port nacelle, tucked under the wing's trailing edge, its nozzle set into its tail
+NACELLE_PORT = [(140, 220), (116, 240), (114, 384), (126, 396), (154, 396), (158, 384), (158, 230)]
+
+
+def nozzle(x, y, w):
+    """An engine nozzle set into a plate's tail: a dark recess with the glow inside it."""
+    return (f'<rect x="{x - w / 2}" y="{y}" width="{w}" height="10" rx="3" fill="#24211e"/>'
+            f'<rect x="{x - w / 2 + 3}" y="{y + 3}" width="{w - 6}" height="5" rx="2.5" fill="{ENGINE_GLOW}"/>')
 
 
 def build(edge=None):
     """The hull. `edge` maps a column to the y of the hull's top edge there (from `top_edge`), for the mounts."""
     edge = edge or {}
     h = Hull(W, H, "GATOS Patrol Cutter")
-    # the nacelles first, under the wings
+    # the nacelles first, under the wings, each with its nozzle set into its tail (pass 3: not a loose port below it)
     for name, half in (("nacelle-port", NACELLE_PORT), ("nacelle-starboard", mirror(NACELLE_PORT))):
         x = sum(p[0] for p in half) / len(half)
         h.plate(name, rounded_path(half, 4), DARK, bevel=3, shadow=3,
-                details=seam(x - 14, 300, x + 14, 300, DARK) + seam(x - 14, 344, x + 14, 344, DARK))
-    # the wings, sharp at the tips: a rust-ochre band raked along each leading edge, a replaced panel on the port wing
-    for name, half, port in (("wing-port", WING_PORT, True), ("wing-starboard", mirror(WING_PORT), False)):
+                details=seam(x - 14, 330, x + 14, 330, DARK) + nozzle(x, 383, 30))
+    # the hull: body and wings as one plate; the wings a step darker (no panel line along their roots: it traced the
+    # old column again), a rust-ochre band raked along each leading edge, the body's seams, soft scorching aft, the stern nozzles set in
+    wings = ""
+    for port in (True, False):
         s = 1 if port else -1
         sx = lambda x: CX + s * (x - CX)
-        band = (f'<path d="M{sx(28)},124 L{sx(126)},156 L{sx(126)},166 L{sx(36)},140 Z" fill="{RUST}" '
-                f'opacity=".85"/>')
-        seams = seam(sx(60), 160, sx(126), 182, WING) + seam(sx(84), 200, sx(132), 214, WING)
-        patch = ""                      # pass 2: the wing's replaced panel read as a placeholder
-        h.plate(name, rounded_path(half, [3, 4, 0, 2, 4, 3]), WING, bevel=4, shadow=4,
-                details=band + seams + patch)
-    # the body over the rooms, with its seams, a replaced panel and soft scorching aft
-    body_details = (seam(162, 150, 278, 150, PLATE) + seam(160, 222, 280, 222, PLATE) + seam(156, 300, 284, 300, PLATE)
-                    + seam(158, 370, 282, 370, PLATE)
-                    + f'<path d="M244,312 L276,312 L278,350 L246,350 Z" fill="{PATCH_B}" '
-                      f'stroke="{shade(PATCH_B, .6)}" stroke-width="1"/>'
-                    + scorch(220, 424, 40, 8))
-    h.plate("hull", sym(BODY, [2, 4, 4, 6, 4, 6, 6]), PLATE, bevel=5, shadow=4, details=body_details)
+        pts = " L".join(f"{sx(x)},{y}" for x, y in WING_PANEL)
+        wings += (f'<path d="M{pts} Z" fill="{shade(WING, .92)}" opacity=".55"/>'
+                  + f'<path d="M{sx(28)},124 L{sx(140)},140 L{sx(140)},150 L{sx(36)},140 Z" fill="{RUST}" opacity=".85"/>'
+                  + seam(sx(60), 164, sx(140), 182, WING) + seam(sx(84), 204, sx(142), 220, WING))
+    details = (wings + seam(162, 150, 278, 150, PLATE) + seam(160, 300, 280, 300, PLATE) + seam(160, 370, 280, 370, PLATE)
+               + scorch(220, 424, 40, 8) + nozzle(206, 423, 18) + nozzle(234, 423, 18))
+    h.plate("hull", sym(HULL, HULL_RADII), PLATE, bevel=5, shadow=4, details=details)
     # the canopy: a narrow wedge of dark glass set into the chisel bow (pass 2: no separate prow blade, simpler)
     canopy = sym([(216, 50), (196, 78), (196, 100), (212, 106)], 2)
     h.plate("cockpit", canopy, GLASS, bevel=2, outline=1.6,
@@ -111,15 +114,10 @@ def build(edge=None):
             details="".join(f'<rect x="{ax - 22}" y="{ay - 12 + i * 14}" width="44" height="5" rx="2" fill="#24221f"/>'
                             f'<rect x="{ax - 20}" y="{ay - 11 + i * 14}" width="40" height="1.6" rx=".8" fill="{RUST}" '
                             f'opacity=".55"/>' for i in range(2)))
-    # the engines: a nozzle at the back of each nacelle and a smaller pair at the stern, glowing
-    nozzles, glow = [], []
-    for x, y, w in ((135, 386, 34), (305, 386, 34), (206, 432, 18), (234, 432, 18)):     # pass 2: chunky nozzles
-        nozzles.append(f'<rect x="{x - w / 2}" y="{y - 6}" width="{w}" height="13" rx="4" fill="#2a2724" stroke="{INK}" '
-                       f'stroke-width="1.6"/><rect x="{x - w / 2 + 4}" y="{y - 2}" width="{w - 8}" height="6" rx="3" '
-                       f'fill="{ENGINE_GLOW}"/>')
-        glow.append(f'<ellipse cx="{x}" cy="{y + 12}" rx="{w * .6}" ry="10" fill="{ENGINE_GLOW}" opacity=".55" '
-                    f'filter="url(#glow)"/>')
-    h.raw("engines", {2: "".join(nozzles), 5: "".join(glow)})
+    # the engines' glow, behind the nozzles set into the nacelles and the stern
+    h.raw("engines", {5: "".join(f'<ellipse cx="{x}" cy="{y}" rx="{w}" ry="9" fill="{ENGINE_GLOW}" opacity=".5" '
+                                 f'filter="url(#glow)"/>' for x, y, w in ((136, 400, 17), (304, 400, 17),
+                                                                          (206, 438, 10), (234, 438, 10)))})
     # six planned mounts on the outer edge, odd port, even starboard (art rules): 1-2 on the wingtips, 3-4 on the
     # wings' leading edges by the body (the cutter's guns), 5-6 on the prow's chines. Each sits on the edge measured
     # from the rendered hull (`edge`), so it is really on it.

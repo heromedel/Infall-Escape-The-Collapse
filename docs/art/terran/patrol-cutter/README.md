@@ -16,11 +16,12 @@ for a merc look with wings or nacelles, and since it's a cutter, give it a sharp
 A rugged mercenary cutter: hull only, top-down, nose up, light from the upper left, 440 × 470 at 1x (35 px tiles, the
 centre of tile (0, 0) at 220, 235).
 
-- **Shape:** forward-swept blade wings, sharp at the tips, break up the vertical stack of rooms; a chisel bow; engine
-  nacelles merged into the wing roots, with chunky nozzles, and a small pair at the stern. No nose cone, fins or
-  engine bells.
+- **Shape:** one hull outline for the body and its forward-swept blade wings, sharp at the tips and joined to the body
+  with a smooth fillet, so it reads as one ship and breaks up the vertical stack of rooms; a chisel bow; engine
+  nacelles under the wings' trailing edges with their nozzles set into their tails, and a small pair set into the
+  stern. No nose cone, fins or engine bells.
 - **Colours and wear:** sun-faded warm grey-olive plates, faded rust-ochre bands raked along the wings' leading edges, a
-  replaced panel of a slightly different shade, soft scorching aft. Nothing drips. The AZC sits under a flush armoured
+  soft scorching aft. Nothing drips, and nothing on the hull marks where an airlock is. The AZC sits under a flush armoured
   panel with two vent slits.
 - **Rooms first:** the 9 rooms of the ship file are laid out on the tile grid (`tools/layout.py`) and the hull is drawn
   round them; `tools/check_rooms.py` checks every room has at least 4 px of hull round it
@@ -29,16 +30,16 @@ centre of tile (0, 0) at 220, 235).
   a clear line forward (`check_mounts.py`), odd port, even starboard: 1–2 on the wingtips, 3–4 on the wings' leading
   edges by the body (the Gat 2.1 at 3, the Gat M1 at 4; the Checkpoint fits the Gat 3.1 and the Gat M2 there), 5–6 on
   the bow's chines. All slide forward.
-- **Parts:** `hull`, `wing-port`, `wing-starboard`, `nacelle-port`, `nacelle-starboard`, `cockpit`, `azc`, `engines`.
+- **Parts:** `hull` (body and wings), `nacelle-port`, `nacelle-starboard`, `cockpit`, `azc`, `engines`.
 
 For the Godot ship file (art pixels on the 1x hull):
 
 ```xml
 <art hull="patrol-cutter-hull-2x.png" scale="0.5" center="220,235"/>
-<mount id="1" x="30" y="117" slide="up"/>
-<mount id="2" x="410" y="117" slide="up"/>
-<mount id="3" x="116" y="140" slide="up"/>
-<mount id="4" x="324" y="139" slide="up"/>
+<mount id="1" x="30" y="116" slide="up"/>
+<mount id="2" x="410" y="116" slide="up"/>
+<mount id="3" x="116" y="123" slide="up"/>
+<mount id="4" x="324" y="123" slide="up"/>
 <mount id="5" x="174" y="61" slide="up"/>
 <mount id="6" x="266" y="62" slide="up"/>
 ```
@@ -53,6 +54,7 @@ W3, crescent wings.
 |---|---|
 | 1 | The worn merc palette; the wing roots moved forward to cover the Shields room and Medbay; a narrower stern; mounts placed on the measured edge. |
 | 2 | Blind check, 6/10 ("lived-in merc" reads; sharp only half-reads; the stubs read as landing legs; the octagon as a pasted-on turret): a chisel bow; the nacelles widened into the wing roots with chunky nozzles; the AZC under a flush armoured panel; a simpler canopy; the wing's patch panel dropped. |
+| 3 | heromedel: the wings and the centre as one ship, not a column; no airlock-looking rectangle (hulls never show where airlocks are); the nozzles joined to the nacelles. One hull outline with a fillet at the wing roots, the wings a darker panel with no root line; the replaced panel at the bottom right removed; every nozzle set into its nacelle's tail or the stern. |
 
 Each part is built in the five stages (`review/stages.png`). The Gat M1 has no weapon art yet, so there is no armed
 preview.
