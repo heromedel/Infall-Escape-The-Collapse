@@ -279,3 +279,17 @@ of the tiles a beam had cut, but a beam was never given that list, so the code f
 it reached and the beam did nothing, the player's and the enemy's alike (five beam weapons). The Vein Moth's
 Lantern showed it in the test fights. One missing field; beams work again.
 
+### C10. The Tentauri reach
+
+A Tentauri working several consoles now grows a pair of short tentacles to each console it mans from across the
+room, drawn by the game as the reach prototype draws them: out of the rim, across the floor and in at the
+console's bulb, a pixel thick with a shade pixel and a frill now and then, wiggling in the middle, each pair
+tapping in turn. They take 0.9 s to grow and pull back in when the Tentauri stops or walks off. They take the
+crew member's own tentacle colour (subtypes). Drawing only.
+
+- Not used: the prototype's own body sheet (`tentauri-reach-body-sheet.png`, with fewer hanging tentacles as more
+  reach out). The game draws the reach over the Facing sheet's ordinary typing frames.
+- The prototype reaches to at most three more consoles; the game reaches to as many as the Tentauri mans (its
+  race file's systems_at_once is 4, so three more).
+- Checked by screenshot on the Tentauri scout in the Facing and Tokens styles.
+

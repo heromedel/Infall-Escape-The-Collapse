@@ -11,6 +11,9 @@ const STAND_BACK_SPEED := 45.0    # pixels a second a crew member shifts back fr
 const PAIR_APART := {"Top Down": 7.0, "Facing": 8.5}   # pixels each of two fighters on a tile is drawn from its
 const PAIR_APART_TOKENS := 9.0                         # middle, up and down the screen
 const SHOT_LENGTH := 7.0          # a crew member's shot: a small bolt, a fifth of a ship laser's
+const REACH_SECONDS := 0.9        # how long a tentacle takes to grow out to a console, or to pull back in
+const REACH_BASE := Vector2(17, 17)   # where on a Tentauri's frame the reaching tentacles leave: the middle of its rim
+const REACH_SHEET_TONES := ["#c8aaff", "#886ad6", "#765ac4", "#e2fffa"]   # tentacle, its shade, its frills, the tap's glint
 const BODY_FADE := 0.7            # seconds a fallen crew member's last frame takes to fade
 const TOKEN_FALL := 0.5           # seconds a token takes to shrink away when its crew member dies
 const BAR_OWN := Color("#58e06a")     # a crew health bar's colour says whose they are, as in the genre (GV 7G)
@@ -43,6 +46,7 @@ var _floor_layer := Node2D.new()
 var _crew_layer := Node2D.new()
 var _over_layer := Node2D.new()     # what is drawn over the crew: a console a Facing sprite stands behind
 var _facings: Dictionary = {}       # crew member -> the way they last faced on the screen (GV 7F)
+var _reaches: Dictionary = {}       # system -> {member, grown}: a console a crew member works from across the room
 var _fallen: Array = []             # crew who have just died here, while their death plays: {member, at, facing, age}
 var _seen_dead: Dictionary = {}     # crew member -> true once their death has been noticed
 var _shifts: Dictionary = {}        # crew member -> how far they are drawn from where they stand: back from a
@@ -151,6 +155,7 @@ func _process(delta: float) -> void:
 	visible = fade > 0.0
 	_weapons_layer.queue_redraw()
 	_shift_crew(delta)
+	_grow_reaches(delta)
 	_watch_for_deaths(delta)
 	_floor_layer.queue_redraw()
 	_crew_layer.queue_redraw()
@@ -648,6 +653,118 @@ func _draw_fallen(canvas: CanvasItem, fall: Dictionary) -> void:
 		canvas.draw_texture_rect_region(sheet.texture, Rect2(p + onto.position, onto.size), region, Color(1, 1, 1, fade)))
 
 
+# --- Reaching (the Tentauri work several consoles at once) -----------------------------------------------------
+
+## A crew member whose race works several systems at once (race.xml, systems_at_once) grows a pair of short
+## tentacles to each console they man that is not the one they stand at; a tentacle pulls back in when they stop
+## (docs/art/tentauri/crew, the reach prototype).
+func _grow_reaches(delta: float) -> void:
+	var wanted := {}
+	for system in ship.systems:
+		var member: CrewMember = system.manned_by
+		if member and member.race.systems_at_once > 1 and member.ship == ship and member.is_active() and member.cell != system.cell \
+				and not member.is_moving() and ShipDesign.DIRECTIONS.has(system.wall):
+			wanted[system] = member
+	for system in wanted:
+		var reach: Dictionary = _reaches.get(system, {})
+		if reach.is_empty() or reach.member != wanted[system]:
+			if not reach.is_empty() and reach.grown > 0.0:
+				continue      # someone else's tentacles are still pulling back from it
+			reach = {"member": wanted[system], "grown": 0.0}
+			_reaches[system] = reach
+		reach.grown = minf(1.0, reach.grown + delta / REACH_SECONDS)
+	for system in _reaches.keys():
+		if wanted.get(system) != _reaches[system].member:
+			_reaches[system].grown -= delta / REACH_SECONDS
+			if _reaches[system].grown <= 0.0:
+				_reaches.erase(system)
+
+
+## The reaching tentacles, a sprite pixel thick with a shade pixel under them and a frill now and then: each hangs
+## out of the rim, sweeps across the floor and comes in at the console; they wiggle, and each pair taps in turn like
+## two hands.
+func _draw_reaches(canvas: CanvasItem) -> void:
+	var turn := _screen_turn()
+	var down := Vector2.DOWN.rotated(-turn)        # down and right on the screen, in the deck's own directions
+	var right := Vector2.RIGHT.rotated(-turn)
+	var beat := int(time / 0.188) % 4
+	var by_member := {}
+	for system in _reaches:
+		var member: CrewMember = _reaches[system].member
+		if not by_member.has(member):
+			by_member[member] = []
+		by_member[member].append(system)
+	for member: CrewMember in by_member:
+		if member.dead or member.ship != ship:
+			continue
+		var jobs: Array = []
+		for system: ShipSystem in by_member[member]:
+			var placed := _console_placement(system)
+			var wall := Vector2(ShipDesign.DIRECTIONS[system.wall])
+			var at: Vector2 = placed.symbol_at if not placed.is_empty() else ship.design.cell_centre(system.cell) + wall * 12.0
+			for hand in 2:
+				jobs.append({"tip": at + Vector2(-wall.y, wall.x) * (hand * 6.0 - 3.0), "toward": wall, "grown": _reaches[system].grown,
+						"wave": ship.systems.find(system) * 2.1 + hand * 1.1, "taps": (beat + hand) % 2 == 0})
+		jobs.sort_custom(func(a, b): return a.tip.dot(right) < b.tip.dot(right))    # so they don't cross at the rim
+		var sheet := CrewArt.sheet_for(member.race, member.subtype)
+		var rim: Vector2 = _drawn_at(member) + ((REACH_BASE - Vector2(CrewArt.frame, CrewArt.frame) * 0.5).rotated(-turn) if not sheet.is_empty() else down * TOKEN_RADIUS)
+		var room := ship.rooms[ship.room_at(member.cell)]
+		var inside := Rect2(ship.design.cell_top_left(room.rect.position), Vector2(room.rect.size) * ShipDesign.TILE).grow(-2.0)
+		var worn := CrewSkins.colour_changes(member.race, member.subtype)
+		var tones: Array = REACH_SHEET_TONES.map(func(code: String): return Color(worn.get(code, code)))
+		var pixels := {}
+		for index in jobs.size():
+			var job: Dictionary = jobs[index]
+			var root: Vector2 = rim + right * roundf(index - (jobs.size() - 1) * 0.5)
+			var route := [root, (root + down * 9.0).clamp(inside.position, inside.end), (job.tip - job.toward * 12.0).clamp(inside.position, inside.end), job.tip]
+			_trace_tentacle(route, job, down, pixels)
+		for cell in pixels:
+			canvas.draw_rect(Rect2(Vector2(cell), Vector2.ONE), tones[pixels[cell]])
+
+
+## One tentacle traced into `pixels` (deck pixel -> which tone): along a curve through `route`, as far as it has
+## grown, wiggling in its middle and still at both ends.
+func _trace_tentacle(route: Array, job: Dictionary, down: Vector2, pixels: Dictionary) -> void:
+	const STEPS := 120
+	var points: Array = []
+	var lengths: Array = [0.0]
+	for step in STEPS + 1:
+		var t := step / float(STEPS)
+		points.append((route[0] as Vector2).bezier_interpolate(route[1], route[2], route[3], t))
+	for step in range(1, STEPS + 1):
+		lengths.append(lengths[step - 1] + (points[step] as Vector2).distance_to(points[step - 1]))
+	var whole: float = lengths[STEPS] * job.grown
+	if whole < 1.0:
+		return
+	var path: Array[Vector2i] = []
+	for step in range(1, STEPS):
+		if lengths[step] > whole:
+			break
+		var along: Vector2 = ((points[step + 1] as Vector2) - points[step - 1]).normalized()
+		var sway := 0.9 * sin(PI * lengths[step] / whole) * sin(lengths[step] * 0.28 - time * 4.5 + job.wave)
+		var cell := Vector2i(((points[step] as Vector2) + Vector2(-along.y, along.x) * sway).round())
+		if path.is_empty() or path.back() != cell:
+			path.append(cell)
+	if path.is_empty():
+		return
+	var tapping: bool = job.grown >= 1.0 and job.taps
+	if tapping:
+		path.append(path.back() + Vector2i((job.toward as Vector2).round()))
+	var under := Vector2i(down.round())
+	for index in path.size():
+		var cell := path[index]
+		if not pixels.has(cell + under):
+			pixels[cell + under] = 1                                   # the shade pixel that gives it thickness
+		pixels[cell] = 0 if index < path.size() - 2 else 1
+		if index % 6 == 3 and index < path.size() - 3:
+			var step := path[index + 1] - cell
+			var frill := cell + (Vector2i(-step.y, step.x) if (index / 6) % 2 == 1 else Vector2i(step.y, -step.x))
+			if not pixels.has(frill):
+				pixels[frill] = 2
+	if tapping:
+		pixels[path.back()] = 3
+
+
 ## Where a crew member is drawn on the deck this frame.
 func _drawn_at(member: CrewMember) -> Vector2:
 	return member.previous_position.lerp(member.position, alpha) + _shifts.get(member, Vector2.ZERO)
@@ -671,6 +788,7 @@ func _draw_crew() -> void:
 	if not interior_visible and not life_signs_visible:
 		return
 	var canvas := _crew_layer
+	_draw_reaches(canvas)
 	for fall in _fallen:
 		_draw_fallen(canvas, fall)
 	for member: CrewMember in _crew_to_draw():
