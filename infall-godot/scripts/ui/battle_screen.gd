@@ -197,7 +197,7 @@ func _show_note(note: Dictionary) -> void:
 	match note.kind:
 		"shot":
 			var weapon: WeaponDef = note.weapon
-			_sound("missile" if weapon.type == "missile" else ("laser_heavy" if weapon.damage >= 2 else "laser"), -6.0 if ship and ship.side == 1 else -3.0)
+			_sound(weapon.shot_sound(), -6.0 if ship and ship.side == 1 else -3.0)
 		"volley":
 			var weapon: WeaponDef = note.weapon
 			if weapon.type == "beam":
@@ -224,6 +224,7 @@ func _show_note(note: Dictionary) -> void:
 			_sound("hit_shield")
 		"miss":
 			effects.float_text(note.position, "MISS", Color(0.85, 0.9, 1.0), 20)
+			_sound("miss", -6.0)
 		"intercept", "shot_down":
 			effects.small_burst(note.position, Color(1.0, 0.6, 0.9))
 			_sound("intercept")

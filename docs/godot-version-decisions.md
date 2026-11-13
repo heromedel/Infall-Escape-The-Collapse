@@ -83,6 +83,8 @@ anything Claude added tagged Ai-Generated-Proposal.
   - Open Doors pressed again, with every inner door open, opens the airlocks too. Vent stays.
   - While the mouse player aims, the arrow is hidden: the reticle is the cursor (reference frame 02).
   - An enemy's empty shield pip shows its recharge as a bar (reference frame 17).
+  - A weapon file can name its launch sound; without one it gets its kind's (missile, flak, ion, spore, heavy or
+    light laser). A miss has a sound. The new sounds have not been listened to.
   - Not settled: the gap between a volley's shots (0.25 s in the game; no figure found), and number keys for
     event choices (no source found).
 

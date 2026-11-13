@@ -45,7 +45,8 @@ passes at the end as at the start, and four bugs that predate the night were fou
 ### Not done
 
 - **B3, number keys for event choices:** no source confirmed the genre has them. Easy to add if you say so.
-- **B7, per-weapon sounds:** not started.
+- **B7, per-weapon sounds:** done after the summary was first written; see the last log entry. **Not listened
+  to**: this session cannot hear, so the four new sounds want an ear.
 - **C3, the Mawjig pool never ending in a zero:** dropped on your word.
 - **C11, several weapon systems on one ship (GDD 8L):** not started; the largest item, and Ship Designs points
   out the Hijacker and the Burr both want it.
@@ -412,3 +413,16 @@ crew member's own tentacle colour (subtypes). Drawing only.
 Seeds 2 and 3 and a two-player seed were clean. Seed 1 failed: the tester pressed LEAVE as the only player, and
 from then on nothing had a view. That was bug 4 above. After the fix seeds 1 and 4 are clean, and the tester now
 presses a key to come back in when it has left.
+
+### B7. Weapon sounds
+
+- A weapon file can name its launch sound (`sound="..."`, a file in `audio/`). Without one a weapon gets its
+  kind's: missiles the missile sound, flak a new ragged burst, ion weapons a new zap, spore and stun weapons that
+  do no damage a new soft puff, heavy lasers and light lasers as before.
+- A miss now has a sound (a shot going by).
+- The four new sounds are made by `tools/make_audio.py` like the rest, in a function that runs last, so the
+  existing effects come out byte for byte as they were (checked: only the new files are new).
+- **Not listened to.** They were made from the same building blocks as the others and their lengths checked
+  (0.4 to 0.5 s), but nobody has heard them.
+- The genre also varies a weapon's launch sound between two or three takes; Infall varies pitch a little instead,
+  as before.
