@@ -1,6 +1,6 @@
 extends Node
 ## Shows a fight and saves screenshots. Environment: E (enemy ship ids, comma separated), SHOTS (seconds,
-## comma separated), OUT (folder), P (player ship ids), ART_STYLE and SPECIES (those settings), BREAK (a system id to break, so the crew repair it). Run with a display: xvfb-run godot --path . tools/battle_view_test.tscn
+## comma separated), OUT (folder), P (player ship ids), ART_STYLE and SPECIES (those settings), BREAK (a system id to break, so the crew repair it), ZOOM and ZOOM_ROOM (how close, and the room to look at), BOARD (an enemy crew member boards the player's first room). Run with a display: xvfb-run godot --path . tools/battle_view_test.tscn
 
 var battle: BattleScreen
 var screen: PlayerView
@@ -74,6 +74,9 @@ func _ready() -> void:
 		var broken: ShipSystem = (players[0] as Ship).system_by(OS.get_environment("BREAK"))
 		if broken:
 			broken.damage = broken.level
+	if OS.get_environment("BOARD") != "" and not enemies.is_empty():
+		# an enemy crew member beamed into the player's first room, for a boarding fight
+		encounter._land((enemies[0] as Ship).crew[0], players[0], 0)
 	if OS.get_environment("ZOOM") != "":
 		zoom_ship = enemies[0] if OS.get_environment("ZOOM_ENEMY") != "" and not enemies.is_empty() else players[0]
 	if OS.get_environment("SELECT") != "":
@@ -89,7 +92,7 @@ func _process(delta: float) -> void:
 	if zoom_ship:
 		screen.camera.user_moved = true
 		screen.camera.target_zoom = float(OS.get_environment("ZOOM"))
-		screen.camera.target_position = screen.encounter.to_view(screen.encounter.local_to_world(zoom_ship, zoom_ship.design.cell_centre(zoom_ship.rooms[mini(2, zoom_ship.rooms.size() - 1)].cells[0])))
+		screen.camera.target_position = screen.encounter.to_view(screen.encounter.local_to_world(zoom_ship, zoom_ship.design.cell_centre(zoom_ship.rooms[mini(int(OS.get_environment("ZOOM_ROOM")) if OS.get_environment("ZOOM_ROOM") != "" else 2, zoom_ship.rooms.size() - 1)].cells[0])))
 		screen.camera.position = screen.camera.target_position
 		screen.camera.zoom = Vector2.ONE * screen.camera.target_zoom
 	if not shots.is_empty() and elapsed >= shots[0]:

@@ -508,7 +508,7 @@ func _update_hover() -> void:
 			continue
 		var local := encounter.world_to_local(ship, world_point)
 		for member in ship.crew + ship.visitors:
-			if member.ship == ship and member.is_active() and member.position.distance_to(local) <= ShipView.TOKEN_RADIUS + 2.0:
+			if member.ship == ship and member.is_active() and views[ship].drawn_position(member).distance_to(local) <= ShipView.CREW_PICK_RADIUS:
 				if member.side == 0 or views[ship].interior_visible:
 					hover_crew = member
 		var cell := Vector2i(floor((local - ship.design.cell_offset) / ShipDesign.TILE))

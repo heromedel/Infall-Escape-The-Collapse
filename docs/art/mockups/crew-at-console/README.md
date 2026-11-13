@@ -1,6 +1,7 @@
 # Crew at a console: does the console art fit in one tile with the crew member? (2026-11-13)
 
-**Ai-Generated-Proposal**, a mockup for GV 7G. Not built in the game.
+**Ai-Generated-Proposal**, a mockup for GV 7G. Built in the game the same day (GV 7G lists what was built and the
+distances used).
 
 heromedel agreed (2026-11-13, "if you can make it work") that crew and system should share a tile the way the art
 sessions settled it: the console at the wall with the symbol in it, the crew member in front. This puts the real
@@ -18,7 +19,8 @@ sheet into one 35-pixel tile, on each wall, at 6 times size.
 - **Facing sprites on a south wall** stand behind the console, so only the head and shoulders show.
 - **Tall Facing sprites reach past the tile** by 3 to 6 pixels when stepped back (clipped in these pictures; in the
   game they would overlap the next tile a little, as tall sprites already do).
-- **A token at today's size (29 across) still covers the console.** At about 21 across it fits.
+- **A token at today's size still covers the console; a smaller one fits.** The pictures' labels are wrong: the
+  two tokens drawn are about 25 and 17 pixels across, not 29 and 21.
 - **The ring under each crew member (29 across) is left out.** It would cross the console.
 - The top-down HalfMech's typing frames were drawn to grip the tower from the tile's middle, so it may want a
   smaller step back than the others.

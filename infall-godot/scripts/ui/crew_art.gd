@@ -9,11 +9,14 @@ extends RefCounted
 
 const LAYOUTS := "res://content/crew-layouts.xml"
 const FACINGS := ["down", "right", "up", "left"]
+const STAND_BACK := 6.0                  # pixels from the tile's middle a figure stands back from a console (GV 7G)
 
 static var frame := 35.0                 # a frame's side, the size of a deck tile
 static var _layouts: Dictionary = {}     # layout id -> {animation id -> {"ms": float, facing -> [row, column, frames]}}
 static var _loaded := false
 static var _recoloured: Dictionary = {}  # "sheet path subtype" -> an SVG sheet's picture in that subtype's colours
+static var _outlines: Dictionary = {}    # a sheet's picture -> the same shapes in plain white, for a selection outline
+static var _feet: Dictionary = {}        # a sheet's picture -> {facing -> how far down its frame the standing figure reaches}
 
 
 static func style() -> String:
@@ -21,7 +24,7 @@ static func style() -> String:
 
 
 ## The sheet a crew member is drawn from in the chosen style, in their subtype's colours: {"texture", "layout",
-## "particles"}, or {} for tokens.
+## "particles", "style", "stand_back"}, or {} for tokens.
 static func sheet_for(race: RaceDef, subtype: String) -> Dictionary:
 	var wanted := style()
 	return {} if wanted == "Tokens" else _sheet(race, wanted, subtype)
@@ -51,7 +54,7 @@ static func _sheet(race: RaceDef, wanted: String, subtype: String) -> Dictionary
 		var texture := _texture(art.sheet, race, subtype)
 		if texture == null or layout.is_empty():
 			return {}
-		return {"texture": texture, "layout": layout, "particles": art.particles}
+		return {"texture": texture, "layout": layout, "particles": art.particles, "style": art.style, "stand_back": art.stand_back}
 	return {}
 
 
@@ -76,6 +79,35 @@ static func _texture(path: String, race: RaceDef, subtype: String) -> Texture2D:
 			image.fix_alpha_edges()      # so the see-through pixels beside the sprite don't show as a pale fringe
 			_recoloured[key] = ImageTexture.create_from_image(image)
 	return _recoloured[key]
+
+
+## A sheet's figures as plain white shapes. Drawn a pixel to each side in a player's colour, under the figure, they
+## make the thin outline that marks a selected crew member (GV 7G).
+static func outline(sheet: Dictionary) -> Texture2D:
+	var texture: Texture2D = sheet.texture
+	if not _outlines.has(texture):
+		var picture := texture.get_image()
+		picture.convert(Image.FORMAT_RGBA8)
+		var white := Image.create(picture.get_width(), picture.get_height(), false, Image.FORMAT_RGBA8)
+		white.fill(Color.WHITE)
+		var shapes := Image.create(picture.get_width(), picture.get_height(), false, Image.FORMAT_RGBA8)
+		shapes.blit_rect_mask(white, picture, Rect2i(Vector2i.ZERO, picture.get_size()), Vector2i.ZERO)
+		_outlines[texture] = ImageTexture.create_from_image(shapes)
+	return _outlines[texture]
+
+
+## How far down its frame the figure reaches when standing and facing this way, in pixels: where the deck is under
+## it, so a health bar can sit just below whatever the figure's height.
+static func feet(sheet: Dictionary, facing: String) -> float:
+	var texture: Texture2D = sheet.texture
+	if not _feet.has(texture):
+		_feet[texture] = {}
+	var known: Dictionary = _feet[texture]
+	if not known.has(facing):
+		var standing := texture.get_image().get_region(Rect2i(region(sheet, "walk", facing, 0.0)))
+		var drawn := standing.get_used_rect()
+		known[facing] = float(drawn.end.y) if drawn.has_area() else frame
+	return known[facing]
 
 
 static func has_animation(sheet: Dictionary, animation: String) -> bool:

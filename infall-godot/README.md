@@ -134,6 +134,16 @@ The Art Style setting shows a token for any race with no sheet in the chosen sty
 - The Tentauri's token is cut from their Facing sheet, in the colours of the crew member's subtype (GV 7F). The
   other races' tokens are still drawn faces, and no other race has subtypes yet.
 - A store's crew cards show the crew member as the Art Style setting draws them: sprite or token.
+- Consoles are drawn from art (GV 7G): `content/consoles/<style>/` holds each style's `console.xml` and art (the
+  wall desk, the Mecha tower, the Tentauri organs), brought over from `docs/art` by `tools/import_console_art.py`.
+  A race names its style in its `race.xml` (`consoles="tower"`); one that names none gets the wall desk. The game
+  draws the system's symbol on the console, in the colour of its state.
+- A crew member standing at a console is drawn a few pixels back from its wall so the symbol stays in view
+  (`stand_back` on a sheet's `<crew_art>`; drawing only). In the Facing style a console on the wall nearest the
+  player is drawn over them.
+- No ring is drawn under a sprite. A health bar's colour says whose crew it is (green ours, red theirs); it shows
+  in a room holding both sides, and on anyone hurt or selected. A selected sprite has a thin outline in the
+  player's colour. Tokens are about 19 pixels across and keep their rim.
 - The top-down drifter's death is a bad placeholder (heromedel, 2026-11-11), to be made again from scratch.
 - The game does not play a death or a clone-bay animation yet, and the sheets' extra rows (the Tentauri typing at
   several systems, the HalfMech's clamp-on frames) are not used.

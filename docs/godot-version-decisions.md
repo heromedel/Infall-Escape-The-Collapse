@@ -210,8 +210,8 @@ anything Claude added tagged Ai-Generated-Proposal.
     - How it is built: the race's `race.xml` lists each part (`<skin_part>`: the sheet's own colour codes for it
       and the colours it can take) and the planned subtypes (`<subtype wears="…"/>`). The sheet is kept as an SVG,
       and the game changes its colour codes and draws it, once for each subtype worn (`CrewSkins`, `CrewArt`).
-- **G — Proposed (heromedel, 2026-11-12):** crew fights as the genre has them (`docs/reference/genre-crew-fights/`).
-  Not built; planning only.
+- **G — Proposed (heromedel, 2026-11-12):** crew fights as the genre has them (`docs/reference/genre-crew-fights/`),
+  and how crew and consoles share a tile. The fights are not built; the tile sharing is (2026-11-13).
   - **Likely (heromedel, 2026-11-12):** fighters walk onto an enemy's tile and pair up, one from each side to a
     tile. The two on a tile punch; a fighter with nobody on his tile aims and fires, and a small bolt flies from
     about the gun to the target.
@@ -222,19 +222,37 @@ anything Claude added tagged Ai-Generated-Proposal.
     someone mans a system goes: the console's art and its powered symbol are enough, and a crew member standing
     there is plainly manning it.
   - **Likely (heromedel, 2026-11-12):** crew are the genre's size in a tile.
-  - **Likely (heromedel, 2026-11-13, "if you can make it work"):** crew and system share a tile the way the art
-    sessions settled it: the console at the wall with the symbol in it, the crew member in front, and no symbol
-    disc at the tile's middle. A mockup with the real console art and crew sheets
-    (`docs/art/mockups/crew-at-console/`, Ai-Generated-Proposal) shows it fits if the crew member is drawn about
-    6 pixels back from the console's wall, a south-wall console is drawn over a Facing sprite, and tokens shrink
-    to about 21 pixels across. Not built yet.
-  - **Decided (heromedel, 2026-11-13):** no ring under a crew sprite. Sides are told apart as in the genre, by
-    the health bar's colour: green for the player's crew, red for the other side. The bar shows on every crew
-    member in a room that holds both sides, and on one who is hurt or selected, as before; its length still
-    shows health. A token keeps its rim, which is part of the token.
-  - **Open (2026-11-13):** how a selected crew sprite is marked. The selection ring is 34 pixels across and
-    would cross the console.
-  - What was found about consoles, symbols and size (2026-11-12), before the point above was answered.
+  - **Decided (heromedel, 2026-11-13), built:** crew and system share a tile the way the art sessions settled
+    it: the console at the wall with the symbol in it, the crew member in front, and no symbol disc at the
+    tile's middle.
+    - The console art is in the game's content (`infall-godot/content/consoles/`, brought over by
+      `tools/import_console_art.py`): the Outrider's wall desk, the Mecha tower, and the Tentauri organs, one for
+      each system. A race names its style in its `race.xml` (`consoles="organs"`).
+    - **Ai-Generated-Proposal:** a race with no consoles of its own (Azurethea, Lykario, Malphen, Senti) gets
+      the wall desk until theirs is drawn.
+    - The art carries no symbol. The game draws it on the screen or bulb, so its colour still shows powered,
+      unpowered, damaged and broken.
+    - The desk and the tower turn to face their wall. The Tentauri organs stay upright on the screen however
+      the ship and the view are turned, at half size, slid against their wall (style guides, Tentauri ships).
+    - A crew member standing still on a console's tile is drawn back from its wall: 6 pixels for a sprite, 4 for
+      the top-down HalfMech (its arms were drawn to grip the tower), 8 for a token. Only the drawing shifts;
+      where they stand in the battle does not. **Ai-Generated-Proposal** for the distances
+      (mockup: `docs/art/mockups/crew-at-console/`).
+    - In the Facing style a console on the wall nearest the player is drawn over the crew member, who stands
+      behind it.
+    - A system with no wall (the Mecha Servicing Core) still shows its symbol on a dark plate.
+    - Shields, Engines and Life Support are now drawn as the agreed shapes (`content/systems/<id>/symbol.svg`
+      at the repo root).
+  - **Decided (heromedel, 2026-11-13), built:** no ring under a crew sprite. Sides are told apart as in the
+    genre, by the health bar's colour: green for the player's crew, red for the other side. The bar shows on
+    every crew member in a room that holds both sides, and on one who is hurt or selected, as before; its
+    length still shows health. It sits just under the figure's feet. A token keeps its rim, which is part of
+    the token.
+  - **Decided (heromedel, 2026-11-13), built:** a selected crew sprite has a thin outline that hugs it, one
+    pixel wide, in the selecting player's colour, as the genre marks its own. A selected token keeps a ring.
+  - **Likely (heromedel, 2026-11-13), built:** tokens are smaller, about 19 pixels across with the rim (they were
+    about 27), so a console's symbol shows beside one. The size is an **Ai-Generated-Proposal**.
+  - What was found about consoles, symbols and size (2026-11-12), before the points above were answered.
     heromedel's first leaning was a small symbol beside or above a crew member while manning:
     - The art sessions settled where the symbol goes: in the console. The Outrider's floor layout test 4 has
       "a pale desk that blends into the floor, with a small symbol on its screen"; the pirate ships have wall
@@ -407,3 +425,4 @@ All built in the build of 2026-11-05.
 | 2026-11-12 | Particles are made in the game, not drawn on the sheets; repair sparks in the ship's power colour (GV 7F). |
 | 2026-11-11 | Every crew card in a store shows the crew member's picture, following the Art Style setting (GV 7F). |
 | 2026-11-11 | Crew subtypes: a Tentauri's bell and tentacle colours, planned pairs first, then unused combinations, one of each to a squad (GV 7F). |
+| 2026-11-13 | Consoles drawn from the art sessions' art with the symbol on them, crew drawn back from the wall, no ring under sprites, health bars coloured by side, a thin outline for a selected sprite, smaller tokens (GV 7G); built the same day. |

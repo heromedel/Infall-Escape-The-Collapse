@@ -23,8 +23,10 @@ var heals_slowly: bool = false
 var crew_price: int = 1089
 var portrait: String = "token"
 var tech: String = "mechanical"
+var consoles: String = ""          # its ships' console style, a folder in content/consoles (GV 7G); "" is the default
 var crew_art: Array = []           # sprite sheets for the Art Style setting (GV 7F): {style, species, sheet, layout,
-								   # particles}; particles is {animation: {kind, facing or "any": point in the frame}}
+								   # particles, stand_back}; particles is {animation: {kind, facing or "any": point
+								   # in the frame}}; stand_back is how far from a console's wall the figure is drawn
 var token: Dictionary = {}         # a token cut from a sheet: {style, row, column, centre, radius}; empty for a drawn face
 var skin_parts: Array = []         # the parts of its sheet that take a colour, in a subtype's order (CrewSkins):
 								   # {id, sheet_tones, colours: {id: tones}}, tones being colour codes, lightest first
@@ -57,6 +59,7 @@ static func from_xml(node: XmlTree, folder: String = "") -> RaceDef:
 	def.crew_price = Mawjig.amount(node.get_float("crew_price", 10.89))
 	def.portrait = node.get_attr("portrait", "token")
 	def.tech = node.get_attr("tech", "mechanical")
+	def.consoles = node.get_attr("consoles")
 	for art_node in node.all("crew_art"):
 		var particles := {}
 		for particles_node in art_node.all("particles"):
@@ -68,7 +71,7 @@ static func from_xml(node: XmlTree, folder: String = "") -> RaceDef:
 			particles[particles_node.get_attr("animation")] = starts
 		def.crew_art.append({"style": art_node.get_attr("style"), "species": art_node.get_attr("species"),
 				"sheet": folder.path_join(art_node.get_attr("sheet")), "layout": art_node.get_attr("layout"),
-				"particles": particles})
+				"particles": particles, "stand_back": art_node.get_float("stand_back", CrewArt.STAND_BACK)})
 	var token_node := node.first("token")
 	if token_node:
 		var cell := token_node.get_attr("frame", "1,1").split(",")

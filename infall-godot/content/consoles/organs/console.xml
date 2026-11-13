@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The Tentauri consoles (GV 7G): organic bases, one for each system, shaped by what it does, with the system's
+     symbol lit in a dark bulb (docs/art/style-guides.md, Tentauri ships). Made by tools/import_console_art.py.
+
+     fit="upright": the art is never turned. It is drawn at `scale` and slid against its wall, the edge of its
+     `box` (left, top, right, bottom of the drawing in its 35-pixel frame) `gap` pixels from the wall.
+     glow: the radius, in the art's pixels, of the soft light round the bulb, in the symbol's colour.
+     A console that names no system is the one for every system not listed. -->
+<console_style id="organs" fit="upright" scale="0.5" box="1,2,32,34" gap="1.5" glow="11.5">
+	<console system="piloting" art="hood.svg" symbol="17.5,15" symbol_size="11.6928"/>
+	<console system="weapons" art="trigger.svg" symbol="23.5,12" symbol_size="11.6928"/>
+	<console system="sensors" art="grasp.svg" symbol="17.5,14" symbol_size="12.4992"/>
+	<console system="medbay" art="bud.svg" symbol="17.5,19" symbol_size="11.088"/>
+	<console system="shields" art="carapace.svg" symbol="17.5,12" symbol_size="12.4992"/>
+	<console system="engines" art="pipes.svg" symbol="17.5,22" symbol_size="11.088"/>
+	<console system="doors" art="iris.svg" symbol="17.5,15" symbol_size="11.6928"/>
+	<console system="life-support" art="air-sacs.svg" symbol="17.5,12" symbol_size="12.4992"/>
+	<console system="supershield" art="halo.svg" symbol="17.5,16.5" symbol_size="12.4992"/>
+	<console art="tendril.svg" symbol="20.5,11" symbol_size="12.4992"/>
+</console_style>

@@ -2,9 +2,14 @@ class_name ShipView
 extends Node2D
 ## Draws one ship in the battle world: hull art (or a drawn hull when the ship has none, GDD 5K), weapons
 ## sliding out from their mounts, the floor with rooms, doors, consoles, conduits, air, fire and breaches, the
-## crew as portrait tokens, and the shield bubble. It only reads the Ship; the battle screen owns input.
+## crew as sprites or portrait tokens, and the shield bubble. It only reads the Ship; the battle screen owns input.
 
-const TOKEN_RADIUS := 12.5
+const TOKEN_RADIUS := 8.5         # small enough to leave a console's symbol in view beside it (GV 7G)
+const TOKEN_STAND_BACK := 8.0     # pixels a token is drawn back from a console's wall
+const CREW_PICK_RADIUS := 13.0    # how near the pointer must be to a crew member to mean them
+const STAND_BACK_SPEED := 45.0    # pixels a second a crew member shifts back from a console, or forward again
+const BAR_OWN := Color("#58e06a")     # a crew health bar's colour says whose they are, as in the genre (GV 7G)
+const BAR_ENEMY := Color("#ff4a3d")
 const FACING_STEP := {"down": Vector2.DOWN, "right": Vector2.RIGHT, "up": Vector2.UP, "left": Vector2.LEFT}   # on the sheet
 const SPRAY_DROPLETS := 10
 const SPRAY_REACH := 8.0          # sprite pixels a droplet travels from the nozzle
@@ -29,7 +34,9 @@ var _weapons_layer := Node2D.new()
 var _hull_layer: Node2D
 var _floor_layer := Node2D.new()
 var _crew_layer := Node2D.new()
+var _over_layer := Node2D.new()     # what is drawn over the crew: a console a Facing sprite stands behind
 var _facings: Dictionary = {}       # crew member -> the way they last faced on the screen (GV 7F)
+var _stand_backs: Dictionary = {}   # crew member -> how far they are drawn from where they stand, at a console
 var _shield_layer := Node2D.new()
 var _shield_rect := ColorRect.new()
 var _shield_material: ShaderMaterial
@@ -62,10 +69,14 @@ func setup(view_ship: Ship, owner: Encounter) -> void:
 		_hull_layer = painter
 	add_child(_hull_layer)
 	add_child(_floor_layer)
+	_floor_layer.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS   # console art is drawn large
 	_floor_layer.draw.connect(_draw_floor)
 	add_child(_crew_layer)
 	_crew_layer.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST   # crew sprites are pixel art (GV 7F)
 	_crew_layer.draw.connect(_draw_crew)
+	add_child(_over_layer)
+	_over_layer.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
+	_over_layer.draw.connect(_draw_over_crew)
 	add_child(_shield_layer)
 	_setup_bubbles()
 
@@ -120,8 +131,10 @@ func _process(delta: float) -> void:
 		modulate.a = 0.45
 	visible = fade > 0.0
 	_weapons_layer.queue_redraw()
+	_shift_crew_at_consoles(delta)
 	_floor_layer.queue_redraw()
 	_crew_layer.queue_redraw()
+	_over_layer.queue_redraw()
 	if ship.hit_flash > 0:
 		_hull_layer.modulate = Color(1.6, 1.4, 1.3)
 	else:
@@ -281,11 +294,10 @@ func _draw_doors(canvas: CanvasItem) -> void:
 				canvas.draw_line(middle - along * half, middle + along * half, Color(UiColours.DAMAGED_RED, 0.8), 2.0)
 
 
-## A system's console: a desk against its wall with the symbol lit in the ship's power colour, red when damaged.
+## A system's console (GV 7G): its race's console art against its wall, with the system's symbol on its screen or
+## bulb in the ship's power colour, red when damaged. The Core keeps its own machine.
 func _draw_console(canvas: CanvasItem, system: ShipSystem) -> void:
-	var design := ship.design
-	var centre := design.cell_centre(system.cell)
-	var tile := ShipDesign.TILE
+	var centre := ship.design.cell_centre(system.cell)
 	var colour := _system_colour(system)
 	if system.behaviour == "power_core":
 		var glow := 0.6 + 0.4 * sin(time * 2.4)
@@ -294,23 +306,60 @@ func _draw_console(canvas: CanvasItem, system: ShipSystem) -> void:
 		canvas.draw_arc(centre, 8.0, 0, TAU, 24, Color(colour, glow), 2.5, true)
 		canvas.draw_circle(centre, 4.5, Color(colour, 0.6 + 0.4 * glow))
 		return
-	var wall_dir: Vector2 = {"north": Vector2.UP, "south": Vector2.DOWN, "east": Vector2.RIGHT, "west": Vector2.LEFT}.get(system.wall, Vector2.ZERO)
-	var icon_at := centre
-	if wall_dir != Vector2.ZERO:
-		var desk_centre := centre + wall_dir * (tile * 0.5 - 6.0)
-		var desk_size := Vector2(tile * 0.78, 9.0) if wall_dir.y != 0 else Vector2(9.0, tile * 0.78)
-		var desk := Rect2(desk_centre - desk_size * 0.5, desk_size)
-		canvas.draw_rect(desk, Color("#e4e8ee") if interior_visible else Color("#4a5262"))
-		canvas.draw_rect(desk, Color("#59616f"), false, 1.0)
-		var screen_size := desk_size - Vector2(6, 4) if wall_dir.y != 0 else desk_size - Vector2(4, 6)
-		canvas.draw_rect(Rect2(desk_centre - screen_size * 0.5, screen_size), Color("#1d2635"))
-		icon_at = centre + wall_dir * 2.0
-	var icon_size := 17.0
-	_draw_upright(canvas, icon_at, func(at: Vector2):
-		canvas.draw_circle(at, icon_size * 0.62, Color(0.06, 0.08, 0.12, 0.55))
-		SystemIcons.draw(canvas, system.def.icon, at, icon_size, colour))
-	if system.manned_by and interior_visible:
-		canvas.draw_arc(icon_at, icon_size * 0.72, 0, TAU, 20, Color(colour, 0.5), 1.2, true)
+	var placed := _console_placement(system)
+	if placed.is_empty():       # no wall, or no art: the symbol on a dark plate
+		_draw_upright(canvas, centre, func(at: Vector2):
+			canvas.draw_circle(at, 10.5, Color(0.06, 0.08, 0.12, 0.55))
+			SystemIcons.draw(canvas, system.def.icon, at, 17.0, colour))
+		return
+	if placed.glow > 0.0:
+		canvas.draw_circle(placed.symbol_at, placed.glow, Color(colour, 0.25))
+	canvas.draw_set_transform(placed.art_at, placed.art_angle, Vector2.ONE)
+	canvas.draw_texture_rect(placed.texture, Rect2(-placed.art_size * 0.5, placed.art_size), false,
+			Color.WHITE if interior_visible else Color(0.38, 0.41, 0.48))
+	canvas.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	_draw_upright(canvas, placed.symbol_at, func(at: Vector2):
+		SystemIcons.draw(canvas, system.def.icon, at, placed.symbol_size, colour))
+
+
+## Where a system's console art and its symbol go on the deck: {"texture", "art_at", "art_angle", "art_size",
+## "symbol_at", "symbol_size", "glow"}, or {} for a system with no wall or no art. Art that is turned faces its wall;
+## art that stays upright is upright on the screen however the ship and the view are turned, shrunk and slid
+## against the wall.
+func _console_placement(system: ShipSystem) -> Dictionary:
+	if not ShipDesign.DIRECTIONS.has(system.wall):
+		return {}
+	var console := ConsoleArt.console_for(ship.race, system.def.id)
+	if console.is_empty():
+		return {}
+	var tile := float(ShipDesign.TILE)
+	var centre := ship.design.cell_centre(system.cell)
+	var wall := Vector2(ShipDesign.DIRECTIONS[system.wall])
+	var middle := Vector2(tile, tile) * 0.5
+	var size: float = console.scale
+	var placed := {"texture": console.texture, "art_size": Vector2(tile, tile) * size,
+			"symbol_size": console.symbol_size * size, "glow": console.glow * size}
+	if console.fit == "upright":
+		var turn := _screen_turn()
+		var on_screen := wall.rotated(turn).round()        # the wall's side as the player sees it
+		var box: PackedFloat64Array = console.box
+		var edge := Vector2(box[0] if on_screen.x < 0.0 else box[2], middle.y) if on_screen.x != 0.0 \
+				else Vector2(middle.x, box[1] if on_screen.y < 0.0 else box[3])
+		var from_centre: Vector2 = on_screen * (tile * 0.5 - console.gap) - (edge - middle) * size
+		placed.art_at = centre + from_centre.rotated(-turn)
+		placed.art_angle = -turn
+		placed.symbol_at = centre + (from_centre + (console.symbol - middle) * size).rotated(-turn)
+	else:
+		placed.art_at = centre
+		placed.art_angle = wall.angle() + PI * 0.5      # the art is drawn for the north wall
+		placed.symbol_at = centre + ((console.symbol - middle) * size).rotated(placed.art_angle)
+	return placed
+
+
+## How far the ship is turned on the screen: a ship flying the other way is turned round, and Battlefield:
+## Horizontal turns the whole view (GV 3J).
+func _screen_turn() -> float:
+	return (PI if ship.facing_down else 0.0) + view_turn
 
 
 func _system_colour(system: ShipSystem) -> Color:
@@ -329,7 +378,7 @@ func _system_colour(system: ShipSystem) -> Color:
 ## Draws something that must read the right way up on the screen (words, portraits, symbols): turned back against
 ## the ship's own turn and the view's (Battlefield: Horizontal turns the whole view, GV 3J).
 func _draw_upright(canvas: CanvasItem, at: Vector2, painter: Callable) -> void:
-	var angle := -(PI if ship.facing_down else 0.0) - view_turn
+	var angle := -_screen_turn()
 	if is_zero_approx(wrapf(angle, -PI, PI)):
 		painter.call(at)
 	else:
@@ -340,7 +389,7 @@ func _draw_upright(canvas: CanvasItem, at: Vector2, painter: Callable) -> void:
 
 ## Up on the screen, in the ship's own drawing (flames rise toward it).
 func _screen_up() -> Vector2:
-	return Vector2.UP.rotated(-(PI if ship.facing_down else 0.0) - view_turn)
+	return Vector2.UP.rotated(-_screen_turn())
 
 
 func _draw_fire(canvas: CanvasItem, centre: Vector2, strength: float, cell: Vector2i) -> void:
@@ -459,16 +508,75 @@ func _draw_destinations(canvas: CanvasItem) -> void:
 
 # --- Crew ----------------------------------------------------------------------------------------------------
 
+## The console a crew member is standing still at: the one on their tile, if it has a wall. null when they are
+## walking, or the tile has none.
+func _console_at(member: CrewMember) -> ShipSystem:
+	if (member.position - member.previous_position).length() >= 0.05:
+		return null
+	for system in ship.systems:
+		if system.cell == member.cell and system.behaviour != "power_core" and ShipDesign.DIRECTIONS.has(system.wall):
+			return system
+	return null
+
+
+## A crew member standing at a console is drawn a little back from its wall, so the console and its symbol stay in
+## view (GV 7G). Only the drawing shifts; where they stand in the battle does not.
+func _shift_crew_at_consoles(delta: float) -> void:
+	for member in ship.crew + ship.visitors:
+		if member.ship != ship:
+			_stand_backs.erase(member)
+			continue
+		var wanted := Vector2.ZERO
+		var system := _console_at(member)
+		if system:
+			var sheet := CrewArt.sheet_for(member.race, member.subtype)
+			var distance: float = sheet.get("stand_back", TOKEN_STAND_BACK)
+			wanted = -Vector2(ShipDesign.DIRECTIONS[system.wall]) * distance
+		_stand_backs[member] = (_stand_backs.get(member, Vector2.ZERO) as Vector2).move_toward(wanted, STAND_BACK_SPEED * delta)
+
+
+## Where a crew member is drawn on the deck, for pointing at them.
+func drawn_position(member: CrewMember) -> Vector2:
+	return member.position + _stand_backs.get(member, Vector2.ZERO)
+
+
+## The console drawn over a crew member rather than under: one on the wall nearest the player, when the figure is a
+## Facing sprite, who then stands behind it. null for none.
+func _console_in_front_of(member: CrewMember, sheet: Dictionary) -> ShipSystem:
+	if sheet.get("style", "") != "Facing":
+		return null
+	var system := _console_at(member)
+	if system == null or Vector2(ShipDesign.DIRECTIONS[system.wall]).rotated(_screen_turn()).y < 0.5:
+		return null
+	return system
+
+
+## The rooms holding crew of both sides. There every crew member shows a health bar, as in the genre (GV 7G).
+func _contested_rooms() -> Dictionary:
+	var sides := {}
+	for member in ship.crew + ship.visitors:
+		if member.ship == ship and member.is_active():
+			var room := ship.room_at(member.cell)
+			sides[room] = int(sides.get(room, 0)) | (1 << mini(member.side, 1))
+	var contested := {}
+	for room in sides:
+		if sides[room] == 3:
+			contested[room] = true
+	return contested
+
+
 func _draw_crew() -> void:
 	if not interior_visible:
 		return
 	var canvas := _crew_layer
+	var contested := _contested_rooms()
 	for member in ship.crew + ship.visitors:
 		if member.dead or member.in_suit or member.ship != ship:
 			continue
-		var at := member.previous_position.lerp(member.position, alpha)
+		var at: Vector2 = member.previous_position.lerp(member.position, alpha) + _stand_backs.get(member, Vector2.ZERO)
 		var ring := UiColours.POWER_GREEN if member.side == 0 else UiColours.enemy_power(member.home.faction, member.home.race)
 		var sheet := CrewArt.sheet_for(member.race, member.subtype)
+		var bar := member.selected or member.health_fraction() < 0.999 or contested.has(ship.room_at(member.cell))
 		# the glow and sparks of a teleport, for a token and for a sheet with no teleport frames of its own
 		if member.teleporting_ticks > 0 and (sheet.is_empty() or not CrewArt.has_animation(sheet, "teleport")):
 			var t := member.teleporting_ticks / float(Encounter.TELEPORT_TICKS)
@@ -480,13 +588,49 @@ func _draw_crew() -> void:
 				continue
 		if not sheet.is_empty():
 			var facing := _member_facing(member)
-			_draw_upright(canvas, at, func(p: Vector2): _draw_member_sprite(canvas, member, p, ring, sheet, facing))
+			var behind_console := _console_in_front_of(member, sheet) != null
+			_draw_upright(canvas, at, func(p: Vector2):
+				_draw_member_sprite(canvas, member, p, sheet, facing)
+				if bar and not behind_console:
+					_draw_health_bar(canvas, member, p + Vector2(0, CrewArt.feet(sheet, facing) - CrewArt.frame * 0.5 + 2.0)))
 			if member.healing:
 				_draw_heal_sparks(canvas, at, member.name.hash())
 			continue
-		_draw_upright(canvas, at, func(p: Vector2): _draw_member(canvas, member, p, ring))
+		_draw_upright(canvas, at, func(p: Vector2):
+			_draw_member(canvas, member, p, ring)
+			if bar:
+				_draw_health_bar(canvas, member, p + Vector2(0, TOKEN_RADIUS + 3.0)))
 		if member.healing:
 			_draw_heal_sparks(canvas, at, member.name.hash())
+
+
+## Drawn over the crew: the console a Facing sprite stands behind, and that crew member's health bar over it.
+func _draw_over_crew() -> void:
+	if not interior_visible:
+		return
+	var canvas := _over_layer
+	var contested := _contested_rooms()
+	for member in ship.crew + ship.visitors:
+		if member.dead or member.in_suit or member.ship != ship:
+			continue
+		var sheet := CrewArt.sheet_for(member.race, member.subtype)
+		if sheet.is_empty():
+			continue
+		var system := _console_in_front_of(member, sheet)
+		if system == null:
+			continue
+		_draw_console(canvas, system)
+		if member.selected or member.health_fraction() < 0.999 or contested.has(ship.room_at(member.cell)):
+			var at: Vector2 = member.position + _stand_backs.get(member, Vector2.ZERO)
+			var feet := CrewArt.feet(sheet, _member_facing(member))
+			_draw_upright(canvas, at, func(p: Vector2): _draw_health_bar(canvas, member, p + Vector2(0, feet - CrewArt.frame * 0.5 + 2.0)))
+
+
+## A crew member's health bar: its colour says whose they are, its length how they are.
+func _draw_health_bar(canvas: CanvasItem, member: CrewMember, top_middle: Vector2) -> void:
+	var bar := Rect2(top_middle + Vector2(-12, 0), Vector2(24, 4))
+	canvas.draw_rect(bar, Color(0, 0, 0, 0.75))
+	canvas.draw_rect(Rect2(bar.position, Vector2(bar.size.x * member.health_fraction(), bar.size.y)), BAR_OWN if member.side == 0 else BAR_ENEMY)
 
 
 ## Small green crosses drifting up off a crew member a medbay is healing.
@@ -513,7 +657,7 @@ func _member_facing(member: CrewMember) -> String:
 			if system.cell == member.cell:
 				heading = Vector2(ShipDesign.DIRECTIONS.get(system.wall, Vector2i.ZERO))
 	if heading.length() >= 0.05:
-		var on_screen := heading.rotated((PI if ship.facing_down else 0.0) + view_turn)
+		var on_screen := heading.rotated(_screen_turn())
 		var facing := ("right" if on_screen.x > 0.0 else "left") if absf(on_screen.x) > absf(on_screen.y) else ("down" if on_screen.y > 0.0 else "up")
 		_facings[member] = facing
 	return _facings.get(member, "down")
@@ -537,13 +681,11 @@ func _member_animation(member: CrewMember) -> String:
 	return ""
 
 
-## A crew member drawn from their race's sprite sheet (GV 7F). The ring under them shows whose they are, as the
-## token's rim does; a badge is kept only for what the sheet has no animation for.
-func _draw_member_sprite(canvas: CanvasItem, member: CrewMember, at: Vector2, ring: Color, sheet: Dictionary, facing: String) -> void:
+## A crew member drawn from their race's sprite sheet (GV 7F). No ring is drawn under them (GV 7G): a selected one
+## has a thin outline in the selecting player's colour, and the health bar's colour says whose they are. A badge is
+## kept only for what the sheet has no animation for.
+func _draw_member_sprite(canvas: CanvasItem, member: CrewMember, at: Vector2, sheet: Dictionary, facing: String) -> void:
 	var half := CrewArt.frame * 0.5
-	if member.selected:
-		canvas.draw_arc(at, half - 0.5, 0, TAU, 32, Color(member.selection_colour, 0.95), 2.0, true)
-	canvas.draw_arc(at, half - 3.0, 0, TAU, 32, Color(ring, 0.55), 1.4 if member.side == 0 else 2.0, true)
 	var animation := _member_animation(member)
 	var clock := time + (absi(member.name.hash()) % 97) / 97.0       # so a room of crew don't move as one
 	var region: Rect2
@@ -551,7 +693,12 @@ func _draw_member_sprite(canvas: CanvasItem, member: CrewMember, at: Vector2, ri
 		region = CrewArt.region(sheet, "teleport", facing, clock, member.teleporting_ticks / float(Encounter.TELEPORT_TICKS))
 	else:
 		region = CrewArt.region(sheet, animation, facing, clock)
-	canvas.draw_texture_rect_region(sheet.texture, Rect2(at - Vector2(half, half), Vector2(CrewArt.frame, CrewArt.frame)), region)
+	var onto := Rect2(at - Vector2(half, half), Vector2(CrewArt.frame, CrewArt.frame))
+	if member.selected:
+		var shapes := CrewArt.outline(sheet)
+		for step in [Vector2.LEFT, Vector2.RIGHT, Vector2.UP, Vector2.DOWN]:
+			canvas.draw_texture_rect_region(shapes, Rect2(onto.position + step, onto.size), region, member.selection_colour)
+	canvas.draw_texture_rect_region(sheet.texture, onto, region)
 	var particles := CrewArt.particles_at(sheet, animation, facing) if member.teleporting_ticks <= 0 else {}
 	if not particles.is_empty():
 		var start: Vector2 = at - Vector2(half, half) + particles.at
@@ -560,11 +707,6 @@ func _draw_member_sprite(canvas: CanvasItem, member: CrewMember, at: Vector2, ri
 				_draw_tool_sparks(canvas, start, absi(member.name.hash()))
 			"spray":
 				_draw_spray(canvas, start, FACING_STEP[facing], absi(member.name.hash()))
-	var fraction := member.health_fraction()
-	if fraction < 0.999 or member.selected:
-		var bar := Rect2(at + Vector2(-12, half + 1.0), Vector2(24, 4))
-		canvas.draw_rect(bar, Color(0, 0, 0, 0.75))
-		canvas.draw_rect(Rect2(bar.position, Vector2(bar.size.x * fraction, bar.size.y)), UiColours.hull_colour(fraction))
 	var badge := _member_badge(member)
 	# A badge for their task is left off only when the sprite is showing that task now: its animation, this facing.
 	var sprite_shows_task := animation != "" and animation != "walk" and CrewArt.has_pose(sheet, animation, facing)
@@ -622,30 +764,25 @@ func _member_badge(member: CrewMember) -> String:
 
 func _draw_member(canvas: CanvasItem, member: CrewMember, at: Vector2, ring: Color) -> void:
 	if member.selected:
-		canvas.draw_arc(at, TOKEN_RADIUS + 4.0, 0, TAU, 28, Color(member.selection_colour, 0.9), 2.0, true)
-	CrewPortraits.draw_token(canvas, member.race.id, member.name, at, TOKEN_RADIUS, ring, 2.2 if member.side == 0 else 2.6, member.subtype)
-	var fraction := member.health_fraction()
-	if fraction < 0.999 or member.selected:
-		var bar := Rect2(at + Vector2(-12, TOKEN_RADIUS + 3), Vector2(24, 4))
-		canvas.draw_rect(bar, Color(0, 0, 0, 0.75))
-		canvas.draw_rect(Rect2(bar.position, Vector2(bar.size.x * fraction, bar.size.y)), UiColours.hull_colour(fraction))
+		canvas.draw_arc(at, TOKEN_RADIUS + 2.5, 0, TAU, 28, Color(member.selection_colour, 0.9), 1.5, true)
+	CrewPortraits.draw_token(canvas, member.race.id, member.name, at, TOKEN_RADIUS, ring, 1.7 if member.side == 0 else 2.0, member.subtype)
 	var badge := _member_badge(member)
 	if not badge.is_empty():
-		_draw_badge(canvas, at + Vector2(TOKEN_RADIUS * 0.8, -TOKEN_RADIUS * 0.8), badge)
+		_draw_badge(canvas, at + Vector2(TOKEN_RADIUS * 0.8, -TOKEN_RADIUS * 0.8), badge, 0.7)
 
 
-func _draw_badge(canvas: CanvasItem, at: Vector2, badge: String) -> void:
-	canvas.draw_circle(at, 6.5, Color(0.05, 0.07, 0.1, 0.9))
+func _draw_badge(canvas: CanvasItem, at: Vector2, badge: String, size: float = 1.0) -> void:
+	canvas.draw_circle(at, 6.5 * size, Color(0.05, 0.07, 0.1, 0.9))
 	match badge:
 		"repair":
-			canvas.draw_line(at + Vector2(-3, 3), at + Vector2(3, -3), Color("#ffd23d"), 2.0, true)
-			canvas.draw_circle(at + Vector2(3, -3), 2.0, Color("#ffd23d"))
+			canvas.draw_line(at + Vector2(-3, 3) * size, at + Vector2(3, -3) * size, Color("#ffd23d"), 2.0 * size, true)
+			canvas.draw_circle(at + Vector2(3, -3) * size, 2.0 * size, Color("#ffd23d"))
 		"fire":
-			canvas.draw_colored_polygon(PackedVector2Array([at + Vector2(-3, 3), at + Vector2(0, -4), at + Vector2(3, 3)]), Color("#ff7a2a"))
+			canvas.draw_colored_polygon(PackedVector2Array([at + Vector2(-3, 3) * size, at + Vector2(0, -4) * size, at + Vector2(3, 3) * size]), Color("#ff7a2a"))
 		"fight":
-			canvas.draw_line(at + Vector2(-3, -3), at + Vector2(3, 3), Color("#ff5a4d"), 2.0, true)
-			canvas.draw_line(at + Vector2(3, -3), at + Vector2(-3, 3), Color("#ff5a4d"), 2.0, true)
+			canvas.draw_line(at + Vector2(-3, -3) * size, at + Vector2(3, 3) * size, Color("#ff5a4d"), 2.0 * size, true)
+			canvas.draw_line(at + Vector2(3, -3) * size, at + Vector2(-3, 3) * size, Color("#ff5a4d"), 2.0 * size, true)
 		"stun":
-			canvas.draw_arc(at, 3.5, time * 6.0, time * 6.0 + 4.5, 8, Color("#9fd0ff"), 1.6, true)
+			canvas.draw_arc(at, 3.5 * size, time * 6.0, time * 6.0 + 4.5, 8, Color("#9fd0ff"), 1.6 * size, true)
 		"air":
-			canvas.draw_arc(at, 3.5, 0, TAU, 10, Color("#ff6a8a"), 1.6, true)
+			canvas.draw_arc(at, 3.5 * size, 0, TAU, 10, Color("#ff6a8a"), 1.6 * size, true)
