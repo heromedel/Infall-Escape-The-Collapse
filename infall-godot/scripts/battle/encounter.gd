@@ -819,11 +819,12 @@ func _land(member: CrewMember, ship: Ship, room_index: int) -> void:
 	if ship != member.home and not ship.visitors.has(member):
 		ship.visitors.append(member)
 	member.path.clear()
-	var cell := ship.free_cell_in_room(room_index, member.side, member)
+	var cell := ship.landing_cell(room_index, member)
 	member.cell = cell
 	member.destination = cell
 	member.position = ship.design.cell_centre(cell)
 	member.previous_position = member.position
+	member.melee_with = null
 	member.teleporting_ticks = TELEPORT_TICKS
 
 

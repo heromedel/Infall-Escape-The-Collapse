@@ -141,6 +141,10 @@ The Art Style setting shows a token for any race with no sheet in the chosen sty
 - A crew member standing at a console is drawn a few pixels back from its wall so the symbol stays in view
   (`stand_back` on a sheet's `<crew_art>`; drawing only). In the Facing style a console on the wall nearest the
   player is drawn over them.
+- Crew fights (GV 7G): a tile holds one fighter from each side. Whoever walks into a room with foes goes onto a
+  foe's tile and the two punch; a fighter alone on a tile stays put and shoots. A hit lands once a second. Send a
+  crew member onto a foe's tile to punch, or to any other tile to shoot. `tools/crew_fight_test.tscn` checks the
+  rules headless. A sheet's `<particles kind="shot" animation="aim" …/>` is the muzzle its shots leave from.
 - No ring is drawn under a sprite. A health bar's colour says whose crew it is (green ours, red theirs); it shows
   in a room holding both sides, and on anyone hurt or selected. A selected sprite has a thin outline in the
   player's colour. Tokens are about 19 pixels across and keep their rim.

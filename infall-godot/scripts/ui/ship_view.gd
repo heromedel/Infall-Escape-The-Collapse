@@ -8,8 +8,12 @@ const TOKEN_RADIUS := 8.5         # small enough to leave a console's symbol in 
 const TOKEN_STAND_BACK := 8.0     # pixels a token is drawn back from a console's wall
 const CREW_PICK_RADIUS := 13.0    # how near the pointer must be to a crew member to mean them
 const STAND_BACK_SPEED := 45.0    # pixels a second a crew member shifts back from a console, or forward again
+const PAIR_APART := {"Top Down": 7.0, "Facing": 8.5}   # pixels each of two fighters on a tile is drawn from its
+const PAIR_APART_TOKENS := 9.0                         # middle, up and down the screen
+const SHOT_LENGTH := 7.0          # a crew member's shot: a small bolt, a fifth of a ship laser's
 const BAR_OWN := Color("#58e06a")     # a crew health bar's colour says whose they are, as in the genre (GV 7G)
 const BAR_ENEMY := Color("#ff4a3d")
+const HIT_RED := Color("#e0362b")
 const FACING_STEP := {"down": Vector2.DOWN, "right": Vector2.RIGHT, "up": Vector2.UP, "left": Vector2.LEFT}   # on the sheet
 const SPRAY_DROPLETS := 10
 const SPRAY_REACH := 8.0          # sprite pixels a droplet travels from the nozzle
@@ -36,7 +40,8 @@ var _floor_layer := Node2D.new()
 var _crew_layer := Node2D.new()
 var _over_layer := Node2D.new()     # what is drawn over the crew: a console a Facing sprite stands behind
 var _facings: Dictionary = {}       # crew member -> the way they last faced on the screen (GV 7F)
-var _stand_backs: Dictionary = {}   # crew member -> how far they are drawn from where they stand, at a console
+var _shifts: Dictionary = {}        # crew member -> how far they are drawn from where they stand: back from a
+									# console, or apart from the foe on their tile
 var _shield_layer := Node2D.new()
 var _shield_rect := ColorRect.new()
 var _shield_material: ShaderMaterial
@@ -131,7 +136,7 @@ func _process(delta: float) -> void:
 		modulate.a = 0.45
 	visible = fade > 0.0
 	_weapons_layer.queue_redraw()
-	_shift_crew_at_consoles(delta)
+	_shift_crew(delta)
 	_floor_layer.queue_redraw()
 	_crew_layer.queue_redraw()
 	_over_layer.queue_redraw()
@@ -519,25 +524,44 @@ func _console_at(member: CrewMember) -> ShipSystem:
 	return null
 
 
-## A crew member standing at a console is drawn a little back from its wall, so the console and its symbol stay in
-## view (GV 7G). Only the drawing shifts; where they stand in the battle does not.
-func _shift_crew_at_consoles(delta: float) -> void:
+## The foe a crew member shares a tile with and punches (GV 7G), or null.
+func _melee_foe(member: CrewMember) -> CrewMember:
+	var foe := member.melee_with
+	if foe == null or member.task != "fighting" or not foe.is_active() or foe.ship != ship or foe.cell != member.cell or foe.is_moving():
+		return null
+	return foe
+
+
+## Whether a fighter sharing a tile is the one drawn in its upper half, facing the camera: the other side's. The
+## player's own is drawn in the lower half with their back to the camera, as the genre draws a boarding fight.
+func _upper_of_pair(member: CrewMember) -> bool:
+	return member.side != 0
+
+
+## Where crew are drawn off the middle of their tile (GV 7G), eased so nobody jumps. Two fighters sharing a tile are
+## drawn apart, one above the other on the screen. A crew member standing at a console is drawn a little back from
+## its wall, so the console and its symbol stay in view. Only the drawing shifts; where they stand in the battle
+## does not.
+func _shift_crew(delta: float) -> void:
 	for member in ship.crew + ship.visitors:
 		if member.ship != ship:
-			_stand_backs.erase(member)
+			_shifts.erase(member)
 			continue
 		var wanted := Vector2.ZERO
 		var system := _console_at(member)
-		if system:
+		if _melee_foe(member):
+			var apart: float = PAIR_APART.get(CrewArt.sheet_for(member.race, member.subtype).get("style", ""), PAIR_APART_TOKENS)
+			wanted = (Vector2.UP if _upper_of_pair(member) else Vector2.DOWN).rotated(-_screen_turn()) * apart
+		elif system:
 			var sheet := CrewArt.sheet_for(member.race, member.subtype)
 			var distance: float = sheet.get("stand_back", TOKEN_STAND_BACK)
 			wanted = -Vector2(ShipDesign.DIRECTIONS[system.wall]) * distance
-		_stand_backs[member] = (_stand_backs.get(member, Vector2.ZERO) as Vector2).move_toward(wanted, STAND_BACK_SPEED * delta)
+		_shifts[member] = (_shifts.get(member, Vector2.ZERO) as Vector2).move_toward(wanted, STAND_BACK_SPEED * delta)
 
 
 ## Where a crew member is drawn on the deck, for pointing at them.
 func drawn_position(member: CrewMember) -> Vector2:
-	return member.position + _stand_backs.get(member, Vector2.ZERO)
+	return member.position + _shifts.get(member, Vector2.ZERO)
 
 
 ## The console drawn over a crew member rather than under: one on the wall nearest the player, when the figure is a
@@ -546,7 +570,7 @@ func _console_in_front_of(member: CrewMember, sheet: Dictionary) -> ShipSystem:
 	if sheet.get("style", "") != "Facing":
 		return null
 	var system := _console_at(member)
-	if system == null or Vector2(ShipDesign.DIRECTIONS[system.wall]).rotated(_screen_turn()).y < 0.5:
+	if system == null or _melee_foe(member) or Vector2(ShipDesign.DIRECTIONS[system.wall]).rotated(_screen_turn()).y < 0.5:
 		return null
 	return system
 
@@ -565,18 +589,32 @@ func _contested_rooms() -> Dictionary:
 	return contested
 
 
+## Where a crew member is drawn on the deck this frame.
+func _drawn_at(member: CrewMember) -> Vector2:
+	return member.previous_position.lerp(member.position, alpha) + _shifts.get(member, Vector2.ZERO)
+
+
+## The colour of a crew member's side: the player's power green, or their own ship's power colour.
+func _crew_colour(member: CrewMember) -> Color:
+	return UiColours.POWER_GREEN if member.side == 0 else UiColours.enemy_power(member.home.faction, member.home.race)
+
+
+## The crew to draw, those further up the screen first, so one standing lower overlaps one standing behind.
+func _crew_to_draw() -> Array:
+	var turn := _screen_turn()
+	var found: Array = (ship.crew + ship.visitors).filter(func(member: CrewMember):
+		return not member.dead and not member.in_suit and member.ship == ship)
+	found.sort_custom(func(a: CrewMember, b: CrewMember): return _drawn_at(a).rotated(turn).y < _drawn_at(b).rotated(turn).y)
+	return found
+
+
 func _draw_crew() -> void:
 	if not interior_visible:
 		return
 	var canvas := _crew_layer
-	var contested := _contested_rooms()
-	for member in ship.crew + ship.visitors:
-		if member.dead or member.in_suit or member.ship != ship:
-			continue
-		var at: Vector2 = member.previous_position.lerp(member.position, alpha) + _stand_backs.get(member, Vector2.ZERO)
-		var ring := UiColours.POWER_GREEN if member.side == 0 else UiColours.enemy_power(member.home.faction, member.home.race)
+	for member: CrewMember in _crew_to_draw():
+		var at := _drawn_at(member)
 		var sheet := CrewArt.sheet_for(member.race, member.subtype)
-		var bar := member.selected or member.health_fraction() < 0.999 or contested.has(ship.room_at(member.cell))
 		# the glow and sparks of a teleport, for a token and for a sheet with no teleport frames of its own
 		if member.teleporting_ticks > 0 and (sheet.is_empty() or not CrewArt.has_animation(sheet, "teleport")):
 			var t := member.teleporting_ticks / float(Encounter.TELEPORT_TICKS)
@@ -586,44 +624,51 @@ func _draw_crew() -> void:
 				canvas.draw_circle(spark, 1.6, Color(0.85, 0.95, 1.0, t))
 			if t > 0.5:
 				continue
-		if not sheet.is_empty():
+		if sheet.is_empty():
+			_draw_upright(canvas, at, func(p: Vector2): _draw_member(canvas, member, p, _crew_colour(member)))
+		else:
 			var facing := _member_facing(member)
-			var behind_console := _console_in_front_of(member, sheet) != null
-			_draw_upright(canvas, at, func(p: Vector2):
-				_draw_member_sprite(canvas, member, p, sheet, facing)
-				if bar and not behind_console:
-					_draw_health_bar(canvas, member, p + Vector2(0, CrewArt.feet(sheet, facing) - CrewArt.frame * 0.5 + 2.0)))
-			if member.healing:
-				_draw_heal_sparks(canvas, at, member.name.hash())
-			continue
-		_draw_upright(canvas, at, func(p: Vector2):
-			_draw_member(canvas, member, p, ring)
-			if bar:
-				_draw_health_bar(canvas, member, p + Vector2(0, TOKEN_RADIUS + 3.0)))
+			_draw_upright(canvas, at, func(p: Vector2): _draw_member_sprite(canvas, member, p, sheet, facing))
 		if member.healing:
 			_draw_heal_sparks(canvas, at, member.name.hash())
 
 
-## Drawn over the crew: the console a Facing sprite stands behind, and that crew member's health bar over it.
+## Drawn over the crew: a console a Facing sprite stands behind, the shots crew fire at each other, the mark of a
+## hit, and the health bars.
 func _draw_over_crew() -> void:
 	if not interior_visible:
 		return
 	var canvas := _over_layer
 	var contested := _contested_rooms()
-	for member in ship.crew + ship.visitors:
-		if member.dead or member.in_suit or member.ship != ship:
-			continue
+	var crew := _crew_to_draw()
+	for member: CrewMember in crew:
 		var sheet := CrewArt.sheet_for(member.race, member.subtype)
-		if sheet.is_empty():
-			continue
 		var system := _console_in_front_of(member, sheet)
-		if system == null:
+		if system:
+			_draw_console(canvas, system)
+	for member: CrewMember in crew:
+		if member.shot_ticks > 0 and member.shot_at and member.shot_at.ship == ship and member.teleporting_ticks <= 0:
+			_draw_crew_shot(canvas, member)
+	for member: CrewMember in crew:
+		if member.teleporting_ticks > 0:
 			continue
-		_draw_console(canvas, system)
+		var at := _drawn_at(member)
+		if member.hit_ticks > 0:
+			_draw_upright(canvas, at, func(p: Vector2): _draw_hit_mark(canvas, member, p))
 		if member.selected or member.health_fraction() < 0.999 or contested.has(ship.room_at(member.cell)):
-			var at: Vector2 = member.position + _stand_backs.get(member, Vector2.ZERO)
-			var feet := CrewArt.feet(sheet, _member_facing(member))
-			_draw_upright(canvas, at, func(p: Vector2): _draw_health_bar(canvas, member, p + Vector2(0, feet - CrewArt.frame * 0.5 + 2.0)))
+			var below := _bar_from_middle(member)
+			_draw_upright(canvas, at, func(p: Vector2): _draw_health_bar(canvas, member, p + Vector2(0, below)))
+
+
+## How far below the middle of a crew member their health bar's top goes: just under their feet, or for the upper
+## of two fighters on a tile just over their head, clear of the one below.
+func _bar_from_middle(member: CrewMember) -> float:
+	var above := _melee_foe(member) != null and _upper_of_pair(member)
+	var sheet := CrewArt.sheet_for(member.race, member.subtype)
+	if sheet.is_empty():
+		return -(TOKEN_RADIUS + 7.0) if above else TOKEN_RADIUS + 3.0
+	var figure := CrewArt.span(sheet, _facings.get(member, "down"))
+	return (figure.x - 6.0 if above else figure.y + 2.0) - CrewArt.frame * 0.5
 
 
 ## A crew member's health bar: its colour says whose they are, its length how they are.
@@ -631,6 +676,44 @@ func _draw_health_bar(canvas: CanvasItem, member: CrewMember, top_middle: Vector
 	var bar := Rect2(top_middle + Vector2(-12, 0), Vector2(24, 4))
 	canvas.draw_rect(bar, Color(0, 0, 0, 0.75))
 	canvas.draw_rect(Rect2(bar.position, Vector2(bar.size.x * member.health_fraction(), bar.size.y)), BAR_OWN if member.side == 0 else BAR_ENEMY)
+
+
+## A crew member's shot on its way (GV 7G): a ship laser's bolt made small, in their side's colour, from about the
+## muzzle of the gun their sheet aims to the one it was fired at.
+func _draw_crew_shot(canvas: CanvasItem, member: CrewMember) -> void:
+	var from := _drawn_at(member)
+	var sheet := CrewArt.sheet_for(member.race, member.subtype)
+	if not sheet.is_empty():
+		var muzzle := CrewArt.particles_at(sheet, "aim", _facings.get(member, "down"))
+		if not muzzle.is_empty():
+			from += (muzzle.at - Vector2(CrewArt.frame, CrewArt.frame) * 0.5).rotated(-_screen_turn())
+	var to := _drawn_at(member.shot_at)
+	var flown := clampf(1.0 - (member.shot_ticks - alpha) / float(maxi(1, member.shot_flight)), 0.0, 1.0)
+	var head := from.lerp(to, flown)
+	var tail := head - (to - from).normalized() * minf(SHOT_LENGTH, from.distance_to(head))
+	var colour := _crew_colour(member)
+	canvas.draw_line(tail, head, Color(colour, 0.3), 3.2, true)
+	canvas.draw_line(tail.lerp(head, 0.3), head, Color(colour, 0.85), 1.8, true)
+	canvas.draw_line(tail.lerp(head, 0.55), head, Color(colour.lightened(0.6), 0.95), 1.0, true)
+	canvas.draw_circle(head, 1.1, Color(1, 1, 1, 0.9))
+
+
+## The mark of a punch or a shot landing: a white flash with a red cross for a tenth of a second, then red flecks
+## that fade.
+func _draw_hit_mark(canvas: CanvasItem, member: CrewMember, at: Vector2) -> void:
+	var age := CrewBrain.HIT_MARK_TICKS - member.hit_ticks + alpha
+	if age < 2.0:
+		canvas.draw_circle(at, 5.0, Color(1, 1, 1, 0.95))
+		canvas.draw_rect(Rect2(at - Vector2(3.5, 1), Vector2(7, 2)), HIT_RED)
+		canvas.draw_rect(Rect2(at - Vector2(1, 3.5), Vector2(2, 7)), HIT_RED)
+		return
+	var fade := clampf(1.0 - (age - 2.0) / (CrewBrain.HIT_MARK_TICKS - 2.0), 0.0, 1.0)
+	var seed := absi(member.name.hash())
+	for index in 5:
+		var roll := absi(hash(seed * 53 + index * 37))
+		var fleck := Vector2(roll % 9 - 4, (roll / 9) % 9 - 4)
+		var size := 1.0 + (roll / 81) % 2
+		canvas.draw_rect(Rect2((at + fleck).floor(), Vector2(size, size)), Color(HIT_RED, fade * 0.9))
 
 
 ## Small green crosses drifting up off a crew member a medbay is healing.
@@ -651,7 +734,14 @@ func _draw_heal_sparks(canvas: CanvasItem, at: Vector2, seed: int) -> void:
 ## Which way a crew member faces on the screen (GV 7F): the way they last moved, or toward the wall their console
 ## is on. Ships fly turned round and the view can be turned, so it is worked out on the screen, not on the deck.
 func _member_facing(member: CrewMember) -> String:
+	if _melee_foe(member):
+		_facings[member] = "down" if _upper_of_pair(member) else "up"
+		return _facings[member]
 	var heading := member.position - member.previous_position
+	if heading.length() < 0.05 and member.task == "fighting":
+		var foe := _shooting_at(member)
+		if foe:
+			heading = foe.position - member.position
 	if heading.length() < 0.05 and member.task == "manning":
 		for system in ship.systems:
 			if system.cell == member.cell:
@@ -661,6 +751,19 @@ func _member_facing(member: CrewMember) -> String:
 		var facing := ("right" if on_screen.x > 0.0 else "left") if absf(on_screen.x) > absf(on_screen.y) else ("down" if on_screen.y > 0.0 else "up")
 		_facings[member] = facing
 	return _facings.get(member, "down")
+
+
+## The foe a fighter with nobody on their tile faces: the one they last shot at, or before their first shot the
+## nearest in the room.
+func _shooting_at(member: CrewMember) -> CrewMember:
+	var target := member.aim_at
+	if target and target.is_active() and target.ship == ship:
+		return target
+	var nearest: CrewMember = null
+	for foe in ship.crew_in_room(ship.room_at(member.cell), 1 - member.side):
+		if nearest == null or member.position.distance_squared_to(foe.position) < member.position.distance_squared_to(nearest.position):
+			nearest = foe
+	return nearest
 
 
 ## The animation a crew member's task calls for; "" is standing.
@@ -675,7 +778,7 @@ func _member_animation(member: CrewMember) -> String:
 		"extinguishing":
 			return "fire"
 		"fighting":
-			return "aim"
+			return "punch" if _melee_foe(member) else "aim"
 		"breaking", "sabotaging":
 			return "punch"
 	return ""
@@ -691,6 +794,10 @@ func _draw_member_sprite(canvas: CanvasItem, member: CrewMember, at: Vector2, sh
 	var region: Rect2
 	if member.teleporting_ticks > 0 and CrewArt.has_animation(sheet, "teleport"):
 		region = CrewArt.region(sheet, "teleport", facing, clock, member.teleporting_ticks / float(Encounter.TELEPORT_TICKS))
+	elif member.task == "fighting":
+		# a punch is timed to land as the hit does; a fighter who shoots holds one steady aim
+		var through := 1.0 - (member.attack_cooldown - alpha) / float(CrewBrain.HIT_TICKS)
+		region = CrewArt.region(sheet, animation, facing, clock, clampf(through, 0.0, 0.999) if animation == "punch" else 0.0)
 	else:
 		region = CrewArt.region(sheet, animation, facing, clock)
 	var onto := Rect2(at - Vector2(half, half), Vector2(CrewArt.frame, CrewArt.frame))

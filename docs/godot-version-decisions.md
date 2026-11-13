@@ -210,14 +210,33 @@ anything Claude added tagged Ai-Generated-Proposal.
     - How it is built: the race's `race.xml` lists each part (`<skin_part>`: the sheet's own colour codes for it
       and the colours it can take) and the planned subtypes (`<subtype wears="…"/>`). The sheet is kept as an SVG,
       and the game changes its colour codes and draws it, once for each subtype worn (`CrewSkins`, `CrewArt`).
-- **G — Proposed (heromedel, 2026-11-12):** crew fights as the genre has them (`docs/reference/genre-crew-fights/`),
-  and how crew and consoles share a tile. The fights are not built; the tile sharing is (2026-11-13).
-  - **Likely (heromedel, 2026-11-12):** fighters walk onto an enemy's tile and pair up, one from each side to a
-    tile. The two on a tile punch; a fighter with nobody on his tile aims and fires, and a small bolt flies from
-    about the gun to the target.
-  - **Proposed (heromedel, 2026-11-12):** if a player moves a paired crew member to another tile, the enemy, if
-    still willing to fight, follows to go on with the melee. The genre had no need of this: it has no
+- **G — Likely (heromedel, 2026-11-12), built 2026-11-13:** crew fights as the genre has them
+  (`docs/reference/genre-crew-fights/`), and how crew and consoles share a tile.
+  - **Likely (heromedel, 2026-11-12), built:** a tile holds one fighter from each side. Whoever walks into a
+    room with foes in it goes onto a foe's tile and pairs up; the two on a tile punch. A fighter with nobody on
+    their tile stays where they are, aims and fires, and a small bolt flies from about the gun to the target.
+    Those already standing in the room do not move.
+  - **Proposed (heromedel, 2026-11-12), built:** if a player moves a paired crew member to another tile, the
+    enemy, if still willing to fight, follows to go on with the melee. The genre had no need of this: it has no
     tile-to-tile orders.
+  - How it is built (`CrewBrain`, `ShipView`; `tools/crew_fight_test` checks the rules). Each line here is an
+    **Ai-Generated-Proposal** where the recordings or heromedel did not settle it:
+    - A punch or a shot lands once a second and does the same damage, 5.6 health at melee 1.0, so a second of
+      fighting costs what it did before hits were counted. Whether the genre's shot and punch differ is not
+      known.
+    - A walker takes the nearest foe's tile that none of their own side holds. A player chooses by the tile
+      they order: onto a foe's tile to punch, any other tile to shoot.
+    - Crew beamed in land on a tile with no foe on it when there is one, so they start by shooting, as in the
+      recordings.
+    - A shooter picks a foe in the room at random for each shot. The bolt takes a quarter of a second a tile
+      and always lands.
+    - Following: only crew no player commands follow, and only inside the room. A player's own crew wait for
+      orders.
+    - Drawing: the two on a tile are drawn apart, the other side's above and facing the camera, the player's
+      below with their back to it. The punch is timed to land with the hit. The bolt is a ship laser's made
+      small, in the shooter's side's colour, leaving from the muzzle point each sheet gives
+      (`<particles kind="shot" animation="aim" …/>`). A hit shows a white flash with a red cross, then red
+      flecks that fade. Crew are drawn from the back of the screen forward, and health bars over everything.
   - **Decided (heromedel, 2026-11-12):** no extra outlines round a crew member. The second ring drawn when
     someone mans a system goes: the console's art and its powered symbol are enough, and a crew member standing
     there is plainly manning it.
@@ -427,3 +446,4 @@ All built in the build of 2026-11-05.
 | 2026-11-11 | Crew subtypes: a Tentauri's bell and tentacle colours, planned pairs first, then unused combinations, one of each to a squad (GV 7F). |
 | 2026-11-13 | Consoles drawn from the art sessions' art with the symbol on them, crew drawn back from the wall, no ring under sprites, health bars coloured by side, a thin outline for a selected sprite, smaller tokens (GV 7G); built the same day. |
 | 2026-11-13 | The Tabby's full Facing sheet is in the game, in place of the four standing views. |
+| 2026-11-13 | Crew fights as the genre has them: pairing on a tile, punches, shots, hit marks, and the enemy following a moved crew member (GV 7G); built the same day. |

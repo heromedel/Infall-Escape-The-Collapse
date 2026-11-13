@@ -9,9 +9,11 @@
 	<crew_art style="Top Down" sheet="crew-top-down.png" layout="mecha-top-down" stand_back="4">
 		<particles kind="sparks" animation="repair" any="27,25"/>
 		<particles kind="spray" animation="fire" down="9,26" right="27,25" up="24,5"/>
+		<particles kind="shot" animation="aim" down="9,26" right="27,25" up="24,6"/>
 	</crew_art>
 	<crew_art style="Facing" sheet="crew-facing.png" layout="eight-wide">
 		<particles kind="sparks" animation="repair" any="26,30"/>
 		<particles kind="spray" animation="fire" down="6,27" right="27,19" up="23,8"/>
+		<particles kind="shot" animation="aim" down="28,12" right="22,14" up="28,10"/>
 	</crew_art>
 </race>

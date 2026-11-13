@@ -10,6 +10,7 @@ extends RefCounted
 ##          sets how many power-hungry systems run at once
 ##   none - Mecha: each system carries its own bars, and an integrated Mecha adds one
 
+const NO_CELL := Vector2i(999, 999)   # no tile: where a crew member who has been sent nowhere is heading
 const TICKS := 20
 const EVASION_BY_ENGINE_POWER := [0, 5, 10, 15, 20, 25, 28, 31, 35]
 const SHIELD_LAYER_TICKS := 40      # 2 s to raise a layer
@@ -341,6 +342,41 @@ func cell_is_claimed(cell: Vector2i, of_side: int, ignore: CrewMember = null) ->
 		if member.destination == cell or (member.path.is_empty() and member.cell == cell):
 			return true
 	return false
+
+
+## The crew member of a side who stands on a tile (not one walking over it), or null.
+func standing_on(cell: Vector2i, of_side: int) -> CrewMember:
+	for member in _everyone_aboard():
+		if member.side == of_side and member.cell == cell and member.path.is_empty():
+			return member
+	return null
+
+
+## The tile a crew member walking into a room goes to for a fight (GV 7G): one where a foe stands and nobody of
+## their own side does or is heading, the nearest to them. NO_CELL when there is none.
+func pairing_cell(room_index: int, member: CrewMember) -> Vector2i:
+	var best := NO_CELL
+	var nearest := INF
+	for cell in rooms[room_index].cells:
+		if standing_on(cell, 1 - member.side) == null or cell_is_claimed(cell, member.side, member):
+			continue
+		var distance := Vector2(cell - member.cell).length_squared()
+		if distance < nearest:
+			nearest = distance
+			best = cell
+	return best
+
+
+## The tile a crew member beamed into a room lands on: a free one with no foe on it when there is one, since those
+## who arrive by teleporter stand apart and shoot (GV 7G).
+func landing_cell(room_index: int, member: CrewMember) -> Vector2i:
+	var wanted := free_cell_in_room(room_index, member.side, member)
+	if standing_on(wanted, 1 - member.side) == null:
+		return wanted
+	for cell in rooms[room_index].cells:
+		if not cell_is_claimed(cell, member.side, member) and standing_on(cell, 1 - member.side) == null:
+			return cell
+	return wanted
 
 
 ## A free tile in a room for a crew member of a side: a system console first, then any tile.

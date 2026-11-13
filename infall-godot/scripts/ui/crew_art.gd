@@ -16,7 +16,7 @@ static var _layouts: Dictionary = {}     # layout id -> {animation id -> {"ms": 
 static var _loaded := false
 static var _recoloured: Dictionary = {}  # "sheet path subtype" -> an SVG sheet's picture in that subtype's colours
 static var _outlines: Dictionary = {}    # a sheet's picture -> the same shapes in plain white, for a selection outline
-static var _feet: Dictionary = {}        # a sheet's picture -> {facing -> how far down its frame the standing figure reaches}
+static var _spans: Dictionary = {}       # a sheet's picture -> {facing -> where down its frame the standing figure starts and ends}
 
 
 static func style() -> String:
@@ -96,17 +96,17 @@ static func outline(sheet: Dictionary) -> Texture2D:
 	return _outlines[texture]
 
 
-## How far down its frame the figure reaches when standing and facing this way, in pixels: where the deck is under
-## it, so a health bar can sit just below whatever the figure's height.
-static func feet(sheet: Dictionary, facing: String) -> float:
+## How far down its frame the standing figure starts and ends when facing this way, in pixels (x its top, y its
+## feet): where its head and the deck under it are, so a health bar can sit just clear of it whatever its height.
+static func span(sheet: Dictionary, facing: String) -> Vector2:
 	var texture: Texture2D = sheet.texture
-	if not _feet.has(texture):
-		_feet[texture] = {}
-	var known: Dictionary = _feet[texture]
+	if not _spans.has(texture):
+		_spans[texture] = {}
+	var known: Dictionary = _spans[texture]
 	if not known.has(facing):
 		var standing := texture.get_image().get_region(Rect2i(region(sheet, "walk", facing, 0.0)))
 		var drawn := standing.get_used_rect()
-		known[facing] = float(drawn.end.y) if drawn.has_area() else frame
+		known[facing] = Vector2(drawn.position.y, drawn.end.y) if drawn.has_area() else Vector2(0.0, frame)
 	return known[facing]
 
 

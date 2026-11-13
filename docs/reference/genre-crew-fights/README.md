@@ -59,9 +59,9 @@ recording's own clock.
 
 ## How Infall differs now
 
-Everyone in a room with an enemy damages the nearest enemy every tick from wherever they stand, nobody walks onto
-an enemy's tile, every fighter plays the aiming pose, and no shot or hit mark is drawn
-(`infall-godot/scripts/battle/crew_brain.gd`, `scripts/ui/ship_view.gd`).
+From 2026-11-13 Infall fights this way too (GV 7G lists the rules and which of them are guesses). Before that
+everyone in a room with an enemy damaged the nearest enemy every tick from wherever they stood, nobody walked onto
+an enemy's tile, every fighter played the aiming pose, and no shot or hit mark was drawn.
 
 ## Crew in a tile: the genre beside Infall (2026-11-12)
 

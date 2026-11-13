@@ -1,6 +1,6 @@
 extends Node
 ## Shows a fight and saves screenshots. Environment: E (enemy ship ids, comma separated), SHOTS (seconds,
-## comma separated), OUT (folder), P (player ship ids), ART_STYLE and SPECIES (those settings), BREAK (a system id to break, so the crew repair it), ZOOM and ZOOM_ROOM (how close, and the room to look at), BOARD (an enemy crew member boards the player's first room). Run with a display: xvfb-run godot --path . tools/battle_view_test.tscn
+## comma separated), OUT (folder), P (player ship ids), ART_STYLE and SPECIES (those settings), BREAK (a system id to break, so the crew repair it), ZOOM and ZOOM_ROOM (how close, and the room to look at), BOARD (how many enemy crew board the player's first room) and JOIN (the player's last crew member walks in to fight them). Run with a display: xvfb-run godot --path . tools/battle_view_test.tscn
 
 var battle: BattleScreen
 var screen: PlayerView
@@ -75,8 +75,12 @@ func _ready() -> void:
 		if broken:
 			broken.damage = broken.level
 	if OS.get_environment("BOARD") != "" and not enemies.is_empty():
-		# an enemy crew member beamed into the player's first room, for a boarding fight
-		encounter._land((enemies[0] as Ship).crew[0], players[0], 0)
+		# enemy crew beamed into the player's first room, for a boarding fight: BOARD is how many. With JOIN, the
+		# player's last crew member is sent to that room, to walk in and pair with one of them
+		for index in mini(int(OS.get_environment("BOARD")), (enemies[0] as Ship).crew.size()):
+			encounter._land((enemies[0] as Ship).crew[index], players[0], 0)
+		if OS.get_environment("JOIN") != "":
+			CrewBrain.order_to_room((players[0] as Ship).crew.back(), 0)
 	if OS.get_environment("ZOOM") != "":
 		zoom_ship = enemies[0] if OS.get_environment("ZOOM_ENEMY") != "" and not enemies.is_empty() else players[0]
 	if OS.get_environment("SELECT") != "":

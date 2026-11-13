@@ -10,6 +10,7 @@
 		<!-- Where the game starts this sheet's particles (see the Terrans' race.xml). -->
 		<particles kind="sparks" animation="repair" any="31,22"/>
 		<particles kind="spray" animation="fire" down="9,25" right="30,20" up="17,3"/>
+		<particles kind="shot" animation="aim" down="9,22" right="32,13" up="30,5"/>
 	</crew_art>
 	<!-- The token is a circle cut from one frame (row, column) of the crew member's own sheet in that style:
 	     its centre and radius in the frame's pixels. -->
