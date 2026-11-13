@@ -148,10 +148,11 @@ anything Claude added tagged Ai-Generated-Proposal.
 - **B — Built (2026-11-13), GDD 5B (Decided):** buying a system is held to the placement rules Ship Designs gave:
   a tile of its own; a Medbay (or any system that heals) only with systems crew can't man, Doors and Sensors
   counted as manned. The room picker says why a room is refused.
-  - **Decided (heromedel, 2026-11-13; GDD 5D):** an EVA or EVB Dock sits on a tile that has an airlock. A bought
-    dock is put on such a tile, and a room without a free one is refused. The four ship files with an EVB Dock
-    (the Assault Frame and its Siege loadout, the Light Attack Frame's two suit dock loadouts) have it in a room
-    with an airlock but not on the airlock's tile: for heromedel and Ship Designs to move.
+  - **Decided (heromedel, 2026-11-13; GDD 5D):** an EVA or EVB Dock sits at an airlock: on a tile that has one,
+    or in a room that has an airlock with no system on its tile. A bought dock is put on the airlock's tile, and a
+    room without such an airlock is refused. The content check holds every ship file to it; the four with an EVB
+    Dock (the Assault Frame and its Siege loadout, the Light Attack Frame's two suit dock loadouts) have the dock
+    on the tile next to a clear airlock, so they pass.
 - **C — Built (2026-11-13):** the docs' own ships from `ship-suggestions.md`: the Pirate Pickpocket and the
   Lykario Scrap Hound (loadouts), the Malphen Polyp with its flak loadout, the Azurethea Vein Moth, and the
   weapons Flesh Mortar, Bone Flak and Lantern. The docs' Relay Picket and the Senti crew killers wait for the AAA.

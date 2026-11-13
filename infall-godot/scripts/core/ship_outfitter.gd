@@ -35,12 +35,12 @@ static func unfit_weapon(ship: Ship, slot: WeaponSlot) -> void:
 	ship.weapons.erase(slot)
 
 
-const DOCKS := ["evb_dock", "eva_dock"]     # systems whose crew leave the ship in a suit, by the airlock on their tile
+const DOCKS := ["evb_dock", "eva_dock"]     # systems whose crew leave the ship in a suit, by an airlock beside them
 
 ## Why a system may not be installed in a room, or "" when it may (Ship Designs' placement rules for a purchase):
 ## - a system needs a tile of its own;
 ## - a Medbay shares a room only with systems crew can't man, so nobody heals while manning one (GDD 5B);
-## - an EVA or EVB Dock sits on a tile that has an airlock: the crew member suits up there and goes out it (GDD 5D).
+## - an EVA or EVB Dock sits at an airlock, for the crew member suits up there and goes out it (GDD 5D).
 static func install_refusal(ship: Ship, def: SystemDef, room_index: int) -> String:
 	if room_index < 0 or room_index >= ship.rooms.size() or _free_console_cell(ship, room_index) == Vector2i(999, 999):
 		return "No free tile in that room."
@@ -51,11 +51,17 @@ static func install_refusal(ship: Ship, def: SystemDef, room_index: int) -> Stri
 		if def.manned and system.behaviour == "medbay":
 			return "This room has %s, and crew can't heal while they man a system, so %s can't go here." % [_with_article(system.def.name), def.name]
 	if def.behaviour in DOCKS and _free_airlock_cell(ship, room_index) == Vector2i(999, 999):
-		return "%s goes on a tile with an airlock, and this room has none free." % _with_article(def.name).capitalize()
+		return "%s goes at an airlock with no system on its tile, and this room has none." % _with_article(def.name).capitalize()
 	return ""
 
 
-## A tile of the room that has an airlock and no system on it, for a dock; (999, 999) when there is none.
+## Whether a ship's dock obeys GDD 5D: its own tile has an airlock, or its room has an airlock with no system on its tile.
+static func dock_has_its_airlock(ship: Ship, dock: ShipSystem) -> bool:
+	return ship.doors.any(func(door: ShipDoor): return door.to_space and door.cell_a == dock.cell) \
+			or _free_airlock_cell(ship, dock.room) != Vector2i(999, 999)
+
+
+## A tile of the room that has an airlock and no system on it; (999, 999) when there is none. A bought dock goes on it.
 static func _free_airlock_cell(ship: Ship, room_index: int) -> Vector2i:
 	var used := {}
 	for system in ship.systems:
