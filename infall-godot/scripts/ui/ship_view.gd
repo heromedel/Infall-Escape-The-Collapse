@@ -28,6 +28,7 @@ var encounter: Encounter
 var alpha: float = 0.0             # how far between the last tick and the next, for smooth movement
 var selected: bool = false         # the player's selected ship: conduits glow
 var interior_visible: bool = true  # sensors decide whether the player sees inside enemy ships
+var life_signs_visible: bool = false   # Animal Senses: the crew aboard are seen even when the inside is not
 var hover_room: int = -1
 var highlight_rooms: Dictionary = {}   # room -> Color (aiming, moving crew)
 var highlight_tiles: Dictionary = {}   # tile -> Color (the tile a shot or an order would go to)
@@ -667,7 +668,7 @@ func _crew_to_draw() -> Array:
 
 
 func _draw_crew() -> void:
-	if not interior_visible:
+	if not interior_visible and not life_signs_visible:
 		return
 	var canvas := _crew_layer
 	for fall in _fallen:

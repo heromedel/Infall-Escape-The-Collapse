@@ -81,12 +81,14 @@ func _process(_delta: float) -> void:
 	if not player_views.is_empty():
 		effects.zoom = player_views[0].camera.zoom.x
 	var player_sees := _player_sees_inside()
+	var senses := _player_senses_life()
 	var several := player_views.size() > 1
 	for ship in views:
 		var view: ShipView = views[ship]
 		view.alpha = alpha
 		view.selected = player_views.any(func(p): return p.selected_ship == ship)
 		view.interior_visible = ship.side == 0 or player_sees or _player_crew_aboard(ship)
+		view.life_signs_visible = ship.side != 0 and senses
 		view.target_marks.clear()
 		view.beam_marks.clear()
 	# Every player ship's weapon targets, seen by everyone
@@ -141,6 +143,17 @@ func _player_sees_inside() -> bool:
 	for ship in encounter.living(0):
 		if ship.sensor_level() >= 2:
 			return true
+	return false
+
+
+## Whether the player's squad has someone with Animal Senses (race profiles, Lykario 9): they sense Life Signs on
+## other ships without ship sensors, and in hazards that blind sensors. It shows where the crew are, nothing else.
+func _player_senses_life() -> bool:
+	for ship in encounter.ships:
+		if ship.side == 0 and not ship.is_gone():
+			for member in ship.crew:
+				if not member.dead and member.race.senses_life:
+					return true
 	return false
 
 

@@ -210,3 +210,14 @@ ship file's shield number means and how upgrades step, so it is left for heromed
   fail now and then by holding the game. Fight test 20 of 20; crew fight rules hold; LAN run passes three times
   running; input test 22 of 22; one chaos seed clean.
 
+### C7. Lykario Animal Senses
+
+With a living Lykario in the squad, the crew aboard an enemy ship are seen even when its inside is not: with no
+sensors, or in a nebula (race profiles, Lykario 9, Decided). Only the crew show, not the rooms' state. The race's
+card says "Animal Senses: they sense Life Signs aboard other ships, with or without sensors." Checked in a nebula
+with a Lykario squad (crew seen) and a GATOS squad (not seen). The profile also says "in hazards"; the nebula is the
+one hazard that blinds sensors, so that is where it shows.
+
+**Infall: Lori** was sent the night's new player-facing lines to check (this trait line, the tooltip lines, the
+room picker's refusals, the Players menu line, the two setting names).
+
