@@ -23,6 +23,7 @@ passes at the end as at the start, and four bugs that predate the night were fou
 | B4 | The reticle replaces the arrow while aiming | compile only: **wants a look in play** |
 | B5 | Enemy shield pips show recharge | compile and tests |
 | B6 | Fire through doors only; Open Doors twice vents; damaged systems red | fight, LAN and chaos tests; screenshot |
+| B7 | Weapon sounds by kind, a miss sound, a weapon file can name its sound | a chaos seed and the fight test: **not listened to** |
 | C1, C2 | Player Power Color; enemy Terrans in pirate orange | screenshots |
 | C4 | The Medbay room rule on purchases | a room-by-room check on the Outrider |
 | C5 | Abandoned clusters lose their store | galaxy test |
@@ -45,11 +46,10 @@ passes at the end as at the start, and four bugs that predate the night were fou
 ### Not done
 
 - **B3, number keys for event choices:** no source confirmed the genre has them. Easy to add if you say so.
-- **B7, per-weapon sounds:** done after the summary was first written; see the last log entry. **Not listened
-  to**: this session cannot hear, so the four new sounds want an ear.
 - **C3, the Mawjig pool never ending in a zero:** dropped on your word.
-- **C11, several weapon systems on one ship (GDD 8L):** not started; the largest item, and Ship Designs points
-  out the Hijacker and the Burr both want it.
+- **C11, several weapon systems on one ship (GDD 8L):** parked, not started. It is the largest item (the
+  simulation, the HUD's weapon rows and the ship files all change), and it would have gone in at the end of a long
+  night with nobody to look at it. Ship Designs points out the Hijacker and the Burr both want it.
 - **Eco's answer 1, shield levels as layers in the ship files:** left for your go, since it changes what every
   ship file's shield number means.
 - **The docs' Relay Picket and the three Senti crew killers:** they need the AAA, which the game lacks.
