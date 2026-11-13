@@ -7,7 +7,8 @@ extends Node
 ##
 ## Players are the host's keyboard and mouse, each controller on the host, and each machine that joined over LAN
 ## (and its own controllers). The host starts as the Admiral; squad decisions (event choices, jumps, pausing, hails)
-## are the Admiral's (GDD 4H, 4M at their defaults, GV 4E); every player commands every ship for now (GV 4D).
+## are the Admiral's (GDD 4H, 4M at their defaults, GV 4E); who commands which ship and crew is the Admiral's to
+## assign (GV 4I, core/assignments.gd), and every player commands whatever is left to Any.
 
 signal players_changed
 signal session_ended(reason: String)
@@ -19,7 +20,7 @@ const MAX_TICKS_A_FRAME := 4
 const CHECK_EVERY := 100              # ticks between the host's checks that every machine still agrees
 const COLOURS := ["#5fd4ff", "#ffb347", "#c58cff", "#ff6f91", "#9be564", "#ffe066", "#7af0c8", "#f08a5d"]
 ## Orders only the Admiral gives: the squad's decisions.
-const ADMIRAL_ORDERS := ["shared", "pause", "jump", "wait", "hail_open", "rule", "hold", "assign"]
+const ADMIRAL_ORDERS := ["shared", "pause", "jump", "wait", "hail_open", "rule", "hold", "assign", "restore"]
 
 var is_host := true
 var players: Array[Dictionary] = []   # {id, name, colour, device ("keys", "pad", "remote"), pad, peer, here}
@@ -79,6 +80,7 @@ func remove_local_player(id: int) -> void:
 		_player_left.rpc_id(1, id)
 	else:
 		_hand_over(id)
+		_admiral_may_have_left(id)
 	_players_changed()
 
 
@@ -461,6 +463,13 @@ func _on_peer_disconnected(peer_id: int) -> void:
 		main.admiral_gone()   # the game pauses and saves until the Admiral returns (GDD 4N, off)
 
 
+## The Admiral leaving by their own choice is the same as their machine dropping out (GV 4E): the game pauses and
+## saves until they return or the role is handed on.
+func _admiral_may_have_left(player_id: int) -> void:
+	if player_id == admiral and main and main.has_method("admiral_gone"):
+		main.admiral_gone()
+
+
 func _rejoin() -> void:
 	_queue.clear()
 	_hello.rpc_id(1, _join_name)
@@ -562,6 +571,7 @@ func _player_left(id: int) -> void:
 	if is_host and not player.is_empty() and player.peer == multiplayer.get_remote_sender_id():
 		player.here = false
 		_hand_over(id)
+		_admiral_may_have_left(id)
 		_players_changed()
 
 

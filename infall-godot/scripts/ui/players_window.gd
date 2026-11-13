@@ -38,6 +38,20 @@ func _rebuild() -> void:
 		_list.add_child(_separator())
 		_list.add_child(_heading("WHO COMMANDS WHAT"))
 		_list.add_child(UiKit.label("Any player may command a ship set to ANY. Ships take their crew with them; a crew member can be given to players of their own. The Admiral commands everything." if session.admiral_is_local() else "The Admiral, %s, decides who commands what." % session.titled_name(session.admiral), 15, UiColours.TEXT_DIM, true))
+		# A player who left and came back: what they commanded went to the Admiral, who can hand it back (GDD 4F)
+		for player in session.players:
+			var theirs := Assignments.remembered_text(main.run, player.id)
+			if theirs.is_empty() or not player.here:
+				continue
+			var back := HBoxContainer.new()
+			back.add_theme_constant_override("separation", 8)
+			var said := UiKit.label("%s commanded %s before leaving." % [session.titled_name(player.id), theirs], 16, UiColours.TEXT, true)
+			said.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			back.add_child(said)
+			var returning: int = player.id
+			if session.admiral_is_local():
+				back.add_child(UiKit.button("RESTORE", func(): session.submit(session.admiral, {"k": "restore", "player": returning}), 120))
+			_list.add_child(back)
 		for index in main.run.squad.size():
 			var ship: Ship = main.run.squad[index]
 			if ship.is_gone():

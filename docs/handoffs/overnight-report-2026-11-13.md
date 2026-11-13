@@ -84,3 +84,19 @@ under the step that used it; this is what they said.
    repair level. **To flag for heromedel.**
 7. No objection to one hit a second in crew fights.
 
+### A1 (end). Chaos baseline
+
+Five chaos seeds of 60 s each: no failures, no engine errors, no frame spikes.
+
+### A2, A5, A7, A8. Co-op fixes
+
+- **Five and six players on one screen** are laid out three across and two down (they were off the screen).
+- **Assignments are remembered** (GDD 4F): when a player leaves, what they commanded is kept, and the Players menu
+  shows the Admiral a RESTORE button beside "… commanded … before leaving" once they are back. Kept in memory for
+  the run; a save does not keep it.
+- **The Admiral leaving by choice pauses the game and saves** (GV 4E), as their machine dropping out already did.
+- The co-op test gained five checks (remembering, restoring, six views on screen, the Shared view, the Admiral
+  leaving): 22 of 22 pass.
+- Stale notes fixed: the README no longer says assigning ships isn't built, and the comment in `session.gd` is
+  right.
+

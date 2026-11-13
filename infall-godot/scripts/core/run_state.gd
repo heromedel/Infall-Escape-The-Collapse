@@ -15,6 +15,8 @@ var jumps: int = 0
 var mawjig: int = 1211
 var squad: Array[Ship] = []
 var cargo: Array[String] = []        # weapons carried but not fitted
+var left_commands: Dictionary = {}   # a player who left (id) -> what they commanded, for the Admiral to restore
+									 # (GDD 4F): {"ships": {Ship: assigned}, "crew": {CrewMember: [assigned, own]}}
 var used_events: Array[String] = []
 var stats := {"ships_destroyed": 0, "crews_killed": 0, "jumps": 0, "mawjig_earned": 0, "events": 0, "ships_lost": 0}
 var over: bool = false

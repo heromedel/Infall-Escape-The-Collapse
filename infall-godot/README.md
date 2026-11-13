@@ -110,11 +110,13 @@ The game always runs as a server with its players as clients, also alone. Contro
 Start and get their own view of the screen (left and right for two, quarters for three or four; Local Co-op View:
 Split > Shared). Over LAN, the host opens the game in the Players menu and others join with the host's IP address,
 at any time. The host is the Admiral and makes the squad's decisions. In Player setup the Admiral gives each ship
-and crew member to Any player or to chosen players; any player can change their input or leave.
+and crew member to Any player or to chosen players; any player can change their input or leave. What a player
+commanded when they left is remembered, and the Admiral can restore it when they return (GDD 4F). Up to six players
+share a screen (three across and two down for five or six). The Admiral leaving pauses the game until they return.
 
 ## Not in this build yet
 
-- The Admiral assigning ships to players, the vote and lock-in multiplayer settings, player profiles (GV 4G).
+- The vote and lock-in multiplayer settings, and player profiles (GV 4G).
 - The Tech victory and other victory paths (ideas); the win is reaching the rim.
 - Augments and drones (the design moves drones into EVB suits and race systems).
 

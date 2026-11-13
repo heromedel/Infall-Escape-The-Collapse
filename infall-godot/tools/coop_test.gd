@@ -97,6 +97,51 @@ func _ready() -> void:
 	main.session.remove_local_player(leaving)
 	await _wait(0.3)
 	_check("a player who leaves takes their view with them", main.battle.player_views.size() == 3)
+	# The Admiral can give a returning player back what they commanded (GDD 4F)
+	var back: int = main.battle.player_views[1].player_id
+	main.session.submit(main.session.admiral, {"k": "assign", "sq": 0, "players": [back]})
+	main.session.submit(main.session.admiral, {"k": "assign", "sq": 0, "crew": 1, "players": [back], "own": true})
+	await _wait(0.2)
+	var back_pad: int = main.session.player_by_id(back).pad
+	main.session.remove_local_player(back)
+	await _wait(0.3)
+	_check("what a leaver commanded is remembered", not Assignments.remembered_text(main.run, back).is_empty() and ship0.assigned == [main.session.admiral])
+	main.session.add_local_player("pad", back_pad)
+	await _wait(0.3)
+	main.session.submit(main.session.admiral, {"k": "restore", "player": back})
+	await _wait(0.2)
+	_check("the Admiral restores a returning player's ship and crew", ship0.assigned == [back] and ship0.crew[1].assigned == [back] and ship0.crew[1].own_assignment and Assignments.remembered_text(main.run, back).is_empty())
+	main.session.submit(main.session.admiral, {"k": "assign", "sq": 0, "players": []})
+	main.session.submit(main.session.admiral, {"k": "assign", "sq": 0, "crew": 1, "players": [], "own": false})
+	# Five and six players on one screen (GDD 4A): three across and two down, all on the screen
+	while main.session.local_players().size() < 6:
+		main.session.add_local_player("pad", 2 + main.session.local_players().size())
+		await _wait(0.3)
+	var screen := get_viewport().get_visible_rect()
+	var all_on_screen := true
+	for view in main.battle.player_views:
+		var shown := Rect2(view.display.position, view.display.size)
+		all_on_screen = all_on_screen and screen.encloses(shown.grow(-1.0)) and shown.size.x > 100.0
+	_check("six players: six views, every one on the screen", main.battle.player_views.size() == 6 and all_on_screen)
+	await _shot("six_players")
+	# Local Co-op View: Shared puts everyone in one view (GV 4F)
+	Settings._values["local_coop_view"] = "Shared"
+	main._lay_out_views()
+	await _wait(0.3)
+	_check("Local Co-op View: Shared gives one view for everyone", main.battle.player_views.size() == 1)
+	await _shot("shared_view")
+	Settings._values["local_coop_view"] = "Split"
+	main._lay_out_views()
+	await _wait(0.3)
+	# The Admiral leaving pauses the game until they return (GV 4E)
+	main.battle.paused = false
+	await _wait(0.2)
+	var admiral_id: int = main.session.admiral
+	main.session.remove_local_player(admiral_id)
+	await _wait(0.4)
+	_check("the Admiral leaving pauses the game", main.battle.paused)
+	main.session.add_local_player("keys", -1)
+	await _wait(0.3)
 	print("PASS" if failures == 0 else "FAIL: %d" % failures)
 	get_tree().quit()
 

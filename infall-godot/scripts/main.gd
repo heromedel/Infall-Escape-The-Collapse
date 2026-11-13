@@ -177,7 +177,8 @@ func begin_run(origin: Dictionary) -> void:
 # --- Players and their views ----------------------------------------------------------------------------------
 
 ## One view for each player on this machine, side by side (GV 4F): left and right for two, quarters for three or
-## four. With Local Co-op View set to Shared, the players share one.
+## four, sixths (three across, two down) for five or six, GDD 4A's most. With Local Co-op View set to Shared, the
+## players share one.
 func _lay_out_views() -> void:
 	if battle == null:
 		return
@@ -221,8 +222,9 @@ func _lay_out_views() -> void:
 			2:
 				view.place(Rect2(Vector2(screen.x * 0.5 * index, 0), Vector2(screen.x * 0.5, screen.y)), screen.y * 1.5)
 			_:
-				var cell := Vector2(screen.x * 0.5, screen.y * 0.5)
-				view.place(Rect2(Vector2(index % 2, index / 2) * cell, cell), screen.y)
+				var columns := ceili(count / 2.0)     # two rows: quarters for three or four, sixths for five or six
+				var cell := Vector2(screen.x / columns, screen.y * 0.5)
+				view.place(Rect2(Vector2(index % columns, index / columns) * cell, cell), screen.y)
 		if battle.encounter:
 			view.frame_everything(true)
 
@@ -304,7 +306,7 @@ func apply_order(order: Dictionary) -> void:
 				Settings.session_rules[order.id] = order.value
 		"console":
 			console.execute(String(order.text))
-		"assign", "handover":
+		"assign", "handover", "restore":
 			Assignments.apply(run, order)
 			run_changed.emit()
 	_update_hold()
