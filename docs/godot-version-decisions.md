@@ -20,6 +20,9 @@ anything Claude added tagged Ai-Generated-Proposal.
 - **B — Likely (heromedel, 2026-10-31):** on the map, Swallowed clusters are black, the legend's icons look like
   clusters, and each race region is one faint wash of colour rather than many circles, so the clusters stand out.
 - **C — Decided (heromedel, 2026-10-31):** events don't speak of the collapse before it appears (GDD 2P).
+- **D — Built (2026-11-13), GDD 2R (Decided):** a cluster that turns Abandoned has no store; what it holds
+  becomes something drifting to salvage. The rest of GDD 2R (each state changing who is met and what a store has)
+  is not built.
 
 ## 3. Squad Combat
 
@@ -67,6 +70,21 @@ anything Claude added tagged Ai-Generated-Proposal.
   portraits and symbols stay upright either way.
   - **Ai-Generated-Proposal (2026-11-05):** only the drawing turns, not the battle, so each player chooses their own,
     also over LAN.
+- **K — Likely (heromedel, 2026-11-13), built:** closer to the genre, from heromedel's answers, the reference
+  frames and what could be read online (no new recordings):
+  - Fire spreads between rooms through their doors, never through a wall: freely through an open door or with
+    no working Doors system; a closed door slows it 1.75 times and a closed blast door 10 times (the genre's
+    wiki). **Ai-Generated-Proposal:** a blast door is Doors at level 2 or more.
+  - Crew fight a fire from where they stand (already so).
+  - A damaged system is red, on the ship and in the HUD (it was orange until broken).
+  - A system's own key gives it power and Shift with the key takes it away, shown in its tooltip (reference
+    frame 12). Where the key already does something else in Infall (C, E, F, T, Z), that use stays and only Shift
+    with the key works.
+  - Open Doors pressed again, with every inner door open, opens the airlocks too. Vent stays.
+  - While the mouse player aims, the arrow is hidden: the reticle is the cursor (reference frame 02).
+  - An enemy's empty shield pip shows its recharge as a bar (reference frame 17).
+  - Not settled: the gap between a volley's shots (0.25 s in the game; no figure found), and number keys for
+    event choices (no source found).
 
 ## 4. Multiplayer
 
@@ -108,12 +126,29 @@ anything Claude added tagged Ai-Generated-Proposal.
   own. Orders from players who aren't assigned are refused, and they are told why.
 - **J — Likely (heromedel, 2026-11-05):** a player who leaves hands their ships and crew to the Admiral; a setting
   may choose otherwise later.
+- **K — Built (2026-11-13):**
+  - GDD 4F (Decided): what a player commanded when they left is remembered, and the Admiral restores it from the
+    Players menu when they return. Kept for the run; a save does not keep it.
+  - GDD 4A (Likely): five and six players on one screen are laid out three across and two down.
+  - GV 4E: the Admiral leaving by choice pauses and saves, as their machine dropping out does.
+  - Fixed: a machine joining while the host was mid-jump played orders queued behind the jump twice and fell out
+    of step. The host's record is now written as each item is played.
+  - The out-of-step check also covers the battle's random numbers, systems, air, fires, breaches, conduits and
+    cooldowns.
+  - Tests: `tools/lan_run_test.sh` (a longer run over LAN, both machines' state compared), more checks in
+    `coop_test`, and `CHAOS_PLAYERS` for the chaos tester.
 
 ## 5. Ships
 
 - **A — Decided (heromedel, 2026-10-31):** a powered Medbay heals every crew member of its own side in its room
   every tick, whatever they are doing, while fire or lack of air keeps hurting them. It heals allies from any
   ship of the squad, never enemies. (The room rule is GDD 5B.)
+- **B — Built (2026-11-13), GDD 5B (Decided):** buying a system is held to the placement rules Ship Designs gave:
+  a tile of its own; a Medbay (or any system that heals) only with systems crew can't man, Doors and Sensors
+  counted as manned; an EVB Dock in a room with an airlock. The room picker says why a room is refused.
+- **C — Built (2026-11-13):** the docs' own ships from `ship-suggestions.md`: the Pirate Pickpocket and the
+  Lykario Scrap Hound (loadouts), the Malphen Polyp with its flak loadout, the Azurethea Vein Moth, and the
+  weapons Flesh Mortar, Bone Flak and Lantern. The docs' Relay Picket and the Senti crew killers wait for the AAA.
 
 ## 6. Jump Travel
 
@@ -298,6 +333,14 @@ anything Claude added tagged Ai-Generated-Proposal.
       down, 9 by 18 facing sideways). What makes crew look bigger is the ring round each one, about 29 pixels
       across. The Facing sprites are taller by design (22 to 31 pixels), and a token with its rim is about 30
       across.
+- **H — Built (2026-11-13):** the Tentauri reach, as the reach prototype has it (`docs/art/tentauri/crew/`): a
+  Tentauri grows a pair of short tentacles to each console it mans from across the room, drawn by the game in its
+  own tentacle colours; they pull back in when it stops. The prototype's body sheet is not used yet.
+- **I — Built (2026-11-13), race profiles Lykario 9 (Decided):** Animal Senses. With a living Lykario in the
+  squad, the crew aboard an enemy ship are seen without sensors and in a nebula. Only the crew show.
+- **J — Built (2026-11-13), GDD 7H (Decided):** repairing a system the crew member has a skill level in is 5%
+  faster. **Ai-Generated-Proposal:** the 5% is Infall: Eco's placeholder (half of one repair level); Eco says the
+  number is heromedel's to settle.
 
 ## 8. Weapons and Systems
 
@@ -313,6 +356,12 @@ anything Claude added tagged Ai-Generated-Proposal.
 - **C — Likely (heromedel, 2026-11-05):** with the real distance (GV 3I), a battlesuit carries 10 to 20 times more
   air, so it can cross the gap, fight and come home.
   - **Ai-Generated-Proposal (2026-11-05):** 15 times to start.
+- **D — Likely (Infall: Eco, 2026-11-13), built:** the growth organ is priced as a clone bay (12.11, then 8.47 and
+  10.89); mercenary prices rise with the band like wreck rewards, times 1.(band − 1); the sized event rewards are
+  7 low, 11 medium and 7 high, the genre's split (which reward moved is an **Ai-Generated-Proposal**); 15 crew
+  damage a point of damage stays. Not done: shield levels as layers in the ship files, which Eco recommends.
+- **E — Fixed (2026-11-13):** no beam weapon had dealt damage since tile targeting was built (a beam was never
+  given its list of tiles cut). They work again.
 
 ## 14. User Interface
 
@@ -355,6 +404,10 @@ anything Claude added tagged Ai-Generated-Proposal.
     when a system in it is damaged, a red tint as its air thins, and a red dot for each intruder. The plan lies
     the way the ship does on the screen (Battlefield: Vertical or Horizontal). **Ai-Generated-Proposal:** the
     cards fold together as one, not each on its own, and the marks' looks are this session's.
+- **I — Built (2026-11-13), GDD 14D:** `Player Power Color: Default (Green) > Racial > Specific Color` colours the
+  player's conduits, symbols, power bars and pips, and `Enemy Terran Color: Pirate Power Orange > Power Green`
+  decides what a Terran enemy shows. **Ai-Generated-Proposal:** the Specific Color is picked with `Specific Power
+  Color: Blue > Cyan > Yellow > Orange > Pink > Purple > White` (no red: red is damage).
 
 ## 15. Ranks and Titles
 
@@ -464,3 +517,4 @@ All built in the build of 2026-11-05.
 | 2026-11-13 | Crew fights as the genre has them: pairing on a tile, punches, shots, hit marks, and the enemy following a moved crew member (GV 7G); built the same day. |
 | 2026-11-13 | A crew member who shoots concentrates on one foe, and fights back when hit by another (GV 7G). |
 | 2026-11-13 | A dying crew member plays their sheet's death frames, then fades (GV 7F). |
+| 2026-11-13 | The overnight plan (`docs/handoffs/overnight-plan-2026-11-13.md`, report beside it): co-op fixes and tests (GV 4K), closer to the genre (GV 3K), Player Power Color (GV 14I), the Medbay rule and the docs' ships (GV 5B, 5C), Abandoned clusters (GV 2D), Animal Senses, the reach and the repair bonus (GV 7H–7J), Eco's prices (GV 8D), ship status cards (GV 14H). |

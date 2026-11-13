@@ -3,6 +3,95 @@
 The log of `overnight-plan-2026-11-13.md`, written as the night goes, newest at the bottom. The summary and the
 numbered questions for heromedel are added at the end.
 
+## Summary
+
+Everything in Plans A, B and C that was settled got built, except the items listed under "Not done". Every test
+passes at the end as at the start, and three bugs that predate the night were found and fixed.
+
+### Built
+
+| Plan | What | Checked by |
+|---|---|---|
+| A2 | Five and six players on one screen | co-op test, screenshot |
+| A3 | A stronger out-of-step check for LAN | LAN tests |
+| A4 | A wider LAN test (`tools/lan_run_test.sh`) | itself, four rejoin timings |
+| A5 | Wider split-screen test; the Admiral leaving pauses the game | co-op test |
+| A6 | Chaos tester with controller players (`CHAOS_PLAYERS`) | 2- and 4-player seeds |
+| A7 | Assignments remembered and restored (GDD 4F) | co-op test |
+| A8 | Stale notes fixed | read |
+| B2 | System power keys, shown in tooltips | input test |
+| B4 | The reticle replaces the arrow while aiming | compile only: **wants a look in play** |
+| B5 | Enemy shield pips show recharge | compile and tests |
+| B6 | Fire through doors only; Open Doors twice vents; damaged systems red | fight, LAN and chaos tests; screenshot |
+| C1, C2 | Player Power Color; enemy Terrans in pirate orange | screenshots |
+| C4 | The Medbay room rule on purchases | a room-by-room check on the Outrider |
+| C5 | Abandoned clusters lose their store | galaxy test |
+| C6 | Skilled repair 5% faster | fight tests |
+| C7 | Lykario Animal Senses | screenshots |
+| C8 | Ship status cards (GV 14H) | screenshots, input and co-op tests |
+| C9 | Pickpocket, Scrap Hound, Polyp, Vein Moth and three weapons | content check, ten bot fights each, screenshots |
+| C10 | The Tentauri reach | screenshots |
+| Eco | Growth organ price, mercenary prices by band, the event reward mix | mercenary, ship value and content tests |
+
+### Bugs found and fixed that were there before tonight
+
+1. **No beam weapon dealt damage** since tile targeting was built (C9's log entry).
+2. **A machine joining a LAN game while the host was mid-jump fell out of step** (A4's log entry).
+3. **Five and six local players were placed off the screen** (A2).
+
+### Not done
+
+- **B3, number keys for event choices:** no source confirmed the genre has them. Easy to add if you say so.
+- **B7, per-weapon sounds:** not started.
+- **C3, the Mawjig pool never ending in a zero:** dropped on your word.
+- **C11, several weapon systems on one ship (GDD 8L):** not started; the largest item, and Ship Designs points
+  out the Hijacker and the Burr both want it.
+- **Eco's answer 1, shield levels as layers in the ship files:** left for your go, since it changes what every
+  ship file's shield number means.
+- **The docs' Relay Picket and the three Senti crew killers:** they need the AAA, which the game lacks.
+- **The rest of GDD 2R** (each cluster state changing who is met and what stores hold).
+- No Windows build was made.
+
+### Questions for heromedel
+
+- **Q1.** The Polyp swarm (two Polyps and a flak Polyp) as the Malphen's band 1 and 2 fight costs the Outrider half
+  its hull in bot fights. Keep three, as the docs have it, or start band 1 with two?
+- **Q2.** Repairing a system you have a level in: 5% faster is Eco's placeholder. What should it be?
+- **Q3.** Shield levels in the ship files: change them from bars to layers, as Eco recommends?
+- **Q4.** Number keys (1, 2, 3…) for event choices: add them?
+- **Q5.** The status cards fold together as one HUD card. Should each ship's card fold on its own, as GV 14H says?
+- **Q6.** System keys that clash with keys Infall already uses (C, E, F, T, Z): today the old use wins and only
+  Shift with the key works for power. Move the old uses to other keys so every system key works both ways?
+- **Q7.** The Specific Power Color is a list of seven colours to step through. Is that enough, or do you want a
+  free colour picker?
+- **Q8.** The Pickpocket replaced the Pirate Scrapper as the pirates' band 1 ship (Ship Designs' squad table). The
+  Scrapper is now met only as a mercenary. Fine, or keep it somewhere?
+- **Q9.** Want a Windows build of all this?
+
+### Each Ai-Generated-Proposal made tonight
+
+The Specific Power Color list; "blast door" meaning Doors at level 2 or more; which event rewards moved up; the
+status cards folding as one and their marks; the 5% repair bonus (Eco's placeholder); the one-line descriptions of
+the four new ships and three new weapons; the Polyp squad of two Polyps and a flak Polyp for bands 1 and 2; the
+Vein Moth taking the Wardens' bands 1 and 2 from the Moth Skiff; the Lantern's beam length and the three new
+weapons' cost per volley (worked from the cost table).
+
+### End-of-night tests against the baseline
+
+| Test | Start | End |
+|---|---|---|
+| Compile, content, galaxy, mercenary, ship value | pass | pass |
+| Crew fight rules | all 13 hold | all 13 hold |
+| Fight test | 20 of 20, 42.7 s | 20 of 20, 42.7 s |
+| Input test | 20 checks | 22 checks, all pass |
+| Co-op test | 17 checks | 22 checks, all pass |
+| LAN test | pass, in step | pass, in step |
+| LAN run test | (new) | pass |
+| Six bot runs | lost at jumps 6, 13, 11, 9, 19, 19 | lost at jumps 6, 7, 11, 9, 12, 19 |
+
+The bot's runs end a little sooner on two seeds. Bands 1 and 2 are harder for a captain who never orders crew:
+boarders arrive in band 1 now, the Polyp swarm is there, and beams work.
+
 ## Log
 
 ### Helpers asked (Plan D)

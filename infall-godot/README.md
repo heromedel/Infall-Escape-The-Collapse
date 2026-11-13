@@ -39,6 +39,7 @@ the Last Fleet. Lose when every scout ship is gone (GDD 1F).
 | Player setup: players, inputs, who commands what, LAN | P or the players button by the menu | View / Select |
 | Join as another player | | Start on a new controller |
 | Ship screen (upgrades, weapons, crew) | U or SHIP | |
+| Give a system power, or take it away | The system's key (in its tooltip), Shift with it to take away | |
 | Menu | Esc | Menu / Start |
 
 ## What is in this build
@@ -74,6 +75,20 @@ the Last Fleet. Lose when every scout ship is gone (GDD 1F).
   scout) and its weapon art, lined up to the ship files' floor plans. Ships without art get a hull drawn from their
   floor plan in their race's style (GDD 5K). Crew are drawn as the Art Style setting says (GV 7F): `Art Style: Top Down > Facing > Tokens`, top-down sprites, facing sprites or the round portrait tokens; a race with no sheet in the chosen style shows its token. The GATOS Species setting (Terrans > Tabbys) makes the GATOS humans or cats.
 - **Sound:** every effect and the three music tracks are synthesized by `tools/make_audio.py`.
+
+## Added on 2026-11-13 (the overnight plan)
+
+What was built, how it was tested and what is left for heromedel is in `docs/handoffs/overnight-report-2026-11-13.md`;
+the points are in `docs/godot-version-decisions.md` (GV 2D, 3K, 4K, 5B, 5C, 7G–7J, 8D, 8E, 14H, 14I). In short:
+
+- Consoles drawn from the art sessions' art, crew fights as the genre has them, deaths played, the Tabby's sheet.
+- Ship status cards, Player Power Color, enemy Terrans in pirate orange, damaged systems red, system power keys.
+- Fire spreads through doors only; Open Doors pressed twice vents; the reticle replaces the arrow while aiming.
+- Lykario Animal Senses; the Tentauri reach; Abandoned clusters without a store; the Medbay rule on purchases.
+- New from the docs: the Pirate Pickpocket, Lykario Scrap Hound, Malphen Polyp and Azurethea Vein Moth.
+- Co-op: six players on one screen, remembered assignments, a LAN fix for joining mid-jump, and wider tests
+  (`tools/lan_run_test.sh`, `CHAOS_PLAYERS=2 tools/chaos.sh`).
+- Beams deal damage again (they had not since tile targeting).
 
 ## Filled in from the genre or the lore (Ai-Generated-Proposals, 2026-10-31)
 
