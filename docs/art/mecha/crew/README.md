@@ -1,7 +1,8 @@
 # Mecha crew sprite sheet
 
 **Date:** 2026-10-25
-**Status:** heromedel's sheet, saved as the reference for Mecha (HalfMech) crew. Source:
+**Status:** the sheet another Claude session made with heromedel's guidance (heromedel, 2026-11-12: not his own
+drawing), saved as the reference for Mecha (HalfMech) crew. Source:
 https://claude.ai/artifact/Rac3hEG59XfS34BkiFTWXy
 
 ![The sheet at 4x](mecha-crew-sheet-4x.png)
@@ -12,6 +13,10 @@ shape (not a rounded, friendly robot), near-black armour with one accent, Mecha 
 blade forearms raised beside the head, short legs) with new armour and colours, and FTL's crew sheet layout.
 
 280 × 560 pixels: 35 × 35 frames, 8 per row, 16 rows.
+
+No particles are drawn on the sheet (heromedel, 2026-11-12): the purple flash at the claw in one aiming frame each
+way (down, right, left) came off the PNG, its 4x render and the SVG, and the game makes particles itself (GV 7F).
+Nothing else on the sheet changed.
 
 | Row | Frames |
 |---|---|

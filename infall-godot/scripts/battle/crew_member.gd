@@ -9,6 +9,7 @@ const BASE_SPEED_TILES := 2.2      # tiles a second at speed 1.0: the genre's us
 
 var name: String
 var race: RaceDef
+var subtype: String = ""           # the colours they wear, e.g. "blue/forest" (CrewSkins, GV 7F); "" for a race without
 var health: float = 100.0
 var max_health: float = 100.0
 var xp: Dictionary = {}            # skill -> XP, kept in decimals, shown whole
@@ -35,7 +36,13 @@ var in_suit: bool = false
 var teleporting_ticks: int = 0
 var integrate_ticks: int = 0       # Mecha: time spent getting into a system
 var suffocating: bool = false
-var attack_cooldown: int = 0
+var attack_cooldown: int = 0        # ticks until their next punch or shot
+var melee_with: CrewMember = null   # the foe they share a tile with and punch (GV 7G); null for a fighter who shoots
+var aim_at: CrewMember = null       # the foe they last shot at
+var shot_at: CrewMember = null      # the foe their shot is flying at now
+var shot_ticks: int = 0             # ticks until it lands
+var shot_flight: int = 0            # ticks its whole flight takes
+var hit_ticks: int = 0              # counts down after a hit lands on them, for the flash and the mark
 var kills: int = 0
 var selected: bool = false          # selected by a player on this machine (drawing only)
 var selection_colour := UiColours.POWER_GREEN
@@ -125,7 +132,7 @@ func is_boarding() -> bool:
 
 
 func to_save() -> Dictionary:
-	return {"name": name, "race": race.id, "health": health, "xp": xp.duplicate(), "station": station_room, "contract": contract_id, "rank": rank, "assigned": assigned.duplicate(), "own_assignment": own_assignment}
+	return {"name": name, "race": race.id, "health": health, "xp": xp.duplicate(), "station": station_room, "contract": contract_id, "rank": rank, "assigned": assigned.duplicate(), "own_assignment": own_assignment, "subtype": subtype}
 
 
 static func from_save(data: Dictionary) -> CrewMember:
@@ -137,6 +144,7 @@ static func from_save(data: Dictionary) -> CrewMember:
 	member.station_room = int(data.get("station", -1))
 	member.contract_id = int(data.get("contract", 0))
 	member.rank = int(data.get("rank", -1))
+	member.subtype = data.get("subtype", "")
 	member.assigned.assign(data.get("assigned", []).map(func(id): return int(id)))
 	member.own_assignment = bool(data.get("own_assignment", false))
 	return member

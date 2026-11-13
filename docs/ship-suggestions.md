@@ -1117,7 +1117,7 @@ Default tag: **Ai-Generated-Proposal (2026-10-29)**. First drafted for Deck Coll
    Medbay.
 7. **Variation:** standard for the race at low tier.
 8. **Layout and systems:** hull 10. **Updated (2026-11-13), Ai-Generated-Proposal:** a Senti core of 7 bars:
-   Shields 1 (a Senti Shield Projector, one bar per layer; GDD 8H, Proposed), Engines 1, AAA 2, Weapons 3. A Backup
+   Shields 1 (a Senti Shield Projector, one bar per layer; GDD 8Q, Proposed), Engines 1, AAA 2, Weapons 3. A Backup
    Battery (the genre's, ship-wide) adds power for a short time. Earlier: AZC level 2. No Life Support: Senti don't breathe (GDD 5L: an unlisted system doesn't exist). The AAA sits in the
    middle of the big central room, with the core, Shields and Weapons around it: a breach there drains no air they
    need, and fire doesn't hurt them.
@@ -1164,7 +1164,10 @@ Default tag: **Ai-Generated-Proposal (2026-10-29)**. First drafted for Deck Coll
    Crew: 2 Senti-GPH
    ```
 
-   **AAA levels — Ai-Generated-Proposal (2026-10-29):** one avatar per level, as a first guess.
+   **AAA levels — Decided (heromedel, 2026-11-13):** one avatar per level, "so a single shot doesn't make you
+   lose 3 crew members". (Deck Collapse's notes, `deck-collapse-ships/README.md` G12, have 3 per working level;
+   that is not the design.) The rest of that note stands (heromedel, 2026-11-13): the AAA replaces the Med Bay
+   on Senti ships, and a Senti killed in a fight comes back at it.
 9. **Weapons:** two new beams:
 
    **2B 01 V1:** Beam, Damage, Mechanical, Senti-GPH · 2 rooms · Damage 1 · Power 1. Charge 16.0 s. Price 7.19.

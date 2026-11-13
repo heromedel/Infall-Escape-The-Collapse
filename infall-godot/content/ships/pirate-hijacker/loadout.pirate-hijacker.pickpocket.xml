@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Pickpocket: the band 1 loadout of the Hijacker (docs/ship-suggestions.md, "Pirate Pickpocket"; Ship Designs,
+     2026-11-13). The Cutpurse without the stolen spore launcher, so pirates can be met in band 1: one twin laser,
+     a teleporter and three boarders. A patch: rooms and doors are unchanged; the Doors and Medbay rooms stand empty.
+     The docs' Hijacker has two weapon systems; on this single-system Hijacker it is Weapons level 1. -->
+<loadout id="pickpocket" ship="pirate-hijacker" name="Pirate Pickpocket" inherit="patch" class="Pickpocket" hull="9">
+	<reactor type="core" level="2"/>
+	<art hull="pirate-cutpurse-hull-2x.png" scale="0.5" center="240,352.5"/>
+	<description>A light pirate boarder. One twin-shot laser keeps your shields busy while its crew teleport aboard.</description>
+	<system id="piloting" tile="-1,-6" level="1" wall="north"/>
+	<system id="sensors" removed="yes"/>
+	<system id="doors" removed="yes"/>
+	<system id="shields" tile="-2,-3" level="2" wall="west"/>
+	<system id="engines" tile="-1,6" level="1" wall="south"/>
+	<system id="weapons" tile="2,-3" level="1" wall="east"/>
+	<system id="medbay" removed="yes"/>
+	<system id="crew-teleporter" tile="2,2" level="1" wall="east"/>
+	<mount id="3" x="158" y="296" slide="left"/>
+	<weapons>
+		<weapon id="gat-2-1" mount="3"/>
+	</weapons>
+	<crew>
+		<member race="terran" count="3"/>
+	</crew>
+	<conduits>
+		(-1,-2,Remove) (-2,-2,N,S) (-2,-3,S,E) (1,-2,N,S,E)
+	</conduits>
+</loadout>

@@ -71,9 +71,10 @@ func _load_weapons() -> void:
 
 func _load_races() -> void:
 	for folder in _folders(CONTENT + "/races"):
-		var node := XmlTree.load_file(CONTENT + "/races/" + folder + "/race.xml")
+		var path := CONTENT + "/races/" + folder
+		var node := XmlTree.load_file(path + "/race.xml")
 		if node:
-			var def := RaceDef.from_xml(node)
+			var def := RaceDef.from_xml(node, path)
 			races[def.id] = def
 
 

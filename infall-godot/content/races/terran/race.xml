@@ -6,4 +6,24 @@
 	<names>Ginger, Sable, Marlowe, Juniper, Pepper, Saffron, Calloway, Cleo, Oscar, Jasper, Luna, Milo, Hazel, Clementine, Tom Avery, Willa, Ozzie, Ronan, Moxie, Kit Delacroix, Wren, Lionel, Felix Okoro, Tabitha, Bramble</names>
 	<names species="Terrans">Dana Reyes, Mack Holloway, Iris Vance, Jun Park, Sasha Petrov, Cole Mbeki, Ada Quinn, Rafe Moreno, Tess Lindqvist, Omar Haddad, Nell Brody, Arlo Finch, Priya Nair, Bo Kowalski, Yara Osei</names>
 	<names species="Tabbys">Tibbs, Mittens, Rusty, Smokey, Nala, Bastet, Biscuit, Socks, Marmalade, Pounce, Sir Fluff, Pumpkin, Shadow, Nutmeg, Thistle</names>
+	<!-- Crew sprites for the Art Style setting (GV 7F); layouts are in content/crew-layouts.xml. A style with no sheet shows tokens.
+	     The sheets draw no particles: a sheet gives the point in its frame where the game starts them while an
+	     animation plays, for each way the crew member faces ("any" for all; left is right mirrored unless given).
+	     Sparks take the ship's power colour. kind="shot" is the muzzle a crew member's shot leaves from when they
+	     aim (GV 7G); the bolt is the game's. -->
+	<crew_art style="Top Down" sheet="crew-top-down.png" layout="nine-wide">
+		<particles kind="sparks" animation="repair" any="26,20"/>
+		<particles kind="spray" animation="fire" down="8,25" right="23,19" up="21,7"/>
+		<particles kind="shot" animation="aim" down="13,25" right="23,19" up="21,7"/>
+	</crew_art>
+	<crew_art style="Facing" sheet="crew-facing.png" layout="eight-wide">
+		<particles kind="sparks" animation="repair" any="25,29"/>
+		<particles kind="spray" animation="fire" down="10,28" right="30,19" up="23,8"/>
+		<particles kind="shot" animation="aim" down="11,27" right="27,17" up="23,8"/>
+	</crew_art>
+	<crew_art style="Facing" species="Tabbys" sheet="crew-facing-tabby.png" layout="eight-wide">
+		<particles kind="sparks" animation="repair" any="28,29"/>
+		<particles kind="spray" animation="fire" down="9,31" right="28,22" up="27,14"/>
+		<particles kind="shot" animation="aim" down="9,30" right="27,22" up="27,15"/>
+	</crew_art>
 </race>

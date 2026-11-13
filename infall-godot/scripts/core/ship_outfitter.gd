@@ -35,13 +35,54 @@ static func unfit_weapon(ship: Ship, slot: WeaponSlot) -> void:
 	ship.weapons.erase(slot)
 
 
+const DOCKS := ["evb_dock", "eva_dock"]     # systems whose crew leave the ship in a suit, by an airlock beside them
+
+## Why a system may not be installed in a room, or "" when it may (Ship Designs' placement rules for a purchase):
+## - a system needs a tile of its own;
+## - a Medbay shares a room only with systems crew can't man, so nobody heals while manning one (GDD 5B);
+## - an EVA or EVB Dock sits at an airlock, for the crew member suits up there and goes out it (GDD 5D).
+static func install_refusal(ship: Ship, def: SystemDef, room_index: int) -> String:
+	if room_index < 0 or room_index >= ship.rooms.size() or _free_console_cell(ship, room_index) == Vector2i(999, 999):
+		return "No free tile in that room."
+	var room := ship.rooms[room_index]
+	for system in room.systems:
+		if def.behaviour == "medbay" and system.def.manned:
+			return "Crew man %s in this room, and crew can't heal while they man a system, so %s can't go here." % [system.def.name, _with_article(def.name)]
+		if def.manned and system.behaviour == "medbay":
+			return "This room has %s, and crew can't heal while they man a system, so %s can't go here." % [_with_article(system.def.name), def.name]
+	if def.behaviour in DOCKS and _free_airlock_cell(ship, room_index) == Vector2i(999, 999):
+		return "%s must sit on an airlock's tile, or next to an airlock with nothing in the way." % _with_article(def.name).capitalize()   # Infall: Lori's wording
+	return ""
+
+
+## Whether a ship's dock obeys GDD 5D: its own tile has an airlock, or its room has an airlock with no system on its tile.
+static func dock_has_its_airlock(ship: Ship, dock: ShipSystem) -> bool:
+	return ship.doors.any(func(door: ShipDoor): return door.to_space and door.cell_a == dock.cell) \
+			or _free_airlock_cell(ship, dock.room) != Vector2i(999, 999)
+
+
+## A tile of the room that has an airlock and no system on it; (999, 999) when there is none. A bought dock goes on it.
+static func _free_airlock_cell(ship: Ship, room_index: int) -> Vector2i:
+	var used := {}
+	for system in ship.systems:
+		used[system.cell] = true
+	for door in ship.doors:
+		if door.to_space and not used.has(door.cell_a) and ship.room_at(door.cell_a) == room_index:
+			return door.cell_a
+	return Vector2i(999, 999)
+
+
+static func _with_article(name: String) -> String:
+	return ("an " if name.left(1).to_lower() in ["a", "e", "i", "o", "u"] else "a ") + name
+
+
 ## The room a new system goes into: an empty room if there is one, else the room with the fewest systems that
-## still has a free tile.
-static func room_for_new_system(ship: Ship) -> int:
+## may take it. -1 when no room may.
+static func room_for_new_system(ship: Ship, def: SystemDef = null) -> int:
 	var best := -1
 	var best_count := 99
 	for room in ship.rooms:
-		if _free_console_cell(ship, room.index) == Vector2i(999, 999):
+		if _free_console_cell(ship, room.index) == Vector2i(999, 999) or (def and not install_refusal(ship, def, room.index).is_empty()):
 			continue
 		var count := room.systems.size()
 		if count < best_count:
@@ -51,7 +92,7 @@ static func room_for_new_system(ship: Ship) -> int:
 
 
 static func install_system(ship: Ship, def: SystemDef, room_index: int) -> ShipSystem:
-	var cell := _free_console_cell(ship, room_index)
+	var cell := _free_airlock_cell(ship, room_index) if def.behaviour in DOCKS else _free_console_cell(ship, room_index)
 	var system := ShipSystem.new()
 	system.def = def
 	system.behaviour = def.behaviour
@@ -116,7 +157,14 @@ static func _join_conduits(ship: Ship, room_index: int) -> void:
 				return
 
 
+## The bars an upgrade adds: one, or what completes a whole shield level (ShipSystem.bars_per_level).
+static func _bars_an_upgrade_adds(system: ShipSystem) -> int:
+	return system.bars_per_level() - system.level % system.bars_per_level()
+
+
 static func system_upgrade_price(system: ShipSystem) -> int:
+	if _bars_an_upgrade_adds(system) == 2:
+		return system.def.layer_upgrade_price(system.level / 2)
 	return system.def.upgrade_price(system.level)
 
 
@@ -124,9 +172,10 @@ static func upgrade_system(run: RunState, ship: Ship, system: ShipSystem) -> boo
 	var price := system_upgrade_price(system)
 	if price < 0 or not run.spend(price):
 		return false
-	system.level += 1
+	var bars := _bars_an_upgrade_adds(system)
+	system.level += bars
 	if ship.reactor_type == "none":
-		system.own_power = mini(system.level, system.own_power + 1)
+		system.own_power = mini(system.level, system.own_power + bars)
 	return true
 
 

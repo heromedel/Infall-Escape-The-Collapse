@@ -72,7 +72,8 @@ func _rebuild() -> void:
 		var race := Library.race(stock.crew[index])
 		var price := Mawjig.amount(race.crew_price * _price_scale() / 100.0)
 		var sold: bool = stock.sold.has("crew:%d" % index)
-		left.add_child(_card("%s crew member" % race.name, race.traits_text, price, sold, func(): _buy_crew(race, index, price)))
+		var for_sale := Refit.crew_for_sale(run, index) if not sold else null
+		left.add_child(_card("%s crew member" % race.name, race.traits_text, price, sold, func(): _buy_crew(race, index, price), _crew_picture(for_sale)))
 	right.add_child(_section("SYSTEMS"))
 	for system_id in stock.systems:
 		var def := Library.system(system_id)
@@ -134,12 +135,34 @@ func _section(text: String) -> Label:
 	return label
 
 
-func _card(title: String, detail: String, price: int, sold: bool, on_buy: Callable) -> PanelContainer:
+## A crew member for sale, as the Art Style setting (GV 7F) will show them aboard: their sprite standing on a deck
+## tile, or their token. An empty space for one already sold, so the cards' text stays in line.
+func _crew_picture(member: CrewMember) -> Control:
+	var picture := Control.new()
+	picture.custom_minimum_size = Vector2(44, 44)
+	picture.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	if member == null:
+		return picture
+	var sheet := CrewArt.sheet_for(member.race, member.subtype)
+	if sheet.is_empty():
+		picture.draw.connect(func(): CrewPortraits.draw_token(picture, member.race.id, member.name, Vector2(22, 22), 18.0, UiColours.POWER_GREEN, 2.0, member.subtype))
+	else:
+		picture.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST      # crew sprites are pixel art
+		var tile := Rect2(Vector2(4, 4), Vector2(CrewArt.frame, CrewArt.frame))
+		picture.draw.connect(func():
+			picture.draw_rect(tile, UiColours.FLOOR)
+			picture.draw_texture_rect_region(sheet.texture, tile, CrewArt.region(sheet, "walk", "down", 0.0)))
+	return picture
+
+
+func _card(title: String, detail: String, price: int, sold: bool, on_buy: Callable, picture: Control = null) -> PanelContainer:
 	var card := PanelContainer.new()
 	card.add_theme_stylebox_override("panel", UiKit.box(UiColours.PANEL_LIGHT if not sold else UiColours.PANEL_DARK, UiColours.BORDER_DIM, 1, 4, 10))
 	var row := HBoxContainer.new()
 	row.add_theme_constant_override("separation", 10)
 	card.add_child(row)
+	if picture:
+		row.add_child(picture)
 	var text := VBoxContainer.new()
 	text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	text.add_child(UiKit.label(title, 18, UiColours.TEXT if not sold else UiColours.TEXT_DIM, true))
@@ -177,12 +200,12 @@ func _buy_crew(race: RaceDef, index: int, price: int) -> void:
 
 
 func _buy_system(def: SystemDef, price: int) -> void:
-	if ShipOutfitter.room_for_new_system(ship) < 0 or run.mawjig < price:
+	if ShipOutfitter.room_for_new_system(ship, def) < 0 or run.mawjig < price:
 		Sfx.play("deny")
 		return
 	var picker := RoomPicker.new()
 	get_parent().add_child(picker)
-	picker.open(ship, def.name)
+	picker.open(ship, def)
 	picker.picked.connect(func(room: int):
 		_order({"op": "buy_system", "id": def.id, "price": price, "room": room})
 		Sfx.play("buy"))

@@ -3,6 +3,8 @@
 Every sound is made here from oscillators, noise and envelopes, so the audio is the game's own and can be
 remade or changed by editing this file:  python3 tools/make_audio.py
 Effects are written as 16-bit mono WAV; music as looping stereo Ogg Vorbis (needs ffmpeg with libvorbis).
+The effects come out the same every time. The music can differ between versions of ffmpeg: after a run that was
+only for the effects, put the three music files back (git checkout -- audio/music_*.ogg).
 """
 import os
 import subprocess
@@ -338,10 +340,39 @@ def make_title():
     stereo_out("music_title", left + low + sparkle * 0.7, right + low + np.roll(sparkle, 1400) * 0.7, total)
 
 
+def make_weapon_effects():
+    """More weapon sounds (2026-11-13): a weapon file may name its launch sound (sound="..."), and these are the
+    ones a weapon gets by its kind. Made last, so the sounds above come out as they always have."""
+    # flak: a ragged burst of small pops
+    burst = np.zeros(int(0.42 * RATE))
+    for index, start in enumerate([0.0, 0.05, 0.085, 0.14, 0.2]):
+        pop = spectral_filter(noise(0.09), 250, 3200) * env(0.09, 0.001, 4) * (1.0 - 0.12 * index)
+        begin = int(start * RATE)
+        burst[begin: begin + len(pop)] += pop
+    thump = sweep(140, 55, 0.3) * env(0.3, 0.003, 2.5)
+    write_wav("flak", reverb(pad(thump * 0.8, burst), 0.6, 0.2), 0.75)
+
+    # ion: a bright zap that wobbles as it falls
+    t = t_axis(0.5)
+    zap = sweep(2600, 420, 0.5, "square") * (0.6 + 0.4 * np.sin(2 * np.pi * 38 * t)) * env(0.5, 0.002, 2.2)
+    fizz = spectral_filter(noise(0.5), 3000, 9000) * env(0.5, 0.001, 3.5) * 0.35
+    write_wav("ion", reverb(spectral_filter(zap, 300, 6000) * 0.6 + fizz, 0.7, 0.25), 0.6)
+
+    # spore: a soft, wet puff
+    puff = spectral_filter(noise(0.5), 120, 1100) * env(0.5, 0.04, 2.0)
+    pop = sweep(320, 140, 0.12) * env(0.12, 0.004, 3)
+    write_wav("spore", reverb(pad(pop * 0.6, puff), 0.6, 0.25), 0.6)
+
+    # miss: the shot going by
+    by = spectral_filter(noise(0.45), 500, 3600) * np.sin(np.pi * t_axis(0.45) / 0.45) ** 2
+    write_wav("miss", by, 0.4)
+
+
 if __name__ == "__main__":
     os.makedirs(OUT, exist_ok=True)
     make_effects()
     make_explore()
     make_combat()
     make_title()
+    make_weapon_effects()
     print("audio written to", os.path.abspath(OUT))

@@ -200,6 +200,10 @@ enemies or reaching squad-mates.
 - **Distance matters:** crossing time depends on the gap between ships, so formation depth and spacing
   (GDD 3H) become tactical.
 - **Risk in transit:** crew outside can be hit by defence drones or anti-personnel fire.
+  - **heromedel, 2026-11-13:** only by accident, or maybe by an EVB battlesuit; ships do not target them.
+- **heromedel, 2026-11-13:** an EVA Dock lets a crew member go from ship to ship without any special drone-type
+  abilities or weapons: to join another ship, help with its repairs, fight its boarders, or board it. An EVB Dock
+  is an EVA Dock with battlesuits. No ship has an EVA Dock yet.
 - **Out of air:** to decide. Leaning toward damage over time until they reach a ship, like FTL suffocation,
   rather than instant death.
 - A race that survives outside without a suit would be a stronger version of the same mechanic.

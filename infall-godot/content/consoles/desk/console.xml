@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The wall desk (GV 7G): a pale desk against the wall with a dark screen, from the Outrider's floor layout test 4.
+     The default: a race that names no consoles of its own gets this one. Made by tools/import_console_art.py.
+
+     fit="turned": the art is drawn for the north wall and turned to face its own wall.
+     symbol: where on the art the game draws the system's symbol, and how big. -->
+<console_style id="desk" default="true" fit="turned">
+	<console art="desk.svg" symbol="17.5,10" symbol_size="13"/>
+</console_style>

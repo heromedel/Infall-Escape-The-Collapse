@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- How crew sprite sheets are laid out (GV 7F, Art Style). Every frame is 35 by 35 pixels, the size of a deck tile.
+     A race's race.xml names its sheets with <crew_art style="..." sheet="..." layout="..."/>; a layout here says where
+     each animation's frames sit on a sheet of that kind.
+
+     An animation gives, for each way the crew member can face (down is toward the camera), "row,column,frames",
+     counted from 1: the row, the column of its first frame and how many frames follow it along the row. "any" is for
+     an animation drawn one way only. ms is how long one frame lasts.
+
+     The game uses: walk (its first frame is also standing still), aim (fighting; each frame is one still aim),
+     fire (putting out a fire), punch (breaking a door, sabotage), type (working a console), repair, teleport,
+     death, clone. A sheet that lacks one shows the crew member standing.
+
+     Sheets draw no particles. Where the game starts sparks and spray is given for each sheet, in its race.xml. -->
+<crew_layouts frame="35">
+	<!-- The genre's eight-column layout: the Facing sheets of the Terran drifter, the Tabby, the Mecha and the Tentauri. -->
+	<layout id="eight-wide">
+		<animation id="walk" down="1,1,4" right="1,5,4" up="2,1,4" left="2,5,4" ms="150"/>
+		<animation id="aim" down="3,1,3" right="3,4,3" up="4,1,3" left="4,4,3" ms="500"/>
+		<animation id="fire" down="5,1,4" right="5,5,4" up="6,1,4" left="6,5,4" ms="220"/>
+		<animation id="punch" up="7,1,6" down="8,1,6" ms="130"/>
+		<animation id="type" right="9,1,4" left="9,5,4" up="10,1,4" down="10,5,4" ms="170"/>
+		<animation id="teleport" any="11,1,8" ms="50"/>
+		<animation id="death" any="12,1,8" ms="130"/>
+		<animation id="clone" any="13,1,6" ms="150"/>
+		<animation id="repair" any="14,4,4" ms="170"/>
+	</layout>
+	<!-- The genre's nine-column human layout: the top-down Terran drifter. -->
+	<layout id="nine-wide">
+		<animation id="walk" down="1,1,4" right="1,5,4" up="2,1,4" left="2,5,4" ms="150"/>
+		<animation id="aim" down="3,1,3" right="3,4,3" up="3,7,3" left="12,1,3" ms="500"/>
+		<animation id="fire" down="4,1,4" right="4,5,4" up="5,1,4" left="5,5,4" ms="220"/>
+		<animation id="repair" any="6,1,9" ms="110"/>
+		<animation id="punch" down="7,1,6" up="12,4,6" ms="130"/>
+		<animation id="type" right="8,1,4" left="8,5,4" up="9,1,4" down="9,5,4" ms="170"/>
+		<animation id="teleport" any="10,1,8" ms="50"/>
+		<animation id="clone" any="11,1,6" ms="150"/>
+		<!-- The drifter's death is a bad placeholder (heromedel, 2026-11-11), to be made again from scratch. -->
+		<animation id="death" any="13,4,4" ms="150"/>
+	</layout>
+	<!-- The top-down HalfMech suit: the eight-column layout with a row for each direction of powering a console
+	     (its first two frames clamp on and are played once; the game loops the other six). -->
+	<layout id="mecha-top-down">
+		<animation id="walk" down="1,1,4" right="1,5,4" up="2,1,4" left="2,5,4" ms="150"/>
+		<animation id="aim" down="3,1,3" right="3,4,3" up="4,1,3" left="4,4,3" ms="500"/>
+		<animation id="fire" down="5,1,4" right="5,5,4" up="6,1,4" left="6,5,4" ms="220"/>
+		<animation id="punch" up="7,1,6" down="8,1,6" ms="130"/>
+		<animation id="type" right="9,3,6" left="10,3,6" up="11,3,6" down="12,3,6" ms="200"/>
+		<animation id="teleport" any="13,1,8" ms="50"/>
+		<animation id="death" any="14,1,8" ms="150"/>
+		<animation id="clone" any="15,1,7" ms="150"/>
+		<animation id="repair" any="16,4,4" ms="200"/>
+	</layout>
+</crew_layouts>

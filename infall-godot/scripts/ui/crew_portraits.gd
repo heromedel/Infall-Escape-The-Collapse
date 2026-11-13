@@ -3,15 +3,36 @@ extends RefCounted
 ## Crew portrait tokens: a round token with a small face for each race, so crew read at a glance without
 ## animated sprites. The GATOS Species setting (GV 7A, 7D) chooses the GATOS faces (mercenary humans, or the
 ## approved pixel-art cat head), the HalfMechs' (a helmet, or dark cyborg kittens) and the Senti's (a hologram, or a
-## holographic cat). A crew member's look comes from their name, so it stays the same all run.
+## holographic cat). A race can instead have its token cut from its crew sprite sheet (race.xml's <token>), as the
+## Tentauri do, in the colours of the crew member's subtype (GV 7F). A drawn face's look comes from the crew member's
+## name, so it stays the same all run.
+
+const CUT_FILLS := 0.92      # a token cut from a sheet reaches the ring; a drawn face sits inside it
+const CUT_POINTS := 32
 
 
 
-static func draw_token(canvas: CanvasItem, race_id: String, seed_text: String, centre: Vector2, radius: float, ring: Color, rim_width: float = 2.0) -> void:
+static func draw_token(canvas: CanvasItem, race_id: String, seed_text: String, centre: Vector2, radius: float, ring: Color, rim_width: float = 2.0, subtype: String = "") -> void:
 	canvas.draw_circle(centre + Vector2(0, radius * 0.12), radius * 1.02, Color(0, 0, 0, 0.45))
 	canvas.draw_circle(centre, radius, Color("#1a2333"))
-	draw_face(canvas, race_id, seed_text, centre, radius * 0.86)
+	var cut := CrewArt.token_for(Library.race(race_id), subtype)
+	if cut.is_empty():
+		draw_face(canvas, race_id, seed_text, centre, radius * 0.86)
+	else:
+		_draw_cut(canvas, cut, centre, radius * CUT_FILLS)
 	canvas.draw_arc(centre, radius, 0, TAU, 28, ring, rim_width, true)
+
+
+## A circle of a sprite sheet, drawn as a disc of radius r.
+static func _draw_cut(canvas: CanvasItem, cut: Dictionary, centre: Vector2, r: float) -> void:
+	var points := PackedVector2Array()
+	var uvs := PackedVector2Array()
+	var size: Vector2 = cut.texture.get_size()
+	for index in CUT_POINTS:
+		var out := Vector2.from_angle(TAU * index / CUT_POINTS)
+		points.append(centre + out * r)
+		uvs.append((cut.centre + out * cut.radius) / size)
+	canvas.draw_colored_polygon(points, Color.WHITE, uvs, cut.texture)
 
 
 static func draw_face(canvas: CanvasItem, race_id: String, seed_text: String, centre: Vector2, r: float) -> void:
@@ -27,8 +48,6 @@ static func draw_face(canvas: CanvasItem, race_id: String, seed_text: String, ce
 				SpeciesFaces.draw_kitten(canvas, centre, seed_text, r)
 			else:
 				_mecha(canvas, centre, r)
-		"tentauri":
-			_tentauri(canvas, seed, centre, r)
 		"azurethea":
 			_moth(canvas, centre, r)
 		"senti":
@@ -51,19 +70,6 @@ static func _mecha(canvas: CanvasItem, c: Vector2, r: float) -> void:
 	canvas.draw_rect(Rect2(c + Vector2(-r * 0.52, -r * 0.1), Vector2(r * 1.04, r * 0.18)), Color("#aa28eb"))
 	canvas.draw_rect(Rect2(c + Vector2(-r * 0.2, -r * 0.08), Vector2(r * 0.4, r * 0.1)), Color("#ebe1fa"))
 	canvas.draw_line(c + Vector2(-r * 0.5, r * 0.45), c + Vector2(r * 0.5, r * 0.45), Color("#7a7f8e"), r * 0.08, true)
-
-
-static func _tentauri(canvas: CanvasItem, seed: int, c: Vector2, r: float) -> void:
-	var body: Color = [Color("#f4d9e8"), Color("#cdeee9"), Color("#e7defa"), Color("#ffd8cc")][seed % 4]
-	for index in 5:
-		var x := (index - 2) * r * 0.28
-		canvas.draw_line(c + Vector2(x, r * 0.2), c + Vector2(x * 1.3, r * 0.92), body.darkened(0.15), r * 0.16, true)
-	canvas.draw_circle(c + Vector2(0, -r * 0.12), r * 0.66, body)
-	canvas.draw_circle(c + Vector2(-r * 0.2, -r * 0.36), r * 0.2, Color(1, 1, 1, 0.55))
-	for side in [-1.0, 1.0]:
-		canvas.draw_circle(c + Vector2(side * r * 0.26, -r * 0.06), r * 0.17, Color("#1d2433"))
-		canvas.draw_circle(c + Vector2(side * r * 0.22, -r * 0.11), r * 0.06, Color.WHITE)
-	canvas.draw_arc(c + Vector2(0, r * 0.12), r * 0.12, 0.2, PI - 0.2, 8, Color("#ff5eca"), r * 0.07, true)
 
 
 static func _moth(canvas: CanvasItem, c: Vector2, r: float) -> void:

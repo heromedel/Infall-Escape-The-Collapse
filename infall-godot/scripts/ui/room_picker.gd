@@ -6,17 +6,21 @@ extends Overlay
 signal picked(room_index: int)
 
 var ship: Ship
-var system_name: String
+var system_def: SystemDef
 var _plan := FloorPlan.new()
+var _why: RichTextLabel
 
 
-func open(for_ship: Ship, new_system: String) -> void:
+func open(for_ship: Ship, new_system: SystemDef) -> void:
 	ship = for_ship
-	system_name = new_system
+	system_def = new_system
 	place_panel(760)
-	add_title("INSTALL %s" % new_system.to_upper())
+	add_title("INSTALL %s" % new_system.name.to_upper())
 	add_text("Choose the room for it on the %s. A room can hold more than one system." % ship.name, 18, UiColours.TEXT_DIM)
+	_why = add_text(" ", 16, UiColours.WARNING)
 	_plan.ship = ship
+	_plan.system_def = new_system
+	_plan.refused.connect(func(why: String): _why.text = why if not why.is_empty() else " ")
 	_plan.custom_minimum_size = Vector2(700, 520)
 	_plan.chosen.connect(func(room_index: int):
 		picked.emit(room_index)
@@ -28,7 +32,9 @@ func open(for_ship: Ship, new_system: String) -> void:
 class FloorPlan:
 	extends Control
 	signal chosen(room_index: int)
+	signal refused(why: String)      # why the room under the pointer can't take the system, or "" when it can
 	var ship: Ship
+	var system_def: SystemDef
 	var _hover := -1
 
 	func _scale_and_offset() -> Array:
@@ -39,13 +45,14 @@ class FloorPlan:
 		return [fit, offset]
 
 	func _room_free(room_index: int) -> bool:
-		return ShipOutfitter._free_console_cell(ship, room_index) != Vector2i(999, 999)
+		return ShipOutfitter.install_refusal(ship, system_def, room_index).is_empty()
 
 	func _gui_input(event: InputEvent) -> void:
 		var transform := _scale_and_offset()
 		if event is InputEventMouseMotion:
 			var local: Vector2 = (event.position - transform[1]) / transform[0]
 			_hover = ship.room_at(Vector2i(floor((local - ship.design.cell_offset) / ShipDesign.TILE)))
+			refused.emit(ShipOutfitter.install_refusal(ship, system_def, _hover) if _hover >= 0 else "")
 			queue_redraw()
 		elif event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 			if _hover >= 0 and _room_free(_hover):

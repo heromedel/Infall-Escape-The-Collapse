@@ -7,7 +7,7 @@
   <power kind="pool" level="7"/>                                   <!-- Senti core by bars (race profile 6, Proposed 2026-11-13) -->
   <system type="piloting" level="1"/>
   <system type="sensors" level="2"/>
-  <system type="shields" level="1" kind="projector"/>   <!-- G29: Senti Shield Projector, one bar per layer (GDD 8H) -->
+  <system type="shields" level="1" kind="projector"/>   <!-- G29: Senti Shield Projector, one bar per layer (GDD 8Q) -->
   <system type="engines" level="1"/>
   <system type="hacking" level="1"/>                                 <!-- hack the Med Bay so the burned can't heal -->
   <system type="aaa" level="1"/>                                       <!-- hosts 3 Senti per level; brings the dead back -->

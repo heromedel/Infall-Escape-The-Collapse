@@ -20,6 +20,9 @@ anything Claude added tagged Ai-Generated-Proposal.
 - **B — Likely (heromedel, 2026-10-31):** on the map, Swallowed clusters are black, the legend's icons look like
   clusters, and each race region is one faint wash of colour rather than many circles, so the clusters stand out.
 - **C — Decided (heromedel, 2026-10-31):** events don't speak of the collapse before it appears (GDD 2P).
+- **D — Built (2026-11-13), GDD 2R (Decided):** a cluster that turns Abandoned has no store; what it holds
+  becomes something drifting to salvage. The rest of GDD 2R (each state changing who is met and what a store has)
+  is not built.
 
 ## 3. Squad Combat
 
@@ -67,6 +70,27 @@ anything Claude added tagged Ai-Generated-Proposal.
   portraits and symbols stay upright either way.
   - **Ai-Generated-Proposal (2026-11-05):** only the drawing turns, not the battle, so each player chooses their own,
     also over LAN.
+- **K — Likely (heromedel, 2026-11-13), built:** closer to the genre, from heromedel's answers, the reference
+  frames and what could be read online (no new recordings):
+  - Fire spreads between rooms through their doors, never through a wall: freely through an open door or with
+    no working Doors system; a closed door slows it 1.75 times and a closed blast door 10 times (the genre's
+    wiki). **Ai-Generated-Proposal:** a blast door is Doors at level 2 or more.
+  - Crew fight a fire from where they stand (already so).
+  - A damaged system is red, on the ship and in the HUD (it was orange until broken).
+  - A system's own key gives it power and Shift with the key takes it away, shown in its tooltip (reference
+    frame 12).
+    - **Decided (heromedel, 2026-11-13):** the keys match the genre's, and anything of Infall's that sat on one of
+      them moved. Cloaking is H, the Crew Teleporter G and the Supershield Y, so every system key works both ways.
+      Open Doors is Z and Close Doors X, Recall R, Return to Stations Enter, look at the selected ship Q, launch
+      a suit B.
+  - Open Doors pressed again, with every inner door open, opens the airlocks too. Vent stays.
+  - While the mouse player aims, the arrow is hidden: the reticle is the cursor (reference frame 02).
+  - An enemy's empty shield pip shows its recharge as a bar (reference frame 17).
+  - A weapon file can name its launch sound; without one it gets its kind's (missile, flak, ion, spore, heavy or
+    light laser). A miss has a sound. The new sounds have not been listened to.
+  - **Decided (heromedel, 2026-11-13):** event choices are numbered and a number key picks one, as the genre's
+    event screens show. Built for every window of numbered choices; 1 also presses a window's only button.
+  - Not settled: the gap between a volley's shots (0.25 s in the game; no figure found).
 
 ## 4. Multiplayer
 
@@ -108,12 +132,38 @@ anything Claude added tagged Ai-Generated-Proposal.
   own. Orders from players who aren't assigned are refused, and they are told why.
 - **J — Likely (heromedel, 2026-11-05):** a player who leaves hands their ships and crew to the Admiral; a setting
   may choose otherwise later.
+- **K — Built (2026-11-13):**
+  - GDD 4F (Decided): what a player commanded when they left is remembered, and the Admiral restores it from the
+    Players menu when they return. Kept for the run; a save does not keep it.
+  - GDD 4A (Likely): five and six players on one screen are laid out three across and two down.
+  - GV 4E: the Admiral leaving by choice pauses and saves, as their machine dropping out does.
+  - Fixed: a machine joining while the host was mid-jump played orders queued behind the jump twice and fell out
+    of step. The host's record is now written as each item is played.
+  - The out-of-step check also covers the battle's random numbers, systems, air, fires, breaches, conduits and
+    cooldowns.
+  - Tests: `tools/lan_run_test.sh` (a longer run over LAN, both machines' state compared), more checks in
+    `coop_test`, and `CHAOS_PLAYERS` for the chaos tester.
 
 ## 5. Ships
 
 - **A — Decided (heromedel, 2026-10-31):** a powered Medbay heals every crew member of its own side in its room
   every tick, whatever they are doing, while fire or lack of air keeps hurting them. It heals allies from any
   ship of the squad, never enemies. (The room rule is GDD 5B.)
+- **B — Built (2026-11-13), GDD 5B (Decided):** buying a system is held to the placement rules Ship Designs gave:
+  a tile of its own; a Medbay (or any system that heals) only with systems crew can't man, Doors and Sensors
+  counted as manned. The room picker says why a room is refused.
+  - **Decided (heromedel, 2026-11-13; GDD 5D):** an EVA or EVB Dock sits at an airlock: on a tile that has one,
+    or in a room that has an airlock with no system on its tile. A bought dock is put on the airlock's tile, and a
+    room without such an airlock is refused. The content check holds every ship file to it; the four with an EVB
+    Dock (the Assault Frame and its Siege loadout, the Light Attack Frame's two suit dock loadouts) have the dock
+    on the tile next to a clear airlock, so they pass.
+- **C — Built (2026-11-13):** the docs' own ships from `ship-suggestions.md`: the Pirate Pickpocket and the
+  Lykario Scrap Hound (loadouts), the Malphen Polyp with its flak loadout, the Azurethea Vein Moth, and the
+  weapons Flesh Mortar, Bone Flak and Lantern. The docs' Relay Picket and the Senti crew killers wait for the AAA.
+  - **Decided (heromedel, 2026-11-13):** the Malphen Growth's first fight is a squad of two, a Polyp and a flak
+    Polyp (three cost the Outrider half its hull in bot fights); band 2 keeps two Polyps and a flak Polyp. The
+    Pirate Scrapper keeps a place: its own squad, GATOS Scrappers, in bands 1 and 2. "None of these are made as
+    hard rules; ships should go where the fun, balance and challenge are."
 
 ## 6. Jump Travel
 
@@ -164,6 +214,148 @@ anything Claude added tagged Ai-Generated-Proposal.
   in game): repair 12.5 s a system bar for an untrained crew member, fire-fighting 10.4 s, teleporter cooldowns
   20, 15 and 10 s by level (were 5.5 s, about 6 s and 30/20/10 s). The teleporter's cooldown resets outside
   fights. Built.
+- **F — Proposed (heromedel, 2026-11-11):** a setting, `Art Style: Top Down > Facing > Tokens`, so both sprite
+  styles can be playtested without asking for a build of each. It can be taken out before a release if needed.
+  - **Top Down — Decided as the default (heromedel, 2026-11-11):** crew drawn from almost straight above, as the
+    genre draws them (`docs/art/terran/crew-test-4`, `docs/art/mecha/crew-topdown-test`).
+  - **Facing:** crew drawn standing, facing the viewer (`docs/art/terran/crew-test-3`, `docs/art/mecha/crew`,
+    `docs/art/tentauri/crew`, the Tabby of `docs/art/terran/cat-concept-for-gatos`).
+  - **Tokens:** the round portrait tokens the game has drawn until now.
+  - A race with no sheet in the chosen style is drawn as its token, so the game plays the same in every style and
+    a new sheet shows up by itself. As sheets are added to the game, gaps, missing frames and fixes get filled in
+    (heromedel, 2026-11-11); what is missing is listed in `infall-godot/README.md`.
+  - How it is built: a race names its sheets in its `race.xml` (`<crew_art style="…" sheet="…" layout="…"/>`), and
+    `content/crew-layouts.xml` says where each animation's frames sit on a sheet. Frames are 35 pixels, the size of
+    a deck tile, so a sprite fills its tile one pixel for one.
+  - **Tokens from sprites — Decided for the Tentauri (heromedel, 2026-11-11):** a race's token can be a circle cut
+    from one frame of its sheet (`<token style="…" frame="row,column" centre="x,y" radius="…"/>` in `race.xml`),
+    in place of a drawn face. The Tentauri's is the bell of the Facing sheet's standing frame.
+  - **Particles — Likely (heromedel, 2026-11-12):** all particles are made in the game instead of being drawn on
+    the sheets (extinguisher spray, welding sparks and the like), and the ones that were drawn on sheets came off:
+    it is more consistent and easier to change. Built 2026-11-12.
+    - Repair sparks are the ship's power colour (heromedel's example, built). Extinguisher spray is white and
+      pale blue (**Ai-Generated-Proposal**).
+    - Taken off the sheets: the Facing drifter's spray and repair sparks; the Tentauri's repair sparks and the
+      sparkles at its tentacle tips when it shoots; the Mecha Facing sheet's flash at the claw in one aiming frame
+      each way. The top-down drifter and top-down Mecha had none. The shooting flashes are not replaced yet: the
+      game does not draw a crew member's shot.
+    - How it is built: a sheet's `<crew_art>` in its `race.xml` holds `<particles kind="…" animation="…" …/>` with
+      the point in the frame where they start for each way the crew member faces ("any" for all; left is right
+      mirrored unless given). The points were read off the art and are good to a pixel or so.
+  - **Crew for sale — Decided (heromedel, 2026-11-11):** every crew card in a store shows a picture of the crew
+    member, drawn as the Art Style setting draws them aboard: their sprite standing on a deck tile, or their
+    token where the style is Tokens or the race has no sheet in it. It is the crew member the buyer gets: their
+    name and subtype are settled before the sale, though the card doesn't show the name.
+  - **Subtypes — Decided (heromedel, 2026-11-11):** a crew member has a subtype that names the colours they
+    wear, one for each part of their race's sheet. A Tentauri's is bell and tentacles, picked separately, e.g.
+    `blue/forest`. It is for show only, is saved with the run, and a clone keeps it.
+    - A newcomer takes, at random, a planned subtype nobody in the squad wears; once all are worn, a combination
+      of the listed colours nobody in the squad wears. No weights, so a bell can turn up with tentacles of its own
+      colour. An enemy squad does the same among itself.
+    - Past every combination (36 for the Tentauri) the colours are made up at random: one too close to a subtype
+      already worn is thrown and tried again, and the third try stands whatever it is (heromedel). What counts as
+      too close is an **Ai-Generated-Proposal**: every part within 25 degrees of hue of the other's.
+    - A Tentauri for sale at a store shows the subtype they will have.
+    - More planned subtypes can be added later; other races have none yet.
+    - How it is built: the race's `race.xml` lists each part (`<skin_part>`: the sheet's own colour codes for it
+      and the colours it can take) and the planned subtypes (`<subtype wears="…"/>`). The sheet is kept as an SVG,
+      and the game changes its colour codes and draws it, once for each subtype worn (`CrewSkins`, `CrewArt`).
+- **G — Likely (heromedel, 2026-11-12), built 2026-11-13:** crew fights as the genre has them
+  (`docs/reference/genre-crew-fights/`), and how crew and consoles share a tile.
+  - **Likely (heromedel, 2026-11-12), built:** a tile holds one fighter from each side. Whoever walks into a
+    room with foes in it goes onto a foe's tile and pairs up; the two on a tile punch. A fighter with nobody on
+    their tile stays where they are, aims and fires, and a small bolt flies from about the gun to the target.
+    Those already standing in the room do not move.
+  - **Proposed (heromedel, 2026-11-12), built:** if a player moves a paired crew member to another tile, the
+    enemy, if still willing to fight, follows to go on with the melee. The genre had no need of this: it has no
+    tile-to-tile orders.
+  - How it is built (`CrewBrain`, `ShipView`; `tools/crew_fight_test` checks the rules). Each line here is an
+    **Ai-Generated-Proposal** where the recordings or heromedel did not settle it:
+    - A punch or a shot lands once a second and does the same damage, 5.6 health at melee 1.0, so a second of
+      fighting costs what it did before hits were counted. Whether the genre's shot and punch differ is not
+      known.
+    - A walker takes the nearest foe's tile that none of their own side holds. A player chooses by the tile
+      they order: onto a foe's tile to punch, any other tile to shoot.
+    - Crew beamed in land on a tile with no foe on it when there is one, so they start by shooting, as in the
+      recordings.
+    - **Decided (heromedel, 2026-11-13), built:** a shooter concentrates on one foe until that foe is dead or
+      gone, unless they are hit by someone else, when they fight back and turn on the one who hit them. This is
+      Infall's own rule: in the recording the genre's shooter changed target five times in fourteen shots, and
+      turned on a foe who never touched him.
+      - **Ai-Generated-Proposal (agreed by heromedel, 2026-11-13):** they turn on the one who hit them only if
+        their own target is not shooting at them too; otherwise two foes shooting at one fighter would have
+        them changing target at every hit. A punch needs no rule: a foe who walks onto a shooter's tile is
+        paired with them, and they punch back.
+      - **Ai-Generated-Proposal (agreed by heromedel, 2026-11-13):** the first target is a foe already shooting
+        at them if there is one, otherwise the nearest.
+    - The bolt takes a quarter of a second a tile and always lands.
+    - Following: only crew no player commands follow, and only inside the room. A player's own crew wait for
+      orders.
+    - Drawing: the two on a tile are drawn apart, the other side's above and facing the camera, the player's
+      below with their back to it. The punch is timed to land with the hit. The bolt is a ship laser's made
+      small, in the shooter's side's colour, leaving from the muzzle point each sheet gives
+      (`<particles kind="shot" animation="aim" …/>`). A hit shows a white flash with a red cross, then red
+      flecks that fade. Crew are drawn from the back of the screen forward, and health bars over everything.
+  - **Decided (heromedel, 2026-11-12):** no extra outlines round a crew member. The second ring drawn when
+    someone mans a system goes: the console's art and its powered symbol are enough, and a crew member standing
+    there is plainly manning it.
+  - **Likely (heromedel, 2026-11-12):** crew are the genre's size in a tile.
+  - **Decided (heromedel, 2026-11-13), built:** crew and system share a tile the way the art sessions settled
+    it: the console at the wall with the symbol in it, the crew member in front, and no symbol disc at the
+    tile's middle.
+    - The console art is in the game's content (`infall-godot/content/consoles/`, brought over by
+      `tools/import_console_art.py`): the Outrider's wall desk, the Mecha tower, and the Tentauri organs, one for
+      each system. A race names its style in its `race.xml` (`consoles="organs"`).
+    - **Ai-Generated-Proposal:** a race with no consoles of its own (Azurethea, Lykario, Malphen, Senti) gets
+      the wall desk until theirs is drawn.
+    - The art carries no symbol. The game draws it on the screen or bulb, so its colour still shows powered,
+      unpowered, damaged and broken.
+    - The desk and the tower turn to face their wall. The Tentauri organs stay upright on the screen however
+      the ship and the view are turned, at half size, slid against their wall (style guides, Tentauri ships).
+    - A crew member standing still on a console's tile is drawn back from its wall: 6 pixels for a sprite, 4 for
+      the top-down HalfMech (its arms were drawn to grip the tower), 8 for a token. Only the drawing shifts;
+      where they stand in the battle does not. **Ai-Generated-Proposal** for the distances
+      (mockup: `docs/art/mockups/crew-at-console/`).
+    - In the Facing style a console on the wall nearest the player is drawn over the crew member, who stands
+      behind it.
+    - A system with no wall (the Mecha Servicing Core) still shows its symbol on a dark plate.
+    - Shields, Engines and Life Support are now drawn as the agreed shapes (`content/systems/<id>/symbol.svg`
+      at the repo root).
+  - **Decided (heromedel, 2026-11-13), built:** no ring under a crew sprite. Sides are told apart as in the
+    genre, by the health bar's colour: green for the player's crew, red for the other side. The bar shows on
+    every crew member in a room that holds both sides, and on one who is hurt or selected, as before; its
+    length still shows health. It sits just under the figure's feet. A token keeps its rim, which is part of
+    the token.
+  - **Decided (heromedel, 2026-11-13), built:** a selected crew sprite has a thin outline that hugs it, one
+    pixel wide, in the selecting player's colour, as the genre marks its own. A selected token keeps a ring.
+  - **Likely (heromedel, 2026-11-13), built:** tokens are smaller, about 19 pixels across with the rim (they were
+    about 27), so a console's symbol shows beside one. The size is an **Ai-Generated-Proposal**.
+  - What was found about consoles, symbols and size (2026-11-12), before the points above were answered.
+    heromedel's first leaning was a small symbol beside or above a crew member while manning:
+    - The art sessions settled where the symbol goes: in the console. The Outrider's floor layout test 4 has
+      "a pale desk that blends into the floor, with a small symbol on its screen"; the pirate ships have wall
+      desks with the symbol; the Tentauri have an organic base for each system with the symbol lit in a dark
+      bulb (Decided, `docs/art/style-guides.md`); the Mecha console is a pixel tower with the symbol on its
+      screen (Decided). The art rule (`docs/art/README.md`, 2026-10-25): a console sits against its wall, at
+      most about half the tile deep, and crew stand and work on the console's own tile.
+    - The Godot version uses none of that console art. It draws a plain desk with a blank screen and puts the
+      symbol on a dark disc in the middle of the tile, which is GDD 14C's stand-in "until console art exists".
+      A crew member stands on the tile's middle, on top of it.
+    - Symbols: 14 agreed symbol files are at the repo root (`content/systems/<id>/symbol.svg`, from the first
+      coding version). The Godot version redraws its symbols in code. Weapons, Medbay, Piloting, Sensors and
+      Doors match; Shields, Engines and Life Support are drawn differently.
+    - Size: the top-down drifter is already exactly the genre human's size in the frame (17 by 12 pixels facing
+      down, 9 by 18 facing sideways). What makes crew look bigger is the ring round each one, about 29 pixels
+      across. The Facing sprites are taller by design (22 to 31 pixels), and a token with its rim is about 30
+      across.
+- **H — Built (2026-11-13):** the Tentauri reach, as the reach prototype has it (`docs/art/tentauri/crew/`): a
+  Tentauri grows a pair of short tentacles to each console it mans from across the room, drawn by the game in its
+  own tentacle colours; they pull back in when it stops. The prototype's body sheet is not used yet.
+- **I — Built (2026-11-13), race profiles Lykario 9 (Decided):** Animal Senses. With a living Lykario in the
+  squad, the crew aboard an enemy ship are seen without sensors and in a nebula. Only the crew show.
+- **J — Built (2026-11-13), GDD 7H (Decided):** repairing a system the crew member has a skill level in is 5%
+  faster. **Placeholder (heromedel, 2026-11-13):** 5% for now, Infall: Eco's figure (half of one repair level);
+  it has not been tested.
 
 ## 8. Weapons and Systems
 
@@ -179,6 +371,22 @@ anything Claude added tagged Ai-Generated-Proposal.
 - **C — Likely (heromedel, 2026-11-05):** with the real distance (GV 3I), a battlesuit carries 10 to 20 times more
   air, so it can cross the gap, fight and come home.
   - **Ai-Generated-Proposal (2026-11-05):** 15 times to start.
+- **D — Likely (Infall: Eco, 2026-11-13), built:** the growth organ is priced as a clone bay (12.11, then 8.47 and
+  10.89); mercenary prices rise with the band like wreck rewards, times 1.(band − 1); the sized event rewards are
+  7 low, 11 medium and 7 high, the genre's split (which reward moved is an **Ai-Generated-Proposal**); 15 crew
+  damage a point of damage stays.
+  - **Decided (heromedel, 2026-11-13), built:** shield levels as layers are a setting that defaults to how the
+    genre works, `Shield Levels: By Bar > By Layer`. By Layer is the shield test (GDD 8H): a level is a whole
+    layer, two power at a press, two damage or two ion to lose, bought at the layer prices of `system-prices.md`
+    (12.11, 24.21, 43.56), and drawn as one block. It is a run rule, so every machine uses the host's. Ship files
+    stay in bars either way. **Ai-Generated-Proposal:** damage and ion are counted apart (one of each loses
+    nothing), and the first layer costs the Shields system's buy price in both modes.
+  - **Superseded (heromedel, 2026-11-13):** By Layer makes shields tougher than the genre's (a layer there falls
+    to the first damage or ion), and a setting over every ship takes too much rebalancing. One power for one
+    layer becomes the Senti Shield Projector, a second shield system (GDD 8Q, Proposed). The By Layer value comes
+    out when that is built.
+- **E — Fixed (2026-11-13):** no beam weapon had dealt damage since tile targeting was built (a beam was never
+  given its list of tiles cut). They work again.
 
 ## 14. User Interface
 
@@ -208,6 +416,27 @@ anything Claude added tagged Ai-Generated-Proposal.
     steps back, as a click on nothing does. Built.
 
 - **G — Proposed (heromedel, 2026-11-05):** the settings menu gets tabs, as the settings grow.
+- **H — Proposed (heromedel, 2026-11-09):** ship status cards. Every ship a player commands has a small status
+  card of a fixed size; the Admiral has one for every ship of the squad. The battle view then never has to keep two
+  ships in sight: a player can select one of their ships, zoom to an enemy ship, and still see on the card when
+  their own ship is hit.
+  - A card shows a small deck plan. A room shows fire, a breach and damage with a tint and/or one icon (not every
+    tile of the room), its air with a tint, and intruders with icons. The card also has a hull bar and shield pips.
+  - Clicking a card jumps the camera to that ship.
+  - A card folds like the other HUD cards: it reopens when something changes on its ship and folds back.
+  - Built 2026-11-13 as one HUD card, SHIP STATUS, holding a small card for each ship the player commands (the
+    Admiral: every ship). A room is orange with a flame when it burns, has a dark hole when breached, a red edge
+    when a system in it is damaged, a red tint as its air thins, and a red dot for each intruder. The plan lies
+    the way the ship does on the screen (Battlefield: Vertical or Horizontal). **Ai-Generated-Proposal:** the
+    marks' looks are this session's.
+  - **Decided (heromedel, 2026-11-13), built:** each ship's card folds on its own, and a folded card opens again
+    when its ship is hit, on fire, breached or boarded.
+- **I — Built (2026-11-13), GDD 14D:** `Player Power Color: Default (Green) > Racial > Specific Color` colours the
+  player's conduits, symbols, power bars and pips, and `Enemy Terran Color: Pirate Power Orange > Power Green`
+  decides what a Terran enemy shows.
+  - **Decided (heromedel, 2026-11-13), built:** the Specific Color is both a list of every species' power colour
+    and a picker: `Specific Power Color: GATOS Green > Pirate Orange > Mecha Purple > Tentauri Pink > Azurethea
+    Blue > Senti Yellow-Green > Lykario Silver > Malphen Pink-Orange > Custom`, and Custom opens a colour picker.
 
 ## 15. Ranks and Titles
 
@@ -274,6 +503,17 @@ All built in the build of 2026-11-05.
    the keyboard player drops back in with any key, as a controller does with Start.
 5. **Settings tabs** (GV 14G): Game, Battle, Controls, HUD, Players, Display and Sound. Built.
 
+## Next build (after 2026-11-05)
+
+1. **Ship status cards** (GV 14H): a small card for every ship a player commands, with a deck plan that shows
+   fire, breaches, damage, air and intruders, a hull bar and shield pips; a click jumps to the ship. Built
+   2026-11-13.
+
+2. **Art Style** (GV 7F): built 2026-11-11 with the five sheets that exist and the standing Tabby; the Tabby's full Facing sheet went in on 2026-11-13. Still to fill in:
+   top-down Tabbys; the Tabby's animations in the Facing style; top-down Tentauri; any sheet at all for the
+   Azurethea, Malphen, Lykario and Senti-GPH; the clone-bay animation, which the game does not play (it has
+   no clone bay; deaths have played since 2026-11-13). The top-down drifter's repair and death rows were redrawn from his own frames the same day and are in.
+
 ## Later (the road map)
 
 - When the host quits a LAN game, hand the game to another player's machine instead of ending it (GDD 4N, Admiral
@@ -295,3 +535,19 @@ All built in the build of 2026-11-05.
 | 2026-11-01 | The 2026-11-01 build: the multiplayer groundwork and the rest of the Next build list. |
 | 2026-11-05 | The real battlefield (GV 3I, 3J), the player setup menu and assignments (GV 4H–4J), more battlesuit air (GV 8C), settings tabs (GV 14G); handing the game over on the road map. |
 | 2026-11-05 | The 2026-11-05 build: co-op fixes, the real battlefield, battlesuit air, the player setup menu with assignments, settings tabs. |
+| 2026-11-09 | Ship status cards (GV 14H) proposed and put on the Next build list. |
+| 2026-11-11 | The Art Style setting, Top Down > Facing > Tokens, with Top Down the default (GV 7F); built the same day. |
+| 2026-11-11 | Tentauri tokens are cut from the Facing sheet's standing frame (GV 7F). |
+| 2026-11-12 | Particles are made in the game, not drawn on the sheets; repair sparks in the ship's power colour (GV 7F). |
+| 2026-11-11 | Every crew card in a store shows the crew member's picture, following the Art Style setting (GV 7F). |
+| 2026-11-11 | Crew subtypes: a Tentauri's bell and tentacle colours, planned pairs first, then unused combinations, one of each to a squad (GV 7F). |
+| 2026-11-13 | Consoles drawn from the art sessions' art with the symbol on them, crew drawn back from the wall, no ring under sprites, health bars coloured by side, a thin outline for a selected sprite, smaller tokens (GV 7G); built the same day. |
+| 2026-11-13 | The Tabby's full Facing sheet is in the game, in place of the four standing views. |
+| 2026-11-13 | Crew fights as the genre has them: pairing on a tile, punches, shots, hit marks, and the enemy following a moved crew member (GV 7G); built the same day. |
+| 2026-11-13 | A crew member who shoots concentrates on one foe, and fights back when hit by another (GV 7G). |
+| 2026-11-13 | A dying crew member plays their sheet's death frames, then fades (GV 7F). |
+| 2026-11-13 | heromedel's answers to the overnight report: keys match the genre's and event choices take number keys (GV 3K); a two-ship first Malphen squad and the GATOS Scrappers (GV 5C); each status card folds on its own (GV 14H); Specific Power Color lists every species and has a picker (GV 14I); `Shield Levels: By Bar > By Layer` (GV 8D); the 5% repair bonus stays as a placeholder (GV 7J). |
+| 2026-11-13 | Two shield systems proposed, the Mawjig Shield Generator and the Senti Shield Projector, and the setting `Beams vs Shields: Penetrate (Classic) > Hit (Damages Shields First)` (GDD 8Q); for Ship Designs to weigh before any is built. |
+| 2026-11-13 | For the next build, on heromedel's go: the classic shield fixed to the genre's (shield power moves in pairs, a damaged or ionised layer frees its other bar, the `Shield Levels` setting removed), and a hull's power-colour stripe following the ship's power colour. The EVA Dock is written up as GDD 8R (Proposed). |
+| 2026-11-13 | An EVA or EVB Dock sits at an airlock: on its tile, or in a room with an airlock that has no system on its tile (GDD 5D, GV 5B). |
+| 2026-11-13 | The overnight plan (`docs/handoffs/overnight-plan-2026-11-13.md`, report beside it): co-op fixes and tests (GV 4K), closer to the genre (GV 3K), Player Power Color (GV 14I), the Medbay rule and the docs' ships (GV 5B, 5C), Abandoned clusters (GV 2D), Animal Senses, the reach and the repair bonus (GV 7H–7J), Eco's prices (GV 8D), ship status cards (GV 14H). |

@@ -4,8 +4,8 @@
 	<event id="ITEMS_WRECKAGE" title="Wreckage" kind="items" weight="2">
 		<text>The remains of a battle drift through the cluster: twisted hull plates, shattered weapon mounts, frozen debris. Your squad's converters could turn a lot of it into Mawjig.</text>
 		<choice text="Convert what you can.">
-			<outcome weight="3"><text>Your squad works for hours, converting enough of the matter into energy to fill your Mawjig stores.</text><mawjig size="medium"/></outcome>
-			<outcome weight="1"><text>Something in the wreckage is still armed. It goes off against your hull.</text><hull amount="-3"/><mawjig size="low"/></outcome>
+			<outcome weight="3"><text>Your squad works for hours, converting enough of the matter into energy to fill your Mawjig stores.</text><mawjig size="high"/></outcome>
+			<outcome weight="1"><text>Something in the wreckage is still armed. It goes off against your hull.</text><hull amount="-3"/><mawjig size="medium"/></outcome>
 		</choice>
 		<choice text="Leave it."/>
 	</event>
@@ -13,7 +13,7 @@
 		<text>Your sensors find a sealed container tucked into an asteroid's shadow, marked with a pirate gang's sign.</text>
 		<choice text="Crack it open.">
 			<outcome weight="3"><text>Inside is a weapon, still in its packing.</text><weapon tier="mid"/></outcome>
-			<outcome weight="1"><text>It's booby-trapped. The blast scorches your ship.</text><hull amount="-2"/><mawjig size="low"/></outcome>
+			<outcome weight="1"><text>It's booby-trapped. The blast scorches your ship.</text><hull amount="-2"/><mawjig size="high"/></outcome>
 		</choice>
 		<choice text="Leave it."/>
 	</event>

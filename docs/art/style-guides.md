@@ -68,18 +68,28 @@ Reference: the sleek battle-cross frame, `mecha/light-attack-frame/pixel-redo/ba
 
 ## HalfMechs in their suits (crew)
 
-Reference: heromedel's sheet, `mecha/crew/`.
+Reference: the sheet in `mecha/crew/`, drawn by another Claude session with heromedel's guidance (heromedel,
+2026-11-12: not his own drawing).
 
-- **Look — Decided (2026-10-25, heromedel's sheet):** low-res pixel art at true crew size, a Gundam-like mech
+- **Look — Decided (2026-10-25, the sheet made with heromedel's guidance):** low-res pixel art at true crew size, a Gundam-like mech
   silhouette (crest head, blade forearms, short legs), near-black armour from the Mecha palette with one accent, the
   purple (visor bar, chest lights). At sprite size the texture is gritty and broken up, and detail is hinted by a pixel
   or two. Menace comes from the silhouette and the dark palette, not from faces, eyes, grilles or bolts.
+- **Size — Decided (heromedel, 2026-11-11):** a HalfMech in its suit is larger than a Terran crew member. The top-down
+  test (`mecha/crew-topdown-test`) is 27 pixels across with its spikes against the drifter's 17.
 - **Powering a system — Decided (2026-10-25):** the power-pulse typing rows: a pulse runs from the HalfMech into the
   console, purple turning power green as it arrives.
+  - **Proposed (heromedel, 2026-11-11):** those rows were made for a figure with a longer bar down the arm. On the
+    top-down figure he clamps on with both claws and stays clamped, pulsing; the light still lands in power green.
+- **Repairing — Proposed (heromedel, 2026-11-11):** he uses the clamp claw and no wrench.
 
 ## HalfMech people (out of their suits)
 
 Reference: heromedel's art, `mecha/pilot/`. There are no current plans to show HalfMechs out of their suits.
+
+- **A glimpse in the clone bay — Proposed (heromedel, 2026-11-11):** the one exception. The Mecha clone animation
+  shows a suit being put together and, for one frame, a small HalfMech jumping into the back of it, drawn like the
+  top-down Terran in HalfMech colours (`mecha/crew-topdown-test`).
 
 - **Look — Proposed (2026-10-25, heromedel's art):** a petite pilot, about half an FTL human's size (9 px wide, 13 px
   tall), pale skin, dark purple hair, purple eyes, and purple implant lights on the left shoulder and the back of the
@@ -102,10 +112,28 @@ Reference: the Tentauri scout, `tentauri/scout/`.
 
 ## Tentauri crew
 
-Reference: heromedel's sheet, `tentauri/crew/`.
+Reference: the sheet in `tentauri/crew/`, drawn by another Claude session with heromedel's guidance (heromedel,
+2026-11-12: not his own drawing).
 
-- **Look — Decided (2026-10-25, heromedel's sheet):** a soft jellyfish from above: a rounded teal bell with a light
+- **Look — Decided (2026-10-25, the sheet made with heromedel's guidance):** a soft jellyfish from above: a rounded teal bell with a light
   highlight and a dark outline, two dot eyes, a pink rim at the base, and lavender tentacles. The tentacles are thin,
   wavy lines (one pixel, plus a shade pixel), never wedges or triangles. Two long tentacles always hang; the eight
   short ones type, shoot, punch and reach out to other systems in the room (the reach prototype).
 - **Using a Tentauri system — Proposed (2026-10-25):** a grasping animation instead of typing (`docs/ideas.md`).
+- **Token — Decided (heromedel, 2026-11-11):** the round token is cut from the sheet's standing frame: the whole
+  bell, the pink rim and the top of the tentacles.
+- **Subtypes — Decided (heromedel, 2026-11-11):** a Tentauri's bell and tentacles each take a colour, so crew can
+  be told apart (GV 7F). The outline, eyes and pink rim stay.
+  - **Planned subtypes — Likely (heromedel, 2026-11-11):** bell with tentacles: teal with lavender (the
+    reference), gold with indigo, pearl with sky blue, blue with forest green, coral with teal, violet with gold
+    (`tentauri/crew/review/subtypes.png`).
+  - Bell colours: teal, gold, pearl, blue, coral, violet. Tentacle colours: lavender, indigo, sky, forest, teal,
+    gold. Any bell can go with any tentacles once the planned ones are worn.
+
+## Terran and Tabby crew
+
+- **Emblems — Decided (heromedel, 2026-11-10):** there is no universal Terran or Tabby emblem. Each Terran or Tabby
+  crew design may wear an emblem of its own; the drifter of crew test 3 keeps its blue chevron
+  (`terran/crew-test-3`), and other designs get other emblems.
+- **Hands — Proposed (heromedel, 2026-11-10):** a hanging hand is drawn as a fist of about four pixels, not as a
+  flat hand.

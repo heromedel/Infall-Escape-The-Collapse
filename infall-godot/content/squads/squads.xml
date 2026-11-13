@@ -3,14 +3,21 @@
      show up (region race and cluster states, GDD 2R) and how they behave in a fight (their conduct). -->
 <squads>
 	<squad id="terran-pirates" name="GATOS Pirates" race="terran" faction="pirate" where_races="terran,mecha,any" where_states="Doomed,Struggling,Border,Abandoned,Refugee,Occupied,Unclaimed">
-		<tier bands="1"><ship design="pirate-scrapper" count="1"/></tier>
+		<tier bands="1"><ship design="pirate-hijacker.pickpocket" count="1"/></tier>
 		<tier bands="2"><ship design="pirate-hijacker.cutpurse" count="1"/></tier>
-		<tier bands="3"><ship design="pirate-hijacker.cutpurse" count="1"/><ship design="pirate-scrapper" count="0-1"/></tier>
+		<tier bands="3"><ship design="pirate-hijacker.cutpurse" count="1"/><ship design="pirate-hijacker.pickpocket" count="0-1"/></tier>
 		<tier bands="4"><ship design="pirate-hijacker" count="1"/></tier>
 		<tier bands="5-6"><ship design="pirate-hijacker" count="1-2"/></tier>
 		<tier bands="7-8"><ship design="pirate-hijacker.marauder" count="1"/><ship design="pirate-hijacker" count="1"/></tier>
 		<conduct surrender_chance="45" surrender_hull="0.35" escape_chance="30" escape_hull="0.25" targets="weapons,piloting" hail="pirate"/>
 		<description>Doomed GATOS turned criminal: they want your ship intact, so they stop your weapons and board.</description>
+	</squad>
+	<!-- The pirates' other band 1 and 2 squad (heromedel, 2026-11-13: the Scrapper stays where it plays well): a lone
+	     Scrapper with no boarders, beside the Pickpocket's boarding party. -->
+	<squad id="terran-scrappers" name="GATOS Scrappers" race="terran" faction="pirate" where_races="terran,mecha,any" where_states="Doomed,Struggling,Border,Abandoned,Refugee,Occupied,Unclaimed">
+		<tier bands="1-2"><ship design="pirate-scrapper" count="1"/></tier>
+		<conduct surrender_chance="45" surrender_hull="0.35" escape_chance="30" escape_hull="0.25" targets="weapons,piloting" hail="pirate"/>
+		<description>Doomed GATOS in a patched-up hull, out for whatever a passing ship can be made to drop.</description>
 	</squad>
 	<squad id="gatos-checkpoint" name="GATOS Checkpoint" race="terran" faction="gatos" where_races="terran" where_states="Doomed,Struggling">
 		<tier bands="2-3"><ship design="patrol-cutter" count="1"/></tier>
@@ -46,7 +53,8 @@
 		<description>Tentauri forcing their way through: they want past you, not your death.</description>
 	</squad>
 	<squad id="azurethea-wardens" name="Azurethea Wardens" race="azurethea" faction="azurethea" where_races="azurethea" where_states="Doomed,Border,Struggling,Occupied">
-		<tier bands="1-3"><ship design="moth-skiff" count="1"/></tier>
+		<tier bands="1-2"><ship design="vein-moth" count="1"/></tier>
+		<tier bands="3"><ship design="moth-skiff" count="1"/></tier>
 		<tier bands="4-6"><ship design="sporecarrier" count="1"/><ship design="moth-skiff" count="0-1"/></tier>
 		<tier bands="7-8"><ship design="sporecarrier" count="2"/></tier>
 		<conduct surrender_chance="80" surrender_hull="0.5" escape_chance="40" escape_hull="0.35" targets="weapons,piloting" hail="azurethea"/>
@@ -60,6 +68,7 @@
 		<description>Senti relay ships. Doomed, they have no qualms about killing the living, while keeping their records.</description>
 	</squad>
 	<squad id="lykario-pack" name="Lykario Pack" race="lykario" faction="lykario" where_races="lykario,any" where_states="Border,Refugee,Doing Fine,Struggling,Doomed,Unclaimed">
+		<tier bands="1"><ship design="outrider.scrap-hound" count="1"/></tier>
 		<tier bands="2-3"><ship design="packrunner" count="1"/></tier>
 		<tier bands="4-6"><ship design="packrunner.huntmaster" count="1"/><ship design="packrunner" count="0-1"/></tier>
 		<tier bands="7-8"><ship design="packrunner.huntmaster" count="2"/></tier>
@@ -67,6 +76,8 @@
 		<description>A hunt. They board, and they keep going.</description>
 	</squad>
 	<squad id="malphen-growth" name="Malphen Growth" race="malphen" faction="malphen" where_races="malphen,any" where_states="Abandoned,Doing Fine,Struggling,Doomed,Unclaimed">
+		<tier bands="1"><ship design="polyp" count="1"/><ship design="polyp.flak" count="1"/></tier>
+		<tier bands="2"><ship design="polyp" count="2"/><ship design="polyp.flak" count="1"/></tier>
 		<tier bands="3"><ship design="spawnling" count="1"/></tier>
 		<tier bands="4"><ship design="spawnling.swollen" count="1"/></tier>
 		<tier bands="5-6"><ship design="spawnling.broodmass" count="1"/></tier>

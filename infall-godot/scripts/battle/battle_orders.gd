@@ -121,8 +121,11 @@ static func apply(battle: BattleScreen, order: Dictionary) -> String:
 				return ""
 			if not ship.doors_controllable():
 				return "The Doors system isn't working."
+			# Open Doors a second time, with every inner door already open, opens the airlocks too, as in the genre
+			var airlocks := bool(order.airlocks)
+			var both: bool = bool(order.open) and not airlocks and ship.doors.all(func(door: ShipDoor): return door.to_space or door.held_open)
 			for door in ship.doors:
-				if door.to_space == bool(order.airlocks) or not bool(order.open):
+				if both or door.to_space == airlocks or not bool(order.open):
 					door.held_open = bool(order.open)
 		"stations":
 			if ship:

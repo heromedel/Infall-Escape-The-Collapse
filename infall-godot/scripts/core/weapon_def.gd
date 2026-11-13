@@ -36,6 +36,7 @@ var art_path: String = ""
 var art_scale: float = 1.0
 var art_anchor := Vector2.ZERO   # the art pixel that sits on the mount point
 var art_filter_nearest: bool = false
+var sound: String = ""           # the launch sound it names (a file in audio/); "" for its kind's own
 var description: String = ""
 var tagline: String = ""
 # Battlesuits
@@ -51,6 +52,7 @@ static func from_xml(node: XmlTree, folder: String) -> WeaponDef:
 	def.race = node.get_attr("race", "")
 	def.tech = node.get_attr("tech", "mechanical")
 	def.type = node.get_attr("type", "laser")
+	def.sound = node.get_attr("sound", "")
 	def.power = node.get_int("power", 1)
 	def.shots = node.get_int("shots", 1)
 	def.damage = node.get_int("damage", 1)
@@ -144,3 +146,19 @@ func stat_line() -> String:
 	if type in ["missile", "bomb"]:
 		parts.append("ignores shields")
 	return ", ".join(parts)
+
+
+## The sound of one of its shots leaving: the one its file names, or its kind's own, as the genre gives each weapon
+## a launch sound.
+func shot_sound() -> String:
+	if not sound.is_empty():
+		return sound
+	if type == "missile":
+		return "missile"
+	if type == "flak":
+		return "flak"
+	if ion > 0:
+		return "ion"
+	if spores or (stun_ticks > 0 and damage == 0):
+		return "spore"
+	return "laser_heavy" if damage >= 2 else "laser"

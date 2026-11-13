@@ -360,6 +360,11 @@ func update_states(jumps: int) -> void:
 			else:
 				states.append("Abandoned" if collapse_radius > 0.0 and distance < BAND_DEPTH * 0.5 else "Unclaimed")
 		cluster.states = states
+		# An Abandoned cluster is left empty (GDD 2R): no store, and wreckage to salvage where one stood
+		if states.has("Abandoned") and cluster.store:
+			cluster.store = false
+			if cluster.kind == "store":
+				cluster.kind = "items"
 	_spread_occupation()
 
 

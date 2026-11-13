@@ -81,12 +81,14 @@ func _process(_delta: float) -> void:
 	if not player_views.is_empty():
 		effects.zoom = player_views[0].camera.zoom.x
 	var player_sees := _player_sees_inside()
+	var senses := _player_senses_life()
 	var several := player_views.size() > 1
 	for ship in views:
 		var view: ShipView = views[ship]
 		view.alpha = alpha
 		view.selected = player_views.any(func(p): return p.selected_ship == ship)
 		view.interior_visible = ship.side == 0 or player_sees or _player_crew_aboard(ship)
+		view.life_signs_visible = ship.side != 0 and senses
 		view.target_marks.clear()
 		view.beam_marks.clear()
 	# Every player ship's weapon targets, seen by everyone
@@ -144,6 +146,17 @@ func _player_sees_inside() -> bool:
 	return false
 
 
+## Whether the player's squad has someone with Animal Senses (race profiles, Lykario 9): they sense Life Signs on
+## other ships without ship sensors, and in hazards that blind sensors. It shows where the crew are, nothing else.
+func _player_senses_life() -> bool:
+	for ship in encounter.ships:
+		if ship.side == 0 and not ship.is_gone():
+			for member in ship.crew:
+				if not member.dead and member.race.senses_life:
+					return true
+	return false
+
+
 func _player_crew_aboard(ship: Ship) -> bool:
 	for member in ship.visitors:
 		if member.side == 0 and not member.dead:
@@ -184,7 +197,7 @@ func _show_note(note: Dictionary) -> void:
 	match note.kind:
 		"shot":
 			var weapon: WeaponDef = note.weapon
-			_sound("missile" if weapon.type == "missile" else ("laser_heavy" if weapon.damage >= 2 else "laser"), -6.0 if ship and ship.side == 1 else -3.0)
+			_sound(weapon.shot_sound(), -6.0 if ship and ship.side == 1 else -3.0)
 		"volley":
 			var weapon: WeaponDef = note.weapon
 			if weapon.type == "beam":
@@ -211,6 +224,7 @@ func _show_note(note: Dictionary) -> void:
 			_sound("hit_shield")
 		"miss":
 			effects.float_text(note.position, "MISS", Color(0.85, 0.9, 1.0), 20)
+			_sound("miss", -6.0)
 		"intercept", "shot_down":
 			effects.small_burst(note.position, Color(1.0, 0.6, 0.9))
 			_sound("intercept")
@@ -303,15 +317,25 @@ func _on_fight_over(outcome: String) -> void:
 	fight_over.emit(outcome, encounter)
 
 
-## A number that every machine should agree on after the same ticks and orders; the host checks it (GV 4C).
+## A number that every machine should agree on after the same ticks and orders; the host checks it (GV 4C). It
+## takes in whatever a difference would first show up in: the battle's random numbers, each ship's hull, shields
+## and cooldowns, its systems, its rooms' air, fires and breaches, its conduits, its crew and its weapons.
 func checksum() -> int:
 	if encounter == null:
 		return 0
-	var parts: Array = [encounter.ships.size()]
+	var parts: Array = [encounter.ships.size(), encounter.tick_count, encounter.rng.state]
 	for ship in encounter.ships:
-		parts.append_array([ship.hull, ship.shield_layers, ship.destroyed, ship.crew.size()])
+		parts.append_array([ship.hull, ship.shield_layers, ship.destroyed, ship.crew.size(), ship.supershield,
+				ship.cloak_ticks, ship.cloak_cooldown, ship.teleporter_cooldown])
+		for system in ship.systems:
+			parts.append_array([system.damage, system.power, system.ion, system.enabled, system.spored])
+		for room in ship.rooms:
+			parts.append_array([int(room.oxygen * 1000.0), int(room.infection), room.fires.keys(), room.breaches.keys()])
+			for cell in room.fires:
+				parts.append(int(room.fires[cell]))
+		parts.append(ship.broken_conduits.keys())
 		for member in ship.crew:
-			parts.append_array([member.cell, int(member.health), member.dead])
+			parts.append_array([member.cell, int(member.health), member.dead, encounter.ships.find(member.ship)])
 		for slot in ship.weapons:
 			parts.append_array([slot.powered, int(slot.charge)])
 	parts.append(encounter.projectiles.size() if "projectiles" in encounter else 0)

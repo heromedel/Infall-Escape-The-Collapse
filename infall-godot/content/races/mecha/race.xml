@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Crew traits from docs/race-profiles.md point 9; power colour from docs/art/palette.md; crew price from system-prices.md. -->
-<race id="mecha" name="Mecha" singular="HalfMech" health="140" speed="0.7" xp_rate="2.0" repair="1.0" biomech_repair="0.5" melee="1.6" power_colour="#AA28EB" crew_price="14.52" portrait="mecha" tech="mechanical" integrates="yes">
+<race id="mecha" name="Mecha" singular="HalfMech" health="140" speed="0.7" xp_rate="2.0" repair="1.0" biomech_repair="0.5" melee="1.6" power_colour="#AA28EB" crew_price="14.52" portrait="mecha" tech="mechanical" integrates="yes" consoles="tower">
 	<description>An aggressive, organized race in semi-cybernetic mech suits. They gut ships.</description>
 	<traits>Tough and dangerous in melee, but slow. Integrating with a system powers it one more bar, never past its level. Learn fast.</traits>
 	<names>Vex, Pip, Nyx, Brat, Kit-7, Rook, Zizi, Dagger, Mink, Vix, Sprocket, Jinx, Hex, Tilly-9, Fuse, Ratchet, Moxi, Grit</names>
+	<!-- Crew sprites for the Art Style setting (GV 7F); layouts are in content/crew-layouts.xml. A style with no sheet shows tokens. -->
+	<!-- Where the game starts each sheet's particles (see the Terrans' race.xml). -->
+	<crew_art style="Top Down" sheet="crew-top-down.png" layout="mecha-top-down" stand_back="4">
+		<particles kind="sparks" animation="repair" any="27,25"/>
+		<particles kind="spray" animation="fire" down="9,26" right="27,25" up="24,5"/>
+		<particles kind="shot" animation="aim" down="9,26" right="27,25" up="24,6"/>
+	</crew_art>
+	<crew_art style="Facing" sheet="crew-facing.png" layout="eight-wide">
+		<particles kind="sparks" animation="repair" any="26,30"/>
+		<particles kind="spray" animation="fire" down="6,27" right="27,19" up="23,8"/>
+		<particles kind="shot" animation="aim" down="28,12" right="22,14" up="28,10"/>
+	</crew_art>
 </race>

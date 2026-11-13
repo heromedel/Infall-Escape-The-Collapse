@@ -337,7 +337,7 @@ Homeworlds. (Earlier: octopus-like, working label "Octopods".)
    don't usually use ion weapons themselves.
    - **Senti core — Proposed (2026-11-13, heromedel):** unlike the Terran AZC, a Senti core works by bars: a pool of
      power bars, as the biomechanical races have, but delivered through the same power conduits. So a layer of the
-     Senti Shield Projector takes one bar (GDD 8H).
+     Senti Shield Projector takes one bar (GDD 8Q).
    - **Backup Batteries — Proposed (2026-11-13, heromedel):** Senti like installing Backup Batteries for their ships
      or systems, especially their AAA. **Ai-Generated-Proposal (2026-11-13):** two kinds: the genre's ship-wide
      Backup Battery (extra power for a short time; vanilla, any band), and a **system battery** bound to one

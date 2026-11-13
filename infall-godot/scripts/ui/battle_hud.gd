@@ -10,7 +10,7 @@ extends Control
 ## five quiet seconds (heromedel, 2026-10-31).
 
 const PAD := 16.0
-const CARD_NAMES := {"top": "MAWJIG AND DRIVE", "ship": "SHIP", "crew": "CREW", "power": "SYSTEMS", "subsystems": "SUBSYSTEMS", "weapons": "WEAPONS", "specials": "SPECIALS"}
+const CARD_NAMES := {"top": "MAWJIG AND DRIVE", "ship": "SHIP", "crew": "CREW", "power": "SYSTEMS", "subsystems": "SUBSYSTEMS", "weapons": "WEAPONS", "specials": "SPECIALS", "status": "SHIP STATUS"}
 const FOLDED_HEIGHT := 26.0
 const FOLD_BACK_SECONDS := 5.0
 const OPACITY := {"85%": 0.86, "100%": 1.0, "70%": 0.7}
@@ -118,7 +118,7 @@ func _draw() -> void:
 	var ids: Array = HudLayout.DEFAULTS.keys()
 	ids.sort_custom(func(a, b): return not layout.is_centred(a) and layout.is_centred(b))
 	for id in ids:
-		if id == "top" or (ship and not ship.is_gone()):
+		if id in ["top", "status"] or (ship and not ship.is_gone()):
 			_draw_card(id, ship)
 	_draw_enemies()
 	_draw_overlays()
@@ -133,7 +133,7 @@ func _draw_card(id: String, ship: Ship) -> void:
 		return
 	_placing[id] = true   # a guard: docks are checked for loops, but drawing must never recurse forever
 	var host := layout.host_of(id)
-	if host != "" and HudLayout.DEFAULTS.has(host) and (host == "top" or ship):
+	if host != "" and HudLayout.DEFAULTS.has(host) and (host in ["top", "status"] or ship):
 		_draw_card(host, ship)
 	_placing.erase(id)
 	_watch(id, ship)
@@ -163,6 +163,7 @@ func _draw_card(id: String, ship: Ship) -> void:
 			"subsystems": _draw_subsystems(ship, at)
 			"weapons": _draw_weapons(ship, at)
 			"specials": _draw_specials(ship, at)
+			"status": _draw_status_cards(at)
 	if Settings.get_value("hud_layout", "Movable") == "Movable":
 		_draw_grab_bar(id, rect, folded)
 
@@ -190,6 +191,12 @@ func _card_size(id: String, ship: Ship) -> Vector2:
 		"specials":
 			var count := _special_buttons(ship).size()
 			return Vector2(170, count * 38.0 + 40.0) if count > 0 else Vector2.ZERO
+		"status":
+			var ships := _status_ships()
+			var tall := 24.0
+			for each in ships:
+				tall += (STATUS_CARD.y if _status_card_open(each) else STATUS_FOLDED) + 6.0
+			return Vector2(STATUS_CARD.x + 16.0, tall) if not ships.is_empty() else Vector2.ZERO
 	return Vector2.ZERO
 
 
@@ -263,11 +270,174 @@ func _card_trouble(id: String, ship: Ship) -> float:
 		"weapons":
 			for slot in ship.weapons:
 				trouble += 0.0 if slot.powered else 10.0
+		"status":
+			trouble = 0.0
+			for each in _status_ships():
+				trouble += _status_trouble(each)
 	return trouble
 
 
 func _panel() -> Color:
 	return Color(UiColours.PANEL, OPACITY.get(Settings.get_value("hud_card_opacity", "85%"), 0.86))
+
+
+# --- Ship status cards (GV 14H) ----------------------------------------------------------------------------------
+
+const STATUS_CARD := Vector2(176, 118)          # every ship's status card is this size
+const STATUS_PLAN_TALL := Rect2(96, 8, 72, 102)  # where the deck plan sits: beside the bars when ships point up
+const STATUS_PLAN_WIDE := Rect2(8, 46, 160, 64)  # and under them when the battlefield is turned on its side
+const STATUS_FOLDED := 30.0                      # a folded status card: the ship's name and its hull bar
+
+var _status_folded: Dictionary = {}    # ship -> true while the player has its status card folded
+var _status_trouble_seen: Dictionary = {}   # ship -> how much was wrong aboard at the last look
+var _status_shown_at: Dictionary = {}  # folded ship -> when its card last showed itself
+
+
+## The ships this player has a status card for: every living ship they command; the Admiral commands them all.
+func _status_ships() -> Array:
+	var found: Array = []
+	for ship in screen.encounter.player_ships():
+		if not ship.is_gone() and (screen.is_admiral() or ship.commanded_by(screen.player_id)):
+			found.append(ship)
+	return found
+
+
+## How much is wrong aboard a ship, for its status card: it reopens a folded card when this rises.
+func _status_trouble(ship: Ship) -> float:
+	var trouble := (ship.max_hull - ship.hull) * 10.0 + (ship.max_shield_layers() - ship.shield_layers) * 2.0
+	for room in ship.rooms:
+		trouble += room.fires.size() * 5.0 + room.breaches.size() * 5.0 + (10.0 if room.oxygen < 0.5 else 0.0)
+		trouble += ship.crew_in_room(room.index, 1 - ship.side).size() * 20.0
+	for system in ship.systems:
+		trouble += system.damage * 10.0
+	return trouble
+
+
+## One small card for each ship the player commands: its hull, its shields and a deck plan that shows fire,
+## breaches, damage, air and intruders room by room. A player can look at an enemy and still see their own ship
+## hit. A click selects the ship and jumps to it.
+func _draw_status_cards(at: Vector2) -> void:
+	var ships := _status_ships()
+	var whole := Rect2(at, _card_size("status", null))
+	UiKit.draw_frame(self, whole, _panel())
+	UiKit.draw_text(self, at + Vector2(10, 16), "SHIP STATUS", 12, UiColours.TEXT_DIM, UiKit.font_bold())
+	var y := 22.0
+	for ship: Ship in ships:
+		var open := _status_card_open(ship)
+		if open:
+			_draw_status_card(ship, at + Vector2(8, y))
+		else:
+			_draw_folded_status_card(ship, at + Vector2(8, y))
+		# its own fold button, at the card's top right
+		var fold := Rect2(at + Vector2(8 + STATUS_CARD.x - 20, y + 4), Vector2(15, 13))
+		draw_rect(fold, Color(0.04, 0.06, 0.1, 0.8))
+		draw_rect(fold, UiColours.BORDER_DIM, false, 1.0)
+		draw_line(fold.get_center() + Vector2(-4, 0), fold.get_center() + Vector2(4, 0), UiColours.TEXT_DIM, 1.5)
+		if _status_folded.get(ship, false):
+			draw_line(fold.get_center() + Vector2(0, -4), fold.get_center() + Vector2(0, 4), UiColours.TEXT_DIM, 1.5)
+		_region(fold, func():
+			_status_folded[ship] = not _status_folded.get(ship, false)
+			_status_shown_at.erase(ship), "Fold this ship's card, or open it. A folded card opens by itself when the ship is hit, burning, breached or boarded.")
+		y += (STATUS_CARD.y if open else STATUS_FOLDED) + 6.0
+
+
+## Whether a ship's status card shows in full. A card the player folded opens by itself when things get worse
+## aboard (a hit, a fire, a breach, damage, boarders), stays open while the ship burns, is breached or has
+## intruders, and folds again five quiet seconds later (heromedel, 2026-11-13; the same settings as the HUD's
+## other cards).
+func _status_card_open(ship: Ship) -> bool:
+	var trouble := _status_trouble(ship)
+	var worse := trouble > float(_status_trouble_seen.get(ship, trouble)) + 0.01
+	_status_trouble_seen[ship] = trouble
+	if not _status_folded.get(ship, false):
+		return true
+	if not Settings.get_value("collapsed_cards_reopen", true):
+		return false
+	var in_danger := false
+	for room in ship.rooms:
+		in_danger = in_danger or not room.fires.is_empty() or not room.breaches.is_empty() or not ship.crew_in_room(room.index, 1 - ship.side).is_empty()
+	if worse or in_danger:
+		_status_shown_at[ship] = _time
+	if not _status_shown_at.has(ship):
+		return false
+	if Settings.get_value("reopened_cards_fold_back", true) and _time - float(_status_shown_at[ship]) > FOLD_BACK_SECONDS:
+		_status_shown_at.erase(ship)
+		return false
+	return true
+
+
+## A folded status card: the ship's name and hull in one line. A click still selects the ship and jumps to it.
+func _draw_folded_status_card(ship: Ship, at: Vector2) -> void:
+	var rect := Rect2(at, Vector2(STATUS_CARD.x, STATUS_FOLDED))
+	var chosen := ship == screen.selected_ship
+	UiKit.draw_frame(self, rect, UiColours.PANEL_LIGHT if chosen else UiColours.PANEL_DARK, UiColours.BORDER if chosen else UiColours.BORDER_DIM, 5.0)
+	UiKit.draw_text(self, at + Vector2(8, 15), ship.name.left(18), 12, UiColours.TEXT, UiKit.font_bold())
+	var fraction := float(ship.hull) / maxf(1.0, ship.max_hull)
+	draw_rect(Rect2(at + Vector2(8, 20), Vector2(STATUS_CARD.x - 34, 5)), UiColours.BAR_EMPTY)
+	draw_rect(Rect2(at + Vector2(8, 20), Vector2((STATUS_CARD.x - 34) * fraction, 5)), UiColours.hull_colour(fraction))
+	_region(rect, func():
+		screen.select_ship(ship)
+		screen.focus_ship(ship), "%s: hull %d of %d. Click to select the ship and look at it." % [ship.name, ship.hull, ship.max_hull])
+
+
+func _draw_status_card(ship: Ship, at: Vector2) -> void:
+	var rect := Rect2(at, STATUS_CARD)
+	var chosen := ship == screen.selected_ship
+	var sideways := not is_zero_approx(ShipView.view_turn)      # the plan lies the way the ship does on the screen
+	var plan_box := STATUS_PLAN_WIDE if sideways else STATUS_PLAN_TALL
+	var bar_width := 110.0 if sideways else 80.0
+	UiKit.draw_frame(self, rect, UiColours.PANEL_LIGHT if chosen else UiColours.PANEL_DARK, UiColours.BORDER if chosen else UiColours.BORDER_DIM, 6.0)
+	UiKit.draw_text(self, at + Vector2(8, 16), ship.name.left(20 if sideways else 13), 13, UiColours.TEXT, UiKit.font_bold())
+	# Hull bar and shield pips
+	var fraction := float(ship.hull) / maxf(1.0, ship.max_hull)
+	draw_rect(Rect2(at + Vector2(8, 22), Vector2(bar_width, 6)), UiColours.BAR_EMPTY)
+	draw_rect(Rect2(at + Vector2(8, 22), Vector2(bar_width * fraction, 6)), UiColours.hull_colour(fraction))
+	var pips_at := at + (Vector2(128, 25) if sideways else Vector2(12, 40))
+	for layer in ship.max_shield_layers():
+		draw_circle(pips_at + Vector2(layer * 10, 0), 4, UiColours.SHIELD_BLUE if layer < ship.shield_layers else Color(0.15, 0.15, 0.25))
+	UiKit.draw_text(self, at + (Vector2(8, 40) if sideways else Vector2(8, 60)), "%d/%d" % [ship.hull, ship.max_hull], 11, UiColours.TEXT_DIM, UiKit.font_bold())
+	# The deck plan, turned as the view is and fitted into its box
+	var floor_rect := ship.design.floor_rect()
+	var turned := Rect2(floor_rect.position.rotated(ShipView.view_turn), Vector2.ZERO).expand(floor_rect.end.rotated(ShipView.view_turn)) \
+			.expand(Vector2(floor_rect.end.x, floor_rect.position.y).rotated(ShipView.view_turn)).expand(Vector2(floor_rect.position.x, floor_rect.end.y).rotated(ShipView.view_turn))
+	var fit := minf(plan_box.size.x / turned.size.x, plan_box.size.y / turned.size.y)
+	var origin := at + plan_box.position + (plan_box.size - turned.size * fit) * 0.5 - turned.position * fit
+	var said := PackedStringArray()
+	var fires := 0
+	var breaches := 0
+	var intruders := 0
+	for room in ship.rooms:
+		var corner := ship.design.cell_top_left(room.rect.position)
+		var far := corner + Vector2(room.rect.size) * ShipDesign.TILE
+		var room_rect := Rect2(origin + corner.rotated(ShipView.view_turn) * fit, Vector2.ZERO).expand(origin + far.rotated(ShipView.view_turn) * fit)
+		var fill := Color(0.2, 0.25, 0.33).lerp(UiColours.LOW_AIR, clampf(1.0 - room.oxygen, 0.0, 1.0) * 0.65)     # air as a tint
+		if not room.fires.is_empty():
+			fill = Color("#ff7a2a")
+			fires += 1
+		draw_rect(room_rect, fill)
+		var damaged: bool = room.systems.any(func(system: ShipSystem): return system.damage > 0)
+		draw_rect(room_rect, UiColours.DAMAGED_RED if damaged else Color(0.05, 0.07, 0.1), false, 1.5 if damaged else 1.0)
+		var middle := room_rect.get_center()
+		if not room.fires.is_empty():
+			draw_colored_polygon(PackedVector2Array([middle + Vector2(-3, 3), middle + Vector2(0, -4), middle + Vector2(3, 3)]), Color("#fff0a0"))
+		elif not room.breaches.is_empty():
+			draw_circle(middle, 3.2, Color(0.02, 0.02, 0.05))
+			draw_arc(middle, 3.2, 0, TAU, 10, Color("#9fd0ff"), 1.0, true)
+		breaches += 1 if not room.breaches.is_empty() else 0
+		var foes := ship.crew_in_room(room.index, 1 - ship.side).size()
+		intruders += foes
+		for foe in mini(foes, 3):
+			draw_circle(Vector2(room_rect.position.x + 3.5 + foe * 6.0, room_rect.end.y - 3.5), 2.4, UiColours.ENEMY_RED)
+	if fires > 0:
+		said.append("fire in %d room%s" % [fires, "" if fires == 1 else "s"])
+	if breaches > 0:
+		said.append("%d room%s breached" % [breaches, "" if breaches == 1 else "s"])
+	if intruders > 0:
+		said.append("%d intruder%s aboard" % [intruders, "" if intruders == 1 else "s"])
+	var state := ("\n" + ", ".join(said).capitalize() + ".") if not said.is_empty() else ""
+	_region(rect, func():
+		screen.select_ship(ship)
+		screen.focus_ship(ship), "%s: hull %d of %d.%s\nRooms show fire, a breach, damage (a red edge), thin air (a red tint) and intruders (red dots). Click to select the ship and look at it." % [ship.name, ship.hull, ship.max_hull, state])
 
 
 func _draw_squad_tabs(at: Vector2) -> float:
@@ -353,7 +523,7 @@ func _draw_crew_list(ship: Ship, at: Vector2) -> void:
 		var rect := Rect2(at.x, y, 290, 50)
 		var chosen := screen.selected_crew.has(member)   # this player's selection, not another's
 		UiKit.draw_frame(self, rect, UiColours.PANEL_LIGHT if chosen else _panel(), UiColours.POWER_GREEN if chosen else UiColours.BORDER_DIM, 6.0)
-		CrewPortraits.draw_token(self, member.race.id, member.name, rect.position + Vector2(22, 25), 16.0, UiColours.POWER_GREEN)
+		CrewPortraits.draw_token(self, member.race.id, member.name, rect.position + Vector2(22, 25), 16.0, UiColours.POWER_GREEN, 2.0, member.subtype)
 		UiKit.draw_text(self, rect.position + Vector2(46, 20), member.display_name(), 16, UiColours.TEXT, UiKit.font_bold())
 		if member.side == 0 and member.rank_due() >= 0:
 			var mark := rect.position + Vector2(rect.size.x - 12, 12)   # a gold diamond: a promotion is due
@@ -373,7 +543,7 @@ func _draw_crew_list(ship: Ship, at: Vector2) -> void:
 		_region(rect, func(): screen.select_crew_member(member, Input.is_key_pressed(KEY_SHIFT)), _crew_tooltip(member))
 		y += 54
 	var buttons_at := Vector2(at.x, y + 4)
-	_button(Rect2(buttons_at, Vector2(142, 32)), "STATIONS", func(): screen.return_to_stations(), "Send this ship's crew back to their saved stations. Hotkey: Z")
+	_button(Rect2(buttons_at, Vector2(142, 32)), "STATIONS", func(): screen.return_to_stations(), "Send this ship's crew back to their saved stations. Hotkey: Enter")
 	_button(Rect2(buttons_at + Vector2(148, 0), Vector2(142, 32)), "SAVE POSTS", func(): screen.save_stations(), "Save where every crew member stands now as their station.")
 
 
@@ -497,7 +667,7 @@ func _draw_power(ship: Ship, at: Vector2) -> void:
 			var shown := mini(total, 14)
 			for index in shown:
 				var cell := Rect2(source_at + Vector2(0, -index * (bar_height + 2) - bar_height), Vector2(30, bar_height))
-				draw_rect(cell, UiColours.POWER_GREEN if index < free else UiColours.BAR_EMPTY)
+				draw_rect(cell, UiColours.player_power(ship.race) if index < free else UiColours.BAR_EMPTY)
 			UiKit.draw_text(self, source_at + Vector2(38, -2), "%d / %d" % [free, total], 15, UiColours.TEXT, UiKit.font_bold())
 			UiKit.draw_text(self, source_at + Vector2(38, 18), "REACTOR", 12, UiColours.TEXT_DIM, UiKit.font_bold())
 			_region(Rect2(source_at + Vector2(0, -150), Vector2(100, 170)), Callable(), "Reactor: free power is lit. Click a system's bars to give it power; right click takes it away.")
@@ -505,11 +675,11 @@ func _draw_power(ship: Ship, at: Vector2) -> void:
 			var running := ship.core_load()
 			var capacity := ship.core_capacity()
 			draw_circle(source_at + Vector2(30, -70), 26, Color("#20262f"))
-			draw_arc(source_at + Vector2(30, -70), 22, 0, TAU, 32, Color(UiColours.POWER_GREEN, 0.6 + 0.3 * sin(_time * 2.4)), 3.0, true)
-			SystemIcons.draw(self, "azc", source_at + Vector2(30, -70), 26, UiColours.POWER_GREEN)
+			draw_arc(source_at + Vector2(30, -70), 22, 0, TAU, 32, Color(UiColours.player_power(ship.race), 0.6 + 0.3 * sin(_time * 2.4)), 3.0, true)
+			SystemIcons.draw(self, "azc", source_at + Vector2(30, -70), 26, UiColours.player_power(ship.race))
 			for index in capacity:
 				var pip := source_at + Vector2(8 + (index % 4) * 16, -32 + (index / 4) * 14)
-				draw_rect(Rect2(pip, Vector2(12, 8)), UiColours.POWER_GREEN if index < running else UiColours.BAR_EMPTY)
+				draw_rect(Rect2(pip, Vector2(12, 8)), UiColours.player_power(ship.race) if index < running else UiColours.BAR_EMPTY)
 			UiKit.draw_text(self, source_at + Vector2(0, 18), "AZC LV%d  %d/%d" % [ship.reactor_level, running, capacity], 12, UiColours.TEXT_DIM, UiKit.font_bold())
 			_region(Rect2(source_at + Vector2(0, -110), Vector2(100, 130)), Callable(), "Armoured ZeroPoint Core: any system joined to it by unbroken conduits has full power. Its level sets how many power-hungry systems run at once. Click a system to switch it on or off.")
 		_:
@@ -533,27 +703,28 @@ func _draw_subsystems(ship: Ship, at: Vector2) -> void:
 func _draw_system_column(ship: Ship, system: ShipSystem, base: Vector2, column: float, bar_height: float, main: bool) -> void:
 	var power := ship.system_power(system)
 	var level := system.level
-	var colour := UiColours.POWER_GREEN
+	var colour := UiColours.player_power(ship.race)      # Player Power Color (GDD 14D)
 	var bar_width := column - 14.0
+	var step := system.bars_per_level()
 	for index in level:
 		var cell := Rect2(base + Vector2(4, -index * (bar_height + 2) - bar_height - 22), Vector2(bar_width, bar_height))
+		if index % step < step - 1:
+			cell = cell.grow_side(SIDE_TOP, 2.0)     # a level of two bars is drawn as one block, with no gap
 		var fill := UiColours.BAR_EMPTY
 		var from_top := level - 1 - index
 		if from_top < system.damage:
 			fill = UiColours.DAMAGED_RED
 		elif index < power:
 			fill = colour
-		elif index < system.usable_bars() and index >= system.usable_bars() - system.ion:
+		elif index < system.usable_bars() and index >= system.working_bars():
 			fill = UiColours.ION_BLUE
 		draw_rect(cell, fill)
 		if fill == UiColours.BAR_EMPTY:
 			draw_rect(cell, Color(UiColours.BORDER_DIM, 0.35), false, 1.0)
 	var icon_centre := base + Vector2(column * 0.5 - 3, 0)
-	var icon_colour := UiColours.POWER_GREEN if power > 0 else Color("#8b93a3")
-	if system.is_broken() or system.spored:
-		icon_colour = UiColours.DAMAGED_RED
-	elif system.damage > 0:
-		icon_colour = Color("#ff9a3d")
+	var icon_colour := colour if power > 0 else Color("#8b93a3")
+	if system.is_broken() or system.spored or system.damage > 0:
+		icon_colour = UiColours.DAMAGED_RED      # damaged or broken: red, as in the genre
 	draw_circle(icon_centre, 15, Color(0.04, 0.06, 0.1))
 	draw_arc(icon_centre, 15, 0, TAU, 24, icon_colour, 1.5, true)
 	SystemIcons.draw(self, system.def.icon, icon_centre, 18, icon_colour)
@@ -572,7 +743,7 @@ func _draw_system_column(ship: Ship, system: ShipSystem, base: Vector2, column: 
 
 func _system_tooltip(ship: Ship, system: ShipSystem) -> String:
 	var lines := PackedStringArray()
-	lines.append("%s (level %d)" % [system.display_name(), system.level])
+	lines.append("%s (level %d)" % [system.display_name(), system.shown_level()])
 	lines.append(system.def.description)
 	var note := system.def.level_note(system.level if system.behaviour != "shields" else system.level)
 	if not note.is_empty():
@@ -597,6 +768,8 @@ func _system_tooltip(ship: Ship, system: ShipSystem) -> String:
 			lines.append("Switch it on to heal crew standing in it; another system may need to go off first.")
 		else:
 			lines.append("Give it power to heal crew standing in it.")
+	if system.def.draws_power and not system.def.hotkey.is_empty():
+		lines.append("Add power: %s  ·  Remove power: Shift + %s" % [system.def.hotkey, system.def.hotkey])
 	if system.def.draws_power and ship.reactor_type == "pool":
 		lines.append("Click to add power, right click to remove.")
 	elif system.def.draws_power and ship.reactor_type == "core":
@@ -624,7 +797,7 @@ func _draw_weapons(ship: Ship, card_at: Vector2) -> void:
 	UiKit.draw_frame(self, rect, _panel())
 	UiKit.draw_text(self, at + Vector2(0, -10), "WEAPONS", 15, UiColours.TEXT_DIM, UiKit.font_bold())
 	if weapons_system:
-		var capacity := ship.weapon_capacity() if ship.reactor_type != "pool" else weapons_system.usable_bars() - weapons_system.ion
+		var capacity := ship.weapon_capacity() if ship.reactor_type != "pool" else weapons_system.working_bars()
 		UiKit.draw_text(self, at + Vector2(90, -10), "%d / %d power" % [ship.powered_weapon_load(), maxi(0, capacity)], 14, UiColours.TEXT_DIM)
 	for index in slots.size():
 		var slot: WeaponSlot = slots[index]
@@ -647,7 +820,7 @@ func _draw_weapon_slot(ship: Ship, slot: WeaponSlot, index: int, rect: Rect2) ->
 	UiKit.draw_text(self, rect.position + Vector2(10, 22), slot.def.short_name(), 16, UiColours.TEXT if slot.powered else UiColours.TEXT_DIM, UiKit.font_bold())
 	UiKit.draw_text(self, rect.position + Vector2(rect.size.x - 10, 22), str(index + 1), 15, UiColours.TEXT_DIM, UiKit.font_bold(), HORIZONTAL_ALIGNMENT_RIGHT, 0)
 	for pip in slot.def.power:
-		draw_rect(Rect2(rect.position + Vector2(10 + pip * 13, 30), Vector2(10, 8)), UiColours.POWER_GREEN if slot.powered else UiColours.BAR_EMPTY)
+		draw_rect(Rect2(rect.position + Vector2(10 + pip * 13, 30), Vector2(10, 8)), UiColours.player_power(ship.race) if slot.powered else UiColours.BAR_EMPTY)
 	var bar := Rect2(rect.position + Vector2(10, rect.size.y - 22), Vector2(rect.size.x - 20, 10))
 	draw_rect(bar, UiColours.BAR_EMPTY)
 	if slot.powered:
@@ -675,16 +848,16 @@ func _special_buttons(ship: Ship) -> Array:
 	if teleporter:
 		var ready := encounter.can_teleport(ship)
 		buttons.append(["BOARD", func(): screen.start_teleport(), "Send the crew standing in the teleporter room to an enemy room. Hotkey: T", ready and encounter.in_fight(), ship.teleporter_cooldown])
-		buttons.append(["RECALL", func(): screen.recall_boarders(), "Bring every boarder home.", ready, -1])
+		buttons.append(["RECALL", func(): screen.recall_boarders(), "Bring every boarder home. Hotkey: R", ready, -1])
 	var dock := ship.system_by("evb_dock")
 	if dock:
-		buttons.append(["LAUNCH SUIT", func(): screen.start_suit_launch(), "A crew member in the EVB Dock room suits up and flies out to fight an enemy ship. Each launch uses a new suit (%s Mawjig). Hotkey: E" % Mawjig.format(Library.weapon(ship.suits[0]).cost_per_volley if not ship.suits.is_empty() else 21), not ship.suit_out and ship.evb_cooldown <= 0 and encounter.in_fight(), ship.evb_cooldown])
+		buttons.append(["LAUNCH SUIT", func(): screen.start_suit_launch(), "A crew member in the EVB Dock room suits up and flies out to fight an enemy ship. Each launch uses a new suit (%s Mawjig). Hotkey: B" % Mawjig.format(Library.weapon(ship.suits[0]).cost_per_volley if not ship.suits.is_empty() else 21), not ship.suit_out and ship.evb_cooldown <= 0 and encounter.in_fight(), ship.evb_cooldown])
 	var cloak := ship.system_by("cloaking")
 	if cloak:
 		buttons.append(["CLOAK", func(): screen.cloak(ship), "Hide the ship: most shots miss and its weapons hold their charge. Hotkey: C", ship.cloak_ticks <= 0 and ship.cloak_cooldown <= 0 and ship.system_power(cloak) > 0, ship.cloak_cooldown])
 	if ship.has_system("doors"):
-		buttons.append(["OPEN DOORS", func(): screen.set_all_doors(ship, true, false), "Open every inner door.", ship.doors_controllable(), -1])
-		buttons.append(["CLOSE DOORS", func(): screen.set_all_doors(ship, false, false), "Close every door, airlocks too.", ship.doors_controllable(), -1])
+		buttons.append(["OPEN DOORS", func(): screen.set_all_doors(ship, true, false), "Opens every inner door. Press again while they are all open to open the airlocks too. Hotkey: Z", ship.doors_controllable(), -1])
+		buttons.append(["CLOSE DOORS", func(): screen.set_all_doors(ship, false, false), "Close every door, airlocks too. Hotkey: X", ship.doors_controllable(), -1])
 		buttons.append(["VENT", func(): screen.set_all_doors(ship, true, true), "Open the airlocks to vent air and fires into space.", ship.doors_controllable(), -1])
 	return buttons
 
@@ -856,6 +1029,11 @@ func _draw_floating_status(ship: Ship) -> void:
 	var layers := ship.system_by("shields").level / 2 if ship.system_by("shields") else 0
 	for index in layers:
 		draw_circle(rect.position + Vector2(pip_x + 6, 49), 6, UiColours.SHIELD_BLUE if index < ship.shield_layers else Color(0.15, 0.15, 0.25))
+		# the layer coming back shows how far along it is, as a bar under its empty pip (reference frame 17)
+		if index == ship.shield_layers and index < ship.max_shield_layers():
+			var bar := Rect2(rect.position + Vector2(pip_x, 57), Vector2(12, 3))
+			draw_rect(bar, Color(0.15, 0.15, 0.25))
+			draw_rect(Rect2(bar.position, Vector2(bar.size.x * clampf(ship.shield_progress / Ship.SHIELD_LAYER_TICKS, 0.0, 1.0), bar.size.y)), UiColours.SHIELD_BLUE)
 		pip_x += 16
 	for index in (5 if ship.has_system("supershield") else 0):
 		draw_circle(rect.position + Vector2(pip_x + 5, 49), 5, UiColours.SUPERSHIELD if index < ship.supershield else Color(0.25, 0.12, 0.22))
@@ -925,7 +1103,7 @@ func _draw_room_info(ship: Ship, room_index: int) -> void:
 			console = system
 	if console:
 		lines.append(console.display_name())
-		lines.append("Level %d · power %d" % [console.level, ship.system_power(console)])
+		lines.append("Level %d · power %d" % [console.shown_level(), ship.system_power(console)])
 		if console.damage > 0:
 			lines.append("%d bar%s damaged" % [console.damage, "" if console.damage == 1 else "s"])
 		if console.ion > 0:

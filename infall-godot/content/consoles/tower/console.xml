@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The Mecha console (GV 7G): the pixel tower with stepped cheeks, docs/art/mecha/console. Turned to face its wall.
+     Made by tools/import_console_art.py. -->
+<console_style id="tower" fit="turned">
+	<console art="tower.svg" symbol="17.5,8.5" symbol_size="9.5"/>
+</console_style>

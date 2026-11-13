@@ -7,7 +7,8 @@ extends Node
 ##
 ## Players are the host's keyboard and mouse, each controller on the host, and each machine that joined over LAN
 ## (and its own controllers). The host starts as the Admiral; squad decisions (event choices, jumps, pausing, hails)
-## are the Admiral's (GDD 4H, 4M at their defaults, GV 4E); every player commands every ship for now (GV 4D).
+## are the Admiral's (GDD 4H, 4M at their defaults, GV 4E); who commands which ship and crew is the Admiral's to
+## assign (GV 4I, core/assignments.gd), and every player commands whatever is left to Any.
 
 signal players_changed
 signal session_ended(reason: String)
@@ -19,7 +20,7 @@ const MAX_TICKS_A_FRAME := 4
 const CHECK_EVERY := 100              # ticks between the host's checks that every machine still agrees
 const COLOURS := ["#5fd4ff", "#ffb347", "#c58cff", "#ff6f91", "#9be564", "#ffe066", "#7af0c8", "#f08a5d"]
 ## Orders only the Admiral gives: the squad's decisions.
-const ADMIRAL_ORDERS := ["shared", "pause", "jump", "wait", "hail_open", "rule", "hold", "assign"]
+const ADMIRAL_ORDERS := ["shared", "pause", "jump", "wait", "hail_open", "rule", "hold", "assign", "restore"]
 
 var is_host := true
 var players: Array[Dictionary] = []   # {id, name, colour, device ("keys", "pad", "remote"), pad, peer, here}
@@ -79,6 +80,7 @@ func remove_local_player(id: int) -> void:
 		_player_left.rpc_id(1, id)
 	else:
 		_hand_over(id)
+		_admiral_may_have_left(id)
 	_players_changed()
 
 
@@ -261,14 +263,22 @@ func _hand_over(player_id: int) -> void:
 		_emit({"k": "handover", "from": player_id, "to": admiral, "p": 0})
 
 
-## Puts one item on the stream: for the record and for this machine to play. The host sends each item to the
-## other machines as it plays it, so they get them in the order it played them.
+## Puts one item on the stream for this machine to play. The host sends each item to the other machines as it
+## plays it, so they get them in the order it played them.
 func _emit(item: Dictionary) -> void:
-	if item.k == "t" and not stream.is_empty() and stream.back().k == "t":
-		stream.back().n = int(stream.back().n) + 1
-	elif item.k != "check":
-		stream.append(item.duplicate() if item.k != "t" else {"k": "t", "n": 1})
 	_queue.append(item)
+
+
+## The host's record of what has been played, for a machine that joins. An item is recorded as it is played, not
+## when it is queued: a machine that joins while the host is busy (a jump's flash) is sent the record and then
+## each later item as the host plays it, so an item waiting behind the jump must not be in both.
+func _record(item: Dictionary) -> void:
+	if not is_host:
+		return
+	if item.k == "t" and not stream.is_empty() and stream.back().k == "t":
+		stream.back().n = int(stream.back().n) + int(item.get("n", 1))
+	else:
+		stream.append(item.duplicate() if item.k != "t" else {"k": "t", "n": int(item.get("n", 1))})
 
 
 func _process(delta: float) -> void:
@@ -310,6 +320,7 @@ func _play() -> void:
 				for count in int(item.get("n", 1)):
 					main.apply_tick()
 				tick_progress = 0.0
+				_record(item)
 				_pass_on({"k": "t", "n": int(item.get("n", 1))})
 			"check":
 				_pass_on({"k": "sum", "v": main.checksum()})
@@ -319,6 +330,7 @@ func _play() -> void:
 					_rejoin()
 					break
 			_:
+				_record(item)
 				_pass_on(item)
 				await main.apply_order(item)
 				_send_outgoing()
@@ -461,6 +473,13 @@ func _on_peer_disconnected(peer_id: int) -> void:
 		main.admiral_gone()   # the game pauses and saves until the Admiral returns (GDD 4N, off)
 
 
+## The Admiral leaving by their own choice is the same as their machine dropping out (GV 4E): the game pauses and
+## saves until they return or the role is handed on.
+func _admiral_may_have_left(player_id: int) -> void:
+	if player_id == admiral and main and main.has_method("admiral_gone"):
+		main.admiral_gone()
+
+
 func _rejoin() -> void:
 	_queue.clear()
 	_hello.rpc_id(1, _join_name)
@@ -481,6 +500,7 @@ func _hello(player_name: String) -> void:
 	else:
 		player.peer = peer_id   # a player coming back gets their old place (GDD 4F)
 		player.here = true
+	_send_outgoing()   # what was played this frame goes out first: it is in the record the newcomer is about to get
 	_welcome.rpc_id(peer_id, players, admiral, origin, stream)
 	_players_changed()
 	note.emit("%s joined." % player.name)
@@ -562,6 +582,7 @@ func _player_left(id: int) -> void:
 	if is_host and not player.is_empty() and player.peer == multiplayer.get_remote_sender_id():
 		player.here = false
 		_hand_over(id)
+		_admiral_may_have_left(id)
 		_players_changed()
 
 

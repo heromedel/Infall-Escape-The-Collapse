@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Azurethea Vein Moth, a low-tier explorer, bands 1-2 (docs/ship-suggestions.md, 'Azurethea "Vein Moth"'; the
+     layout is the docs', Ai-Generated-Proposal 2026-10-29). A body of two 2 by 2 rooms with a 1 by 2 wing room on
+     each side; both airlocks are in the wings. Its centre is a point on both axes, so tiles count ... -2, -1, 1,
+     2 with no 0. Shields are given in bars: level 2 bars is one layer. No Sensors: good sensors are their high
+     tech. -->
+<ship id="vein-moth" name="Azurethea Vein Moth" class="Vein Moth" race="azurethea" faction="azurethea" style="azurethea" center_x="Point" center_y="Point" hull="10">
+	<reactor type="pool" level="8"/>
+	<description>An Azurethea explorer. It rarely starts a fight, and when it must, it picks one system and stings it.</description>
+	<room id="0" from="-1,-2" to="1,-1" name="Forward"/>
+	<room id="1" from="2,-1" to="2,1" name="Starboard wing"/>
+	<room id="2" from="-1,1" to="1,2" name="Aft"/>
+	<room id="3" from="-2,-1" to="-2,1" name="Port wing"/>
+	<system id="piloting" tile="-1,-2" level="1" wall="north"/>
+	<system id="weapons" tile="1,-2" level="2" wall="north"/>
+	<system id="shields" tile="-1,-1" level="2" wall="west"/>
+	<system id="medbay" tile="2,1" level="1" wall="east"/>
+	<system id="engines" tile="-1,2" level="2" wall="south"/>
+	<system id="life-support" tile="1,2" level="1" wall="south"/>
+	<door id="0" tile="1,-1" facing="south"/>
+	<door id="1" tile="1,-1" facing="east"/>
+	<door id="2" tile="-1,1" facing="west"/>
+	<door id="3" tile="2,-1" facing="east"/>
+	<door id="4" tile="-2,-1" facing="west"/>
+	<weapons>
+		<weapon id="stinger" mount="1"/>
+		<weapon id="lantern" mount="2"/>
+	</weapons>
+	<crew>
+		<member race="azurethea" station="piloting"/>
+		<member race="azurethea" station="weapons"/>
+	</crew>
+</ship>

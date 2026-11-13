@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The docs' Flesh Mortar (docs/ship-suggestions.md, Malphen "Polyp"): a 1-damage missile priced as the Stinger. The
+     id says "missile" because an older weapon keeps the id flesh-mortar (it is the Sinew Flak now). Cost per volley
+     from mawjig-cost-table.md. -->
+<weapon id="flesh-mortar-missile" name="Flesh Mortar" race="malphen" tech="biomechanical" type="missile" power="1" shots="1" damage="1" charge="9.0" cost="0.05" price="6.79" colour="#ffa480">
+	<description>Named by those who faced it. A lump of living tissue, thrown hard enough to pass a shield.</description>
+</weapon>

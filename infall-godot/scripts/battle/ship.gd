@@ -10,6 +10,7 @@ extends RefCounted
 ##          sets how many power-hungry systems run at once
 ##   none - Mecha: each system carries its own bars, and an integrated Mecha adds one
 
+const NO_CELL := Vector2i(999, 999)   # no tile: where a crew member who has been sent nowhere is heading
 const TICKS := 20
 const EVASION_BY_ENGINE_POWER := [0, 5, 10, 15, 20, 25, 28, 31, 35]
 const SHIELD_LAYER_TICKS := 40      # 2 s to raise a layer
@@ -343,6 +344,41 @@ func cell_is_claimed(cell: Vector2i, of_side: int, ignore: CrewMember = null) ->
 	return false
 
 
+## The crew member of a side who stands on a tile (not one walking over it), or null.
+func standing_on(cell: Vector2i, of_side: int) -> CrewMember:
+	for member in _everyone_aboard():
+		if member.side == of_side and member.cell == cell and member.path.is_empty():
+			return member
+	return null
+
+
+## The tile a crew member walking into a room goes to for a fight (GV 7G): one where a foe stands and nobody of
+## their own side does or is heading, the nearest to them. NO_CELL when there is none.
+func pairing_cell(room_index: int, member: CrewMember) -> Vector2i:
+	var best := NO_CELL
+	var nearest := INF
+	for cell in rooms[room_index].cells:
+		if standing_on(cell, 1 - member.side) == null or cell_is_claimed(cell, member.side, member):
+			continue
+		var distance := Vector2(cell - member.cell).length_squared()
+		if distance < nearest:
+			nearest = distance
+			best = cell
+	return best
+
+
+## The tile a crew member beamed into a room lands on: a free one with no foe on it when there is one, since those
+## who arrive by teleporter stand apart and shoot (GV 7G).
+func landing_cell(room_index: int, member: CrewMember) -> Vector2i:
+	var wanted := free_cell_in_room(room_index, member.side, member)
+	if standing_on(wanted, 1 - member.side) == null:
+		return wanted
+	for cell in rooms[room_index].cells:
+		if not cell_is_claimed(cell, member.side, member) and standing_on(cell, 1 - member.side) == null:
+			return cell
+	return wanted
+
+
 ## A free tile in a room for a crew member of a side: a system console first, then any tile.
 func free_cell_in_room(room_index: int, of_side: int, member: CrewMember = null) -> Vector2i:
 	var room := rooms[room_index]
@@ -379,7 +415,7 @@ func room_has_space(room_index: int, of_side: int, member: CrewMember = null) ->
 func system_power(system: ShipSystem) -> int:
 	if system == null or system.spored:
 		return 0
-	var usable := system.usable_bars() - system.ion
+	var usable := system.working_bars()
 	if usable <= 0:
 		return 0
 	var bars := 0
@@ -414,7 +450,7 @@ func weapon_capacity() -> int:
 	var system := system_by("weapons")
 	if system == null or system.spored:
 		return 0
-	var usable := system.usable_bars() - system.ion
+	var usable := system.working_bars()
 	match reactor_type:
 		"pool":
 			return maxi(0, usable)
@@ -427,7 +463,7 @@ func weapon_capacity() -> int:
 
 
 func system_power_without_weapons(system: ShipSystem) -> int:
-	var usable := system.usable_bars() - system.ion
+	var usable := system.working_bars()
 	if usable <= 0:
 		return 0
 	var bars := 0
@@ -502,6 +538,11 @@ func refresh_conduit_power() -> void:
 				todo.append(next)
 
 
+## The bars one press gives a system: one, or what completes a whole shield level (ShipSystem.bars_per_level).
+func _bars_a_press_adds(system: ShipSystem) -> int:
+	return system.bars_per_level() - system.power % system.bars_per_level()
+
+
 func can_add_power(system: ShipSystem) -> bool:
 	if system == null or not system.def.draws_power:
 		return false
@@ -509,7 +550,8 @@ func can_add_power(system: ShipSystem) -> bool:
 		"pool":
 			if system.behaviour == "weapons":
 				return _next_unpowered_weapon() != null
-			return system.power < system.usable_bars() - system.ion and reactor_free() > 0
+			var bars := _bars_a_press_adds(system)
+			return system.power + bars <= system.working_bars() and reactor_free() >= bars
 		"core":
 			return not system.enabled and core_load() < core_capacity()
 	return false
@@ -522,7 +564,7 @@ func add_power(system: ShipSystem) -> bool:
 		"pool":
 			if system.behaviour == "weapons":
 				return set_weapon_powered(_next_unpowered_weapon(), true)
-			system.power += 1
+			system.power += _bars_a_press_adds(system)
 		"core":
 			system.enabled = true
 	return true
@@ -541,7 +583,8 @@ func remove_power(system: ShipSystem) -> bool:
 			system.power_lost = 0
 			if system.power <= 0:
 				return false
-			system.power -= 1
+			var odd := system.power % system.bars_per_level()
+			system.power -= odd if odd > 0 else system.bars_per_level()
 		"core":
 			if not system.enabled:
 				return false
@@ -569,7 +612,7 @@ func _weapon_fits(slot: WeaponSlot) -> bool:
 		var system := system_by("weapons")
 		if system == null:
 			return false
-		capacity = system.usable_bars() - system.ion
+		capacity = system.working_bars()
 		if reactor_free() < slot.def.power:
 			return false
 	return powered_weapon_load() + slot.def.power <= capacity
@@ -646,7 +689,7 @@ func settle_power() -> void:
 	if reactor_type == "pool":
 		for system in systems:
 			if system.def.draws_power and system.behaviour != "weapons":
-				var kept := clampi(system.power, 0, maxi(0, system.usable_bars() - system.ion))
+				var kept := clampi(system.power, 0, system.working_bars())
 				system.power_lost += system.power - kept
 				system.power = kept
 		while reactor_used() > reactor_total():
@@ -674,7 +717,7 @@ func settle_power() -> void:
 func give_back_power() -> void:
 	if reactor_type == "pool":
 		for system in systems:
-			while system.power_lost > 0 and system.power < system.usable_bars() - system.ion:
+			while system.power_lost > 0 and system.power < system.working_bars():
 				if reactor_free() <= 0:
 					system.power_lost = 0
 					break
@@ -695,7 +738,7 @@ func _weapon_room(slot: WeaponSlot) -> bool:
 	var system := system_by("weapons")
 	if system == null:
 		return false
-	var capacity := system.usable_bars() - system.ion if reactor_type == "pool" else weapon_capacity()
+	var capacity := system.working_bars() if reactor_type == "pool" else weapon_capacity()
 	return powered_weapon_load() + slot.def.power <= capacity
 
 
@@ -884,6 +927,19 @@ func door_max_health() -> float:
 	return DOOR_HEALTH_PER_LEVEL * maxi(1, system_power(doors_system))
 
 
+## How readily fire crosses from one tile to the next room's tile (0 to 1). Fire spreads between rooms through
+## their doors, never through a wall: freely through an open door or with no working Doors system; a closed door
+## slows it 1.75 times, and a closed blast door (Doors at level 2 or more) 10 times, the genre's figures.
+func _fire_through(from: Vector2i, to: Vector2i) -> float:
+	for link in links.get(from, []):
+		if link.cell != to or link.door == null:
+			continue
+		if link.door.is_open() or not doors_controllable():
+			return 1.0
+		return 0.1 if system_by("doors").level >= 2 else 1.0 / 1.75
+	return 0.0
+
+
 func doors_controllable() -> bool:
 	var doors_system := system_by("doors")
 	return doors_system != null and system_power(doors_system) > 0
@@ -941,7 +997,7 @@ func _tick_fires(rng: RandomNumberGenerator) -> void:
 					var next_room := room_at(next)
 					if next_room < 0:
 						continue
-					if next_room == room.index or rng.randf() < 0.25:
+					if next_room == room.index or rng.randf() < _fire_through(cell, next):
 						new_fires.append(next)
 						break
 		room.fire_system_damage += 0.004 * room.fires.size()

@@ -53,6 +53,8 @@ static func settings(tab: String = "Game") -> Overlay:
 				HudLayout.new().reset()
 				for hud in window.get_tree().get_nodes_in_group("battle_hud"):
 					hud.layout = HudLayout.load_saved(), 0))
+		if name == "Battle":
+			rows.add_child(_colour_row("player_power_custom", "Used when Specific Power Color is Custom."))
 		if name == "Game":
 			rows.add_child(UiKit.label("Terran Ship Conduits and Run Length apply to new runs. In a game with others, the host's settings for a run are used.", 15, UiColours.TEXT_DIM, true))
 	for name in Settings.TABS:
@@ -61,6 +63,21 @@ static func settings(tab: String = "Game") -> Overlay:
 	show_tab.call(tab if Settings.TABS.has(tab) else "Game")
 	window.add_button("Done", window.close)
 	return window
+
+
+## A setting that is a colour of the player's own choosing: a swatch that opens a colour picker.
+static func _colour_row(id: String, note: String) -> Control:
+	var row := HBoxContainer.new()
+	var label := UiKit.label("%s  [%s]" % [Settings.OPTIONS[id][2], note], 18)
+	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	row.add_child(label)
+	var picker := ColorPickerButton.new()
+	picker.color = Color(String(Settings.get_value(id, Settings.OPTIONS[id][0])))
+	picker.edit_alpha = false
+	picker.custom_minimum_size = Vector2(360, 36)
+	picker.color_changed.connect(func(colour: Color): Settings.set_value(id, "#" + colour.to_html(false)))
+	row.add_child(picker)
+	return row
 
 
 static func _setting_row(id: String) -> Control:

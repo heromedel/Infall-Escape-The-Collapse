@@ -5,7 +5,7 @@
 	<event id="HAZARD_ASTEROIDS" title="Asteroid Field" kind="hazard" hazard="asteroids" weight="2">
 		<text>The cluster is full of tumbling rock. Your pilots weave between the bigger asteroids, but the small ones will keep coming. Shields up.</text>
 		<choice text="Mine a few for Mawjig while you're here.">
-			<outcome weight="2"><text>The rock is rich. Your converters work through a whole asteroid.</text><mawjig size="low"/></outcome>
+			<outcome weight="2"><text>The rock is rich. Your converters work through a whole asteroid.</text><mawjig size="medium"/></outcome>
 			<outcome weight="1"><text>Something else is hiding in the field.</text><fight/></outcome>
 		</choice>
 		<choice text="Keep your distance."/>
@@ -25,7 +25,7 @@
 	<event id="HAZARD_NEBULA" title="Nebula" kind="hazard" hazard="nebula" weight="2">
 		<text>A thick nebula swallows the cluster. Your sensors are almost blind in here: you won't see inside other ships. Then again, neither will anyone else.</text>
 		<choice text="Search the nebula for anything useful.">
-			<outcome weight="2"><text>Hidden in the murk is the wreck of a smuggler. Its hold isn't empty.</text><mawjig size="medium"/></outcome>
+			<outcome weight="2"><text>Hidden in the murk is the wreck of a smuggler. Its hold isn't empty.</text><mawjig size="high"/></outcome>
 			<outcome weight="1"><text>You aren't the only ones hiding in here.</text><fight/></outcome>
 		</choice>
 		<choice text="Wait for the drives to charge."/>

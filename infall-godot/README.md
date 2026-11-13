@@ -39,6 +39,11 @@ the Last Fleet. Lose when every scout ship is gone (GDD 1F).
 | Player setup: players, inputs, who commands what, LAN | P or the players button by the menu | View / Select |
 | Join as another player | | Start on a new controller |
 | Ship screen (upgrades, weapons, crew) | U or SHIP | |
+| Give a system power, or take it away | The system's key (in its tooltip: Shields A, Engines S, Weapons W, Medbay D, Life Support F, Cloaking H, Teleporter G), Shift with it to take away | |
+| Open the inner doors, then the airlocks; close every door | Z, Z again; X | |
+| Send and recall boarders; cloak; launch a battlesuit | T and R; C; B | |
+| Crew back to their stations; look at the ship | Enter; Q | |
+| Take an event's choice | Its number | |
 | Menu | Esc | Menu / Start |
 
 ## What is in this build
@@ -72,8 +77,26 @@ the Last Fleet. Lose when every scout ship is gone (GDD 1F).
   ships that unlock as you get farther (GDD 7C).
 - **Art:** the hull art from `docs/art/` (Outrider, Pirate Hijacker and Cutpurse, Mecha Light Attack Frame, Tentauri
   scout) and its weapon art, lined up to the ship files' floor plans. Ships without art get a hull drawn from their
-  floor plan in their race's style (GDD 5K). Crew are portrait tokens; the GATOS Species setting (Terrans > Tabbys) makes the GATOS humans or cats.
+  floor plan in their race's style (GDD 5K). Crew are drawn as the Art Style setting says (GV 7F): `Art Style: Top Down > Facing > Tokens`, top-down sprites, facing sprites or the round portrait tokens; a race with no sheet in the chosen style shows its token. The GATOS Species setting (Terrans > Tabbys) makes the GATOS humans or cats.
 - **Sound:** every effect and the three music tracks are synthesized by `tools/make_audio.py`.
+
+## Added on 2026-11-13 (the overnight plan)
+
+What was built, how it was tested and what is left for heromedel is in `docs/handoffs/overnight-report-2026-11-13.md`;
+the points are in `docs/godot-version-decisions.md` (GV 2D, 3K, 4K, 5B, 5C, 7G–7J, 8D, 8E, 14H, 14I). In short:
+
+- Consoles drawn from the art sessions' art, crew fights as the genre has them, deaths played, the Tabby's sheet.
+- Ship status cards, Player Power Color, enemy Terrans in pirate orange, damaged systems red, system power keys.
+- Fire spreads through doors only; Open Doors pressed twice vents; the reticle replaces the arrow while aiming.
+- Lykario Animal Senses; the Tentauri reach; Abandoned clusters without a store; the Medbay rule on purchases.
+- New from the docs: the Pirate Pickpocket, Lykario Scrap Hound, Malphen Polyp and Azurethea Vein Moth.
+- Co-op: six players on one screen, remembered assignments, a LAN fix for joining mid-jump, and wider tests
+  (`tools/lan_run_test.sh`, `CHAOS_PLAYERS=2 tools/chaos.sh`).
+- Beams deal damage again (they had not since tile targeting).
+- After heromedel's answers the next morning: keys as the genre has them and number keys for event choices; each
+  status card folds on its own; Specific Power Color with every species' colour and a picker; `Shield Levels: By
+  Bar > By Layer` (By Layer makes a shield level a whole layer, GDD 8H); a two-ship first Malphen squad and the
+  GATOS Scrappers; a dock goes at an airlock (GDD 5D).
 
 ## Filled in from the genre or the lore (Ai-Generated-Proposals, 2026-10-31)
 
@@ -110,13 +133,62 @@ The game always runs as a server with its players as clients, also alone. Contro
 Start and get their own view of the screen (left and right for two, quarters for three or four; Local Co-op View:
 Split > Shared). Over LAN, the host opens the game in the Players menu and others join with the host's IP address,
 at any time. The host is the Admiral and makes the squad's decisions. In Player setup the Admiral gives each ship
-and crew member to Any player or to chosen players; any player can change their input or leave.
+and crew member to Any player or to chosen players; any player can change their input or leave. What a player
+commanded when they left is remembered, and the Admiral can restore it when they return (GDD 4F). Up to six players
+share a screen (three across and two down for five or six). The Admiral leaving pauses the game until they return.
 
 ## Not in this build yet
 
-- The Admiral assigning ships to players, the vote and lock-in multiplayer settings, player profiles (GV 4G).
+- The vote and lock-in multiplayer settings, and player profiles (GV 4G).
 - The Tech victory and other victory paths (ideas); the win is reaching the rim.
 - Augments and drones (the design moves drones into EVB suits and race systems).
+
+## Crew art still to fill in (GV 7F)
+
+The Art Style setting shows a token for any race with no sheet in the chosen style.
+
+| Race | Top Down | Facing |
+|---|---|---|
+| GATOS as Terrans | The drifter | The drifter |
+| GATOS as Tabbys | None | The Tabby crew sheet (`docs/art/terran/tabby-crew`), every animation |
+| Mecha | The suit | The older crew sheet |
+| Tentauri | None | The crew sheet, recoloured for each crew member's subtype |
+| Azurethea, Malphen, Lykario, Senti-GPH | None | None |
+
+- Every Terran is the same drifter until there are more designs.
+- The Tentauri's token is cut from their Facing sheet, in the colours of the crew member's subtype (GV 7F). The
+  other races' tokens are still drawn faces, and no other race has subtypes yet.
+- A store's crew cards show the crew member as the Art Style setting draws them: sprite or token.
+- Consoles are drawn from art (GV 7G): `content/consoles/<style>/` holds each style's `console.xml` and art (the
+  wall desk, the Mecha tower, the Tentauri organs), brought over from `docs/art` by `tools/import_console_art.py`.
+  A race names its style in its `race.xml` (`consoles="tower"`); one that names none gets the wall desk. The game
+  draws the system's symbol on the console, in the colour of its state.
+- A crew member standing at a console is drawn a few pixels back from its wall so the symbol stays in view
+  (`stand_back` on a sheet's `<crew_art>`; drawing only). In the Facing style a console on the wall nearest the
+  player is drawn over them.
+- Crew fights (GV 7G): a tile holds one fighter from each side. Whoever walks into a room with foes goes onto a
+  foe's tile and the two punch; a fighter alone on a tile stays put and shoots at one foe until that foe is dead or gone, turning on
+  someone else only to fight back. A hit lands once a second. Send a
+  crew member onto a foe's tile to punch, or to any other tile to shoot. `tools/crew_fight_test.tscn` checks the
+  rules headless. A sheet's `<particles kind="shot" animation="aim" …/>` is the muzzle its shots leave from.
+- No ring is drawn under a sprite. A health bar's colour says whose crew it is (green ours, red theirs); it shows
+  in a room holding both sides, and on anyone hurt or selected. A selected sprite has a thin outline in the
+  player's colour. Tokens are about 19 pixels across and keep their rim.
+- The top-down drifter's death is a bad placeholder (heromedel, 2026-11-11), to be made again from scratch.
+- A crew member who dies plays their sheet's death frames once where they stood, and the last frame fades; a
+  token shrinks away. The top-down drifter's death frames are still the placeholder.
+- The clone-bay rows are not used: the game has no clone bay. The HalfMech's clamp-on frames are not used either.
+- A Tentauri working several systems at once is not drawn yet. The reach prototype
+  (`docs/art/tentauri/crew/tentauri-reach-prototype.html`) draws the reaching tentacles live, a pair to each
+  console, over a body sheet; the game is meant to draw them itself in the same way, not from sheet rows.
+- When a sheet has no frames for what a crew member is doing, or none for the way they face (punching is only
+  drawn toward and away from the camera), they stand and the small badge says what they are doing, as with tokens.
+  A sheet with no teleport frames gets the tokens' glow and sparks.
+- Stunned, healing and out of air have no frames: the small badges and sparks show them, as with tokens.
+- Particles are the game's, not the sheets' (GV 7F): no sheet draws sparks, spray or a shooting flash. Each sheet's
+  entry in its `race.xml` gives the point where they start (`<particles kind="sparks" animation="repair" …/>`,
+  `<particles kind="spray" animation="fire" down="…" right="…" up="…"/>`). Repair sparks take the ship's power
+  colour; extinguisher spray is white and pale blue. The game does not draw a crew member's shot yet.
 
 ## Tools
 
@@ -126,6 +198,12 @@ and crew member to Any player or to chosen players; any player can change their 
   screenshots and simulated clicks (need a display, e.g. `xvfb-run`).
 - `tools/compile_check.sh` rebuilds the script cache and prints script errors.
 - `tools/make_audio.py` remakes the sounds and music.
+- `tools/import_crew_art.py` copies the crew sprite sheets from `docs/art` into `content/races` and checks each
+  against its layout in `content/crew-layouts.xml`. Run it after a sheet changes, then let Godot import the files.
+  A sheet the game recolours for subtypes (the Tentauri's) is copied as its SVG and kept from Godot's importer
+  (`importer="keep"` in its `.import` file), so the exported game still has its text.
+- `tools/battle_view_test.tscn` takes `ART_STYLE` and `SPECIES` to set those two settings, and `ZOOM` (with
+  `ZOOM_ENEMY`) for a close-up of a deck.
 - The admin console: press the backtick key (`) in game; `help` lists its commands.
 - Debug: run with `INFALL_SMOKE=1` to load the content, start a run and quit; `INFALL_SEED=<number>` fixes a new
   run's seed.

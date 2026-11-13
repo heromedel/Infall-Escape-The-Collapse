@@ -1,7 +1,8 @@
 # Tentauri crew sprite sheet
 
 **Date:** 2026-10-25
-**Status:** heromedel's sheet and reach prototype, saved as the reference for Tentauri crew. Sources:
+**Status:** the sheet and reach prototype another Claude session made with heromedel's guidance (heromedel,
+2026-11-12: not his own drawing), saved as the reference for Tentauri crew. Sources:
 - Sheet: https://claude.ai/artifact/JxheWdQk6QJDtxcp6wcu7L
 - Reach prototype: https://claude.ai/artifact/RZGZgFGBDQ5Jrs55PTJGeV
 
@@ -36,6 +37,10 @@ to other systems.
 | 19 | Typing with 3 other systems: right, left |
 | 20 | Typing with 3 other systems: up, down |
 
+No particles are drawn on the sheet (heromedel, 2026-11-12): the yellow sparks in the four repair frames and the
+sparkles at the tentacle tips in four shooting frames came off the PNG, its 4x render and the SVG, and the game
+makes particles itself (GV 7F). Nothing else on the sheet changed.
+
 ## Reach prototype
 
 [`tentauri-reach-prototype.html`](tentauri-reach-prototype.html) is a self-contained page. The Tentauri types at its
@@ -47,6 +52,16 @@ grow out, and each pair taps alternately like two hands. A tentacle pulls back i
 [`tentauri-reach-body-sheet.png`](tentauri-reach-body-sheet.png) is the body sheet embedded in the prototype:
 280 × 280, indexed by direction × tentacles out (0–3) × bob frame.
 
+## Subtypes
+
+![The planned subtypes](review/subtypes.png)
+
+A Tentauri's bell and tentacles each take a colour (Decided, heromedel, 2026-11-11; GV 7F). The planned pairs
+above are heromedel's pick (Likely). The colours and the pairs are listed in the game's content,
+`infall-godot/content/races/tentauri/race.xml`, and the game recolours the SVG sheet itself by changing its colour
+codes, so there are no recoloured sheets to keep. `tools/subtypes.py` draws the planned pairs from that file for
+review: `python3 tools/subtypes.py`, from this folder.
+
 ## Files
 
 | File | What |
@@ -55,3 +70,4 @@ grow out, and each pair taps alternately like two hands. A tentacle pulls back i
 | `tentauri-crew-sheet.png`, `-4x.png` | Renders at 1x and 4x |
 | `tentauri-reach-prototype.html` | Tentacle-to-system reach prototype |
 | `tentauri-reach-body-sheet.png` | The prototype's body sheet |
+| `tools/subtypes.py` | Draws the planned subtypes as `review/subtypes.png` |

@@ -10,8 +10,18 @@ func _ready() -> void:
 	print("squads: ", Library.squads.size(), " events: ", Library.events.size())
 	for p in Library.problems:
 		print("PROBLEM: ", p)
+	_check_docks()
 	_check_species_words()
 	get_tree().quit()
+
+
+## A ship's EVA or EVB Dock sits at an airlock (GDD 5D).
+func _check_docks() -> void:
+	for id in Library.ships:
+		var ship := Ship.from_design(Library.ships[id], 0, RandomNumberGenerator.new())
+		for system in ship.systems:
+			if system.behaviour in ShipOutfitter.DOCKS and not ShipOutfitter.dock_has_its_airlock(ship, system):
+				print("PROBLEM: %s: %s is not at an airlock" % [id, system.def.name])
 
 
 ## Every {gatos:...} in the content must read as {gatos:Terran words|Tabby words}, and fill in both ways.

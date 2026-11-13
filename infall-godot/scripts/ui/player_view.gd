@@ -14,6 +14,7 @@ signal store_pressed(view: PlayerView)
 signal menu_pressed(view: PlayerView)
 signal players_pressed(view: PlayerView)
 
+
 var player_id: int = 1
 var colour := Color.WHITE
 var battle: BattleScreen
@@ -169,7 +170,23 @@ func encounter_changed(reframe: bool = true) -> void:
 		frame_everything(true)
 
 
+## While the mouse player aims, the reticle is the cursor, as in the genre: the arrow is hidden until the aim ends
+## or a window opens.
+func _show_or_hide_the_arrow() -> void:
+	if not uses_keys:
+		return
+	var wanted := Input.MOUSE_MODE_HIDDEN if encounter != null and aim_mode != "" and not hold_pause and not has_window() else Input.MOUSE_MODE_VISIBLE
+	if Input.mouse_mode != wanted:
+		Input.mouse_mode = wanted
+
+
+func _exit_tree() -> void:
+	if uses_keys and Input.mouse_mode == Input.MOUSE_MODE_HIDDEN:
+		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
+
+
 func _process(delta: float) -> void:
+	_show_or_hide_the_arrow()
 	if encounter == null:
 		return
 	_apply_turn()
@@ -434,7 +451,25 @@ func _aim_is_autofire() -> bool:
 	return autofire_default != (uses_keys and Input.is_key_pressed(KEY_CTRL))
 
 
+## A system's own key gives it power and Shift with the key takes power away, as the genre's system tooltip says
+## ("Add Power: A / Remove Power: Shift + A"). The keys are in each system's file and are the genre's: Shields A,
+## Engines S, Weapons W, Medbay D, Life Support F, Cloaking H, Crew Teleporter G; the EVB Dock has the drone bay's E.
+## The keys below that do things (C cloaks, T and R send and recall boarders, Z and X open and close the doors)
+## are the genre's too, so none of them is a system's key.
+func _system_key(event: InputEventKey) -> bool:
+	if selected_ship == null or event.keycode < KEY_A or event.keycode > KEY_Z:
+		return false
+	var letter := OS.get_keycode_string(event.keycode)
+	for system in selected_ship.systems:
+		if system.def.hotkey == letter and system.def.draws_power:
+			system_power(selected_ship, system, not event.shift_pressed)
+			return true
+	return false
+
+
 func _key(event: InputEventKey) -> void:
+	if _system_key(event):
+		return
 	match event.keycode:
 		KEY_SPACE:
 			toggle_pause()
@@ -448,7 +483,7 @@ func _key(event: InputEventKey) -> void:
 			cycle_ship()
 		KEY_HOME:
 			frame_everything()
-		KEY_F:
+		KEY_Q:
 			if selected_ship:
 				focus_ship(selected_ship)
 		KEY_J:
@@ -457,12 +492,20 @@ func _key(event: InputEventKey) -> void:
 			ship_screen_pressed.emit(self)
 		KEY_T:
 			start_teleport()
-		KEY_E:
+		KEY_R:
+			recall_boarders()
+		KEY_B:
 			start_suit_launch()
 		KEY_C:
 			if selected_ship:
 				cloak(selected_ship)
 		KEY_Z:
+			if selected_ship:
+				set_all_doors(selected_ship, true, false)       # pressed again, it opens the airlocks too
+		KEY_X:
+			if selected_ship:
+				set_all_doors(selected_ship, false, false)
+		KEY_ENTER, KEY_KP_ENTER:
 			return_to_stations()
 		KEY_P:
 			players_pressed.emit(self)
@@ -508,7 +551,7 @@ func _update_hover() -> void:
 			continue
 		var local := encounter.world_to_local(ship, world_point)
 		for member in ship.crew + ship.visitors:
-			if member.ship == ship and member.is_active() and member.position.distance_to(local) <= ShipView.TOKEN_RADIUS + 2.0:
+			if member.ship == ship and member.is_active() and views[ship].drawn_position(member).distance_to(local) <= ShipView.CREW_PICK_RADIUS:
 				if member.side == 0 or views[ship].interior_visible:
 					hover_crew = member
 		var cell := Vector2i(floor((local - ship.design.cell_offset) / ShipDesign.TILE))

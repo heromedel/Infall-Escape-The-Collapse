@@ -42,7 +42,8 @@ static func _names(main: Node, ids: Array) -> String:
 	return " or ".join(ids.map(func(id): return main.session.titled_name(id)))
 
 
-## Plays an assignment (the Admiral's order) or a handover (a player who left: theirs go to the Admiral, GV 4J).
+## Plays an assignment (the Admiral's order), a handover (a player who left: theirs go to the Admiral, GV 4J) or a
+## restore (the Admiral gives a player back what they commanded before they left, GDD 4F).
 static func apply(run: RunState, order: Dictionary) -> void:
 	match String(order.k):
 		"assign":
@@ -61,10 +62,40 @@ static func apply(run: RunState, order: Dictionary) -> void:
 		"handover":
 			var from := int(order.from)
 			var to := int(order.to)
+			var remembered := {"ships": {}, "crew": {}}
 			for ship in run.squad:
+				if ship.assigned.has(from):
+					remembered.ships[ship] = ship.assigned.duplicate()
 				ship.assigned = _swap(ship.assigned, from, to)
 				for member in ship.crew:
+					if member.assigned.has(from):
+						remembered.crew[member] = [member.assigned.duplicate(), member.own_assignment]
 					member.assigned = _swap(member.assigned, from, to)
+			if not remembered.ships.is_empty() or not remembered.crew.is_empty():
+				run.left_commands[from] = remembered
+		"restore":
+			var remembered: Dictionary = run.left_commands.get(int(order.player), {})
+			run.left_commands.erase(int(order.player))
+			for ship in remembered.get("ships", {}):
+				if run.squad.has(ship) and not ship.is_gone():
+					ship.assigned = remembered.ships[ship]
+			for member in remembered.get("crew", {}):
+				if not member.dead and run.squad.has(member.home):
+					member.assigned = remembered.crew[member][0]
+					member.own_assignment = remembered.crew[member][1]
+
+
+## What a player who left used to command, for the Admiral's eyes: "the Outrider and Sable", or "".
+static func remembered_text(run: RunState, player_id: int) -> String:
+	var remembered: Dictionary = run.left_commands.get(player_id, {})
+	var names: Array = []
+	for ship in remembered.get("ships", {}):
+		if run.squad.has(ship) and not ship.is_gone():
+			names.append("the " + ship.name)
+	for member in remembered.get("crew", {}):
+		if not member.dead and run.squad.has(member.home):
+			names.append(member.display_name())
+	return " and ".join(names) if names.size() <= 2 else ", ".join(names.slice(0, -1)) + " and " + names.back()
 
 
 static func _swap(ids: Array, from: int, to: int) -> Array:

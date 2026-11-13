@@ -1,0 +1,121 @@
+# Terran crew test 4: the drifter from above, at the genre's size
+
+**Date:** 2026-11-10
+**Status:** a test, waiting for heromedel's verdict. It is the first of the three versions agreed on 2026-11-10:
+this one at the genre's size and build, then an extended one with more pixels for the coat, then the face-forward
+drifter of crew test 3 revisited. Everything about the look is an **Ai-Generated-Proposal (2026-11-10)**.
+
+![The sheet at 4x](terran-drifter-topdown-sheet-4x.png)
+
+![Every animation](review/animations-4x.gif)
+
+The drifter of crew test 3, seen from almost straight above and built the way the genre builds its human
+(`docs/reference/genre-crew-sheet-analysis.md`): a head on two coat shoulders on a two-line torso, a fist a pixel,
+feet a line.
+
+- His **brown duster** is the two shoulders and the sleeves, with a cream pixel of fleece collar beside the head.
+- His **quiff** is the head: dark hair with its highlight to one side and a single row of face under it.
+- The **blue bandana** is three pixels in the middle of the torso line. From behind, the **chevron** is three blue
+  pixels on his back.
+- The **coat's tail** facing the camera is two brown pixels beside his feet; when he steps, the one on the stepping
+  side is covered (heromedel's "two brown dots that kick back when he steps"). **From behind it is a hem**: a third
+  brown line under his back that hides his feet, with a boot showing only when he steps. (The two dots from behind
+  read as an X: heromedel, 2026-11-10.)
+- The **pistol is metal in Mecha purple** and the **extinguisher is power green** (heromedel, 2026-11-10).
+  **Proposed (heromedel, 2026-11-10):** the extinguisher could take the power colour of whichever race is using it.
+- The pistol and the extinguisher are in his right hand at the end of a straight arm. His head stays still when he
+  aims: only the arm and pistol move (heromedel, 2026-11-10).
+
+## The sheet
+
+315 × 455 pixels: 35 × 35 frames, 13 rows of up to 9, **laid out exactly as the genre's human sheet is**, with the
+same frame counts:
+
+| Row | Frames |
+|---|---|
+| 1 | Walk down (4), walk right (4) |
+| 2 | Walk up (4), walk left (4) |
+| 3 | Aim down, right, up (3 each: straight, a little to his right, a little to his left; no flash) |
+| 4 | Fire down (4), fire right (4): the green extinguisher swept from side to side, no spray |
+| 5 | Fire up (4), fire left (4) |
+| 6 | Repair (9 frames from 3 drawings, played 1 2 3 3 2 2 1 1 1): side on, a welding gun in his near hand and his far hand on the work; the gun at rest, a pixel forward, a pixel down, the same shape in all three. No sparks on the sheet: the game draws them |
+| 7 | Punch down (6) |
+| 8 | Type right (4), type left (4) |
+| 9 | Type up (4), type down (4) |
+| 10 | Teleport (9: his edge lights up, he turns all to light, and the light thins into bands, columns and rising sparks; the last frame is empty) |
+| 11 | Clone (6: a lump and a bare figure in muted power green with a bright edge that fades, then his colours coming in from the head down, his feet last) |
+| 12 | Aim left (3), punch up (6) |
+| 13 | Portrait (the standing frame), crew laser shot (a white bar), a gap, death (4): **a bad placeholder**, to be made again from scratch: a stumbling step, he goes over, is down on his side, settles |
+
+- **Decided (heromedel, 2026-11-10):** the sheet's teleport is the light one, first made for crew test 3. The
+  genre's kind, where his own pixels are pulled upward, is kept beside the sheet as the alternative:
+  `terran-drifter-topdown-teleport-pulled.png` (9 frames in a row). `review/teleport-compare.png` shows both.
+
+- **Decided (heromedel, 2026-11-11):** a clone grows in its race's power colour, toned down, with a bright edge of
+  it that fades as the figure fills in. For this Terran that is power green. He grows head first, so his colours
+  come in from the head down, and his feet are the last part still green, glowing in the bright power colour on
+  that frame. `review/clone-12x.gif` and `review/clone-slow-12x.gif` show it moving. `review/clone-compare.png`
+  shows the grey first version and the muted green without the edge beside it.
+
+- **Walking away, the coat kicks (heromedel, 2026-11-11):** the hem drops a row over the trailing leg and lifts a row
+  on the other side, so it swings as he steps. It moves up and down only; a tail kicked out sideways was tried first
+  and turned down. `review/walk-up-kick-choices.png` shows the flat hem and four up-or-down kicks; the third column
+  is the one on the sheet.
+
+- **Hands (heromedel, 2026-11-11):** a hanging hand is a fist two pixels by two, straight under its cuff, as the
+  style guide proposes for Terrans. The genre's one-pixel fist, set a pixel out from the cuff, read as a nub. The
+  walking frames and every action frame that keeps a hanging hand carry the same fist.
+
+## How close it sits to the genre's sheet
+
+It was drawn frame for frame against the genre's sheet, working from letter maps of where each of its parts sits in
+each frame. Measured afterwards, frame against frame in the same place on the sheet:
+
+- **No pixel has the genre's colour** except the white laser bar, which is plain white on both.
+- **The outlines nearly coincide on the rows drawn against the genre's:** 92–98% of the shape is shared on the walk,
+  aim, fire, punch and type rows.
+- **Repair and death are his own (heromedel, 2026-11-11).** For a day both took the genre's poses part for part, in
+  his colours (100% and 97% shared), after heromedel found my first own repair senseless ("a severed hand or a
+  vulture") and my first own death "dumb" (2026-11-10). That was a recolour of the genre's drawing, which the repo's
+  rule forbids, so both were redrawn from his own frames:
+  - **Repair** is his own side view, as he stands at a console and with the extinguisher: a welding gun in his near
+    hand (a dark grip, a grey neck, a brass nozzle) and his far hand on the work. A cable hung from the grip at
+    first; it made a ring by his hand that came undone when he reached forward, so it was removed (heromedel,
+    2026-11-11). **No sparks are drawn on the sheet (heromedel, 2026-11-11):** the game makes them at the nozzle, so
+    they can flicker freely; `tools/topdown.py` gives the point as `SPARKS_AT` and the game's layout file carries
+    it. Two redraws came before: a hammer swung on a thin handle, which read as waving a melted spatula, and a thin
+    torch with sparks drawn in.
+  - **Death** is one topple, all one way and in one piece: a stumbling step; the standing figure itself leaning
+    over, slid across row by row with his head furthest, then further; going over on the slant, his legs showing
+    now that he is no longer upright; down on his side; settled. Four redraws came before and each read wrong
+    (heromedel, 2026-11-11): a face-on sprawl from his face-forward sheet ("terrible"); sinking at the knees and then
+    a figure lying the other way ("he melts one way and then a dummy falls the other way"); and his parts coming
+    down piece by piece, as the HalfMech suit's do ("he just falls apart").
+  - **The death is a bad placeholder (heromedel, 2026-11-11):** not great, but it works for now; it is kept until a
+    new one is made from scratch.
+  - **A test (heromedel, 2026-11-11):** the two leaning frames are out of the death, leaving the stumble, the going
+    over and the lying. With them he read as standing, going diagonal, and only then falling. `leaning` is kept in
+    the tool so they can be put back.
+  - The gun is one fixed shape; only where his fist holds it changes. It had been redrawn shorter on the tipped
+    drawing, which made it seem to change size (heromedel, 2026-11-11).
+  - Measured again, frame against frame in the same cell, the shape they share with the genre's frames is under
+    half, which is what any two figures in the middle of the same tile share.
+- **Two rows are worked out and share little of their shape:** the teleport, which is now the light one and unlike
+  the genre's, and the clone (66%). Walking
+  away shares 86%, because of the hem.
+
+## How it is made
+
+Every frame is placed by hand as text, one character a pixel, in `tools/topdown.py`; the colours are in
+`tools/pix.py`. An action frame is the standing grid with the rows of the acting arm replaced. Two things are worked
+out from drawn frames instead of drawn: the teleport (his own shape turned to light and thinned out) and the clone
+bay's toned power colour and fading edge. `python3 tools/build.py`, run from this folder,
+rebuilds the sheet and the pictures in `review/`.
+
+## Review pictures
+
+- `review/animations-2x.gif`, `animations-4x.gif`: every animation looping. Row 1: walk down, right, up, left, punch
+  down, punch up. Row 2: aim down, right, up, left, repair, teleport. Row 3: fire down, right, up, left, clone,
+  death. Row 4: type down, right, up, left.
+- `review/game-size.png`: the face-forward drifter of crew test 3 beside this one facing down, right, up and left,
+  at game size, 2x and 4x.

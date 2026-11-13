@@ -53,6 +53,12 @@ func setup(player_ships: Array, enemy_ships: Array, seed_value: int) -> void:
 	for ship in enemy_ships:
 		ships.append(ship)
 		ai[ship] = ShipAI.new(ship, self)
+	# Crew with no subtype yet get one here (GV 7F), each side as a squad, from numbers of their own so the fight's
+	# numbers stay as they were.
+	var dresser := RandomNumberGenerator.new()
+	dresser.seed = seed_value
+	CrewSkins.dress(player_ships, dresser)
+	CrewSkins.dress(enemy_ships, dresser)
 	for ship in ships:
 		ship.event_sink = note
 		ship.visitors.clear()
@@ -598,7 +604,7 @@ func _start_beam(ship: Ship, slot: WeaponSlot) -> void:
 		start_local = centre
 		end_local = centre + Vector2(slot.def.beam_length, 0)
 	beams.append({"weapon": slot.def, "source": ship, "slot": slot, "target": target, "start": start_local, "end": end_local,
-			"ticks": 0, "total": 24, "rooms_hit": [], "blocked": false})
+			"ticks": 0, "total": 24, "rooms_hit": [], "tiles_hit": [], "blocked": false})
 
 
 func _tick_beams() -> void:
@@ -813,11 +819,12 @@ func _land(member: CrewMember, ship: Ship, room_index: int) -> void:
 	if ship != member.home and not ship.visitors.has(member):
 		ship.visitors.append(member)
 	member.path.clear()
-	var cell := ship.free_cell_in_room(room_index, member.side, member)
+	var cell := ship.landing_cell(room_index, member)
 	member.cell = cell
 	member.destination = cell
 	member.position = ship.design.cell_centre(cell)
 	member.previous_position = member.position
+	member.melee_with = null
 	member.teleporting_ticks = TELEPORT_TICKS
 
 

@@ -10,7 +10,12 @@ const OPTIONS := {
 	"auto_pause_seconds": [5.0, [5.0, 3.0, 8.0, 12.0], "Auto Pause Interval (seconds)"],
 	"event_auto_pause": [true, [true, false], "Events Pause the Game"],
 	"terran_conduits": [true, [true, false], "Terran Ship Conduits"],
+	"shield_levels": ["By Bar", ["By Bar", "By Layer"], "Shield Levels"],     # By Layer is the shield test (GDD 8H)
 	"player_power_colour": ["Default (Green)", ["Default (Green)", "Racial", "Specific Color"], "Player Power Color"],
+	"player_power_specific": ["GATOS Green", ["GATOS Green", "Pirate Orange", "Mecha Purple", "Tentauri Pink", "Azurethea Blue",
+			"Senti Yellow-Green", "Lykario Silver", "Malphen Pink-Orange", "Custom"], "Specific Power Color"],
+	"player_power_custom": ["#4FA8FF", ["#4FA8FF"], "Custom Power Color"],     # picked with a colour picker, not from a list
+	"enemy_terran_colour": ["Pirate Power Orange", ["Pirate Power Orange", "Power Green"], "Enemy Terran Color"],
 	"run_length": ["Standard", ["Standard", "Short"], "Run Length"],
 	"difficulty": ["Normal", ["Normal", "Easy", "Hard"], "Difficulty"],
 	"map_zoom": ["Clamped", ["Clamped", "Free"], "Map Zoom"],
@@ -25,6 +30,7 @@ const OPTIONS := {
 	"mouse_control": ["Left Selects, Right Orders", ["Left Selects, Right Orders", "Left Selects and Orders, Right Deselects"], "Mouse Control"],
 	"local_coop_view": ["Split", ["Split", "Shared"], "Local Co-op View"],
 	"battlefield": ["Vertical", ["Vertical", "Horizontal"], "Battlefield"],
+	"art_style": ["Top Down", ["Top Down", "Facing", "Tokens"], "Art Style"],
 	"fullscreen": [false, [false, true], "Fullscreen"],
 	"master_volume": [0.8, [], "Master Volume"],
 	"music_volume": [0.6, [], "Music Volume"],
@@ -33,17 +39,17 @@ const OPTIONS := {
 
 ## The settings window's tabs (GV 14G), in order, and the settings on each.
 const TABS := {
-	"Game": ["run_length", "difficulty", "terran_conduits", "gatos_species", "low_mawjig_warning"],
-	"Battle": ["battlefield", "formation", "auto_pause", "auto_pause_seconds", "event_auto_pause", "screen_shake", "player_power_colour"],
+	"Game": ["run_length", "difficulty", "terran_conduits", "shield_levels", "gatos_species", "low_mawjig_warning"],
+	"Battle": ["battlefield", "formation", "auto_pause", "auto_pause_seconds", "event_auto_pause", "screen_shake", "player_power_colour", "player_power_specific", "enemy_terran_colour"],
 	"Controls": ["mouse_control", "map_zoom"],
 	"HUD": ["hud_layout", "hud_card_opacity", "collapsed_cards_reopen", "reopened_cards_fold_back"],
 	"Players": ["local_coop_view"],
-	"Display and Sound": ["fullscreen", "master_volume", "music_volume", "effects_volume"],
+	"Display and Sound": ["art_style", "fullscreen", "master_volume", "music_volume", "effects_volume"],
 }
 
 ## Settings that change what happens in a run, not just how it looks: in a session every machine uses the host's
 ## (GV 4C), so the simulation runs the same everywhere.
-const RULES := ["terran_conduits", "run_length", "difficulty", "formation", "gatos_species", "auto_pause",
+const RULES := ["terran_conduits", "shield_levels", "run_length", "difficulty", "formation", "gatos_species", "auto_pause",
 		"auto_pause_seconds", "event_auto_pause"]
 
 var _values: Dictionary = {}

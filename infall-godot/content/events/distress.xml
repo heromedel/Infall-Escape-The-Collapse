@@ -6,7 +6,7 @@
 
 "Our life support is failing. We have twice the people aboard it was built for. We fled the collapse with whatever would fly. Please, if you can spare anything, help us."</text>
 		<choice text="Send your crew over to repair their life support.">
-			<outcome weight="2"><text>Your crew spend hours crawling through the transport's ducts and finally get its air scrubbers running again. The captain sends over what little Mawjig they can spare and thanks you on behalf of everyone aboard.</text><mawjig size="low"/></outcome>
+			<outcome weight="2"><text>Your crew spend hours crawling through the transport's ducts and finally get its air scrubbers running again. The captain sends over what little Mawjig they can spare and thanks you on behalf of everyone aboard.</text><mawjig size="medium"/></outcome>
 			<outcome weight="1"><text>The transport's life support was pieced together from three different ships, and none of the parts want to work together. Your crew get it running at half strength before a coolant line bursts and scalds {crew}. Half strength will last the refugees as far as the next cluster. The captain thanks you anyway.</text><crew_hurt amount="35"/></outcome>
 		</choice>
 		<choice text="Ferry as many of them as you can to the nearest station.">
@@ -19,7 +19,7 @@
 			<outcome><text>You can't spare the time or the Mawjig. The transport's lights grow fainter behind you as you prepare to jump.</text></outcome>
 		</choice>
 		<choice text="Send {crew} to keep their air breathable." requires="crew:azurethea">
-			<outcome><text>{crew} moves from cabin to cabin. Each room fills with fresh air the moment they stand in it. With the worst of the danger past, your crew repair the scrubbers without hurrying. The captain sends over a share of their Mawjig. One of the refugees also asks to join your crew.</text><mawjig size="low"/><crew race="terran"/></outcome>
+			<outcome><text>{crew} moves from cabin to cabin. Each room fills with fresh air the moment they stand in it. With the worst of the danger past, your crew repair the scrubbers without hurrying. The captain sends over a share of their Mawjig. One of the refugees also asks to join your crew.</text><mawjig size="high"/><crew race="terran"/></outcome>
 		</choice>
 	</event>
 
@@ -30,7 +30,7 @@
 			<outcome weight="1"><text>The fire is worse than it looked. Your crew put it out, but {crew} is badly burned doing it. The freighter crew pay you what they can.</text><mawjig size="low"/><crew_hurt amount="45"/></outcome>
 		</choice>
 		<choice text="Talk them through venting their engine room.">
-			<outcome><text>Your crew talk them through opening their outer hatches from the bridge. The fire dies in the vacuum. They send a generous thank-you.</text><mawjig size="medium"/></outcome>
+			<outcome><text>Your crew talk them through opening their outer hatches from the bridge. The fire dies in the vacuum. They send a generous thank-you.</text><mawjig size="high"/></outcome>
 		</choice>
 		<choice text="Leave them."/>
 	</event>
@@ -60,7 +60,7 @@
 		<text>A Lykario raider is limping along on one engine, its crew yelling cheerfully at each other over an open channel. "Hey! Scouts! We're fine, totally fine. We could use a hand though."</text>
 		<choice text="Help them patch their engine.">
 			<outcome weight="3"><text>The Lykario are loud, grateful and very hard to work around. One of them decides your squad is a better hunt than his own and asks to come along.</text><crew race="lykario"/></outcome>
-			<outcome weight="1"><text>The moment your crew are aboard, the "wounded" Lykario try to take your ship. It doesn't go well for them, but it doesn't go well for {crew} either.</text><crew_hurt amount="40"/><mawjig size="low"/></outcome>
+			<outcome weight="1"><text>The moment your crew are aboard, the "wounded" Lykario try to take your ship. It doesn't go well for them, but it doesn't go well for {crew} either.</text><crew_hurt amount="40"/><mawjig size="medium"/></outcome>
 		</choice>
 		<choice text="Keep your distance."/>
 	</event>
@@ -71,7 +71,7 @@
 			<outcome><text>The array lights up cyan. "We, The Senti-, will remember this." In return they transmit star charts for every cluster they have ever recorded nearby.</text><mawjig amount="-1.21"/><reveal/></outcome>
 		</choice>
 		<choice text="Let {crew} talk to it." requires="crew:senti">
-			<outcome><text>{crew} links with the barge directly and restarts it without spending a thing. The archive's keepers transmit their nearby charts, and a little Mawjig for the trouble.</text><reveal/><mawjig size="low"/></outcome>
+			<outcome><text>{crew} links with the barge directly and restarts it without spending a thing. The archive's keepers transmit their nearby charts, and a little Mawjig for the trouble.</text><reveal/><mawjig size="medium"/></outcome>
 		</choice>
 		<choice text="Move on."/>
 	</event>
@@ -91,7 +91,7 @@
 			<outcome><text>The family cheers. The pilot promises to name the next {gatos:baby|kitten} after your ship. As they jump away, they send you a message: "There's a cache of parts in the next cluster. We couldn't carry it."</text><mawjig amount="-1.21"/><weapon tier="low" race="terran"/></outcome>
 		</choice>
 		<choice text="Tow them to the hub yourself.">
-			<outcome><text>It takes time, but the family is safe. The hub's dockmaster thanks you with a little Mawjig.</text><mawjig size="low"/></outcome>
+			<outcome><text>It takes time, but the family is safe. The hub's dockmaster thanks you with a little Mawjig.</text><mawjig size="medium"/></outcome>
 		</choice>
 		<choice text="You can't help them."/>
 	</event>

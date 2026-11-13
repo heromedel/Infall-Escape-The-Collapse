@@ -61,6 +61,15 @@ func _ready() -> void:
 		var medbay_region := _hud_region(medbay.display_name() + " (level")
 		await _click(medbay_region.rect.get_center(), MOUSE_BUTTON_LEFT)
 		_check("click switches the Medbay on", medbay.enabled)
+	# 5b. A system's own key: Shift with it takes its power away, the key alone gives it back (Shields is A)
+	var shields: ShipSystem = ship.system_by("shields")
+	var shields_before := ship.system_power(shields)
+	await _key(KEY_A, true)
+	await _wait(0.2)
+	_check("Shift + A takes power from Shields", ship.system_power(shields) < shields_before)
+	await _key(KEY_A)
+	await _wait(0.2)
+	_check("A gives Shields its power back", ship.system_power(shields) == shields_before)
 	# 6. A door click
 	var door: ShipDoor = ship.doors[0]
 	var door_point: Vector2 = ship.design.cell_centre(door.cell_a) + Vector2(door.direction) * ShipDesign.TILE * 0.5
@@ -108,6 +117,36 @@ func _ready() -> void:
 	await _wait(0.2)
 	_check("Promote makes them a Lieutenant", veteran.rank == 1 and veteran.display_name().begins_with("Lt. "))
 	get_viewport().get_texture().get_image().save_png("/tmp/claude-0/input_test.png")
+	# Number keys answer an event's numbered choices, as in the genre
+	main.show_event(Library.events["WAITED"])
+	await _wait(0.4)
+	var events: Array = main.overlays.get_children().filter(func(w): return w is EventWindow and w.visible)
+	var texts: Array = (events.back().body.get_children() if not events.is_empty() else []).filter(func(n): return n is Button).map(func(b): return b.text)
+	await _key(KEY_1)
+	await _wait(0.4)
+	var events_after: Array = main.overlays.get_children().filter(func(w): return w is EventWindow and w.visible and not w.is_queued_for_deletion())
+	var texts_after: Array = (events_after.back().body.get_children() if not events_after.is_empty() else []).filter(func(n): return n is Button).map(func(b): return b.text)
+	_check("the 1 key takes an event's first choice", not events.is_empty() and texts != texts_after)
+	await _key(KEY_1)
+	await _wait(0.4)
+	await _press_first_event_button()
+	# The genre's door keys: Z opens the inner doors, X closes them all
+	var inner: Array = ship.doors.filter(func(d): return not d.to_space)
+	await _key(KEY_X)
+	await _wait(0.2)
+	await _key(KEY_Z)
+	await _wait(0.2)
+	_check("Z opens every inner door", inner.all(func(d): return d.held_open) and ship.doors.filter(func(d): return d.to_space).all(func(d): return not d.held_open))
+	await _key(KEY_X)
+	await _wait(0.2)
+	_check("X closes every door", ship.doors.all(func(d): return not d.held_open))
+	# A player alone who leaves comes back in with any key (GDD 4F)
+	main.session.remove_local_player(main.session.first_local_id())
+	await _wait(0.3)
+	_check("leaving alone takes the view away", main.battle.player_views.is_empty())
+	await _key(KEY_HOME)
+	await _wait(0.4)
+	_check("any key brings the keyboard player back in", main.battle.player_views.size() == 1)
 	get_tree().quit()
 
 
@@ -173,10 +212,11 @@ func _drag(from: Vector2, to: Vector2) -> void:
 	await _wait(0.1)
 
 
-func _key(code: int) -> void:
+func _key(code: int, shift: bool = false) -> void:
 	for pressed in [true, false]:
 		var event := InputEventKey.new()
 		event.keycode = code
+		event.shift_pressed = shift
 		event.pressed = pressed
 		Input.parse_input_event(event)
 		await _wait(0.05)

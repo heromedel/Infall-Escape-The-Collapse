@@ -15,6 +15,8 @@ var jumps: int = 0
 var mawjig: int = 1211
 var squad: Array[Ship] = []
 var cargo: Array[String] = []        # weapons carried but not fitted
+var left_commands: Dictionary = {}   # a player who left (id) -> what they commanded, for the Admiral to restore
+									 # (GDD 4F): {"ships": {Ship: assigned}, "crew": {CrewMember: [assigned, own]}}
 var used_events: Array[String] = []
 var stats := {"ships_destroyed": 0, "crews_killed": 0, "jumps": 0, "mawjig_earned": 0, "events": 0, "ships_lost": 0}
 var over: bool = false
@@ -141,6 +143,12 @@ func hire(ship: Ship, jumps_long: int, pay: int) -> void:
 	log_book.write("hired_ship", {"ship": ship.name, "jumps": jumps_long, "pay": pay}, "The %s signed on for %d jumps." % [ship.name, jumps_long])
 
 
+## What a mercenary asks at this band (Infall: Eco, 2026-11-13): the event's price times the band adjustment, as
+## wreck rewards rise (GDD 8I), so a hire keeps costing about a fight's pay.
+func hire_price(base: float) -> int:
+	return Mawjig.amount(base * band_adjustment())
+
+
 func renewal_price(ship: Ship) -> int:
 	return roundi(int(ship.contract.get("pay", 0)) * RENEWAL_RISE)
 
@@ -168,6 +176,12 @@ func count_mercenary_crew() -> void:
 	for ship in living_ships():
 		if ship.is_mercenary():
 			ship.contract.crew_at_start = _contract_crew(ship).size()
+
+
+## Crew who join the squad between encounters get their subtype at once (GV 7F); the rest get theirs when an
+## encounter is set up.
+func dress_crew() -> void:
+	CrewSkins.dress(squad, rng)
 
 
 ## The mercenaries leave: their ship, and their crew wherever they are. Anyone of yours aboard comes back first.

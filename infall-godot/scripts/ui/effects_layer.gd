@@ -169,7 +169,7 @@ func _draw_solid_shots() -> void:
 			var size := texture.get_size() * suit.def.art_scale
 			draw_texture_rect(texture, Rect2(at - size * 0.5, size), false, Color(1, 0.6, 0.6) if suit.is_damaged() else Color.WHITE)
 		else:
-			CrewPortraits.draw_token(self, suit.pilot.race.id, suit.pilot.name, at, 10.0, UiColours.enemy_power("", suit.pilot.race))
+			CrewPortraits.draw_token(self, suit.pilot.race.id, suit.pilot.name, at, 10.0, UiColours.enemy_power("", suit.pilot.race), 2.0, suit.pilot.subtype)
 		var oxygen := clampf(float(suit.oxygen_ticks) / float(suit.def.suit_oxygen_ticks), 0.0, 1.0)
 		draw_rect(Rect2(at + Vector2(-10, 14), Vector2(20, 3)), Color(0, 0, 0, 0.7))
 		draw_rect(Rect2(at + Vector2(-10, 14), Vector2(20 * oxygen, 3)), Color("#7fd3ff"))
