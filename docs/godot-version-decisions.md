@@ -381,6 +381,10 @@ anything Claude added tagged Ai-Generated-Proposal.
     (12.11, 24.21, 43.56), and drawn as one block. It is a run rule, so every machine uses the host's. Ship files
     stay in bars either way. **Ai-Generated-Proposal:** damage and ion are counted apart (one of each loses
     nothing), and the first layer costs the Shields system's buy price in both modes.
+  - **Superseded (heromedel, 2026-11-13):** By Layer makes shields tougher than the genre's (a layer there falls
+    to the first damage or ion), and a setting over every ship takes too much rebalancing. One power for one
+    layer becomes the Senti Shield Projector, a second shield system (GDD 8Q, Proposed). The By Layer value comes
+    out when that is built.
 - **E — Fixed (2026-11-13):** no beam weapon had dealt damage since tile targeting was built (a beam was never
   given its list of tiles cut). They work again.
 
@@ -543,5 +547,6 @@ All built in the build of 2026-11-05.
 | 2026-11-13 | A crew member who shoots concentrates on one foe, and fights back when hit by another (GV 7G). |
 | 2026-11-13 | A dying crew member plays their sheet's death frames, then fades (GV 7F). |
 | 2026-11-13 | heromedel's answers to the overnight report: keys match the genre's and event choices take number keys (GV 3K); a two-ship first Malphen squad and the GATOS Scrappers (GV 5C); each status card folds on its own (GV 14H); Specific Power Color lists every species and has a picker (GV 14I); `Shield Levels: By Bar > By Layer` (GV 8D); the 5% repair bonus stays as a placeholder (GV 7J). |
+| 2026-11-13 | Two shield systems proposed, the Mawjig Shield Generator and the Senti Shield Projector, and the setting `Beams vs Shields: Penetrate (Classic) > Hit (Damages Shields First)` (GDD 8Q); for Ship Designs to weigh before any is built. |
 | 2026-11-13 | An EVA or EVB Dock sits at an airlock: on its tile, or in a room with an airlock that has no system on its tile (GDD 5D, GV 5B). |
 | 2026-11-13 | The overnight plan (`docs/handoffs/overnight-plan-2026-11-13.md`, report beside it): co-op fixes and tests (GV 4K), closer to the genre (GV 3K), Player Power Color (GV 14I), the Medbay rule and the docs' ships (GV 5B, 5C), Abandoned clusters (GV 2D), Animal Senses, the reach and the repair bonus (GV 7H–7J), Eco's prices (GV 8D), ship status cards (GV 14H). |
