@@ -123,3 +123,17 @@ the same tick and print their state, and the script compares them.
   confirmed each arrived while the jump was playing) all end with identical state and no out-of-step note.
 - Not covered still: hails and surrender offers over LAN, controllers on a client, two real machines.
 
+### A6. Chaos with more than one player
+
+`CHAOS_PLAYERS=2` (up to 6) gives the chaos tester controller players beside the mouse-and-keys one: they point
+somewhere in their own view and press a button or lean on a stick, give orders (a door, crew to a room, stations),
+and leave and come back. The tester's own clicks on HUD buttons and on the map are now aimed correctly in a split
+view (they were aimed as if the view filled the screen, so two-player runs never jumped).
+
+Three two-player seeds of 90 s and one four-player seed, headless: about 450 actions each, jumps, purchases, new
+runs and continues, **no failures and no engine errors**. Three two-player seeds with a display (slower, about 45
+actions each) were clean too.
+
+**Plan A is done** except what it left out on purpose. Not tested by anything still: real controllers and their
+sticks, two real machines, hails and surrender offers over LAN, controllers on a LAN client.
+

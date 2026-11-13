@@ -7,7 +7,8 @@ extends Node
 ##
 ## Run: tools/chaos.sh (several seeds, headless or with xvfb), or one run:
 ##   CHAOS_SEED=3 CHAOS_SECONDS=120 godot --headless --path . --log-file /tmp/chaos.log tools/chaos_test.tscn
-## Env: CHAOS_SEED (default 1), CHAOS_SECONDS (default 120), CHAOS_LOG (the engine log to scan for errors: pass
+## Env: CHAOS_PLAYERS (default 1; with 2 to 6 the others are controllers that point, press, order, leave and return),
+## CHAOS_SEED (default 1), CHAOS_SECONDS (default 120), CHAOS_LOG (the engine log to scan for errors: pass
 ## the same path as --log-file, as chaos.sh does; without it, user://logs/godot.log), CHAOS_VERBOSE=1 prints every action. Runs one at a
 ## time: the game keeps one save file. Timing is real time, so the same seed takes the same choices but a
 ## fight can play out differently from run to run.
@@ -27,6 +28,7 @@ var rng := RandomNumberGenerator.new()
 var seed_value := 1
 var budget := 120.0
 var verbose := false
+var players := 1                # CHAOS_PLAYERS: how many share the screen; the others are controllers
 var only: PackedStringArray = []          # CHAOS_ONLY=probe,jump: just these actions, to reproduce one thing
 var log_path := ""
 var _log_pos := 0
@@ -56,6 +58,7 @@ func _ready() -> void:
 	seed_value = int(OS.get_environment("CHAOS_SEED")) if OS.get_environment("CHAOS_SEED") != "" else 1
 	budget = float(OS.get_environment("CHAOS_SECONDS")) if OS.get_environment("CHAOS_SECONDS") != "" else 120.0
 	verbose = OS.get_environment("CHAOS_VERBOSE") == "1"
+	players = maxi(1, int(OS.get_environment("CHAOS_PLAYERS"))) if OS.get_environment("CHAOS_PLAYERS") != "" else 1
 	if OS.get_environment("CHAOS_ONLY") != "":
 		only = OS.get_environment("CHAOS_ONLY").split(",", false)
 	log_path = OS.get_environment("CHAOS_LOG")
@@ -297,6 +300,9 @@ func _random_action() -> void:
 		["save_continue", 3, _save_and_continue], ["console", 3, _console], ["let_it_run", 5, _let_it_run],
 		["probe", 3, _probe],
 	]
+	if players > 1:
+		_keep_pad_players()
+		choices.append_array([["pad", 14, _pad_player], ["pad_orders", 6, _pad_orders], ["pad_leaves", 2, _pad_leaves_and_returns]])
 	if not only.is_empty():
 		choices = choices.filter(func(c): return only.has(c[0]))
 	var total := 0
@@ -349,6 +355,89 @@ func _new_run() -> void:
 	runs_started += 1
 	_note("start_new_run")
 	main.start_new_run("outrider")
+
+
+# --- More players on this screen (CHAOS_PLAYERS) -------------------------------------------------------------------
+
+## Controllers stay joined: a new run or a continue may have dropped them.
+func _keep_pad_players() -> void:
+	for pad in players - 1:
+		if not main.session.local_players().any(func(p): return p.device == "pad" and int(p.pad) == pad):
+			main.session.add_local_player("pad", pad)
+
+
+func _pad_views() -> Array:
+	return main.battle.player_views.filter(func(view: PlayerView): return view.show_cursor) if main.battle else []
+
+
+## A controller player points somewhere in their view and presses a button, or leans on a stick for a moment.
+func _pad_player() -> void:
+	var views := _pad_views()
+	if views.is_empty():
+		return
+	var view: PlayerView = views[rng.randi_range(0, views.size() - 1)]
+	var pad := int(main.session.player_by_id(view.player_id).get("pad", 0))
+	var shown := Rect2(view.display.position, view.display.size)
+	view.pointer = shown.position + Vector2(rng.randf(), rng.randf()) * shown.size
+	if rng.randf() < 0.75:
+		var buttons := [JOY_BUTTON_A, JOY_BUTTON_A, JOY_BUTTON_X, JOY_BUTTON_X, JOY_BUTTON_B, JOY_BUTTON_Y, JOY_BUTTON_START,
+				JOY_BUTTON_BACK, JOY_BUTTON_LEFT_STICK, JOY_BUTTON_RIGHT_STICK, JOY_BUTTON_LEFT_SHOULDER, JOY_BUTTON_RIGHT_SHOULDER,
+				JOY_BUTTON_DPAD_UP, JOY_BUTTON_DPAD_DOWN, JOY_BUTTON_DPAD_LEFT, JOY_BUTTON_DPAD_RIGHT]
+		var button: JoyButton = buttons[rng.randi_range(0, buttons.size() - 1)]
+		for pressed in [true, false]:
+			var event := InputEventJoypadButton.new()
+			event.device = pad
+			event.button_index = button
+			event.pressed = pressed
+			Input.parse_input_event(event)
+			await _frames(3)
+	else:
+		var axes := [JOY_AXIS_LEFT_X, JOY_AXIS_LEFT_Y, JOY_AXIS_RIGHT_X, JOY_AXIS_RIGHT_Y, JOY_AXIS_TRIGGER_LEFT, JOY_AXIS_TRIGGER_RIGHT]
+		var axis: JoyAxis = axes[rng.randi_range(0, axes.size() - 1)]
+		for value in [rng.randf_range(-1.0, 1.0), 0.0]:
+			var lean := InputEventJoypadMotion.new()
+			lean.device = pad
+			lean.axis = axis
+			lean.axis_value = value
+			Input.parse_input_event(lean)
+			await _frames(rng.randi_range(4, 20))
+
+
+## A controller player's orders, given straight to their view: a door, crew sent to a room, a ship selected.
+func _pad_orders() -> void:
+	var views := _pad_views()
+	if views.is_empty() or main.encounter == null:
+		return
+	var view: PlayerView = views[rng.randi_range(0, views.size() - 1)]
+	var ships: Array = main.encounter.living(0)
+	if ships.is_empty():
+		return
+	var ship: Ship = ships[rng.randi_range(0, ships.size() - 1)]
+	match rng.randi_range(0, 2):
+		0:
+			if not ship.doors.is_empty():
+				view.toggle_door(ship, ship.doors[rng.randi_range(0, ship.doors.size() - 1)])
+		1:
+			var crew := ship.crew.filter(func(member: CrewMember): return member.is_active() and member.ship == ship)
+			if not crew.is_empty():
+				view.select_crew_member(crew[rng.randi_range(0, crew.size() - 1)], false)
+				view._give({"k": "move", "ts": BattleOrders.ship_index(main.encounter, ship), "cell": ship.rooms[rng.randi_range(0, ship.rooms.size() - 1)].cells[0],
+						"crew": view.selected_crew.map(func(member: CrewMember): return BattleOrders.crew_ref(main.encounter, member))})
+		2:
+			view._give({"k": "stations", "s": BattleOrders.ship_index(main.encounter, ship)})
+	await _frames(4)
+
+
+## A controller player leaves and comes back a moment later.
+func _pad_leaves_and_returns() -> void:
+	var views := _pad_views()
+	if views.is_empty():
+		return
+	var id: int = views[rng.randi_range(0, views.size() - 1)].player_id
+	main.session.remove_local_player(id)
+	await _frames(rng.randi_range(2, 30))
+	_keep_pad_players()
+	await _frames(4)
 
 
 func _click_anywhere() -> void:
@@ -427,7 +516,7 @@ func _click_hud_region() -> void:
 	if battle == null or battle.hud._regions.is_empty():
 		return
 	var region: Dictionary = battle.hud._regions[rng.randi() % battle.hud._regions.size()]
-	var at: Vector2 = region.rect.get_center()
+	var at: Vector2 = _in_view(region.rect.get_center())
 	_note("hud '%s'" % String(region.tooltip).left(40).replace("\n", " "))
 	await _click(at, MOUSE_BUTTON_LEFT if rng.randf() < 0.7 else MOUSE_BUTTON_RIGHT)
 
@@ -513,6 +602,8 @@ func _jump() -> void:
 	if not stores.is_empty() and rng.randf() < 0.6:
 		target = stores[rng.randi() % stores.size()]   # stores are where the buying happens
 	var at: Vector2 = map.get_global_transform() * map._to_screen(run.galaxy.clusters[target].position)
+	if _view() and map.get_viewport() == _view().viewport:
+		at = _in_view(at)
 	var before := run.jumps
 	await _click(at, MOUSE_BUTTON_LEFT)
 	await _click(at, MOUSE_BUTTON_LEFT, true)
@@ -1050,7 +1141,7 @@ func _click_hud(tooltip_start: String, button: int) -> void:
 		return
 	for region in _view().hud._regions:
 		if String(region.tooltip).begins_with(tooltip_start):
-			await _click(region.rect.get_center(), button)
+			await _click(_in_view(region.rect.get_center()), button)
 			return
 
 
@@ -1138,6 +1229,12 @@ func _hovered() -> Control:
 	if control == null and _view():
 		control = _view().viewport.gui_get_hovered_control()
 	return control
+
+
+## A point of the first player's view on the screen: with players sharing the screen the view is placed and scaled.
+func _in_view(point: Vector2) -> Vector2:
+	var view := _view()
+	return view.display.position + point * view.view_scale if view else point
 
 
 ## A control's middle on the screen: a control in a player's view is placed and scaled with the view.
