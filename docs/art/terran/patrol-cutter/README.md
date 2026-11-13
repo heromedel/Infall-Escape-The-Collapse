@@ -1,58 +1,64 @@
 # GATOS Patrol Cutter hull
 
 **Date:** 2026-11-13
-**Status:** draft for heromedel's review, not yet sent to Ship Designs. The ship comes from the Godot version
+**Status:** round 2, draft for heromedel's review, not yet sent to Ship Designs. The ship comes from the Godot version
 (`infall-godot/content/ships/patrol-cutter/ship.xml` on `Cloud-C-Godot-Version`), which has no hull art for it; the
 Checkpoint loadout (`loadout.patrol-cutter.checkpoint.xml`) uses the same hull.
 
-![At the Outrider's scale, at battle zoom, as a silhouette and at half size](review/scale-and-squad.png)
+![Beside the Outrider and the Pirate Hijacker at the same scale, at battle zoom and as a silhouette](review/scale-and-squad.png)
 
 ## What it is
 
-A tidy doing-fine GATOS patrol cutter: white and pale grey with blue trim, the armoured housing over the AZC
-(race profiles, Terrans 1). Hull only, top-down, nose up, light from the upper left, 300 × 480 at 1x (35 px tiles, the
-centre of tile (0, 0) at 150, 240). A classic spaceship, not a rocket: a chined bow, swept side sponsons, engines set
-flush into a squared stern, no nose cone, fins or engine bells.
+**Round 2 (2026-11-13).** heromedel on round 1 (a clean white shuttle): the rooms already make it nearly rocket-shaped;
+the GATOS are a loose alliance of mercenaries, not a clean, white, Federation-like or "American clean-cut" vessel; go
+for a merc look with wings or nacelles, and since it's a cutter, give it a sharp look, maybe sharp wings.
 
+A rugged mercenary cutter: hull only, top-down, nose up, light from the upper left, 440 × 470 at 1x (35 px tiles, the
+centre of tile (0, 0) at 220, 235).
+
+- **Shape:** forward-swept blade wings, sharp at the tips, break up the vertical stack of rooms; a chisel bow; engine
+  nacelles merged into the wing roots, with chunky nozzles, and a small pair at the stern. No nose cone, fins or
+  engine bells.
+- **Colours and wear:** sun-faded warm grey-olive plates, faded rust-ochre bands raked along the wings' leading edges, a
+  replaced panel of a slightly different shade, soft scorching aft. Nothing drips. The AZC sits under a flush armoured
+  panel with two vent slits.
 - **Rooms first:** the 9 rooms of the ship file are laid out on the tile grid (`tools/layout.py`) and the hull is drawn
   round them; `tools/check_rooms.py` checks every room has at least 4 px of hull round it
   (`review/rooms-and-mounts.png`).
-- **Six mounts** in the hidden `weapon-mounts` group, each on the outer edge with a clear line forward
-  (`check_mounts.py`), odd port, even starboard: 1–2 on the bow chines (up), 3–4 on the sponsons' swept leading edges
-  (left, right: the Gat 2.1 at 3, the Gat M1 at 4; the Checkpoint fits the Gat 3.1 and the Gat M2 there), 5–6 on
-  the sponsons' outer flanks (left, right).
-- **Parts:** `hull`, `sponson-port`, `sponson-starboard`, `spine`, `cockpit`, `azc`, `engines`.
+- **Six mounts** in the hidden `weapon-mounts` group, each placed on the edge measured from a render of the hull, with
+  a clear line forward (`check_mounts.py`), odd port, even starboard: 1–2 on the wingtips, 3–4 on the wings' leading
+  edges by the body (the Gat 2.1 at 3, the Gat M1 at 4; the Checkpoint fits the Gat 3.1 and the Gat M2 there), 5–6 on
+  the bow's chines. All slide forward.
+- **Parts:** `hull`, `wing-port`, `wing-starboard`, `nacelle-port`, `nacelle-starboard`, `cockpit`, `azc`, `engines`.
 
 For the Godot ship file (art pixels on the 1x hull):
 
 ```xml
-<art hull="patrol-cutter-hull-2x.png" scale="0.5" center="150,240"/>
-<mount id="1" x="122" y="36" slide="up"/>
-<mount id="2" x="178" y="36" slide="up"/>
-<mount id="3" x="63" y="136" slide="left"/>
-<mount id="4" x="237" y="136" slide="right"/>
-<mount id="5" x="45" y="250" slide="left"/>
-<mount id="6" x="255" y="250" slide="right"/>
+<art hull="patrol-cutter-hull-2x.png" scale="0.5" center="220,235"/>
+<mount id="1" x="30" y="117" slide="up"/>
+<mount id="2" x="410" y="117" slide="up"/>
+<mount id="3" x="116" y="140" slide="up"/>
+<mount id="4" x="324" y="139" slide="up"/>
+<mount id="5" x="174" y="61" slide="up"/>
+<mount id="6" x="266" y="62" slide="up"/>
 ```
 
 ## How it was made (`docs/art/ship-art-process.md`)
 
-Concepts (`review/concepts.png`), all drawn round the rooms: A, a chined wedge; B, sponsons on struts; C, a rounded
-cutter; D, a sensor-bar bow; E, a swept cutter. A, C and D read as a blocky plus sign; E was picked, its sponsons swept
-back, its corners softened.
+**Round 2:** concepts round the same rooms on a wider canvas (`review/concepts-round2.png`): W1, swept-back wings with
+wingtip nacelles; W2, forward-swept wings with root nacelles (picked: the sharpest and least like anything vertical);
+W3, crescent wings.
 
 | Pass | Changes |
 |---|---|
-| 1 | The sponsons as raised plates of their own; a narrower spine; an engine block; mounts 3–4 onto the true edge. |
-| 2 | The sponsons out to the hull's edge (they floated inside a white rim). |
-| 3 | The GATOS blue double stripe across the spine under the canopy, as on the Outrider. |
-| 4 | Up to the Outrider's polish: a bigger armoured AZC housing with an inner ring and bolts, spine seams, larger nozzles. |
-| 5 | Blind check, 6/10, "a utility shuttle, not a fast cutter": a longer chined bow; the engines set into the stern (the block read as bolted on); the dial sensor dropped (read as a clock). |
-| 6 | Blind check, 6/10: a narrower bow tip; no dome, pod slots or portholes (read as a button, handles and stitching); bigger nozzles. Sponsons tapered into swept tips were tried and dropped: they read as rocket boosters. |
+| 1 | The worn merc palette; the wing roots moved forward to cover the Shields room and Medbay; a narrower stern; mounts placed on the measured edge. |
+| 2 | Blind check, 6/10 ("lived-in merc" reads; sharp only half-reads; the stubs read as landing legs; the octagon as a pasted-on turret): a chisel bow; the nacelles widened into the wing roots with chunky nozzles; the AZC under a flush armoured panel; a simpler canopy; the wing's patch panel dropped. |
 
-Each part is built in the five stages (`review/stages.png`). Still flagged by the blind checks: the AZC housing sits
-alone mid-spine, and the hull is plainer than the Outrider. The Gat M1 has no weapon art yet, so there is no armed
+Each part is built in the five stages (`review/stages.png`). The Gat M1 has no weapon art yet, so there is no armed
 preview.
+
+**Round 1 (rejected):** a clean white shuttle with swept sponsons, six passes (in git history; its concepts in
+`review/concepts-round1.png`).
 
 ## Files
 
@@ -63,4 +69,4 @@ preview.
 | `patrol-cutter-hull-mounts.svg` | Review copy showing the mount spots |
 | `tools/build.py` | Builds the hull and its stages: `python3 build.py OUT_DIR` |
 | `tools/layout.py`, `tools/check_rooms.py` | The rooms on the pixel grid, and the room-margin check |
-| `tools/concepts.py` | The concept silhouettes |
+| `tools/concepts.py`, `tools/concepts2.py` | The concept silhouettes, rounds 1 and 2 |

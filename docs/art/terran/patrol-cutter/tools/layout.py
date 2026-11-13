@@ -3,7 +3,7 @@ ship.xml), on the hull's pixel grid: 35 px tiles at 1x, tile (0, 0) centred on t
 concept is drawn around these rooms, never the other way round (docs/art/ship-art-process.md, rooms first)."""
 
 TILE = 35
-W, H = 300, 480                 # the hull canvas at 1x
+W, H = 440, 470                 # the hull canvas at 1x (wide, for the forward-swept wings)
 CX, CY = W / 2, H / 2           # the centre of tile (0, 0)
 
 ROOMS = [  # name, first tile, last tile
