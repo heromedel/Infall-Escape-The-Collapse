@@ -125,7 +125,7 @@ The Art Style setting shows a token for any race with no sheet in the chosen sty
 | Race | Top Down | Facing |
 |---|---|---|
 | GATOS as Terrans | The drifter | The drifter |
-| GATOS as Tabbys | None | Standing only, in four directions: no animations |
+| GATOS as Tabbys | None | The Tabby crew sheet (`docs/art/terran/tabby-crew`), every animation |
 | Mecha | The suit | The older crew sheet |
 | Tentauri | None | The crew sheet, recoloured for each crew member's subtype |
 | Azurethea, Malphen, Lykario, Senti-GPH | None | None |

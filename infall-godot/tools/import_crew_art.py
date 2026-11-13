@@ -20,22 +20,13 @@ ART = os.path.join(GAME, "..", "docs", "art")
 SOURCES = {        # the game's copy: the sheet it is copied from
     "content/races/terran/crew-top-down.png": "terran/crew-test-4/terran-drifter-topdown-sheet.png",
     "content/races/terran/crew-facing.png": "terran/crew-test-3/terran-drifter-sheet.png",
+    "content/races/terran/crew-facing-tabby.png": "terran/tabby-crew/tabby-crew-sheet.png",
     "content/races/mecha/crew-top-down.png": "mecha/crew-topdown-test/mecha-topdown-sheet.png",
     "content/races/mecha/crew-facing.png": "mecha/crew/mecha-crew-sheet.png",
     "content/races/tentauri/crew-facing.svg": "tentauri/crew/tentauri-crew-sheet.svg",
 }
 FACINGS = ("down", "right", "up", "left", "any")
 failed = False
-
-
-def tabby_standing(path):
-    """The Facing Tabby has no sheet yet, only four standing views: set them in a row, facing down, right, up, left."""
-    sys.path.insert(0, os.path.join(ART, "terran", "cat-concept-for-gatos", "tools"))
-    import cat
-    sheet = Image.new("RGBA", (4 * cat.FRAME, cat.FRAME), (0, 0, 0, 0))
-    for number, view in enumerate(("down", "right", "up", "left")):
-        sheet.alpha_composite(cat.image(cat.pixels(view), (0, 0, 0, 0)), (number * cat.FRAME, 0))
-    sheet.save(path)
 
 
 def picture_of(race, sheet):
@@ -102,7 +93,6 @@ def report(label, what, problems):
 if __name__ == "__main__":
     for target, source in SOURCES.items():
         shutil.copyfile(os.path.join(ART, source), os.path.join(GAME, target))
-    tabby_standing(os.path.join(GAME, "content/races/terran/crew-facing-tabby.png"))
     frame, known = layouts()
     races = os.path.join(GAME, "content", "races")
     for race in sorted(os.listdir(races)):

@@ -393,7 +393,7 @@ All built in the build of 2026-11-05.
 1. **Ship status cards** (GV 14H): a small card for every ship a player commands, with a deck plan that shows
    fire, breaches, damage, air and intruders, a hull bar and shield pips; a click jumps to the ship.
 
-2. **Art Style** (GV 7F): built 2026-11-11 with the five sheets that exist and the standing Tabby. Still to fill in:
+2. **Art Style** (GV 7F): built 2026-11-11 with the five sheets that exist and the standing Tabby; the Tabby's full Facing sheet went in on 2026-11-13. Still to fill in:
    top-down Tabbys; the Tabby's animations in the Facing style; top-down Tentauri; any sheet at all for the
    Azurethea, Malphen, Lykario and Senti-GPH; death and clone-bay animations, which the game does not play
    yet. The top-down drifter's repair and death rows were redrawn from his own frames the same day and are in.
@@ -426,3 +426,4 @@ All built in the build of 2026-11-05.
 | 2026-11-11 | Every crew card in a store shows the crew member's picture, following the Art Style setting (GV 7F). |
 | 2026-11-11 | Crew subtypes: a Tentauri's bell and tentacle colours, planned pairs first, then unused combinations, one of each to a squad (GV 7F). |
 | 2026-11-13 | Consoles drawn from the art sessions' art with the symbol on them, crew drawn back from the wall, no ring under sprites, health bars coloured by side, a thin outline for a selected sprite, smaller tokens (GV 7G); built the same day. |
+| 2026-11-13 | The Tabby's full Facing sheet is in the game, in place of the four standing views. |

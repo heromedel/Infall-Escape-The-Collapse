@@ -4,7 +4,8 @@
 **Status:** a test, waiting for heromedel's verdict. The mercenary cat of
 [`../cat-concept-for-gatos`](../cat-concept-for-gatos) animated, so the GATOS as Tabbys have a Facing sheet like the
 Terran drifter's. The standing views are that concept's, unchanged; every animation frame is an
-**Ai-Generated-Proposal (2026-11-11)**. Not in the game yet.
+**Ai-Generated-Proposal (2026-11-11)**. In the game since 2026-11-13 (heromedel's go-ahead): the Facing sheet of
+the GATOS as Tabbys, with its spark and spray points in `infall-godot/content/races/terran/race.xml`.
 
 ![The sheet at 4x](tabby-crew-sheet-4x.png)
 
@@ -45,7 +46,8 @@ Terran drifter's. The standing views are that concept's, unchanged; every animat
   bent the gun and left the arm still).
 - **Fight fire:** the aiming arm with a red extinguisher, sweeping straight, one way, straight, the other way. No
   spray is drawn: the game adds it (heromedel, 2026-11-12). The nozzle is the dark tip beyond the red; in the
-  frame's own pixels it is at about (10, 31) toward us, (25, 22) to the right and (25, 14) away from us.
+  frame's own pixels its tip is at (9, 31) toward us, (28, 22) to the right and (27, 14) away from us, measured
+  on the sheet when it went into the game.
 - **Punch:** one arm, with his weight behind it (heromedel, 2026-11-12: the first version moved only the arm). He
   shifts away as the fist draws back, then steps in with the other leg and sinks a pixel as the arm goes out, and
   his head dips as it lands. Away from us the elbow pokes out first, and the arm goes out ahead of him, which from
