@@ -171,7 +171,8 @@ step, not to every line; points he agreed to are tagged.
    even if the 3-shot laser with good sensors is a bit powerful. An FTL Kestrel-level all-rounder with one scouting strength: Sensors 2, since
    sensor level sets how far beacons are visible (GDD 2E). 3 crew, like the Kestrel.
 7. **Variation:** standard for the race (the Terran starting ship).
-8. **Layout and systems:** a shuttle-shaped cruiser in white and pale grey with blue trim. Hull 30, as every FTL
+8. **Layout and systems:** a shuttle-shaped cruiser in white and pale grey with blue trim (superseded for art by the
+   GATOS mercenary look, Decided 2026-11-13; race profile Terrans 1). Hull 30, as every FTL
    player ship. **Rooms — Likely (2026-10-23):** 10 bigger rooms rather than
    the Kestrel's many small ones, from Arty's floor layout test 3: the bridge holds Piloting, Weapons and Shields;
    one room holds Sensors and Doors; the engine room holds Engines and Life Support; Medbay and the AZC core room
