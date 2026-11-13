@@ -137,3 +137,16 @@ actions each) were clean too.
 **Plan A is done** except what it left out on purpose. Not tested by anything still: real controllers and their
 sticks, two real machines, hails and surrender offers over LAN, controllers on a LAN client.
 
+### C1, C2 and B1e. Colours
+
+- **Player Power Color** (GDD 14D, Decided) now works: `Player Power Color: Default (Green) > Racial > Specific Color`
+  colours the player's conduits, console symbols, power bars, system icons, weapon power pips and crew shots.
+  Racial is the ship's own race's power colour. For Specific Color there is a second setting, `Specific Power
+  Color: Blue > Cyan > Yellow > Orange > Pink > Purple > White`. **Ai-Generated-Proposal:** the GDD says only "the
+  player picks one colour"; a list to step through was the smallest way to build it, and it leaves red out because
+  red is damage.
+- **Any Terran ship met as an enemy shows pirate orange** (GDD 14D, Likely), with `Enemy Terran Color: Pirate Power
+  Orange > Power Green`. A GATOS patrol used to show green.
+- **A damaged system is red** (heromedel; reference frame 18), on the ship and in the HUD. It was orange until
+  broken.
+

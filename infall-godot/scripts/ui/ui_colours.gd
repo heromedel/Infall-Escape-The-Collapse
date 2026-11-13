@@ -37,9 +37,29 @@ const UNSEEN_FLOOR := Color("#2a3140")
 const LOW_AIR := Color(1.0, 0.25, 0.3)
 
 
-## The colour of a race's power when it is the enemy (palette.md); GATOS pirates show pirate orange.
+## The colours the Specific Color choice of Player Power Color offers (GDD 14D). No red: red is damage.
+const SPECIFIC_POWER := {"Blue": "#4FA8FF", "Cyan": "#4FE8E0", "Yellow": "#FFE14D", "Orange": "#FF8500", "Pink": "#FF5ECA",
+		"Purple": "#AA28EB", "White": "#F2F5F8"}
+
+
+## The colour of the player's powered systems, power bars and system symbols (GDD 14D): `Player Power Color:
+## Default (Green) > Racial > Specific Color`. Racial is the power colour of the ship's own race (GATOS: green).
+static func player_power(race: RaceDef = null) -> Color:
+	match Settings.get_value("player_power_colour", "Default (Green)"):
+		"Racial":
+			return race.power_colour if race else POWER_GREEN
+		"Specific Color":
+			return Color(SPECIFIC_POWER.get(Settings.get_value("player_power_specific", "Blue"), "#4FA8FF"))
+	return POWER_GREEN
+
+
+## The colour of a race's power when it is the enemy (palette.md). Any Terran ship met as an enemy shows pirate
+## orange, since an enemy Terran reads as a pirate, unless `Enemy Terran Color: Pirate Power Orange > Power Green`
+## says otherwise (GDD 14D).
 static func enemy_power(faction: String, race: RaceDef) -> Color:
 	if faction == "pirate":
+		return PIRATE_ORANGE
+	if race and race.id == "terran" and Settings.get_value("enemy_terran_colour", "Pirate Power Orange") == "Pirate Power Orange":
 		return PIRATE_ORANGE
 	return race.power_colour if race else PIRATE_ORANGE
 

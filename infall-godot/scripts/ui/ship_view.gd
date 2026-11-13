@@ -58,7 +58,7 @@ var _super_hits: Array = []        # Supershield hits
 func setup(view_ship: Ship, owner: Encounter) -> void:
 	ship = view_ship
 	encounter = owner
-	power_colour = UiColours.POWER_GREEN if ship.side == 0 else UiColours.enemy_power(ship.faction, ship.race)
+	power_colour = _power_colour()
 	for member in ship.crew + ship.visitors:
 		if member.dead:
 			_seen_dead[member] = true      # dead before this view existed: nothing to play
@@ -123,8 +123,14 @@ func shield_hit(world_point: Vector2, supershield: bool = false) -> void:
 		list.pop_front()
 
 
+## The ship's power colour: the player's choice for their own ships (GDD 14D), the race's for an enemy.
+func _power_colour() -> Color:
+	return UiColours.player_power(ship.race) if ship.side == 0 else UiColours.enemy_power(ship.faction, ship.race)
+
+
 func _process(delta: float) -> void:
 	time += delta
+	power_colour = _power_colour()      # a setting, so it can change mid-fight
 	position = encounter.to_view(ship.world_position)   # a ship sits whole on its side of the squeezed gap
 	rotation = PI if ship.facing_down else 0.0
 	for hit in _hits + _super_hits:
@@ -381,7 +387,7 @@ func _system_colour(system: ShipSystem) -> Color:
 	if system.ion > 0:
 		return UiColours.ION_BLUE
 	if system.damage > 0:
-		return Color("#ff9a3d")
+		return UiColours.DAMAGED_RED     # a damaged system is red, as in the genre (heromedel, 2026-11-13)
 	if ship.system_power(system) > 0 or system.behaviour == "power_core":
 		return power_colour
 	return Color("#8b93a3")
@@ -648,7 +654,7 @@ func _drawn_at(member: CrewMember) -> Vector2:
 
 ## The colour of a crew member's side: the player's power green, or their own ship's power colour.
 func _crew_colour(member: CrewMember) -> Color:
-	return UiColours.POWER_GREEN if member.side == 0 else UiColours.enemy_power(member.home.faction, member.home.race)
+	return UiColours.player_power(member.home.race) if member.side == 0 else UiColours.enemy_power(member.home.faction, member.home.race)
 
 
 ## The crew to draw, those further up the screen first, so one standing lower overlaps one standing behind.

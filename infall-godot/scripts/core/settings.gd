@@ -11,6 +11,8 @@ const OPTIONS := {
 	"event_auto_pause": [true, [true, false], "Events Pause the Game"],
 	"terran_conduits": [true, [true, false], "Terran Ship Conduits"],
 	"player_power_colour": ["Default (Green)", ["Default (Green)", "Racial", "Specific Color"], "Player Power Color"],
+	"player_power_specific": ["Blue", ["Blue", "Cyan", "Yellow", "Orange", "Pink", "Purple", "White"], "Specific Power Color"],
+	"enemy_terran_colour": ["Pirate Power Orange", ["Pirate Power Orange", "Power Green"], "Enemy Terran Color"],
 	"run_length": ["Standard", ["Standard", "Short"], "Run Length"],
 	"difficulty": ["Normal", ["Normal", "Easy", "Hard"], "Difficulty"],
 	"map_zoom": ["Clamped", ["Clamped", "Free"], "Map Zoom"],
@@ -35,7 +37,7 @@ const OPTIONS := {
 ## The settings window's tabs (GV 14G), in order, and the settings on each.
 const TABS := {
 	"Game": ["run_length", "difficulty", "terran_conduits", "gatos_species", "low_mawjig_warning"],
-	"Battle": ["battlefield", "formation", "auto_pause", "auto_pause_seconds", "event_auto_pause", "screen_shake", "player_power_colour"],
+	"Battle": ["battlefield", "formation", "auto_pause", "auto_pause_seconds", "event_auto_pause", "screen_shake", "player_power_colour", "player_power_specific", "enemy_terran_colour"],
 	"Controls": ["mouse_control", "map_zoom"],
 	"HUD": ["hud_layout", "hud_card_opacity", "collapsed_cards_reopen", "reopened_cards_fold_back"],
 	"Players": ["local_coop_view"],

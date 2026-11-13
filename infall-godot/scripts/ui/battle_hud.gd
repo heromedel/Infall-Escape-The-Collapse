@@ -497,7 +497,7 @@ func _draw_power(ship: Ship, at: Vector2) -> void:
 			var shown := mini(total, 14)
 			for index in shown:
 				var cell := Rect2(source_at + Vector2(0, -index * (bar_height + 2) - bar_height), Vector2(30, bar_height))
-				draw_rect(cell, UiColours.POWER_GREEN if index < free else UiColours.BAR_EMPTY)
+				draw_rect(cell, UiColours.player_power(ship.race) if index < free else UiColours.BAR_EMPTY)
 			UiKit.draw_text(self, source_at + Vector2(38, -2), "%d / %d" % [free, total], 15, UiColours.TEXT, UiKit.font_bold())
 			UiKit.draw_text(self, source_at + Vector2(38, 18), "REACTOR", 12, UiColours.TEXT_DIM, UiKit.font_bold())
 			_region(Rect2(source_at + Vector2(0, -150), Vector2(100, 170)), Callable(), "Reactor: free power is lit. Click a system's bars to give it power; right click takes it away.")
@@ -505,11 +505,11 @@ func _draw_power(ship: Ship, at: Vector2) -> void:
 			var running := ship.core_load()
 			var capacity := ship.core_capacity()
 			draw_circle(source_at + Vector2(30, -70), 26, Color("#20262f"))
-			draw_arc(source_at + Vector2(30, -70), 22, 0, TAU, 32, Color(UiColours.POWER_GREEN, 0.6 + 0.3 * sin(_time * 2.4)), 3.0, true)
-			SystemIcons.draw(self, "azc", source_at + Vector2(30, -70), 26, UiColours.POWER_GREEN)
+			draw_arc(source_at + Vector2(30, -70), 22, 0, TAU, 32, Color(UiColours.player_power(ship.race), 0.6 + 0.3 * sin(_time * 2.4)), 3.0, true)
+			SystemIcons.draw(self, "azc", source_at + Vector2(30, -70), 26, UiColours.player_power(ship.race))
 			for index in capacity:
 				var pip := source_at + Vector2(8 + (index % 4) * 16, -32 + (index / 4) * 14)
-				draw_rect(Rect2(pip, Vector2(12, 8)), UiColours.POWER_GREEN if index < running else UiColours.BAR_EMPTY)
+				draw_rect(Rect2(pip, Vector2(12, 8)), UiColours.player_power(ship.race) if index < running else UiColours.BAR_EMPTY)
 			UiKit.draw_text(self, source_at + Vector2(0, 18), "AZC LV%d  %d/%d" % [ship.reactor_level, running, capacity], 12, UiColours.TEXT_DIM, UiKit.font_bold())
 			_region(Rect2(source_at + Vector2(0, -110), Vector2(100, 130)), Callable(), "Armoured ZeroPoint Core: any system joined to it by unbroken conduits has full power. Its level sets how many power-hungry systems run at once. Click a system to switch it on or off.")
 		_:
@@ -533,7 +533,7 @@ func _draw_subsystems(ship: Ship, at: Vector2) -> void:
 func _draw_system_column(ship: Ship, system: ShipSystem, base: Vector2, column: float, bar_height: float, main: bool) -> void:
 	var power := ship.system_power(system)
 	var level := system.level
-	var colour := UiColours.POWER_GREEN
+	var colour := UiColours.player_power(ship.race)      # Player Power Color (GDD 14D)
 	var bar_width := column - 14.0
 	for index in level:
 		var cell := Rect2(base + Vector2(4, -index * (bar_height + 2) - bar_height - 22), Vector2(bar_width, bar_height))
@@ -549,11 +549,9 @@ func _draw_system_column(ship: Ship, system: ShipSystem, base: Vector2, column: 
 		if fill == UiColours.BAR_EMPTY:
 			draw_rect(cell, Color(UiColours.BORDER_DIM, 0.35), false, 1.0)
 	var icon_centre := base + Vector2(column * 0.5 - 3, 0)
-	var icon_colour := UiColours.POWER_GREEN if power > 0 else Color("#8b93a3")
-	if system.is_broken() or system.spored:
-		icon_colour = UiColours.DAMAGED_RED
-	elif system.damage > 0:
-		icon_colour = Color("#ff9a3d")
+	var icon_colour := colour if power > 0 else Color("#8b93a3")
+	if system.is_broken() or system.spored or system.damage > 0:
+		icon_colour = UiColours.DAMAGED_RED      # damaged or broken: red, as in the genre
 	draw_circle(icon_centre, 15, Color(0.04, 0.06, 0.1))
 	draw_arc(icon_centre, 15, 0, TAU, 24, icon_colour, 1.5, true)
 	SystemIcons.draw(self, system.def.icon, icon_centre, 18, icon_colour)
@@ -647,7 +645,7 @@ func _draw_weapon_slot(ship: Ship, slot: WeaponSlot, index: int, rect: Rect2) ->
 	UiKit.draw_text(self, rect.position + Vector2(10, 22), slot.def.short_name(), 16, UiColours.TEXT if slot.powered else UiColours.TEXT_DIM, UiKit.font_bold())
 	UiKit.draw_text(self, rect.position + Vector2(rect.size.x - 10, 22), str(index + 1), 15, UiColours.TEXT_DIM, UiKit.font_bold(), HORIZONTAL_ALIGNMENT_RIGHT, 0)
 	for pip in slot.def.power:
-		draw_rect(Rect2(rect.position + Vector2(10 + pip * 13, 30), Vector2(10, 8)), UiColours.POWER_GREEN if slot.powered else UiColours.BAR_EMPTY)
+		draw_rect(Rect2(rect.position + Vector2(10 + pip * 13, 30), Vector2(10, 8)), UiColours.player_power(ship.race) if slot.powered else UiColours.BAR_EMPTY)
 	var bar := Rect2(rect.position + Vector2(10, rect.size.y - 22), Vector2(rect.size.x - 20, 10))
 	draw_rect(bar, UiColours.BAR_EMPTY)
 	if slot.powered:
