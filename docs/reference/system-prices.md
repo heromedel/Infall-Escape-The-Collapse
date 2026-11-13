@@ -72,6 +72,7 @@ guess.
 | EVA Dock | Teleporter × 0.75 | 16.34 | 5.45, 10.89 | 16.34 |
 | AAA | Clone Bay + Backup DNA Bank augment (40 scrap) | 21.78 | 8.47, 10.89 | 19.36 |
 | Supershield Generator | Zoltan Shield augment (80 scrap) | 19.36 | none yet | — |
+| System battery (Senti) | Backup Battery × 0.75 (powers one system only) | 6.35 | 9.08 | 9.08 |
 
 The number of levels follows the analog until each system's levels are designed.
 
@@ -99,6 +100,9 @@ FTL's crew price × 0.242 (`ftl-baseline.md`), each race priced from its closest
 **Ai-Generated-Proposal (2026-10-23):** Mecha ships have no reactor; each system carries its own power. Those
 bars are priced as reactor bars, counted across the whole ship as one reactor would be (bars 1–5 at 3.63, 6–10 at
 4.84, …). A bar added by an integrated crew member costs nothing extra.
+
+Senti core (Ai-Generated-Proposal, 2026-11-13): it works by bars (race profiles, Senti-GPH 6), so it is priced
+per bar as the standard reactor below.
 
 ## Standard reactor (per bar)
 

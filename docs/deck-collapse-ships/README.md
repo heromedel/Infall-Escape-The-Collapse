@@ -125,3 +125,5 @@ Features the plans use that Deck Collapse doesn't have yet, written as if they e
 | G26 | Our boarders aboard | `ownBoardersAboard`: any of our crew is aboard the enemy ship |
 | G27 | Negative conditions | `unless="…"` skips a line while the condition holds; `ownCrewIn`: our own crew are in the target system (so a ship never shoots its own boarders) |
 | G28 | Being boarded | `when="enemyBoardersAboard"`: enemy crew are aboard our ship (the Census Picket turns on the enemy teleporter first) |
+| G29 | Senti Shield Projector | `kind="projector"` on Senti shields: one bar and one damage or ion per layer, layers recover twice as slowly, up to double the Generator's maximum level (GDD 8H, Proposed 2026-11-13) |
+| G30 | System battery | `<system type="systemBattery" for="aaa"/>`: a battery bound to one system that keeps it powered when the core or its conduit is cut (race profile Senti-GPH 6, Proposed 2026-11-13) |

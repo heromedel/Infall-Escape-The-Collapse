@@ -323,6 +323,13 @@ Homeworlds. (Earlier: octopus-like, working label "Octopods".)
    stores and broadcasts their holographic avatars. If it is damaged, fewer avatars can be broadcast, so the ship
    has fewer holographic crew until it is repaired; they don't die from this unless the ship is destroyed. They
    don't usually use ion weapons themselves.
+   - **Senti core — Proposed (2026-11-13, heromedel):** unlike the Terran AZC, a Senti core works by bars: a pool of
+     power bars, as the biomechanical races have, but delivered through the same power conduits. So a layer of the
+     Senti Shield Projector takes one bar (GDD 8H).
+   - **Backup Batteries — Proposed (2026-11-13, heromedel):** Senti like installing Backup Batteries for their ships
+     or systems, especially their AAA. **Ai-Generated-Proposal (2026-11-13):** two kinds: the genre's ship-wide
+     Backup Battery (extra power for a short time; vanilla, any band), and a **system battery** bound to one
+     system, most often the AAA, that keeps it powered when the core or its conduit is cut (new, from band 3).
    - **Weapon names — Proposed (2026-10-22):** number codes. Beams give rooms swept, type, damage and version,
      e.g. 3B 01 V2 (3-room beam, 1 damage, version 2). Other weapons can start with the shot count instead (e.g.
      2L 02 V1, a 2-shot laser with 2 damage); a guideline, not an absolute rule.

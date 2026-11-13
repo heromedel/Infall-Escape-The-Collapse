@@ -170,6 +170,8 @@ source doc carries the tag heromedel's words give it.
 - Struggling Senti-GPH put preserving data first, trading for records, archives and storage. (Race profiles, Senti-GPH 3; Proposed)
 - Doomed Senti-GPH have no qualms about killing living people, while still storing their information and biological data. (Race profiles, Senti-GPH 4; Proposed)
 - The Senti-GPH would rather preserve a refugee race's records than house its people, since housing them costs life support they don't otherwise need. (Race profiles, Senti-GPH 5; Proposed)
+- Senti-GPH cores work by power bars delivered through conduits, unlike the Terran AZC. (Race profiles, Senti-GPH 6; Proposed)
+- The Senti-GPH like installing Backup Batteries for their ships or systems, especially their AAA. (Race profiles, Senti-GPH 6; Proposed)
 - Senti-GPH ships broadcast their people from an Armoured Avatar Array (AAA), alongside an AZC like the Terrans'. (Race profiles, Senti-GPH 6; Proposed)
 - Senti-GPH weapon names are number codes, such as 3B 01 V2. (Race profiles, Senti-GPH 6; Proposed)
 - The Senti-GPH live in small, dense clusters built around relay and broadcast stations. (Race profiles, Senti-GPH 7, 8; Proposed)

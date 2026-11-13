@@ -4,13 +4,14 @@
      while still storing their data (race profile 4). Uses only Deck Collapse's current rules. -->
 <ship bands="3-4" name="Census Picket" race="Senti-GPH" faction="Senti-GPH" color="#D2FF00" hull="10" missiles="0">
   <note>Sets the other ship on fire and sweeps its crew with beams. Its own crew are holograms: fire can't hurt them and they need no air, so it carries no Life Support.</note>
-  <power kind="AZC" level="2"/>
+  <power kind="pool" level="7"/>                                   <!-- Senti core by bars (race profile 6, Proposed 2026-11-13) -->
   <system type="piloting" level="1"/>
   <system type="sensors" level="2"/>
-  <system type="shields" level="1"/>
+  <system type="shields" level="1" kind="projector"/>   <!-- G29: Senti Shield Projector, one bar per layer (GDD 8H) -->
   <system type="engines" level="1"/>
   <system type="hacking" level="1"/>                                 <!-- hack the Med Bay so the burned can't heal -->
   <system type="aaa" level="1"/>                                       <!-- hosts 3 Senti per level; brings the dead back -->
+  <system type="battery" level="1"/>                                 <!-- Senti like Backup Batteries -->
   <system type="weapon" id="weapons" name="Weapons" level="3">
     <weapon name="2B 01 F1" kind="beam" power="2" shots="1" damage="1" rooms="2" fire="100" tech="digital"/>  <!-- a fire beam: every hit system burns -->
     <weapon name="1B 02 V1" kind="beam" power="1" shots="1" damage="2" rooms="1" tech="digital"/>             <!-- beams wound every crew member they sweep -->
