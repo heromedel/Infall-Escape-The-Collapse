@@ -182,6 +182,8 @@ The starting race (GDD 7C). The name is deliberate, to avoid a plain Federation 
    Dock): a variant of the EVA Dock, basically battle EVA suits. It needs a battlesuit type, the way a drone bay
    needs a drone type, and likely costs material to launch. Crew fly out to ships themselves to attack (or do
    other things) repeatedly. Other races can use it if they acquire one.
+   - **Airlock — Proposed (heromedel, 2026-11-13):** an EVB Dock must be on a tile with an airlock, or maybe next to
+     an airlock with nothing in the way.
    - **Suit oxygen — Likely (2026-10-23):** a battlesuit has a limited supply of its own oxygen. It starts going
      down as soon as the suit leaves the ship and keeps going down on the way back; if it runs out, the occupant
      slowly dies of asphyxiation.
@@ -371,6 +373,7 @@ Wolf-like race (earlier working label "wolf race").
 8. **Where and how they live — Proposed (2026-10-21):** small, localized, independent clusters that even attack
    each other.
 9. **Crew traits — Proposed (2026-10-21):** quick attacks, reduced HP, Animal Senses.
+   - **Fast — Likely (heromedel, 2026-11-13):** they move fast as well as attacking quickly, and have less health.
    - **Animal Senses — Decided (2026-10-23):** as if they are psychic, but player-facing text never calls it
      psychic. It is always "Animal Senses", and the senses are never explained. They sense Life Signs, without
      using ship sensors and even on other ships and in hazards.

@@ -198,7 +198,7 @@ source doc carries the tag heromedel's words give it.
 - The Lykario live in small, independent clusters that even attack each other. (Race profiles, Lykario 8; Proposed)
 - The Lykario have Animal Senses, as if they were psychic. The senses are never explained, and they are never called psychic. (Race profiles, Lykario 9; Decided)
 - The Lykario sense Life Signs without ship sensors, even on other ships and in hazards. (Race profiles, Lykario 9; Decided)
-- The Lykario are quick in a fight, but fragile. (Race profiles, Lykario 9; Proposed)
+- The Lykario are fast and quick to strike, but fragile. (Race profiles, Lykario 9; Likely)
 - Lykario technology is basic, stolen and never biomechanical. They favour crew teleporters and cloaking, and leave their ships on autopilot while they board others. (Race profiles, Lykario 6; Proposed)
 - The Lykario hunt anyone who borders them. (Race profiles, Relations between races; Proposed)
 - The Lykario rarely become refugees. Doomed Lykario bands follow refugee convoys instead. (Race profiles, Lykario 5; Ai-Generated-Proposal)
