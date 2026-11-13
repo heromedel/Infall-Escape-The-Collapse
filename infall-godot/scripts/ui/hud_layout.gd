@@ -20,6 +20,7 @@ const DEFAULTS := {
 	"subsystems": {"dock": "power", "side": "right"},
 	"weapons": {"anchor": "bottom_centre", "offset": Vector2(120, 16)},
 	"specials": {"anchor": "bottom_right", "offset": Vector2(16, 16)},
+	"status": {"anchor": "top_right", "offset": Vector2(16, 16)},
 }
 const ANCHORS := ["top_left", "top_centre", "top_right", "bottom_left", "bottom_centre", "bottom_right"]
 

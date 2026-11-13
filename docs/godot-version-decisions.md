@@ -350,6 +350,11 @@ anything Claude added tagged Ai-Generated-Proposal.
     tile of the room), its air with a tint, and intruders with icons. The card also has a hull bar and shield pips.
   - Clicking a card jumps the camera to that ship.
   - A card folds like the other HUD cards: it reopens when something changes on its ship and folds back.
+  - Built 2026-11-13 as one HUD card, SHIP STATUS, holding a small card for each ship the player commands (the
+    Admiral: every ship). A room is orange with a flame when it burns, has a dark hole when breached, a red edge
+    when a system in it is damaged, a red tint as its air thins, and a red dot for each intruder. The plan lies
+    the way the ship does on the screen (Battlefield: Vertical or Horizontal). **Ai-Generated-Proposal:** the
+    cards fold together as one, not each on its own, and the marks' looks are this session's.
 
 ## 15. Ranks and Titles
 
@@ -419,7 +424,8 @@ All built in the build of 2026-11-05.
 ## Next build (after 2026-11-05)
 
 1. **Ship status cards** (GV 14H): a small card for every ship a player commands, with a deck plan that shows
-   fire, breaches, damage, air and intruders, a hull bar and shield pips; a click jumps to the ship.
+   fire, breaches, damage, air and intruders, a hull bar and shield pips; a click jumps to the ship. Built
+   2026-11-13.
 
 2. **Art Style** (GV 7F): built 2026-11-11 with the five sheets that exist and the standing Tabby; the Tabby's full Facing sheet went in on 2026-11-13. Still to fill in:
    top-down Tabbys; the Tabby's animations in the Facing style; top-down Tentauri; any sheet at all for the

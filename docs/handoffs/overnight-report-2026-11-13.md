@@ -221,3 +221,19 @@ one hazard that blinds sensors, so that is where it shows.
 **Infall: Lori** was sent the night's new player-facing lines to check (this trait line, the tooltip lines, the
 room picker's refusals, the Players menu line, the two setting names).
 
+### C8. Ship status cards (GV 14H)
+
+A new HUD card, SHIP STATUS (top right by default; it drags, docks and folds like the others), holds a small card
+of a fixed size for each ship the player commands, and for the Admiral every ship of the squad. Each has the
+ship's name, hull bar, shield pips and a deck plan: a room is orange with a flame when it burns, shows a dark hole
+when breached, has a red edge when a system in it is damaged, takes a red tint as its air thins, and carries a red
+dot for each intruder. A click selects the ship and jumps to it. A folded card reopens when things get worse aboard
+any of its ships.
+
+- The plan lies the way the ship does on the screen: upright beside the bars with Battlefield: Vertical, on its
+  side under them with Horizontal.
+- **Ai-Generated-Proposal:** GV 14H says each card folds; these fold together as one HUD card. The marks' looks
+  are this session's.
+- Checked by screenshot with two ships, two fires and boarders aboard, in both battlefield orientations; input
+  test 22 of 22, co-op test 22 of 22, a two-player chaos seed clean.
+
