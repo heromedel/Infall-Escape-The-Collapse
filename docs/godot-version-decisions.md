@@ -78,15 +78,19 @@ anything Claude added tagged Ai-Generated-Proposal.
   - Crew fight a fire from where they stand (already so).
   - A damaged system is red, on the ship and in the HUD (it was orange until broken).
   - A system's own key gives it power and Shift with the key takes it away, shown in its tooltip (reference
-    frame 12). Where the key already does something else in Infall (C, E, F, T, Z), that use stays and only Shift
-    with the key works.
+    frame 12).
+    - **Decided (heromedel, 2026-11-13):** the keys match the genre's, and anything of Infall's that sat on one of
+      them moved. Cloaking is H, the Crew Teleporter G and the Supershield Y, so every system key works both ways.
+      Open Doors is Z and Close Doors X, Recall R, Return to Stations Enter, look at the selected ship Q, launch
+      a suit B.
   - Open Doors pressed again, with every inner door open, opens the airlocks too. Vent stays.
   - While the mouse player aims, the arrow is hidden: the reticle is the cursor (reference frame 02).
   - An enemy's empty shield pip shows its recharge as a bar (reference frame 17).
   - A weapon file can name its launch sound; without one it gets its kind's (missile, flak, ion, spore, heavy or
     light laser). A miss has a sound. The new sounds have not been listened to.
-  - Not settled: the gap between a volley's shots (0.25 s in the game; no figure found), and number keys for
-    event choices (no source found).
+  - **Decided (heromedel, 2026-11-13):** event choices are numbered and a number key picks one, as the genre's
+    event screens show. Built for every window of numbered choices; 1 also presses a window's only button.
+  - Not settled: the gap between a volley's shots (0.25 s in the game; no figure found).
 
 ## 4. Multiplayer
 
@@ -156,6 +160,10 @@ anything Claude added tagged Ai-Generated-Proposal.
 - **C — Built (2026-11-13):** the docs' own ships from `ship-suggestions.md`: the Pirate Pickpocket and the
   Lykario Scrap Hound (loadouts), the Malphen Polyp with its flak loadout, the Azurethea Vein Moth, and the
   weapons Flesh Mortar, Bone Flak and Lantern. The docs' Relay Picket and the Senti crew killers wait for the AAA.
+  - **Decided (heromedel, 2026-11-13):** the Malphen Growth's first fight is a squad of two, a Polyp and a flak
+    Polyp (three cost the Outrider half its hull in bot fights); band 2 keeps two Polyps and a flak Polyp. The
+    Pirate Scrapper keeps a place: its own squad, GATOS Scrappers, in bands 1 and 2. "None of these are made as
+    hard rules; ships should go where the fun, balance and challenge are."
 
 ## 6. Jump Travel
 
@@ -346,8 +354,8 @@ anything Claude added tagged Ai-Generated-Proposal.
 - **I — Built (2026-11-13), race profiles Lykario 9 (Decided):** Animal Senses. With a living Lykario in the
   squad, the crew aboard an enemy ship are seen without sensors and in a nebula. Only the crew show.
 - **J — Built (2026-11-13), GDD 7H (Decided):** repairing a system the crew member has a skill level in is 5%
-  faster. **Ai-Generated-Proposal:** the 5% is Infall: Eco's placeholder (half of one repair level); Eco says the
-  number is heromedel's to settle.
+  faster. **Placeholder (heromedel, 2026-11-13):** 5% for now, Infall: Eco's figure (half of one repair level);
+  it has not been tested.
 
 ## 8. Weapons and Systems
 
@@ -366,7 +374,13 @@ anything Claude added tagged Ai-Generated-Proposal.
 - **D — Likely (Infall: Eco, 2026-11-13), built:** the growth organ is priced as a clone bay (12.11, then 8.47 and
   10.89); mercenary prices rise with the band like wreck rewards, times 1.(band − 1); the sized event rewards are
   7 low, 11 medium and 7 high, the genre's split (which reward moved is an **Ai-Generated-Proposal**); 15 crew
-  damage a point of damage stays. Not done: shield levels as layers in the ship files, which Eco recommends.
+  damage a point of damage stays.
+  - **Decided (heromedel, 2026-11-13), built:** shield levels as layers are a setting that defaults to how the
+    genre works, `Shield Levels: By Bar > By Layer`. By Layer is the shield test (GDD 8H): a level is a whole
+    layer, two power at a press, two damage or two ion to lose, bought at the layer prices of `system-prices.md`
+    (12.11, 24.21, 43.56), and drawn as one block. It is a run rule, so every machine uses the host's. Ship files
+    stay in bars either way. **Ai-Generated-Proposal:** damage and ion are counted apart (one of each loses
+    nothing), and the first layer costs the Shields system's buy price in both modes.
 - **E — Fixed (2026-11-13):** no beam weapon had dealt damage since tile targeting was built (a beam was never
   given its list of tiles cut). They work again.
 
@@ -410,11 +424,15 @@ anything Claude added tagged Ai-Generated-Proposal.
     Admiral: every ship). A room is orange with a flame when it burns, has a dark hole when breached, a red edge
     when a system in it is damaged, a red tint as its air thins, and a red dot for each intruder. The plan lies
     the way the ship does on the screen (Battlefield: Vertical or Horizontal). **Ai-Generated-Proposal:** the
-    cards fold together as one, not each on its own, and the marks' looks are this session's.
+    marks' looks are this session's.
+  - **Decided (heromedel, 2026-11-13), built:** each ship's card folds on its own, and a folded card opens again
+    when its ship is hit, on fire, breached or boarded.
 - **I — Built (2026-11-13), GDD 14D:** `Player Power Color: Default (Green) > Racial > Specific Color` colours the
   player's conduits, symbols, power bars and pips, and `Enemy Terran Color: Pirate Power Orange > Power Green`
-  decides what a Terran enemy shows. **Ai-Generated-Proposal:** the Specific Color is picked with `Specific Power
-  Color: Blue > Cyan > Yellow > Orange > Pink > Purple > White` (no red: red is damage).
+  decides what a Terran enemy shows.
+  - **Decided (heromedel, 2026-11-13), built:** the Specific Color is both a list of every species' power colour
+    and a picker: `Specific Power Color: GATOS Green > Pirate Orange > Mecha Purple > Tentauri Pink > Azurethea
+    Blue > Senti Yellow-Green > Lykario Silver > Malphen Pink-Orange > Custom`, and Custom opens a colour picker.
 
 ## 15. Ranks and Titles
 
@@ -524,4 +542,6 @@ All built in the build of 2026-11-05.
 | 2026-11-13 | Crew fights as the genre has them: pairing on a tile, punches, shots, hit marks, and the enemy following a moved crew member (GV 7G); built the same day. |
 | 2026-11-13 | A crew member who shoots concentrates on one foe, and fights back when hit by another (GV 7G). |
 | 2026-11-13 | A dying crew member plays their sheet's death frames, then fades (GV 7F). |
+| 2026-11-13 | heromedel's answers to the overnight report: keys match the genre's and event choices take number keys (GV 3K); a two-ship first Malphen squad and the GATOS Scrappers (GV 5C); each status card folds on its own (GV 14H); Specific Power Color lists every species and has a picker (GV 14I); `Shield Levels: By Bar > By Layer` (GV 8D); the 5% repair bonus stays as a placeholder (GV 7J). |
+| 2026-11-13 | An EVA or EVB Dock sits at an airlock: on its tile, or in a room with an airlock that has no system on its tile (GDD 5D, GV 5B). |
 | 2026-11-13 | The overnight plan (`docs/handoffs/overnight-plan-2026-11-13.md`, report beside it): co-op fixes and tests (GV 4K), closer to the genre (GV 3K), Player Power Color (GV 14I), the Medbay rule and the docs' ships (GV 5B, 5C), Abandoned clusters (GV 2D), Animal Senses, the reach and the repair bonus (GV 7H–7J), Eco's prices (GV 8D), ship status cards (GV 14H). |

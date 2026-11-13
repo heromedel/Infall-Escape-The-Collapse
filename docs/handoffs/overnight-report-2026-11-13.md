@@ -51,7 +51,7 @@ passes at the end as at the start, and four bugs that predate the night were fou
   simulation, the HUD's weapon rows and the ship files all change), and it would have gone in at the end of a long
   night with nobody to look at it. Ship Designs points out the Hijacker and the Burr both want it.
 - **Eco's answer 1, shield levels as layers in the ship files:** left for your go, since it changes what every
-  ship file's shield number means.
+  ship file's shield number means. (Since built as a setting; see heromedel's answers below.)
 - **The docs' Relay Picket and the three Senti crew killers:** they need the AAA, which the game lacks.
 - **The rest of GDD 2R** (each cluster state changing who is met and what stores hold).
 - No Windows build was made.
@@ -74,6 +74,28 @@ passes at the end as at the start, and four bugs that predate the night were fou
 - **Q10.** Lori could not find "an EVB Dock needs a room with an airlock" in the GDD or the profiles. Ship Designs
   gave it from `docs/art-review-checks.md` ("EVA and EVB Docks by an airlock — Decided (2026-10-26, heromedel)"),
   which is about floor plans. Should a player's purchase be held to it too? It is, as built.
+
+### heromedel's answers (2026-11-13, the morning after) and what was done
+
+| Question | Answer | Done |
+|---|---|---|
+| Q1 | A smaller squad of only two ships | Malphen Growth band 1 is a Polyp and a flak Polyp; band 2 keeps three. Outrider against the two: 10 wins of 10, hull 24.7 of 30 (against three: 9 of 10, hull 14.7) |
+| Q2 | 5% for now; it is a placeholder and untested | Left at 5%, tagged Placeholder (GV 7J) |
+| Q3 | A toggleable setting, defaulting to how the genre works | `Shield Levels: By Bar > By Layer` (GV 8D). Ship files stay in bars. Fight test unchanged: 20 of 20, 42.7 s |
+| Q4 | Yes; the genre's event screens show the numbers | Number keys pick a numbered choice in any window; 1 presses a lone button |
+| Q5 | Yes, but unhide when the ship is hit, on fire, breached or boarded | Each card folds on its own and reopens on those (GV 14H) |
+| Q6 | Match the genre; move whatever sat on its keys | Cloaking H, Teleporter G, Supershield Y; doors Z and X, Recall R, stations Enter, look at ship Q, launch suit B (GV 3K) |
+| Q7 | Both: every species' colour, and a picker | Built (GV 14I) |
+| Q8 | Yes if it works; none of these are hard rules | The Scrapper has its own squad, GATOS Scrappers, bands 1 and 2 |
+| Q9 | Not answered | No Windows build made |
+| Q10 | A dock must be at an airlock: on its tile, or next to a clear one | Decided in GDD 5D; purchases and the content check hold to it. The four EVB ships pass as they are |
+
+Also answered: "why not make the AAA", and that no ship has an EVA Dock yet. Both are design work with open
+questions, so they are put to heromedel as plans before any code.
+
+One thing for Infall: Eco: `system-prices.md` prices the first layer under the shield test at buy plus the first
+upgrade (54.46). The genre sells Shields already at two bars for the buy price, and so does the game in both
+modes (30.25).
 
 ### Each Ai-Generated-Proposal made tonight
 

@@ -157,7 +157,14 @@ static func _join_conduits(ship: Ship, room_index: int) -> void:
 				return
 
 
+## The bars an upgrade adds: one, or what completes a whole shield level (ShipSystem.bars_per_level).
+static func _bars_an_upgrade_adds(system: ShipSystem) -> int:
+	return system.bars_per_level() - system.level % system.bars_per_level()
+
+
 static func system_upgrade_price(system: ShipSystem) -> int:
+	if _bars_an_upgrade_adds(system) == 2:
+		return system.def.layer_upgrade_price(system.level / 2)
 	return system.def.upgrade_price(system.level)
 
 
@@ -165,9 +172,10 @@ static func upgrade_system(run: RunState, ship: Ship, system: ShipSystem) -> boo
 	var price := system_upgrade_price(system)
 	if price < 0 or not run.spend(price):
 		return false
-	system.level += 1
+	var bars := _bars_an_upgrade_adds(system)
+	system.level += bars
 	if ship.reactor_type == "none":
-		system.own_power = mini(system.level, system.own_power + 1)
+		system.own_power = mini(system.level, system.own_power + bars)
 	return true
 
 

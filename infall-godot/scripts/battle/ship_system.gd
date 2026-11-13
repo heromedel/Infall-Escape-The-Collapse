@@ -27,8 +27,30 @@ var manned_by: CrewMember = null
 var manned_count: int = 0
 
 
+## How many bars make one level: two for shields under Shield Levels: By Layer, the shield test (GDD 8H), where a
+## level is a whole layer that costs two power and takes two damage, or two ion, to lose. One for everything else.
+func bars_per_level() -> int:
+	return 2 if behaviour == "shields" and Settings.get_value("shield_levels", "By Bar") == "By Layer" else 1
+
+
+## The level as the player reads it.
+func shown_level() -> int:
+	return level / bars_per_level()
+
+
+## The bars damage has left working.
 func usable_bars() -> int:
-	return maxi(0, level - damage)
+	return maxi(0, level - _whole_levels(damage))
+
+
+## The bars that can hold power right now: those damage has left, less those ion holds down.
+func working_bars() -> int:
+	return maxi(0, usable_bars() - _whole_levels(ion))
+
+
+func _whole_levels(bars: int) -> int:
+	var step := bars_per_level()
+	return bars / step * step
 
 
 func is_broken() -> bool:

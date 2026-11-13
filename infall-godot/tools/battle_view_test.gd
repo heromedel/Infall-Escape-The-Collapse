@@ -1,6 +1,6 @@
 extends Node
 ## Shows a fight and saves screenshots. Environment: E (enemy ship ids, comma separated), SHOTS (seconds,
-## comma separated), OUT (folder), P (player ship ids), ART_STYLE and SPECIES (those settings), BREAK (a system id to break, so the crew repair it), ZOOM and ZOOM_ROOM (how close, and the room to look at), BOARD (how many enemy crew board the player's first room) JOIN (the player's last crew member walks in to fight them) and WEAK (the boarders die to the first shots). Run with a display: xvfb-run godot --path . tools/battle_view_test.tscn
+## comma separated), OUT (folder), P (player ship ids), ART_STYLE, SPECIES and SHIELD_LEVELS (those settings), BREAK (a system id to break, so the crew repair it), ZOOM and ZOOM_ROOM (how close, and the room to look at), BOARD (how many enemy crew board the player's first room) JOIN (the player's last crew member walks in to fight them) and WEAK (the boarders die to the first shots). Run with a display: xvfb-run godot --path . tools/battle_view_test.tscn
 
 var battle: BattleScreen
 var screen: PlayerView
@@ -14,6 +14,8 @@ var zoom_ship: Ship = null
 func _ready() -> void:
 	if OS.get_environment("BATTLEFIELD") != "":
 		Settings._values["battlefield"] = OS.get_environment("BATTLEFIELD")
+	if OS.get_environment("SHIELD_LEVELS") != "":
+		Settings._values["shield_levels"] = OS.get_environment("SHIELD_LEVELS")
 	if OS.get_environment("ART_STYLE") != "":
 		Settings._values["art_style"] = OS.get_environment("ART_STYLE")
 	if OS.get_environment("SPECIES") != "":

@@ -415,7 +415,7 @@ func room_has_space(room_index: int, of_side: int, member: CrewMember = null) ->
 func system_power(system: ShipSystem) -> int:
 	if system == null or system.spored:
 		return 0
-	var usable := system.usable_bars() - system.ion
+	var usable := system.working_bars()
 	if usable <= 0:
 		return 0
 	var bars := 0
@@ -450,7 +450,7 @@ func weapon_capacity() -> int:
 	var system := system_by("weapons")
 	if system == null or system.spored:
 		return 0
-	var usable := system.usable_bars() - system.ion
+	var usable := system.working_bars()
 	match reactor_type:
 		"pool":
 			return maxi(0, usable)
@@ -463,7 +463,7 @@ func weapon_capacity() -> int:
 
 
 func system_power_without_weapons(system: ShipSystem) -> int:
-	var usable := system.usable_bars() - system.ion
+	var usable := system.working_bars()
 	if usable <= 0:
 		return 0
 	var bars := 0
@@ -538,6 +538,11 @@ func refresh_conduit_power() -> void:
 				todo.append(next)
 
 
+## The bars one press gives a system: one, or what completes a whole shield level (ShipSystem.bars_per_level).
+func _bars_a_press_adds(system: ShipSystem) -> int:
+	return system.bars_per_level() - system.power % system.bars_per_level()
+
+
 func can_add_power(system: ShipSystem) -> bool:
 	if system == null or not system.def.draws_power:
 		return false
@@ -545,7 +550,8 @@ func can_add_power(system: ShipSystem) -> bool:
 		"pool":
 			if system.behaviour == "weapons":
 				return _next_unpowered_weapon() != null
-			return system.power < system.usable_bars() - system.ion and reactor_free() > 0
+			var bars := _bars_a_press_adds(system)
+			return system.power + bars <= system.working_bars() and reactor_free() >= bars
 		"core":
 			return not system.enabled and core_load() < core_capacity()
 	return false
@@ -558,7 +564,7 @@ func add_power(system: ShipSystem) -> bool:
 		"pool":
 			if system.behaviour == "weapons":
 				return set_weapon_powered(_next_unpowered_weapon(), true)
-			system.power += 1
+			system.power += _bars_a_press_adds(system)
 		"core":
 			system.enabled = true
 	return true
@@ -577,7 +583,8 @@ func remove_power(system: ShipSystem) -> bool:
 			system.power_lost = 0
 			if system.power <= 0:
 				return false
-			system.power -= 1
+			var odd := system.power % system.bars_per_level()
+			system.power -= odd if odd > 0 else system.bars_per_level()
 		"core":
 			if not system.enabled:
 				return false
@@ -605,7 +612,7 @@ func _weapon_fits(slot: WeaponSlot) -> bool:
 		var system := system_by("weapons")
 		if system == null:
 			return false
-		capacity = system.usable_bars() - system.ion
+		capacity = system.working_bars()
 		if reactor_free() < slot.def.power:
 			return false
 	return powered_weapon_load() + slot.def.power <= capacity
@@ -682,7 +689,7 @@ func settle_power() -> void:
 	if reactor_type == "pool":
 		for system in systems:
 			if system.def.draws_power and system.behaviour != "weapons":
-				var kept := clampi(system.power, 0, maxi(0, system.usable_bars() - system.ion))
+				var kept := clampi(system.power, 0, system.working_bars())
 				system.power_lost += system.power - kept
 				system.power = kept
 		while reactor_used() > reactor_total():
@@ -710,7 +717,7 @@ func settle_power() -> void:
 func give_back_power() -> void:
 	if reactor_type == "pool":
 		for system in systems:
-			while system.power_lost > 0 and system.power < system.usable_bars() - system.ion:
+			while system.power_lost > 0 and system.power < system.working_bars():
 				if reactor_free() <= 0:
 					system.power_lost = 0
 					break
@@ -731,7 +738,7 @@ func _weapon_room(slot: WeaponSlot) -> bool:
 	var system := system_by("weapons")
 	if system == null:
 		return false
-	var capacity := system.usable_bars() - system.ion if reactor_type == "pool" else weapon_capacity()
+	var capacity := system.working_bars() if reactor_type == "pool" else weapon_capacity()
 	return powered_weapon_load() + slot.def.power <= capacity
 
 

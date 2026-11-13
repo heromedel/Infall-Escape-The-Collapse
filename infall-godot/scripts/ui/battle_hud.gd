@@ -705,15 +705,18 @@ func _draw_system_column(ship: Ship, system: ShipSystem, base: Vector2, column: 
 	var level := system.level
 	var colour := UiColours.player_power(ship.race)      # Player Power Color (GDD 14D)
 	var bar_width := column - 14.0
+	var step := system.bars_per_level()
 	for index in level:
 		var cell := Rect2(base + Vector2(4, -index * (bar_height + 2) - bar_height - 22), Vector2(bar_width, bar_height))
+		if index % step < step - 1:
+			cell = cell.grow_side(SIDE_TOP, 2.0)     # a level of two bars is drawn as one block, with no gap
 		var fill := UiColours.BAR_EMPTY
 		var from_top := level - 1 - index
 		if from_top < system.damage:
 			fill = UiColours.DAMAGED_RED
 		elif index < power:
 			fill = colour
-		elif index < system.usable_bars() and index >= system.usable_bars() - system.ion:
+		elif index < system.usable_bars() and index >= system.working_bars():
 			fill = UiColours.ION_BLUE
 		draw_rect(cell, fill)
 		if fill == UiColours.BAR_EMPTY:
@@ -740,7 +743,7 @@ func _draw_system_column(ship: Ship, system: ShipSystem, base: Vector2, column: 
 
 func _system_tooltip(ship: Ship, system: ShipSystem) -> String:
 	var lines := PackedStringArray()
-	lines.append("%s (level %d)" % [system.display_name(), system.level])
+	lines.append("%s (level %d)" % [system.display_name(), system.shown_level()])
 	lines.append(system.def.description)
 	var note := system.def.level_note(system.level if system.behaviour != "shields" else system.level)
 	if not note.is_empty():
@@ -794,7 +797,7 @@ func _draw_weapons(ship: Ship, card_at: Vector2) -> void:
 	UiKit.draw_frame(self, rect, _panel())
 	UiKit.draw_text(self, at + Vector2(0, -10), "WEAPONS", 15, UiColours.TEXT_DIM, UiKit.font_bold())
 	if weapons_system:
-		var capacity := ship.weapon_capacity() if ship.reactor_type != "pool" else weapons_system.usable_bars() - weapons_system.ion
+		var capacity := ship.weapon_capacity() if ship.reactor_type != "pool" else weapons_system.working_bars()
 		UiKit.draw_text(self, at + Vector2(90, -10), "%d / %d power" % [ship.powered_weapon_load(), maxi(0, capacity)], 14, UiColours.TEXT_DIM)
 	for index in slots.size():
 		var slot: WeaponSlot = slots[index]
@@ -1100,7 +1103,7 @@ func _draw_room_info(ship: Ship, room_index: int) -> void:
 			console = system
 	if console:
 		lines.append(console.display_name())
-		lines.append("Level %d · power %d" % [console.level, ship.system_power(console)])
+		lines.append("Level %d · power %d" % [console.shown_level(), ship.system_power(console)])
 		if console.damage > 0:
 			lines.append("%d bar%s damaged" % [console.damage, "" if console.damage == 1 else "s"])
 		if console.ion > 0:
