@@ -51,7 +51,7 @@ static func install_refusal(ship: Ship, def: SystemDef, room_index: int) -> Stri
 		if def.manned and system.behaviour == "medbay":
 			return "This room has %s, and crew can't heal while they man a system, so %s can't go here." % [_with_article(system.def.name), def.name]
 	if def.behaviour in DOCKS and _free_airlock_cell(ship, room_index) == Vector2i(999, 999):
-		return "%s goes at an airlock with no system on its tile, and this room has none." % _with_article(def.name).capitalize()
+		return "%s must sit on an airlock's tile, or next to an airlock with nothing in the way." % _with_article(def.name).capitalize()   # Infall: Lori's wording
 	return ""
 
 
