@@ -150,8 +150,12 @@ The Art Style setting shows a token for any race with no sheet in the chosen sty
   in a room holding both sides, and on anyone hurt or selected. A selected sprite has a thin outline in the
   player's colour. Tokens are about 19 pixels across and keep their rim.
 - The top-down drifter's death is a bad placeholder (heromedel, 2026-11-11), to be made again from scratch.
-- The game does not play a death or a clone-bay animation yet, and the sheets' extra rows (the Tentauri typing at
-  several systems, the HalfMech's clamp-on frames) are not used.
+- A crew member who dies plays their sheet's death frames once where they stood, and the last frame fades; a
+  token shrinks away. The top-down drifter's death frames are still the placeholder.
+- The clone-bay rows are not used: the game has no clone bay. The HalfMech's clamp-on frames are not used either.
+- A Tentauri working several systems at once is not drawn yet. The reach prototype
+  (`docs/art/tentauri/crew/tentauri-reach-prototype.html`) draws the reaching tentacles live, a pair to each
+  console, over a body sheet; the game is meant to draw them itself in the same way, not from sheet rows.
 - When a sheet has no frames for what a crew member is doing, or none for the way they face (punching is only
   drawn toward and away from the camera), they stand and the small badge says what they are doing, as with tokens.
   A sheet with no teleport frames gets the tokens' glow and sparks.

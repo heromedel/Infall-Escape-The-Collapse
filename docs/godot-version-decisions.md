@@ -423,8 +423,8 @@ All built in the build of 2026-11-05.
 
 2. **Art Style** (GV 7F): built 2026-11-11 with the five sheets that exist and the standing Tabby; the Tabby's full Facing sheet went in on 2026-11-13. Still to fill in:
    top-down Tabbys; the Tabby's animations in the Facing style; top-down Tentauri; any sheet at all for the
-   Azurethea, Malphen, Lykario and Senti-GPH; death and clone-bay animations, which the game does not play
-   yet. The top-down drifter's repair and death rows were redrawn from his own frames the same day and are in.
+   Azurethea, Malphen, Lykario and Senti-GPH; the clone-bay animation, which the game does not play (it has
+   no clone bay; deaths have played since 2026-11-13). The top-down drifter's repair and death rows were redrawn from his own frames the same day and are in.
 
 ## Later (the road map)
 
@@ -457,3 +457,4 @@ All built in the build of 2026-11-05.
 | 2026-11-13 | The Tabby's full Facing sheet is in the game, in place of the four standing views. |
 | 2026-11-13 | Crew fights as the genre has them: pairing on a tile, punches, shots, hit marks, and the enemy following a moved crew member (GV 7G); built the same day. |
 | 2026-11-13 | A crew member who shoots concentrates on one foe, and fights back when hit by another (GV 7G). |
+| 2026-11-13 | A dying crew member plays their sheet's death frames, then fades (GV 7F). |

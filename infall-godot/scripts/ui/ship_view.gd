@@ -11,6 +11,8 @@ const STAND_BACK_SPEED := 45.0    # pixels a second a crew member shifts back fr
 const PAIR_APART := {"Top Down": 7.0, "Facing": 8.5}   # pixels each of two fighters on a tile is drawn from its
 const PAIR_APART_TOKENS := 9.0                         # middle, up and down the screen
 const SHOT_LENGTH := 7.0          # a crew member's shot: a small bolt, a fifth of a ship laser's
+const BODY_FADE := 0.7            # seconds a fallen crew member's last frame takes to fade
+const TOKEN_FALL := 0.5           # seconds a token takes to shrink away when its crew member dies
 const BAR_OWN := Color("#58e06a")     # a crew health bar's colour says whose they are, as in the genre (GV 7G)
 const BAR_ENEMY := Color("#ff4a3d")
 const HIT_RED := Color("#e0362b")
@@ -40,6 +42,8 @@ var _floor_layer := Node2D.new()
 var _crew_layer := Node2D.new()
 var _over_layer := Node2D.new()     # what is drawn over the crew: a console a Facing sprite stands behind
 var _facings: Dictionary = {}       # crew member -> the way they last faced on the screen (GV 7F)
+var _fallen: Array = []             # crew who have just died here, while their death plays: {member, at, facing, age}
+var _seen_dead: Dictionary = {}     # crew member -> true once their death has been noticed
 var _shifts: Dictionary = {}        # crew member -> how far they are drawn from where they stand: back from a
 									# console, or apart from the foe on their tile
 var _shield_layer := Node2D.new()
@@ -55,6 +59,9 @@ func setup(view_ship: Ship, owner: Encounter) -> void:
 	ship = view_ship
 	encounter = owner
 	power_colour = UiColours.POWER_GREEN if ship.side == 0 else UiColours.enemy_power(ship.faction, ship.race)
+	for member in ship.crew + ship.visitors:
+		if member.dead:
+			_seen_dead[member] = true      # dead before this view existed: nothing to play
 	add_child(_weapons_layer)
 	_weapons_layer.draw.connect(_draw_weapons)
 	var texture := Library.texture(ship.design.art_path)
@@ -137,6 +144,7 @@ func _process(delta: float) -> void:
 	visible = fade > 0.0
 	_weapons_layer.queue_redraw()
 	_shift_crew(delta)
+	_watch_for_deaths(delta)
 	_floor_layer.queue_redraw()
 	_crew_layer.queue_redraw()
 	_over_layer.queue_redraw()
@@ -589,6 +597,50 @@ func _contested_rooms() -> Dictionary:
 	return contested
 
 
+## Notes each crew member who dies on this ship, so their death is played where they stood (GV 7F): the sheet's
+## death frames once, the last one fading out; a token shrinks away.
+func _watch_for_deaths(delta: float) -> void:
+	for fall in _fallen:
+		fall.age += delta
+	_fallen = _fallen.filter(func(fall): return fall.age < fall.lasts)
+	for member in ship.crew + ship.visitors:
+		if not member.dead or _seen_dead.has(member):
+			continue
+		_seen_dead[member] = true
+		if member.ship != ship or member.in_suit:
+			continue
+		var sheet := CrewArt.sheet_for(member.race, member.subtype)
+		var played := CrewArt.duration(sheet, "death") if not sheet.is_empty() else 0.0
+		_fallen.append({"member": member, "at": member.position + _shifts.get(member, Vector2.ZERO),
+				"facing": _facings.get(member, "down"), "age": 0.0, "played": played,
+				"lasts": played + BODY_FADE if played > 0.0 else TOKEN_FALL})
+
+
+## A crew member who has just died: their sheet's death frames, then the last one fading; without a sheet or
+## without death frames, their token or their standing figure shrinking away.
+func _draw_fallen(canvas: CanvasItem, fall: Dictionary) -> void:
+	var member: CrewMember = fall.member
+	var sheet := CrewArt.sheet_for(member.race, member.subtype)
+	var age: float = fall.age
+	var played: float = fall.played
+	var at: Vector2 = fall.at
+	var facing: String = fall.facing
+	var left := clampf(1.0 - age / TOKEN_FALL, 0.0, 1.0)
+	if sheet.is_empty():
+		_draw_upright(canvas, at, func(p: Vector2):
+			CrewPortraits.draw_token(canvas, member.race.id, member.name, p, TOKEN_RADIUS * left, _crew_colour(member), 1.7 * left, member.subtype))
+		return
+	var onto := Rect2(-Vector2(CrewArt.frame, CrewArt.frame) * 0.5, Vector2(CrewArt.frame, CrewArt.frame))
+	if played <= 0.0:
+		_draw_upright(canvas, at, func(p: Vector2):
+			canvas.draw_texture_rect_region(sheet.texture, Rect2(p + onto.position * left, onto.size * left), CrewArt.region(sheet, "", facing, 0.0)))
+		return
+	var region := CrewArt.region(sheet, "death", facing, 0.0, minf(age / played, 0.999))
+	var fade := clampf(1.0 - (age - played) / BODY_FADE, 0.0, 1.0)
+	_draw_upright(canvas, at, func(p: Vector2):
+		canvas.draw_texture_rect_region(sheet.texture, Rect2(p + onto.position, onto.size), region, Color(1, 1, 1, fade)))
+
+
 ## Where a crew member is drawn on the deck this frame.
 func _drawn_at(member: CrewMember) -> Vector2:
 	return member.previous_position.lerp(member.position, alpha) + _shifts.get(member, Vector2.ZERO)
@@ -612,6 +664,8 @@ func _draw_crew() -> void:
 	if not interior_visible:
 		return
 	var canvas := _crew_layer
+	for fall in _fallen:
+		_draw_fallen(canvas, fall)
 	for member: CrewMember in _crew_to_draw():
 		var at := _drawn_at(member)
 		var sheet := CrewArt.sheet_for(member.race, member.subtype)

@@ -110,6 +110,16 @@ static func span(sheet: Dictionary, facing: String) -> Vector2:
 	return known[facing]
 
 
+## How long an animation takes to play through once, in seconds; 0 for one the sheet doesn't have.
+static func duration(sheet: Dictionary, animation: String) -> float:
+	var entry: Dictionary = sheet.layout.get(animation, {})
+	var longest := 0
+	for facing in entry:
+		if facing != "ms":
+			longest = maxi(longest, int(entry[facing][2]))
+	return longest * float(entry.get("ms", 0.0)) / 1000.0
+
+
 static func has_animation(sheet: Dictionary, animation: String) -> bool:
 	return sheet.layout.has(animation)
 
