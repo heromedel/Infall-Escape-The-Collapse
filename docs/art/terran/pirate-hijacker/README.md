@@ -16,7 +16,8 @@ Designs):
 | Loadout | Bands | Bay modules | Weapons | Look |
 |---|---|---|---|---|
 | Hijacker | 4–6 | both bays | Twinshot (port), Sporewing (starboard) | pirate-orange nose stripes |
-| Cutpurse | 1–3 | starboard only; port bay faired over flush | Sporewing | plainer, no stripes, leaner and lopsided |
+| Cutpurse | 2–3 | starboard only; port bay faired over flush | Sporewing | plainer, no stripes, leaner and lopsided |
+| Pickpocket | 1 | the Cutpurse hull (Ship Designs, 2026-10-29) | Twinshot on mount 3, no Sporewing | no preview drawn yet |
 
 - **Hull only** in `pirate-*-hull.svg`: top-down, nose up, 480 × 760. Weapon mounts are hidden points in the
   `weapon-mounts` group. The weapons are separate art in `docs/art/weapons/` (`sporewing/`, `twinshot/`).

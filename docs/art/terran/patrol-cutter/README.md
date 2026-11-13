@@ -1,8 +1,8 @@
 # GATOS Patrol Cutter hull
 
 **Date:** 2026-11-13
-**Status:** **approved by heromedel (2026-11-13)**, round 2 pass 7: the approved cutter. Sent to Ship Designs and the
-Godot Version session. The ship comes from the Godot version (`infall-godot/content/ships/patrol-cutter/ship.xml` on
+**Status:** **approved by heromedel (2026-11-13)** and **accepted by Ship Designs** (ae8e067), round 2 pass 7: the approved
+cutter. Sent to the Godot Version session. The ship comes from the Godot version (`infall-godot/content/ships/patrol-cutter/ship.xml` on
 `Cloud-C-Godot-Version`), which had no hull art for it; the Checkpoint loadout (`loadout.patrol-cutter.checkpoint.xml`)
 uses the same hull.
 
