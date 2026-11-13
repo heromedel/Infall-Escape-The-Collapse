@@ -79,7 +79,7 @@
 			<outcome><text>"Then we are sorry," the voices say, and shields flare to life.</text><fight squad="tentauri-passage"/></outcome>
 		</choice>
 		<choice text="Ask {crew} to talk to them." requires="crew:tentauri">
-			<outcome><text>{crew} drifts to the comm and talks with the strangers for a long time, in voices too soft to follow. When it's over, the Tentauri pass, and leave a small gift of Mawjig in your path.</text><mawjig size="low"/></outcome>
+			<outcome><text>{crew} drifts to the comm and talks with the strangers for a long time, in voices too soft to follow. When it's over, the Tentauri pass, and leave a small gift of Mawjig in your path.</text><mawjig size="medium"/></outcome>
 		</choice>
 	</event>
 
@@ -93,7 +93,7 @@
 			<outcome><fight squad="azurethea-wardens"/></outcome>
 		</choice>
 		<choice text="Let {crew} speak with them." requires="crew:azurethea">
-			<outcome><text>{crew} speaks with them softly. The ship folds its wings, and its captain sends you a little of their Mawjig. "For anyone who still travels with one of us."</text><mawjig size="low"/></outcome>
+			<outcome><text>{crew} speaks with them softly. The ship folds its wings, and its captain sends you a little of their Mawjig. "For anyone who still travels with one of us."</text><mawjig size="medium"/></outcome>
 		</choice>
 	</event>
 

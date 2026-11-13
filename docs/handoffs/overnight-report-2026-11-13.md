@@ -169,3 +169,22 @@ sticks, two real machines, hails and surrender offers over LAN, controllers on a
 
 Fight test 20 of 20, crew fight rules all hold, content check clean after these.
 
+### Eco's answer 5: the event reward mix
+
+The 25 sized event rewards went from 17 low, 6 medium and 2 high to **7 low, 11 medium and 7 high**, the genre's
+split as Eco counted it; the 4 tiny ones stay. **Ai-Generated-Proposal:** Eco gave the counts, and which reward
+moved is this session's pick, by what the choice risks or needs:
+
+- Now high: talking the freighter through venting, the wreckage's good roll, searching the nebula, cracking the
+  weapon cache (it can cost hull), and sending a crew member with the right trait to the failing refugee ship.
+- Now medium: the three choices a crew member of the right race opens (Azurethea warning, Senti archive, Tentauri
+  passage), towing the GATOS family, patching the Lykario's engine, repairing the refugees' life support, mining
+  the asteroids, and the wreckage's poorer roll.
+- Still low: the freighter's poorer roll, the Tentauri search, the spore cloud, the stardust, the two chart-sharing
+  choices and the Tentauri escort.
+
+Eco also reminded that events need the genre's full reward curve by band; that is already in (GV 8A).
+
+**Not done from Eco's answers:** shield levels as layers in the ship files (answer 1). It changes what every
+ship file's shield number means and how upgrades step, so it is left for heromedel to say go on.
+
