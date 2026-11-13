@@ -44,6 +44,22 @@ One level per layer; each level takes 2 power and 2 damage to lose, and is price
 | 3 | 3 | levels 5–6 | 100 | 24.21 |
 | 4 | 4 | levels 7–8 | 180 | 43.56 |
 
+## Senti Shield Projector — Proposed (2026-11-13, heromedel)
+
+Senti only, instead of the shield system above (the Mawjig Shield Generator). One power and one damage per layer;
+layers recover twice as slowly; maximum level double the Generator's (8 layers).
+
+**Likely (2026-11-13, heromedel):** each layer is priced as a Generator layer of the same number, so a Projector
+layer costs no less than a Generator layer and budgets limit how many a ship carries.
+
+| Level | Layers | Mawjig |
+|---|---|---|
+| 1 | 1 | 54.46 |
+| 2 | 2 | 12.11 |
+| 3 | 3 | 24.21 |
+| 4 | 4 | 43.56 |
+| 5–8 | 5–8 | **Open:** "crazy expensive" (heromedel); no genre price exists above 4 layers, so Eco sets these |
+
 ## New Infall systems (suggested, from FTL analogs)
 
 Each is priced from the closest FTL system. A weaker analog ("sucks more") takes × 0.75 of its price, a first
