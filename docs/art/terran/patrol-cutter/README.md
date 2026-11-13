@@ -1,9 +1,10 @@
 # GATOS Patrol Cutter hull
 
 **Date:** 2026-11-13
-**Status:** round 2, draft for heromedel's review, not yet sent to Ship Designs. The ship comes from the Godot version
-(`infall-godot/content/ships/patrol-cutter/ship.xml` on `Cloud-C-Godot-Version`), which has no hull art for it; the
-Checkpoint loadout (`loadout.patrol-cutter.checkpoint.xml`) uses the same hull.
+**Status:** **approved by heromedel (2026-11-13)**, round 2 pass 7: the approved cutter. Sent to Ship Designs and the
+Godot Version session. The ship comes from the Godot version (`infall-godot/content/ships/patrol-cutter/ship.xml` on
+`Cloud-C-Godot-Version`), which had no hull art for it; the Checkpoint loadout (`loadout.patrol-cutter.checkpoint.xml`)
+uses the same hull.
 
 ![Beside the Outrider and the Pirate Hijacker at the same scale, at battle zoom and as a silhouette](review/scale-and-squad.png)
 

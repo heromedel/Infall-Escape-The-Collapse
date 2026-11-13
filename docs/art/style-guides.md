@@ -17,7 +17,7 @@ replaced. Tags follow `docs/tag-styles.md`. The general art rules stay in `READM
 - **Decided (2026-11-13, heromedel):** a GATOS hull's coloured stripes are in its power colour: power green on a
   player's ship, pirate power orange on a non-player vessel (the Patrol Cutter's wing stripes; the pirate hulls' nose
   stripes and fin bands, oxblood before). Grey: the Pirate Hijacker's gunmetal, a little metallic.
-- Reference: the Patrol Cutter, round 2 (`terran/patrol-cutter/`), until heromedel picks one.
+- Reference: the Patrol Cutter (`terran/patrol-cutter/`), approved by heromedel (2026-11-13).
 
 ## Mecha ships
 
