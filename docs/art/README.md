@@ -44,7 +44,8 @@ each with its SVG, PNG exports, review sheets, build tools and a notes README.
 `tools/` holds what every piece uses: `render.js` (SVG to PNG: `node render.js in.svg out.png [scale] [background]`),
 `sheet.js` (side-by-side review sheets), `art_kit.py` (the vector hull drawing kit) and `check_mounts.py` (checks
 every mount sits on the hull's edge with a clear line forward, and that a hull plans at least 4).
-`palette.py` holds the shared colours.
+`palette.py` holds the shared colours. The order of work for a ship: `ship-art-process.md`; for a sprite:
+`sprite-process.md`.
 
 ## Pieces
 
