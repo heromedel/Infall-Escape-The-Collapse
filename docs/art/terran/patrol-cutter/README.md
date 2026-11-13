@@ -20,7 +20,7 @@ centre of tile (0, 0) at 220, 235).
   with a smooth fillet, so it reads as one ship and breaks up the vertical stack of rooms; a chisel bow; engine
   nacelles under the wings' trailing edges with their nozzles set into their tails, and a small pair set into the
   stern. No nose cone, fins or engine bells.
-- **Colours and wear:** the Pirate Hijacker's gunmetal greys with a metallic sheen and a pale rim (heromedel); the wings
+- **Colours and wear:** the Pirate Hijacker's gunmetal greys, a tad darker, with a metallic sheen and a pale rim (heromedel); the wings
   shade into the body on a smooth gradient, darker toward the tips. A stripe raked along each wing's leading edge in
   the ship's power colour: power green on a player ship, pirate power orange on a non-player one
   (`review/player-and-non-player.png`; the SVG is the player's, and the game swaps the one colour). Soft scorching aft.
@@ -33,7 +33,7 @@ centre of tile (0, 0) at 220, 235).
   a clear line forward (`check_mounts.py`), odd port, even starboard: 1–2 on the wingtips, 3–4 on the wings' leading
   edges by the body (the Gat 2.1 at 3, the Gat M1 at 4; the Checkpoint fits the Gat 3.1 and the Gat M2 there), 5–6 on
   the bow's chines. All slide forward.
-- **Parts:** `hull` (body and wings), `nacelle-port`, `nacelle-starboard`, `cockpit`, `azc`, `engines`.
+- **Parts:** `hull` (body and wings), `cockpit-module`, `nacelle-port`, `nacelle-starboard`, `cockpit`, `azc`, `engines`.
 
 For the Godot ship file (art pixels on the 1x hull):
 
@@ -59,6 +59,7 @@ W3, crescent wings.
 | 2 | Blind check, 6/10 ("lived-in merc" reads; sharp only half-reads; the stubs read as landing legs; the octagon as a pasted-on turret): a chisel bow; the nacelles widened into the wing roots with chunky nozzles; the AZC under a flush armoured panel; a simpler canopy; the wing's patch panel dropped. |
 | 3 | heromedel: the wings and the centre as one ship, not a column; no airlock-looking rectangle (hulls never show where airlocks are); the nozzles joined to the nacelles. One hull outline with a fillet at the wing roots, the wings a darker panel with no root line; the replaced panel at the bottom right removed; every nozzle set into its nacelle's tail or the stern. |
 | 4 | heromedel: the Pirate Hijacker's grey, more metallic, the wings and centre blended so it doesn't read as a column, the stripes in power green (pirate orange on non-player vessels). Its gunmetal palette, a sheen and a pale rim; the wings' darker tone as a smooth gradient instead of a panel with an edge; the rust bands now power-colour stripes. |
+| 5 | heromedel: a tad darker, and the cockpit set apart from the wings so it reads as a small cockpit. The greys a step darker; the cockpit a raised, bevelled nose module of its own, its rear edge curving across in front of the wing roots. |
 
 Each part is built in the five stages (`review/stages.png`). The Gat M1 has no weapon art yet, so there is no armed
 preview.

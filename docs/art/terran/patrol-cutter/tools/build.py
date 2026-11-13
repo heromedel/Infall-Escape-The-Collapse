@@ -27,8 +27,8 @@ import palette  # noqa: E402
 W, H, CX, CY = layout.W, layout.H, layout.CX, layout.CY
 
 # pass 4 (heromedel, 2026-11-13): the Pirate Hijacker's gunmetal greys (its tools/pirate.py), a little more metallic
-PLATE = "#545b65"          # the main hull plates
-WING = "#434951"           # the wings shade toward this, a step darker
+PLATE = "#4b5159"          # the main hull plates (pass 5: a tad darker than the pirate's #545b65)
+WING = "#3b4047"           # the wings shade toward this, a step darker
 DARK = "#2b3037"           # nacelles and armour
 STEEL = "#7c838d"
 GLASS = "#1e2a3a"
@@ -117,7 +117,12 @@ def build(edge=None):
                + f'<path d="{hull_d}" fill="none" stroke="#b4bcc6" stroke-width="3" opacity=".35"/>'
                + f'<path d="{hull_d}" fill="none" stroke="#eef2f6" stroke-width=".9" opacity=".3"/>')
     h.plate("hull", hull_d, PLATE, bevel=5, shadow=4, details=details)
-    # the canopy: a narrow wedge of dark glass set into the chisel bow (pass 2: no separate prow blade, simpler)
+    # pass 5 (heromedel: a small cockpit, set apart from the wings): the cockpit as a raised, bevelled nose module of
+    # its own on the bow, a step lighter, its rear edge curving across in front of the wing roots
+    nose = sym([(214, 18), (170, 72), (168, 108), (180, 124), (200, 130)], [2, 4, 6, 8, 6])
+    h.plate("cockpit-module", nose, PLATE, bevel=4, outline=2, shadow=3,
+            details=f'<path d="{nose}" fill="url(#sheen)"/>' + seam(184, 118, 256, 118, PLATE))
+    # the canopy: a narrow wedge of dark glass set into the cockpit module
     canopy = sym([(216, 50), (196, 78), (196, 100), (212, 106)], 2)
     h.plate("cockpit", canopy, GLASS, bevel=2, outline=1.6,
             details=f'<path d="M212,58 L201,76 L201,94" fill="none" stroke="{GLINT}" stroke-width="1.5" '
