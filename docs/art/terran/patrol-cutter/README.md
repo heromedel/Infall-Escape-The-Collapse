@@ -18,8 +18,8 @@ centre of tile (0, 0) at 220, 235).
 
 - **Shape:** one hull outline for the body and its forward-swept blade wings, sharp at the tips and joined to the body
   with a smooth fillet, so it reads as one ship and breaks up the vertical stack of rooms; a chisel bow; engine
-  nacelles under the wings' trailing edges with their nozzles set into their tails, and a small pair set into the
-  stern. No nose cone, fins or engine bells.
+  nacelles under the wings' trailing edges with their nozzles set into their tapered tails, and a stern that curves
+  in to a narrow tail with a small pair of nozzles set into it. No nose cone, fins or engine bells.
 - **Colours and wear:** the Pirate Hijacker's gunmetal greys, a tad darker, with a metallic sheen and a pale rim (heromedel); the wings
   shade into the body on a smooth gradient, darker toward the tips. A stripe raked along each wing's leading edge in
   the ship's power colour: power green on a player ship, pirate power orange on a non-player one
@@ -61,6 +61,7 @@ W3, crescent wings.
 | 4 | heromedel: the Pirate Hijacker's grey, more metallic, the wings and centre blended so it doesn't read as a column, the stripes in power green (pirate orange on non-player vessels). Its gunmetal palette, a sheen and a pale rim; the wings' darker tone as a smooth gradient instead of a panel with an edge; the rust bands now power-colour stripes. |
 | 5 | heromedel: a tad darker, and the cockpit set apart from the wings so it reads as a small cockpit. The greys a step darker; the cockpit a raised, bevelled nose module of its own, its rear edge curving across in front of the wing roots. |
 | 6 | heromedel: sleekly down from the wings, not so harsh. The cockpit as a raised teardrop fairing tapering back down the spine between the wing roots, with a thin outline, a gentle bevel and only a hint of shadow. |
+| 7 | heromedel: the back end tapering down more stylishly. From just behind the engine room the stern curves in to a narrow tail, with the stern nozzles set into it; the wings' trailing edges sweep into it on softer fillets; the nacelles' tails taper to match. |
 
 Each part is built in the five stages (`review/stages.png`). The Gat M1 has no weapon art yet, so there is no armed
 preview.

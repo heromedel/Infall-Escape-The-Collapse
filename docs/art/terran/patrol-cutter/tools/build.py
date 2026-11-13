@@ -67,11 +67,14 @@ def scorch(x, y, rx, ry):
 # pass 3 (heromedel: the wings should merge with the centre so it reads as one whole ship, not a column): one hull
 # outline for the body and both wings, a smooth fillet where they meet. Its left half, top to bottom: the chisel bow,
 # the wing root, the forward-swept leading edge to the sharp tip, the trailing edge back in to the stern.
-HULL = [(214, 12), (160, 78), (158, 104), (146, 124), (22, 114), (34, 150), (124, 300), (150, 322), (160, 344),
-        (160, 404), (182, 434)]
-HULL_RADII = [2, 4, 8, 10, 0, 2, 8, 8, 4, 6, 6]
+HULL = [(214, 12), (160, 78), (158, 104), (146, 124), (22, 114), (34, 150), (124, 300), (148, 324), (158, 352),
+        (162, 404), (174, 428), (196, 446), (210, 452)]
+# pass 7 (heromedel: the back end tapering down more stylishly): from just behind the engine room the stern curves in
+# to a narrow tail, and the wings' trailing edges sweep into it on softer fillets
+HULL_RADII = [2, 4, 8, 10, 0, 2, 14, 14, 10, 14, 16, 10, 4]
 # the port nacelle, tucked under the wing's trailing edge, its nozzle set into its tail
-NACELLE_PORT = [(140, 220), (116, 240), (114, 384), (126, 396), (154, 396), (158, 384), (158, 230)]
+NACELLE_PORT = [(140, 220), (116, 240), (114, 352), (120, 382), (134, 398), (150, 394), (158, 370), (158, 230)]
+# (pass 7: its tail tapered too, to match the stern)
 
 
 def nozzle(x, y, w):
@@ -88,7 +91,7 @@ def build(edge=None):
     for name, half in (("nacelle-port", NACELLE_PORT), ("nacelle-starboard", mirror(NACELLE_PORT))):
         x = sum(p[0] for p in half) / len(half)
         h.plate(name, rounded_path(half, 4), DARK, bevel=3, shadow=3,
-                details=seam(x - 14, 330, x + 14, 330, DARK) + nozzle(x, 383, 30))
+                details=seam(x - 14, 330, x + 14, 330, DARK) + nozzle(x - 1, 382, 22))
     # the hull: body and wings as one plate. Pass 4: the wings shade into the body on a smooth gradient, darker toward
     # the tips (a hard tone edge traced the old column); a metallic sheen and a pale rim, as on the Pirate Hijacker.
     # The stripe raked along each wing's leading edge is in the ship's power colour: power green on a player ship,
@@ -113,7 +116,7 @@ def build(edge=None):
                     + seam(sx(60), 164, sx(140), 182, PLATE) + seam(sx(84), 204, sx(142), 220, PLATE))
     details = (f'<path d="{hull_d}" fill="url(#wing-blend)"/><path d="{hull_d}" fill="url(#sheen)"/>'
                + stripes + seam(162, 150, 278, 150, PLATE) + seam(160, 300, 280, 300, PLATE)
-               + seam(160, 370, 280, 370, PLATE) + scorch(220, 424, 40, 8) + nozzle(206, 423, 18) + nozzle(234, 423, 18)
+               + seam(160, 370, 280, 370, PLATE) + scorch(220, 440, 26, 7) + nozzle(211, 440, 14) + nozzle(229, 440, 14)
                + f'<path d="{hull_d}" fill="none" stroke="#b4bcc6" stroke-width="3" opacity=".35"/>'
                + f'<path d="{hull_d}" fill="none" stroke="#eef2f6" stroke-width=".9" opacity=".3"/>')
     h.plate("hull", hull_d, PLATE, bevel=5, shadow=4, details=details)
@@ -139,8 +142,8 @@ def build(edge=None):
                             f'opacity=".55"/>' for i in range(2)))
     # the engines' glow, behind the nozzles set into the nacelles and the stern
     h.raw("engines", {5: "".join(f'<ellipse cx="{x}" cy="{y}" rx="{w}" ry="9" fill="{ENGINE_GLOW}" opacity=".5" '
-                                 f'filter="url(#glow)"/>' for x, y, w in ((136, 400, 17), (304, 400, 17),
-                                                                          (206, 438, 10), (234, 438, 10)))})
+                                 f'filter="url(#glow)"/>' for x, y, w in ((135, 398, 13), (305, 398, 13),
+                                                                          (211, 455, 8), (229, 455, 8)))})
     # six planned mounts on the outer edge, odd port, even starboard (art rules): 1-2 on the wingtips, 3-4 on the
     # wings' leading edges by the body (the cutter's guns), 5-6 on the prow's chines. Each sits on the edge measured
     # from the rendered hull (`edge`), so it is really on it.
