@@ -1,14 +1,16 @@
-"""Floor plans for the Terran pirate dagger: one room layout, two loadouts (Hijacker and Cutpurse).
+"""Floor plans for the Terran pirate dagger: one room layout, three loadouts (Hijacker, Cutpurse, Pickpocket).
 
-Usage: python3 floorplan.py HIJACKER_ARMED_SVG CUTPURSE_ARMED_SVG OUT_DIR
+Usage: python3 floorplan.py HIJACKER_ARMED_SVG CUTPURSE_ARMED_SVG PICKPOCKET_ARMED_SVG OUT_DIR
 
 Writes, per loadout: floor-LOADOUT.svg (rooms, doors, airlocks, consoles), conduits-LOADOUT.svg (the conduit layer
-on its own, as the art rules ask) and plan-LOADOUT.svg (hull + floor + conduits), plus floorplans.svg, the two side
+on its own, as the art rules ask) and plan-LOADOUT.svg (hull + floor + conduits), plus floorplans.svg, the three side
 by side with a legend.
 
-Same hull, so one room layout. Systems go into rooms of the player's choice (GDD 5E): the Cutpurse simply has fewer
-installed, and its unused rooms stand empty and stripped. Conduits: a plain ring from the AZC through the system
-rooms, plus one spur out to the Sporewing hardpoint, the readable weak point. A cut shows as a red flash (GDD 14C).
+Drawn from the Hijacker's layout in docs/ship-suggestions.md (Ship Designs, step 8, 2026-10-27; the Cutpurse and
+Pickpocket as its patches). Same hull, so one room layout; each loadout installs fewer systems and its unused rooms
+stand empty and stripped. Conduits feed systems, not weapon mounts (GDD 5H): a ring from the AZC through the system
+rooms, and one spur to Weapons B, the Sporewing's own system: the readable weak point. A cut shows as a red flash
+(GDD 14C), only in the separate mockup.
 """
 import base64
 import os
@@ -67,41 +69,65 @@ ROOMS = [
     ("engine-room", 0, 11, 4, 2),
 ]
 
-# consoles: (name, col, row, glyph, loadouts that have it). The core is drawn on its own.
+LOADOUTS = ("hijacker", "cutpurse", "pickpocket")
+ALL = set(LOADOUTS)
+# the layout's tiles (x, y) to plan cells (column, row): centre X is a point, so x runs -2, -1, 1, 2; y runs -6..6
+COL = {-2: 0, -1: 1, 1: 2, 2: 3}
+
+
+def tile(x, y):
+    return COL[x], y + 6
+
+
+# consoles: (name, tile in the layout, wall, glyph, loadouts that have it). The core is drawn on its own.
 CONSOLES = [
-    ("Piloting", 1, 0, "piloting", {"hijacker", "cutpurse"}),
-    ("Sensors", 2, 0, "sensors", {"hijacker"}),
-    ("Doors", 1, 2, "doors", {"hijacker"}),
-    ("Shields", 0, 3, "shields", {"hijacker", "cutpurse"}),
-    ("Weapons", 3, 3, "weapons", {"hijacker", "cutpurse"}),
-    ("Medbay", 0, 8, "medbay", {"hijacker"}),
-    ("Crew Teleporter", 3, 8, "teleporter", {"hijacker", "cutpurse"}),
-    ("Engines", 1, 12, "engines", {"hijacker", "cutpurse"}),
-    ("Life Support", 2, 12, "life", {"hijacker", "cutpurse"}),
+    ("Piloting", tile(-1, -6), "n", "piloting", ALL),
+    ("Sensors", tile(1, -6), "n", "sensors", {"hijacker"}),
+    ("Doors", tile(-1, -4), "w", "doors", {"hijacker"}),
+    ("Shields", tile(-2, -3), "w", "shields", ALL),
+    ("Weapons A", tile(2, -3), "e", "weapons", {"hijacker", "pickpocket"}),
+    ("Weapons B", tile(2, -1), "e", "weapons", {"hijacker", "cutpurse"}),
+    ("Medbay", tile(-2, 2), "w", "medbay", {"hijacker"}),
+    ("Crew Teleporter", tile(2, 2), "e", "teleporter", ALL),
+    ("Engines", tile(-1, 6), "s", "engines", ALL),
+    ("Life Support", tile(1, 6), "s", "life", ALL),
 ]
-# which rooms a loadout leaves empty (the room's only systems are not installed)
-EMPTY = {"hijacker": {"port-flank", "starboard-flank", "aft-hall"},
-         "cutpurse": {"port-flank", "starboard-flank", "aft-hall", "doors-room", "medbay"}}
+# Weapons B sits on a door tile, as the layout places it: the starboard flank's two tiles are both door tiles. It is
+# against the art rule (no controlled system on a door tile), so the check names it and it is raised with Ship Designs.
+FLAGGED_ON_DOOR = {"Weapons B"}
+# which rooms a loadout leaves empty (none of its systems are installed)
+EMPTY = {"hijacker": {"port-flank", "aft-hall"},
+         "cutpurse": {"port-flank", "aft-hall", "doors-room", "medbay", "weapons"},
+         "pickpocket": {"port-flank", "aft-hall", "doors-room", "medbay", "starboard-flank"}}
 
 DOORS = [(2, 1, "s"), (2, 2, "s"), (1, 4, "e"), (0, 4, "s"), (3, 4, "s"), (1, 5, "w"), (2, 6, "e"),
          (1, 4, "s"), (1, 6, "s"), (2, 6, "s"), (1, 8, "e"), (1, 8, "s"), (2, 8, "s"), (1, 10, "s"), (2, 10, "s")]
 AIRLOCKS = [(0, 9, "w"), (0, 10, "w"), (3, 9, "e"), (3, 10, "e")]
-CORE_TILES = [(2, 5)]   # the AZC takes one tile (no system takes more), the core room's only tile free of doors
+CORE_TILES = [tile(1, -1)]   # the AZC takes one tile (no system takes more), the core room's only tile free of doors
 
-# the ring: out of the core's top, up the starboard side to the bridge, down the port side to the engine room,
-# then up the starboard side and back into the core
-RING = [(2, 5), (2, 4), (2, 3), (2, 2), (2, 1), (2, 0), (1, 0), (1, 1), (1, 2), (1, 3), (0, 3), (0, 4), (0, 5),
-        (0, 6), (0, 7), (0, 8), (0, 9), (0, 10), (0, 11), (1, 11), (1, 12), (2, 12), (2, 11), (3, 11), (3, 10),
-        (3, 9), (3, 8), (3, 7), (3, 6), (2, 6)]
-# weapon hardpoints and their conduit feeds. Each feed is a run of tiles from the network out to the hull wall,
-# then on to the hardpoint. The Sporewing, a crude refit of stolen tech, has one spur: the readable weak point. The
-# Twinshot, Terran-built, is fed twice: a run from the weapons room and a tap off the ring, so no single cut drops it.
-HARDPOINTS = {
-    "Sporewing": {"at": (364, 296), "loadouts": {"hijacker", "cutpurse"}, "feeds": [[(2, 4), (3, 4)]],
-                  "intended_weak_point": True},
-    "Twinshot": {"at": (116, 296), "loadouts": {"hijacker"}, "feeds": [[(2, 4), (1, 4), (0, 4)], [(0, 3)]],
-                 "intended_weak_point": False},
-}
+# the conduits, tile by tile as the layout gives them: (x, y, the sides it runs out of)
+CONDUITS = """(-1,-6,S,E) (1,-6,S,W) (-1,-5,N,S) (1,-5,N,S) (-1,-4,N,S) (1,-4,N,S)
+    (-2,-3,S,E) (-1,-3,N,W) (1,-3,N,S) (-2,-2,N,S) (1,-2,N,S,E) (2,-2,S,W)
+    (-2,-1,N,S) (1,-1,N,S) (2,-1,N) (-2,0,N,S) (1,0,N,S) (-2,1,N,S)
+    (1,1,N,E) (2,1,S,W) (-2,2,N,S) (2,2,N,S) (-2,3,N,S) (2,3,N,S)
+    (-2,4,N,S) (2,4,N,S) (-2,5,N,E) (-1,5,S,W) (1,5,S,E) (2,5,N,W)
+    (-1,6,N,E) (1,6,N,W)"""
+# the spur to Weapons B (the Sporewing's system): the one intended weak point; the Pickpocket has no spur
+SPUR = {frozenset((tile(1, -2), tile(2, -2))), frozenset((tile(2, -2), tile(2, -1)))}
+INTENDED_WEAK = {"Weapons B"}
+
+
+def conduit_edges():
+    """Every conduit segment, from the layout's list: a tile and the sides it runs out of."""
+    import re
+    step = {"N": (0, -1), "S": (0, 1), "W": (-1, 0), "E": (1, 0)}
+    edges = set()
+    for x, y, sides in re.findall(r"\((-?\d+),(-?\d+),([NSEW,]+)\)", CONDUITS):
+        c, r = tile(int(x), int(y))
+        for side in sides.split(","):
+            dc, dr = step[side]
+            edges.add(frozenset(((c, r), (c + dc, r + dr))))
+    return edges
 
 
 def door_tiles():
@@ -114,11 +140,13 @@ def door_tiles():
 
 
 def check():
-    blocked = [n for n, c, r, _, _ in CONSOLES if (c, r) in door_tiles()]
-    assert not blocked, f"consoles on door tiles: {blocked}"
+    blocked = [n for n, (c, r), _, _, _ in CONSOLES if (c, r) in door_tiles()]
+    assert set(blocked) <= FLAGGED_ON_DOOR, f"consoles on door tiles: {blocked}"
+    if blocked:
+        print("flagged, raised with Ship Designs: console on a door tile:", blocked)
     assert len(CORE_TILES) == 1, "no system takes more than one tile"
     assert not set(CORE_TILES) & door_tiles(), "the AZC needs a free tile of its own"
-    assert not set(CORE_TILES) & {(c, r) for _, c, r, _, _ in CONSOLES}, "the AZC shares a tile with a console"
+    assert not set(CORE_TILES) & {t for _, t, _, _, _ in CONSOLES}, "the AZC shares a tile with a console"
 
 
 def room_of(c, r):
@@ -137,7 +165,7 @@ def floor_layer(loadout):
                    f'fill="{PLATE}"/>')
     for rid, c, r, w, h in ROOMS:
         x, y = cell(c, r)
-        fill = FLOOR_STRIPPED if (loadout == "cutpurse" and rid in EMPTY["cutpurse"] - EMPTY["hijacker"]) else FLOOR
+        fill = FLOOR_STRIPPED if rid in EMPTY[loadout] - EMPTY["hijacker"] else FLOOR
         out.append(f'<rect x="{x}" y="{y}" width="{w * T}" height="{h * T}" fill="{fill}"/>')
         for i in range(1, w):
             out.append(f'<line x1="{x + i * T}" y1="{y}" x2="{x + i * T}" y2="{y + h * T}" stroke="{FLOOR_LINE}"/>')
@@ -150,9 +178,9 @@ def floor_layer(loadout):
     for c, r, side in AIRLOCKS:
         out.append(door(c, r, side, AIRLOCK))
     out.append(core_block())
-    for name, c, r, kind, loadouts in CONSOLES:
+    for name, (c, r), wall, kind, loadouts in CONSOLES:
         if loadout in loadouts:
-            out.append(terminal(name, c, r, kind))
+            out.append(terminal(name, c, r, wall, kind))
     return "".join(out)
 
 
@@ -176,20 +204,10 @@ def core_block():
             f'<circle cx="{cx}" cy="{cy}" r="3" fill="{ON_CORE}"/></g>')
 
 
-def wall_side(c, r):
-    here = room_of(c, r)
-    step = {"n": (0, -1), "w": (-1, 0), "e": (1, 0), "s": (0, 1)}
-    for side in ("n", "w", "e", "s"):
-        dc, dr = step[side]
-        if room_of(c + dc, r + dr) != here:
-            return side
-    return "n"
-
-
-def terminal(name, c, r, kind):
-    """A wall desk with a screen; the symbol, in the ship's accent colour, stays upright."""
+def terminal(name, c, r, side, kind):
+    """A wall desk against its wall (as the layout gives it) with a screen; the symbol, in the ship's power colour,
+    stays upright."""
     x, y = cell(c, r)
-    side = wall_side(c, r)
     angle = {"n": 0, "e": 90, "s": 180, "w": 270}[side]
     cx, cy = x + T / 2, y + T / 2
     desk = (f'<rect x="{x + 3}" y="{y + 2}" width="{T - 6}" height="17" rx="3" fill="{TERMINAL}" '
@@ -207,18 +225,9 @@ def terminal(name, c, r, kind):
 
 
 def network_edges(loadout):
-    """Every conduit segment for a loadout: the ring, plus each fitted hardpoint's feeds."""
-    edges = set()
-    for a, b in zip(RING, RING[1:] + RING[:1]):
-        edges.add(frozenset((a, b)))
-    for name, hp in HARDPOINTS.items():
-        if loadout not in hp["loadouts"]:
-            continue
-        for feed in hp["feeds"]:
-            path = feed + [("hardpoint", name)]
-            for a, b in zip(path, path[1:]):
-                edges.add(frozenset((a, b)))
-    return edges
+    """Every conduit segment for a loadout: the layout's conduits, without the Weapons B spur on the Pickpocket."""
+    edges = conduit_edges()
+    return edges - SPUR if loadout == "pickpocket" else edges
 
 
 def reachable(edges):
@@ -236,18 +245,12 @@ def reachable(edges):
 
 
 def check_network(loadout):
-    """The conduit check, run before anything is sent: every installed system's room is on the network, every
-    fitted hardpoint has a run, each traces back to the AZC, and every single point of failure is listed."""
+    """The conduit check, run before anything is sent: every installed system's room is on the network and traces
+    back to the AZC, and every single point of failure is listed (only the Weapons B spur may be one)."""
     edges = network_edges(loadout)
     live = reachable(edges)
     room_tiles = {rid: {(cc, rr) for cc in range(c, c + w) for rr in range(r, r + h)} for rid, c, r, w, h in ROOMS}
-    targets = {}
-    for name, c, r, _, loadouts in CONSOLES:
-        if loadout in loadouts:
-            targets[name] = room_tiles[room_of(c, r)]
-    for name, hp in HARDPOINTS.items():
-        if loadout in hp["loadouts"]:
-            targets[f"{name} hardpoint"] = {("hardpoint", name)}
+    targets = {name: room_tiles[room_of(c, r)] for name, (c, r), _, _, loadouts in CONSOLES if loadout in loadouts}
     unpowered = [t for t, tiles in targets.items() if not tiles & live]
     assert not unpowered, f"{loadout}: not connected to the AZC: {unpowered}"
     weak = {}
@@ -256,50 +259,33 @@ def check_network(loadout):
         lost = [t for t, tiles in targets.items() if not tiles & after]
         if lost:
             weak.setdefault(tuple(sorted(lost)), []).append(e)
-    intended = {f"{n} hardpoint" for n, hp in HARDPOINTS.items() if hp["intended_weak_point"]}
-    unexpected = [lost for lost in weak if not set(lost) <= intended]
+    unexpected = [lost for lost in weak if not set(lost) <= INTENDED_WEAK]
     assert not unexpected, f"{loadout}: unintended single points of failure: {unexpected}"
-    return {"systems": sorted(t for t in targets if "hardpoint" not in t),
-            "hardpoints": sorted(t for t in targets if "hardpoint" in t),
-            "weak points": {", ".join(lost): len(segs) for lost, segs in weak.items()}}
+    return {"systems": sorted(targets), "weak points": {", ".join(lost): len(segs) for lost, segs in weak.items()}}
 
 
 def conduit_layer(loadout, cut_spur):
-    """The conduit layer on its own: the ring, and the feeds to each fitted weapon hardpoint."""
-    def wire(d):
+    """The conduit layer on its own: every segment between tile centres. With `cut_spur` (the mockup only), the spur
+    to Weapons B is shown cut: a red flash at the break and the cut-off part red (GDD 14C)."""
+    def wire(d, colour=ON, core=ON_CORE):
         return (f'<path d="{d}" fill="none" stroke="#0c1018" stroke-width="6" stroke-linejoin="round" '
-                f'stroke-linecap="round"/><path d="{d}" fill="none" stroke="{ON}" stroke-width="2.2" '
-                f'stroke-linejoin="round" filter="url(#cglow)"/><path d="{d}" fill="none" stroke="{ON_CORE}" '
-                f'stroke-width=".8" stroke-linejoin="round"/>')
-    ring = "M" + " L".join(f"{centre(c, r)[0]:.1f},{centre(c, r)[1]:.1f}" for c, r in RING) + " Z"
-    out = [wire(ring)]
-    for name, hp in HARDPOINTS.items():
-        if loadout not in hp["loadouts"]:
-            continue
-        tx, ty = hp["at"]
-        side = 1 if tx > CX else -1
-        for feed in hp["feeds"]:
-            pts = [centre(*t) for t in feed]
-            lx, ly = pts[-1]
-            # out through the hull wall, then into the hardpoint
-            pts += [(tx - side * 6, ly), (tx, ty)]
-            if cut_spur and hp["intended_weak_point"]:
-                # GDD 14C: a broken conduit flashes red, and the cut-off part may turn red too
-                mx = (lx + tx) / 2
-                head = pts[:-2] + [(mx - side * 6, ly)]
-                out.append(wire("M" + " L".join(f"{x:.1f},{y:.1f}" for x, y in head)))
-                tail = f"M{mx + side * 6},{ly} L{tx - side * 6},{ly} L{tx},{ty}"
-                out.append(f'<path d="{tail}" fill="none" stroke="#0c1018" stroke-width="6"/>'
-                           f'<path d="{tail}" fill="none" stroke="{CUT}" stroke-width="2" opacity=".8"/>'
-                           f'<circle cx="{mx}" cy="{ly}" r="14" fill="{CUT}" opacity=".35" filter="url(#cglow)"/>'
-                           f'<circle cx="{mx}" cy="{ly}" r="6" fill="{CUT}"/><circle cx="{mx}" cy="{ly}" r="2.5" '
-                           f'fill="#fff1ec"/><circle cx="{tx}" cy="{ty}" r="9" fill="none" stroke="{CUT}" '
-                           f'stroke-width="2"/>')
-            else:
-                out.append(wire("M" + " L".join(f"{x:.1f},{y:.1f}" for x, y in pts)))
-        if not (cut_spur and hp["intended_weak_point"]):
-            out.append(f'<circle cx="{tx}" cy="{ty}" r="4" fill="#0c1018"/><circle cx="{tx}" cy="{ty}" r="2.2" '
-                       f'fill="{ON}"/>')
+                f'stroke-linecap="round"/><path d="{d}" fill="none" stroke="{colour}" stroke-width="2.2" '
+                f'stroke-linejoin="round" stroke-linecap="round" filter="url(#cglow)"/><path d="{d}" fill="none" '
+                f'stroke="{core}" stroke-width=".8" stroke-linecap="round"/>')
+    out = []
+    for e in sorted(network_edges(loadout), key=lambda e: sorted(e)):
+        (a, b) = sorted(e)
+        (ax, ay), (bx, by) = centre(*a), centre(*b)
+        d = f"M{ax:.1f},{ay:.1f} L{bx:.1f},{by:.1f}"
+        if cut_spur and e == frozenset((tile(2, -2), tile(2, -1))):
+            mx, my = (ax + bx) / 2, (ay + by) / 2
+            out.append(wire(f"M{ax:.1f},{ay:.1f} L{mx:.1f},{my - 5:.1f}"))
+            out.append(wire(f"M{mx:.1f},{my + 5:.1f} L{bx:.1f},{by:.1f}", CUT, "#fff1ec"))
+            out.append(f'<circle cx="{mx}" cy="{my}" r="14" fill="{CUT}" opacity=".35" filter="url(#cglow)"/>'
+                       f'<circle cx="{mx}" cy="{my}" r="6" fill="{CUT}"/><circle cx="{mx}" cy="{my}" r="2.5" '
+                       f'fill="#fff1ec"/>')
+        else:
+            out.append(wire(d))
     return "".join(out)
 
 
@@ -320,15 +306,19 @@ def plan(hull_svg, loadout, cut_spur):
 
 def legend(x0):
     rows = [
-        "Same hull and room layout for both loadouts. Systems go into rooms of the player's choice (GDD 5E): the "
-        "Cutpurse has fewer installed, so its Doors and Medbay rooms stand empty and stripped (darker, bare floor).",
-        "Hijacker: Piloting and Sensors share the bridge; Doors, Shields, Weapons, Medbay and the Crew Teleporter "
-        "each have a room; Engines and Life Support share the engine room.",
-        "Cutpurse: Piloting, Shields, Weapons, Crew Teleporter, Engines and Life Support.",
-        "Conduits: a plain ring from the AZC through the system rooms. The Twinshot hardpoint is fed twice (a run "
-        "from the weapons room and a tap off the ring). The Sporewing has one spur: the readable weak point.",
+        "Same hull and room layout for all three loadouts (Ship Designs' layout, 2026-10-27). Systems go into rooms "
+        "of the player's choice (GDD 5E); rooms a loadout leaves empty stand stripped (darker, bare floor).",
+        "Hijacker (bands 4-6): Piloting and Sensors share the bridge; Doors, Shields, Weapons A (Twinshot), Weapons B "
+        "(Sporewing, by its launcher), Medbay and the Crew Teleporter each have a room; Engines and Life Support "
+        "share the engine room.",
+        "Cutpurse (bands 2-3): no Sensors, Doors, Weapons A or Medbay. Pickpocket (band 1): no Sensors, Doors, "
+        "Weapons B or Medbay, and no spur.",
+        "Conduits feed systems, not weapon mounts (GDD 5H): a ring from the AZC through the system rooms, and one "
+        "spur to Weapons B: the readable weak point.",
+        "Weapons B sits on a door tile where the layout puts it: flagged to Ship Designs (art rule: no controlled "
+        "system on a door tile).",
         "Everything is shown intact and powered. A cut is shown separately, in mockup-damage-14c.",
-        "Airlocks: doors to space, two on each side of the aft hall. No console sits on a door tile.",
+        "Airlocks: doors to space, two on each side of the aft hall.",
     ]
     out = [f'<text x="{x0}" y="48" font-size="17" font-family="sans-serif" font-weight="600" fill="#e3e8f1">'
            f'Pirate dagger floor plans</text>']
@@ -350,33 +340,33 @@ def legend(x0):
 
 
 if __name__ == "__main__":
-    hij, cut, out_dir = sys.argv[1:4]
+    hij, cut, pick, out_dir = sys.argv[1:5]
     os.makedirs(out_dir, exist_ok=True)
     check()
-    for loadout in ("hijacker", "cutpurse"):
+    hulls = {"hijacker": hij, "cutpurse": cut, "pickpocket": pick}
+    labels = {"hijacker": "Hijacker (bands 4–6)", "cutpurse": "Cutpurse (bands 2–3)", "pickpocket": "Pickpocket (band 1)"}
+    for loadout in LOADOUTS:
         print("conduit check,", loadout, check_network(loadout))
-    for loadout, hull, cut_spur in (("hijacker", hij, False), ("cutpurse", cut, False)):
         open(os.path.join(out_dir, f"floor-{loadout}.svg"), "w").write(
             svg(floor_layer(loadout), title=f"Pirate dagger floor, {loadout}"))
         open(os.path.join(out_dir, f"conduits-{loadout}.svg"), "w").write(
             svg(conduit_layer(loadout, False), title=f"Pirate dagger conduits, {loadout}"))
         open(os.path.join(out_dir, f"plan-{loadout}.svg"), "w").write(
-            svg(plan(hull, loadout, cut_spur), title=f"Pirate dagger plan, {loadout}"))
+            svg(plan(hulls[loadout], loadout, False), title=f"Pirate dagger plan, {loadout}"))
     body = []
-    for i, (loadout, hull, cut_spur, label) in enumerate((("hijacker", hij, False, "Hijacker (bands 4–6)"),
-                                                          ("cutpurse", cut, False, "Cutpurse (bands 1–3)"))):
-        body.append(f'<g transform="translate({i * SHIP_W},0)">{plan(hull, loadout, cut_spur)}'
+    for i, loadout in enumerate(LOADOUTS):
+        body.append(f'<g transform="translate({i * SHIP_W},0)">{plan(hulls[loadout], loadout, False)}'
                     f'<text x="{SHIP_W / 2}" y="22" font-size="14" font-family="sans-serif" fill="#e3e8f1" '
-                    f'text-anchor="middle">{label}</text></g>')
-    body.append(legend(2 * SHIP_W + 10))
+                    f'text-anchor="middle">{labels[loadout]}</text></g>')
+    body.append(legend(3 * SHIP_W + 10))
     open(os.path.join(out_dir, "floorplans.svg"), "w").write(
-        svg('<rect width="100%" height="100%" fill="#0d1220"/>' + "".join(body), 2 * SHIP_W + 300, SHIP_H,
+        svg('<rect width="100%" height="100%" fill="#0d1220"/>' + "".join(body), 3 * SHIP_W + 300, SHIP_H,
             "Pirate dagger floor plans"))
     # a separate mockup, clearly labelled, of damage (GDD 14C): not part of the floor plans
     demo = (f'<rect width="100%" height="100%" fill="#0d1220"/>{plan(hij, "hijacker", True)}'
             f'<rect x="0" y="0" width="{SHIP_W}" height="30" fill="#0d1220" opacity=".85"/>'
             f'<text x="{SHIP_W / 2}" y="21" font-size="14" font-family="sans-serif" fill="#ff8a7a" '
-            f'text-anchor="middle">MOCKUP, not the floor plan: Sporewing spur cut (GDD 14C)</text>')
+            f'text-anchor="middle">MOCKUP, not the floor plan: Weapons B spur cut (GDD 14C)</text>')
     open(os.path.join(out_dir, "mockup-damage-14c.svg"), "w").write(
-        svg(demo, title="Mockup: Sporewing spur cut (GDD 14C)"))
+        svg(demo, title="Mockup: Weapons B spur cut (GDD 14C)"))
     print("saved floor plans to", out_dir)

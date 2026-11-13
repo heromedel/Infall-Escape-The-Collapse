@@ -272,7 +272,16 @@ def cutpurse():
     return s
 
 
-VERSIONS = {"hijacker": hijacker, "cutpurse": cutpurse}
+def pickpocket():
+    """The band 1 loadout (Ship Designs, 2026-10-29): the Cutpurse hull with the Twinshot on mount 3, on the
+    faired-over port bay, and no Sporewing."""
+    s = cutpurse()
+    s["mounts"] = [(m[0], m[1], m[2], "Gat 2.1 Twinshot" if m[0] == "mount-3" else
+                    ("" if m[0] == "mount-4" else m[3]), m[4]) for m in s["mounts"]]
+    return s
+
+
+VERSIONS = {"hijacker": hijacker, "cutpurse": cutpurse, "pickpocket": pickpocket}
 
 if __name__ == "__main__":
     out = sys.argv[1]
