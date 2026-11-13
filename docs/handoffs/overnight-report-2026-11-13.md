@@ -45,3 +45,42 @@ lost at nearly the same jumps (6, 12, 11, 13, 19, 20 then; 6, 13, 11, 9, 19, 19 
 | System power keys | The key adds power, Shift with it removes: "Add Power: A / Remove Power: Shift + A" on the Shields tooltip | Reference frame 12 | Each system file names a key; nothing reads it. To build. |
 | Event choice keys | Not confirmed by any source found | Search; the game's readme lists only 1–4, 5–6 and Escape | Parked: asked in the questions below. |
 
+### What the helpers answered (both within about fifteen minutes)
+
+heromedel's rule for the night: go with what they say, then report it. What was done with each answer is logged
+under the step that used it; this is what they said.
+
+**Infall: Ship Designs** (checked by it against `ship-suggestions.md` on its own branch):
+
+1. Floor plans exist in `ship-suggestions.md` for the **Polyp** (line 1058; its flak loadout at 1082 swaps the Flesh
+   Mortar for Bone Flak) and the **Vein Moth** (line 938; its weapons are the Stinger and the Lantern, a 1-room,
+   1-damage beam, 1 power, 14.0 s, 6.57, which is not the game's Lanternfly). The docs' **Relay Picket** has a
+   layout (line 1124) but needs the AAA, and the three **Senti crew killers** have no Infall layouts, are Deck
+   Collapse test ships, and need the AAA too: leave all four for heromedel.
+2. **Pickpocket:** band 1 only; Terran Pirates band 1 is one Pickpocket, band 3 one or two Cutpurses or
+   Pickpockets; three Terrans; the Cutpurse's hull art; 131.11. On the game's single-weapon-system Hijacker it
+   comes to "Weapons level 1 with the Twinshot only". **Scrap Hound:** bands 1–2, in the Lykario Pack's band 1
+   slot (the Packrunner is over band 1's budget); three Lykario; hull 12; no Sensors, Doors or Medbay; Engines 1; a
+   Crew Teleporter at (2,-2) on the east wall; the Twinshot on mount 3; AZC 2; Lykario silver; 135.95; the
+   Outrider's art until it has its own.
+3. Placement rules for a bought system: one tile a system and no console on a door tile; a Medbay only with
+   systems crew can't man, remembering that crew man Doors and Sensors too; an EVA or EVB Dock next to an airlock;
+   a weapon system's slot count is a lock on that hull; on conduit ships warn, don't block, when no conduit reaches
+   the room.
+4. It also noted the game's Hijacker is out of date: the docs' has Weapons A (Twinshot) and Weapons B (Sporewing).
+   That is the several-weapon-systems item (GDD 8L, C11).
+
+**Infall: Eco:**
+
+1. Shield level should mean layers (GDD 8H), as its prices and values already do; it would change the ship files
+   from bars to layers.
+2. The growth organ is priced as a clone bay: buy 12.11, upgrades 8.47 and 10.89.
+3. Keep 15 crew damage a point of damage: the wiki's figure, and it fits the genre's data (the anti-crew beam's 4
+   units being its known 60), though never timed in game.
+4. Keep the mercenary prices, but scale them by band like wreck rewards, times 1.(band − 1). Its opinion only.
+5. Event rewards: the genre's sized rewards are 28% low, 45% medium, 27% high. Keep the 4 tiny; re-tag the other
+   25 to about 7 low, 11 medium and 7 high (17, 6 and 2 now).
+6. "Slightly faster" repair is not an economy number but heromedel's; as a placeholder only, +5%, half of one
+   repair level. **To flag for heromedel.**
+7. No objection to one hit a second in crew fights.
+
