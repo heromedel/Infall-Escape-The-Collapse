@@ -228,8 +228,12 @@ anything Claude added tagged Ai-Generated-Proposal.
     (`docs/art/mockups/crew-at-console/`, Ai-Generated-Proposal) shows it fits if the crew member is drawn about
     6 pixels back from the console's wall, a south-wall console is drawn over a Facing sprite, and tokens shrink
     to about 21 pixels across. Not built yet.
-  - **Open (heromedel, 2026-11-12):** what marks whose crew a crew member is, now that extra rings go. The ring
-    under each one is 29 pixels across and would cross the console.
+  - **Decided (heromedel, 2026-11-13):** no ring under a crew sprite. Sides are told apart as in the genre, by
+    the health bar's colour: green for the player's crew, red for the other side. The bar shows on every crew
+    member in a room that holds both sides, and on one who is hurt or selected, as before; its length still
+    shows health. A token keeps its rim, which is part of the token.
+  - **Open (2026-11-13):** how a selected crew sprite is marked. The selection ring is 34 pixels across and
+    would cross the console.
   - What was found about consoles, symbols and size (2026-11-12), before the point above was answered.
     heromedel's first leaning was a small symbol beside or above a crew member while manning:
     - The art sessions settled where the symbol goes: in the console. The Outrider's floor layout test 4 has
