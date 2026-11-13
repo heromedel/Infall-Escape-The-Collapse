@@ -303,15 +303,25 @@ func _on_fight_over(outcome: String) -> void:
 	fight_over.emit(outcome, encounter)
 
 
-## A number that every machine should agree on after the same ticks and orders; the host checks it (GV 4C).
+## A number that every machine should agree on after the same ticks and orders; the host checks it (GV 4C). It
+## takes in whatever a difference would first show up in: the battle's random numbers, each ship's hull, shields
+## and cooldowns, its systems, its rooms' air, fires and breaches, its conduits, its crew and its weapons.
 func checksum() -> int:
 	if encounter == null:
 		return 0
-	var parts: Array = [encounter.ships.size()]
+	var parts: Array = [encounter.ships.size(), encounter.tick_count, encounter.rng.state]
 	for ship in encounter.ships:
-		parts.append_array([ship.hull, ship.shield_layers, ship.destroyed, ship.crew.size()])
+		parts.append_array([ship.hull, ship.shield_layers, ship.destroyed, ship.crew.size(), ship.supershield,
+				ship.cloak_ticks, ship.cloak_cooldown, ship.teleporter_cooldown])
+		for system in ship.systems:
+			parts.append_array([system.damage, system.power, system.ion, system.enabled, system.spored])
+		for room in ship.rooms:
+			parts.append_array([int(room.oxygen * 1000.0), int(room.infection), room.fires.keys(), room.breaches.keys()])
+			for cell in room.fires:
+				parts.append(int(room.fires[cell]))
+		parts.append(ship.broken_conduits.keys())
 		for member in ship.crew:
-			parts.append_array([member.cell, int(member.health), member.dead])
+			parts.append_array([member.cell, int(member.health), member.dead, encounter.ships.find(member.ship)])
 		for slot in ship.weapons:
 			parts.append_array([slot.powered, int(slot.charge)])
 	parts.append(encounter.projectiles.size() if "projectiles" in encounter else 0)

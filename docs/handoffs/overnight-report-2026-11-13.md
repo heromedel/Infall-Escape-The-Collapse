@@ -100,3 +100,26 @@ Five chaos seeds of 60 s each: no failures, no engine errors, no frame spikes.
 - Stale notes fixed: the README no longer says assigning ships isn't built, and the comment in `session.gd` is
   right.
 
+### A3. A stronger out-of-step check
+
+The number the LAN machines compare now also takes in the battle's random-number state and tick, each system's
+damage, power and ion, each room's air, infection, fires and breaches, the broken conduits, the Supershield and the
+cloak and teleporter cooldowns, and which ship each crew member is on. The LAN test still passes with it, which
+also says today's crew fights play the same on both machines.
+
+### A4. A wider LAN test, and a bug it found
+
+`tools/lan_run_test.sh` runs a host and a client through a fight won, a purchase by each machine, the client
+leaving and rejoining while the host jumps with orders queued behind the jump, the event at the next cluster, a
+rule change (Difficulty: Hard), a wait, and a second fight with orders from the client. Both machines then pause on
+the same tick and print their state, and the script compares them.
+
+- **Bug found and fixed: a machine that joined while the host was mid-jump fell out of step.** The host's record of
+  the run (sent to a machine that joins) listed orders as soon as they were queued, so an order waiting behind the
+  jump was in the record and was then sent again when the host played it; the newcomer played it twice. In three
+  runs the client reported "out of step" every time, and once never matched the host again. The record is now
+  written as each item is played, and what was played in the current frame is sent out before a newcomer is
+  welcomed. After the fix: four runs with the client rejoining 0.05, 0.15, 0.3 and 0.45 s into the jump (the host
+  confirmed each arrived while the jump was playing) all end with identical state and no out-of-step note.
+- Not covered still: hails and surrender offers over LAN, controllers on a client, two real machines.
+

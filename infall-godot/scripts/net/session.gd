@@ -263,14 +263,22 @@ func _hand_over(player_id: int) -> void:
 		_emit({"k": "handover", "from": player_id, "to": admiral, "p": 0})
 
 
-## Puts one item on the stream: for the record and for this machine to play. The host sends each item to the
-## other machines as it plays it, so they get them in the order it played them.
+## Puts one item on the stream for this machine to play. The host sends each item to the other machines as it
+## plays it, so they get them in the order it played them.
 func _emit(item: Dictionary) -> void:
-	if item.k == "t" and not stream.is_empty() and stream.back().k == "t":
-		stream.back().n = int(stream.back().n) + 1
-	elif item.k != "check":
-		stream.append(item.duplicate() if item.k != "t" else {"k": "t", "n": 1})
 	_queue.append(item)
+
+
+## The host's record of what has been played, for a machine that joins. An item is recorded as it is played, not
+## when it is queued: a machine that joins while the host is busy (a jump's flash) is sent the record and then
+## each later item as the host plays it, so an item waiting behind the jump must not be in both.
+func _record(item: Dictionary) -> void:
+	if not is_host:
+		return
+	if item.k == "t" and not stream.is_empty() and stream.back().k == "t":
+		stream.back().n = int(stream.back().n) + int(item.get("n", 1))
+	else:
+		stream.append(item.duplicate() if item.k != "t" else {"k": "t", "n": int(item.get("n", 1))})
 
 
 func _process(delta: float) -> void:
@@ -312,6 +320,7 @@ func _play() -> void:
 				for count in int(item.get("n", 1)):
 					main.apply_tick()
 				tick_progress = 0.0
+				_record(item)
 				_pass_on({"k": "t", "n": int(item.get("n", 1))})
 			"check":
 				_pass_on({"k": "sum", "v": main.checksum()})
@@ -321,6 +330,7 @@ func _play() -> void:
 					_rejoin()
 					break
 			_:
+				_record(item)
 				_pass_on(item)
 				await main.apply_order(item)
 				_send_outgoing()
@@ -490,6 +500,7 @@ func _hello(player_name: String) -> void:
 	else:
 		player.peer = peer_id   # a player coming back gets their old place (GDD 4F)
 		player.here = true
+	_send_outgoing()   # what was played this frame goes out first: it is in the record the newcomer is about to get
 	_welcome.rpc_id(peer_id, players, admiral, origin, stream)
 	_players_changed()
 	note.emit("%s joined." % player.name)
