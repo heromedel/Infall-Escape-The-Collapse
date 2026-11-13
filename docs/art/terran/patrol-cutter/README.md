@@ -60,6 +60,7 @@ W3, crescent wings.
 | 3 | heromedel: the wings and the centre as one ship, not a column; no airlock-looking rectangle (hulls never show where airlocks are); the nozzles joined to the nacelles. One hull outline with a fillet at the wing roots, the wings a darker panel with no root line; the replaced panel at the bottom right removed; every nozzle set into its nacelle's tail or the stern. |
 | 4 | heromedel: the Pirate Hijacker's grey, more metallic, the wings and centre blended so it doesn't read as a column, the stripes in power green (pirate orange on non-player vessels). Its gunmetal palette, a sheen and a pale rim; the wings' darker tone as a smooth gradient instead of a panel with an edge; the rust bands now power-colour stripes. |
 | 5 | heromedel: a tad darker, and the cockpit set apart from the wings so it reads as a small cockpit. The greys a step darker; the cockpit a raised, bevelled nose module of its own, its rear edge curving across in front of the wing roots. |
+| 6 | heromedel: sleekly down from the wings, not so harsh. The cockpit as a raised teardrop fairing tapering back down the spine between the wing roots, with a thin outline, a gentle bevel and only a hint of shadow. |
 
 Each part is built in the five stages (`review/stages.png`). The Gat M1 has no weapon art yet, so there is no armed
 preview.

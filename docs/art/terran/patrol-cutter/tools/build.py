@@ -117,11 +117,13 @@ def build(edge=None):
                + f'<path d="{hull_d}" fill="none" stroke="#b4bcc6" stroke-width="3" opacity=".35"/>'
                + f'<path d="{hull_d}" fill="none" stroke="#eef2f6" stroke-width=".9" opacity=".3"/>')
     h.plate("hull", hull_d, PLATE, bevel=5, shadow=4, details=details)
-    # pass 5 (heromedel: a small cockpit, set apart from the wings): the cockpit as a raised, bevelled nose module of
-    # its own on the bow, a step lighter, its rear edge curving across in front of the wing roots
-    nose = sym([(214, 18), (170, 72), (168, 108), (180, 124), (200, 130)], [2, 4, 6, 8, 6])
-    h.plate("cockpit-module", nose, PLATE, bevel=4, outline=2, shadow=3,
-            details=f'<path d="{nose}" fill="url(#sheen)"/>' + seam(184, 118, 256, 118, PLATE))
+    # pass 5 (heromedel: a small cockpit, set apart from the wings); pass 6 (heromedel: sleekly down from the wings,
+    # not so harsh): the cockpit as a raised teardrop fairing on the bow, tapering back down the spine between the wing
+    # roots, with a thin outline, a gentle bevel and only a hint of shadow
+    nose = sym([(214, 18), (174, 68), (171, 102), (178, 140), (192, 184), (206, 212), (216, 224)],
+               [2, 6, 14, 18, 18, 12, 8])
+    h.plate("cockpit-module", nose, PLATE, bevel=3, outline=1.1, shadow=1.2,
+            details=f'<path d="{nose}" fill="url(#sheen)"/>')
     # the canopy: a narrow wedge of dark glass set into the cockpit module
     canopy = sym([(216, 50), (196, 78), (196, 100), (212, 106)], 2)
     h.plate("cockpit", canopy, GLASS, bevel=2, outline=1.6,
