@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Scrap Hound: a stolen Outrider flown by Lykario raiders, bands 1-2 (docs/ship-suggestions.md, 'Lykario "Scrap
+     Hound"'; Ship Designs, 2026-11-13). A patch of the Outrider: its rooms, doors, conduit wheel and mounts are kept.
+     Battered, so hull 12. No Sensors (Animal Senses), Doors or Medbay; Piloting 2 so the pilot can board too; a
+     Crew Teleporter in the empty starboard forward room. It keeps the Outrider's art until it has its own. -->
+<loadout id="scrap-hound" ship="outrider" name="Lykario Scrap Hound" inherit="patch" class="Scrap Hound" race="lykario" faction="lykario" hull="12">
+	<reactor type="core" level="2"/>
+	<description>A stolen GATOS scout, its paint patched and marked with bone-white claws. The pack kept its gun, bolted in a teleporter and threw out what it had no use for.</description>
+	<system id="piloting" tile="0,-6" level="2" wall="north"/>
+	<system id="weapons" tile="1,-6" level="1" wall="north"/>
+	<system id="sensors" removed="yes"/>
+	<system id="doors" removed="yes"/>
+	<system id="medbay" removed="yes"/>
+	<system id="engines" tile="0,6" level="1" wall="south"/>
+	<system id="crew-teleporter" tile="2,-2" level="1" wall="east"/>
+	<weapons>
+		<weapon id="gat-2-1-stolen" mount="3"/>
+	</weapons>
+	<crew>
+		<member race="lykario" count="3"/>
+	</crew>
+</loadout>

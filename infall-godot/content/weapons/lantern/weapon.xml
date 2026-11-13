@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The docs' Lantern (docs/ship-suggestions.md, Azurethea "Vein Moth"): a 1-room, 1-damage beam, 1 power, 14.0 s,
+     6.57. Not the Ocellus (id lanternfly), which is a laser. Cost per volley from mawjig-cost-table.md (a beam,
+     0.03 a room swept). -->
+<weapon id="lantern" name="Lantern" race="azurethea" tech="biomechanical" type="beam" power="1" shots="1" damage="1" charge="14.0" cost="0.03" price="6.57" colour="#7fb2ff" beam_length="60">
+	<description>A firefly's light organ, grown large. Its short beam burns one room once the shield is down.</description>
+</weapon>

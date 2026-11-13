@@ -237,3 +237,45 @@ any of its ships.
 - Checked by screenshot with two ships, two fires and boarders aboard, in both battlefield orientations; input
   test 22 of 22, co-op test 22 of 22, a two-player chaos seed clean.
 
+### C9. The docs' own ships, and a beam bug found on the way
+
+Added from `ship-suggestions.md`, with Ship Designs' pointers:
+
+| Ship | What it is | Where it is met |
+|---|---|---|
+| Pirate Pickpocket | Hijacker loadout: Weapons 1 with the Twinshot, a teleporter, three Terrans, no Doors or Medbay, the Cutpurse's hull art | GATOS Pirates band 1 (replacing the Pirate Scrapper there); band 3 may add one beside the Cutpurse |
+| Lykario Scrap Hound | Outrider loadout: hull 12, Piloting 2, a stolen Twinshot, a teleporter in the starboard forward room, three Lykario, no Sensors, Doors or Medbay | Lykario Pack band 1 (the pack had no band 1) |
+| Malphen Polyp, and its flak loadout | The docs' layout: hull 5, no shields, one weapon, one crew member. New weapons Flesh Mortar (missile) and Bone Flak | Malphen Growth bands 1–2, two Polyps and a flak Polyp (the Malphen had no band 1 or 2) |
+| Azurethea Vein Moth | The docs' layout: hull 10, one shield layer, the Stinger and the new Lantern (a one-room beam) | Azurethea Wardens bands 1–2 (the Moth Skiff keeps band 3) |
+
+Left for heromedel, as Ship Designs said: the docs' Relay Picket and the three Senti crew killers need the AAA,
+which the game does not have.
+
+Ten bot fights of the Outrider against each (a captain who only aims at weapons and never orders crew):
+
+| Enemy | Won | Hull left of 30 | Crew left of 3 |
+|---|---|---|---|
+| Two Polyps and a flak Polyp | 9 of 10 | 14.7 | 2.8 |
+| Vein Moth | 10 | 27.2 | 3.0 |
+| Pickpocket | 10 | 28.7 | 1.4 |
+| Scrap Hound | 10 | 28.4 | 2.0 |
+| Pirate Scrapper (band 1 before tonight) | 10 | 29.1 | 3.0 |
+
+- **For heromedel: the Polyp swarm is a hard first fight.** Three missiles every nine seconds pass the Outrider's
+  one shield layer, and it costs half the hull. The docs flag this themselves ("whether a squad of three is too
+  much for a first fight"). It is in as the docs have it.
+- **The boarders now kill crew** when nobody answers them (the Pickpocket's three and the Scrap Hound's three):
+  that is the bot never sending anyone to fight, but it shows boarding is a real threat in band 1 now.
+- By the game's value-from-parts rule the Scrap Hound comes to 332.90 and the Pickpocket to 326.83, about the
+  Packrunner's 330.81, because the rule counts the hull's rooms and doors and the Outrider is a big hull. Ship
+  Designs' 135.95 and 131.11 count systems and weapons only. So fight rewards for them are like a Packrunner's.
+- The Polyp's growth organ only heals. In the docs it grows a new crew member when the one aboard dies, so there
+  a Polyp does not end with its crew; here it does (GDD 1F).
+- One-line descriptions for the four ships and three weapons are this session's, written from the docs, and go
+  to Lori.
+
+**Bug found and fixed: no beam weapon has dealt damage since tile targeting was built.** The beam code kept a list
+of the tiles a beam had cut, but a beam was never given that list, so the code failed at the first unshielded tile
+it reached and the beam did nothing, the player's and the enemy's alike (five beam weapons). The Vein Moth's
+Lantern showed it in the test fights. One missing field; beams work again.
+

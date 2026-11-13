@@ -9,9 +9,12 @@ reviewed its part on 2026-10-31; what was changed is under **Checked**, and what
 
 1. **Two weapon systems per ship:** the Hijacker's Sporewing on its own Weapons B, and the Burr's one weapon system
    per laser (`ship-suggestions.md`). The Godot version runs one weapon system per ship, so both still use one.
-2. **The docs' own ships the Godot version lacks:** the Pickpocket (band 1 pirate), the Polyp (band 1 Malphen, with
-   the docs' Flesh Mortar missile), the docs' Relay Picket with its AAA, the Vein Moth and the Scrap Hound. There is
-   no band 1 Malphen squad until the Polyp is added.
+2. **The docs' own ships the Godot version lacks:** the docs' Relay Picket and the three Senti crew killers, which
+   need the AAA (Ship Designs, 2026-11-13: leave them for heromedel). Added on 2026-11-13 from `ship-suggestions.md`:
+   the Pickpocket (band 1 pirate), the Scrap Hound (band 1 Lykario Pack), the Polyp with its flak loadout, Flesh
+   Mortar missile and Bone Flak (Malphen Growth bands 1-2, two Polyps and a flak Polyp), and the Vein Moth with its
+   Lantern beam (Azurethea Wardens bands 1-2). The Polyp's growth organ only heals; in the docs it grows a new crew
+   member.
 3. **Ship and loadout values** are now worked out from their parts by Eco's rules (GV 8B), so the typed values
    (Chestnut 488.4, Burr 188.81 and the rest) are gone. Ship Designs may want to look at what the parts give.
 

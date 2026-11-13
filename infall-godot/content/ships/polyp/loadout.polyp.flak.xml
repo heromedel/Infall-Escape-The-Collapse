@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The Polyp's flak loadout (docs/ship-suggestions.md): Bone Flak in place of the Flesh Mortar, so a swarm can mix
+     shield-poppers with missiles. -->
+<loadout id="flak" ship="polyp" name="Malphen Polyp" inherit="patch" class="Polyp (Flak)">
+	<weapons>
+		<weapon id="bone-flak" mount="1"/>
+	</weapons>
+</loadout>

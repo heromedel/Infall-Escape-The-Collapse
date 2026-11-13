@@ -604,7 +604,7 @@ func _start_beam(ship: Ship, slot: WeaponSlot) -> void:
 		start_local = centre
 		end_local = centre + Vector2(slot.def.beam_length, 0)
 	beams.append({"weapon": slot.def, "source": ship, "slot": slot, "target": target, "start": start_local, "end": end_local,
-			"ticks": 0, "total": 24, "rooms_hit": [], "blocked": false})
+			"ticks": 0, "total": 24, "rooms_hit": [], "tiles_hit": [], "blocked": false})
 
 
 func _tick_beams() -> void:
