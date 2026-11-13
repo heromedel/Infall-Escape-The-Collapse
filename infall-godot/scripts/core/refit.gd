@@ -44,7 +44,7 @@ static func apply(run: RunState, order: Dictionary) -> void:
 				run.log_book.write("hired", {"race": race.id, "name": member.name}, "%s joined the %s." % [member.name, target.name])
 		"buy_system":
 			var def := Library.system(order.id)
-			if def and ship and run.spend(int(order.price)):
+			if def and ship and ShipOutfitter.install_refusal(ship, def, int(order.room)).is_empty() and run.spend(int(order.price)):
 				ensure_stock(run)
 				ShipOutfitter.install_system(ship, def, int(order.room))
 				run.cluster().store_stock.sold.append("system:" + def.id)

@@ -35,13 +35,31 @@ static func unfit_weapon(ship: Ship, slot: WeaponSlot) -> void:
 	ship.weapons.erase(slot)
 
 
+## Why a system may not be installed in a room, or "" when it may (Ship Designs' placement rules for a purchase):
+## - a system needs a tile of its own;
+## - a Medbay shares a room only with systems crew can't man, so nobody heals while manning one (GDD 5B);
+## - an EVB Dock sits in a room with an airlock, for its suits to leave by.
+static func install_refusal(ship: Ship, def: SystemDef, room_index: int) -> String:
+	if room_index < 0 or room_index >= ship.rooms.size() or _free_console_cell(ship, room_index) == Vector2i(999, 999):
+		return "No free tile in that room."
+	var room := ship.rooms[room_index]
+	for system in room.systems:
+		if def.behaviour == "medbay" and system.def.manned:
+			return "It heals crew, so it can't share a room with %s, which crew man." % system.def.name
+		if def.manned and system.behaviour == "medbay":
+			return "Crew man it, so it can't share a room with %s, which heals them." % system.def.name
+	if def.behaviour == "evb_dock" and not ship.doors.any(func(door: ShipDoor): return door.to_space and room.cells.has(door.cell_a)):
+		return "An EVB Dock needs a room with an airlock."
+	return ""
+
+
 ## The room a new system goes into: an empty room if there is one, else the room with the fewest systems that
-## still has a free tile.
-static func room_for_new_system(ship: Ship) -> int:
+## may take it. -1 when no room may.
+static func room_for_new_system(ship: Ship, def: SystemDef = null) -> int:
 	var best := -1
 	var best_count := 99
 	for room in ship.rooms:
-		if _free_console_cell(ship, room.index) == Vector2i(999, 999):
+		if _free_console_cell(ship, room.index) == Vector2i(999, 999) or (def and not install_refusal(ship, def, room.index).is_empty()):
 			continue
 		var count := room.systems.size()
 		if count < best_count:

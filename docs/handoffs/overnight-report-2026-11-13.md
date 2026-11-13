@@ -150,3 +150,22 @@ sticks, two real machines, hails and surrender offers over LAN, controllers on a
 - **A damaged system is red** (heromedel; reference frame 18), on the ship and in the HUD. It was orange until
   broken.
 
+### C4, C5, C6 and Eco's answers 2 and 4
+
+- **The Medbay room rule when buying a system** (GDD 5B, Decided). The room picker greys out a room that may not
+  take the system and says why, and the purchase itself is refused if the room is wrong. Following Ship Designs:
+  crew man Doors and Sensors too, so a Medbay can't share with those either, and an EVB Dock needs a room with an
+  airlock. On the Outrider a Medbay is now refused in the bridge, the Sensors and Doors room and the engine room.
+  Its conduit advice (warn, don't block) needed nothing: a bought system is joined to the conduits automatically.
+- **Abandoned clusters have no store** (GDD 2R, Decided). When a cluster turns Abandoned its store is gone, and
+  what it holds becomes "something drifting" (a salvage event), as the GDD's row says.
+- **Repairing a system you have a skill level in is 5% faster** (GDD 7H, Decided; the number is Eco's placeholder).
+  **For heromedel to settle:** Eco says this number is yours, not the economy's.
+- **The growth organ costs 12.11** (Eco: priced as a clone bay), up from the 6.05 placeholder. The Cyst's value
+  rises by 6.06 with it; the ship value test's reference numbers predate this, so it now skips ships with a growth
+  organ, as it already did ships with a Supershield.
+- **Mercenary prices rise with the band** (Eco), times 1.(band − 1) like wreck rewards: the hire price, the price
+  shown on the choice and the pay a renewal builds on. The mercenary test still passes (17 of 17).
+
+Fight test 20 of 20, crew fight rules all hold, content check clean after these.
+

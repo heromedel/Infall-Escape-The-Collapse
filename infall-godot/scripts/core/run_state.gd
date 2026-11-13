@@ -143,6 +143,12 @@ func hire(ship: Ship, jumps_long: int, pay: int) -> void:
 	log_book.write("hired_ship", {"ship": ship.name, "jumps": jumps_long, "pay": pay}, "The %s signed on for %d jumps." % [ship.name, jumps_long])
 
 
+## What a mercenary asks at this band (Infall: Eco, 2026-11-13): the event's price times the band adjustment, as
+## wreck rewards rise (GDD 8I), so a hire keeps costing about a fight's pay.
+func hire_price(base: float) -> int:
+	return Mawjig.amount(base * band_adjustment())
+
+
 func renewal_price(ship: Ship) -> int:
 	return roundi(int(ship.contract.get("pay", 0)) * RENEWAL_RISE)
 

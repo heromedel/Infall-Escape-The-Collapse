@@ -11,6 +11,8 @@ extends RefCounted
 ## back (heromedel, 2026-11-13; the genre's shooters change targets more freely). A punch or a shot lands about
 ## once a second.
 
+const SKILLED_REPAIR_BONUS := 0.05  # repairing a system they have a skill level in is slightly faster (GDD 7H); the
+									# number is Eco's placeholder, half of one repair level, for heromedel to settle
 const HIT_TICKS := 20               # ticks between one fighter's punches or shots
 const HIT_DAMAGE := 5.6             # health a hit costs at melee 1.0: a second of fighting, as before hits were counted
 const FIRST_HIT_TICKS := 10         # a fighter's first hit comes this long after the fight reaches them
@@ -237,6 +239,8 @@ static func _repair_speed(member: CrewMember, ship: Ship) -> float:
 
 static func _repair_system(member: CrewMember, system: ShipSystem, ship: Ship, encounter: Encounter) -> void:
 	var speed := Ship.REPAIR_PER_TICK * _repair_speed(member, ship)
+	if member.skill_level(system.behaviour) > 0:
+		speed *= 1.0 + SKILLED_REPAIR_BONUS     # they know this system (GDD 7H)
 	if system.spored:
 		system.spore_progress += speed
 		if system.spore_progress >= 100.0:

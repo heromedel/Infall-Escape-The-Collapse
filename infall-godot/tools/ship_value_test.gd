@@ -11,8 +11,10 @@ func _ready() -> void:
 		var design: ShipDesign = Library.ship(id)
 		var ours := ShipValue.of(design) / 100.0
 		var off: float = ours - ECO[id]
-		if not design.systems.any(func(sys): return sys.id == "supershield"):
-			worst = maxf(worst, absf(off))   # F13 priced the Supershield at 19.36 with no upgrades; now 38.72, 7.26, 12.11
+		# F13 priced the Supershield at 19.36 with no upgrades (now 38.72, 7.26, 12.11) and the growth organ at its
+		# 6.05 placeholder (now a clone bay's 12.11: Eco, 2026-11-13), so ships with either are off by those amounts
+		if not design.systems.any(func(sys): return sys.id in ["supershield", "growth-organ"]):
+			worst = maxf(worst, absf(off))
 		var with_system := 0
 		for room_index in design.rooms.size():
 			if design.systems.any(func(sys): return sys.room == room_index):

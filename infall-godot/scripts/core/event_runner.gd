@@ -103,6 +103,8 @@ func can_take(choice: Dictionary) -> bool:
 			return false
 		"mawjig":
 			return run.mawjig >= Mawjig.amount(float(parts[1]))
+		"hire":
+			return run.mawjig >= run.hire_price(float(parts[1]))
 		"weapon":
 			for ship in run.living_ships():
 				for slot in ship.weapons:
@@ -148,6 +150,8 @@ func requirement_label(choice: Dictionary) -> String:
 			return "(%s)" % parts[1].capitalize()
 		"mawjig":
 			return "(%s Mawjig)" % parts[1]
+		"hire":
+			return "(%s Mawjig)" % Mawjig.format(run.hire_price(float(parts[1])))
 		"renewal":
 			return "(%s Mawjig)" % Mawjig.format(run.renewal_price(mercenary)) if mercenary else ""
 	return ""
@@ -187,10 +191,18 @@ func most_given_away(choice: Dictionary) -> int:
 	for outcome in choice.outcomes:
 		for effect in outcome.effects:
 			if effect.tag == "mawjig" and not effect.attrs.has("size"):
-				most = maxi(most, -Mawjig.amount(float(effect.attrs.get("amount", "0"))))
+				most = maxi(most, -_fixed_amount(effect.attrs))
 			elif effect.tag == "renew_contract" and mercenary:
 				most = maxi(most, run.renewal_price(mercenary))
 	return mini(most, run.mawjig)
+
+
+## A Mawjig effect's written amount in cents; one marked by_band (a mercenary's price) rises with the band.
+func _fixed_amount(attrs: Dictionary) -> int:
+	var amount := float(attrs.get("amount", "0"))
+	if attrs.get("by_band", "") == "yes":
+		return -run.hire_price(-amount) if amount < 0.0 else run.hire_price(amount)
+	return Mawjig.amount(amount)
 
 
 func _apply(tag: String, attrs: Dictionary, result: Dictionary) -> void:
@@ -200,7 +212,7 @@ func _apply(tag: String, attrs: Dictionary, result: Dictionary) -> void:
 			if attrs.has("size"):
 				cents = Mawjig.reward_for_size(attrs.size, run.band())
 			else:
-				cents = Mawjig.amount(float(attrs.get("amount", "0")))
+				cents = _fixed_amount(attrs)
 			if cents < 0:
 				cents = -mini(-cents, run.mawjig)
 				run.mawjig += cents
@@ -292,7 +304,8 @@ func _apply(tag: String, attrs: Dictionary, result: Dictionary) -> void:
 				ship.name = attrs.get("name", ship.name)
 				run.squad.append(ship)
 				if attrs.has("contract"):   # a mercenary, paid what the choice cost (GV 7C)
-					run.hire(ship, int(attrs.contract), Mawjig.amount(float(attrs.get("pay", "0"))))
+					var pay := float(attrs.get("pay", "0"))
+					run.hire(ship, int(attrs.contract), run.hire_price(pay) if attrs.get("by_band", "") == "yes" else Mawjig.amount(pay))
 					result.lines.append("+1 ship: the %s signs on for %s jumps" % [ship.name, attrs.contract])
 				else:
 					result.lines.append("+1 ship: the %s joins the squad" % ship.name)
