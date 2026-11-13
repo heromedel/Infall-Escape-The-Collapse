@@ -34,8 +34,14 @@ recording's own clock.
 4. **Whoever is already standing in the room does not move.** The Rock at his console and the boarders who beamed
    in stayed where they were. So who punches and who shoots comes from who walked in, not from fighters closing
    on each other.
-5. **A shooter changes targets.** The unpaired boarder shot at the Rock, then at the pirate's human on the shared
-   tile (11.9 s, 13.2 s), then at the Rock again. The Rock's shots also went to both boarders in turn.
+5. **A shooter changes targets, in runs.** The unpaired boarder shot at the Rock, then at the pirate's human on the
+   shared tile (11.9 s, 13.2 s), then at the Rock again. The Rock's shots also went to both boarders in turn.
+   Every one of that boarder's shots in fight one, traced by which way the bolt flew (2026-11-13, R the Rock, H
+   the pirate's human, who reached his tile at about 3.5 s and was dead by about 20 s):
+   R at 2.55 s, then R R R R R, H, R, H H H, R R R, H H (the last at 20.2 s), then R for every shot to the end.
+   So with two foes to shoot at he changed target five times in fourteen shots, going back to the Rock while
+   the human was still alive. One recording cannot tell a coin toss for each shot from a rule that keeps a
+   target for a while.
 6. **A shot is a small bolt that flies.** The human's is a short green streak, about 6 to 8 pixels long. It crossed
    one tile in about 5 frames (0.25 s), so about 140 pixels a second at this size. The Rock's shot is a small grey
    lump, so each race has its own.
