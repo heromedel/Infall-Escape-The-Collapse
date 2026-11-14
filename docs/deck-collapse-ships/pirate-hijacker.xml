@@ -28,6 +28,7 @@
   <ai plan="crew-kill">
     <!-- Wants your ship intact: spores the engines and piloting, silences the guns, then boards.
          The first five lines are Deck Collapse's own example; Life Support is never cut while our boarders are aboard. -->
+    <target unless="ownCrewIn" system="shields" weapon="Sporewing" when="enemyHeavyShields" weight="0.85"/>   <!-- 2026-11-14, heromedel's direction: spore the shields when they are too heavy (G32) -->
     <target unless="ownCrewIn" system="engines" weapon="Sporewing" weight="0.8"/>
     <target unless="ownCrewIn" system="piloting" weapon="Sporewing"/>
     <target unless="ownCrewIn" system="weapon" weapon="Gat 2.1 Twinshot" weight="0.8"/>

@@ -22,6 +22,7 @@
   <!-- Captain plan, Ai-Generated-Proposal (2026-10-30). Lines marked G22-G27 use features Deck Collapse doesn't have yet (README.md). -->
   <ai plan="destroy">
     <!-- An all-rounder: strip shields with the 3-shot laser, missile the guns. -->
+    <target system="shields" weapon="Gat M1 Pathfinder" when="enemyHeavyShields" weight="0.85"/>   <!-- 2026-11-14, heromedel's direction: missiles at heavy shields (G32) -->
     <target system="shields" weapon="Gat 3.1 Triblast" weight="0.8"/>
     <target system="weapon" weapon="Gat M1 Pathfinder" weight="0.8"/>
     <target system="weapon" when="enemyShieldsDown" weapon="Gat 3.1 Triblast"/>

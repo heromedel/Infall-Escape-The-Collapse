@@ -19,6 +19,7 @@
   <!-- Captain plan, Ai-Generated-Proposal (2026-10-30). Lines marked G22-G27 use features Deck Collapse doesn't have yet (README.md). -->
   <ai plan="destroy">
     <!-- Picks one system and keeps hitting it: both weapons on the guns, then on Piloting. -->
+    <target system="shields" weapon="Stinger" when="enemyHeavyShields" weight="0.85"/>   <!-- 2026-11-14, heromedel's direction: missiles at heavy shields (G32) -->
     <target system="weapon" weapon="Stinger" weight="0.85"/>
     <target system="weapon" weapon="Lantern" weight="0.85"/>
     <target system="piloting" weapon="Stinger" when="enemyWeaponsDown" weight="0.8"/>

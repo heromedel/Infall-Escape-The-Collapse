@@ -25,6 +25,7 @@
   <ai plan="crew-kill">
     <!-- Breach the Life Support so the air drains, burn the Med Bay, then send the holograms into the rooms nobody
          else can live in. Hack the Airlock Control so the crew can't vent the fires out. -->
+    <target unless="ownCrewIn" system="shields" weapon="2L 01 B1" when="onlyThisGetsThrough" weight="0.9"/>   <!-- 2026-11-14, heromedel's direction: the weapon that gets through takes the shields first (G31) -->
     <target unless="ownCrewIn" system="lifeSupport" weapon="2L 01 B1" weight="0.85"/>
     <target unless="ownCrewIn" system="medBay" weapon="3B 01 F1" weight="0.85"/>
     <target unless="ownCrewIn" system="aaa" weapon="3B 01 F1" weight="0.85"/>   <!-- Senti ships: the AAA replaces the Med Bay -->

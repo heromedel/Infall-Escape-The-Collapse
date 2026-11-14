@@ -20,6 +20,8 @@
   <!-- Captain plan, Ai-Generated-Proposal (2026-10-30). Lines marked G22-G27 use features Deck Collapse doesn't have yet (README.md). -->
   <ai plan="destroy">
     <!-- A station guard: silence the guns that threaten the station. -->
+    <target system="shields" weapon="1B 02 V1" when="onlyThisGetsThrough" weight="0.9"/>   <!-- 2026-11-14, heromedel's direction: the one beam that gets through takes the shields first (G31) -->
+    <target system="weapon" weapon="2B 01 V1" when="enemyShieldsDown" weight="0.85"/>
     <target system="weapon" weapon="1B 02 V1" weight="0.8"/>
     <target system="weapon" weapon="2B 01 V1" weight="0.75"/>
     <target system="engines" weapon="1B 02 V1" when="enemyWeaponsDown" weight="0.6"/>

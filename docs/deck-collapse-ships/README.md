@@ -127,3 +127,5 @@ Features the plans use that Deck Collapse doesn't have yet, written as if they e
 | G28 | Being boarded | `when="enemyBoardersAboard"`: enemy crew are aboard our ship (the Census Picket turns on the enemy teleporter first) |
 | G29 | Senti Shield Projector | `kind="projector"` on Senti shields: one bar and one damage or ion per layer, layers recover twice as slowly, up to double the Generator's maximum level (GDD 8Q, Proposed 2026-11-13) |
 | G30 | System battery | `<system type="systemBattery" for="aaa"/>`: a battery bound to one system that keeps it powered when the core or its conduit is cut (race profile Senti-GPH 6, Proposed 2026-11-13) |
+| G31 | Only this gets through | `when="onlyThisGetsThrough"`: of this ship's weapons, only this one would do damage through the enemy's current shields, so it takes the shields down first (heromedel, 2026-11-14) |
+| G32 | Heavy shields | `when="enemyHeavyShields"`: the enemy has a Senti Shield Projector or three or more layers, so missiles, bombs and spores go for the shield room (heromedel, 2026-11-14) |

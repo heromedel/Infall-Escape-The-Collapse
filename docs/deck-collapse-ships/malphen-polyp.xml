@@ -17,6 +17,7 @@
   <!-- Captain plan, Ai-Generated-Proposal (2026-10-30). Lines marked G22-G27 use features Deck Collapse doesn't have yet (README.md). -->
   <ai plan="destroy">
     <!-- The missile ignores shields: hit the guns. -->
+    <target system="shields" weapon="Flesh Mortar" when="enemyHeavyShields" weight="0.85"/>   <!-- 2026-11-14, heromedel's direction: missiles at heavy shields (G32) -->
     <target system="weapon" weapon="Flesh Mortar" weight="0.8"/>
     <target system="engines" weapon="Flesh Mortar" when="enemyWeaponsDown"/>
   </ai>
