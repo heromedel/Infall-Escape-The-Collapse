@@ -555,3 +555,11 @@ travel, add paying encounters or events along the race routes rather than make M
 Wins that round: watcher 5 of 30 (3 Alliance), expert 9 of 30 (5 Alliance), expert going for Tech 3 of 20, going for
 Alliance 5 of 20. Crew lost per fight: the Senti Census crew killers 0 in 3 fights, the lowest of any enemy (the Last
 Fleet 5.5, Senti pickets 0.8): with Ship Designs and heromedel (concern 5).
+
+**Breakdown (Godot Version, same 30 games, watcher, per game):** spent 192 (store 83, jumps 78 for 65 jumps, convoy
+pledges 12.1, other events 11.2, shots 7.8); earned 210 (fights 176, events 32, waits 1.8). The rise was the
+playtester paying pledges that left it short of a jump, which a player is warned about (GDD 14L); with that fixed,
+about 3 waits a game. **Structural point for heromedel:** the watcher fights about 15 times in 65 jumps (0.23 a
+jump), where F4–F13 assumed 0.7 and the genre sits between (about 31% of its beacons are hostile lists, plus neutral
+events that turn hostile). So jumps take 44% of fight pay, and a game nets only about +18 over the 12.11 start. If the
+early game should be less tight, the lever is more paying encounters per jump, not cheaper jumps (6C is Decided).
