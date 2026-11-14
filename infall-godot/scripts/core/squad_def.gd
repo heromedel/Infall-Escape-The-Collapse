@@ -52,9 +52,9 @@ static func from_xml(node: XmlTree) -> SquadDef:
 func roll_ships(band: int, rng: RandomNumberGenerator) -> Array[String]:
 	var picked: Array[String] = []
 	var best_tier: Dictionary = {}
-	for tier in tiers:
-		if band >= tier.low_band and band <= tier.high_band:
-			best_tier = tier
+	var fitting: Array = tiers.filter(func(tier): return band >= tier.low_band and band <= tier.high_band)
+	if not fitting.is_empty():
+		best_tier = fitting[rng.randi_range(0, fitting.size() - 1)]     # several tiers for a band: one of them
 	if best_tier.is_empty() and not tiers.is_empty():
 		best_tier = tiers.back() if band > tiers.back().high_band else tiers.front()
 	if best_tier.is_empty():

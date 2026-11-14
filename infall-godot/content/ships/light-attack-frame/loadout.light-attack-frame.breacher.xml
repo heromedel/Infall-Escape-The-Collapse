@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mecha "Breacher", bands 4-6, a patch of the Light Attack Frame (standard stern). Ai-Generated-Proposal (2026-11-14),
+     from the Mecha profile's mid tech: breach missiles, a second EVB Dock or weapon system, more hull. The weapon pod
+     carries a breach missile; the spare bay gets an EVB Dock beside its airlock. The profile also names boarding
+     battlesuits for mid tech; the game has only the laser battlesuit so far, so this uses it. -->
+<loadout id="breacher" ship="light-attack-frame" name="Mecha Breacher" class="Breacher" inherit="patch" hull="12" missiles="6">
+	<description>A heavier battle-cross. Its breach missile opens rooms to space while a battlesuit pops the shield layer.</description>
+	<system id="shields" tile="1,-2" level="4" own_power="4" wall="north"/>
+	<system id="weapon-pod" tile="3,-1" level="3" own_power="2" wall="east" max_slots="1"/>
+	<system id="evb-dock" tile="-2,-1" level="2" own_power="2" wall="north"/>
+	<weapons>
+		<weapon id="ss-st-breach-missile" mount="4"/>
+	</weapons>
+	<suits>
+		<suit id="laser-battlesuit"/>
+	</suits>
+	<crew>
+		<member race="mecha" station="piloting"/>
+		<member race="mecha" station="weapons"/>
+		<member race="mecha" station="evb_dock"/>
+	</crew>
+	<ai plan="destroy">
+		<suit system="shields" suit="laser" weight="0.85"/>
+		<target system="shields" weapon="SS-ST Breach Missile" when="enemyHeavyShields" weight="0.85"/>
+		<target system="weapons" weapon="SS-ST Breach Missile" weight="0.8"/>
+		<target system="oxygen" weapon="SS-ST Breach Missile" when="enemyWeaponsDown" weight="0.6"/>
+	</ai>
+</loadout>

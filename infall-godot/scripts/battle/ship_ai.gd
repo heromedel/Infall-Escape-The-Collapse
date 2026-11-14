@@ -68,16 +68,52 @@ func _weigh() -> void:
 	var our_time := ours / maxf(incoming, 0.0001)
 	var their_time := theirs / maxf(outgoing, 0.0001)
 	pressed = incoming > 0.0001 and our_time < 30.0
+	var reading := "even"
 	if incoming <= 0.0001 and outgoing <= 0.0001:
-		outlook = "stalled" if seconds >= 19.0 else "even"
+		reading = "stalled" if seconds >= 19.0 else "even"
 	elif outgoing <= 0.0001:
-		outlook = "hopeless"
+		reading = "hopeless"
 	elif our_time < their_time * 0.6:
-		outlook = "losing"
+		reading = "losing"
 	elif their_time < our_time * 0.6:
-		outlook = "winning"
-	else:
-		outlook = "even"
+		reading = "winning"
+	_commit(reading)
+
+
+const READING_HOLDS_TICKS := 100    # a new reading must hold 5 s before the captain acts on it
+const COMMIT_TICKS := 300           # and a change of tactics sticks for 15 s, unless the hull is going fast
+
+var _reading: String = "even"
+var _reading_since: int = 0
+var _committed_at: int = -COMMIT_TICKS
+
+
+## A captain reads the fight twice a second but doesn't change its mind that often: the reading has to last, and a
+## change of tactics is kept for a while. Only a hull going down fast lets it change sooner.
+func _commit(reading: String) -> void:
+	var now := encounter.tick_count
+	if reading != _reading:
+		_reading = reading
+		_reading_since = now
+	if reading == outlook or now - _reading_since < READING_HOLDS_TICKS:
+		return
+	if now - _committed_at < COMMIT_TICKS and not pressed:
+		return
+	var tactics_before := _tactics()
+	outlook = reading
+	_committed_at = now
+	if _tactics() != tactics_before:
+		# New tactics reach the guns: every weapon is aimed again (its charge is kept)
+		for slot in ship.weapons:
+			if not slot.is_firing():
+				slot.clear_target()
+
+
+## What the outlook asks of the guns: "shields" when nothing is landing, "weapons" when taking a beating, else the plan.
+func _tactics() -> String:
+	if outlook in ["hopeless", "stalled"]:
+		return "shields"
+	return "weapons" if outlook == "losing" else "plan"
 
 
 # --- Power ----------------------------------------------------------------------------------------------------
@@ -507,7 +543,7 @@ func _plan_pick(kind: String, weapon: WeaponDef) -> ShipSystem:
 		var system := target.system_by(line.system)
 		if system == null or system.is_broken():
 			continue
-		if not _holds(line.when, system) or (line.unless != "" and _holds(line.unless, system)):
+		if not _holds(line.when, system, weapon) or (line.unless != "" and _holds(line.unless, system, weapon)):
 			continue
 		if encounter.rng.randf() < CaptainPlan.chance(line.weight, _difficulty()):
 			return system
@@ -515,7 +551,7 @@ func _plan_pick(kind: String, weapon: WeaponDef) -> ShipSystem:
 
 
 ## Whether a plan condition holds now, for a line aimed at `system` on the target.
-func _holds(condition: String, system: ShipSystem) -> bool:
+func _holds(condition: String, system: ShipSystem, weapon: WeaponDef = null) -> bool:
 	match condition:
 		"", "always":
 			return true
@@ -538,7 +574,29 @@ func _holds(condition: String, system: ShipSystem) -> bool:
 			return target.crew.any(func(m): return not m.dead and m.ship == ship)
 		"ownCrewIn":
 			return _own_crew_in(system.room)
+		"enemyHeavyShields":
+			# A Senti Shield Projector, or three layers and more (heromedel, 2026-11-14)
+			var shields := target.system_by("shields")
+			return shields != null and target.shield_layers > 0 and (shields.def.bars_per_layer == 1 or target.shield_layer_capacity() >= 3)
+		"onlyThisGetsThrough":
+			# Of the weapons this ship has powered, only this one would do damage through the shields as they stand
+			if weapon == null or target.shield_layers == 0 or not _gets_through(weapon):
+				return false
+			for slot in ship.weapons:
+				if slot.powered and slot.def != weapon and not slot.def.defensive and _gets_through(slot.def):
+					return false
+			return true
 	return false
+
+
+## Whether a weapon does any damage through the target's shield layers as they stand.
+func _gets_through(weapon: WeaponDef) -> bool:
+	var layers := target.shield_layers
+	if layers == 0 or weapon.ignores_shields():
+		return true
+	if weapon.type == "beam":
+		return weapon.damage > layers
+	return weapon.shots > layers
 
 
 ## A ship without the system counts it as down, as the card game does.

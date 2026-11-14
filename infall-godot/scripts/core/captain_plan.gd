@@ -15,7 +15,7 @@ const DEFAULT_WEIGHT := 0.75
 const MAX_WEIGHT := 0.9
 # The card game's system names, read as this game's system behaviours
 const SYSTEM_NAMES := {"weapon": "weapons", "medBay": "medbay", "lifeSupport": "oxygen", "life-support": "oxygen", "teleport": "teleporter", "evbDock": "evb_dock", "cloak": "cloaking"}
-const CONDITIONS := ["always", "enemyWeaponsDown", "enemyShieldsDown", "enemyMedBayDown", "enemyLifeSupportDown", "enemyWounded", "ownBoardersAboard", "enemyBoardersAboard", "ownCrewIn"]
+const CONDITIONS := ["always", "enemyWeaponsDown", "enemyShieldsDown", "enemyMedBayDown", "enemyLifeSupportDown", "enemyWounded", "ownBoardersAboard", "enemyBoardersAboard", "ownCrewIn", "onlyThisGetsThrough", "enemyHeavyShields"]
 
 var plan: String = "destroy"       # destroy, or crew-kill: favour rooms with crew in them
 var spare_own_crew: bool = true    # avoid firing on rooms holding our own boarders (by difficulty)

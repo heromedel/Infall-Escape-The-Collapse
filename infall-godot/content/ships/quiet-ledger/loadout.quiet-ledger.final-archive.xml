@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Senti-GPH "Final Archive", bands 7-8, a patch of the Quiet Ledger. Ai-Generated-Proposal (2026-11-14): kills the crew
+     and keeps the ship. An anti-bio beam, a bio bomb (it uses missiles, as every bomb does) and a fire beam. -->
+<loadout id="final-archive" ship="quiet-ledger" name="Senti Final Archive" class="Final Archive" inherit="patch" hull="22" missiles="4">
+	<reactor type="pool" level="21"/>
+	<description>It kills the crew and keeps the ship: an anti-bio beam sweeps four rooms without scratching them, and bio bombs are broadcast straight in.</description>
+	<system id="shield-projector" tile="-1,0" level="4" wall="west"/>
+	<system id="aaa" tile="0,1" level="4" wall="none"/>
+	<system id="weapons" tile="-1,-2" level="7" wall="west"/>
+	<weapons>
+		<weapon id="4b-00-x1" mount="1"/>
+		<weapon id="bb-00-x1" mount="2"/>
+		<weapon id="3b-01-f1" mount="3"/>
+	</weapons>
+	<crew>
+		<member race="senti" station="piloting"/>
+		<member race="senti" station="weapons"/>
+		<member race="senti" station="teleporter"/>
+		<member race="senti" station="teleporter"/>
+	</crew>
+	<ai plan="crew-kill">
+		<target unless="ownCrewIn" system="medbay" weapon="BB 00 X1" when="enemyWounded" weight="0.85"/>
+		<target unless="ownCrewIn" system="aaa" weapon="BB 00 X1" when="enemyWounded" weight="0.85"/>
+		<target unless="ownCrewIn" system="oxygen" weapon="3B 01 F1" weight="0.75"/>
+		<hack system="medbay" weight="0.9"/>
+		<hack system="aaa" weight="0.9"/>
+		<board system="medbay" when="enemyMedBayDown" weight="0.8"/>
+		<board system="oxygen"/>
+	</ai>
+</loadout>

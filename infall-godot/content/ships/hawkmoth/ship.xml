@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Azurethea "Hawkmoth", bands 4-6 (Azurethea Wardens squad). Ai-Generated-Proposal (2026-11-14), from the Azurethea
+     profile's mid tech: spores that disable systems and stun crew, spores that turn enemy crew against each other
+     (the Pheromone Gland), higher evasion, medium shields at most. Ship names are flying insects; weapon names insect
+     parts (race profile, Likely). Winged: a body of three rooms with a wing room each side; the Medbay is alone in the
+     starboard wing (GDD 5B). -->
+<ship id="hawkmoth" name="Azurethea Hawkmoth" class="Hawkmoth" race="azurethea" faction="azurethea" style="azurethea" center_x="Point" center_y="Tile" hull="12" missiles="6">
+	<reactor type="pool" level="15"/>
+	<description>Broad moth wings over a living hull. Its spores stop your systems and stun your crew, and its pheromones set them on each other.</description>
+	<room id="0" from="-1,-3" to="1,-2" name="Cockpit"/>
+	<room id="1" from="-1,-1" to="1,0" name="Thorax"/>
+	<room id="2" from="-2,-1" to="-2,1" name="Port wing"/>
+	<room id="3" from="2,-1" to="2,1" name="Starboard wing"/>
+	<room id="4" from="-1,1" to="1,3" name="Abdomen"/>
+	<system id="piloting" tile="-1,-3" level="2" wall="north"/>
+	<system id="sensors" tile="1,-3" level="1" wall="north"/>
+	<system id="weapons" tile="-1,-2" level="3" wall="west"/>
+	<system id="pheromone-gland" tile="-1,-1" level="2" wall="west"/>
+	<system id="shields" tile="-2,1" level="4" wall="west"/>
+	<system id="medbay" tile="2,1" level="1" wall="east"/>
+	<system id="doors" tile="1,1" level="1" wall="east"/>
+	<system id="engines" tile="-1,3" level="4" wall="south"/>
+	<system id="life-support" tile="1,3" level="1" wall="south"/>
+	<door id="0" tile="1,-2" facing="south"/>
+	<door id="1" tile="-1,0" facing="west"/>
+	<door id="2" tile="1,0" facing="east"/>
+	<door id="3" tile="-1,0" facing="south"/>
+	<door id="4" tile="-2,-1" facing="west" note="airlock"/>
+	<door id="5" tile="2,-1" facing="east" note="airlock"/>
+	<mount id="1" tile="-1,-4" slide="up"/>
+	<mount id="2" tile="1,-4" slide="up"/>
+	<mount id="3" tile="-3,-2" slide="left"/>
+	<mount id="4" tile="3,-2" slide="right"/>
+	<mount id="5" tile="-3,2" slide="left"/>
+	<mount id="6" tile="3,2" slide="right"/>
+	<weapons>
+		<weapon id="stinger" mount="1"/>
+		<weapon id="pollen-bomb" mount="2"/>
+		<weapon id="lantern" mount="3"/>
+	</weapons>
+	<crew>
+		<member race="azurethea" station="piloting"/>
+		<member race="azurethea" station="weapons"/>
+		<member race="azurethea" station="engines"/>
+		<member race="azurethea"/>
+	</crew>
+	<!-- Near-pacifists: stop the guns, not the ship. Spore the weapons, sting the shields if they're heavy. -->
+	<ai plan="destroy">
+		<target system="shields" weapon="Stinger" when="enemyHeavyShields" weight="0.85"/>
+		<target system="weapons" weapon="Pollen Bomb" weight="0.85"/>
+		<target system="piloting" weapon="Pollen Bomb" when="enemyWeaponsDown" weight="0.7"/>
+		<target system="weapons" weapon="Stinger" weight="0.8"/>
+		<target system="weapons" weapon="Lantern" when="enemyShieldsDown" weight="0.8"/>
+	</ai>
+</ship>

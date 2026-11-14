@@ -22,6 +22,7 @@
 	<squad id="gatos-checkpoint" name="GATOS Checkpoint" race="terran" faction="gatos" where_races="terran" where_states="Doomed,Struggling">
 		<tier bands="2-3"><ship design="patrol-cutter" count="1"/></tier>
 		<tier bands="4-6"><ship design="patrol-cutter.checkpoint" count="1"/></tier>
+		<tier bands="4-6"><ship design="mercenary-gunship" count="1"/></tier>
 		<tier bands="7-8"><ship design="patrol-cutter.checkpoint" count="2"/></tier>
 		<conduct surrender_chance="35" surrender_hull="0.3" escape_chance="20" escape_hull="0.2" targets="shields,weapons" hail="checkpoint"/>
 		<description>A doomed GATOS hub's patrol, running scans, tolls and shakedowns.</description>
@@ -39,6 +40,7 @@
 		<tier bands="1"><ship design="light-attack-frame.openstern" count="1"/></tier>
 		<tier bands="2"><ship design="light-attack-frame.opensternsuitdock" count="1"/></tier>
 		<tier bands="3-4"><ship design="light-attack-frame" count="1-2"/></tier>
+		<tier bands="4-6"><ship design="light-attack-frame.breacher" count="1"/></tier>
 		<tier bands="5-6"><ship design="assault-frame" count="1"/></tier>
 		<tier bands="7-8"><ship design="assault-frame.siege" count="1"/><ship design="light-attack-frame" count="1"/></tier>
 		<conduct surrender_chance="30" surrender_hull="0.35" escape_chance="40" escape_hull="0.3" targets="weapons,shields" hail="mecha"/>
@@ -56,6 +58,7 @@
 		<tier bands="1-2"><ship design="vein-moth" count="1"/></tier>
 		<tier bands="3"><ship design="moth-skiff" count="1"/></tier>
 		<tier bands="4-6"><ship design="sporecarrier" count="1"/><ship design="moth-skiff" count="0-1"/></tier>
+		<tier bands="4-6"><ship design="hawkmoth" count="1"/></tier>
 		<tier bands="7-8"><ship design="sporecarrier" count="2"/></tier>
 		<conduct surrender_chance="80" surrender_hull="0.5" escape_chance="40" escape_hull="0.35" targets="weapons,piloting" hail="azurethea"/>
 		<description>Near-pacifists defending what is theirs; they would rather disable you than destroy you.</description>
@@ -69,8 +72,8 @@
 	</squad>
 	<squad id="senti-census" name="Senti Census" race="senti" faction="senti" where_races="senti" where_states="Doomed,Struggling">
 		<tier bands="3-4"><ship design="relay-picket.census" count="1"/></tier>
-		<tier bands="5-6"><ship design="relay-picket.ledger" count="1"/></tier>
-		<tier bands="7-8"><ship design="relay-picket.final-archive" count="1"/><ship design="relay-picket" count="0-1"/></tier>
+		<tier bands="5-6"><ship design="quiet-ledger" count="1"/></tier>
+		<tier bands="7-8"><ship design="quiet-ledger.final-archive" count="1"/><ship design="relay-picket" count="0-1"/></tier>
 		<conduct surrender_chance="0" escape_chance="20" escape_hull="0.2" targets="medbay,oxygen,weapons" hail="senti"/>
 		<description>Doomed Senti who mean to keep your ship and your records, and have no use for your crew.</description>
 	</squad>
@@ -78,6 +81,7 @@
 		<tier bands="1"><ship design="outrider.scrap-hound" count="1"/></tier>
 		<tier bands="2-3"><ship design="packrunner" count="1"/></tier>
 		<tier bands="4-6"><ship design="packrunner.huntmaster" count="1"/><ship design="packrunner" count="0-1"/></tier>
+		<tier bands="4-6"><ship design="pirate-hijacker.howler" count="1"/></tier>
 		<tier bands="7-8"><ship design="packrunner.huntmaster" count="2"/></tier>
 		<conduct surrender_chance="20" surrender_hull="0.25" escape_chance="35" escape_hull="0.25" targets="weapons,oxygen" hail="lykario"/>
 		<description>A hunt. They board, and they keep going.</description>

@@ -202,6 +202,8 @@ func _read(node: XmlTree) -> void:
 				elif child.has_attr("tile"):
 					var mount_cell: Vector2i = to_cell.call(child.get_attr("tile"))
 					position = cell_centre(mount_cell) + slide * (TILE * 0.5 + child.get_float("out", 14.0))
+					mounts.append({"id": child.get_int("id"), "position": position, "slide": slide, "cell": mount_cell, "out": child.get_float("out", 14.0)})
+					continue
 				mounts.append({"id": child.get_int("id"), "position": position, "slide": slide})
 			"weapons":
 				weapons.clear()
@@ -271,6 +273,11 @@ func _link_layout() -> void:
 			continue
 		kept.append(door)
 	doors = kept
+	# A mount never lies inside a room (ship design process, step 8): its tile is the one just outside the floor, and
+	# the weapon sits at the hull's edge there. An older file that names the room tile beside it means the same spot.
+	for mount in mounts:
+		if mount.has("cell") and cell_room.get(mount.cell, -1) < 0:
+			mount.position = cell_centre(mount.cell) + mount.slide * (float(mount.out) - TILE * 0.5)
 	mounts_listed = mounts.size()
 	if mounts.is_empty():
 		_place_default_mounts()

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Lykario "Howler", bands 4-6 (Lykario Pack squad), a patch of the Pirate Hijacker: a stolen pirate hull. Ai-Generated-Proposal
+     (2026-11-14), from the Lykario profile: their best ships stand out only for larger or multiple crew teleporter rooms;
+     stolen tech keeps its maker's name; Animal Senses need no Sensors; they board on Auto Pilot. A second Crew Teleporter
+     goes in the empty port flank, at the one tile there without a door. -->
+<loadout id="howler" ship="pirate-hijacker" name="Lykario Howler" class="Howler" inherit="patch" race="lykario" faction="lykario" hull="14">
+	<description>A stolen pirate hull under bone-white claw marks, with two teleporters. Half the pack crosses at once.</description>
+	<system id="sensors" removed="true"/>
+	<system id="piloting" tile="-1,-6" level="2" wall="north"/>
+	<system id="crew-teleporter" label="B" tile="-2,0" level="2" wall="west"/>
+	<system id="weapons" label="B" tile="2,-1" level="1" wall="east"/>
+	<weapons>
+		<weapon id="gat-2-1-stolen" mount="3" system="A"/>
+		<weapon id="snarl" mount="4" system="B"/>
+	</weapons>
+	<crew>
+		<member race="lykario" count="6"/>
+	</crew>
+	<ai plan="crew-kill">
+		<target unless="ownCrewIn" system="weapons" weapon="Snarl" weight="0.85"/>
+		<target unless="ownCrewIn" system="medbay" weapon="Snarl" when="enemyWounded" weight="0.6"/>
+		<target unless="ownCrewIn" system="weapons" weapon="Gat 2.1 Twinshot" weight="0.8"/>
+		<board system="weapons" weight="0.85"/>
+		<board system="medbay" when="enemyWounded" weight="0.7"/>
+		<board system="aaa"/>
+	</ai>
+</loadout>
