@@ -103,6 +103,11 @@ static func tick(member: CrewMember, encounter: Encounter) -> void:
 	if member.hit_ticks > 0:
 		member.hit_ticks -= 1
 	_fly_shot(member, encounter)
+	if member.mind_ticks > 0:
+		member.mind_ticks -= 1
+		if member.mind_ticks == 0:
+			member.end_mind_control()
+			encounter.note("mind_control_ended", {"crew": member})
 	if member.stun_ticks > 0:
 		member.stun_ticks -= 1
 		member.task = "stunned"
@@ -176,7 +181,7 @@ static func _work(member: CrewMember, encounter: Encounter) -> void:
 		return
 	member.melee_with = null
 	member.aim_at = null
-	var at_home := ship == member.home
+	var at_home := ship == member.home and member.mind_ticks <= 0
 	if at_home:
 		# 2. Fires, breaches, system damage, conduits, infection: the genre's order of trouble
 		if not room.fires.is_empty():

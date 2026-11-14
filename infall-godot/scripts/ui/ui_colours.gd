@@ -7,6 +7,7 @@ const POWER_GREEN := Color("#66ff66")
 const PIRATE_ORANGE := Color("#ff8500")
 const DAMAGED_RED := Color("#ff4a3d")
 const ION_BLUE := Color("#7fd3ff")
+const HACKED := Color("#e24bff")          # a system shut down by a hacking pulse; a crew member under mind control
 const SHIELD_BLUE := Color("#5aa8ff")
 const SUPERSHIELD := Color("#ff8fe0")
 const HULL_GREEN := Color("#7dff7a")

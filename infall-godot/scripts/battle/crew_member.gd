@@ -15,6 +15,7 @@ var max_health: float = 100.0
 var xp: Dictionary = {}            # skill -> XP, kept in decimals, shown whole
 var side: int = 0                  # 0 player, 1 enemy
 var home: Ship                     # the ship whose crew they are
+var mind_ticks: int = 0            # held by an enemy's mind control for this long: they fight for the other side
 var ship: Ship                     # the ship they are on now (boarding changes it)
 var cell: Vector2i                 # the tile they stand on or are leaving
 var position := Vector2.ZERO        # local pixels on `ship`
@@ -115,8 +116,19 @@ func is_active() -> bool:
 	return not dead and not in_suit and teleporting_ticks <= 0
 
 
+## Whether their own side can give them orders: not while stunned, and not while an enemy's mind control holds them.
 func can_act() -> bool:
-	return is_active() and stun_ticks <= 0
+	return is_active() and stun_ticks <= 0 and mind_ticks <= 0
+
+
+## Mind control puts them on the other side for a while; when it wears off they are their home ship's again.
+func end_mind_control() -> void:
+	if mind_ticks > 0 or (home != null and side != home.side):
+		mind_ticks = 0
+		side = home.side if home else side
+		melee_with = null
+		aim_at = null
+		path.clear()
 
 
 func is_moving() -> bool:

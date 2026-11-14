@@ -6,7 +6,7 @@
 		<text>The cluster is full of tumbling rock. Your pilots weave between the bigger asteroids, but the small ones will keep coming. Shields up.</text>
 		<choice text="Mine a few for Mawjig while you're here.">
 			<outcome weight="2"><text>The rock is rich. Your converters work through a whole asteroid.</text><mawjig size="medium"/></outcome>
-			<outcome weight="1"><text>Something else is hiding in the field.</text><fight/></outcome>
+			<outcome weight="1"><text>A ship was hiding in the field, waiting for someone to come close.</text><fight/></outcome>
 		</choice>
 		<choice text="Keep your distance."/>
 	</event>

@@ -28,7 +28,7 @@ static func read(node: XmlTree) -> CaptainPlan:
 	result.plan = node.get_attr("plan", "destroy")
 	result.spare_own_crew = node.get_attr("spareOwnCrew", "true") != "false"
 	for child in node.children:
-		if child.tag not in ["target", "board", "suit"]:
+		if child.tag not in ["target", "board", "suit", "hack"]:
 			continue
 		var system := child.get_attr("system")
 		var line := {

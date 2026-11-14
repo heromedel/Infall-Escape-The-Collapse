@@ -390,6 +390,8 @@ func _screen_turn() -> float:
 func _system_colour(system: ShipSystem) -> Color:
 	if system.is_broken() or system.spored:
 		return UiColours.DAMAGED_RED
+	if system.hacked_ticks > 0:
+		return UiColours.HACKED
 	if system.ion > 0:
 		return UiColours.ION_BLUE
 	if system.damage > 0:
@@ -772,6 +774,8 @@ func _drawn_at(member: CrewMember) -> Vector2:
 
 ## The colour of a crew member's side: the player's power green, or their own ship's power colour.
 func _crew_colour(member: CrewMember) -> Color:
+	if member.mind_ticks > 0:
+		return UiColours.HACKED
 	return UiColours.player_power(member.home.race) if member.side == 0 else UiColours.enemy_power(member.home.faction, member.home.race)
 
 

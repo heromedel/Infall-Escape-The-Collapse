@@ -130,7 +130,7 @@ After a quick exchange of data, {crew} transmits the records. The station's paym
 	</event>
 
 	<event id="NEUTRAL_BEGGARS" title="Beggars" kind="neutral" states="Occupied,Doomed,Refugee" weight="1.5">
-		<text>A battered little shuttle drifts up, its crew of {race} broadcasting a plea for anything at all: food, air, Mawjig. Their cluster has nothing left to give them.</text>
+		<text>A battered little shuttle drifts up, its crew of {race} broadcasting a plea for anything at all: Mawjig, parts, a place aboard. Their cluster has nothing left to give them.</text>
 		<choice text="Give them what you can." requires="mawjig:0.61">
 			<outcome><text>They thank you over and over. One of them asks whether you have room for a crew member who can work.</text><mawjig amount="-0.61"/><crew race="region"/></outcome>
 		</choice>
@@ -142,7 +142,7 @@ After a quick exchange of data, {crew} transmits the records. The station's paym
 		<choice text="Trade charts with them.">
 			<outcome><text>They send their charts in exchange for yours, and add a small gift for the news from the core.</text><reveal/><mawjig size="tiny"/></outcome>
 		</choice>
-		<choice text="Warn them about the collapse.">
+		<choice text="Warn them about the collapse." requires="collapse">
 			<outcome><text>The Azurethea are quiet for a long time. "Then we will go and see it, and tell the others." Their ship turns inward. They leave you their charts.</text><reveal/></outcome>
 		</choice>
 	</event>

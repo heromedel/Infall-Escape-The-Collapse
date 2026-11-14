@@ -59,16 +59,6 @@ The Colony Ship's signal comes through weaker than before. "Our messages to the 
 		<choice text="Keep waiting..."/>
 	</event>
 
-	<event id="FINAL_RIVAL" title="The Last Fleet" kind="final" unique="yes">
-		<text>Beyond this cluster there is nothing but the dark between galaxies. Your sensors find a path out, a run of stable space your Jigawatt Drives could follow, and The Colony Ship could follow you.
-
-You are not alone. Three ships hang over the way out, darkened GATOS hulls with scorched emblems. Their leader hails you.
-
-"We know where you're going. We've followed scouts like you for weeks. There's only room for one of us out there, and we were here first."</text>
-		<choice text="If they want the way out, they'll have to take it.">
-			<outcome><fight squad="final-rival"/></outcome>
-		</choice>
-	</event>
 
 	<event id="NOTHING_GENERIC" kind="nothing" weight="1">
 		<text>The cluster is quiet. A few distant ships run silent across your sensors and vanish into jumps of their own.</text>
@@ -76,10 +66,10 @@ You are not alone. Three ships hang over the way out, darkened GATOS hulls with 
 	<event id="NOTHING_DUST" kind="nothing" weight="1">
 		<text>A thin haze of dust drifts between the stars here. Your ships' converters pick through it as you pass, but there's nothing worth stopping for.</text>
 	</event>
-	<event id="NOTHING_DOOMED" kind="nothing" states="Doomed,Abandoned" weight="2">
+	<event id="NOTHING_DOOMED" kind="nothing" states="Doomed,Abandoned" weight="2" after_collapse="yes">
 		<text>Every channel here is silent. Whoever lived in this cluster has already left, or already given up. The only movement on your sensors is the collapse, closer than it was.</text>
 	</event>
-	<event id="NOTHING_DISBELIEF" kind="nothing" states="Doing Fine" weight="1.5">
+	<event id="NOTHING_DISBELIEF" kind="nothing" states="Doing Fine" weight="1.5" after_collapse="yes">
 		<text>Local broadcasts here are full of ordinary news: trade prices, a festival, a dispute over mining rights. One talk show is laughing about "core panic." Nobody here believes the collapse is real yet.</text>
 	</event>
 	<event id="NOTHING_STRUGGLING" kind="nothing" states="Struggling" weight="1.5">

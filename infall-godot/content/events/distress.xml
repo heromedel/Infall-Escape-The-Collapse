@@ -51,7 +51,7 @@
 		<text>An escape pod is tumbling through the wreckage of a recent fight, broadcasting in clipped Mecha code. Inside, sensors read a single Mecha in a damaged frame, very much alive and very much annoyed.</text>
 		<choice text="Bring the pod aboard.">
 			<outcome weight="2"><text>The Mecha climbs out, inspects your ship with open contempt, and then announces that it will be staying, since your ship clearly needs someone competent.</text><crew race="mecha"/></outcome>
-			<outcome weight="1"><text>The Mecha comes out of the pod swinging. By the time your crew pin it down and push it back out the airlock, {crew} is hurt.</text><crew_hurt amount="40"/></outcome>
+			<outcome weight="1"><text>The Mecha comes out of the pod swinging. By the time your crew wrestle it back into its pod and out the airlock, {crew} is hurt.</text><crew_hurt amount="40"/></outcome>
 		</choice>
 		<choice text="Leave it."/>
 	</event>
@@ -60,7 +60,7 @@
 		<text>A Lykario raider is limping along on one engine, its crew yelling cheerfully at each other over an open channel. "Hey! Scouts! We're fine, totally fine. We could use a hand though."</text>
 		<choice text="Help them patch their engine.">
 			<outcome weight="3"><text>The Lykario are loud, grateful and very hard to work around. One of them decides your squad is a better hunt than his own and asks to come along.</text><crew race="lykario"/></outcome>
-			<outcome weight="1"><text>The moment your crew are aboard, the "wounded" Lykario try to take your ship. It doesn't go well for them, but it doesn't go well for {crew} either.</text><crew_hurt amount="40"/><mawjig size="medium"/></outcome>
+			<outcome weight="1"><text>The moment your crew are aboard, the "wounded" Lykario try to take your ship. It doesn't go well for them, but it doesn't go well for {crew} either. The raiders flee and leave their loot behind.</text><crew_hurt amount="40"/><mawjig size="medium"/></outcome>
 		</choice>
 		<choice text="Keep your distance."/>
 	</event>
@@ -88,7 +88,7 @@
 	<event id="DISTRESS_GATOS_FAMILY" title="Stragglers" kind="distress" races="terran" states="Struggling,Refugee,Doing Fine" weight="1.2">
 		<text>A tiny GATOS shuttle has run dry two jumps short of anywhere. A whole family is crammed into it, {gatos:children|kittens} and all. "Please," says the pilot. "We just need enough to reach the next hub."</text>
 		<choice text="Give them the Mawjig they need." requires="mawjig:1.21">
-			<outcome><text>The family cheers. The pilot promises to name the next {gatos:baby|kitten} after your ship. As they jump away, they send you a message: "There's a cache of parts in the next cluster. We couldn't carry it."</text><mawjig amount="-1.21"/><weapon tier="low" race="terran"/></outcome>
+			<outcome><text>The family cheers. The pilot promises to name the next {gatos:baby|kitten} after your ship. As they jump away, they leave you the one thing they couldn't fit aboard: a crated weapon.</text><mawjig amount="-1.21"/><weapon tier="low" race="terran"/></outcome>
 		</choice>
 		<choice text="Tow them to the hub yourself.">
 			<outcome><text>It takes time, but the family is safe. The hub's dockmaster thanks you with a little Mawjig.</text><mawjig size="medium"/></outcome>

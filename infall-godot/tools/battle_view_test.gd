@@ -1,6 +1,6 @@
 extends Node
 ## Shows a fight and saves screenshots. Environment: E (enemy ship ids, comma separated), SHOTS (seconds,
-## comma separated), OUT (folder), P (player ship ids), ART_STYLE and SPECIES (those settings), BREAK (a system id to break, so the crew repair it), ZOOM and ZOOM_ROOM (how close, and the room to look at), BOARD (how many enemy crew board the player's first room) JOIN (the player's last crew member walks in to fight them) and WEAK (the boarders die to the first shots). Run with a display: xvfb-run godot --path . tools/battle_view_test.tscn
+## comma separated), OUT (folder), P (player ship ids), ART_STYLE and SPECIES (those settings), ADD (system ids to install on the player's first ship), USE (hack, mind: use them on the first enemy), BREAK (a system id to break, so the crew repair it), ZOOM and ZOOM_ROOM (how close, and the room to look at), BOARD (how many enemy crew board the player's first room) JOIN (the player's last crew member walks in to fight them) and WEAK (the boarders die to the first shots). Run with a display: xvfb-run godot --path . tools/battle_view_test.tscn
 
 var battle: BattleScreen
 var screen: PlayerView
@@ -32,10 +32,22 @@ func _ready() -> void:
 	for id in (OS.get_environment("E") if OS.get_environment("E") != "" else "pirate-hijacker.cutpurse").split(","):
 		if id != "none":
 			enemies.append(Ship.from_design(Library.ship(id), 1, rng))
+	for id in OS.get_environment("ADD").split(",", false):      # systems to install on the player's first ship
+		var def := Library.system(id)
+		var added := ShipOutfitter.install_system(players[0], def, ShipOutfitter.room_for_new_system(players[0], def))
+		added.power = 1
+	run.mawjig = 5000
 	var encounter := Encounter.new()
 	encounter.wallet = run
 	encounter.hazard = OS.get_environment("HAZARD")
 	encounter.setup(players, enemies, 3)
+	if OS.get_environment("USE").contains("hack") and not enemies.is_empty():
+		encounter.fight_started = true
+		encounter.attach_hack(players[0], enemies[0], enemies[0].system_by("shields"))
+		encounter.pulse_hack(players[0])
+	if OS.get_environment("USE").contains("mind") and not enemies.is_empty():
+		encounter.fight_started = true
+		encounter.mind_control(players[0], enemies[0].crew[0])
 	battle = BattleScreen.new()
 	add_child(battle)
 	screen = PlayerView.new()

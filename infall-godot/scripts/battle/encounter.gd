@@ -837,6 +837,73 @@ func cloak(ship: Ship) -> bool:
 	return true
 
 
+# --- Hacking and Mind Control ---------------------------------------------------------------------------------
+# The genre's two systems. Timings are the genre's (4, 7, 10 s a pulse; 14, 20, 28 s of control; 20 s to ready
+# again). The Mawjig a use costs is Infall: Eco's (2026-11-14, Ai-Generated-Proposal).
+
+const HACK_PULSE_TICKS := [0, 80, 140, 200]
+const HACK_COOLDOWN_TICKS := 400
+const HACK_COST := 4
+const MIND_TICKS := [0, 280, 400, 560]
+const MIND_COOLDOWN_TICKS := 400
+const MIND_COST := 8
+
+
+func can_hack(ship: Ship) -> bool:
+	var hacking := ship.system_by("hacking")
+	return hacking != null and ship.system_power(hacking) > 0 and ship.hack_cooldown <= 0
+
+
+## Latches the ship's probe onto one system of an enemy ship. It holds there for the rest of the fight.
+func attach_hack(ship: Ship, target: Ship, system: ShipSystem) -> bool:
+	var hacking := ship.system_by("hacking")
+	if hacking == null or ship.system_power(hacking) <= 0 or ship.hack_system != null:
+		return false
+	if target == null or system == null or target.is_gone() or target.side == ship.side or target.supershield > 0 or not target.systems.has(system):
+		return false
+	ship.hack_target = target
+	ship.hack_system = system
+	note("hack_attached", {"ship": ship, "target": target, "system": system})
+	return true
+
+
+## One pulse: the held system is shut down for a few seconds, longer at a higher level.
+func pulse_hack(ship: Ship) -> bool:
+	if not can_hack(ship) or ship.hack_system == null or ship.hack_target == null or ship.hack_target.is_gone():
+		return false
+	if ship.side == 0 and wallet != null and not wallet.spend(HACK_COST):
+		return false
+	var pulse: int = HACK_PULSE_TICKS[clampi(ship.system_power(ship.system_by("hacking")), 1, 3)]
+	ship.hack_system.hacked_ticks = pulse
+	ship.hack_cooldown = pulse + HACK_COOLDOWN_TICKS
+	note("hack_pulse", {"ship": ship, "target": ship.hack_target, "system": ship.hack_system})
+	return true
+
+
+func can_mind_control(ship: Ship) -> bool:
+	var mind := ship.system_by("mind_control")
+	return mind != null and ship.system_power(mind) > 0 and ship.mind_cooldown <= 0
+
+
+## Takes over one crew member of the other side, aboard any ship, until it wears off.
+func mind_control(ship: Ship, member: CrewMember) -> bool:
+	if not can_mind_control(ship) or member == null or member.dead or member.in_suit or member.mind_ticks > 0 or member.side == ship.side:
+		return false
+	if member.ship == null or member.ship.is_gone() or (member.ship != ship and member.ship.supershield > 0):
+		return false
+	if ship.side == 0 and wallet != null and not wallet.spend(MIND_COST):
+		return false
+	var held: int = MIND_TICKS[clampi(ship.system_power(ship.system_by("mind_control")), 1, 3)]
+	member.mind_ticks = held
+	member.side = ship.side
+	member.melee_with = null
+	member.aim_at = null
+	member.path.clear()
+	ship.mind_cooldown = held + MIND_COOLDOWN_TICKS
+	note("mind_controlled", {"ship": ship, "crew": member})
+	return true
+
+
 # --- Hazards --------------------------------------------------------------------------------------------------
 
 func _tick_hazard() -> void:

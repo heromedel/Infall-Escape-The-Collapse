@@ -4,7 +4,8 @@ extends RefCounted
 ## The store and the ship screen give these orders; every machine plays them here, so the run stays the same
 ## everywhere. Ships are named by their place in the squad, crew by their place in their ship's crew.
 
-const INSTALLABLE := ["medbay", "doors", "sensors", "crew-teleporter", "cloaking", "supershield", "evb-dock", "shields", "life-support"]
+const INSTALLABLE := ["medbay", "doors", "sensors", "crew-teleporter", "cloaking", "supershield", "evb-dock", "shields", "life-support", "hacking", "mind-control"]
+const RACE_OWN := {"senti": {"hacking": "intrusion-array"}, "azurethea": {"mind-control": "pheromone-gland"}}   # a race's own make of a system
 
 
 static func apply(run: RunState, order: Dictionary) -> void:
@@ -107,6 +108,14 @@ static func _member(ship: Ship, order: Dictionary) -> CrewMember:
 
 
 ## Per hull point by band: 0.48 in bands 1-3, 0.73 in 4-6, 0.97 in 7-8 (mawjig-cost-table.md).
+## What a store asks for a ship: a share of its value by difficulty (Infall: Eco, 2026-11-14: Easy 50%, Normal 75%,
+## Hard 100%), times the cluster's price scale.
+const SHIP_PRICE_SHARE := {"Easy": 0.5, "Normal": 0.75, "Hard": 1.0}
+
+static func ship_price(run: RunState, design: ShipDesign, scale: float) -> int:
+	return Mawjig.amount(design.value * SHIP_PRICE_SHARE.get(run.difficulty, 0.75) * scale / 100.0)
+
+
 static func repair_price(run: RunState) -> int:
 	var band := run.band()
 	return 48 if band <= 3 else (73 if band <= 6 else 97)
@@ -177,7 +186,7 @@ static func ensure_stock(run: RunState) -> void:
 		systems[index] = systems[other]
 		systems[other] = swap
 	for index in mini(2 if short else 3, systems.size()):
-		stock.systems.append(systems[index])
+		stock.systems.append(RACE_OWN.get(race, {}).get(systems[index], systems[index]))
 	var crew_races := [race, "terran"] if race != "malphen" else ["terran"]
 	for count in (1 if short else 2):
 		stock.crew.append(crew_races[rng.randi_range(0, crew_races.size() - 1)])

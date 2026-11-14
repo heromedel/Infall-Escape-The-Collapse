@@ -8,7 +8,8 @@ extends RefCounted
 ## apply() returns "" when the order was carried out, or why not, for the player who gave it.
 
 const KINDS := ["power", "wpower", "aim", "aim_beam", "aim_suit", "untarget", "autofire", "move", "door", "doors",
-		"stations", "save_posts", "board", "recall", "suit", "cloak", "pause"]
+		"stations", "save_posts", "board", "recall", "suit", "cloak", "pause",
+		"hack", "pulse", "mind"]
 
 
 # --- Naming things ------------------------------------------------------------------------------------------
@@ -151,6 +152,19 @@ static func apply(battle: BattleScreen, order: Dictionary) -> String:
 		"cloak":
 			if ship:
 				encounter.cloak(ship)
+		"hack":
+			var target := _ship(encounter, order, "ts")
+			var index := int(order.get("sys", -1))
+			if ship == null or target == null or index < 0 or index >= target.systems.size() or not encounter.attach_hack(ship, target, target.systems[index]):
+				return "The probe can't latch on there."
+		"pulse":
+			if ship == null or not encounter.pulse_hack(ship):
+				return "Hacking isn't ready."
+		"mind":
+			var home := _ship(encounter, order, "home")
+			var index := int(order.get("crew", -1))
+			if ship == null or home == null or index < 0 or index >= home.crew.size() or not encounter.mind_control(ship, home.crew[index]):
+				return "Mind Control can't reach them."
 	return ""
 
 

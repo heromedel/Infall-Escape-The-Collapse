@@ -274,6 +274,12 @@ func _show_note(note: Dictionary) -> void:
 			squad_lost.emit()
 		"cloaked":
 			_sound("cloak")
+		"hack_attached":
+			_sound("target")
+		"hack_pulse":
+			_sound("ion")
+		"mind_controlled":
+			_sound("spore", -4.0)
 
 
 ## The squad's Jigawatt Drives fire: the ships stretch toward the rim and every player's screen flashes white.

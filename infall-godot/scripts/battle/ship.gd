@@ -63,6 +63,10 @@ var jump_charge: float = 0.0
 var cloak_ticks: int = 0
 var cloak_cooldown: int = 0
 var teleporter_cooldown: int = 0
+var hack_target: Ship = null        # the ship this ship's hacking probe is latched onto, for the fight
+var hack_system: ShipSystem = null  # and the system it holds
+var hack_cooldown: int = 0
+var mind_cooldown: int = 0
 var evb_cooldown: int = 0
 var suit_out: bool = false
 var destroyed: bool = false
@@ -81,7 +85,7 @@ var event_sink: Callable            # Encounter.note: what happened, for the scr
 
 
 ## Builds a fresh ship from a design, with its starting crew.
-static func from_design(ship_design: ShipDesign, ship_side: int, rng: RandomNumberGenerator, conduits_on: bool = true) -> Ship:
+static func from_design(ship_design: ShipDesign, ship_side: int, rng: RandomNumberGenerator, conduits_on: bool = false) -> Ship:
 	var ship := Ship.new()
 	ship.design = ship_design
 	ship.name = ship_design.name
@@ -909,6 +913,15 @@ func _tick_cooldowns() -> void:
 			cloak_cooldown = 400
 	elif cloak_cooldown > 0:
 		cloak_cooldown -= 1
+	for system in systems:
+		if system.hacked_ticks > 0:
+			system.hacked_ticks -= 1
+	var hacking := system_by("hacking")
+	if hack_cooldown > 0 and hacking and system_power(hacking) > 0:
+		hack_cooldown -= 1
+	var mind := system_by("mind_control")
+	if mind_cooldown > 0 and mind and system_power(mind) > 0:
+		mind_cooldown -= 1
 	var teleporter := system_by("teleporter")
 	if teleporter_cooldown > 0 and teleporter and system_power(teleporter) > 0:
 		teleporter_cooldown -= 1
@@ -1140,6 +1153,14 @@ func begin_encounter() -> void:
 	cloak_cooldown = 0
 	teleporter_cooldown = 240
 	evb_cooldown = 60
+	hack_target = null
+	hack_system = null
+	hack_cooldown = 0
+	mind_cooldown = 0
+	for system in systems:
+		system.hacked_ticks = 0
+	for member in crew:
+		member.end_mind_control()
 	charging_escape = false
 	surrendered = false
 	for slot in weapons:

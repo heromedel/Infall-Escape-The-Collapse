@@ -852,6 +852,15 @@ func _special_buttons(ship: Ship) -> Array:
 	var cloak := ship.system_by("cloaking")
 	if cloak:
 		buttons.append(["CLOAK", func(): screen.cloak(ship), "Hide the ship: most shots miss and its weapons hold their charge. Hotkey: C", ship.cloak_ticks <= 0 and ship.cloak_cooldown <= 0 and ship.system_power(cloak) > 0, ship.cloak_cooldown])
+	var hacking := ship.system_by("hacking")
+	if hacking:
+		if ship.hack_system == null:
+			buttons.append(["HACK", func(): screen.start_hack(), "Latch %s onto one enemy system: click its room. It holds there for the fight. Hotkey: N" % hacking.def.name, encounter.in_fight() and ship.system_power(hacking) > 0, -1])
+		else:
+			buttons.append(["PULSE HACK", func(): screen.start_hack(), "Shut down the %s of the %s for a few seconds (%s Mawjig). Hotkey: N" % [ship.hack_system.def.name, ship.hack_target.name, Mawjig.format(Encounter.HACK_COST)], encounter.can_hack(ship) and encounter.in_fight(), ship.hack_cooldown])
+	var mind := ship.system_by("mind_control")
+	if mind:
+		buttons.append(["MIND CONTROL", func(): screen.start_mind_control(), "Take over one enemy crew member you can see, aboard their ship or yours: click them (%s Mawjig). Hotkey: M" % Mawjig.format(Encounter.MIND_COST), encounter.can_mind_control(ship) and encounter.in_fight(), ship.mind_cooldown])
 	if ship.has_system("doors"):
 		buttons.append(["OPEN DOORS", func(): screen.set_all_doors(ship, true, false), "Opens every inner door. Press again while they are all open to open the airlocks too. Hotkey: Z", ship.doors_controllable(), -1])
 		buttons.append(["CLOSE DOORS", func(): screen.set_all_doors(ship, false, false), "Close every door, airlocks too. Hotkey: X", ship.doors_controllable(), -1])
@@ -1060,7 +1069,7 @@ func _draw_overlays() -> void:
 			line = ("paused by %s · " % session.titled_name(by) if by > 0 else "") + ("press Space to resume" if screen.is_admiral() else "%s resumes" % session.titled_name(session.admiral))
 		UiKit.draw_text(self, Vector2(centre.x, 178), line, 17, UiColours.TEXT_DIM, null, HORIZONTAL_ALIGNMENT_CENTER, 0)
 	if screen.aim_mode != "":
-		var hint: String = {"weapon": "Click a tile of an enemy ship to aim. Right click cancels.", "beam": "Press on an enemy tile and drag to aim the beam's sweep.", "teleport": "Click an enemy room to send boarders.", "suit": "Click an enemy ship to send the battlesuit."}.get(screen.aim_mode, "")
+		var hint: String = {"weapon": "Click a tile of an enemy ship to aim. Right click cancels.", "beam": "Press on an enemy tile and drag to aim the beam's sweep.", "teleport": "Click an enemy room to send boarders.", "suit": "Click an enemy ship to send the battlesuit.", "hack": "Click an enemy system to latch the probe onto it. Right click cancels.", "mind": "Click an enemy crew member you can see to take them over. Right click cancels."}.get(screen.aim_mode, "")
 		_draw_notice(hint, size.y - 300, UiColours.TARGET_YELLOW)
 		var mouse := get_local_mouse_position()
 		var colour := UiColours.ENEMY_RED if screen._aim_is_autofire() else UiColours.TARGET_YELLOW

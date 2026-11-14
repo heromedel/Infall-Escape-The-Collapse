@@ -86,7 +86,7 @@ func _rebuild() -> void:
 	if stock.ship != "" and not stock.sold.has("ship"):
 		var design := Library.ship(stock.ship)
 		if design:
-			var price := Mawjig.amount(design.value * 1.15 * _price_scale() / 100.0)
+			var price := Refit.ship_price(run, design, _price_scale())
 			var full := run.living_ships().size() >= EventRunner.MAX_SQUAD
 			right.add_child(_section("SHIPYARD"))
 			right.add_child(_card(design.name, "%s\nHull %d, crew %d. Joins your squad with its crew." % [design.description, design.hull, design.crew.size()], price, full, func(): _buy_ship(design, price)))

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Prices in Mawjig from docs/reference/system-prices.md. Text by Infall: Lori (2026-11-14). Pulse and control times are the genre's. -->
+<system id="pheromone-gland" name="Pheromone Gland" behaviour="mind_control" max_level="3" draws_power="yes" manned="no" buy="18.15" upgrades="7.26,14.52" icon="mind_control" hotkey="K" order="76">
+	<description>The Azurethea's mind control. A cloud of pheromone spores turns one enemy crew member against their own side for a while.</description>
+	<level>Lasts 14 s</level>
+	<level>Lasts 20 s</level>
+	<level>Lasts 28 s</level>
+</system>

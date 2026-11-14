@@ -433,7 +433,7 @@ func build_enemy_ships(squad: SquadDef) -> Array[Ship]:
 		var design := Library.ship(design_id)
 		if design == null:
 			continue
-		var ship := Ship.from_design(design, 1, run.rng, true)
+		var ship := Ship.from_design(design, 1, run.rng, Settings.get_value("terran_conduits", false))
 		# Ships met farther out carry a little more hull than their file lists, as the genre scales by sector
 		var band_hull := 1.0 + 0.04 * (run.band() - 1)
 		ship.max_hull = maxi(3, int(round(ship.max_hull * difficulty_hull * band_hull)))

@@ -71,6 +71,18 @@ static func draw(canvas: CanvasItem, icon: String, centre: Vector2, size: float,
 			canvas.draw_rect(Rect2(centre + Vector2(-s * 0.5, -s * 0.15), Vector2(s, s * 0.45)), colour, false, w)
 			canvas.draw_line(centre + Vector2(-s * 0.32, -s * 0.18), centre + Vector2(s * 0.32, -s * 0.18), colour, w * 1.3, true)
 			canvas.draw_line(centre + Vector2(-s * 0.7, s * 0.75), centre + Vector2(s * 0.7, s * 0.75), colour, w, true)
+		"hacking":       # a probe: an antenna dish on a stalk, with two signal arcs
+			canvas.draw_line(centre + Vector2(0, s * 0.85), centre + Vector2(0, -s * 0.1), colour, w, true)
+			canvas.draw_circle(centre + Vector2(0, -s * 0.25), s * 0.22, colour)
+			canvas.draw_arc(centre + Vector2(0, -s * 0.25), s * 0.55, PI * 1.15, PI * 1.85, 10, colour, w, true)
+			canvas.draw_arc(centre + Vector2(0, -s * 0.25), s * 0.9, PI * 1.2, PI * 1.8, 12, colour, w, true)
+			canvas.draw_line(centre + Vector2(-s * 0.5, s * 0.85), centre + Vector2(s * 0.5, s * 0.85), colour, w, true)
+		"mind_control":  # a head in outline with a spiral inside
+			canvas.draw_arc(centre + Vector2(0, -s * 0.1), s * 0.8, PI * 0.85, PI * 2.15, 20, colour, w, true)
+			canvas.draw_line(centre + Vector2(-s * 0.45, s * 0.55), centre + Vector2(-s * 0.45, s * 0.9), colour, w, true)
+			canvas.draw_line(centre + Vector2(s * 0.45, s * 0.55), centre + Vector2(s * 0.45, s * 0.9), colour, w, true)
+			canvas.draw_arc(centre + Vector2(0, -s * 0.1), s * 0.38, 0, PI * 1.5, 12, colour, w * 0.9, true)
+			canvas.draw_circle(centre + Vector2(0, -s * 0.1), s * 0.12, colour)
 		"cloaking":
 			canvas.draw_arc(centre, s * 0.75, PI * 1.1, PI * 1.9, 14, colour, w, true)
 			canvas.draw_arc(centre, s * 0.75, PI * 0.1, PI * 0.9, 14, colour, w, true)

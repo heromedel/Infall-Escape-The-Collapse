@@ -13,7 +13,7 @@
 		<text>Your sensors find a sealed container tucked into an asteroid's shadow, marked with a pirate gang's sign.</text>
 		<choice text="Crack it open.">
 			<outcome weight="3"><text>Inside is a weapon, still in its packing.</text><weapon tier="mid"/></outcome>
-			<outcome weight="1"><text>It's booby-trapped. The blast scorches your ship.</text><hull amount="-2"/><mawjig size="high"/></outcome>
+			<outcome weight="1"><text>It's booby-trapped. The blast scorches your ship, but what's left of the container is still worth converting.</text><hull amount="-2"/><mawjig size="high"/></outcome>
 		</choice>
 		<choice text="Leave it."/>
 	</event>

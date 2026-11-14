@@ -15,6 +15,7 @@ var ion: int = 0
 var ion_ticks: int = 0
 var spored: bool = false           # Sporewing hit: off until cleared like a repair
 var spore_progress: float = 0.0
+var hacked_ticks: int = 0          # shut down by an enemy's hacking pulse for this long
 var power: int = 0                 # bars given (reactor pool ships)
 var power_lost: int = 0            # bars damage or ion took, given back once they work again
 var enabled: bool = true           # switched on (core ships)
@@ -40,6 +41,8 @@ func usable_bars() -> int:
 
 ## The bars that can hold power right now: those damage has left, less those ion holds down.
 func working_bars() -> int:
+	if hacked_ticks > 0:
+		return 0
 	return maxi(0, usable_bars() - ion)
 
 

@@ -148,10 +148,13 @@ static func end_screen(run: RunState, won: bool, on_done: Callable) -> Overlay:
 	window.place_panel(860)
 	if won:
 		window.add_title("THE WAY OUT", Color("#ffd46b"))
-		window.add_text("The Last Fleet breaks apart behind you. Ahead there is nothing but the dark between galaxies, and a path your scouts have charted all the way to its edge.\n\nThe Colony Ship's signal comes through clear for the first time in weeks. \"We see your beacon. We're coming. Every one of us.\"\n\nBehind it, the collapse keeps growing. It will not reach you here.", 20)
+		window.add_text("The Last Fleet breaks apart behind you. Ahead there is nothing but the dark between galaxies, and a path your scouts have charted all the way across it.\n\nThe Colony Ship's signal comes through clear for the first time in weeks. \"We see your beacon. We're coming. Every one of us.\"\n\nBehind it, the collapse keeps growing. It will never reach you now.", 20)
 	else:
 		window.add_title("THE SCOUTS ARE GONE", UiColours.DAMAGED_RED)
-		window.add_text("The last of your scout ships is gone. Somewhere behind you, The Colony Ship waits for a signal that will not come, and the collapse moves on.", 20)
+		if run.cluster().kind == "final":
+			window.add_text("The last of your scout ships is gone. The Last Fleet takes the path out alone, and behind it the way closes. Somewhere back in the dark, The Colony Ship waits for a signal that will never come.", 20)
+		else:
+			window.add_text("The last of your scout ships is gone. Somewhere behind you, The Colony Ship waits for a signal that will never come, and the collapse moves on.", 20)
 	window.add_separator()
 	var stats := run.stats
 	window.add_text("Jumps made: %d\nEnemy ships destroyed: %d\nEnemy crews defeated: %d\nMawjig earned: %s\nScout ships lost: %d\nReached band %d of %d" % [stats.jumps, stats.ships_destroyed, stats.crews_killed, Mawjig.format(stats.mawjig_earned), stats.ships_lost, run.band(), run.galaxy.bands], 18, UiColours.TEXT_DIM)

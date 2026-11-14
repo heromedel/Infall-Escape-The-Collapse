@@ -18,15 +18,17 @@ const FIGHT_LIMIT := 20 * 600       # ten minutes of fight time: after that it i
 const SAFE_GAP := 560.0             # how far ahead of the collapse a careful player stays before exploring sideways
 const SIZE_VALUE := {"tiny": 150, "low": 450, "medium": 900, "high": 1500, "huge": 2200}
 const PLAYERS := {
-	"careless": {"focus": false, "events": "random", "explore": false, "flee_below": 0.0, "repair_to": 0.5, "shop": "odd", "reserve": 3, "think_every": 20},
-	"watcher": {"focus": true, "events": "sees", "explore": true, "flee_below": 0.15, "repair_to": 0.8, "shop": "plan", "reserve": 4, "think_every": 10},
-	"expert": {"focus": true, "events": "knows", "explore": true, "flee_below": 0.3, "repair_to": 0.95, "shop": "all", "reserve": 3, "think_every": 4},
+	"careless": {"focus": false, "events": "random", "explore": false, "flee_below": 0.0, "repair_to": 0.5, "shop": "odd", "reserve": 3, "think_every": 20, "gives_up_after": 600},
+	"watcher": {"focus": true, "events": "sees", "explore": true, "flee_below": 0.15, "repair_to": 0.8, "shop": "plan", "reserve": 6, "think_every": 10, "gives_up_after": 150},
+	"expert": {"focus": true, "events": "knows", "explore": true, "flee_below": 0.3, "repair_to": 0.95, "shop": "all", "reserve": 10, "think_every": 4, "gives_up_after": 90},
 }
 
 var player: Dictionary = PLAYERS.watcher
 var skill := "watcher"
 var verbose := false
 var _last: Encounter
+var _fights: Dictionary = {}        # "band squad" -> what happened in every fight against it, for the balance table
+var _starved := 0                   # times a squad had to wait because it couldn't pay for a jump
 
 
 func _ready() -> void:
@@ -72,6 +74,13 @@ func _summary(reports: Array) -> void:
 	var names := killers.keys()
 	names.sort_custom(func(a, b): return killers[a] > killers[b])
 	print("ended by  " + ", ".join(names.map(func(name): return "%s %d" % [name, killers[name]])))
+	print("waits for want of Mawjig: %d" % _starved)
+	print("\nband squad                 fights  lost  left  hull lost  shots  paid  shots/paid")
+	var keys := _fights.keys()
+	keys.sort()
+	for key in keys:
+		var row: Dictionary = _fights[key]
+		print("%-26s %6d %5d %5d %8.0f%% %6.2f %6.2f %8.0f%%" % [key, row.fights, row.lost, row.left, 100.0 * row.hull / row.fights, row.spent / 100.0 / row.fights, row.paid / 100.0 / row.fights, 100.0 * row.spent / maxf(1.0, row.paid)])
 
 
 func _play_one(seed_number: int, ship_id: String) -> Dictionary:
@@ -92,13 +101,22 @@ func _play_one(seed_number: int, ship_id: String) -> Dictionary:
 			if result.fight_given:
 				report.fights += 1
 				var squad := runner.pick_squad(result.fight)
+				var band := run.band()
+				var hull_before := _hull(run)
+				var mawjig_before := run.mawjig
 				var outcome := _fight(run, runner, squad)
+				var spent := mawjig_before - run.mawjig
+				var paid := 0
+				if outcome in ["won", "surrendered"]:
+					var before_pay := run.mawjig
+					runner.fight_rewards(_last)
+					paid = run.mawjig - before_pay
+				_note_fight(band, squad.id, outcome, hull_before, _hull(run), spent, paid)
 				if verbose:
 					print("    jump %d band %d: %s vs %s, hulls %s, mawjig %s" % [run.jumps, run.band(), outcome, squad.id, str(run.squad.map(func(s): return "%d/%d" % [s.hull, s.max_hull])), Mawjig.format(run.mawjig)])
 				match outcome:
 					"won", "surrendered":
 						report.won += 1
-						runner.fight_rewards(_last)
 					"fled":
 						report.fled += 1
 					"stalemate":
@@ -117,11 +135,35 @@ func _play_one(seed_number: int, ship_id: String) -> Dictionary:
 		report.most_ships = maxi(report.most_ships, run.living_ships().size())
 		_rest(run)
 		if not _travel(run):
+			_starved += 1
 			run.wait()
 		if run.galaxy.is_swallowed(run.current) or run.collapse_distance() < 60.0:
 			report.ended_by = "swallowed by the collapse"
 			return _close(report, run)
 	return _close(report, run)
+
+
+## The squad's hull as [points left, points when whole].
+func _hull(run: RunState) -> Array:
+	var left := 0
+	var whole := 0
+	for ship in run.squad:
+		whole += ship.max_hull
+		left += maxi(0, ship.hull) if not ship.destroyed else 0
+	return [left, whole]
+
+
+func _note_fight(band: int, squad_id: String, outcome: String, before: Array, after: Array, spent: int, paid: int) -> void:
+	var key := "%d %s" % [band, squad_id]
+	if not _fights.has(key):
+		_fights[key] = {"fights": 0, "lost": 0, "left": 0, "hull": 0.0, "spent": 0, "paid": 0}
+	var row: Dictionary = _fights[key]
+	row.fights += 1
+	row.lost += 1 if outcome == "lost" else 0
+	row.left += 1 if outcome in ["fled", "stalemate"] else 0
+	row.hull += float(before[0] - after[0]) / maxf(1.0, float(before[1]))
+	row.spent += spent
+	row.paid += paid
 
 
 func _close(report: Dictionary, run: RunState) -> Dictionary:
@@ -243,7 +285,19 @@ func _fight(run: RunState, runner: EventRunner, squad: SquadDef) -> String:
 			captain.preferred_targets = ["weapons", "shields", "piloting", "engines"]
 		captains[ship] = captain
 	var ticks := 0
+	var enemy_left := INF
+	var progress_at := 0
 	while encounter.outcome.is_empty() and ticks < FIGHT_LIMIT:
+		if ticks % 20 == 0:
+			# A fight that isn't getting anywhere: a player stops pouring shots into it and jumps on
+			var left := 0.0
+			for enemy in encounter.living(1):
+				left += enemy.hull + 3.0 * enemy.living_crew_count()
+			if left < enemy_left:
+				enemy_left = left
+				progress_at = ticks
+			if ticks - progress_at > 20 * int(player.gives_up_after) and encounter.can_squad_jump() and run.mawjig >= Mawjig.JUMP_COST:
+				return _leave(run, encounter, "stalemate")
 		if ticks % int(player.think_every) == 0:
 			var focus := _focus(encounter)
 			for ship in encounter.living(0):
@@ -340,7 +394,7 @@ func _shop(run: RunState) -> void:
 	# Another ship, when the store has one and the squad can pay
 	if stock.ship != "" and not stock.sold.has("ship"):
 		var design := Library.ship(stock.ship)
-		var price := Mawjig.amount(design.value * 1.15 * scale / 100.0)
+		var price := Refit.ship_price(run, design, scale)
 		if run.mawjig - price >= reserve:
 			Refit.apply(run, {"op": "buy_ship", "id": stock.ship, "price": price})
 	var ships: Array[Ship] = run.living_ships().filter(func(ship: Ship): return not ship.is_mercenary())
@@ -454,7 +508,7 @@ func _travel(run: RunState) -> bool:
 			sideways = link
 	var hurt := _squad_strength(run) < 0.6
 	var pick := outward
-	if player.explore and sideways >= 0:
+	if player.explore and sideways >= 0 and run.mawjig >= Mawjig.JUMP_COST * 4:
 		pick = sideways
 		if hurt:
 			# Hurt: a store within reach comes first

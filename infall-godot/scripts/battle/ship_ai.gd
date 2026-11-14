@@ -381,6 +381,21 @@ func _use_specials() -> void:
 	if ship.system_by("evb_dock") and not ship.suit_out:
 		var planned := _plan_pick("suit", null)
 		encounter.launch_suit(ship, target, planned.room if planned else -1)
+	if ship.system_by("hacking"):
+		if ship.hack_system == null:
+			# The probe goes where the plan says, else onto the shields, else the weapons
+			var planned := _plan_pick("hack", null)
+			var held: ShipSystem = planned
+			for behaviour in ["shields", "weapons", "piloting"]:
+				if held == null or held.is_broken():
+					held = target.system_by(behaviour)
+			encounter.attach_hack(ship, target, held)
+		elif encounter.can_hack(ship) and not ship.hack_system.is_broken():
+			encounter.pulse_hack(ship)
+	if encounter.can_mind_control(ship):
+		var victim := _mind_control_pick()
+		if victim:
+			encounter.mind_control(ship, victim)
 	if ship.system_by("cloaking") and ship.cloak_ticks == 0:
 		var incoming := 0
 		for shot in encounter.projectiles:
@@ -388,6 +403,21 @@ func _use_specials() -> void:
 				incoming += 1
 		if incoming >= 2:
 			encounter.cloak(ship)
+
+
+## Who to take over: an intruder aboard this ship first; else someone at a console on the target, else anyone there.
+func _mind_control_pick() -> CrewMember:
+	var aboard := ship.crew_present().filter(func(member: CrewMember): return member.side != ship.side and member.mind_ticks <= 0)
+	if not aboard.is_empty():
+		return aboard[encounter.rng.randi_range(0, aboard.size() - 1)]
+	if target == null or target.supershield > 0:
+		return null
+	var there := target.crew_present().filter(func(member: CrewMember): return member.side != ship.side and member.mind_ticks <= 0)
+	if there.is_empty():
+		return null
+	var manning := there.filter(func(member: CrewMember): return member.task == "manning")
+	var pool: Array = manning if not manning.is_empty() else there
+	return pool[encounter.rng.randi_range(0, pool.size() - 1)]
 
 
 func _boarding_room() -> int:

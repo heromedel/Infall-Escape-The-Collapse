@@ -404,6 +404,11 @@ func _mouse_button(event: InputEventMouseButton) -> void:
 
 
 func _click_while_aiming() -> void:
+	if aim_mode == "mind":
+		if hover_crew and hover_crew.side != 0 and selected_ship:
+			_give({"k": "mind", "s": _index(selected_ship), "home": _index(hover_crew.home), "crew": hover_crew.home.crew.find(hover_crew)})
+			cancel_aim()
+		return
 	if hover_ship == null or hover_ship.side != 1 or hover_ship.is_gone():
 		var suit := _suit_under_pointer()
 		if aim_mode == "weapon" and suit:
@@ -430,6 +435,14 @@ func _click_while_aiming() -> void:
 		"suit":
 			_give({"k": "suit", "s": _index(selected_ship), "ts": _index(hover_ship)})
 			cancel_aim()
+		"hack":
+			if hover_room >= 0 and not hover_ship.rooms[hover_room].systems.is_empty():
+				var held: ShipSystem = hover_ship.rooms[hover_room].systems[0]
+				for system in hover_ship.rooms[hover_room].systems:
+					if system.cell == hover_cell:
+						held = system
+				_give({"k": "hack", "s": _index(selected_ship), "ts": _index(hover_ship), "sys": hover_ship.systems.find(held)})
+				cancel_aim()
 
 
 func _finish_beam() -> void:
@@ -499,6 +512,10 @@ func _key(event: InputEventKey) -> void:
 		KEY_C:
 			if selected_ship:
 				cloak(selected_ship)
+		KEY_N:
+			start_hack()
+		KEY_M:
+			start_mind_control()
 		KEY_Z:
 			if selected_ship:
 				set_all_doors(selected_ship, true, false)       # pressed again, it opens the airlocks too
@@ -673,6 +690,23 @@ func recall_boarders() -> void:
 func start_suit_launch() -> void:
 	if selected_ship and selected_ship.system_by("evb_dock") and encounter.in_fight():
 		aim_mode = "suit"
+
+
+## Hacking: the first press aims the probe; once it holds, each press is a pulse.
+func start_hack() -> void:
+	if selected_ship == null or selected_ship.system_by("hacking") == null or not encounter.in_fight():
+		return
+	if selected_ship.hack_system == null:
+		aim_mode = "hack"
+	else:
+		_give({"k": "pulse", "s": _index(selected_ship)})
+
+
+func start_mind_control() -> void:
+	if selected_ship and encounter.can_mind_control(selected_ship) and encounter.in_fight():
+		aim_mode = "mind"
+	elif selected_ship and selected_ship.system_by("mind_control"):
+		hud.flash_message("Mind Control isn't ready.")
 
 
 func cloak(ship: Ship) -> void:
