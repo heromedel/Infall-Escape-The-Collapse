@@ -67,6 +67,59 @@ by Infall: Lori.
    Azurethea should not help.
 8. Only for attacking that race's own ships first: not for defending against its pirates, raiders or mercenaries.
 
+**Proposed (heromedel, 2026-11-14, later the same day), changes to the Alliance victory:**
+
+- The Alliance victory was meant to be all seven races. Each contributes something that lets the convoy survive the
+  insanely long, multi-generational voyage between galaxies, since they would not be jumping there. It is the
+  peaceful victory, more or less.
+- Each race should be a little different, and some refuse under certain circumstances.
+- Every "with X aboard" option should come with a challenge or a second condition, or be reconsidered.
+- **Mecha:** they have to be struggling or doomed, and see a profit in it.
+- **Senti:** when doomed they are trying to kill the squad for its data. There can still be a store, but with a fight
+  to get to it, and several fights if it is a cluster or more deep in their territory. The squad can ask, but it
+  must buy or have the Senti databank (the Armoured Avatar Array) and agree to let them record all of its data,
+  biological data included.
+- **Malphen:** a system is mandatory to communicate with them at all, crudely, through pheromones, scent or organic
+  reactions: one Azurethea system (the Pheromone Gland) or one Malphen system (the Lymph Gland, GDD 8S), bought at a
+  Malphen or Azurethea store or on a ship the squad got somehow. Then the squad sends them resources or negotiates.
+- Asking at stores makes it semi-predictable, which may be better than not finding a way to do it.
+- **The last fight:** with every race in the convoy, a rogue Malphen squad opposes everyone. Maybe it does not even
+  know what it is doing: it sees a line of colony ships passing and wants to eat or infect them, out of instinct. A
+  Malphen Cancer Growth, or Cancer squad. **Ai-Generated-Proposal:** the name Malphen Metastasis.
+
+### A setting for every victory (2026-11-14)
+
+**Proposed (heromedel, 2026-11-14):** every victory should have a setting for whether it is allowed. The fallback
+victory shows as the Vector Drive victory by default and can be toggled to the old Last Fleet victory.
+
+### Vector Drive victory (2026-11-14)
+
+**Proposed (heromedel, 2026-11-14):** this replaces the plain victory (reach the rim and beat the Last Fleet).
+
+- The Mecha have collected, or are collecting, the tech a single ship needs to jump to another galaxy: a special
+  **Mawjig Vector Drive**, which folds space.
+- If the squad can track that ship down and kill its crew, or defeat the ship and hope it did not destroy the drive,
+  it can take the drive and rig it to one of its own ships to jump to another galaxy.
+- **Catch 1:** if the ship's engine, the Vector Drive, is damaged when the ship is destroyed, the drive is destroyed
+  and can't be recovered. If it was repaired before the ship was destroyed, it can be recovered (and may still need
+  repair after it is installed).
+- **Catch 2:** at a refit yard it could be fitted to The Colony Ship for a large amount of Mawjig, like buying a
+  very expensive system, so that The Colony Ship can make the jump, with the scouts docking and going aboard.
+- It pits the Mecha as if they were the original enemies, though they are not evil, and the Terrans as the
+  aggressor. The goal of finding their ship can be mentioned early in a run, and again when the "how do we get out,
+  maybe with the right techs" event comes.
+- If the squad ends up fighting the Vector Drive ship several times, the ship recovers only some of its hull, not
+  all of it, and ships its squad lost are not always replaced with identical ones. Some variation in final fights
+  would be good.
+
+### Collection victory by refitting The Colony Ship (2026-11-14)
+
+**Proposed (heromedel, 2026-11-14):** a possible route for the Collection victory, which should really be named the
+colony ship victory: refitting systems to The Colony Ship. A rough idea: the same systems as the Tech victory, but a
+refit to The Colony Ship costs the full system price and it needs about two of each. That is about eight times more
+expensive, and it weakens the squad. If events that affect The Colony Ship are ever added, knowing what systems it
+has can affect them. Colony ship upgrades have otherwise not been planned or discussed.
+
 ### ??? victory, alternate version (2026-10-21)
 
 Getting powerful enough to survive inside the collapse requires getting nearly to the rim, then becoming powerful

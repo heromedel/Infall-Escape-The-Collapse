@@ -220,6 +220,10 @@ The starting race (GDD 7C). The name is deliberate, to avoid a plain Federation 
    suspicious. Their border territories are typically in constant battle with whoever they border, and with
    criminals and pirates from other regions. Since they don't actively seek out criminals, only attacking when
    they run into them or see an advantage, some races find it worthwhile to hide inside Mecha border clusters.
+   - **Character — Proposed (heromedel, 2026-11-14):** they are greedy and competitive and enjoy a challenge, but
+     mainly they enjoy victory. They are more about enjoying competition and victory than about being evil or
+     nasty. That they may battle each other is the point for a player too: if the player is Mecha, or has a Mecha
+     ship, Mecha may still challenge them, even though they have shops and sometimes help each other.
 8. **Where and how they live — Proposed (2026-10-21):** they expand like lakes or rivers, flowing into the regions
    of least resistance, preferring previously populated areas over empty regions where they would have to build
    infrastructure themselves. This gives criminals another place to hide, but to the Mecha, criminals developing
