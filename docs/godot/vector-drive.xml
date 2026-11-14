@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The Vector Drive victory, by Infall: Lori (2026-11-14), for Infall: Godot Version. Built on heromedel's words
+     (docs/ideas.md on Cloud-C-Godot-Version, "Vector Drive victory", Proposed) and GDD 9E (choices should matter).
+     Every text is Ai-Generated-Proposal (2026-11-14), checked against docs/lore-facts.md and docs/race-profiles.md.
+
+     The Mecha's ship is the Vector Frame: Mecha ships are frames (Light Attack Frame, Assault Frame), and Mecha names
+     are descriptive and functional (race profiles, Mecha 6). Squad final-vector, shown as "The Vector Frame".
+     The Mecha are not evil here (Mecha 7, Character: greedy, competitive, they enjoy a contest and enjoy winning
+     more), and the squad is the aggressor. The end screens say so.
+
+     These events play only while the Vector Drive victory is allowed (its setting, "a setting for every victory").
+
+     New hooks, named for Infall: Godot Version:
+     - <vector_goal/>: the goal starts and the map line appears. VECTOR_FIRST_WORD starts it whatever the choice.
+     - <vector_trail/>: the map points toward the Vector Frame (the line below). Each one narrows it.
+     - <vector_part/>: the Vector Frame meets the squad at the rim one part short: less hull, or one system a level
+       lower. Godot's pick.
+     - then="EVENT_ID" on <fight> (as in alliance.xml): that event plays once the fight is won.
+     - On the final fight: first_strike="squad" or "enemy" (whose weapons start charged), hold_back="escorts" (only
+       the Vector Frame fights), no_escape="yes" (it can't jump away mid-fight). Without no_escape it can jump away
+       when beaten down, and is met again further on with only some of its hull back and not always the same escorts
+       (heromedel). -->
+<events>
+	<!-- Early in a run: the first word of the ship and its drive (bands 2-3). -->
+	<event id="VECTOR_FIRST_WORD" title="The Manifest" kind="neutral" bands="2-3" weight="3" unique="yes" after_collapse="yes">
+		<text>A Mecha courier frame drifts with its drive burnt out. Its cargo manifest is open to any scanner: parts for one ship, the Vector Frame, the best frame the Mecha have ever built. And parts for something the manifest calls a Mawjig Vector Drive. A drive that folds space, far enough to reach another galaxy.
+
+You pass the manifest to The Colony Ship. The answer comes back at once.
+
+"If the Mecha have a way out, we need it. Find that ship."</text>
+		<choice text="Take the cargo.">
+			<outcome><text>You strip the courier's hold before its escort drops out of its jump. Wherever the Vector Frame is, it will be one part short.</text><vector_goal/><vector_part/><mawjig size="low"/><fight squad="mecha-light-attack"/></outcome>
+		</choice>
+		<choice text="Repair its drive, for a fee.">
+			<outcome><text>The courier pays a fair price and not a bit more. While your crew work, its pilot can't stop boasting: the Vector Frame will be waiting near the rim, and nobody will ever catch it.</text><vector_goal/><mawjig size="low"/></outcome>
+		</choice>
+		<choice text="Leave it.">
+			<outcome><text>You leave the courier where it drifts, and keep the manifest.</text><vector_goal/></outcome>
+		</choice>
+	</event>
+
+	<!-- Bands 6-8: its trail. -->
+	<event id="VECTOR_TRAIL_WRECKS" title="The Ones Who Caught It" kind="neutral" bands="6-8" weight="1.5" unique="yes" after_collapse="yes">
+		<text>A GATOS hunting squad hangs in pieces across the cluster. They found the Vector Frame before you did. Their last log is still broadcasting, on a loop.</text>
+		<choice text="Read their logs.">
+			<outcome><text>The log ends mid-sentence, but not before it gives the Vector Frame's heading.</text><vector_trail/></outcome>
+		</choice>
+		<choice text="Salvage the wrecks.">
+			<outcome><text>There's a lot left to convert. By the time you're done, the log has faded into static.</text><mawjig size="medium"/></outcome>
+		</choice>
+		<choice text="Let {crew} read the damage." requires="crew_with:mecha:servicing-core,evb-dock">
+			<outcome><text>{crew} studies the scorch marks like a page of code. "Stern beams. It fires while it runs. It always runs." {crew} marks its heading on your charts while your crews salvage what they can.</text><vector_trail/><mawjig size="low"/></outcome>
+		</choice>
+	</event>
+
+	<event id="VECTOR_TRAIL_YARD" title="The Yard That Built It" kind="neutral" races="mecha" bands="6-8" weight="1.5" unique="yes" after_collapse="yes">
+		<text>A Mecha yard boss sees where your squad is headed and laughs.
+
+"The Vector Frame? We fitted half of it. You won't catch it. But if you want to try, its route is for sale. Or you could win it."</text>
+		<choice text="Buy its route." requires="mawjig:9.68">
+			<outcome><text>The yard boss sends the route and counts the Mawjig twice.</text><mawjig amount="-9.68"/><vector_trail/></outcome>
+		</choice>
+		<choice text="Win it.">
+			<outcome><text>"Now that's a customer!" The yard's frames come for you.</text><fight squad="mecha-light-attack" then="VECTOR_YARD_WON"/></outcome>
+		</choice>
+		<choice text="Leave."/>
+	</event>
+
+	<event id="VECTOR_YARD_WON" title="Fair's Fair" kind="message">
+		<text>The yard boss hails you from a burning frame, laughing anyway. "Fair's fair. Here's its route. Good luck catching it."</text>
+		<choice text="Continue...">
+			<outcome><vector_trail/></outcome>
+		</choice>
+	</event>
+
+	<event id="VECTOR_REARGUARD" title="Rearguard" kind="hostile" bands="7-8" weight="1.2" unique="yes" after_collapse="yes">
+		<text>Mecha frames are holding the lane, left behind to stop anyone following the Vector Frame. Their leader hails you, bored.
+
+"Turn back. Or don't. We were hoping someone would try."</text>
+		<choice text="Break through.">
+			<outcome><text>"Finally!" The frames spread out to meet you.</text><fight squad="mecha-raiders" then="VECTOR_REARGUARD_WON"/></outcome>
+		</choice>
+		<choice text="Cloak and slip past them." requires="system:cloaking">
+			<outcome><text>You pass through their line unseen and pick up the Vector Frame's wake on the far side.</text><vector_trail/></outcome>
+		</choice>
+		<choice text="Find another way."/>
+	</event>
+
+	<event id="VECTOR_REARGUARD_WON" title="A Signal" kind="message">
+		<text>Among the rearguard's wreckage, one frame is still transmitting to the Vector Frame. You trace the signal.</text>
+		<choice text="Continue...">
+			<outcome><vector_trail/></outcome>
+		</choice>
+	</event>
+
+	<!-- The meeting at the rim. Every choice fights squad="final-vector"; each changes the fight (GDD 9E). -->
+	<event id="FINAL_VECTOR" title="The Vector Frame" kind="final" unique="yes">
+		<text>The Vector Frame waits at the rim, its drive charging. Its captain hails you, cheerful.
+
+"You followed us all this way? Good. We were hoping for a contest before we leave."
+
+The Colony Ship's warning comes through behind it: "Careful. If that drive is damaged when the ship goes, the drive goes with it."</text>
+		<choice text="Open fire before the drive is charged.">
+			<outcome><text>Your squad fires first. The Vector Frame's escorts scramble to cover it.</text><fight squad="final-vector" first_strike="squad"/></outcome>
+		</choice>
+		<choice text="Give them their contest: your squad against their ship alone.">
+			<outcome><text>"Deal!" The escorts pull back to watch. The Vector Frame fires first, of course.</text><fight squad="final-vector" hold_back="escorts" first_strike="enemy"/></outcome>
+		</choice>
+		<choice text="Jam the drive before it can jump." requires="system:hacking">
+			<outcome><text>Your probe latches onto the Vector Frame's drive. Whatever happens now, it isn't leaving.</text><fight squad="final-vector" no_escape="yes"/></outcome>
+		</choice>
+	</event>
+</events>
+
+<!-- Lines for the code:
+
+Where the "right techs" search begins (TECH_GOAL_FOUND), added as a last paragraph while this victory is allowed and
+the goal is running:
+"There may be another way. If the Mecha's Vector Frame is real, its drive could take a single ship across in one jump.
+Take that, and you'll need none of this."
+
+Map lines:
+Before any trail: "The Vector Frame: somewhere near the rim. Find its trail."
+With a trail: "The Vector Frame: last seen heading {direction} of you."
+
+When the Vector Frame jumps away mid-fight:
+"The Vector Frame folds away, burning. It hasn't gone far, and it won't have time to repair it all."
+
+When the drive is taken, undamaged:
+"The Mawjig Vector Drive comes out of the wreck whole. Your engineers start fitting it before the debris has stopped
+moving."
+
+When the drive is taken after a repair (it was repaired before the ship died, and may still need work, heromedel):
+"The Mawjig Vector Drive comes out of the wreck scarred but whole. It may need repairs once it's fitted."
+
+When it was destroyed with the engine:
+"The Vector Frame breaks apart with its drive still damaged. The Mawjig Vector Drive goes with it, folding into
+nothing. Whatever way out it offered is gone."
+
+Choosing where to fit it (a refit yard row for The Colony Ship, priced as a very expensive system, heromedel):
+"Fit the Mawjig Vector Drive to one of your ships: that ship makes the jump. Nobody else does."
+"Fit the Mawjig Vector Drive to The Colony Ship: your scouts dock and go aboard, and The Colony Ship makes the jump."
+
+THE END SCREEN, fitted to one of the squad's ships, title "THE VECTOR":
+The Mawjig Vector Drive folds space around one ship, and the galaxy is gone.
+
+Aboard are the crew it could carry. Nobody else. Behind you, The Colony Ship is still flying toward a rim it will
+never cross.
+
+The Mecha built that drive to save themselves. You took it. Wherever you arrive, you arrive as the ones who did.
+
+THE END SCREEN, fitted to The Colony Ship, title "THE FOLD":
+Your scouts dock one by one, and their crews go aboard The Colony Ship. Then the Mawjig Vector Drive folds space
+around it, every passenger and every crew member, and the galaxy is gone.
+
+Behind you, the collapse reaches the rim. Nobody you saved will ever see it.
+
+The Mecha built that drive to save themselves. You took it. Wherever The Colony Ship arrives, it arrives as the ones
+who did. -->

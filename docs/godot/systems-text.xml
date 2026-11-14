@@ -75,4 +75,36 @@
 		<level>Keeps one bar powered</level>
 		<level>Keeps two bars powered</level>
 	</system>
+
+	<!-- The Malphen clone bay (GDD 8S, Proposed: "it regrows the crew who die, as growths"). Replaces the stand-in
+	     "A Malphen ship's own tissue knitting its crew back together." -->
+	<system id="growth-organ" name="Growth Organ" max_level="3" manned="no">
+		<description>The Malphen clone bay: a ship's own living tissue. Crew who die aboard are grown back in it, as growths of the ship.</description>
+		<level>Regrows crew slowly</level>
+		<level>Regrows crew quickly</level>
+		<level>Regrows crew very quickly</level>
+	</system>
+
+	<!-- The second Malphen system (GDD 8S, Proposed; name heromedel's). Hacking-like against an enemy; in the squad's
+	     own room it boosts repairs and heals crew to at most 75%; on a jump, with a Growth Organ aboard, it heals all
+	     crew a little, up to full. It must be working to heal. One of the two systems that reach the Malphen. -->
+	<system id="lymph-gland" name="Lymph Gland" max_level="3" manned="no">
+		<description>A Malphen gland that pumps living fluid wherever it is sent. Sent into an enemy system, it clogs it. Sent into one of your own rooms, it speeds repairs there and heals your crew, though never fully. With a Growth Organ aboard, it tends every crew member a little after each jump. Its scent is also one of the few ways to reach the Malphen at all.</description>
+		<level>Clogs briefly, heals slowly</level>
+		<level>Clogs longer, heals faster</level>
+		<level>Clogs longest, heals fastest</level>
+	</system>
+
+	<!-- The Mecha's piece of the Tech victory (GDD 8T, Proposed; name heromedel's): one per ship, 5 more hull points,
+	     no power, not manned (Godot's Ai-Generated-Proposal). Replaces the name Hull Reinforcement. -->
+	<system id="hull-reinforcement" name="Mecha Hull Polarizer" max_level="1" manned="no">
+		<description>Mecha plating locked into a single polarized field, holding a hull together under forces no other ship could take. It needs no power and no crew. One to a ship. The ship has 5 more hull points.</description>
+		<level>Polarized</level>
+	</system>
+
+	<!-- The Vector Drive victory (docs/ideas.md, Proposed; name heromedel's). The Vector Frame's engine. -->
+	<system id="vector-drive" name="Mawjig Vector Drive" max_level="1" manned="yes">
+		<description>The Mecha's drive that folds space instead of crossing it, far enough to reach another galaxy in one jump.</description>
+		<level>Folds space</level>
+	</system>
 </systems>

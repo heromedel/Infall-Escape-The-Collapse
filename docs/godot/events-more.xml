@@ -4,7 +4,8 @@
      1. At War (GDD 2R): WAR_CROSSFIRE, WAR_WOUNDED, WAR_ARMS_DEALER, WAR_CEASEFIRE.
      2. Refugees on the move: REFUGEE_COLUMN, REFUGEE_CAMP, REFUGEE_EMPTY_SHIP.
      3. Yards: YARD_CHEAP_REFIT, YARD_SPARE_HULL.
-     4. Bands 7-8, not fights: LATE_LAST_BROADCAST, LATE_CLEARANCE, LATE_STOWAWAYS.
+     4. Bands 7-8, not fights: LATE_LAST_BROADCAST, LATE_CLEARANCE, LATE_STOWAWAYS. LATE_LAST_BROADCAST's choices were
+     changed the same day so that each one changes something (GDD 9E, Proposed).
      5. crew_with blue choices in WAR_CEASEFIRE (Senti with the AAA) and REFUGEE_CAMP (Tentauri with a Supershield).
      Senti record keeping (a Senti trait, race profiles 2-5) is also a plain crew:senti blue in REFUGEE_CAMP and
      LATE_LAST_BROADCAST.
@@ -132,11 +133,12 @@
 	<!-- 4. Bands 7-8: others desperate to get out, not fights -->
 	<event id="LATE_LAST_BROADCAST" title="The Last Broadcast" kind="neutral" bands="7-8" weight="1.2" unique="yes" after_collapse="yes">
 		<text>A world at the edge of the collapse is sending one message on every channel, over and over: the names of everyone who couldn't get off it.</text>
-		<choice text="Record it and send it to The Colony Ship.">
-			<outcome><text>You record the whole list and pass it on. The Colony Ship answers with a single line: "We'll carry them too."</text></outcome>
+		<choice text="Go in close and take off who you can.">
+			<outcome weight="2"><text>The collapse tears at your hulls the whole time you're down there. When you pull out, one more voice is aboard, and one less name is on the list.</text><hull amount="-5"/><crew race="region"/></outcome>
+			<outcome weight="1"><text>The collapse tears at your hulls the whole time you're down there, and nobody reaches you in time.</text><hull amount="-5"/></outcome>
 		</choice>
 		<choice text="Let {crew} keep every name." requires="crew:senti">
-			<outcome><text>{crew} records the list, name by name. "Now they are somewhere," {crew} says.</text></outcome>
+			<outcome><text>{crew} records the list, name by name. Between the names, {crew} finds the world's last charts, sent out by someone who knew nobody would read them. "Now they are somewhere," {crew} says.</text><reveal/></outcome>
 		</choice>
 		<choice text="Jump on."/>
 	</event>
