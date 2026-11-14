@@ -522,3 +522,22 @@ from the Malphen; the Mecha only on a good deal). All Ai-Generated-Proposal.
    least that.
 3. **Taking it from a whole ship** (crew dead): a 1-in-5 chance per ship from band 3 (or 1 in 3 from band 6, if it
    should grow toward the rim). With two or three crew kills of a race, about 40–50%: a real route, not a sure one.
+
+## F17. Refit yards, selling ships, and Tech-event favours (2026-11-14, for heromedel's review)
+
+Asked by Infall: Godot Version. All Ai-Generated-Proposal unless noted.
+
+1. **Moving a system between ships** at a refit yard: a quarter of its value at its level (buy price plus upgrades;
+   the AZC by its level steps), as heromedel said ("like a quarter of the system's value"); no trailing zero.
+2. **Selling a ship** at a yard: 0.375 × its value (half the 0.75 store price). This is Federation Home Planet's
+   Trade In (`Pricing.tradeIn`, half her value at the Normal rate), with its deductions at 0.242: 1.21 a missing hull
+   point, 1.21 a broken system bar, 2.42 a broken bar of Piloting, Engines or Life Support, 1.21 a breach, and 15
+   percentage points off the share per missing core system (never under 5%); never below 0.
+3. **Tech-event favours:** Azurethea passage and the Lykario autopilot at a quarter of that band's piece price
+   (10.89 in band 3 up to 15.43 in band 8), not a flat 9.68; Mecha with a Mecha crew member 0.6 × the Mecha deal
+   (0.9 × the store price) and GATOS with a GATOS crew member half the store price, both kept.
+4. **First Tech-victory data** (Godot Version, 20 expert games going for it): 4 won, all by the plain ending with 5
+   or 6 pieces; pieces from events 72, surrenders 23, stores 3. If buying should be a real route, show pieces in
+   stores more often rather than lowering the price.
+5. **Crew killers** kill about 1.7 crew a fight, the same as ordinary ships (Godot Version's duels): not a price
+   question; see `concerns.md`, concern 5.
