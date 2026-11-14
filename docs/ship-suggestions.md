@@ -1189,3 +1189,28 @@ the Backup Battery tile at (1,-1), a free tile with no door.
 **Ai-Generated-Proposal (2026-10-29):** the Deck Collapse Mote isn't brought into Infall yet. Its low tech is ion
 blasts only, so it can't damage a hull and fails the shield check (step 9); the Whispwraith win by converting a
 ship's air, which needs their atmosphere rules and the ??? victory path designed first.
+
+## Mid-band additions for the Godot version (2026-11-14)
+
+**Ai-Generated-Proposal (2026-11-14)**, asked by heromedel through Infall: Godot Version: playtests found bands 3–7
+mild and most races fielding one or two hulls there. Written straight into the Godot version's ship file format, in
+`docs/godot-ships/` (rooms, systems with tile and wall, doors, airlocks, mounts and a captain plan). Each layout was
+checked: no overlapping rooms, every system on the floor and off door tiles, Medbays only with systems crew can't man
+(GDD 5B), airlocks on both sides, every room reachable, mounts outside the rooms. Values come from the game's own
+pricing.
+
+| File | Race | Ship | Bands | Squad | In short |
+|---|---|---|---|---|---|
+| `quiet-ledger/ship.xml` | Senti-GPH | Quiet Ledger | 5–6 | Senti Pickets | the larger Senti hull: 5 × 7, the AAA at the heart of the array room; Shield Projector 3, Hacking 2, Crew Teleporter 2, Backup Battery; fire beam and breach laser; 3 Senti. Crew-kill plan |
+| `quiet-ledger/loadout.quiet-ledger.final-archive.xml` | Senti-GPH | Final Archive | 7–8 | Senti Pickets | anti-bio beam, bio bomb (4 missiles), fire beam; Projector 4, AAA 4; 4 Senti |
+| `pirate-hijacker/loadout.pirate-hijacker.howler.xml` | Lykario | Howler | 4–6 | Lykario Pack | a stolen Hijacker with a second Crew Teleporter in the port flank, a stolen Twinshot and a Snarl stun bomb, no Sensors (Animal Senses); 6 Lykario |
+| `hawkmoth/ship.xml` | Azurethea | Hawkmoth | 4–6 | Azurethea Wardens | winged, three body rooms and two wings; Stinger, Pollen Bomb (spores), Lantern; Pheromone Gland 2; Engines 4 for evasion; two shield layers; 4 Azurethea |
+| `light-attack-frame/loadout.light-attack-frame.breacher.xml` | Mecha | Breacher | 4–6 | Mecha Raiders | the battle-cross with hull 12, two shield layers, a breach missile in the pod and an EVB Dock in the spare bay beside its airlock; 3 Mecha |
+| `mercenary-gunship/ship.xml` | Terran (GATOS) | MG-3 "Sellsword" | 4–6 | GATOS Checkpoint | a broad mercenary gunship between two nacelles; Triblast and Longshot, a Crew Teleporter; AZC 3; 5 Terrans |
+
+The Census Picket stays a loadout of the Relay Picket (Hacking fits on a free engine-room tile), as the game has it.
+
+Judgment calls: the Quiet Ledger's Projector 3 and AAA 3 follow the game's tuning (the Deck Collapse file had 2);
+the Breacher uses the laser battlesuit, since the boarding battlesuit of the Mecha mid tier isn't in the game; the
+Howler swaps the Sporewing for the Lykario Snarl stun bomb (stun before boarding); the Sellsword's name follows the
+GATOS designation-plus-nickname style. The Senti system battery for the AAA isn't in the game, so it is left out.
