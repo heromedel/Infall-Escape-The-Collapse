@@ -268,10 +268,9 @@ func _check_outcome() -> void:
 		return
 	if living(0).all(func(ship: Ship): return ship.is_mercenary()):
 		# Ships of the squad's own that jumped out of the fight keep the run alive (GV 3N)
-		if fight_started and ships.any(func(ship: Ship): return ship.side == 0 and ship.escaped and not ship.destroyed and not ship.crew_dead and not ship.is_mercenary()):
+		if fight_started and jumped_out().any(func(ship: Ship): return not ship.is_mercenary()):
 			outcome = "withdrew"
-			_bring_boarders_home()
-			bring_back_jumped_out()
+			leave_behind_away_crew()     # the ships that jumped clear are the squad now; crew still aboard the enemy are lost
 			note("fight_over", {"outcome": outcome})
 			return
 		outcome = "lost"   # mercenaries fly with the squad but don't keep a run alive (GDD 7G)
@@ -301,30 +300,44 @@ func _check_outcome() -> void:
 		note("fight_over", {"outcome": outcome})
 
 
-# --- One ship jumping out of the fight (GV 3N; heromedel, 2026-11-14) ------------------------------------------
+# --- Jumping out of a fight (GV 3N; heromedel, 2026-11-14) -----------------------------------------------------
+# A short jump inside the cluster needs only a charged drive: each ship jumps clear of the fight on its own. The long
+# jump to another cluster is the squad's, by the map, and costs the squad a jump's Mawjig.
 
-## Whether a ship of the squad can jump out of the fight on its own: its own drive charged, the Mawjig for a jump,
-## and another ship still fighting (the last ship out is the squad leaving, by the map).
+## Whether a ship of the squad can jump clear of the fight: its own drive charged.
 func can_jump_out(ship: Ship) -> bool:
-	if ship == null or ship.side != 0 or ship.is_gone() or not in_fight() or not ship.jump_ready():
-		return false
-	if wallet != null and wallet.mawjig < Mawjig.JUMP_COST:
-		return false
-	return living(0).size() > 1
+	return ship != null and ship.side == 0 and not ship.is_gone() and in_fight() and ship.jump_ready()
 
 
-## The ship jumps clear of the fight. It waits there and rejoins when the fight ends; its crew aboard other ships
-## stay where they are.
+## The ship jumps clear of the fight. It waits there; its crew aboard other ships stay where they are.
 func jump_out(ship: Ship) -> bool:
 	if not can_jump_out(ship):
 		return false
-	if wallet != null:
-		wallet.spend(Mawjig.JUMP_COST)
 	ship.escaped = true
 	ship.jump_charge = 0.0
 	for slot in ship.weapons:
 		slot.clear_target()
 	note("jumped_out", {"ship": ship})
+	return true
+
+
+## The squad's ships that have jumped clear of this fight.
+func jumped_out() -> Array[Ship]:
+	var list: Array[Ship] = []
+	for ship in ships:
+		if ship.side == 0 and ship.escaped and not ship.destroyed and not ship.crew_dead:
+			list.append(ship)
+	return list
+
+
+## The squad leaves with the ships that are clear: every ship still fighting is left behind and lost.
+func abandon_the_rest() -> bool:
+	if not in_fight() or jumped_out().is_empty():
+		return false
+	for ship in living(0):
+		ship.hull = 0
+		ship.destroyed = true
+		note("left_behind", {"ship": ship})
 	return true
 
 

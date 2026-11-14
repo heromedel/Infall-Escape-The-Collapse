@@ -480,6 +480,13 @@ func _on_fight_over(outcome: String, finished: Encounter) -> void:
 	Sfx.play_music("explore")
 	if outcome == "lost":
 		return
+	if outcome == "withdrew":
+		# The squad is clear of the fight: straight to the map, to choose where the long jump goes
+		_after_fight(false, true)
+		var admiral := view_of(session.admiral) if session.admiral_is_local() else null
+		if admiral and not session.catching_up:
+			open_map(admiral)
+		return
 	var rewards := runner.fight_rewards(finished) if outcome in ["won", "surrendered"] else {"mawjig": 0, "lines": []}
 	var final_fight: bool = run.cluster().kind == "final" and outcome in ["won", "surrendered"]
 	var window := Overlay.new()
@@ -493,9 +500,6 @@ func _on_fight_over(outcome: String, finished: Encounter) -> void:
 		"surrendered":
 			window.add_title("THEY SURRENDER", UiColours.POWER_GREEN)
 			window.add_text("They power down and pay to be let go." if finished.surrender_pays else "They are gone, and what you demanded is in your hold.", 20)
-		"withdrew":
-			window.add_title("YOUR SHIPS GOT CLEAR", UiColours.WARNING)
-			window.add_text("Every ship still in the fight is lost. The ones that jumped out regroup once the enemy has moved on. There is nothing left here to salvage.", 20)
 		"enemy_fled":
 			window.add_title("THEY GOT AWAY", UiColours.WARNING)
 			window.add_text("The enemy's Jigawatt Drive flares and they're gone. There is nothing left here to salvage.", 20)
@@ -552,7 +556,7 @@ func _after_fight_text() -> String:
 	return "The enemy is beaten. Your crews convert the wreckage into Mawjig."
 
 
-func _after_fight(final_fight: bool) -> void:
+func _after_fight(final_fight: bool, squad_left: bool = false) -> void:
 	run.clear_lost_ships()
 	if final_fight:
 		_win_run()
@@ -560,7 +564,7 @@ func _after_fight(final_fight: bool) -> void:
 	var fought := enemy_squad
 	_show_quiet_cluster()
 	run.save_to_disk()
-	var after_rival := runner.after_rival_event(fought)
+	var after_rival := runner.after_rival_event(fought) if not squad_left else null
 	if after_rival:
 		show_event(after_rival, _mercenaries_after_fight)
 		return
@@ -646,9 +650,36 @@ func _after_the_end() -> void:
 
 # --- The map: jumping and waiting -----------------------------------------------------------------------------
 
+## Leaving a fight (GV 3N; heromedel, 2026-11-14): each ship jumps clear on its own charged drive, a short jump that
+## costs nothing. The map, and the squad's long jump for a jump's Mawjig, come once the squad is clear: all of it,
+## or the ships that are, with the rest left behind.
+const NO_SHIP_CLEAR := "No ship has jumped clear of the fight yet, so there is nowhere to plot a course from. Jump a ship out first, once its drive is charged."
+
+func _leave_the_fight(view: PlayerView) -> void:
+	var clear := encounter.jumped_out()
+	var fighting := encounter.living(0)
+	if clear.is_empty():
+		if encounter.can_squad_jump():
+			view.jump_out_all()      # every drive is charged: the whole squad jumps clear, and the map follows
+		else:
+			view.hud.flash_message(NO_SHIP_CLEAR)
+		return
+	if not session.is_admiral(view.player_id):
+		return
+	var window := Overlay.new()
+	view.open_window(window)
+	window.place_panel(720)
+	window.add_title("LEAVE THEM BEHIND?", UiColours.WARNING)
+	window.add_text("The squad can leave now with the ships that are clear: %s.\n\nThese ships are still in the fight and will be lost, with everyone aboard: %s." % [", ".join(clear.map(func(ship: Ship): return ship.name)), ", ".join(fighting.map(func(ship: Ship): return ship.name))], 20)
+	window.add_button("1. Leave them and plot the jump.", func():
+		window.close()
+		view.abandon_the_rest(), UiColours.DAMAGED_RED)
+	window.add_button("2. Stay in the fight.", window.close)
+
+
 func open_map(view: PlayerView) -> void:
-	if encounter.in_fight() and not encounter.can_squad_jump():
-		view.hud.flash_message("The Jigawatt Drive is still charging.")
+	if encounter.in_fight():
+		_leave_the_fight(view)
 		return
 	var map := MapScreen.new()
 	view.open_window(map)

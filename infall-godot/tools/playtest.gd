@@ -390,7 +390,7 @@ func _fight(run: RunState, runner: EventRunner, squad: SquadDef) -> String:
 			# A ship about to be lost jumps out on its own when its drive is ready (GV 3N); the careless player never does
 			if float(player.flee_below) > 0.0:
 				for ship in encounter.living(0):
-					if float(ship.hull) / ship.max_hull < float(player.flee_below) * 0.7 and encounter.can_jump_out(ship):
+					if float(ship.hull) / ship.max_hull < float(player.flee_below) * 0.7 and encounter.can_jump_out(ship) and encounter.living(0).size() > 1:
 						encounter.jump_out(ship)
 		for note in encounter.notes:
 			if note.kind == "surrender_offer":

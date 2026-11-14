@@ -150,11 +150,12 @@ anything Claude added tagged Ai-Generated-Proposal.
   more, a captain sends what ignores shields at the shield room; the Senti plans cut the shield room first. Senti
   picket fights fell from 32 to 54% of hull lost to 0 to 37%, with no stalemates.
 
-- **N — Built (2026-11-14), heromedel: "do we let individual player ships flee while others haven't fled yet? It
-  might make sense to":** one ship can jump out of a fight on its own. Its own drive must be charged (the HUD shows
-  it under the squad's) and it costs a jump's Mawjig. **Ai-Generated-Proposal:** it waits clear of the fight and
-  rejoins when the fight ends; the last ship still fighting leaves by the map, as the squad always has; if every
-  ship still fighting is lost, the run goes on with the ones that got out. Its crew aboard other ships stay there.
+- **N — Built (2026-11-14), GDD 6F (Proposed, heromedel):** leaving a fight. Each ship jumps clear on its own
+  charged drive, at no cost (JUMP OUT; the HUD shows the selected ship's own drive under the squad's). JUMP in a
+  fight: with no ship clear it says there is nowhere to plot a course from, unless every drive is charged, when
+  the whole squad jumps clear at once; with some clear and some still fighting it lists the ships that will be
+  lost and asks; once the squad is clear the map opens, and the jump from there costs the 1.21. A fight won with
+  ships clear brings them back. If every ship still fighting is lost, the run goes on with the ones that got out.
 
 ## 4. Multiplayer
 

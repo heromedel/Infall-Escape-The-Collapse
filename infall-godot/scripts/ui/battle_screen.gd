@@ -288,6 +288,8 @@ func _show_note(note: Dictionary) -> void:
 			_sound("jump")
 			if note.kind == "jumped_out":
 				flash_message("The %s jumps clear of the fight." % ship.name)
+		"left_behind":
+			flash_message("The %s is left behind." % ship.name)
 		"no_mawjig":
 			flash_message("Not enough Mawjig to fire.")
 		"fight_over":

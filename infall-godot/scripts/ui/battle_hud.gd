@@ -1026,9 +1026,9 @@ func _draw_top_centre(at: Vector2) -> void:
 	if fighting and own and own.side == 0 and not own.is_gone() and encounter.living(0).size() > 1:
 		draw_rect(Rect2(bar.position + Vector2(0, bar.size.y + 2), Vector2(bar.size.x * 0.5 * own.jump_charge, 3)), UiColours.ACCENT if own.jump_charge < 1.0 else UiColours.POWER_GREEN)
 		var out_ready := encounter.can_jump_out(own) and screen.hold_pause == false
-		_button(Rect2(drive_at + Vector2(92, 43), Vector2(78, 18)), "JUMP OUT", func(): screen.jump_out(), "Jump the %s out of the fight on its own (1.21 Mawjig). It waits clear of the fight and rejoins when it ends. When its drive is charged." % own.name, out_ready)
-	var can_jump := encounter.can_squad_jump() and screen.hold_pause == false
-	_button(Rect2(drive_at + Vector2(184, 6), Vector2(96, 44)), "JUMP", func(): screen.jump_pressed.emit(screen), "Open the map and jump the squad to another cluster (1.21 Mawjig). In a fight the drive must charge first, and needs a pilot. Hotkey: J", can_jump, can_jump and _time - floor(_time) < 0.5)
+		_button(Rect2(drive_at + Vector2(92, 43), Vector2(78, 18)), "JUMP OUT", func(): screen.jump_out(), "Jump the %s clear of the fight on its own, once its drive is charged. A short jump inside the cluster costs nothing. It comes back if the fight is won." % own.name, out_ready, out_ready and _time - floor(_time) < 0.5)
+	var can_jump := screen.hold_pause == false and (fighting or encounter.can_squad_jump())
+	_button(Rect2(drive_at + Vector2(184, 6), Vector2(96, 44)), "JUMP", func(): screen.jump_pressed.emit(screen), "Open the map and jump the squad to another cluster (1.21 Mawjig). In a fight each ship first jumps clear on its own charged drive, which needs a pilot; the squad then leaves with the ships that are clear. Hotkey: J", can_jump, encounter.can_squad_jump() and screen.hold_pause == false and _time - floor(_time) < 0.5)
 	_button(Rect2(drive_at + Vector2(288, 6), Vector2(66, 21)), "SHIP", func(): screen.ship_screen_pressed.emit(screen), "Upgrade systems, manage weapons and crew. Hotkey: U", not fighting)
 	if fighting:
 		_button(Rect2(drive_at + Vector2(288, 29), Vector2(66, 21)), "HAIL", func(): screen.hail_pressed.emit(screen), "Hail the enemy squad: ask for surrender, or offer terms.", true)

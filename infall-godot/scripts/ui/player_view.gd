@@ -718,6 +718,16 @@ func recall_eva() -> void:
 		_give({"k": "eva_home", "s": _index(selected_ship)})
 
 
+## Every ship whose drive is charged jumps clear of the fight (GV 3N).
+func jump_out_all() -> void:
+	_give({"k": "jump_out_all"})
+
+
+## The squad leaves with the ships that are clear; the ones still fighting are lost.
+func abandon_the_rest() -> void:
+	_give({"k": "abandon"})
+
+
 ## The selected ship jumps out of the fight on its own (GV 3N).
 func jump_out() -> void:
 	if selected_ship and encounter.can_jump_out(selected_ship):
