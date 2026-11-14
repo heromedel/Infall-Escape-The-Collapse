@@ -9,6 +9,21 @@
   the shape of a laser bolt or a GUI element. Look at the genre first (recordings, reference frames, measured
   numbers), then build our own version of it. What is forbidden is lifting its code, its art files or its text.
 
+## Hard rule: reconcile and move on
+
+- **Hard Rule (heromedel, 2026-11-14):**
+  1. **The newest decision wins.** If something was fixed or decided somewhere, older copies are just out of date.
+     Whoever touches one next updates it quietly, and nobody asks heromedel.
+  2. **Each thing has one home.** Design lives in the GDD and the design docs. A ship's layout lives in its XML.
+     Art means the hull art a game actually loads. Everything else, such as drawings, mockups and tests, is an
+     example and never something to reconcile.
+  3. **Only real clashes go to heromedel:** two current decisions that disagree. For a given game version, the
+     newest one wins.
+
+  If shields took 2 damage per layer and were updated to 1, the update happened for a reason. If a ship had a
+  design note with a door but the approved design doesn't, the approved design was still approved: unless it is
+  broken or breaks a Hard Rule, move on. Reconcile and move on; don't complain or nitpick.
+
 A design-stage project: we are writing a game design document, not building the game yet.
 
 - Follow `docs/game-project-standards.md`: standard rules (workflow, labelling of plans/steps/questions,
