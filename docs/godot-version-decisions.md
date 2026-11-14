@@ -412,6 +412,13 @@ anything Claude added tagged Ai-Generated-Proposal.
   layer, and once the layers are gone the tiles after it take the beam's full damage.
 - **H — Built (2026-11-14):** the genre's Backup Battery: two extra power a level for 30 s, then 20 s to recharge;
   8.47, level 2 another 12.11.
+- **J — Built (2026-11-14), GDD 8L (Likely) and 8M (Proposed):** a ship may carry several weapon systems. Each
+  weapon is fitted to one and draws on that system's bars only, so damage or ion to one weapon system leaves the
+  other's weapons firing; each has its own gunner. The WEAPONS card has a row for each, the first at the bottom,
+  and the number keys run row by row. A ship file labels them (`label="A"`, `label="B"`) and a weapon names its
+  system. The Pirate Hijacker (Twinshot on A, Sporewing on B; its loadouts as the docs have them) and the Tentauri
+  scout and Pappus (one weapon on each) use it. Not built from 8M: slots set by a system's level, `maxSlots`, and
+  mounts kept for one system.
 - **I — Proposed (Infall: Eco, 2026-11-14; heromedel: "makes sense"), built:** a store asks 75% of a ship's value
   on Normal, 50% on Easy and 100% on Hard (it was 115%).
 

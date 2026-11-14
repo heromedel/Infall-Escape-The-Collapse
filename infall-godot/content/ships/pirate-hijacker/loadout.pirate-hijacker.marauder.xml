@@ -4,15 +4,15 @@
 <loadout id="marauder" ship="pirate-hijacker" name="Pirate Marauder" inherit="patch" class="Marauder" hull="20">
 	<reactor type="core" level="4"/>
 	<system id="shields" tile="-2,-3" level="6" wall="west"/>
-	<system id="weapons" tile="2,-3" level="5" wall="east"/>
+	<system id="weapons" label="A" tile="2,-3" level="4" wall="east"/>
 	<system id="engines" tile="-1,6" level="4" wall="south"/>
 	<system id="crew-teleporter" tile="2,2" level="3" wall="east"/>
 	<system id="medbay" tile="-2,2" level="3" wall="west"/>
 	<system id="doors" tile="-1,-4" level="3" wall="west"/>
 	<weapons>
-		<weapon id="gat-3-1" mount="3"/>
-		<weapon id="sporewing" mount="4"/>
-		<weapon id="gat-m2" mount="1"/>
+		<weapon id="gat-3-1" mount="3" system="A"/>
+		<weapon id="sporewing" mount="4" system="B"/>
+		<weapon id="gat-m2" mount="1" system="A"/>
 	</weapons>
 	<crew>
 		<member race="terran" count="6"/>

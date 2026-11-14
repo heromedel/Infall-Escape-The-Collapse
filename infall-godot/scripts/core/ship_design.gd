@@ -206,7 +206,7 @@ func _read(node: XmlTree) -> void:
 			"weapons":
 				weapons.clear()
 				for weapon_node in child.all("weapon"):
-					weapons.append({"id": weapon_node.get_attr("id"), "mount": weapon_node.get_int("mount", -1)})
+					weapons.append({"id": weapon_node.get_attr("id"), "mount": weapon_node.get_int("mount", -1), "system": weapon_node.get_attr("system", "")})
 			"suits":
 				suits.clear()
 				for suit_node in child.all("suit"):

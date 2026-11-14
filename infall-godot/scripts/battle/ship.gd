@@ -107,7 +107,10 @@ static func from_design(ship_design: ShipDesign, ship_side: int, rng: RandomNumb
 	for entry in ship_design.weapons:
 		var weapon_def := Library.weapon(entry.id)
 		if weapon_def:
-			ship.weapons.append(WeaponSlot.create(weapon_def, entry.mount))
+			var slot := WeaponSlot.create(weapon_def, entry.mount)
+			slot.system = ship.weapon_system_labelled(entry.get("system", ""))
+			ship.weapons.append(slot)
+	ship.group_weapons()
 	ship.suits.assign(ship_design.suits)
 	var taken: Array = []
 	for entry in ship_design.crew:
@@ -428,7 +431,7 @@ func system_power(system: ShipSystem) -> int:
 	match reactor_type:
 		"pool":
 			if system.behaviour == "weapons":
-				bars = mini(usable, powered_weapon_load())
+				bars = mini(usable, powered_weapon_load(system))
 			elif system.def.draws_power:
 				bars = mini(usable, system.power)
 			else:
@@ -443,17 +446,71 @@ func system_power(system: ShipSystem) -> int:
 	return bars
 
 
-func powered_weapon_load() -> int:
+# A ship may carry several weapon systems (GDD 8L). Each weapon is fitted to one of them and draws on that system's
+# bars only: damage or ion to a weapon system takes its own weapons down and leaves the other system's firing.
+
+## The ship's weapon systems, in the order its file lists them.
+func weapon_systems() -> Array[ShipSystem]:
+	var found: Array[ShipSystem] = []
+	for system in systems:
+		if system.behaviour == "weapons":
+			found.append(system)
+	return found
+
+
+## The weapon system with this label ("A", "B"); the first one when the label is empty or unknown.
+func weapon_system_labelled(label: String) -> ShipSystem:
+	var first: ShipSystem = null
+	for system in systems:
+		if system.behaviour == "weapons":
+			if first == null:
+				first = system
+			if label != "" and system.label == label:
+				return system
+	return first
+
+
+## The weapon system a weapon is fitted to.
+func weapon_system_of(slot: WeaponSlot) -> ShipSystem:
+	return slot.system if slot.system != null and systems.has(slot.system) else system_by("weapons")
+
+
+## Keeps the weapons in the order of their weapon systems, so the first system's weapons come first and the number
+## keys keep their meaning row by row (GDD 8L).
+func group_weapons() -> void:
+	var grouped: Array[WeaponSlot] = []
+	for system in weapon_systems():
+		for slot in weapons:
+			if weapon_system_of(slot) == system:
+				grouped.append(slot)
+	for slot in weapons:
+		if not grouped.has(slot):
+			grouped.append(slot)
+	weapons = grouped
+
+
+## The weapons fitted to one weapon system.
+func weapons_on(system: ShipSystem) -> Array[WeaponSlot]:
+	var found: Array[WeaponSlot] = []
+	for slot in weapons:
+		if weapon_system_of(slot) == system:
+			found.append(slot)
+	return found
+
+
+## The power the switched-on weapons draw: on one weapon system, or on all of them.
+func powered_weapon_load(system: ShipSystem = null) -> int:
 	var load := 0
 	for slot in weapons:
-		if slot.powered:
+		if slot.powered and (system == null or weapon_system_of(slot) == system):
 			load += slot.def.power
 	return load
 
 
-## Bars the weapons can draw on: what the weapons system can carry.
-func weapon_capacity() -> int:
-	var system := system_by("weapons")
+## Bars a weapon system's weapons can draw on: what that system can carry.
+func weapon_capacity(system: ShipSystem = null) -> int:
+	if system == null:
+		system = system_by("weapons")
 	if system == null or system.spored:
 		return 0
 	var usable := system.working_bars()
@@ -498,7 +555,7 @@ func reactor_used() -> int:
 		if not system.def.draws_power:
 			continue
 		if system.behaviour == "weapons":
-			used += powered_weapon_load()
+			used += powered_weapon_load(system)
 		else:
 			used += system.power
 	return used
@@ -566,7 +623,7 @@ func can_add_power(system: ShipSystem) -> bool:
 	match reactor_type:
 		"pool":
 			if system.behaviour == "weapons":
-				return _next_unpowered_weapon() != null
+				return _next_unpowered_weapon(system) != null
 			var bars := _bars_a_press_adds(system)
 			return system.power + bars <= system.working_bars() and reactor_free() >= bars
 		"core":
@@ -580,7 +637,7 @@ func add_power(system: ShipSystem) -> bool:
 	match reactor_type:
 		"pool":
 			if system.behaviour == "weapons":
-				return set_weapon_powered(_next_unpowered_weapon(), true)
+				return set_weapon_powered(_next_unpowered_weapon(system), true)
 			system.power += _bars_a_press_adds(system)
 		"core":
 			system.enabled = true
@@ -594,7 +651,7 @@ func remove_power(system: ShipSystem) -> bool:
 		"pool":
 			if system.behaviour == "weapons":
 				for index in range(weapons.size() - 1, -1, -1):
-					if weapons[index].powered:
+					if weapons[index].powered and weapon_system_of(weapons[index]) == system:
 						return set_weapon_powered(weapons[index], false)
 				return false
 			system.power_lost = 0
@@ -608,9 +665,9 @@ func remove_power(system: ShipSystem) -> bool:
 	return true
 
 
-func _next_unpowered_weapon() -> WeaponSlot:
+func _next_unpowered_weapon(system: ShipSystem = null) -> WeaponSlot:
 	for slot in weapons:
-		if not slot.powered and _weapon_fits(slot):
+		if not slot.powered and (system == null or weapon_system_of(slot) == system) and _weapon_fits(slot):
 			return slot
 	return null
 
@@ -623,15 +680,15 @@ func can_power_weapon(slot: WeaponSlot) -> bool:
 func _weapon_fits(slot: WeaponSlot) -> bool:
 	if slot.def.type == "suit":
 		return false
-	var capacity := weapon_capacity()
+	var system := weapon_system_of(slot)
+	if system == null:
+		return false
+	var capacity := weapon_capacity(system)
 	if reactor_type == "pool":
-		var system := system_by("weapons")
-		if system == null:
-			return false
 		capacity = system.working_bars()
 		if reactor_free() < slot.def.power:
 			return false
-	return powered_weapon_load() + slot.def.power <= capacity
+	return powered_weapon_load(system) + slot.def.power <= capacity
 
 
 func set_weapon_powered(slot: WeaponSlot, on: bool) -> bool:
@@ -718,15 +775,22 @@ func settle_power() -> void:
 					break
 			if not dropped:
 				break
-	var capacity := weapon_capacity()
-	if reactor_type == "pool":
-		capacity = mini(capacity, powered_weapon_load() + reactor_free())
-	for index in range(weapons.size() - 1, -1, -1):
-		if powered_weapon_load() <= capacity:
-			break
-		if weapons[index].powered:
-			weapons[index].powered = false
-			weapons[index].power_lost = true
+	# Each weapon system sheds its own weapons, the last fitted first, when it can no longer carry them
+	for system in weapon_systems():
+		var capacity := weapon_capacity(system)
+		if reactor_type == "pool":
+			capacity = mini(capacity, powered_weapon_load(system) + reactor_free())
+		for index in range(weapons.size() - 1, -1, -1):
+			if powered_weapon_load(system) <= capacity:
+				break
+			if weapons[index].powered and weapon_system_of(weapons[index]) == system:
+				weapons[index].powered = false
+				weapons[index].power_lost = true
+	if weapon_systems().is_empty():
+		for slot in weapons:
+			if slot.powered:
+				slot.powered = false
+				slot.power_lost = true
 
 
 ## Gives back, as the genre does, the power damage or ion took once the bars work again. If the reactor's power has
@@ -753,11 +817,11 @@ func give_back_power() -> void:
 
 ## Whether the weapons system itself has the bars for a weapon, whatever the reactor has free.
 func _weapon_room(slot: WeaponSlot) -> bool:
-	var system := system_by("weapons")
+	var system := weapon_system_of(slot)
 	if system == null:
 		return false
-	var capacity := system.working_bars() if reactor_type == "pool" else weapon_capacity()
-	return powered_weapon_load() + slot.def.power <= capacity
+	var capacity := system.working_bars() if reactor_type == "pool" else weapon_capacity(system)
+	return powered_weapon_load(system) + slot.def.power <= capacity
 
 
 # --- Combat numbers -------------------------------------------------------------------------------------------
@@ -1288,7 +1352,7 @@ func to_save() -> Dictionary:
 				"room": system.room, "cell": [system.cell.x, system.cell.y], "wall": system.wall, "own_power": system.own_power,
 				"power": system.power, "enabled": system.enabled})
 	for slot in weapons:
-		data.weapons.append({"id": slot.def.id, "mount": slot.mount_id, "powered": slot.powered})
+		data.weapons.append({"id": slot.def.id, "mount": slot.mount_id, "powered": slot.powered, "system": weapon_system_of(slot).label if weapon_system_of(slot) else ""})
 	for member in crew:
 		if not member.dead:
 			data.crew.append(member.to_save())
@@ -1333,7 +1397,9 @@ static func from_save(data: Dictionary, ship_side: int) -> Ship:
 		if def:
 			var slot := WeaponSlot.create(def, int(entry.mount))
 			slot.powered = bool(entry.get("powered", false))
+			slot.system = ship.weapon_system_labelled(String(entry.get("system", "")))
 			ship.weapons.append(slot)
+	ship.group_weapons()
 	ship.suits.assign(data.get("suits", []))
 	ship.assigned.assign(data.get("assigned", []).map(func(id): return int(id)))
 	for key in data.get("contract", {}):

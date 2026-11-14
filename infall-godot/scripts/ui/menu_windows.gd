@@ -38,6 +38,8 @@ static func pause_menu(on_resume: Callable, on_settings: Callable, on_save_quit:
 const HOW_TO_PLAY := [
 	["The goal", "Jump from cluster to cluster toward the rim of the galaxy, ahead of the collapse, and beat whoever is waiting at the way out. The run is lost when every scout ship is gone."],
 	["Mawjig", "Fuel, ammunition and money in one. A jump costs 1.21, every shot a little, and stores take it for repairs, weapons, crew and ships. Won fights and events pay it."],
+	["The collapse", "It grows from the centre of the galaxy with every jump and every wait, and swallows the clusters it reaches. Stay ahead of it."],
+	["Your ship", "Hull is its health. Each shield layer stops one laser hit and then recharges. Evasion is the chance a shot misses you: it needs a pilot and powered engines. Air keeps the crew alive."],
 	["Pause", "Space. Give orders while paused."],
 	["Attack", "Click a weapon (or press 1 to 6), then click a room of an enemy ship. It fires when charged. V or AUTOFIRE keeps weapons firing."],
 	["Power", "Click a system's bars to give it power, right click to take it away. Or use the key in its tooltip, with Shift to take away."],

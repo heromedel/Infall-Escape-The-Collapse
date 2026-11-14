@@ -115,6 +115,8 @@ How it was tested and what the playtesters found is in `docs/handoffs/build-repo
 - **A store ship costs 75% of its value** on Normal (Infall: Eco), in place of 115%.
 - **Playtesters** (`tools/playtest`): three bots that play whole runs, careless, watcher and expert.
 - A hull's stripe takes the ship's power colour (the Patrol Cutter).
+- **Several weapon systems on one ship** (GDD 8L): each its own row of slots; the Pirate Hijacker and the Tentauri
+  scout have Weapons A and B.
 - `Beams vs Shields: Penetrate (Classic) > Hit (Damages Shields First)` (GDD 8Q), and the Doors subsystem's two
   buttons, doors and airlocks, each flipping between open and close.
 
@@ -162,8 +164,9 @@ share a screen (three across and two down for five or six). The Admiral leaving 
 - The vote and lock-in multiplayer settings, and player profiles (GV 4G).
 - The Tech victory and other victory paths (ideas); the win is reaching the rim.
 - Augments and drones (the design moves drones into EVB suits and race systems).
-- Several weapon systems on one ship (GDD 8L), the EVA Dock (GDD 8R), the Senti system battery, the three Senti
-  crew killers (they need fire beams, an anti-crew beam and bio bombs).
+- The EVA Dock (GDD 8R), the Senti system battery, the three Senti crew killers (they need fire beams, an
+  anti-crew beam and bio bombs), and from GDD 8M: weapon slots set by a system's level and mounts kept for one
+  system.
 
 ## Crew art still to fill in (GV 7F)
 

@@ -225,12 +225,13 @@ func _bring_boarders_home() -> void:
 # --- Weapons --------------------------------------------------------------------------------------------------
 
 func _tick_weapons(ship: Ship, fighting: bool) -> void:
-	var weapons_system := ship.system_by("weapons")
-	var gunner: CrewMember = weapons_system.manned_by if weapons_system else null
-	var rate := 1.0
-	if gunner:
-		rate += [0.1, 0.15, 0.2][gunner.skill_level("weapons")]
 	for slot in ship.weapons:
+		# Each weapon charges with the gunner at its own weapon system's console (GDD 8L)
+		var weapons_system := ship.weapon_system_of(slot)
+		var gunner: CrewMember = weapons_system.manned_by if weapons_system else null
+		var rate := 1.0
+		if gunner:
+			rate += [0.1, 0.15, 0.2][gunner.skill_level("weapons")]
 		slot.slide = move_toward(slot.slide, 1.0 if slot.powered else 0.0, 0.06)
 		if slot.fired_flash > 0:
 			slot.fired_flash -= 1

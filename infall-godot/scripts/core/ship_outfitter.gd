@@ -26,7 +26,17 @@ static func fit_weapon(ship: Ship, def: WeaponDef) -> bool:
 	if free.is_empty():
 		return false
 	var slot := WeaponSlot.create(def, free[0])
+	# Onto the weapon system with the most bars to spare for it (GDD 8L); a ship with one system has no choice
+	var most := -999
+	for system in ship.weapon_systems():
+		var spare: int = system.level
+		for fitted in ship.weapons_on(system):
+			spare -= fitted.def.power
+		if spare > most:
+			most = spare
+			slot.system = system
 	ship.weapons.append(slot)
+	ship.group_weapons()
 	ship.set_weapon_powered(slot, true)
 	return true
 

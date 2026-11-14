@@ -187,7 +187,7 @@ func _card_size(id: String, ship: Ship) -> Vector2:
 		"weapons":
 			if ship.weapons.filter(func(s): return s.def.type != "suit").is_empty() and ship.system_by("weapons") == null:
 				return Vector2.ZERO
-			return Vector2(maxi(_weapon_slots(ship).size(), 1) * (WEAPON_SLOT.x + 8) + 16, WEAPON_SLOT.y + 74)
+			return _weapons_card_size(ship)
 		"specials":
 			var count := _special_buttons(ship).size()
 			return Vector2(170, count * 38.0 + 40.0) if count > 0 else Vector2.ZERO
@@ -646,7 +646,9 @@ func _button(rect: Rect2, text: String, action: Callable, tooltip: String = "", 
 # --- Power ----------------------------------------------------------------------------------------------------
 
 const SYSTEM_COLUMN := 44.0
-const POWER_HEIGHT := 170.0
+const POWER_HEIGHT := 182.0
+const ICON_BASE := 42.0             # how far above the card's bottom a system's icon sits; its short name goes under it
+const SHORT_NAMES := {"shields": "SHLD", "engines": "ENG", "weapons": "WPN", "oxygen": "AIR", "medbay": "MED", "teleporter": "TELE", "cloaking": "CLOAK", "evb_dock": "EVB", "hacking": "HACK", "mind_control": "MIND", "aaa": "ARRAY", "supershield": "SUPER", "piloting": "PILOT", "sensors": "SENS", "doors": "DOORS", "battery": "BATT", "growth_organ": "GROW", "servicing_core": "CORE"}
 const POWER_BAR := 9.0
 
 
@@ -666,12 +668,12 @@ func _draw_power(ship: Ship, at: Vector2) -> void:
 	UiKit.draw_frame(self, rect, _panel())
 	UiKit.draw_text(self, at + Vector2(12, 22), "SYSTEMS", 13, UiColours.TEXT_DIM, UiKit.font_bold())
 	# The power source: reactor bars, the AZC, or nothing for a self-powered ship
-	var source_at := Vector2(x + 14, bottom - 30)
+	var source_at := Vector2(x + 14, bottom - ICON_BASE)
 	match ship.reactor_type:
 		"pool":
 			var total := ship.reactor_total()
 			var free := ship.reactor_free()
-			var shown := mini(total, 14)
+			var shown := mini(total, 10)
 			for index in shown:
 				var cell := Rect2(source_at + Vector2(0, -index * (bar_height + 2) - bar_height), Vector2(30, bar_height))
 				draw_rect(cell, UiColours.player_power(ship.race) if index < free else UiColours.BAR_EMPTY)
@@ -694,7 +696,7 @@ func _draw_power(ship: Ship, at: Vector2) -> void:
 			UiKit.draw_text(self, source_at + Vector2(0, 16), "POWERED", 14, UiColours.TEXT_DIM, UiKit.font_bold())
 	x += 120.0
 	for system in main_systems:
-		_draw_system_column(ship, system, Vector2(x, bottom - 30), SYSTEM_COLUMN, bar_height, true)
+		_draw_system_column(ship, system, Vector2(x, bottom - ICON_BASE), SYSTEM_COLUMN, bar_height, true)
 		x += SYSTEM_COLUMN
 
 
@@ -704,7 +706,7 @@ func _draw_subsystems(ship: Ship, at: Vector2) -> void:
 	UiKit.draw_text(self, at + Vector2(12, 22), "SUBSYSTEMS", 13, UiColours.TEXT_DIM, UiKit.font_bold())
 	var x := at.x + 10.0
 	for system in _power_systems(ship, false):
-		_draw_system_column(ship, system, Vector2(x, at.y + POWER_HEIGHT - 30), SYSTEM_COLUMN, POWER_BAR, false)
+		_draw_system_column(ship, system, Vector2(x, at.y + POWER_HEIGHT - ICON_BASE), SYSTEM_COLUMN, POWER_BAR, false)
 		x += SYSTEM_COLUMN
 
 
@@ -739,7 +741,9 @@ func _draw_system_column(ship: Ship, system: ShipSystem, base: Vector2, column: 
 		var flash := 0.5 + 0.5 * sin(_time * 9.0)
 		draw_circle(icon_centre + Vector2(-12, -12), 5, Color(UiColours.DAMAGED_RED, flash))
 	var rect := Rect2(base + Vector2(0, -level * (bar_height + 2) - 30), Vector2(column - 4, level * (bar_height + 2) + 48))
-	var button_at := Vector2(base.x + 1, maxf(base.y + 30.0 - POWER_HEIGHT + 26.0, rect.position.y - 22.0))
+	var short_name: String = SHORT_NAMES.get(system.behaviour, system.def.name.left(5).to_upper()) + (" " + system.label if not system.label.is_empty() else "")
+	UiKit.draw_text(self, icon_centre + Vector2(-column * 0.5, 28), short_name, 9, UiColours.TEXT_DIM, UiKit.font_bold(), HORIZONTAL_ALIGNMENT_CENTER, column)
+	var button_at := Vector2(base.x + 1, maxf(base.y + ICON_BASE - POWER_HEIGHT + 26.0, rect.position.y - 22.0))
 	for entry in _system_buttons(ship, system):
 		_icon_button(Rect2(button_at, Vector2(column - 8, 20)), entry[0], entry[1], entry[2], entry[3], entry[4])
 		button_at.y -= 23.0
@@ -795,23 +799,48 @@ func _weapon_slots(ship: Ship) -> Array:
 	return ship.weapons.filter(func(s): return s.def.type != "suit")
 
 
-func _draw_weapons(ship: Ship, card_at: Vector2) -> void:
-	var weapons_system := ship.system_by("weapons")
+## The weapons a row at a time: one row for each weapon system the ship carries (GDD 8L), [system, its weapons].
+func _weapon_rows(ship: Ship) -> Array:
 	var slots := _weapon_slots(ship)
+	var systems := ship.weapon_systems()
+	if systems.size() <= 1:
+		return [[systems[0] if not systems.is_empty() else null, slots]]
+	var rows: Array = []
+	for system in systems:
+		rows.append([system, slots.filter(func(slot: WeaponSlot): return ship.weapon_system_of(slot) == system)])
+	return rows
+
+
+func _weapons_card_size(ship: Ship) -> Vector2:
+	var rows := _weapon_rows(ship)
+	var widest := 1
+	for row in rows:
+		widest = maxi(widest, row[1].size())
+	return Vector2(widest * (WEAPON_SLOT.x + 8) + 16, rows.size() * (WEAPON_SLOT.y + 30) + 44)
+
+
+## Each weapon system is its own row of slots, stacked upward with the first at the bottom, so the number keys keep
+## their meaning (GDD 8L).
+func _draw_weapons(ship: Ship, card_at: Vector2) -> void:
+	var rows := _weapon_rows(ship)
 	var slot_size := WEAPON_SLOT
-	var count := maxi(slots.size(), 1)
-	var width := count * (slot_size.x + 8) + 16
-	var at := card_at + Vector2(8, 30)
-	var rect := Rect2(card_at, Vector2(width, slot_size.y + 40 + 34))
+	var card := _weapons_card_size(ship)
+	var width := card.x
+	var rect := Rect2(card_at, card)
 	UiKit.draw_frame(self, rect, _panel())
-	UiKit.draw_text(self, at + Vector2(0, -10), "WEAPONS", 15, UiColours.TEXT_DIM, UiKit.font_bold())
-	if weapons_system:
-		var capacity := ship.weapon_capacity() if ship.reactor_type != "pool" else weapons_system.working_bars()
-		UiKit.draw_text(self, at + Vector2(90, -10), "%d / %d power" % [ship.powered_weapon_load(), maxi(0, capacity)], 14, UiColours.TEXT_DIM)
-	for index in slots.size():
-		var slot: WeaponSlot = slots[index]
-		var slot_rect := Rect2(at + Vector2(index * (slot_size.x + 8), 0), slot_size)
-		_draw_weapon_slot(ship, slot, ship.weapons.find(slot), slot_rect)
+	var at := card_at + Vector2(8, 30 + (rows.size() - 1) * (slot_size.y + 30))
+	for index in rows.size():
+		var weapons_system: ShipSystem = rows[index][0]
+		var row_at := card_at + Vector2(8, 30 + (rows.size() - 1 - index) * (slot_size.y + 30))
+		var title := "WEAPONS" if weapons_system == null or weapons_system.label.is_empty() else "WEAPONS %s" % weapons_system.label
+		UiKit.draw_text(self, row_at + Vector2(0, -10), title, 15, UiColours.TEXT_DIM, UiKit.font_bold())
+		if weapons_system:
+			var capacity := ship.weapon_capacity(weapons_system) if ship.reactor_type != "pool" else weapons_system.working_bars()
+			UiKit.draw_text(self, row_at + Vector2(112 if not weapons_system.label.is_empty() else 90, -10), "%d / %d power" % [ship.powered_weapon_load(weapons_system), maxi(0, capacity)], 14, UiColours.TEXT_DIM)
+		var row_slots: Array = rows[index][1]
+		for place in row_slots.size():
+			var slot: WeaponSlot = row_slots[place]
+			_draw_weapon_slot(ship, slot, ship.weapons.find(slot), Rect2(row_at + Vector2(place * (slot_size.x + 8), 0), slot_size))
 	var auto_rect := Rect2(at + Vector2(width - 16 - 150, slot_size.y + 6), Vector2(150, 30))
 	_button(auto_rect, "AUTOFIRE", func(): screen.toggle_autofire(), "Autofire: weapons keep firing at their targets every time they charge. Hold Ctrl while aiming to do the opposite for that shot. Hotkey: V", true, screen.autofire_default)
 
@@ -873,15 +902,15 @@ func _system_buttons(ship: Ship, system: ShipSystem) -> Array:
 		"evb_dock":
 			return [["go", func(): screen.start_suit_launch(), "A crew member in the EVB Dock room suits up and flies out to fight an enemy ship. Each launch uses a new suit (%s Mawjig). Hotkey: B" % Mawjig.format(Library.weapon(ship.suits[0]).cost_per_volley) if not ship.suits.is_empty() else "No suits left.", fighting and ship.evb_cooldown <= 0 and not ship.suits.is_empty() and not ship.suit_out and ship.system_power(system) > 0, ship.evb_cooldown]]
 		"cloaking":
-			return [["go", func(): screen.cloak(ship), "Hide the ship: most shots miss and its weapons hold their charge. Hotkey: C", ship.cloak_ticks <= 0 and ship.cloak_cooldown <= 0 and ship.system_power(system) > 0, ship.cloak_cooldown]]
+			return [["cloak", func(): screen.cloak(ship), "Hide the ship: most shots miss and its weapons hold their charge. Hotkey: C", ship.cloak_ticks <= 0 and ship.cloak_cooldown <= 0 and ship.system_power(system) > 0, ship.cloak_cooldown]]
 		"battery":
-			return [["go", func(): screen.use_battery(), "Switch on the Backup Battery: %d extra power for 30 s, then 20 s to recharge." % (2 * system.level), encounter.can_use_battery(ship), ship.battery_cooldown]]
+			return [["bolt", func(): screen.use_battery(), "Switch on the Backup Battery: %d extra power for 30 s, then 20 s to recharge." % (2 * system.level), encounter.can_use_battery(ship), ship.battery_cooldown]]
 		"hacking":
 			if ship.hack_system == null:
-				return [["go", func(): screen.start_hack(), "Latch %s onto one enemy system: click its room. It holds there for the fight. Hotkey: N" % system.def.name, fighting and ship.system_power(system) > 0, -1]]
-			return [["go", func(): screen.start_hack(), "Shut down the %s of the %s for a few seconds (%s Mawjig). Hotkey: N" % [ship.hack_system.def.name, ship.hack_target.name, Mawjig.format(Encounter.HACK_COST)], encounter.can_hack(ship) and fighting, ship.hack_cooldown]]
+				return [["probe", func(): screen.start_hack(), "Latch %s onto one enemy system: click its room. It holds there for the fight. Hotkey: N" % system.def.name, fighting and ship.system_power(system) > 0, -1]]
+			return [["pulse", func(): screen.start_hack(), "Shut down the %s of the %s for a few seconds (%s Mawjig). Hotkey: N" % [ship.hack_system.def.name, ship.hack_target.name, Mawjig.format(Encounter.HACK_COST)], encounter.can_hack(ship) and fighting, ship.hack_cooldown]]
 		"mind_control":
-			return [["go", func(): screen.start_mind_control(), "Take over one enemy crew member you can see, aboard their ship or yours: click them (%s Mawjig). Hotkey: M" % Mawjig.format(Encounter.MIND_COST), encounter.can_mind_control(ship) and fighting, ship.mind_cooldown]]
+			return [["mind", func(): screen.start_mind_control(), "Take over one enemy crew member you can see, aboard their ship or yours: click them (%s Mawjig). Hotkey: M" % Mawjig.format(Encounter.MIND_COST), encounter.can_mind_control(ship) and fighting, ship.mind_cooldown]]
 	return []
 
 
@@ -912,7 +941,24 @@ func _icon_button(rect: Rect2, glyph: String, action: Callable, tooltip: String,
 		"recall":    # an arrow home
 			draw_line(c + Vector2(0, -6), c + Vector2(0, 2), colour, 2.5)
 			draw_colored_polygon(PackedVector2Array([c + Vector2(0, 7), c + Vector2(-6, 1), c + Vector2(6, 1)]), colour)
-		_:           # use it
+		"cloak":     # an eye, struck through
+			draw_arc(c + Vector2(0, 5), 10, PI * 1.2, PI * 1.8, 8, colour, 1.6, true)
+			draw_arc(c + Vector2(0, -5), 10, PI * 0.2, PI * 0.8, 8, colour, 1.6, true)
+			draw_circle(c, 2.2, colour)
+			draw_line(c + Vector2(-8, 6), c + Vector2(8, -6), colour, 1.6, true)
+		"bolt":      # a lightning bolt
+			draw_polyline(PackedVector2Array([c + Vector2(3, -7), c + Vector2(-4, 1), c + Vector2(2, 1), c + Vector2(-3, 7)]), colour, 2.0, true)
+		"probe":     # a probe on its way: a dot and an arrow to a box
+			draw_circle(c + Vector2(-10, 0), 2.2, colour)
+			draw_line(c + Vector2(-7, 0), c + Vector2(1, 0), colour, 1.8)
+			draw_colored_polygon(PackedVector2Array([c + Vector2(5, 0), c + Vector2(0, -4), c + Vector2(0, 4)]), colour)
+			draw_rect(Rect2(c + Vector2(7, -5), Vector2(7, 10)), colour, false, 1.6)
+		"pulse":     # a pulse: a flat line with a spike
+			draw_polyline(PackedVector2Array([c + Vector2(-12, 2), c + Vector2(-5, 2), c + Vector2(-2, -6), c + Vector2(2, 6), c + Vector2(5, 2), c + Vector2(12, 2)]), colour, 1.8, true)
+		"mind":      # a spiral
+			draw_arc(c, 6.5, 0, PI * 1.5, 12, colour, 1.6, true)
+			draw_arc(c + Vector2(0, 1.5), 3.2, PI * 0.5, PI * 2.0, 10, colour, 1.6, true)
+		_:           # launch: an arrow away
 			draw_colored_polygon(PackedVector2Array([c + Vector2(-5, -6), c + Vector2(7, 0), c + Vector2(-5, 6)]), colour)
 	if glyph.ends_with("_air"):
 		# Air between the leaves: two wavy lines
@@ -1131,7 +1177,7 @@ func _draw_overlays() -> void:
 			line = ("paused by %s · " % session.titled_name(by) if by > 0 else "") + ("press Space to resume" if screen.is_admiral() else "%s resumes" % session.titled_name(session.admiral))
 		UiKit.draw_text(self, Vector2(centre.x, 178), line, 17, UiColours.TEXT_DIM, null, HORIZONTAL_ALIGNMENT_CENTER, 0)
 	if screen.aim_mode == "" and _wants_a_hint():
-		_draw_notice("To attack: click a weapon at the bottom, then a room of the enemy ship. Space pauses.", size.y - 300, UiColours.TARGET_YELLOW)
+		_draw_notice("To attack: click a weapon at the bottom, then a room of the enemy ship. Space pauses.", 226, UiColours.TARGET_YELLOW)
 	if screen.aim_mode != "":
 		var hint: String = {"weapon": "Click a tile of an enemy ship to aim. Right click cancels.", "beam": "Press on an enemy tile and drag to aim the beam's sweep.", "teleport": "Click an enemy room to send boarders.", "suit": "Click an enemy ship to send the battlesuit.", "hack": "Click an enemy system to latch the probe onto it. Right click cancels.", "mind": "Click an enemy crew member you can see to take them over. Right click cancels."}.get(screen.aim_mode, "")
 		_draw_notice(hint, size.y - 300, UiColours.TARGET_YELLOW)

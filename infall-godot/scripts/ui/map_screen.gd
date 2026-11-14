@@ -180,7 +180,7 @@ func _update_info() -> void:
 	if not states.is_empty():
 		lines.append(", ".join(states))
 	if index == run.current:
-		lines.append("[color=#66ff66]Your squad is here.[/color]")
+		lines.append("[color=#66ff66]Your squad is here.[/color] The way out is the rim: head away from the galaxy's centre.")
 	if run.galaxy.is_rim(index):
 		lines.append("[color=#ffd46b]The rim: the edge of the galaxy, and the way out. Someone else wants out too.[/color]")
 	elif _readable(index):

@@ -62,6 +62,8 @@ Still rough, from the last round:
 | A hull's stripe in the ship's power colour | heromedel, 2026-11-13 | The Patrol Cutter |
 | `Beams vs Shields: Penetrate (Classic) > Hit (Damages Shields First)` | GDD 8Q | Off by default. With Hit, the Senti beam ships win their duels about a quarter sooner |
 | Two door buttons that flip between open and close | heromedel (his option B and icons) | Doors and airlocks |
+| Several weapon systems on one ship | GDD 8L | A row of slots for each; each draws on its own bars and has its own gunner. The Pirate Hijacker and the Tentauri scout have Weapons A and B, as the docs have them |
+| Short names under the system icons; a different sign on each system's button | Second blind test | SHLD, ENG, WPN A… |
 | The dock rule, the Hijacker's door, the Patrol Cutter's hull, the shields room value | Earlier the same day | |
 
 ## Blind testers
@@ -93,8 +95,7 @@ Not fixed:
 
 ## Not built
 
-- Several weapon systems on one ship (GDD 8L). It is the largest piece left: the simulation, the weapon rows and
-  the ship files all change.
+- From GDD 8M: weapon slots set by a system's level, `maxSlots`, and mounts kept for one weapon system.
 - The EVA Dock (GDD 8R, Proposed, with open questions).
 - The three Senti crew killers: they also need fire beams, an anti-crew beam and bio bombs.
 - The Senti system battery; seeing into a hacked room; mind control's bonus at higher levels.
@@ -111,4 +112,5 @@ clean, one with a display and one with two players. The exported game starts wit
 - **Q1.** Is about one game in six for a good player the difficulty you want on Normal?
 - **Q2.** Should a fight open zoomed on your own ship, with the enemy off screen until you zoom out, or stay as the
   overview it is now?
-- **Q3.** What next: several weapon systems (GDD 8L), the EVA Dock, or more ships and events for the middle bands?
+- **Q3.** What next: the EVA Dock, the three Senti crew killers and their weapons, or more ships and events for the
+  middle bands?

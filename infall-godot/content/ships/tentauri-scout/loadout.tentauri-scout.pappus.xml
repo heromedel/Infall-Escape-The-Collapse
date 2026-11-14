@@ -6,8 +6,8 @@
 	<system id="supershield" removed="yes"/>
 	<system id="medbay" removed="yes"/>
 	<weapons>
-		<weapon id="coil" mount="3"/>
-		<weapon id="coil" mount="4"/>
+		<weapon id="coil" mount="3" system="A"/>
+		<weapon id="coil" mount="4" system="B"/>
 	</weapons>
 	<ai plan="destroy">
 		<target system="weapons" weapon="Coil" weight="0.8"/>

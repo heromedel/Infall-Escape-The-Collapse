@@ -9,12 +9,12 @@
 	<system id="doors" removed="yes"/>
 	<system id="shields" tile="-2,-3" level="2" wall="west"/>
 	<system id="engines" tile="-1,6" level="1" wall="south"/>
-	<system id="weapons" tile="2,-3" level="1" wall="east"/>
+	<system id="weapons" label="A" removed="yes"/>
 	<system id="medbay" removed="yes"/>
 	<system id="crew-teleporter" tile="2,2" level="1" wall="east"/>
 	<mount id="3" x="158" y="296" slide="left"/>
 	<weapons>
-		<weapon id="sporewing" mount="4"/>
+		<weapon id="sporewing" mount="4" system="B"/>
 	</weapons>
 	<crew>
 		<member race="terran" count="3"/>

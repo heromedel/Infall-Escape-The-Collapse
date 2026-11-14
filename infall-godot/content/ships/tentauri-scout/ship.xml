@@ -13,7 +13,9 @@
 	<system id="sensors" tile="-1,-2" level="1" wall="north"/>
 	<system id="piloting" tile="0,-2" level="1" wall="north"/>
 	<system id="shields" tile="1,-2" level="2" wall="north"/>
-	<system id="weapons" tile="-2,-1" level="2" wall="west"/>
+	<!-- Two weapon systems, one weapon each (docs/ship-suggestions.md; GDD 8L) -->
+	<system id="weapons" label="A" tile="-2,-1" level="1" wall="west"/>
+	<system id="weapons" label="B" tile="2,-1" level="1" wall="east"/>
 	<system id="engines" tile="-2,0" level="2" wall="west"/>
 	<system id="doors" tile="2,0" level="1" wall="east"/>
 	<system id="life-support" tile="-1,1" level="1" wall="north"/>
@@ -32,8 +34,8 @@
 	<mount id="6" x="280" y="98" slide="right"/>
 
 	<weapons>
-		<weapon id="tentauri-defense-laser" mount="3"/>
-		<weapon id="tentauri-defense-laser" mount="4"/>
+		<weapon id="tentauri-defense-laser" mount="3" system="A"/>
+		<weapon id="tentauri-defense-laser" mount="4" system="B"/>
 	</weapons>
 	<crew>
 		<member race="tentauri" station="piloting"/>

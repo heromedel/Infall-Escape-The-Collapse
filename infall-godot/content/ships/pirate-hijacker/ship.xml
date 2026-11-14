@@ -22,7 +22,9 @@
 	<system id="sensors" tile="1,-6" level="1" wall="north"/>
 	<system id="doors" tile="-1,-4" level="2" wall="west"/>
 	<system id="shields" tile="-2,-3" level="4" wall="west"/>
-	<system id="weapons" tile="2,-3" level="3" wall="east"/>
+	<!-- Two weapon systems (docs/ship-suggestions.md; GDD 8L, 8M): the Twinshot on Weapons A, the Sporewing on its own Weapons B by its launcher -->
+	<system id="weapons" label="A" tile="2,-3" level="2" wall="east"/>
+	<system id="weapons" label="B" tile="2,-1" level="1" wall="east"/>
 	<system id="azc" tile="1,-1" level="3" wall="none"/>
 	<system id="medbay" tile="-2,2" level="2" wall="west"/>
 	<system id="crew-teleporter" tile="2,2" level="2" wall="east"/>
@@ -66,8 +68,8 @@
 	<mount id="6" x="396" y="618" slide="right"/>
 
 	<weapons>
-		<weapon id="gat-2-1" mount="3"/>
-		<weapon id="sporewing" mount="4"/>
+		<weapon id="gat-2-1" mount="3" system="A"/>
+		<weapon id="sporewing" mount="4" system="B"/>
 	</weapons>
 	<crew>
 		<member race="terran" count="5"/>
