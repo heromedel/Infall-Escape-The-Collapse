@@ -1,7 +1,7 @@
 # Tentauri Seedpod hull
 
 **Date:** 2026-11-14
-**Status:** saved by heromedel (2026-11-14); not yet sent to Ship Designs or the Godot version.
+**Status:** saved by heromedel (2026-11-14); sent to Ship Designs (2026-11-14).
 Ship: the Tentauri Seedpod, id `tentauri-warden` (`infall-godot/content/ships/tentauri-warden/ship.xml`), with the
 Chestnut loadout. Its description there: "pillowy and prismatic, wrapped in shields. It means to pass, not to destroy."
 
