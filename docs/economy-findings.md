@@ -493,3 +493,8 @@ was changed.
    (GDD 8I surrender or negotiation, e.g. a records trade), or less damage, or more value.
 6. **Win rates:** a good player wins about one game in six. Sits sensibly around heromedel's target of about 9 runs in
    10 lost; nothing for the economy to push.
+
+**heromedel (2026-11-14), on 5:** the Senti picket fights have counters, and both go into the ship strategies
+(captain plans): against the Senti, hit the Shield Projector with missiles or bombs, which ignore shields (GDD 8Q);
+playing as the Senti, beam the enemy's shield room right before firing the stronger beam. Passed to Infall: Godot
+Version for its bots and the Senti captain plans, with a rerun of the Senti rows asked for. No price change.
