@@ -26,6 +26,14 @@ func event_for_arrival() -> EventDef:
 	if not run.tech_goal and run.galaxy.bands >= 8 and run.band() >= run.galaxy.bands - RimTech.goal_bands_from_rim and not cluster.store \
 			and Library.events.has("TECH_GOAL_FOUND") and not run.used_events.has("TECH_GOAL_FOUND") and not cluster.event_done:
 		return Library.events["TECH_GOAL_FOUND"]
+	# The Colony Ship proposes the convoy when the squad first reaches another race's space, the collapse known (GV 2G)
+	if not run.alliance_goal and collapse_known() and cluster.race != "" and cluster.race != run.galaxy.home_race and not cluster.store \
+			and Library.events.has("ALLIANCE_PROPOSED") and not run.used_events.has("ALLIANCE_PROPOSED") and not cluster.event_done:
+		return Library.events["ALLIANCE_PROPOSED"]
+	# A talk with a race that has not pledged: on one arrival in three in its space or among its refugees
+	var ask := Alliance.race_to_ask(run, cluster)
+	if ask != "" and not cluster.event_done and not cluster.store and int(cluster.seed) % Alliance.talk_one_in == 1:
+		return Library.events[Alliance.talk_event(ask)]
 	if cluster.event_done:
 		return before_or_after_collapse("REVISIT")
 	var rival := _rival_event()
@@ -42,6 +50,9 @@ func event_for_arrival() -> EventDef:
 func final_event() -> EventDef:
 	if run.tech_goal and run.has_all_tech() and Library.events.has("FINAL_RIVAL_TECH"):
 		return Library.events["FINAL_RIVAL_TECH"]
+	if run.alliance_ready() and Library.events.has("FINAL_ALLIANCE"):
+		var everyone: bool = Alliance.refusers(run).is_empty() and Library.events.has("FINAL_ALLIANCE_ALL")
+		return Library.events["FINAL_ALLIANCE_ALL" if everyone else "FINAL_ALLIANCE"]
 	if Settings.get_value("tech_victory", "Optional") == "Required" and Library.events.has("RIM_NO_WAY_OUT"):
 		return Library.events["RIM_NO_WAY_OUT"]
 	return Library.events.get("FINAL_RIVAL")
@@ -178,6 +189,24 @@ func _meets(requirement: String) -> bool:
 			return run.has_tech(parts[1])
 		"no_tech":
 			return not run.has_tech(parts[1])
+		"pledged":
+			return run.has_pledge(parts[1])
+		"not_pledged":
+			return not run.has_pledge(parts[1])
+		"pledges":          # at least this many races in the convoy: "pledges:3"
+			return run.pledge_count() >= int(parts[1])
+		"state":            # the cluster is in one of these states: "state:Doomed,Refugee"
+			for state in parts[1].split(","):
+				if run.cluster().states.has(state):
+					return true
+			return false
+		"not_state":
+			for state in parts[1].split(","):
+				if run.cluster().states.has(state):
+					return false
+			return true
+		"crew_with":        # a crew member of a race aboard a ship that has one of these systems: "crew_with:senti:aaa"
+			return _crew_with(parts[1], parts[2].split(",") if parts.size() > 2 else PackedStringArray()) != null
 		"afford_tech":      # the price of a race's piece here, times a share: "afford_tech:mecha:0.6"
 			return run.mawjig >= RimTech.price(parts[1], run.band(), float(parts[2]) if parts.size() > 2 else 1.0)
 	return true
@@ -198,7 +227,7 @@ func before_or_after_collapse(id: String) -> EventDef:
 
 func is_blue(choice: Dictionary) -> bool:
 	var requirement: String = choice.requires
-	return requirement.begins_with("crew:") or requirement.begins_with("system:") or requirement.begins_with("weapon:")
+	return requirement.begins_with("crew:") or requirement.begins_with("system:") or requirement.begins_with("weapon:") or requirement.begins_with("crew_with:")
 
 
 func requirement_label(choice: Dictionary) -> String:
@@ -222,6 +251,10 @@ func requirement_label(choice: Dictionary) -> String:
 
 func crew_for_choice(choice: Dictionary) -> String:
 	var parts := String(choice.requires).split(":")
+	if parts[0] == "crew_with":
+		var with := _crew_with(parts[1], parts[2].split(",") if parts.size() > 2 else PackedStringArray())
+		if with:
+			return with.name
 	if parts[0] == "crew":
 		var member := _crew_of_race(parts[1])
 		if member:
@@ -389,10 +422,20 @@ func _apply(tag: String, attrs: Dictionary, result: Dictionary) -> void:
 				race_id = run.cluster().race
 			if run.give_tech(race_id, "event"):
 				result.lines.append("%s: in the hold. A refit yard can fit it to a ship." % RimTech.name_of(race_id))
+		"alliance_goal":
+			run.alliance_goal = true
+			result.lines.append("The convoy is proposed: %d of %d races pledged. The map shows where to find the others." % [run.pledge_count(), Alliance.needed])
+		"pledge":
+			var pledged_race: String = attrs.get("race", "")
+			if pledged_race == "" or pledged_race == "region":
+				pledged_race = Alliance.race_to_ask(run, run.cluster())
+			if run.pledge(pledged_race):
+				result.lines.append("The %s pledge to the convoy (%d of %d)." % [Library.race(pledged_race).name, run.pledge_count(), Alliance.needed])
 		"tech_goal":
 			run.tech_goal = true
 			result.lines.append("The crossing: %d of %d fitted to one ship. The map shows where to look for the rest." % [run.tech_count(), run.tech_total()])
 		"fight":
+			run.pledge_on_win = attrs.get("pledge", "")
 			result.fight = attrs.get("squad", "")
 			result.fight_given = true
 			result.surprise = attrs.get("surprise", "no") == "yes"
@@ -427,6 +470,21 @@ func random_weapon(tier: String, race: String) -> String:
 	if options.is_empty():
 		return "gat-2-1"
 	return options[run.rng.randi_range(0, options.size() - 1)]
+
+
+## A crew member of a race who is aboard one of the squad's ships that has one of these systems (any, when none is named).
+func _crew_with(race_id: String, system_ids: PackedStringArray) -> CrewMember:
+	for ship in run.living_ships():
+		var fitted := system_ids.is_empty()
+		for id in system_ids:
+			if ship.system_by_id(id) or ship.system_by(id) or ship.system_by(id.replace("-", "_")):
+				fitted = true
+		if not fitted:
+			continue
+		for member in ship.crew:
+			if not member.dead and member.race.id == race_id:
+				return member
+	return null
 
 
 func _crew_of_race(race_id: String) -> CrewMember:
@@ -468,6 +526,9 @@ func pick_squad(squad_id: String) -> SquadDef:
 	for squad in Library.squads.values():
 		if squad.id.begins_with("final") or not squad.has_band(run.band()):
 			continue
+		# A race pledged to the convoy doesn't send its own ships against the squad (its pirates still come)
+		if squad.faction != run.galaxy.home_race and squad.faction != "gatos" and run.pledges.has(squad.faction):
+			continue
 		var weight := squad_weight(squad, race, cluster.states)
 		if cluster.enemy != "" and squad.where_races.has(cluster.enemy):
 			weight += 2.0        # at war, the other side's ships are met here too (GDD 2R: ships of both sides)
@@ -505,7 +566,10 @@ func squad_weight(squad: SquadDef, race: String, states: Array) -> float:
 func build_enemy_ships(squad: SquadDef) -> Array[Ship]:
 	var ships: Array[Ship] = []
 	var difficulty_hull := {"Easy": 0.8, "Normal": 1.0, "Hard": 1.25}.get(run.difficulty, 1.0) as float
-	for design_id in squad.roll_ships(run.band(), run.rng):
+	var fielded: Array[String] = squad.roll_ships(run.band(), run.rng)
+	if squad.id == "final-refusers":
+		fielded = Alliance.refusers(run)       # a ship from each race that never pledged
+	for design_id in fielded:
 		var design := Library.ship(design_id)
 		if design == null:
 			continue
@@ -516,6 +580,24 @@ func build_enemy_ships(squad: SquadDef) -> Array[Ship]:
 		ship.hull = maxi(1, int(round(ship.max_hull * squad.starts_at)))
 		ships.append(ship)
 	return ships
+
+
+## At the rim, each pledged race's ship joins the squad for the last fight, as far as the squad has room: flown by
+## the player, as a mercenary's is.
+func add_allies(squad: SquadDef) -> Array[Ship]:
+	var joined: Array[Ship] = []
+	if squad == null or squad.id not in ["final-refusers", "final-rogue-malphen"]:
+		return joined
+	for race in Alliance.races:
+		var design := Library.ship(String(Alliance.ally.get(race, "")))
+		if design == null or race == run.galaxy.home_race or not run.has_pledge(race) or run.living_ships().size() >= MAX_SQUAD:
+			continue
+		var ship := Ship.from_design(design, 0, run.rng, Settings.get_value("terran_conduits", false))
+		ship.name = "%s (ally)" % ship.name
+		run.squad.append(ship)
+		run.hire(ship, 1, 0)
+		joined.append(ship)
+	return joined
 
 
 ## The ships a squad has waiting to replace its losses, built as its others are.
@@ -557,6 +639,17 @@ func fight_rewards(encounter: Encounter) -> Dictionary:
 			lines.append("%s surrendered: Mawjig +%s" % [ship.name, Mawjig.format(paid)])
 	if total > 0:
 		run.earn(total)
+	# A pledge that was staked on this fight (the Lykario's fair hunt, won)
+	if run.pledge_on_win != "":
+		if run.pledge(run.pledge_on_win):
+			lines.append("The %s pledge to the convoy (%d of %d)." % [Library.race(run.pledge_on_win).name, run.pledge_count(), Alliance.needed])
+		run.pledge_on_win = ""
+	# A pledge is broken by destroying that race's own ships (not its pirates or mercenaries)
+	for ship in encounter.all_enemy_ships():
+		var flag: String = ship.design.faction
+		if (ship.destroyed or ship.crew_dead) and run.pledges.has(flag) and (encounter.squad == null or not encounter.squad.id.begins_with("final")):
+			run.pledges.erase(flag)
+			lines.append("The %s withdraw their pledge to the convoy." % Library.race(flag).name)
 	# The Tech victory's pieces (GV 2F), while the search is on: any ship of a race may carry that race's piece. A
 	# wreck gives it up now and then; a ship left whole, its crew dead, more often.
 	if run.tech_goal:

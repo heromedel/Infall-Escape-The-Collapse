@@ -100,6 +100,19 @@ func _rebuild() -> void:
 		var price := RimTech.price(piece, run.band())
 		right.add_child(_section("THE CROSSING  ·  %d of %d fitted" % [run.tech_count(), run.tech_total()]))
 		right.add_child(_card(RimTech.name_of(piece), "%s\n%s: one of the pieces a ship needs to cross to another galaxy. It goes to your hold; a refit yard fits it." % [RimTech.pieces[piece].line, RimTech.name_of(piece)], price, held, func(): _buy_tech(piece, price), null, "HELD"))
+	var ask := Alliance.race_to_ask(run, run.cluster())
+	if ask != "":
+		right.add_child(_section("THE CONVOY"))
+		var talk_row := HBoxContainer.new()
+		talk_row.add_theme_constant_override("separation", 8)
+		talk_row.add_child(UiKit.label("The %s have not pledged to the convoy." % Library.race(ask).name, 17, UiColours.TEXT_DIM))
+		var talk := UiKit.button("ASK THEM", func():
+			give.call({"k": "alliance_talk"})
+			close(), 150)
+		talk.disabled = bool(run.cluster().get("talked", false))
+		talk.tooltip_text = "They have given their answer here." if talk.disabled else "Put the convoy to the %s here." % Library.race(ask).name
+		talk_row.add_child(talk)
+		right.add_child(talk_row)
 	if Refit.has_yard(run.cluster()):
 		right.add_child(_section("REFIT YARD"))
 		var yard_row := HBoxContainer.new()

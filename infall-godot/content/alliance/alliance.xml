@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The Alliance victory (docs/ideas.md, Victory paths and "Alliance victory, first plan"; GV 2G). heromedel,
+     2026-11-14: enough races agree to a Colony Ship convoy through hyperspace; the squad still gets to the rim; the
+     last fight is against the races who refused and were not included, or a rogue Malphen ship if all joined.
+     needed: how many races must be pledged, the squad's own among them (Ai-Generated-Proposal: four of seven).
+     ally: the ship a pledged race sends to fight beside the squad at the rim, and the ship it fields against the
+     squad if it refused. The Malphen send none: no race takes them in, so their pledge is to let the convoy pass
+     (Infall: Lori's check). Ship choices are Ai-Generated-Proposals. -->
+<alliance needed="4" talk_one_in="3">
+	<race id="terran" ally="patrol-cutter.checkpoint"/>
+	<race id="azurethea" ally="sporecarrier"/>
+	<race id="mecha" ally="assault-frame"/>
+	<race id="tentauri" ally="tentauri-warden.vanguard"/>
+	<race id="senti" ally="relay-picket.archive"/>
+	<race id="lykario" ally="packrunner.huntmaster"/>
+	<race id="malphen" ally="" foe="spawnling.swollen"/>
+</alliance>

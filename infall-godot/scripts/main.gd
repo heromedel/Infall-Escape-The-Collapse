@@ -297,6 +297,11 @@ func apply_order(order: Dictionary) -> void:
 			wait_here()
 		"hail_open":
 			open_hail()
+		"alliance_talk":
+			var asked := Alliance.race_to_ask(run, run.cluster())
+			if asked != "" and not run.cluster().get("talked", false):
+				run.cluster()["talked"] = true
+				show_event(Library.events[Alliance.talk_event(asked)])
 		"refit":
 			Refit.apply(run, order)
 			_refresh_quiet_cluster(false)
@@ -451,6 +456,7 @@ func start_fight(squad_id: String) -> void:
 	var asked := Time.get_ticks_usec()
 	enemy_squad = runner.pick_squad(squad_id)
 	run.count_mercenary_crew()
+	runner.add_allies(enemy_squad)       # at the rim, pledged races' ships fight beside the squad (GV 2G)
 	var enemies := runner.build_enemy_ships(enemy_squad)
 	encounter = Encounter.new()
 	encounter.wallet = run
@@ -633,7 +639,8 @@ func _on_squad_lost() -> void:
 func _win_run() -> void:
 	run.over = true
 	run.won = true
-	run.victory = "tech" if run.has_all_tech() else "escape"
+	var beaten: String = enemy_squad.id if enemy_squad else ""
+	run.victory = "alliance" if beaten in ["final-refusers", "final-rogue-malphen"] else ("tech" if beaten == "final-rival-tech" and run.has_all_tech() else "escape")
 	run.save_to_disk()
 	Profile.unlock("win")
 	run.log_book.write("run_won", run.stats, "The squad reached the rim and beat the Last Fleet. The colony ship has its way out." if run.victory == "escape" else "The squad carried a piece of every race's tech to the rim and beat the Last Fleet's ambush. The Tech victory.")

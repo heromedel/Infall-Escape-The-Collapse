@@ -206,6 +206,12 @@ func _update_info() -> void:
 			lines.append("[color=#66ff66]In jump range. Click to set course.[/color]")
 		else:
 			lines.append("[color=#7d8ba0]Not linked to your cluster.[/color]")
+	if run.alliance_goal:
+		lines.append("")
+		var convoy := Alliance.lines(run)
+		lines.append("[color=#ffd46b]%s[/color]" % convoy[0])
+		for line_index in range(1, convoy.size()):
+			lines.append("[color=#a8b8cc]%s[/color]" % convoy[line_index])
 	if run.tech_goal:
 		lines.append("")
 		lines.append("[color=#ffd46b]The crossing: %d of %d fitted to one ship[/color]" % [run.tech_count(), run.tech_total()])

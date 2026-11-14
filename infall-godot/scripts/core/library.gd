@@ -29,6 +29,9 @@ func load_all() -> void:
 	var tech := XmlTree.load_file(CONTENT + "/tech/tech.xml")
 	if tech:
 		RimTech.load_from(tech)
+	var alliance := XmlTree.load_file(CONTENT + "/alliance/alliance.xml")
+	if alliance:
+		Alliance.load_from(alliance)
 	for problem in problems:
 		push_warning(problem)
 

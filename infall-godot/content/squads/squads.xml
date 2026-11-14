@@ -118,4 +118,16 @@
 		<conduct surrender_chance="0" escape_chance="0" targets="weapons,shields,piloting" hail="rival"/>
 		<description>Marlowe's last stand at the rim: every desperate ship that still answered his call.</description>
 	</squad>
+	<!-- The Alliance victory's last fights (GV 2G): a ship from each race that never pledged (the game fills this
+	     squad from content/alliance), or, with every race pledged, a rogue Malphen ship (heromedel, 2026-11-14). -->
+	<squad id="final-refusers" name="The Ones Who Refused" race="terran" faction="pirate" where_races="none">
+		<tier bands="1-8"><ship design="pirate-hijacker.marauder" count="1"/></tier>
+		<conduct surrender_chance="0" escape_chance="0" targets="weapons,shields,piloting" hail="rival"/>
+		<description>The races that would not join the convoy, come to take its way out.</description>
+	</squad>
+	<squad id="final-rogue-malphen" name="The Rogue" race="malphen" faction="malphen" where_races="none">
+		<tier bands="1-8"><ship design="spawnling.broodmass" count="1"/><ship design="spawnling.swollen" count="1"/></tier>
+		<conduct surrender_chance="0" escape_chance="0" targets="shields,engines" hail="malphen"/>
+		<description>A Malphen ship that follows no pledge, grown huge on everything the collapse left behind.</description>
+	</squad>
 </squads>

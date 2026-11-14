@@ -172,6 +172,10 @@ static func ship_select(on_pick: Callable, on_back: Callable) -> Overlay:
 	return window
 
 
+## The Alliance victory's end screen (Ai-Generated-Proposal until Infall: Lori words it).
+const ALLIANCE_WON_TITLE := "THE CONVOY"
+const ALLIANCE_WON_TEXT := "The last of the ones who refused falls away behind you. One by one the colony ships of the races that pledged drop out of their jumps and form up: yours, and the ones that agreed to fly beside it.\n\nNo single people could have made this crossing. The convoy turns toward the dark between galaxies and goes in together.\n\nBehind it, the collapse reaches the rim. It will never reach where you are going."
+
 ## The Tech victory's end screen (Infall: Lori, Ai-Generated-Proposal 2026-11-14).
 const TECH_WON_TITLE := "THE CROSSING"
 const TECH_WON_TEXT := "The best technology of other peoples, fitted into one ship that was never meant to exist. It flies into the dark between galaxies, and the dark lets it through.\n\nBehind you, The Colony Ship follows your signal as far as it can.\n\nBehind it, the collapse reaches the rim. It will never reach where you are going."
@@ -180,7 +184,10 @@ static func end_screen(run: RunState, won: bool, on_done: Callable) -> Overlay:
 	var window := Overlay.new()
 	window.dim.color = Color(0, 0.0, 0.02, 0.85)
 	window.place_panel(860)
-	if won and run.victory == "tech":
+	if won and run.victory == "alliance":
+		window.add_title(ALLIANCE_WON_TITLE, Color("#ffd46b"))
+		window.add_text(ALLIANCE_WON_TEXT, 20)
+	elif won and run.victory == "tech":
 		window.add_title(TECH_WON_TITLE, Color("#ffd46b"))
 		window.add_text(TECH_WON_TEXT, 20)
 	elif won:

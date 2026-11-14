@@ -85,6 +85,24 @@ anything Claude added tagged Ai-Generated-Proposal.
     replaced by a Forlorn Hope and a Sellsword; the setting and its default; the pointers are compass directions
     as the map shows them.
 
+- **G — Built (2026-11-14), heromedel: the Alliance victory** (`docs/ideas.md`, "Alliance victory, first plan", with
+  Infall: Lori's check; all of the plan is Ai-Generated-Proposal until heromedel has read it).
+  - **The convoy is proposed** by The Colony Ship when the squad first reaches another race's space with the
+    collapse known. The squad's own race is in it from then.
+  - **A pledge per race,** won in a talk: on one arrival in three in that race's space or among its refugees, or
+    asked for at its store (ASK THEM). What a race answers depends on the state of the cluster, as Lori's check
+    has it: most are easiest when doomed, the GATOS the other way, the Mecha never for passage alone, the Lykario
+    by a fair hunt, won; the Malphen only let the convoy pass, for matter.
+  - **Blue choices** come from crew of other races aboard a ship that has that race's own system (heromedel's
+    example: a Senti with the Armoured Avatar Array offers to keep a people's records).
+  - **Enough** is four of the seven. The map lists who has pledged and which way the others' space lies.
+  - **At the rim** each pledged race's ship joins the squad for the last fight, as far as the squad has room,
+    against a ship from each race that never pledged; with every race pledged, a rogue Malphen ship (heromedel).
+  - **A pledged race** no longer sends its own ships against the squad, and withdraws its pledge if the squad
+    destroys one of them.
+  - The talks' texts are stand-ins until Infall: Lori's replace them. The playtesters can go for it
+    (`GOAL=alliance`).
+
 ## 3. Squad Combat
 
 - **A — Decided (heromedel, 2026-10-31):** a hit lands on one tile: the system on that tile and the crew standing

@@ -18,6 +18,9 @@ var cargo: Array[String] = []        # weapons carried but not fitted
 var left_commands: Dictionary = {}   # a player who left (id) -> what they commanded, for the Admiral to restore
 									 # (GDD 4F): {"ships": {Ship: assigned}, "crew": {CrewMember: [assigned, own]}}
 var tech: Array[String] = []         # the Tech victory's pieces in the hold, by race (content/tech/tech.xml)
+var alliance_goal: bool = false      # The Colony Ship has proposed the convoy (the ALLIANCE_PROPOSED event)
+var pledge_on_win: String = ""       # the race that pledges if the fight an event just started is won
+var pledges: Array[String] = []      # races pledged to the convoy, besides the squad's own (content/alliance)
 var tech_goal: bool = false          # the search for the seven pieces has begun (the TECH_GOAL_FOUND event)
 var victory: String = ""             # how a won run was won: "escape" or "tech"
 var used_events: Array[String] = []
@@ -56,6 +59,30 @@ func spend(cents: int) -> bool:
 		return false
 	mawjig -= cents
 	return true
+
+
+# --- The Alliance victory's pledges (GV 2G) --------------------------------------------------------------------
+
+## Whether a race is in the convoy: the squad's own always is, once the convoy is proposed.
+func has_pledge(race: String) -> bool:
+	return alliance_goal and (race == galaxy.home_race or pledges.has(race))
+
+
+func pledge(race: String) -> bool:
+	if has_pledge(race) or not Alliance.races.has(race):
+		return false
+	pledges.append(race)
+	if log_book:
+		log_book.write("pledge", {"race": race, "pledged": pledge_count()}, "The %s pledged to the convoy (%d of %d)." % [Library.race(race).name, pledge_count(), Alliance.needed])
+	return true
+
+
+func pledge_count() -> int:
+	return Alliance.races.filter(func(race): return has_pledge(race)).size()
+
+
+func alliance_ready() -> bool:
+	return alliance_goal and pledge_count() >= Alliance.needed
 
 
 # --- The Tech victory's pieces --------------------------------------------------------------------------------
@@ -341,7 +368,7 @@ func to_save() -> Dictionary:
 			ships.append(ship.to_save())
 	return {
 		"game": "Infall: Escape The Collapse", "version": 2, "seed": seed_value, "current": current, "jumps": jumps,
-		"mawjig": mawjig, "cargo": cargo.duplicate(), "tech": tech.duplicate(), "tech_goal": tech_goal, "used_events": used_events.duplicate(), "stats": stats.duplicate(),
+		"mawjig": mawjig, "cargo": cargo.duplicate(), "tech": tech.duplicate(), "tech_goal": tech_goal, "alliance_goal": alliance_goal, "pledges": pledges.duplicate(), "used_events": used_events.duplicate(), "stats": stats.duplicate(),
 		"difficulty": difficulty, "pending_fight": pending_fight, "next_contract_id": next_contract_id, "squad": ships, "galaxy": galaxy.to_save(), "rng_state": rng.state,
 	}
 
@@ -397,6 +424,8 @@ static func from_data(data: Dictionary) -> RunState:
 	run.cargo.assign(data.get("cargo", []))
 	run.tech.assign(data.get("tech", []))
 	run.tech_goal = bool(data.get("tech_goal", false))
+	run.alliance_goal = bool(data.get("alliance_goal", false))
+	run.pledges.assign(data.get("pledges", []))
 	run.used_events.assign(data.get("used_events", []))
 	for key in data.get("stats", {}):
 		run.stats[key] = int(data.stats[key])
