@@ -472,3 +472,24 @@ Asked by Infall: Godot Version while finishing the game with playtester bots; he
   0.64 / 0.96 / 1.28 and shots plus repairs of about 1.6 / 3.15 / 5.2 by tier, plus 1.21 a jump for the squad.
   Shots over 25% of pay means fights run too long. Losses should come from fights and choices, never from a squad
   that can't afford to shoot or jump.
+
+## F15. First bot run data, Eco's overnight read (2026-11-14, for heromedel's review)
+
+From Infall: Godot Version's playtester bots, 40 runs each (`docs/handoffs/build-report-2026-11-14.md` on
+`Cloud-C-Godot-Version`). Games won: careless 0, watcher 7, expert 15. All Ai-Generated-Proposal; no economy number
+was changed.
+
+1. **Shots against pay:** 3–6% of a fight's pay in most rows; worst 10–15% (Senti pickets, Malphen in band 5). Healthy,
+   under F14's 15%. The one 21% row (Senti, band 7, watcher) is low pay, not costly shots.
+2. **Pay per fight:** about band 2 8, band 4 15–17, band 7 23–30, the final 32–35; near F13 for the squads the bots
+   had. Malphen pay about half, because beaten ships flee; acceptable (the genre pays nothing for an escaped ship).
+3. **Running dry:** the watcher waited for want of Mawjig 87 times in 40 games and was swallowed 4 times (of 33
+   losses), mostly after fights it left or stalemated and long detours. Read as play, not an economy fault: Wait is
+   the Decided safety net (6B). No store floor and no bigger wait gain. Asked whether GDD 14L's warning is in the game.
+4. **Unspent at the end:** 77–280 Mawjig for the expert. Suggested late sinks rather than lower pay: more higher-tech
+   stock in later bands, and ships in more stores from band 4 (F14). Stores at 11% of clusters match the genre.
+5. **Senti pickets** take 32–54% of hull a fight and pay little (they flee or stalemate): the one fight that costs
+   more than it pays. A combat-balance question for Ship Designs and heromedel. Suggested: either a non-fight payoff
+   (GDD 8I surrender or negotiation, e.g. a records trade), or less damage, or more value.
+6. **Win rates:** a good player wins about one game in six. Sits sensibly around heromedel's target of about 9 runs in
+   10 lost; nothing for the economy to push.
