@@ -210,7 +210,7 @@ func _update_info() -> void:
 
 
 func _rank_text(rank: String) -> String:
-	return {"core": "deep space of its region", "inner": "inner cluster", "border": "border cluster", "neutral": "between regions"}.get(rank, rank)
+	return {"core": "deep inside its region", "inner": "inner cluster", "border": "border cluster", "neutral": "between regions"}.get(rank, rank)
 
 
 func _draw() -> void:

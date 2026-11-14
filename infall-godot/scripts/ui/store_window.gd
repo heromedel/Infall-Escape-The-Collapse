@@ -101,7 +101,8 @@ func _rebuild() -> void:
 		damaged += each.max_hull - each.hull
 	var repair_row := HBoxContainer.new()
 	repair_row.add_theme_constant_override("separation", 8)
-	repair_row.add_child(UiKit.label("Hull %d missing across the squad · %s a point" % [damaged, Mawjig.format(per_point)], 17, UiColours.TEXT_DIM))
+	var hull_text := "The squad's hulls are whole" if damaged == 0 else "The squad is missing %d hull" % damaged
+	repair_row.add_child(UiKit.label("%s · repairs cost %s a point" % [hull_text, Mawjig.format(per_point)], 17, UiColours.TEXT_DIM))
 	right.add_child(repair_row)
 	var buttons := HBoxContainer.new()
 	buttons.add_theme_constant_override("separation", 8)

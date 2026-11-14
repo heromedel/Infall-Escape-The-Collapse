@@ -129,7 +129,9 @@ func _weapons_column() -> VBoxContainer:
 		if slot.def.type == "suit":
 			continue
 		var row := HBoxContainer.new()
-		var name_label := UiKit.label("Mount %d: %s" % [slot.mount_id, slot.def.display_name()], 16)
+		var on_system := ship.weapon_system_of(slot)
+		var where := "Weapons %s" % on_system.label if on_system and not on_system.label.is_empty() else "Weapon %d" % (ship.weapons.find(slot) + 1)
+		var name_label := UiKit.label("%s: %s" % [where, slot.def.display_name()], 16)
 		name_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		name_label.tooltip_text = slot.def.description + "\n" + slot.def.stat_line()
 		name_label.mouse_filter = Control.MOUSE_FILTER_PASS
