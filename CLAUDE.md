@@ -38,6 +38,14 @@ A design-stage project: we are writing a game design document, not building the 
 - "Minimal" means unnoticeable, default or trivial. E.g. a ship's minimal power is not enough to power a
   system.
 
+## Small fixes
+
+- **Rule (heromedel, 2026-11-14):** small fixes that follow the newest design are just made. Don't report them one
+  by one, and don't ask heromedel about them. Bring him only what needs his decision.
+
+  Example: Ship Designs removed one door from the Pirate Hijacker's layout. Sessions kept listing "door 4" in
+  status reports and questions to heromedel, when the only thing to do was delete the same line in the other copies.
+
 ## The Creative 3-6 Rule
 
 When doing creative work, make 3-6 ideas and pick the best one. See if it matches the rest of the game design and
