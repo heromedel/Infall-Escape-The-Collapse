@@ -569,3 +569,19 @@ early game should be less tight, the lever is more paying encounters per jump, n
 a jump by band: 0.30, 0.27, 0.24, 0.28, 0.22, 0.15, 0.47, 0.36 (bands 1–8): about a quarter, lowest in band 6.
 Repairs are small (about 6% of fight pay), so the store money goes to upgrades, as in the genre. Band 6 is where more
 paying encounters would help most.
+
+## F19. Lymph Gland and the Vector Drive (2026-11-14, for heromedel's review)
+
+Asked by Infall: Godot Version for heromedel's GDD 8S and the Vector Drive victory (`ideas.md`). Ai-Generated-Proposal.
+
+1. **Lymph Gland** (Malphen, GDD 8S): Hacking plus half a Medbay, since it does Hacking's job and part of a Medbay's
+   (heals to 75%, one room aimed at; the jump heal only with a Growth Organ). Buy 25.41 (80 + 25 scrap), level 2
+   +12.71, level 3 +19.97 (`system-prices.md`: Hacking 19.36 / 8.47 / 14.52, Medbay 12.11 / 8.47 / 10.89). Per
+   activation against an enemy 0.04, as Hacking (F14); healing its own rooms is free, as a Medbay.
+2. **Growth Organ:** no change; priced as a Clone Bay (12.11, 8.47, 10.89), now working as one.
+3. **Vector Drive fitted to The Colony Ship:** 242.01 (1,000 scrap), fixed, with no band adjustment. That's about the
+   price of fully upgrading Shields and Engines together (256.55), so "like a very expensive system", and at the top
+   of the expert bot's 130–300 end-of-run spare. Fitted to a scout instead: the usual refit, a quarter of a core
+   system (9.08).
+4. heromedel (2026-11-14) doesn't think Mawjig is too tight; his change for fights a jump is structural (GDD 9D:
+   events compiled from the situation). No price change; recheck fights a jump once that runs.
