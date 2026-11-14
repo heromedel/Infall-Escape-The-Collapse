@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Tentauri "Spear Grass", bands 4-6 (Tentauri Passage squad). Ai-Generated-Proposal (2026-11-14), Infall: Ship Designs,
+     on Infall: Arty's attack-ship hull (docs/art/tentauri/attack-ship/, a barbed arrowhead seed) and its cross of rooms.
+     A spear grass seed drills itself in: the Tentauri force their way in without looking to destroy (race profile 2).
+     Mid tech (race profile 10): three rooms, two shield layers, a faster Supershield, a Pike-like beam, a Defense Laser;
+     one weapon system per gun, as the Burr. Every controlled system is in the main room; the stern holds only Medbay,
+     Life Support and the Supershield, which crew don't man (GDD 5B). -->
+<ship id="spear-grass" name="Tentauri Spear Grass" class="Spear Grass" race="tentauri" faction="tentauri" style="tentauri" center="Tile" hull="12">
+	<reactor type="pool" level="15"/>
+	<description>A lilac arrowhead seed with hooked barbs. It drives through a blockade, strips the guns that could stop it, and is gone.</description>
+	<room id="0" from="-1,-3" to="1,-2" name="Bow"/>
+	<room id="1" from="-2,-1" to="2,0" name="Main"/>
+	<room id="2" from="-1,1" to="1,2" name="Stern"/>
+	<system id="sensors" tile="-1,-3" level="1" wall="north"/>
+	<system id="piloting" tile="0,-3" level="1" wall="north"/>
+	<system id="weapons" label="A" tile="1,-3" level="2" wall="north"/>
+	<system id="shields" tile="-2,-1" level="4" wall="west"/>
+	<system id="engines" tile="2,-1" level="3" wall="east"/>
+	<system id="weapons" label="B" tile="-2,0" level="1" wall="west"/>
+	<system id="doors" tile="2,0" level="1" wall="east"/>
+	<system id="medbay" tile="-1,1" level="1" wall="west"/>
+	<system id="supershield" tile="1,1" level="3" wall="east"/>
+	<system id="life-support" tile="0,2" level="1" wall="south"/>
+	<door id="0" tile="0,-2" facing="south"/>
+	<door id="1" tile="0,0" facing="south"/>
+	<door id="2" tile="-1,2" facing="west" note="airlock"/>
+	<door id="3" tile="1,2" facing="east" note="airlock"/>
+	<mount id="1" tile="-2,-3" slide="up"/>
+	<mount id="2" tile="2,-3" slide="up"/>
+	<mount id="3" tile="-3,-1" slide="left"/>
+	<mount id="4" tile="3,-1" slide="right"/>
+	<mount id="5" tile="-2,1" slide="left"/>
+	<mount id="6" tile="2,1" slide="right"/>
+	<weapons>
+		<weapon id="tendril-beam" mount="1" system="A"/>
+		<weapon id="tentauri-defense-laser" mount="2" system="B"/>
+	</weapons>
+	<crew>
+		<member race="tentauri" station="piloting"/>
+		<member race="tentauri" station="weapons"/>
+		<member race="tentauri" station="shields"/>
+	</crew>
+	<!-- It wants past you: the beam strips the guns that could stop it, then the engines that could chase it. The
+	     Defense Laser stays back to shoot down missiles. -->
+	<ai plan="destroy">
+		<target system="weapons" weapon="Tendril Beam" weight="0.85"/>
+		<target system="engines" weapon="Tendril Beam" when="enemyWeaponsDown" weight="0.8"/>
+	</ai>
+</ship>

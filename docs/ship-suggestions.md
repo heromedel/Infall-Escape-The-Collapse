@@ -1207,6 +1207,7 @@ pricing.
 | `hawkmoth/ship.xml` | Azurethea | Hawkmoth | 4–6 | Azurethea Wardens | winged, three body rooms and two wings; Stinger, Pollen Bomb (spores), Lantern; Pheromone Gland 2; Engines 4 for evasion; two shield layers; 4 Azurethea |
 | `light-attack-frame/loadout.light-attack-frame.breacher.xml` | Mecha | Breacher | 4–6 | Mecha Raiders | the battle-cross with hull 12, two shield layers, a breach missile in the pod and an EVB Dock in the spare bay beside its airlock; 3 Mecha |
 | `mercenary-gunship/ship.xml` | Terran (GATOS) | MG-3 "Sellsword" | 4–6 | GATOS Checkpoint | a broad mercenary gunship between two nacelles; Triblast and Longshot, a Crew Teleporter; AZC 3; 5 Terrans |
+| `spear-grass/ship.xml` | Tentauri | Spear Grass | 4–6 | Tentauri Passage | on Arty's barbed arrowhead hull (accepted 2026-11-14) and its cross of rooms: Tendril Beam and a Defense Laser on two weapon systems, two shield layers, Supershield 3, Engines 3; Medbay, Life Support and Supershield in the stern; 3 Tentauri. It strips the guns, then the engines, and passes |
 
 The Census Picket stays a loadout of the Relay Picket (Hacking fits on a free engine-room tile), as the game has it.
 
