@@ -47,7 +47,8 @@ func open(run_state: RunState, jumping_allowed: bool) -> void:
 	bar.set_anchors_and_offsets_preset(Control.PRESET_CENTER_BOTTOM)
 	bar.position = Vector2(-330, -86)
 	add_child(bar)
-	_jump_button = UiKit.button("JUMP  (1.21 Mawjig)", _on_jump, 260)
+	_jump_button = UiKit.button("CLICK A LINKED CLUSTER", _on_jump, 300)
+	_jump_button.tooltip_text = "Click one of the clusters joined to yours by a green line, then press here. A jump costs 1.21 Mawjig."
 	_jump_button.disabled = true
 	bar.add_child(_jump_button)
 	_wait_button = UiKit.button("WAIT  (+0.25 Mawjig)", func(): wait_chosen.emit(), 240)

@@ -24,7 +24,7 @@ func _init() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	theme = UiKit.theme()
 	mouse_filter = Control.MOUSE_FILTER_STOP
-	dim.color = Color(0.0, 0.01, 0.03, 0.55)
+	dim.color = Color(0.0, 0.01, 0.03, 0.74)     # dark enough that what is behind a window reads as behind it
 	dim.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	add_child(dim)
 	panel.add_theme_stylebox_override("panel", UiKit.box(Color(0.045, 0.075, 0.13, 0.97), UiColours.BORDER, 2, 6, 24))

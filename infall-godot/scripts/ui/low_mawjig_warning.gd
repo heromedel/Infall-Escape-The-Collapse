@@ -11,7 +11,7 @@ static var current_run: Callable              # Main: () -> the run being played
 
 
 ## Runs `action` now, or once the player agrees in a warning laid over `host`.
-static func confirm(host: Node, run: RunState, cost: int, action: Callable) -> void:
+static func confirm(host: Node, run: RunState, cost: int, action: Callable, what: String = "") -> void:
 	if not Settings.get_value("low_mawjig_warning", true) or cost <= 0 or run.mawjig - cost >= THRESHOLD:
 		action.call()
 		return
@@ -19,6 +19,8 @@ static func confirm(host: Node, run: RunState, cost: int, action: Callable) -> v
 	host.add_child(window)
 	window.place_panel(660)
 	window.add_title("LOW MAWJIG", UiColours.WARNING)
+	if not what.is_empty():
+		window.add_text("You are buying %s." % what, 19, UiColours.TEXT)
 	window.add_text("Warning: Mawjig is also used for weapon fire, battlesuits and jumps. After this you would have %s left. If you don't keep enough to fight or jump away, you could be defeated." % Mawjig.format(maxi(0, run.mawjig - cost)), 19)
 	window.add_button("Spend it anyway", func():
 		window.close()

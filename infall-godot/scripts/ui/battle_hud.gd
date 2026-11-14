@@ -543,8 +543,8 @@ func _draw_crew_list(ship: Ship, at: Vector2) -> void:
 		_region(rect, func(): screen.select_crew_member(member, Input.is_key_pressed(KEY_SHIFT)), _crew_tooltip(member))
 		y += 54
 	var buttons_at := Vector2(at.x, y + 4)
-	_button(Rect2(buttons_at, Vector2(142, 32)), "STATIONS", func(): screen.return_to_stations(), "Send this ship's crew back to their saved stations. Hotkey: Enter")
-	_button(Rect2(buttons_at + Vector2(148, 0), Vector2(142, 32)), "SAVE POSTS", func(): screen.save_stations(), "Save where every crew member stands now as their station.")
+	_button(Rect2(buttons_at, Vector2(142, 32)), "TO STATIONS", func(): screen.return_to_stations(), "Send this ship's crew back to their saved stations. Hotkey: Enter")
+	_button(Rect2(buttons_at + Vector2(148, 0), Vector2(142, 32)), "SAVE STATIONS", func(): screen.save_stations(), "Save where every crew member stands now as their station.")
 
 
 func _crew_status(member: CrewMember) -> String:
@@ -664,6 +664,7 @@ func _draw_power(ship: Ship, at: Vector2) -> void:
 	var bar_height := POWER_BAR
 	var rect := Rect2(at, _card_size("power", ship))
 	UiKit.draw_frame(self, rect, _panel())
+	UiKit.draw_text(self, at + Vector2(12, 22), "SYSTEMS", 13, UiColours.TEXT_DIM, UiKit.font_bold())
 	# The power source: reactor bars, the AZC, or nothing for a self-powered ship
 	var source_at := Vector2(x + 14, bottom - 30)
 	match ship.reactor_type:
@@ -674,8 +675,8 @@ func _draw_power(ship: Ship, at: Vector2) -> void:
 			for index in shown:
 				var cell := Rect2(source_at + Vector2(0, -index * (bar_height + 2) - bar_height), Vector2(30, bar_height))
 				draw_rect(cell, UiColours.player_power(ship.race) if index < free else UiColours.BAR_EMPTY)
-			UiKit.draw_text(self, source_at + Vector2(38, -2), "%d / %d" % [free, total], 15, UiColours.TEXT, UiKit.font_bold())
-			UiKit.draw_text(self, source_at + Vector2(38, 18), "REACTOR", 12, UiColours.TEXT_DIM, UiKit.font_bold())
+			UiKit.draw_text(self, source_at + Vector2(38, -2), "%d of %d" % [free, total], 15, UiColours.TEXT, UiKit.font_bold())
+			UiKit.draw_text(self, source_at + Vector2(38, 18), "POWER FREE", 11, UiColours.TEXT_DIM, UiKit.font_bold())
 			_region(Rect2(source_at + Vector2(0, -150), Vector2(100, 170)), Callable(), "Reactor: free power is lit. Click a system's bars to give it power; right click takes it away.")
 		"core":
 			var running := ship.core_load()
@@ -700,6 +701,7 @@ func _draw_power(ship: Ship, at: Vector2) -> void:
 ## The subsystems (piloting, sensors, doors and the like): their own card, docked beside the systems at first.
 func _draw_subsystems(ship: Ship, at: Vector2) -> void:
 	UiKit.draw_frame(self, Rect2(at, _card_size("subsystems", ship)), _panel())
+	UiKit.draw_text(self, at + Vector2(12, 22), "SUBSYSTEMS", 13, UiColours.TEXT_DIM, UiKit.font_bold())
 	var x := at.x + 10.0
 	for system in _power_systems(ship, false):
 		_draw_system_column(ship, system, Vector2(x, at.y + POWER_HEIGHT - 30), SYSTEM_COLUMN, POWER_BAR, false)
@@ -943,6 +945,7 @@ func _draw_top_centre(at: Vector2) -> void:
 		draw_circle(swatch, 6.5, Color(others[index].colour))
 		if screen.session.is_admiral(others[index].id):
 			draw_arc(swatch, 8.5, 0, TAU, 16, Color("#ffd46b"), 1.6, true)
+	UiKit.draw_text(self, players_rect.position + Vector2(22, 64), "PLAYERS", 9, UiColours.TEXT_DIM, UiKit.font_bold(), HORIZONTAL_ALIGNMENT_CENTER, 0)
 	if encounter.hazard != "":
 		var hazard_text: String = {"asteroids": "ASTEROID FIELD", "sun": "CLOSE TO A STAR: FLARES", "nebula": "NEBULA: SENSORS BLIND", "ion_storm": "ION STORM: HALF POWER", "collapse_edge": "COLLAPSE EDGE: HULL SHEAR"}.get(encounter.hazard, "")
 		UiKit.draw_text(self, Vector2(centre, rect.end.y + 22), hazard_text, 15, UiColours.WARNING, UiKit.font_bold(), HORIZONTAL_ALIGNMENT_CENTER, 0)

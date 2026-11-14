@@ -112,7 +112,7 @@ func _upgrade_row(label: String, level: int, max_level: int, price: int, on_upgr
 		text.add_child(UiKit.label(note, 13, UiColours.TEXT_DIM))
 	row.add_child(text)
 	# The price of the next level, shown as the store shows prices: a cost, not a gain
-	var button := UiKit.button("MAX" if price < 0 else Mawjig.format(price), func(): LowMawjigWarning.confirm(self, run, price, on_upgrade), 100)
+	var button := UiKit.button("MAX" if price < 0 else "UPGRADE  " + Mawjig.format(price), func(): LowMawjigWarning.confirm(self, run, price, on_upgrade, "an upgrade to %s for %s Mawjig" % [label, Mawjig.format(price)]), 150)
 	button.disabled = price < 0 or run.mawjig < price
 	button.tooltip_text = "" if price < 0 else "Upgrade one level for %s Mawjig." % Mawjig.format(price)
 	button.add_theme_color_override("font_color", Color("#ffd46b"))

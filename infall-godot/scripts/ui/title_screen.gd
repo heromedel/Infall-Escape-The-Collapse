@@ -25,11 +25,12 @@ func _ready() -> void:
 	var menu := VBoxContainer.new()
 	menu.add_theme_constant_override("separation", 12)
 	menu.set_anchors_and_offsets_preset(Control.PRESET_CENTER_LEFT)
-	menu.position = Vector2(140, 80)
+	menu.position = Vector2(140, -40)
 	add_child(menu)
 	var title := UiKit.title_label("INFALL", 110, Color("#eef3ff"))
 	menu.add_child(title)
 	menu.add_child(UiKit.title_label("ESCAPE THE COLLAPSE", 30, Color("#ff9a5a")))
+	menu.add_child(UiKit.label("The Galactic Core is collapsing. Scout the way out for the last of your people.", 18, UiColours.TEXT_DIM))
 	var gap := Control.new()
 	gap.custom_minimum_size = Vector2(0, 30)
 	menu.add_child(gap)
@@ -43,10 +44,6 @@ func _ready() -> void:
 		if child is Button:
 			child.add_theme_font_size_override("font_size", 22)
 			child.custom_minimum_size.y = 52
-	var footer := UiKit.label("The Galactic Core is collapsing. Scout the way out for the last of your people.", 18, UiColours.TEXT_DIM)
-	footer.set_anchors_and_offsets_preset(Control.PRESET_BOTTOM_LEFT)
-	footer.position = Vector2(140, -70)
-	add_child(footer)
 
 
 func _process(delta: float) -> void:

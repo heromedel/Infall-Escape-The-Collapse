@@ -82,9 +82,11 @@ func _rebuild() -> void:
 		if def == null:
 			continue
 		var price := Mawjig.amount(def.buy_price * _price_scale() / 100.0)
-		var owned := ship.system_by_id(system_id) != null
+		var has: ShipSystem = ship.system_by(def.behaviour)      # a ship has one system of a kind: one shield system, one hacking system
+		var owned := has != null
 		var sold: bool = stock.sold.has("system:" + system_id) or owned
-		right.add_child(_card(def.name, def.description + ("\nAlready installed on the %s." % ship.name if owned else ""), price, sold, func(): _buy_system(def, price)))
+		var why := "" if not owned else ("\nAlready installed on the %s." % ship.name if has.def.id == system_id else "\nThe %s has %s in its place." % [ship.name, has.def.name])
+		right.add_child(_card(def.name, def.description + why, price, sold, func(): _buy_system(def, price), null, "INSTALLED" if owned else "SOLD"))
 	if stock.ship != "" and not stock.sold.has("ship"):
 		var design := Library.ship(stock.ship)
 		if design:
@@ -157,7 +159,7 @@ func _crew_picture(member: CrewMember) -> Control:
 	return picture
 
 
-func _card(title: String, detail: String, price: int, sold: bool, on_buy: Callable, picture: Control = null) -> PanelContainer:
+func _card(title: String, detail: String, price: int, sold: bool, on_buy: Callable, picture: Control = null, sold_word: String = "SOLD") -> PanelContainer:
 	var card := PanelContainer.new()
 	card.add_theme_stylebox_override("panel", UiKit.box(UiColours.PANEL_LIGHT if not sold else UiColours.PANEL_DARK, UiColours.BORDER_DIM, 1, 4, 10))
 	var row := HBoxContainer.new()
@@ -173,7 +175,8 @@ func _card(title: String, detail: String, price: int, sold: bool, on_buy: Callab
 	detail_label.custom_minimum_size = Vector2(400, 0)
 	text.add_child(detail_label)
 	row.add_child(text)
-	var buy := UiKit.button("SOLD" if sold else Mawjig.format(price), func(): LowMawjigWarning.confirm(self, run, price, on_buy), 110)
+	var buy := UiKit.button(sold_word if sold else "BUY  " + Mawjig.format(price), func(): LowMawjigWarning.confirm(self, run, price, on_buy, "%s for %s Mawjig" % [title, Mawjig.format(price)]), 132)
+	buy.tooltip_text = "" if sold else ("Buy for %s Mawjig." % Mawjig.format(price) if run.mawjig >= price else "Costs %s Mawjig; the squad has %s." % [Mawjig.format(price), Mawjig.format(run.mawjig)])
 	buy.disabled = sold or run.mawjig < price
 	buy.add_theme_color_override("font_color", Color("#ffd46b"))
 	row.add_child(buy)
