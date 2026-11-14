@@ -16,6 +16,9 @@ var surrender_rolled: bool = false
 var escape_rolled: bool = false
 var boarding_party_out: bool = false
 var gathering: Array[CrewMember] = []   # crew called to the teleporter to board
+var fixed_target: bool = false          # the target is chosen for this captain (a squad focusing its fire)
+var preferred_targets: Array = []       # the systems this captain shoots first, in place of its squad's conduct
+var careless: bool = false              # fires each weapon as it charges, at any room (a playtester who doesn't try)
 
 
 func _init(controlled: Ship, owner: Encounter) -> void:
@@ -27,12 +30,14 @@ func think() -> void:
 	if ship.destroyed or ship.crew_dead:
 		return
 	_manage_power()
-	_choose_target()
+	if not fixed_target or target == null or target.is_gone():
+		_choose_target()
 	_aim_weapons()
 	_order_crew()
 	_order_boarders()
 	_use_specials()
-	_consider_conduct()
+	if ship.side == 1:
+		_consider_conduct()     # surrender and escape are the enemy squad's conduct
 
 
 # --- Power ----------------------------------------------------------------------------------------------------
@@ -92,7 +97,7 @@ func _anyone_hurt() -> bool:
 # --- Weapons --------------------------------------------------------------------------------------------------
 
 func _choose_target() -> void:
-	var options := encounter.living(0)
+	var options := encounter.living(1 - ship.side)
 	if options.is_empty():
 		target = null
 		return
@@ -118,7 +123,7 @@ func _aim_weapons() -> void:
 			lasers_ready = false
 			if needed - slot.charge > 70.0:
 				lasers_close = false
-	var hold_lasers := laser_count >= 2 and not lasers_ready and lasers_close and target.shield_layers > 0
+	var hold_lasers := laser_count >= 2 and not lasers_ready and lasers_close and target.shield_layers > 0 and not careless
 	var taken_rooms: Array[int] = []
 	for slot in ship.weapons:
 		if not slot.powered:
@@ -169,8 +174,11 @@ func _pick_tile(room_index: int) -> Vector2i:
 ## hull-bonus weapons go for empty rooms.
 func _pick_room(weapon: WeaponDef, taken_rooms: Array[int]) -> int:
 	var spare := _spares_own_crew()
-	if encounter.squad:
-		for behaviour in encounter.squad.targets:
+	if careless:
+		return encounter.rng.randi_range(0, target.rooms.size() - 1)
+	var first: Array = preferred_targets if not preferred_targets.is_empty() else (encounter.squad.targets if encounter.squad and ship.side == 1 else [])
+	if not first.is_empty():
+		for behaviour in first:
 			var system := target.system_by(behaviour)
 			if system and not taken_rooms.has(system.room) and not system.is_broken() and not (spare and _own_crew_in(system.room)):
 				return system.room
