@@ -13,12 +13,14 @@ then the Last Fleet at the rim. In a fight each ship is flown by the same captai
 
 | Playtester | How it plays | Games won |
 |---|---|---|
-| Careless | Fires each weapon as it charges at any room, picks event choices at random, flies straight out, repairs only when badly hurt | PLACEHOLDER_CARELESS |
-| Watcher | Goes by what is on the screen: focuses fire, shoots weapons then shields, takes blue choices and offered ships, explores, heads for stores, upgrades to a plan | PLACEHOLDER_WATCHER |
-| Expert | Knows what every event choice is worth, picks targets by threat, leaves a losing fight, spends everything, thinks five times a second | PLACEHOLDER_EXPERT |
+| Careless | Fires each weapon as it charges at any room, picks event choices at random, flies straight out, repairs only when badly hurt | 0 of 40 |
+| Watcher | Goes by what is on the screen: focuses fire, shoots weapons then shields, takes blue choices and offered ships, explores, heads for stores, upgrades to a plan | 7 of 40 |
+| Expert | Knows what every event choice is worth, picks targets by threat, leaves a losing fight, spends everything, thinks five times a second | 15 of 40 |
 
-So the game can be won, a careless player never wins, and a good player wins seldom. Careless runs end in bands 2
-to 5. The expert wins with three or four ships, as GDD 3K expects.
+So the game can be won, a careless player never wins, and a good player wins about one game in six. Careless runs
+end in bands 2 to 5, most of them in band 4. The expert reached the Last Fleet in 31 of its 40 games and beat it
+in 15; it wins with three or four ships, as GDD 3K expects. Earlier rounds of 30 games gave the watcher 2 and 5
+wins and the expert 9 and 12 (of 27), so these rates move by several games from round to round.
 
 What the runs changed:
 
@@ -33,7 +35,14 @@ What the runs changed:
 
 Still rough, from the last round:
 
-PLACEHOLDER_ROUGH
+1. **The Last Fleet** ends most of the runs that reach it: 14 of the expert's 31 final fights were lost, and 6 of
+   the watcher's 16. A squad of one or two ships does not beat it.
+2. **Senti pickets** cost the watcher and the expert a third to a half of their hull each time (bands 4 to 6).
+   The Shield Projector's three layers stop most early weapons.
+3. **Running out of Mawjig.** The watcher had to wait for want of Mawjig 87 times over 40 games and was swallowed
+   by the collapse four times. Infall: Eco calls that an economy fault if a real player meets it; the numbers have
+   gone to Eco.
+4. **The middle bands are mild for the expert:** fights in bands 3 to 7 cost it under 15% of its hull.
 
 ## What was built
 
@@ -91,11 +100,14 @@ Not fixed:
 
 ## Tests at the end of the day
 
-PLACEHOLDER_TESTS
+Compile, content, galaxy, mercenary, ship value (all 15 ships match Infall: Eco's table), crew fight (13 rules)
+and fight (20 of 20) tests pass. Input 27 of 27, co-op 22 of 22. The LAN test and the LAN run test pass (the LAN run
+test failed once while the machine was busy with playtests, and passed when run on its own). Chaos: four seeds
+clean, one with a display and one with two players. The exported game starts without errors.
 
 ## Questions
 
-- **Q1.** Is about one game in PLACEHOLDER_ODDS for a good player the difficulty you want on Normal?
+- **Q1.** Is about one game in six for a good player the difficulty you want on Normal?
 - **Q2.** Should a fight open zoomed on your own ship, with the enemy off screen until you zoom out, or stay as the
   overview it is now?
 - **Q3.** What next: several weapon systems (GDD 8L), the EVA Dock, or more ships and events for the middle bands?
