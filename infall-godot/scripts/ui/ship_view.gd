@@ -621,7 +621,7 @@ func _watch_for_deaths(delta: float) -> void:
 		if not member.dead or _seen_dead.has(member):
 			continue
 		_seen_dead[member] = true
-		if member.ship != ship or member.in_suit:
+		if member.ship != ship or member.in_suit or member.offline:
 			continue
 		var sheet := CrewArt.sheet_for(member.race, member.subtype)
 		var played := CrewArt.duration(sheet, "death") if not sheet.is_empty() else 0.0
@@ -783,7 +783,7 @@ func _crew_colour(member: CrewMember) -> Color:
 func _crew_to_draw() -> Array:
 	var turn := _screen_turn()
 	var found: Array = (ship.crew + ship.visitors).filter(func(member: CrewMember):
-		return not member.dead and not member.in_suit and member.ship == ship)
+		return not member.dead and not member.in_suit and not member.offline and member.ship == ship)
 	found.sort_custom(func(a: CrewMember, b: CrewMember): return _drawn_at(a).rotated(turn).y < _drawn_at(b).rotated(turn).y)
 	return found
 

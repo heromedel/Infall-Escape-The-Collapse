@@ -34,6 +34,8 @@ var assigned: Array = []             # GV 4I: player ids of their own; empty fol
 var own_assignment := false          # assigned on their own, not with their ship                 # GV 15A: -1 none, 0 Sgt. up to 5 Cpt.
 var contract_id: int = 0           # a hired mercenary: the contract they came with (GV 7C); 0 for the squad's own
 var in_suit: bool = false
+var offline: bool = false          # a Senti held in their ship's array: not broadcast, so nowhere aboard, but not dead
+var rebroadcast_ticks: int = 0     # how long until the array can broadcast them again after they were killed
 var teleporting_ticks: int = 0
 var integrate_ticks: int = 0       # Mecha: time spent getting into a system
 var suffocating: bool = false
@@ -113,7 +115,7 @@ func speed_pixels_per_tick() -> float:
 
 
 func is_active() -> bool:
-	return not dead and not in_suit and teleporting_ticks <= 0
+	return not dead and not in_suit and not offline and teleporting_ticks <= 0
 
 
 ## Whether their own side can give them orders: not while stunned, and not while an enemy's mind control holds them.

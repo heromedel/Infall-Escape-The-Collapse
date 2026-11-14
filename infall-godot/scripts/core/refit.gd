@@ -5,7 +5,7 @@ extends RefCounted
 ## everywhere. Ships are named by their place in the squad, crew by their place in their ship's crew.
 
 const INSTALLABLE := ["medbay", "doors", "sensors", "crew-teleporter", "cloaking", "supershield", "evb-dock", "shields", "life-support", "hacking", "mind-control"]
-const RACE_OWN := {"senti": {"hacking": "intrusion-array"}, "azurethea": {"mind-control": "pheromone-gland"}}   # a race's own make of a system
+const RACE_OWN := {"senti": {"hacking": "intrusion-array", "shields": "shield-projector", "medbay": "aaa"}, "azurethea": {"mind-control": "pheromone-gland"}}   # a race's own make of a system
 
 
 static func apply(run: RunState, order: Dictionary) -> void:
@@ -33,7 +33,7 @@ static func apply(run: RunState, order: Dictionary) -> void:
 			var race := Library.race(order.race)
 			var target: Ship = null
 			for each in ([ship] if ship else []) + run.living_ships():
-				if each.living_crew_count() < EventRunner.MAX_CREW_PER_SHIP:
+				if race and can_host(each, race):
 					target = each
 					break
 			ensure_stock(run)
@@ -108,6 +108,12 @@ static func _member(ship: Ship, order: Dictionary) -> CrewMember:
 
 
 ## Per hull point by band: 0.48 in bands 1-3, 0.73 in 4-6, 0.97 in 7-8 (mawjig-cost-table.md).
+## Whether a ship can take on a crew member of a race: a bunk free, and for a Senti, room in its Armoured Avatar
+## Array (race profiles, Senti 9: a ship needs an array to host even one).
+static func can_host(ship: Ship, race: RaceDef) -> bool:
+	return ship.living_crew_count() < EventRunner.MAX_CREW_PER_SHIP and (not race.broadcast or ship.avatar_room() > 0)
+
+
 ## What a store asks for a ship: a share of its value by difficulty (Infall: Eco, 2026-11-14: Easy 50%, Normal 75%,
 ## Hard 100%), times the cluster's price scale.
 const SHIP_PRICE_SHARE := {"Easy": 0.5, "Normal": 0.75, "Hard": 1.0}

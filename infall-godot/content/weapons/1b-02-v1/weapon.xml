@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- From docs/ship-suggestions.md (the Relay Picket): charge time and price as given there; cost per volley from mawjig-cost-table.md. -->
+<weapon id="1b-02-v1" name="1B 02 V1" race="senti" tech="mechanical" type="beam" power="2" shots="1" damage="2" charge="16.0" cost="0.06" price="11.28" colour="#4ff0ff" beam_length="40">
+	<description>1-room beam, 2 damage, version 1.</description>
+</weapon>

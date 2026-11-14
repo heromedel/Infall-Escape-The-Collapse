@@ -77,7 +77,7 @@
 	</squad>
 	<squad id="malphen-growth" name="Malphen Growth" race="malphen" faction="malphen" where_races="malphen,any" where_states="Abandoned,Doing Fine,Struggling,Doomed,Unclaimed">
 		<tier bands="1"><ship design="polyp" count="1"/><ship design="polyp.flak" count="1"/></tier>
-		<tier bands="2"><ship design="polyp" count="2"/><ship design="polyp.flak" count="1"/></tier>
+		<tier bands="2"><ship design="polyp" count="2"/><ship design="polyp.flak" count="0-1"/></tier>
 		<tier bands="3"><ship design="spawnling" count="1"/></tier>
 		<tier bands="4"><ship design="spawnling.swollen" count="1"/></tier>
 		<tier bands="5-6"><ship design="spawnling.broodmass" count="1"/></tier>

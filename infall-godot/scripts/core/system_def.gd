@@ -12,6 +12,8 @@ var draws_power: bool = true    # takes reactor (or core) capacity; subsystems d
 var manned: bool = false        # a crew member at its console gives a bonus
 var buy_price: int = 0          # Mawjig hundredths to install at level 1
 var upgrade_prices: Array[int] = []   # step prices for level 2, 3, ...
+var bars_per_layer: int = 2     # shields: the Mawjig Shield Generator holds a layer with two bars, the Senti Shield Projector with one (GDD 8Q)
+var recharge: float = 1.0       # shields: how fast layers come back, 1 for the Generator, 0.5 for the Projector
 var description: String = ""
 var level_notes: PackedStringArray = []
 var icon: String = ""
@@ -30,6 +32,8 @@ static func from_xml(node: XmlTree) -> SystemDef:
 	def.buy_price = Mawjig.amount(node.get_float("buy", 0.0))
 	for step in node.get_attr("upgrades", "").split(",", false):
 		def.upgrade_prices.append(Mawjig.amount(float(step)))
+	def.bars_per_layer = maxi(1, node.get_int("bars_per_layer", 2))
+	def.recharge = node.get_float("recharge", 1.0)
 	def.icon = node.get_attr("icon", def.behaviour)
 	def.hotkey = node.get_attr("hotkey", "")
 	def.order = node.get_int("order", 50)

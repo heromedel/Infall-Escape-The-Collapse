@@ -136,7 +136,11 @@ func step() -> void:
 func _remove_the_dead() -> void:
 	for ship in ships:
 		for member in ship.crew:
-			if not member.dead and member.health <= 0.0:
+			if not member.dead and not member.offline and member.health <= 0.0:
+				if ship.holds_avatar(member):
+					note("avatar_lost", {"ship": member.ship, "crew": member, "position": member.ship.design.cell_centre(member.cell)})
+					ship.take_back_avatar(member)
+					continue
 				member.dead = true
 				member.path.clear()
 				note("crew_died", {"ship": member.ship, "crew": member, "position": member.ship.design.cell_centre(member.cell)})
@@ -189,7 +193,7 @@ func _check_outcome() -> void:
 func leave_behind_away_crew() -> void:
 	for ship in living(0):
 		for member in ship.crew:
-			if not member.dead and (member.ship != ship or member.in_suit):
+			if not member.dead and not member.offline and (member.ship != ship or member.in_suit):
 				member.dead = true
 				note("crew_died", {"ship": ship, "crew": member, "position": Vector2.ZERO})
 		ship.suit_out = false
@@ -803,7 +807,7 @@ func recall_boarders(ship: Ship) -> bool:
 	var teleporter := ship.system_by("teleporter")
 	var any := false
 	for member in ship.crew:
-		if not member.dead and member.ship != ship and not member.in_suit:
+		if not member.dead and not member.offline and member.ship != ship and not member.in_suit:
 			_land(member, ship, teleporter.room)
 			any = true
 	if any:

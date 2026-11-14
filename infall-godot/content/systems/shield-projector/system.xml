@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The Senti Shield Projector (GDD 8Q, Proposed): one bar a layer, layers back half as fast, up to eight layers. Each
+     layer is priced as a Shield Generator layer of the same number; layers 5 to 8 are Infall: Eco's (2026-11-14,
+     Ai-Generated-Proposal). Text by Infall: Lori (2026-11-14). A ship has this or the Shield Generator, never both. -->
+<system id="shield-projector" name="Shield Projector" behaviour="shields" max_level="8" bars_per_layer="1" recharge="0.5" draws_power="yes" manned="yes" buy="54.46" upgrades="12.11,24.21,43.56,62.92,82.28,101.64,121.01" icon="shields" hotkey="A" order="10">
+	<description>The Senti's shields. Every bar of power holds one shield layer, and each layer stops one laser or flak hit. Layers come back half as fast as a Shield Generator's. Missiles and bombs pass through.</description>
+	<level>One shield layer</level>
+	<level>Two shield layers</level>
+	<level>Three shield layers</level>
+	<level>Four shield layers</level>
+	<level>Five shield layers</level>
+	<level>Six shield layers</level>
+	<level>Seven shield layers</level>
+	<level>Eight shield layers</level>
+</system>

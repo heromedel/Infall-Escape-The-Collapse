@@ -247,9 +247,9 @@ func _apply(tag: String, attrs: Dictionary, result: Dictionary) -> void:
 			if race_id == "" or race_id == "region":
 				race_id = run.cluster().race if run.cluster().race != "" else "terran"
 			for copy in int(attrs.get("count", "1")):
-				var ship := _ship_with_room()
+				var ship := _ship_with_room(Library.race(race_id))
 				if ship == null:
-					result.lines.append("No room aboard for more crew")
+					result.lines.append("No Armoured Avatar Array with room to host a Senti" if Library.race(race_id) and Library.race(race_id).broadcast else "No room aboard for more crew")
 					break
 				var race := Library.race(race_id)
 				var member := CrewMember.create(race, race.random_name(run.rng, ship.crew.map(func(c): return c.name)))
@@ -374,9 +374,9 @@ func _any_crew() -> CrewMember:
 	return everyone[run.rng.randi_range(0, everyone.size() - 1)]
 
 
-func _ship_with_room() -> Ship:
+func _ship_with_room(race: RaceDef = null) -> Ship:
 	for ship in run.living_ships():
-		if ship.living_crew_count() < MAX_CREW_PER_SHIP:
+		if ship.living_crew_count() < MAX_CREW_PER_SHIP and (race == null or Refit.can_host(ship, race)):
 			return ship
 	return null
 

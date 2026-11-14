@@ -481,7 +481,7 @@ func _draw_ship_card(ship: Ship, card_at: Vector2) -> void:
 	# Shields
 	var shield_at := at + Vector2(16, 100)
 	UiKit.draw_text(self, shield_at + Vector2(0, 16), "SHIELDS", 15, UiColours.TEXT_DIM, UiKit.font_bold())
-	var max_layers := maxi(ship.max_shield_layers(), ship.system_by("shields").level / 2 if ship.system_by("shields") else 0)
+	var max_layers := maxi(ship.max_shield_layers(), ship.shield_layer_capacity())
 	var x := 86.0
 	for index in max_layers:
 		var centre := shield_at + Vector2(x + 12, 10)
@@ -548,6 +548,10 @@ func _draw_crew_list(ship: Ship, at: Vector2) -> void:
 
 
 func _crew_status(member: CrewMember) -> String:
+	if member.offline:
+		return "not broadcast"
+	if member.mind_ticks > 0:
+		return "mind controlled!"
 	if member.in_suit:
 		return "in a battlesuit"
 	if member.suffocating:
@@ -577,6 +581,8 @@ func _crew_status(member: CrewMember) -> String:
 ## Where they are doing it: the station they man, the system they repair, the room they stand in or are
 ## walking to.
 func _crew_place(member: CrewMember) -> String:
+	if member.offline:
+		return "held in the array"
 	if member.in_suit:
 		return "outside"
 	var ship := member.ship
@@ -1032,7 +1038,7 @@ func _draw_floating_status(ship: Ship) -> void:
 	for index in ship.max_hull:
 		draw_rect(Rect2(rect.position + Vector2(10 + index * segment, 26), Vector2(maxf(1.0, segment - 1.5), 10)), UiColours.hull_colour(fraction) if index < ship.hull else UiColours.BAR_EMPTY)
 	var pip_x := 10.0
-	var layers := ship.system_by("shields").level / 2 if ship.system_by("shields") else 0
+	var layers := ship.shield_layer_capacity()
 	for index in layers:
 		draw_circle(rect.position + Vector2(pip_x + 6, 49), 6, UiColours.SHIELD_BLUE if index < ship.shield_layers else Color(0.15, 0.15, 0.25))
 		# the layer coming back shows how far along it is, as a bar under its empty pip (reference frame 17)

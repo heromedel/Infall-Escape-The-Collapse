@@ -91,7 +91,7 @@ static func door_between(ship: Ship, a: Vector2i, b: Vector2i) -> ShipDoor:
 
 ## One tick for one crew member.
 static func tick(member: CrewMember, encounter: Encounter) -> void:
-	if member.dead or member.in_suit:
+	if member.dead or member.in_suit or member.offline:
 		return
 	if member.teleporting_ticks > 0:
 		member.teleporting_ticks -= 1

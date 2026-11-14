@@ -309,7 +309,7 @@ func _everyone_aboard() -> Array[CrewMember]:
 func crew_present() -> Array[CrewMember]:
 	var found: Array[CrewMember] = []
 	for member in crew + visitors:
-		if member.ship == self and not member.dead and not member.in_suit:
+		if member.ship == self and not member.dead and not member.in_suit and not member.offline:
 			found.append(member)
 	return found
 
@@ -781,7 +781,14 @@ func evasion() -> int:
 
 
 func max_shield_layers() -> int:
-	return system_power(system_by("shields")) / 2
+	var shields := system_by("shields")
+	return system_power(shields) / shields.def.bars_per_layer if shields else 0
+
+
+## The layers the shields could hold at their level, whatever their power or damage now.
+func shield_layer_capacity() -> int:
+	var shields := system_by("shields")
+	return shields.level / shields.def.bars_per_layer if shields else 0
 
 
 func can_charge_jump() -> bool:
@@ -824,6 +831,7 @@ func tick(in_fight: bool, rng: RandomNumberGenerator) -> void:
 	_tick_manning()
 	_tick_shields()
 	_tick_supershield()
+	_tick_avatars()
 	_tick_jump_drive(in_fight)
 	_tick_cooldowns()
 	_tick_air()
@@ -872,13 +880,88 @@ func _tick_shields() -> void:
 	if shields == null or shield_layers >= max_layers:
 		shield_progress = 0.0
 		return
-	var rate := 1.0
+	var rate := shields.def.recharge
 	if shields.manned_by:
-		rate += [0.1, 0.2, 0.3][shields.manned_by.skill_level("shields")]
+		rate += [0.1, 0.2, 0.3][shields.manned_by.skill_level("shields")] * shields.def.recharge
 	shield_progress += rate
 	if shield_progress >= SHIELD_LAYER_TICKS:
 		shield_progress = 0.0
 		shield_layers += 1
+
+
+# --- The Armoured Avatar Array (race profiles, Senti 6 and 9) -------------------------------------------------
+# A Senti is a hologram broadcast from their ship's array: one per bar of the array's power (heromedel,
+# 2026-11-13). When damage or ion leaves the array too little power, the Senti over the limit are held in it until
+# it works again; they don't die from this. A Senti killed in a fight is broadcast again from the array after a
+# while (as the genre's clone bay does, 12, 9 or 7 s by power). Aboard their own ship the array also mends them.
+
+const REBROADCAST_TICKS := [240, 240, 180, 140]
+const ARRAY_MEND_PER_TICK := 0.1        # health a tick per bar of power (Ai-Generated-Proposal): a third of a medbay
+
+
+## Whether a crew member of this ship is an avatar its array holds: they can be struck down but not killed.
+func holds_avatar(member: CrewMember) -> bool:
+	return member.race.broadcast and member.home == self and system_by("aaa") != null and not destroyed
+
+
+## Takes a struck-down avatar back into the array, to be broadcast again later.
+func take_back_avatar(member: CrewMember) -> void:
+	var array := system_by("aaa")
+	member.offline = true
+	member.rebroadcast_ticks = REBROADCAST_TICKS[clampi(system_power(array), 0, 3)]
+	member.health = member.max_health
+	member.end_mind_control()
+	member.path.clear()
+	member.melee_with = null
+	member.aim_at = null
+	member.stun_ticks = 0
+	if member.ship != self:
+		member.ship.visitors.erase(member)
+		member.ship = self
+
+
+func _tick_avatars() -> void:
+	var array := system_by("aaa")
+	if array == null:
+		return
+	var slots := system_power(array)
+	var shown := 0
+	for member in crew:
+		if not member.race.broadcast or member.dead or member.offline:
+			continue
+		shown += 1
+		if shown > slots:
+			take_back_avatar(member)      # the array can't hold this many now
+			member.rebroadcast_ticks = 0  # they come back as soon as it can
+			shown -= 1
+		elif member.ship == self:
+			member.health = minf(member.max_health, member.health + ARRAY_MEND_PER_TICK * slots)
+	for member in crew:
+		if not member.offline or member.dead or shown >= slots:
+			continue
+		if member.rebroadcast_ticks > 0:
+			member.rebroadcast_ticks -= 1
+			continue
+		member.offline = false
+		var cell := free_cell_in_room(array.room, side, member)
+		member.cell = cell
+		member.destination = cell
+		member.position = design.cell_centre(cell)
+		member.previous_position = member.position
+		member.teleporting_ticks = 10
+		shown += 1
+
+
+## How many more Senti this ship's array could host, at its level (not its power now).
+func avatar_room() -> int:
+	var array := system_by("aaa")
+	if array == null:
+		return 0
+	var hosted := 0
+	for member in crew:
+		if member.race.broadcast and not member.dead:
+			hosted += 1
+	return maxi(0, array.level - hosted)
 
 
 func _tick_supershield() -> void:

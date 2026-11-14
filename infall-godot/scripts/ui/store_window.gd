@@ -73,7 +73,9 @@ func _rebuild() -> void:
 		var price := Mawjig.amount(race.crew_price * _price_scale() / 100.0)
 		var sold: bool = stock.sold.has("crew:%d" % index)
 		var for_sale := Refit.crew_for_sale(run, index) if not sold else null
-		left.add_child(_card("%s crew member" % race.name, race.traits_text, price, sold, func(): _buy_crew(race, index, price), _crew_picture(for_sale)))
+		var hosted: bool = run.living_ships().any(func(each: Ship): return Refit.can_host(each, race))
+		var detail: String = race.traits_text if hosted else race.traits_text + "\nNone of your ships has room: a Senti needs a free place in an Armoured Avatar Array." if race.broadcast else race.traits_text + "\nNone of your ships has room."
+		left.add_child(_card("%s crew member" % race.name, detail, price, sold, func(): _buy_crew(race, index, price) if hosted else Sfx.play("deny"), _crew_picture(for_sale)))
 	right.add_child(_section("SYSTEMS"))
 	for system_id in stock.systems:
 		var def := Library.system(system_id)

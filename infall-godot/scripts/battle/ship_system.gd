@@ -31,7 +31,7 @@ var manned_count: int = 0
 ## How many bars of power move at a time. Shields take and give power in pairs, two bars to a layer, as in the
 ## genre: a layer that loses one bar to damage or ion gives up the other. Every other system moves one bar.
 func power_step() -> int:
-	return 2 if behaviour == "shields" else 1
+	return def.bars_per_layer if behaviour == "shields" else 1
 
 
 ## The bars damage has left working.

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The Armoured Avatar Array (race profiles, Senti 6 and 9). One avatar per level (heromedel, 2026-11-13). Prices from
+     docs/reference/system-prices.md (as a clone bay). Text by Infall: Lori (2026-11-14). -->
+<system id="aaa" name="Armoured Avatar Array" behaviour="aaa" max_level="3" draws_power="yes" manned="no" buy="21.78" upgrades="8.47,10.89" icon="aaa" hotkey="D" order="42">
+	<description>Stores and broadcasts the ship's Senti crew. A Senti killed in a fight is broadcast again from the array. If the array is damaged, fewer Senti can be broadcast until it is repaired.</description>
+	<level>Hosts one Senti</level>
+	<level>Hosts two Senti</level>
+	<level>Hosts three Senti</level>
+</system>
