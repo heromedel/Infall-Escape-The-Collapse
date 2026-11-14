@@ -18,6 +18,7 @@ var cargo: Array[String] = []        # weapons carried but not fitted
 var left_commands: Dictionary = {}   # a player who left (id) -> what they commanded, for the Admiral to restore
 									 # (GDD 4F): {"ships": {Ship: assigned}, "crew": {CrewMember: [assigned, own]}}
 var tech: Array[String] = []         # the Tech victory's pieces in the hold, by race (content/tech/tech.xml)
+var tech_goal: bool = false          # the search for the seven pieces has begun (the TECH_GOAL_FOUND event)
 var victory: String = ""             # how a won run was won: "escape" or "tech"
 var used_events: Array[String] = []
 var stats := {"ships_destroyed": 0, "crews_killed": 0, "jumps": 0, "mawjig_earned": 0, "events": 0, "ships_lost": 0}
@@ -59,28 +60,48 @@ func spend(cents: int) -> bool:
 
 # --- The Tech victory's pieces --------------------------------------------------------------------------------
 
+## Whether the squad has a race's piece: in the hold, or as that race's own make of the system on one of its ships.
 func has_tech(race: String) -> bool:
-	return tech.has(race)
+	return tech.has(race) or carries_tech(race)
+
+
+func carries_tech(race: String) -> bool:
+	var behaviour := RimTech.behaviour_of(race)
+	if behaviour.is_empty():
+		return false
+	for ship in own_ships():
+		for system in ship.systems:
+			if system.behaviour == behaviour and system.make == race:
+				return true
+	return false
+
+
+func tech_count() -> int:
+	var count := 0
+	for race in RimTech.order:
+		if has_tech(race):
+			count += 1
+	return count
 
 
 ## Puts a race's piece in the hold. False when the squad already has it, or there is no such piece.
 func give_tech(race: String, how: String = "") -> bool:
-	if tech.has(race) or not RimTech.pieces.has(race):
+	if has_tech(race) or not RimTech.pieces.has(race):
 		return false
 	tech.append(race)
 	if log_book:
-		log_book.write("tech", {"race": race, "how": how, "held": tech.size()}, "The squad has the %s (%d of %d)." % [RimTech.name_of(race), tech.size(), RimTech.order.size()])
+		log_book.write("tech", {"race": race, "how": how, "held": tech_count()}, "The squad has the %s (%d of %d)." % [RimTech.name_of(race), tech_count(), RimTech.order.size()])
 	return true
 
 
 func has_all_tech() -> bool:
-	return not RimTech.order.is_empty() and RimTech.order.all(func(race): return tech.has(race))
+	return not RimTech.order.is_empty() and RimTech.order.all(func(race): return has_tech(race))
 
 
 func missing_tech() -> Array[String]:
 	var missing: Array[String] = []
 	for race in RimTech.order:
-		if not tech.has(race):
+		if not has_tech(race):
 			missing.append(race)
 	return missing
 
@@ -283,7 +304,7 @@ func to_save() -> Dictionary:
 			ships.append(ship.to_save())
 	return {
 		"game": "Infall: Escape The Collapse", "version": 2, "seed": seed_value, "current": current, "jumps": jumps,
-		"mawjig": mawjig, "cargo": cargo.duplicate(), "tech": tech.duplicate(), "used_events": used_events.duplicate(), "stats": stats.duplicate(),
+		"mawjig": mawjig, "cargo": cargo.duplicate(), "tech": tech.duplicate(), "tech_goal": tech_goal, "used_events": used_events.duplicate(), "stats": stats.duplicate(),
 		"difficulty": difficulty, "pending_fight": pending_fight, "next_contract_id": next_contract_id, "squad": ships, "galaxy": galaxy.to_save(), "rng_state": rng.state,
 	}
 
@@ -338,6 +359,7 @@ static func from_data(data: Dictionary) -> RunState:
 	run.mawjig = int(data.mawjig)
 	run.cargo.assign(data.get("cargo", []))
 	run.tech.assign(data.get("tech", []))
+	run.tech_goal = bool(data.get("tech_goal", false))
 	run.used_events.assign(data.get("used_events", []))
 	for key in data.get("stats", {}):
 		run.stats[key] = int(data.stats[key])

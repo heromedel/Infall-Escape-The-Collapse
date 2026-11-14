@@ -1,107 +1,124 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- The Tech victory and its rival (GV 2F). Infall: Lori, 2026-11-14 (docs/godot/tech-victory.xml on Cloud-C-Lori);
-     everything here is Ai-Generated-Proposal except what heromedel's words set (2026-11-14): one tech from every
-     race; ways to buy, earn, steal or demand them; the Malphen piece never sold; the Mecha piece only for a good
-     deal; a Terran rival who escapes twice, wants your way out, threatens The Colony Ship and ambushes you at the rim.
-     kind="tech": placed, not rolled: one cluster in each race's region holds its TECH_ event and shows it on the map
-     (heromedel, 2026-11-14: the pieces must not be rare events), and it plays there until the squad has the piece.
-     kind="rival": played by the rival's hunt in the last two bands. Where a piece is plainly bought the price is the
-     piece's own (content/tech/tech.xml, Infall: Eco); the other prices are Lori's first guesses. -->
+     everything here is Ai-Generated-Proposal except what heromedel's words set (2026-11-14): the pieces are goals,
+     not destinations; the goal starts late, from an event; the Malphen piece is never sold; the Mecha piece only for
+     a good deal; a Terran rival escapes twice, wants your way out, threatens The Colony Ship and ambushes you at the
+     rim. TECH_GOAL_FOUND plays on the squad's first arrival two bands from the rim. A race's TECH_ event is picked
+     only while the goal runs and the squad lacks that piece. kind="rival": played by the rival's hunt in the last
+     two bands. Prices of pieces are the piece's own price times a share (content/tech/tech.xml, Infall: Eco: the
+     plain purchases at 1, a favour at a quarter, kinship at a half, the Mecha's own at 0.6). -->
 <events>
-	<!-- 2. One event per race, in that race's own space. heromedel (2026-11-14): these are not rare events. The player
-	     must visit and trigger all seven to win, so each one can be reached on purpose: kind="tech" marks it as placed,
-	     not rolled. Suggested: one cluster in each race's region holds its TECH_ event and shows it on the map (line
-	     below), and the piece can also be had from that race's ships by surrender (the demand line), so a squad is
-	     never stuck waiting for luck. The states= on each event are the states it reads best in; if a placed cluster
-	     ends up in another state, keep the event anyway. -->
-	<event id="TECH_TERRAN" title="The Long Haul" kind="tech" races="terran" states="Doing Fine,Struggling" bands="3-8" unique="yes">
-		<text>A GATOS shipyard is building something it can't sell: an Armoured ZeroPoint Core far too big for any ship it makes. The yard boss hails you, half proud and half desperate.
+	<!-- The goal starts. A late band, once (bands 6-7 suggested). -->
+	<event id="TECH_GOAL_FOUND" title="A Way Out" kind="neutral" bands="6-7" weight="3" unique="yes" after_collapse="yes">
+		<text>A transmission from The Colony Ship catches up with you, its signal weaker than ever.
+
+"Our engineers have found something in the old archives. No single race's ship could cross the dark between galaxies. But a ship built with the best of every race's technology just might. One power core, one engine, one shield, one archive, one autopilot, one hull, and one organ that heals what breaks.
+
+"We're too big and too slow to rebuild in time. Your scouts aren't. If it comes to it, find those pieces and go without us. Somebody has to make it."</text>
+		<choice text="We'll find them.">
+			<outcome><text>Your squad begins a new search: the best technology of seven different races, from whoever will sell it, give it, lose it or surrender it.</text><tech_goal/></outcome>
+		</choice>
+	</event>
+
+	<!-- "What techs are we missing": the check the squad can open at any time once the goal has started. The game fills
+	     one line per missing piece. -->
+	<event id="TECH_MISSING" title="The Seven Pieces" kind="message">
+		<text>Your squad holds {held} of the seven pieces. Still missing:
+
+{missing}</text>
+		<choice text="Continue..."/ requires="afford_tech:terran:1">
+	</event>
+
+	<!-- One event per race, in that race's space. Weighted, not placed: a chance to get the piece in character, one
+	     of many ways. They should only be picked while the goal is running and the squad lacks that race's piece. -->
+	<event id="TECH_TERRAN" title="An Overbuilt Core" kind="neutral" races="terran" states="Doing Fine,Struggling" bands="6-8" weight="2" unique="yes" after_collapse="yes">
+		<text>A GATOS shipyard has an Armoured ZeroPoint Core it can't sell: far too big for any ship it makes. The yard boss hails you, half proud and half desperate.
 
 "We built it for a jump nobody's made yet. Nobody around here can afford it now. You look like people heading somewhere far."</text>
-		<choice text="Buy the core." requires="afford_tech:terran:1">
-			<outcome><text>The yard crew load the Long Haul into your hold. "Make it count," the yard boss says.</text><mawjig tech="terran" share="1"/><tech race="terran"/></outcome>
+		<choice text="Buy the core.">
+			<outcome><text>The yard crew load the core into your hold. "Make it count," the yard boss says.</text><mawjig tech="terran" share="1"/><tech race="terran"/></outcome>
 		</choice>
 		<choice text="Let {crew} tell them where you're going." requires="crew:terran" also="afford_tech:terran:0.5">
 			<outcome><text>{crew} tells them about The Colony Ship and the rim. The yard boss is quiet for a long time, then halves the price. "For the ones who actually might make it."</text><mawjig tech="terran" share="0.5"/><tech race="terran"/></outcome>
 		</choice>
-		<choice text="Not now."/>
+		<choice text="Not now."/ requires="afford_tech:azurethea:0.25">
 	</event>
 
-	<event id="TECH_AZURETHEA" title="Grown, Not Built" kind="tech" races="azurethea" states="Struggling,Refugee,Doomed" bands="3-8" unique="yes">
-		<text>An Azurethea outpost is tending something in its hold: an engine still half grown, its veins pulsing slowly. Its keeper hails you.
+	<event id="TECH_AZURETHEA" title="Grown, Not Built" kind="neutral" races="azurethea" bands="6-8" weight="2" unique="yes" after_collapse="yes">
+		<text>An Azurethea outpost is tending a set of engines in its hold, still half grown, their veins pulsing slowly. Its keeper hails you.
 
-"Once we would never have shared this. The collapse has changed what even we will trade. Our refugees need passage more than we need secrets. Pay for it, and the engine is yours."</text>
-		<choice text="Pay for their refugees' passage." requires="mawjig:9.68">
-			<outcome><text>Your Mawjig buys passage for a whole convoy of Azurethea refugees. The keeper seals the Wingbeat Engine into your hold. "Fly it gently. It remembers."</text><mawjig amount="-9.68"/><tech race="azurethea"/></outcome>
+"Once we would never have shared these. The collapse has changed what even we will trade. Our refugees need passage more than we need secrets. Pay for it, and the engines are yours."</text>
+		<choice text="Pay for their refugees' passage.">
+			<outcome><text>Your Mawjig buys passage for a whole convoy of Azurethea refugees. The keeper seals the engines into your hold. "Fly them gently. They remember."</text><mawjig tech="azurethea" share="0.25"/><tech race="azurethea"/></outcome>
 		</choice>
 		<choice text="Let {crew} speak with the keeper." requires="crew:azurethea">
-			<outcome><text>{crew} and the keeper talk until the outpost's lights dim for the night. In the morning the engine is in your hold, and nobody mentions a price.</text><tech race="azurethea"/></outcome>
+			<outcome><text>{crew} and the keeper talk until the outpost's lights dim for the night. In the morning the engines are in your hold, and nobody mentions a price.</text><tech race="azurethea"/></outcome>
 		</choice>
-		<choice text="Move on."/>
+		<choice text="Move on."/ requires="afford_tech:mecha:1">
 	</event>
 
-	<event id="TECH_MECHA" title="A Good Deal" kind="tech" races="mecha" states="Doing Fine,Core,Struggling,Border" bands="3-8" unique="yes">
-		<text>A Mecha yard boss hails you, already smiling. "We heard you want our hull bracing. Everyone wants it. Nobody gets it for free. Make us a good offer."</text>
-		<choice text="Pay their price." requires="afford_tech:mecha:1">
-			<outcome><text>"Pleasure doing business." The bracing is loaded aboard, and the yard boss is still laughing when you jump.</text><mawjig tech="mecha" share="1"/><tech race="mecha"/></outcome>
+	<event id="TECH_MECHA" title="A Good Deal" kind="neutral" races="mecha" states="Doing Fine,Core,Struggling,Border" bands="6-8" weight="2" unique="yes" after_collapse="yes">
+		<text>A Mecha yard boss hails you, already smiling. "We heard you want our hull reinforcement. Everyone wants it. Nobody gets it for free. Make us a good offer."</text>
+		<choice text="Pay their price.">
+			<outcome><text>"Pleasure doing business." The reinforcement is loaded aboard, and the yard boss is still laughing when you jump.</text><mawjig tech="mecha" share="1"/><tech race="mecha"/></outcome>
 		</choice>
 		<choice text="Let {crew} make the offer." requires="crew:mecha" also="afford_tech:mecha:0.6">
 			<outcome><text>{crew} and the yard boss trade clipped Mecha code for an hour. When it's over, both of them seem sure they won.</text><mawjig tech="mecha" share="0.6"/><tech race="mecha"/></outcome>
 		</choice>
-		<choice text="Copy their bracing plans and fit it yourself." requires="system:hacking">
-			<outcome weight="1"><text>Your probe copies the plans before the yard notices. Your crews fit the bracing at the next quiet cluster.</text><tech race="mecha"/></outcome>
+		<choice text="Copy their reinforcement plans." requires="system:hacking">
+			<outcome weight="1"><text>Your probe copies the plans before the yard notices. Your crews build the reinforcement at the next quiet cluster.</text><tech race="mecha"/></outcome>
 			<outcome weight="1"><text>"Theft? From us?" The yard boss sounds almost impressed. The frames come for you.</text><fight/></outcome>
 		</choice>
 		<choice text="Walk away."/>
 	</event>
 
-	<event id="TECH_TENTAURI" title="The Mantle" kind="tech" races="tentauri" states="Struggling,Doomed,Border" bands="3-8" unique="yes">
-		<text>Two Tentauri hail you, their voices soft and in step. "We have a shield we cannot carry where we are going. We would give it to someone who flies with us, once."</text>
+	<event id="TECH_TENTAURI" title="The Shell" kind="neutral" races="tentauri" bands="6-8" weight="2" unique="yes" after_collapse="yes">
+		<text>Two Tentauri hail you, their voices soft and in step. "We have a Supershield Generator we cannot carry where we are going. We would give it to someone who flies with us, once."</text>
 		<choice text="Fly a joint operation with them.">
-			<outcome weight="2"><text>You cross the cluster beside them without trouble. At the far side they pass the Mantle Shield to your ship and drift on alone.</text><tech race="tentauri"/></outcome>
-			<outcome weight="1"><text>Raiders find you halfway across. The Tentauri fight beside you, and when it's over they pass you the Mantle Shield.</text><tech race="tentauri"/><fight/></outcome>
+			<outcome weight="2"><text>You cross the cluster beside them without trouble. At the far side they pass the generator to your ship and drift on alone.</text><tech race="tentauri"/></outcome>
+			<outcome weight="1"><text>Raiders find you halfway across. The Tentauri pass you the generator before the fighting starts. "Use it well."</text><tech race="tentauri"/><fight/></outcome>
 		</choice>
 		<choice text="Let {crew} answer them." requires="crew:tentauri">
-			<outcome><text>{crew} answers in the same soft voice. The Tentauri pass you the Mantle Shield at once, and stay long enough to fit it.</text><tech race="tentauri"/></outcome>
+			<outcome><text>{crew} answers in the same soft voice. The Tentauri pass you the generator at once, and stay long enough to fit it.</text><tech race="tentauri"/></outcome>
 		</choice>
 		<choice text="Decline."/>
 	</event>
 
-	<event id="TECH_SENTI" title="The Archive Seed" kind="tech" races="senti" states="Doing Fine,Struggling" bands="3-8" unique="yes">
-		<text>A Senti archive station hails you, its light lines bright. "We, The Senti-, keep a seed of our archive for anyone who means to leave this galaxy. It is not sold. It is traded, record for record."</text>
+	<event id="TECH_SENTI" title="Record for Record" kind="neutral" races="senti" states="Doing Fine,Struggling" bands="6-8" weight="2" unique="yes" after_collapse="yes">
+		<text>A Senti archive station hails you, its light lines bright. "We, The Senti-, have an Armoured Avatar Array to spare, and every record it holds. It is not sold. It is traded, record for record."</text>
 		<choice text="Trade your home world's records.">
-			<outcome><text>You transmit everything your ships carry about the world you left. The station reads it all, then sends the Archive Seed in return. "We, The Senti-, will remember your world. Now you will remember ours."</text><tech race="senti"/></outcome>
+			<outcome><text>You transmit everything your ships carry about the world you left. The station sends the array in return. "We, The Senti-, will remember your world. Now you will remember ours."</text><tech race="senti"/></outcome>
 		</choice>
 		<choice text="Trade your sensor logs of the collapse." requires="system:sensors">
-			<outcome><text>"We, The Senti-, did not have this," the station says, and sends the seed.</text><tech race="senti"/></outcome>
+			<outcome><text>"We, The Senti-, did not have this," the station says, and sends the array.</text><tech race="senti"/></outcome>
 		</choice>
-		<choice text="Let {crew} carry the seed." requires="crew:senti">
-			<outcome><text>{crew} links with the station and comes back carrying the Archive Seed inside their own records. "I will keep it safe," they say.</text><tech race="senti"/></outcome>
+		<choice text="Let {crew} carry the records." requires="crew:senti">
+			<outcome><text>{crew} links with the station and comes back with the array's records already copied into your own systems. "I will keep them safe," they say.</text><tech race="senti"/></outcome>
 		</choice>
-		<choice text="Not now."/>
+		<choice text="Not now."/ requires="afford_tech:lykario:0.25">
 	</event>
 
-	<event id="TECH_LYKARIO" title="Stolen Goods" kind="tech" races="lykario" states="Doing Fine,Border,Struggling" bands="3-8" unique="yes">
+	<event id="TECH_LYKARIO" title="Stolen Goods" kind="neutral" races="lykario" bands="6-8" weight="2" unique="yes" after_collapse="yes">
 		<text>A Lykario trader grins over the channel. "The best autopilot in the galaxy. Flies your ship while you're off hunting. Stolen, of course, so it's cheap."</text>
-		<choice text="Buy it." requires="mawjig:9.68">
-			<outcome><text>"Pleasure! Don't ask who it was stolen from." The Tracker Autopilot goes into your hold.</text><mawjig amount="-9.68"/><tech race="lykario"/></outcome>
+		<choice text="Buy it.">
+			<outcome><text>"Pleasure! Don't ask who it was stolen from." The autopilot goes into your hold.</text><mawjig tech="lykario" share="0.25"/><tech race="lykario"/></outcome>
 		</choice>
 		<choice text="Let {crew} offer a joint hunt for it." requires="crew:lykario">
 			<outcome><text>{crew} and the trader trade boasts until the trader laughs. "Fine, fine. Good sport is worth more than Mawjig." The autopilot is yours.</text><tech race="lykario"/></outcome>
 		</choice>
-		<choice text="Steal it back from the thieves." requires="system:crew-teleporter">
+		<choice text="Steal it from the thieves." requires="system:crew-teleporter">
 			<outcome weight="1"><text>Your team teleports into their hold and out again with the autopilot before anyone notices. The Lykario would be proud of you.</text><tech race="lykario"/></outcome>
 			<outcome weight="1"><text>Your team grabs the autopilot, but the pack catches them on the way out. Now it's a hunt.</text><tech race="lykario"/><crew_hurt amount="30"/><fight squad="lykario-pack"/></outcome>
 		</choice>
 		<choice text="Move on."/>
 	</event>
 
-	<!-- The Malphen never sell: their piece is cut out of a living ship. -->
-	<event id="TECH_MALPHEN" title="The Brood Heart" kind="tech" races="malphen,any" states="Abandoned,Doomed,Unclaimed" bands="3-8" unique="yes">
+	<!-- The Malphen never sell: their piece is cut out of a living ship, or given up in a surrender (below). -->
+	<event id="TECH_MALPHEN" title="Still Beating" kind="hostile" races="malphen,any" states="Abandoned,Doomed,Unclaimed" bands="6-8" weight="2" unique="yes" after_collapse="yes">
 		<text>A huge Malphen ship lies dormant in an overgrown wreck field, barely moving. Deep inside it, your sensors read a growth organ still beating. Nobody sells one of those. You'll have to cut it out.</text>
 		<choice text="Send a team in to cut it out.">
-			<outcome weight="2"><text>Your team cuts its way through the living hull and back out again with the Brood Heart sealed in a crate. Behind them, the ship begins to wake.</text><tech race="malphen"/><crew_hurt amount="30"/></outcome>
-			<outcome weight="1"><text>The ship wakes while your team is inside. They get out with the Brood Heart, and the ship comes after it.</text><tech race="malphen"/><fight squad="malphen-growth"/></outcome>
+			<outcome weight="2"><text>Your team cuts its way through the living hull and back out again with the organ sealed in a crate. Behind them, the ship begins to wake.</text><tech race="malphen"/><crew_hurt amount="30"/></outcome>
+			<outcome weight="1"><text>The ship wakes while your team is inside. They get out with the organ, and the ship comes after it.</text><tech race="malphen"/><fight squad="malphen-growth"/></outcome>
 		</choice>
 		<choice text="Teleport straight to the organ and out again." requires="system:crew-teleporter">
 			<outcome><text>Your team teleports in beside the beating organ, cuts it loose and is gone before the ship stirs.</text><tech race="malphen"/></outcome>
@@ -110,12 +127,11 @@
 	</event>
 
 	<!-- heromedel's idea (2026-11-14): a negotiated surrender during a fight the squad is winning against a Malphen
-	     ship, not an event of its own. The Malphen give up their organ the way they surrender, with matter and no
-	     words (race profiles, Malphen: diplomacy through matter). Shown by the fight's surrender or Hail flow when a
-	     Malphen ship is losing; kind="surrender" is a suggestion for wiring it. -->
+	     ship. The Malphen give up their organ the way they surrender, with matter and no words (race profiles,
+	     Malphen: diplomacy through matter). For the fight's surrender or Hail flow. -->
 	<event id="MALPHEN_SURRENDER_TECH" title="No Words" kind="surrender" races="malphen" unique="yes">
 		<text>The Malphen ship is torn open and leaking, but it is still fighting. Deep inside it, your sensors read a growth organ still beating.</text>
-		<choice text="Demand the organ, or you will finish them off." requires="no_tech:malphen">
+		<choice text="Demand the organ, or you will finish them off.">
 			<outcome><text>The Malphen don't answer. They never do. The ship stops firing, turns and begins to drift away from you.
 
 Then, without a sound, it splits open and lets the growth organ float free. By the time your crews have it aboard, the ship has powered up its drive and is gone.</text><tech race="malphen"/></outcome>
@@ -123,11 +139,11 @@ Then, without a sound, it splits open and lets the growth organ float free. By t
 		<choice text="Finish them off."/>
 	</event>
 
-	<!-- 3. The rival, given a face: Commodore Marlowe and the Long Odds (doomed GATOS, jealous and scared). -->
+	<!-- The rival: Commodore Marlowe of the Long Odds (doomed GATOS, jealous and scared). -->
 	<event id="RIVAL_FIRST" title="The Long Odds" kind="rival" unique="yes">
 		<text>A heavy GATOS ship drops out of a jump right beside your squad, its hull darkened and its emblem scorched. Its captain hails you.
 
-"Commodore Marlowe, of the Long Odds. You've been collecting things. Pieces of every race's tech. Nobody does that unless they've found a way out of this galaxy. Tell me how."</text>
+"Commodore Marlowe, of the Long Odds. You've been collecting things. The best tech of every race. Nobody does that unless they've found a way out of this galaxy. Tell me how."</text>
 		<choice text="Tell him nothing.">
 			<outcome><text>"Then I'll take it out of your wreckage."</text><fight squad="rival-hunt"/></outcome>
 		</choice>
@@ -169,14 +185,14 @@ Then, without a sound, it splits open and lets the growth organ float free. By t
 		<choice text="Continue..."/>
 	</event>
 
-	<!-- 4. The ambush at the rim, when the squad holds all seven pieces. -->
+	<!-- The ambush at the rim, when the squad holds all seven pieces. -->
 	<event id="FINAL_RIVAL_TECH" title="Marlowe's Last Stand" kind="final" unique="yes">
-		<text>The rim is here. With all seven pieces aboard, your squad could make the crossing, and The Colony Ship could follow you.
+		<text>The rim is here. With all seven pieces aboard, your squad could make the crossing.
 
 Then the Long Odds drops out of a jump in front of you, and the rest of Marlowe's fleet drops in around it: every desperate ship that still answered his call. Marlowe sounds exhausted.
 
 "I'm not asking anymore. Seven pieces, and a way out. I'm taking them."</text>
-		<choice text="Offer him a place behind The Colony Ship.">
+		<choice text="Offer him a place behind you.">
 			<outcome><text>"Behind you? Behind you is where the collapse is." He laughs, and it doesn't sound like laughing.</text><fight squad="final-rival-tech"/></outcome>
 		</choice>
 		<choice text="Let {crew} speak to him one last time." requires="crew:terran">
@@ -191,7 +207,7 @@ Then the Long Odds drops out of a jump in front of you, and the rest of Marlowe'
 
 	<!-- The rim without all seven, where the Tech victory is required (Infall: Lori's line). -->
 	<event id="RIM_NO_WAY_OUT" title="The Rim" kind="final">
-		<text>The rim is here, but there is no way out yet. Without all seven pieces your squad can't cross the dark between galaxies. Go back and find the ones you're missing.</text>
+		<text>The rim is here, but there is no way out yet. Without all seven pieces your squad can't cross the dark between galaxies. Find the ones you're missing.</text>
 		<choice text="Turn back."/>
 	</event>
 </events>

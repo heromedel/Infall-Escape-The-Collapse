@@ -83,7 +83,8 @@ func _summary(reports: Array) -> void:
 	var counts := held.keys()
 	counts.sort()
 	print("Tech victories %d. Pieces held at the end: %s. Pieces came by: %s. Meetings with the rival: %d." % [tech_wins, ", ".join(counts.map(func(n): return "%d pieces in %d runs" % [n, held[n]])), str(how), reports.reduce(func(sum: int, r): return sum + int(r.rival), 0)])
-	print("Runs that ended without a race's piece: %s" % str(_missing))
+	print("Runs where the search began: %d. Runs that never had a race's piece: %s" % [reports.filter(func(r): return r.goal).size(), str(_missing)])
+	print("Systems bought: %s" % str(_systems_bought))
 	var band_line := PackedStringArray()
 	for band in range(1, 9):
 		band_line.append("band %d: %d" % [band, bands.get(band, 0)])
@@ -103,7 +104,7 @@ func _summary(reports: Array) -> void:
 func _play_one(seed_number: int, ship_id: String) -> Dictionary:
 	var run := RunState.start(seed_number, ship_id)
 	var runner := EventRunner.new(run)
-	var report := {"seed": seed_number, "result": "LOST", "band": 1, "jumps": 0, "fights": 0, "won": 0, "fled": 0, "stalemates": 0, "ships": 1, "most_ships": 1, "mawjig": 0, "ended_by": "ran out of jumps", "tech": 0, "victory": "", "tech_how": {}, "rival": 0}
+	var report := {"seed": seed_number, "result": "LOST", "band": 1, "jumps": 0, "fights": 0, "won": 0, "fled": 0, "stalemates": 0, "ships": 1, "most_ships": 1, "mawjig": 0, "ended_by": "ran out of jumps", "tech": 0, "lacked": [], "goal": false, "victory": "", "tech_how": {}, "rival": 0}
 	while run.jumps < 400:
 		var event := runner.opening_message()
 		if event:
@@ -131,11 +132,11 @@ func _play_one(seed_number: int, ship_id: String) -> Dictionary:
 				var paid := 0
 				if outcome in ["won", "surrendered"]:
 					var before_pay := run.mawjig
-					var held_before := run.tech.size()
+					var held_before := run.tech_count()
 					var rewards := runner.fight_rewards(_last)
 					_count_tech(run, held_before, "taken")
 					if goal == "tech":
-						var pieces := run.tech.size()
+						var pieces := run.tech_count()
 						runner.trade_surrender_for_tech(rewards)
 						_count_tech(run, pieces, "surrender")
 					paid = run.mawjig - before_pay
@@ -162,6 +163,10 @@ func _play_one(seed_number: int, ship_id: String) -> Dictionary:
 				_shop(run)
 		run.clear_lost_ships()
 		report.most_ships = maxi(report.most_ships, run.living_ships().size())
+		if run.tech_count() >= int(report.tech):     # the most pieces the squad had aboard at once, and what it lacked then
+			report.tech = run.tech_count()
+			report.lacked = run.missing_tech()
+		report.goal = run.tech_goal
 		_rest(run)
 		if not _travel(run):
 			_starved += 1
@@ -200,14 +205,15 @@ func _close(report: Dictionary, run: RunState) -> Dictionary:
 	report.jumps = run.jumps
 	report.ships = run.living_ships().size()
 	report.mawjig = run.mawjig
-	report.tech = run.tech.size()
-	for race in run.missing_tech():
+	for race in report.lacked:
 		_missing[race] = int(_missing.get(race, 0)) + 1
 	report.tech_how = _tech_how.duplicate()
 	_tech_how.clear()
 	return report
 
 
+const WANTED_SYSTEMS := ["hacking", "mind_control", "teleporter", "cloaking", "battery", "supershield"]     # systems the captain code knows how to use
+var _systems_bought := {}    # behaviour -> how many the player bought over all runs
 var _missing := {}       # race -> runs that ended without its piece
 var _tech_how := {}      # how this run's pieces came: event, bought, taken, surrender
 
@@ -219,8 +225,8 @@ func _tech_spare(run: RunState) -> int:
 
 
 func _count_tech(run: RunState, before: int, way: String) -> void:
-	if run.tech.size() > before:
-		_tech_how[way] = int(_tech_how.get(way, 0)) + run.tech.size() - before
+	if run.tech_count() > before:
+		_tech_how[way] = int(_tech_how.get(way, 0)) + run.tech_count() - before
 
 
 ## Between clusters a player lets the crew finish repairs, and heal if the ship has a working medbay.
@@ -262,7 +268,7 @@ func _resolve(runner: EventRunner, event: EventDef) -> Dictionary:
 				if value > best:
 					best = value
 					choice = each
-	var pieces := runner.run.tech.size()
+	var pieces := runner.run.tech_count()
 	var result := runner.resolve(choice, runner.crew_for_choice(choice))
 	_count_tech(runner.run, pieces, "event")
 	return result
@@ -397,7 +403,7 @@ func _fight(run: RunState, runner: EventRunner, squad: SquadDef) -> String:
 				# A losing Malphen ship gives up its growth organ to a squad that lacks it, in place of Mawjig
 				var from: Ship = note.ship
 				if from.design.race == "malphen" and encounter.tech_wanted.has("malphen") and not run.has_tech("malphen"):
-					var pieces := run.tech.size()
+					var pieces := run.tech_count()
 					run.give_tech("malphen", "surrender")
 					_count_tech(run, pieces, "surrender")
 					encounter.surrender_pays = false
@@ -475,8 +481,8 @@ func _shop(run: RunState) -> void:
 		Refit.apply(run, {"op": "repair", "points": points})
 	# Going for the Tech victory: the piece this store sells
 	var piece := RimTech.sold_at(run.cluster())
-	if goal == "tech" and piece != "" and not run.has_tech(piece) and run.mawjig - RimTech.price(piece, run.band()) >= maxi(reserve, _tech_spare(run)):
-		var pieces := run.tech.size()
+	if goal == "tech" and run.tech_goal and piece != "" and not run.has_tech(piece) and run.mawjig - RimTech.price(piece, run.band()) >= maxi(reserve, _tech_spare(run)):
+		var pieces := run.tech_count()
 		Refit.apply(run, {"op": "buy_tech", "race": piece, "price": RimTech.price(piece, run.band())})
 		_count_tech(run, pieces, "bought")
 	if player.shop == "odd":
@@ -512,6 +518,22 @@ func _shop(run: RunState) -> void:
 			var price := Mawjig.amount(race.crew_price * scale / 100.0)
 			if run.mawjig - price >= reserve:
 				Refit.apply(run, {"op": "buy_crew", "sq": index, "race": race.id, "index": slot, "price": price})
+	# The expert fits a ship with a system it lacks, one a store, once the ship has its second shield layer
+	if player.shop == "all":
+		for ship in ships:
+			var shields := ship.system_by("shields")
+			if shields == null or shields.level < 4:
+				continue
+			for id in stock.systems:
+				var def := Library.system(id)
+				if def == null or stock.sold.has("system:" + id) or ship.system_by(def.behaviour) != null or def.behaviour not in WANTED_SYSTEMS:
+					continue
+				var price := Mawjig.amount(def.buy_price * scale / 100.0)
+				var room := ShipOutfitter.room_for_new_system(ship, def)
+				if room >= 0 and run.mawjig - price >= reserve + 1500:
+					Refit.apply(run, {"op": "buy_system", "sq": run.squad.find(ship), "id": id, "room": room, "price": price})
+					_systems_bought[def.behaviour] = int(_systems_bought.get(def.behaviour, 0)) + 1
+					break
 	# Then, ship by ship, the upgrade a player would want most that the squad can pay for, until nothing fits
 	var bought := true
 	while bought:
@@ -623,7 +645,7 @@ func _travel(run: RunState) -> bool:
 			continue
 		var there: Dictionary = run.galaxy.clusters[link]
 		# Going for the Tech victory, the rim waits until every piece is aboard, while the collapse allows
-		var holds_off: bool = goal == "tech" and there.kind == "final" and not run.has_all_tech() and run.collapse_distance() > SAFE_GAP * 2.0
+		var holds_off: bool = goal == "tech" and run.tech_goal and there.kind == "final" and not run.has_all_tech() and run.collapse_distance() > SAFE_GAP * 2.0
 		if not holds_off and (outward < 0 or there.radius > run.galaxy.clusters[outward].radius):
 			outward = link
 		var keeps_ahead: bool = run.galaxy.collapse_radius <= 0.0 or there.radius - run.galaxy.collapse_radius - Galaxy.COLLAPSE_STEP > SAFE_GAP
@@ -637,7 +659,7 @@ func _travel(run: RunState) -> bool:
 		var store := _toward_store(run)
 		if store >= 0:
 			pick = store
-	if goal == "tech" and not run.has_all_tech():
+	if goal == "tech" and run.tech_goal and not run.has_all_tech():
 		var site := _toward_tech(run)
 		if site >= 0:
 			pick = site
@@ -647,8 +669,9 @@ func _travel(run: RunState) -> bool:
 	return true
 
 
-## The first jump toward the nearest tech site of a race whose piece the squad lacks (the map shows them all), that
-## it can reach ahead of the collapse and pay the jumps to; -1 when there is none within a dozen jumps.
+## The first jump toward the nearest cluster the squad hasn't been to in the space of a race whose piece it lacks
+## (the map's pointers say where that space lies), that it can reach ahead of the collapse and pay the jumps to; -1
+## when there is none within a dozen jumps.
 func _toward_tech(run: RunState) -> int:
 	var missing := run.missing_tech()
 	var reach := mini(12, (run.mawjig / Mawjig.JUMP_COST) - 3)
@@ -666,10 +689,10 @@ func _toward_tech(run: RunState) -> int:
 				if run.galaxy.collapse_radius > 0.0 and there.radius - run.galaxy.collapse_radius - Galaxy.COLLAPSE_STEP * (depth + 1) < 200.0:
 					continue
 				first_hop[link] = link if at == run.current else first_hop[at]
-				var site := String(there.get("tech_site", ""))
+				var race := String(there.race)
 				# A piece that is plainly bought (the GATOS core, the Mecha's deal) is worth the trip only with the Mawjig for it
-				var dear: bool = site in ["terran", "mecha"]
-				if missing.has(site) and (not dear or run.mawjig - RimTech.price(site, int(there.band)) >= _tech_spare(run)):
+				var dear: bool = race in ["terran", "mecha"]
+				if not there.visited and missing.has(race) and (not dear or run.mawjig - RimTech.price(race, int(there.band)) >= _tech_spare(run)):
 					return first_hop[link]
 				next.append(link)
 		frontier = next

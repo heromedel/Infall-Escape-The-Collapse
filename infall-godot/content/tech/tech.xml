@@ -1,20 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- The Tech victory's seven pieces, one from each race (docs/ideas.md, Victory paths; GV 2F). heromedel, 2026-11-14:
-     "get one tech from every race ... ways to buy them, or events to get them, or ways to steal them, or maybe demand
-     one in surrender if you are close enough to the rim ... you can't buy the Malphen one ... Mecha would not
-     surrender a system unless offered a good deal". A piece is carried in the squad's hold; it does nothing in a fight.
-     Names and lines: Infall: Lori (Ai-Generated-Proposal, 2026-11-14), each in its race's own style.
+<!-- The Tech victory's seven pieces (docs/ideas.md, Victory paths; GV 2F). heromedel, 2026-11-14: the pieces are
+     goals, not destinations. Each is that race's own version of a real system, so it can come from any of that
+     race's ships (bought, salvaged, demanded in a surrender, stolen), its stores or its events; with luck all seven
+     could be bought along the way. The Malphen piece is never sold; the Mecha part with theirs only for a good deal.
+     system: the system a piece is. A piece counts when a ship of the squad has that system and it is that race's
+     make, or when the piece is in the squad's hold. The Mecha Hull Reinforcement has no system in the game yet, so
+     it is only ever carried in the hold.
+     Names and lines: Infall: Lori (Ai-Generated-Proposal, 2026-11-14).
      Prices and chances: Infall: Eco (Ai-Generated-Proposal, 2026-11-14, economy finding F16): a piece costs what a
-     core system does, 36.31, times the band adjustment; the Mecha's good deal is 1.5 times that; a ship left whole,
-     its crew dead, carries its race's piece 1 time in 5 in bands 3 to 5 and 1 in 3 from band 6.
-     from_band: the first band with tech sites and store rows. demand_band: the first band where a surrendering ship
-     can be asked for its piece. -->
-<tech price="36.31" from_band="3" demand_band="6" steal_chance="0.2" steal_chance_late="0.33" late_band="6">
-	<piece race="terran" name="AZC Mk IX &quot;Long Haul&quot;">A GATOS Armoured ZeroPoint Core, overbuilt to power one impossibly long jump.</piece>
-	<piece race="azurethea" name="Wingbeat Engine">An Azurethea engine, grown rather than built: the most agile drive in the galaxy.</piece>
-	<piece race="mecha" name="Full Frame - Stress Rated - Hull Reinforcement" price_share="1.5" surrendered="no">Mecha bracing that holds a hull together under forces no other ship could take.</piece>
-	<piece race="tentauri" name="Mantle Shield">A Tentauri shield that wraps a whole ship the way a mantle wraps its body.</piece>
-	<piece race="senti" name="Archive Seed AS 01 V1">A copy of the Senti Archive's core: every route and record the Senti have ever kept.</piece>
-	<piece race="lykario" name="Tracker Autopilot">A Lykario autopilot that flies a ship alone while its crew are away on the hunt.</piece>
-	<piece race="malphen" name="Brood Heart" sold="no">A Malphen growth organ, still alive. It regrows whatever is torn away.</piece>
+     core system does, 36.31, times the band adjustment; the Mecha's good deal is 1.5 times that; a ship left whole
+     carries its race's piece 1 time in 5 before band 6 and 1 in 3 from it. wreck_chance, a piece pulled from a
+     wreck, is Infall: Godot Version's stand-in.
+     goal_bands_from_rim: how many bands before the last the goal's event comes (band 6 of 8). demand_band: the first
+     band where a surrendering ship can be asked for its piece. -->
+<tech price="36.31" goal_bands_from_rim="2" demand_band="6" steal_chance="0.2" steal_chance_late="0.33" late_band="6" wreck_chance="0.1">
+	<piece race="terran" system="azc" name="GATOS Armoured ZeroPoint Core">The GATOS power core: no power limit for anything joined to it. The crossing will need all the power it can get.</piece>
+	<piece race="azurethea" system="engines" name="Azurethea Engines">Grown, not built: the most agile drive in the galaxy, made by the Azurethea for their own ships.</piece>
+	<piece race="mecha" system="hull-reinforcement" name="Mecha Hull Reinforcement" price_share="1.5" surrendered="no">Mecha bracing that holds a hull together under forces no other ship could take.</piece>
+	<piece race="tentauri" system="supershield" name="Tentauri Supershield Generator">A Tentauri shell of energy outside the shields, to wrap a ship through the dark between galaxies.</piece>
+	<piece race="senti" system="aaa" name="Senti Armoured Avatar Array">The Senti archive of minds and records, the information to find the way across.</piece>
+	<piece race="lykario" system="piloting" name="Lykario Autopilot">Lykario piloting that flies a ship alone while its crew are away: the only pilot that can fly the whole crossing.</piece>
+	<piece race="malphen" system="growth-organ" name="Malphen Growth Organ" sold="no">A living Malphen organ. It regrows whatever the crossing tears away.</piece>
 </tech>

@@ -451,7 +451,7 @@ func _draw_squad_tabs(at: Vector2) -> float:
 		var chosen := ship == screen.selected_ship
 		var gone := ship.is_gone()
 		UiKit.draw_frame(self, rect, UiColours.PANEL_LIGHT if chosen else UiColours.PANEL, UiColours.BORDER if chosen else UiColours.BORDER_DIM, 7.0)
-		UiKit.draw_text(self, rect.position + Vector2(10, 22), ship.name if not gone else ship.name + " (lost)", 15, UiColours.TEXT if not gone else UiColours.TEXT_DIM, UiKit.font_bold())
+		UiKit.draw_text(self, rect.position + Vector2(10, 22), ship.name if not gone else ship.name + (" (clear)" if ship.escaped and not ship.destroyed else " (lost)"), 15, UiColours.TEXT if not gone else UiColours.TEXT_DIM, UiKit.font_bold())
 		if not gone:
 			var fraction := float(ship.hull) / ship.max_hull
 			draw_rect(Rect2(rect.position + Vector2(10, 27), Vector2(150 * fraction, 3)), UiColours.hull_colour(fraction))
@@ -906,7 +906,8 @@ func _system_buttons(ship: Ship, system: ShipSystem) -> Array:
 		"eva_dock":
 			return [
 				["send", func(): screen.start_eva(), "Send crew across to another ship in EVA suits: the crew you have selected, or whoever stands in the dock's room. Then click the ship, a squad-mate's or an enemy's.", ship.system_power(system) > 0, -1],
-				["recall", func(): screen.recall_eva(), "Call home every crew member of this ship who is aboard another.", ship.system_power(system) > 0, -1]]
+				["recall", func(): screen.recall_eva(), "Call home every crew member of this ship who is aboard another.", ship.system_power(system) > 0, -1],
+				["stay", func(): screen.stay_aboard(), "Crew of this ship who crossed to a squad-mate stay there and join its crew.", ship.crew.any(func(member: CrewMember): return member.ship != ship and member.ship.side == ship.side and member.is_active() and not member.crossing), -1]]
 		"cloaking":
 			return [["cloak", func(): screen.cloak(ship), "Hide the ship: most shots miss and its weapons hold their charge. Hotkey: C", ship.cloak_ticks <= 0 and ship.cloak_cooldown <= 0 and ship.system_power(system) > 0, ship.cloak_cooldown]]
 		"battery":
@@ -944,6 +945,9 @@ func _icon_button(rect: Rect2, glyph: String, action: Callable, tooltip: String,
 		"send":      # an arrow out
 			draw_line(c + Vector2(0, 6), c + Vector2(0, -2), colour, 2.5)
 			draw_colored_polygon(PackedVector2Array([c + Vector2(0, -7), c + Vector2(-6, -1), c + Vector2(6, -1)]), colour)
+		"stay":      # a house: this is home now
+			draw_polyline(PackedVector2Array([c + Vector2(-7, 0), c + Vector2(0, -7), c + Vector2(7, 0)]), colour, 2.0, true)
+			draw_rect(Rect2(c + Vector2(-5, 0), Vector2(10, 7)), colour, false, 2.0)
 		"recall":    # an arrow home
 			draw_line(c + Vector2(0, -6), c + Vector2(0, 2), colour, 2.5)
 			draw_colored_polygon(PackedVector2Array([c + Vector2(0, 7), c + Vector2(-6, 1), c + Vector2(6, 1)]), colour)

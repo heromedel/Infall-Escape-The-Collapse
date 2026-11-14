@@ -102,20 +102,37 @@ static func room_for_new_system(ship: Ship, def: SystemDef = null) -> int:
 
 
 static func install_system(ship: Ship, def: SystemDef, room_index: int) -> ShipSystem:
-	var cell := _free_airlock_cell(ship, room_index) if def.behaviour in DOCKS else _free_console_cell(ship, room_index)
 	var system := ShipSystem.new()
 	system.def = def
 	system.behaviour = def.behaviour
 	system.level = 2 if def.behaviour in ["shields"] else 1
+	place_system(ship, system, room_index)
+	return system
+
+
+## Puts a system, new or taken off another ship, on a free tile of a room: a dock on the room's airlock tile.
+static func place_system(ship: Ship, system: ShipSystem, room_index: int) -> void:
+	var cell := _free_airlock_cell(ship, room_index) if system.behaviour in DOCKS else _free_console_cell(ship, room_index)
 	system.room = room_index
 	system.cell = cell
 	system.wall = _wall_for(ship, cell)
-	if ship.reactor_type == "none":
-		system.own_power = system.level
+	system.own_power = system.level if ship.reactor_type == "none" else 0
+	system.power = 0
+	system.manned_by = null
 	ship.systems.append(system)
 	ship.rooms[room_index].systems.append(system)
+	if system.behaviour == "power_core":
+		ship.core_cell = cell
 	_join_conduits(ship, room_index)
-	return system
+
+
+## Takes a system off a ship, leaving its tile free.
+static func remove_system(ship: Ship, system: ShipSystem) -> void:
+	ship.systems.erase(system)
+	if system.room >= 0 and system.room < ship.rooms.size():
+		ship.rooms[system.room].systems.erase(system)
+	if system.manned_by:
+		system.manned_by = null
 
 
 static func _free_console_cell(ship: Ship, room_index: int) -> Vector2i:

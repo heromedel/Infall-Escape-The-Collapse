@@ -513,7 +513,7 @@ func _on_fight_over(outcome: String, finished: Encounter) -> void:
 		var trade: Array[Button] = []
 		trade.append(window.add_button("Demand their %s as the price of surrender (hand back the %s Mawjig)." % [piece, Mawjig.format(int(rewards.surrender_paid))], func():
 			if runner.trade_surrender_for_tech(rewards):
-				trade[0].text = "They hand over the %s (%d of %d)." % [piece, run.tech.size(), RimTech.order.size()]
+				trade[0].text = "They hand over the %s (%d of %d)." % [piece, run.tech_count(), RimTech.order.size()]
 			trade[0].disabled = true
 			run_changed.emit(), Color("#ffd46b")))
 	var survivors: Array = rewards.get("survivors", [])
@@ -653,7 +653,7 @@ func _after_the_end() -> void:
 ## Leaving a fight (GV 3N; heromedel, 2026-11-14): each ship jumps clear on its own charged drive, a short jump that
 ## costs nothing. The map, and the squad's long jump for a jump's Mawjig, come once the squad is clear: all of it,
 ## or the ships that are, with the rest left behind.
-const NO_SHIP_CLEAR := "No ship has jumped clear of the fight yet, so there is nowhere to plot a course from. Jump a ship out first, once its drive is charged."
+const NO_SHIP_CLEAR := "No ship has jumped clear yet, so there is nowhere to plot the squad's jump from. Jump one ship out first, once its drive is charged."     # Infall: Lori
 
 func _leave_the_fight(view: PlayerView) -> void:
 	var clear := encounter.jumped_out()
@@ -670,7 +670,9 @@ func _leave_the_fight(view: PlayerView) -> void:
 	view.open_window(window)
 	window.place_panel(720)
 	window.add_title("LEAVE THEM BEHIND?", UiColours.WARNING)
-	window.add_text("The squad can leave now with the ships that are clear: %s.\n\nThese ships are still in the fight and will be lost, with everyone aboard: %s." % [", ".join(clear.map(func(ship: Ship): return ship.name)), ", ".join(fighting.map(func(ship: Ship): return ship.name))], 20)
+	var clear_names := ", ".join(clear.map(func(ship: Ship): return ship.name))
+	var fighting_names := ", ".join(fighting.map(func(ship: Ship): return ship.name))
+	window.add_text("%s %s clear of the fight. %s %s still in it, and will be lost with everyone aboard if you jump now." % [clear_names, "is" if clear.size() == 1 else "are", fighting_names, "is" if fighting.size() == 1 else "are"], 20)     # Infall: Lori
 	window.add_button("1. Leave them and plot the jump.", func():
 		window.close()
 		view.abandon_the_rest(), UiColours.DAMAGED_RED)

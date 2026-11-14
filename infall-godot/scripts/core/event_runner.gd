@@ -22,10 +22,10 @@ func event_for_arrival() -> EventDef:
 		return final_event()
 	if cluster.kind == "opening":
 		return Library.events.get("START_LAUNCH")
-	# A race's tech site plays its event until the squad has the piece (GV 2F: never left to luck)
-	var site: String = cluster.get("tech_site", "")
-	if site != "" and not run.has_tech(site) and Library.events.has(RimTech.site_event(site)):
-		return Library.events[RimTech.site_event(site)]
+	# The search for the seven pieces begins on the squad's first arrival two bands from the rim (GV 2F)
+	if not run.tech_goal and run.galaxy.bands >= 8 and run.band() >= run.galaxy.bands - RimTech.goal_bands_from_rim and not cluster.store \
+			and Library.events.has("TECH_GOAL_FOUND") and not run.used_events.has("TECH_GOAL_FOUND") and not cluster.event_done:
+		return Library.events["TECH_GOAL_FOUND"]
 	if cluster.event_done:
 		return before_or_after_collapse("REVISIT")
 	var rival := _rival_event()
@@ -40,7 +40,7 @@ func event_for_arrival() -> EventDef:
 ## What waits at the rim (GV 2F). With every piece of tech aboard, the rival's ambush and the Tech victory. Without
 ## them: the Last Fleet as ever, or, where the Tech victory is required, no way out yet.
 func final_event() -> EventDef:
-	if run.has_all_tech() and Library.events.has("FINAL_RIVAL_TECH"):
+	if run.tech_goal and run.has_all_tech() and Library.events.has("FINAL_RIVAL_TECH"):
 		return Library.events["FINAL_RIVAL_TECH"]
 	if Settings.get_value("tech_victory", "Optional") == "Required" and Library.events.has("RIM_NO_WAY_OUT"):
 		return Library.events["RIM_NO_WAY_OUT"]
@@ -51,7 +51,7 @@ func final_event() -> EventDef:
 ## last two bands (heromedel, 2026-11-14): one meeting in each, on one arrival in three, by the cluster's own number
 ## so every machine and every reload agree.
 func _rival_event() -> EventDef:
-	if run.tech.size() < 2 and Settings.get_value("tech_victory", "Optional") != "Required":
+	if (not run.tech_goal or run.tech_count() < 2) and Settings.get_value("tech_victory", "Optional") != "Required":
 		return null
 	var last: int = run.galaxy.bands
 	for step in [["RIVAL_FIRST", last - 1], ["RIVAL_SECOND", last]]:
@@ -91,6 +91,12 @@ func pick(kind: String) -> EventDef:
 			continue
 		if def.after_collapse and not collapse_known():
 			continue
+		# A race's own piece of the Tech victory: only while the search is on and the squad lacks it
+		var piece := RimTech.race_of_event(def.id)
+		if piece != "" and (not run.tech_goal or run.has_tech(piece)):
+			continue
+		if def.id == "TECH_GOAL_FOUND":
+			continue
 		if not def.hazard.is_empty() and def.hazard != cluster.hazard:
 			continue
 		var weight: float = def.weight
@@ -98,6 +104,8 @@ func pick(kind: String) -> EventDef:
 			weight *= 2.5   # a race's own events come up more in its own space
 		if run.used_events.has(def.id):
 			weight *= 0.25
+		if piece != "":
+			weight *= 3.0   # one of several ways to a piece, but not a rare one
 		candidates.append(def)
 		weights.append(weight)
 	if candidates.is_empty():
@@ -380,7 +388,10 @@ func _apply(tag: String, attrs: Dictionary, result: Dictionary) -> void:
 			if race_id == "" or race_id == "region":
 				race_id = run.cluster().race
 			if run.give_tech(race_id, "event"):
-				result.lines.append("Rim tech: %s (%d of %d)" % [RimTech.name_of(race_id), run.tech.size(), RimTech.order.size()])
+				result.lines.append("%s: in the hold (%d of %d)" % [RimTech.name_of(race_id), run.tech_count(), RimTech.order.size()])
+		"tech_goal":
+			run.tech_goal = true
+			result.lines.append("The seven pieces: %d of %d aboard. The map shows where to look for the rest." % [run.tech_count(), RimTech.order.size()])
 		"fight":
 			result.fight = attrs.get("squad", "")
 			result.fight_given = true
@@ -546,15 +557,22 @@ func fight_rewards(encounter: Encounter) -> Dictionary:
 			lines.append("%s surrendered: Mawjig +%s" % [ship.name, Mawjig.format(paid)])
 	if total > 0:
 		run.earn(total)
-	# The Tech victory's pieces (GV 2F): a ship left whole, its crew dead, may carry its race's piece
-	for ship in encounter.all_enemy_ships():
-		var race: String = ship.design.race
-		if ship.crew_dead and not ship.destroyed and RimTech.pieces.has(race) and not run.has_tech(race) and run.band() >= RimTech.from_band and run.rng.randf() < RimTech.steal_chance_in(run.band()):
-			run.give_tech(race, "taken")
-			lines.append("You strip the %s out of the %s. (%d of %d)" % [RimTech.name_of(race), ship.name, run.tech.size(), RimTech.order.size()])
+	# The Tech victory's pieces (GV 2F), while the search is on: any ship of a race may carry that race's piece. A
+	# wreck gives it up now and then; a ship left whole, its crew dead, more often.
+	if run.tech_goal:
+		for ship in encounter.all_enemy_ships():
+			var race: String = ship.design.race
+			if not RimTech.pieces.has(race) or run.has_tech(race):
+				continue
+			if ship.crew_dead and not ship.destroyed and run.rng.randf() < RimTech.steal_chance_in(run.band()):
+				run.give_tech(race, "taken")
+				lines.append("You strip the %s out of the %s. (%d of %d)" % [RimTech.name_of(race), ship.name, run.tech_count(), RimTech.order.size()])
+			elif ship.destroyed and run.rng.randf() < RimTech.wreck_chance:
+				run.give_tech(race, "salvaged")
+				lines.append("Your crews pull the %s out of the wreck of the %s. (%d of %d)" % [RimTech.name_of(race), ship.name, run.tech_count(), RimTech.order.size()])
 	# And close to the rim, a ship that surrenders can be asked for its piece in place of its Mawjig
 	var demand := ""
-	if surrender_paid > 0 and run.band() >= RimTech.demand_band:
+	if run.tech_goal and surrender_paid > 0 and run.band() >= RimTech.demand_band:
 		for ship in encounter.all_enemy_ships():
 			var race: String = ship.design.race
 			if ship.surrendered and RimTech.pieces.has(race) and RimTech.pieces[race].surrendered and not run.has_tech(race):
@@ -587,7 +605,7 @@ func fight_rewards(encounter: Encounter) -> Dictionary:
 ## The races whose piece the squad still lacks, where pieces are to be had at all (for a fight's captains).
 func tech_wanted() -> Array[String]:
 	var wanted: Array[String] = []
-	if run.band() >= RimTech.from_band:
+	if run.tech_goal:
 		wanted = run.missing_tech()
 	return wanted
 

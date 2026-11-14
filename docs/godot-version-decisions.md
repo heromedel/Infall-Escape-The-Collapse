@@ -41,31 +41,39 @@ anything Claude added tagged Ai-Generated-Proposal.
     push into their neighbours; two Doomed clusters in three send a group.
 
 - **F — Built (2026-11-14), heromedel: "the victory path that should come next is the get one tech from every
-  race":** the Tech victory (`docs/ideas.md`, Victory paths) and its rival.
-  - **The pieces.** Seven, one from each race, carried in the squad's hold (they do nothing in a fight). The map
-    and the store show how many are aboard. Names and lines are Infall: Lori's, in each race's own style.
-  - **Never left to luck (heromedel, 2026-11-14: "the Tech pieces must not be rare events"):** one cluster in each
-    of a race's regions is that race's tech site, marked on the map from anywhere with a gold diamond. Its event
-    plays there until the squad has the piece.
-  - **Other ways (heromedel: "ways to buy them ... ways to steal ... demand one in surrender if you are close
-    enough to the rim"):** a store deep in a race's own space sells its piece; a ship left whole with its crew dead
-    may carry one; from band 6 a ship that surrenders can be asked for its piece in place of its Mawjig.
-  - **Exceptions (heromedel):** the Malphen piece is never sold; a losing Malphen ship gives up its growth organ
-    in place of its usual surrender, to a squad that lacks it. The Mecha never hand theirs over in a surrender,
-    and sell it only for a good deal.
-  - **Prices (Infall: Eco, finding F16):** a piece costs what a core system does, 36.31, times the band
-    adjustment; the Mecha's deal is 1.5 times that; a ship left whole carries its piece 1 time in 5 in bands 3 to
-    5 and 1 in 3 from band 6.
+  race":** the Tech victory and its rival. The rule is `docs/ideas.md`, Tech victory (Proposed, heromedel
+  2026-11-14, on Infall: Lori's branch): the pieces are goals, not destinations.
+  - **The pieces.** Each is a race's own version of a real system: the GATOS Armoured ZeroPoint Core, Azurethea
+    Engines, the Tentauri Supershield Generator, the Senti Armoured Avatar Array, the Lykario Autopilot (their
+    Piloting), the Malphen Growth Organ, and the Mecha Hull Reinforcement. A piece counts when a ship of the squad
+    has that system in that race's make, or when it is in the squad's hold. Every system now records the race that
+    built it: its ship's race, or the race whose store sold it. So a squad that starts in the Outrider has the
+    GATOS core from the first jump, and buying an Azurethea ship brings its Engines.
+  - **The goal starts late.** On the squad's first arrival two bands from the rim, The Colony Ship's message
+    (TECH_GOAL_FOUND) begins the search. From then the map lists how many pieces are aboard and, for each one
+    missing, which way that race's nearest space lies: a pointer to a region, never a marked place.
+  - **Ways to a piece while the search is on.** Any ship of that race: its wreck gives the piece up now and then, a
+    ship left whole with its crew dead more often, and from band 6 one that surrenders can be asked for it in
+    place of its Mawjig. A store in that race's space sells it. That race's own event comes up in its space.
+  - **Exceptions (heromedel):** the Malphen piece is never sold; a losing Malphen ship gives up its organ in place
+    of its usual surrender. The Mecha never hand theirs over in a surrender and sell it only for a good deal.
+  - **Prices (Infall: Eco, findings F16 and F17):** a piece costs what a core system does, 36.31, times the band
+    adjustment; the Mecha's deal 1.5 times that; a favour a quarter; kinship a half. A ship left whole carries its
+    piece 1 time in 3 from band 6.
   - **The rival (heromedel, 2026-11-14):** Commodore Marlowe's Long Odds (Lori's names; the ship is Infall: Ship
-    Designs' BC-9) meets a squad that holds two or more pieces once in each of the last two bands. It carries a
-    Jig Drive MC-Flywheel (Mawjig-Charged) and jumps away the moment its hull falls below 25% (heromedel). With
-    all seven pieces aboard it ambushes the squad at the rim with its squad, the flywheel spent, and its first
-    two losses are replaced by stronger, desperate Terrans that jump in where the wrecks were. Winning that fight
-    is the Tech victory.
+    Designs' BC-9) meets a squad that is searching and has two or more pieces, once in each of the last two bands.
+    It carries a Jig Drive MC-Flywheel (Mawjig-Charged; heromedel's name) and jumps away the moment its hull falls
+    below 25% (heromedel). With all seven aboard it ambushes the squad at the rim, the flywheel spent, and its
+    first two losses are replaced by ships that jump in where the wrecks were. Winning that fight is the Tech
+    victory.
   - **Setting:** `Tech Victory: Optional > Required`. Optional: without all seven the rim is as before, the Last
     Fleet and the plain ending. Required: without all seven there is no way out at the rim yet.
-  - **Ai-Generated-Proposal:** tech sites and store rows start in band 3; the rival wants two pieces aboard before
-    it hunts; the ambush is the Long Odds and a Checkpoint Cutter; the setting and its default.
+  - **Not built:** the Mecha Hull Reinforcement as a system of its own (it is only ever a piece in the hold); a
+    Short run has no Tech victory.
+  - **Ai-Generated-Proposal:** a wreck gives up its piece 1 time in 10; the rival wants two pieces aboard before
+    it hunts and comes to those meetings at 70% of its hull; the ambush is the Long Odds and a Checkpoint Cutter,
+    replaced by a Forlorn Hope and a Sellsword; the setting and its default; the pointers are compass directions
+    as the map shows them.
 
 ## 3. Squad Combat
 
@@ -234,6 +242,16 @@ anything Claude added tagged Ai-Generated-Proposal.
   7-bar Senti core, a Shield Projector, the Armoured Avatar Array, a Backup Battery, two beams, two Senti). The
   Archive Cruiser, its mid-tier loadout, is an **Ai-Generated-Proposal**: three Projector layers, three Senti, the
   Intrusion Array, two lasers and a beam. Senti pickets are met from band 3, as the docs have it.
+
+- **E — Built (2026-11-14), GDD 5N (Proposed, heromedel):** refit yards. A store with a yard (one with a ship for
+  sale, and half the others) moves a system from one of the squad's ships to another for a quarter of its value at
+  its level, into a room the player picks, under the same placement rules as a purchase. A ship can't take a kind
+  of system it already has, a weapons system moves only with its weapons off, and a mercenary's ship is not the
+  squad's to refit. Moving a power core, Life Support, Piloting or Engines asks first, in Infall: Lori's words.
+  The yard also buys a ship (Infall: Eco, finding F17: half of what a store asks for the design, less damage);
+  its crew move to the other ships where there is room. Crew already move between ships on the ship screen.
+- **F — Built (2026-11-14), GDD 8R (heromedel):** the EVA Dock has a third button: crew of the ship who crossed to
+  a squad-mate stay there and join its crew.
 
 ## 6. Jump Travel
 

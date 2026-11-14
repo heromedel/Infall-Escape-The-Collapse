@@ -9,7 +9,7 @@ extends RefCounted
 
 const KINDS := ["power", "wpower", "aim", "aim_beam", "aim_suit", "untarget", "autofire", "move", "door", "doors",
 		"stations", "save_posts", "board", "recall", "suit", "cloak", "pause",
-		"hack", "pulse", "mind", "battery", "eva", "eva_home", "jump_out", "jump_out_all", "abandon"]
+		"hack", "pulse", "mind", "battery", "eva", "eva_home", "jump_out", "jump_out_all", "abandon", "eva_stay"]
 
 
 # --- Naming things ------------------------------------------------------------------------------------------
@@ -177,6 +177,26 @@ static func apply(battle: BattleScreen, order: Dictionary) -> String:
 				for member in ship.crew:
 					if member.ship != ship and member.is_active():
 						encounter.order_eva(member, ship)
+		"eva_stay":
+			# Crew of this ship who crossed to a squad-mate's ship stay there and join its crew (heromedel, 2026-11-14)
+			var stayed := 0
+			if ship:
+				for member in ship.crew.duplicate():
+					var aboard: Ship = member.ship
+					if aboard == ship or aboard.side != ship.side or not member.is_active() or member.crossing:
+						continue
+					if ship.living_crew_count() <= 1 or not Refit.can_host(aboard, member.race):
+						continue
+					ship.crew.erase(member)
+					aboard.visitors.erase(member)
+					aboard.add_crew(member)
+					member.station_room = -1
+					member.eva_to = null
+					aboard.assign_stations()
+					stayed += 1
+				ship.assign_stations()
+			if stayed == 0:
+				return "Nobody of this ship's crew is aboard a squad-mate's ship with a free bunk."
 		"battery":
 			if ship == null or not encounter.use_battery(ship):
 				return "The Backup Battery isn't ready."

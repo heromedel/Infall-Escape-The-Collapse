@@ -49,7 +49,6 @@ static func generate(seed_number: int, band_count: int, home: String = "terran")
 	galaxy._place_regions(rng)
 	galaxy._assign_regions()
 	galaxy._assign_contents(rng)
-	galaxy._place_tech_sites()
 	galaxy.update_states(0)
 	return galaxy
 
@@ -84,7 +83,7 @@ func _new_cluster(position: Vector2, rng: RandomNumberGenerator) -> Dictionary:
 		stars.append([rng.randf_range(-13, 13), rng.randf_range(-11, 11), rng.randf_range(1.2, 3.2)])
 	return {
 		"position": position, "radius": position.length(), "band": band_at(position.length()),
-		"links": [], "race": "", "region": -1, "rank": "", "states": [], "kind": "nothing", "hazard": "", "tech_site": "",
+		"links": [], "race": "", "region": -1, "rank": "", "states": [], "kind": "nothing", "hazard": "",
 		"visited": false, "seen": false, "seed": rng.randi(), "stars": stars, "store": false, "name": "",
 		"occupier": "", "event_done": false, "store_stock": {},
 		"refugees": "", "fled": false, "enemy": "",      # who is fleeing through here; whether its own people have left; who it is at war with
@@ -299,24 +298,6 @@ func _assign_regions() -> void:
 				if clusters[other].race != cluster.race:
 					cluster.rank = "border"
 					break
-
-
-## One cluster in each region of a race that has a piece of the Tech victory holds that race's tech site (GV 2F;
-## heromedel, 2026-11-14: each piece must be reachable on purpose): the cluster nearest the region's centre, from the
-## band the pieces start in. Placed without the generator's numbers, so the rest of the map is as it was.
-func _place_tech_sites() -> void:
-	var first_band: int = RimTech.from_band if bands >= 8 else 2
-	var best := {}          # region index -> [cluster index, distance to the region's centre]
-	for index in clusters.size():
-		var cluster: Dictionary = clusters[index]
-		if cluster.region < 0 or not RimTech.pieces.has(cluster.race) or int(cluster.band) < first_band or cluster.kind in ["final", "opening", "store"]:
-			continue
-		var distance: float = cluster.position.distance_to(regions[cluster.region].centre)
-		if not best.has(cluster.region) or distance < float(best[cluster.region][1]):
-			best[cluster.region] = [index, distance]
-	for region_index in best:
-		var cluster: Dictionary = clusters[int(best[region_index][0])]
-		cluster.tech_site = cluster.race
 
 
 func _assign_contents(rng: RandomNumberGenerator) -> void:

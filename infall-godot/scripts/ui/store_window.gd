@@ -95,11 +95,20 @@ func _rebuild() -> void:
 			right.add_child(_section("SHIPYARD"))
 			right.add_child(_card(design.name, "%s\nHull %d, crew %d. Joins your squad with its crew." % [design.description, design.hull, design.crew.size()], price, full, func(): _buy_ship(design, price)))
 	var piece := RimTech.sold_at(run.cluster())
-	if piece != "":
+	if piece != "" and run.tech_goal:
 		var held := run.has_tech(piece)
 		var price := RimTech.price(piece, run.band())
-		right.add_child(_section("RIM TECH  ·  %d of %d held" % [run.tech.size(), RimTech.order.size()]))
+		right.add_child(_section("THE SEVEN PIECES  ·  %d of %d aboard" % [run.tech_count(), RimTech.order.size()]))
 		right.add_child(_card(RimTech.name_of(piece), "%s\n%s: one of the seven pieces you need to cross to another galaxy." % [RimTech.pieces[piece].line, RimTech.name_of(piece)], price, held, func(): _buy_tech(piece, price), null, "HELD"))
+	if Refit.has_yard(run.cluster()):
+		right.add_child(_section("REFIT YARD"))
+		var yard_row := HBoxContainer.new()
+		yard_row.add_theme_constant_override("separation", 8)
+		yard_row.add_child(UiKit.label("Move a system between your ships, or sell a ship.", 17, UiColours.TEXT_DIM))
+		yard_row.add_child(UiKit.button("OPEN THE YARD", _open_yard, 190))
+		right.add_child(yard_row)
+	if is_instance_valid(_yard) and not _yard.is_queued_for_deletion():
+		_yard.rebuild()
 	right.add_child(_section("REPAIRS"))
 	var per_point := Refit.repair_price(run)
 	var damaged := 0
@@ -221,6 +230,15 @@ func _buy_system(def: SystemDef, price: int) -> void:
 	picker.picked.connect(func(room: int):
 		_order({"op": "buy_system", "id": def.id, "price": price, "room": room})
 		Sfx.play("buy"))
+
+
+var _yard: RefitYard = null
+
+
+func _open_yard() -> void:
+	_yard = RefitYard.new()
+	get_parent().add_child(_yard)
+	_yard.open(run, give)
 
 
 func _buy_tech(race: String, price: int) -> void:

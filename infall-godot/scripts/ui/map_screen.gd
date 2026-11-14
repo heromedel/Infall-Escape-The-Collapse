@@ -181,12 +181,6 @@ func _update_info() -> void:
 		lines.append(", ".join(states))
 	if index == run.current:
 		lines.append("[color=#66ff66]Your squad is here.[/color] The way out is the rim: head away from the galaxy's centre.")
-	var site: String = cluster.get("tech_site", "")
-	if site != "":
-		if run.has_tech(site):
-			lines.append("[color=#8f8463]%s technology: aboard.[/color]" % Library.race(site).name)
-		else:
-			lines.append("[color=#ffd46b]%s technology: the %s can be found here.[/color]" % [Library.race(site).name, RimTech.name_of(site)])
 	if run.galaxy.is_rim(index):
 		lines.append("[color=#ffd46b]The rim: the edge of the galaxy, and the way out. Someone else wants out too.[/color]")
 	elif _readable(index):
@@ -212,11 +206,11 @@ func _update_info() -> void:
 			lines.append("[color=#66ff66]In jump range. Click to set course.[/color]")
 		else:
 			lines.append("[color=#7d8ba0]Not linked to your cluster.[/color]")
-	lines.append("")
-	lines.append("[color=#ffd46b]Rim tech: %d of %d[/color] [color=#a8b8cc](gold diamonds on the map)[/color]" % [run.tech.size(), RimTech.order.size()])
-	var missing := run.missing_tech()
-	if not missing.is_empty() and not run.tech.is_empty():
-		lines.append("[color=#a8b8cc]Still to find: %s[/color]" % ", ".join(missing.map(func(race): return Library.race(race).name)))
+	if run.tech_goal:
+		lines.append("")
+		lines.append("[color=#ffd46b]The seven pieces: %d of %d aboard[/color]" % [run.tech_count(), RimTech.order.size()])
+		for line in RimTech.missing_lines(run):
+			lines.append("[color=#a8b8cc]%s[/color]" % line)
 	_info.text = "\n".join(lines)
 
 
@@ -331,16 +325,6 @@ func _draw_cluster(index: int) -> void:
 			draw_circle(at + Vector2(0, -24), 10, Color(0.05, 0.08, 0.14, 0.95))
 			draw_arc(at + Vector2(0, -24), 10, 0, TAU, 20, Color("#ffd46b") if badge == "$" else (UiColours.WARNING if badge == "!" else UiColours.ACCENT), 1.5, true)
 			UiKit.draw_text(self, at + Vector2(0, -18), badge, 15, Color("#ffd46b") if badge == "$" else (UiColours.WARNING if badge == "!" else UiColours.ACCENT), UiKit.font_bold(), HORIZONTAL_ALIGNMENT_CENTER, 0)
-	# A race's tech site (GV 2F) shows from anywhere on the map: a gold diamond, dim once the squad has that piece
-	var site: String = cluster.get("tech_site", "")
-	if site != "" and not swallowed:
-		var held := run.has_tech(site)
-		var mark := at + Vector2(-20, -18)
-		var gold := Color("#ffd46b", 0.35 if held else 1.0)
-		draw_colored_polygon(PackedVector2Array([mark + Vector2(0, -8), mark + Vector2(7, 0), mark + Vector2(0, 8), mark + Vector2(-7, 0)]), Color(0.05, 0.08, 0.14, 0.95))
-		draw_polyline(PackedVector2Array([mark + Vector2(0, -8), mark + Vector2(7, 0), mark + Vector2(0, 8), mark + Vector2(-7, 0), mark + Vector2(0, -8)]), gold, 1.8, true)
-		if not held:
-			draw_circle(mark, 2.2, gold)
 	if run.galaxy.collapse_radius > 0.0 and cluster.radius - run.galaxy.collapse_radius < Galaxy.COLLAPSE_STEP and cluster.radius > run.galaxy.collapse_radius:
 		draw_arc(at, 18, 0, TAU, 20, Color(1.0, 0.35, 0.2, 0.5 + 0.4 * sin(_time * 6.0)), 2.0, true)
 

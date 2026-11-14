@@ -143,6 +143,7 @@ func _build_layout() -> void:
 			system.def = def
 			system.behaviour = def.behaviour
 			system.label = entry.label
+			system.make = design.race
 			system.level = entry.level
 			system.own_power = entry.own_power
 			system.room = entry.room
@@ -1349,7 +1350,7 @@ func to_save() -> Dictionary:
 	}
 	for system in systems:
 		data.systems.append({"id": system.def.id, "label": system.label, "level": system.level, "damage": system.damage,
-				"room": system.room, "cell": [system.cell.x, system.cell.y], "wall": system.wall, "own_power": system.own_power,
+				"room": system.room, "cell": [system.cell.x, system.cell.y], "wall": system.wall, "own_power": system.own_power, "make": system.make,
 				"power": system.power, "enabled": system.enabled})
 	for slot in weapons:
 		data.weapons.append({"id": slot.def.id, "mount": slot.mount_id, "powered": slot.powered, "system": weapon_system_of(slot).label if weapon_system_of(slot) else ""})
@@ -1381,6 +1382,7 @@ static func from_save(data: Dictionary, ship_side: int) -> Ship:
 		var system := ShipSystem.new()
 		system.def = def
 		system.behaviour = def.behaviour
+		system.make = entry.get("make", ship_design.race)
 		system.label = entry.get("label", "")
 		system.level = int(entry.level)
 		system.damage = int(entry.get("damage", 0))

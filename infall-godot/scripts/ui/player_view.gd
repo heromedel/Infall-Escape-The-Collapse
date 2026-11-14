@@ -718,6 +718,12 @@ func recall_eva() -> void:
 		_give({"k": "eva_home", "s": _index(selected_ship)})
 
 
+## Crew of the selected ship who crossed to a squad-mate's ship stay and join its crew.
+func stay_aboard() -> void:
+	if selected_ship:
+		_give({"k": "eva_stay", "s": _index(selected_ship)})
+
+
 ## Every ship whose drive is charged jumps clear of the fight (GV 3N).
 func jump_out_all() -> void:
 	_give({"k": "jump_out_all"})
