@@ -650,7 +650,7 @@ func _button(rect: Rect2, text: String, action: Callable, tooltip: String = "", 
 const SYSTEM_COLUMN := 44.0
 const POWER_HEIGHT := 182.0
 const ICON_BASE := 42.0             # how far above the card's bottom a system's icon sits; its short name goes under it
-const SHORT_NAMES := {"eva_dock": "EVA", "shields": "SHLD", "engines": "ENG", "weapons": "WPN", "oxygen": "AIR", "medbay": "MED", "teleporter": "TELE", "cloaking": "CLOAK", "evb_dock": "EVB", "hacking": "HACK", "mind_control": "MIND", "aaa": "ARRAY", "supershield": "SUPER", "piloting": "PILOT", "sensors": "SENS", "doors": "DOORS", "battery": "BATT", "growth_organ": "GROW", "servicing_core": "CORE"}
+const SHORT_NAMES := {"eva_dock": "EVA", "shields": "SHLD", "engines": "ENG", "weapons": "WPN", "oxygen": "AIR", "medbay": "MED", "teleporter": "TELE", "cloaking": "CLOAK", "evb_dock": "EVB", "hacking": "HACK", "mind_control": "MIND", "aaa": "ARRAY", "supershield": "SUPER", "piloting": "PILOT", "sensors": "SENS", "doors": "DOORS", "battery": "BATT", "growth_organ": "GROW", "servicing_core": "CORE", "clone_bay": "GROW", "lymph_gland": "LYMPH", "hull_polarizer": "HULL"}
 const POWER_BAR := 9.0
 
 
@@ -914,6 +914,13 @@ func _system_buttons(ship: Ship, system: ShipSystem) -> Array:
 			return [["cloak", func(): screen.cloak(ship), "Hide the ship: most shots miss and its weapons hold their charge. Hotkey: C", ship.cloak_ticks <= 0 and ship.cloak_cooldown <= 0 and ship.system_power(system) > 0, ship.cloak_cooldown]]
 		"battery":
 			return [["bolt", func(): screen.use_battery(), "Switch on the Backup Battery: %d extra power for 30 s, then 20 s to recharge." % (2 * system.level), encounter.can_use_battery(ship), ship.battery_cooldown]]
+		"lymph_gland":
+			var tend := ["mend", func(): screen.start_tend(), "Tend one of this ship's rooms: click it. Repairs there go twice as fast and your crew in it are healed, to three quarters of their health (%s Mawjig)." % Mawjig.format(Encounter.HACK_COST), encounter.can_tend(ship), ship.lymph_cooldown]
+			if ship.system_by("hacking") != null:
+				return [tend]
+			if ship.hack_system == null:
+				return [["probe", func(): screen.start_hack(), "Swell one enemy system shut: click its room. The gland holds it for the fight. Hotkey: N", fighting and ship.system_power(system) > 0, -1], tend]
+			return [["pulse", func(): screen.start_hack(), "Shut down the %s of the %s for a few seconds (%s Mawjig). Hotkey: N" % [ship.hack_system.def.name, ship.hack_target.name, Mawjig.format(Encounter.HACK_COST)], encounter.can_hack(ship) and fighting, ship.hack_cooldown], tend]
 		"hacking":
 			if ship.hack_system == null:
 				return [["probe", func(): screen.start_hack(), "Latch %s onto one enemy system: click its room. It holds there for the fight. Hotkey: N" % system.def.name, fighting and ship.system_power(system) > 0, -1]]
@@ -947,6 +954,9 @@ func _icon_button(rect: Rect2, glyph: String, action: Callable, tooltip: String,
 		"send":      # an arrow out
 			draw_line(c + Vector2(0, 6), c + Vector2(0, -2), colour, 2.5)
 			draw_colored_polygon(PackedVector2Array([c + Vector2(0, -7), c + Vector2(-6, -1), c + Vector2(6, -1)]), colour)
+		"mend":      # a cross: tend this room
+			draw_line(c + Vector2(-6, 0), c + Vector2(6, 0), colour, 2.6)
+			draw_line(c + Vector2(0, -6), c + Vector2(0, 6), colour, 2.6)
 		"stay":      # a house: this is home now
 			draw_polyline(PackedVector2Array([c + Vector2(-7, 0), c + Vector2(0, -7), c + Vector2(7, 0)]), colour, 2.0, true)
 			draw_rect(Rect2(c + Vector2(-5, 0), Vector2(10, 7)), colour, false, 2.0)
@@ -1200,7 +1210,7 @@ func _draw_overlays() -> void:
 	if screen.aim_mode == "" and _wants_a_hint():
 		_draw_notice("To attack: click a weapon at the bottom, then a room of the enemy ship. Space pauses.", 226, UiColours.TARGET_YELLOW)
 	if screen.aim_mode != "":
-		var hint: String = {"weapon": "Click a tile of an enemy ship to aim. Right click cancels.", "beam": "Press on an enemy tile and drag to aim the beam's sweep.", "teleport": "Click an enemy room to send boarders.", "suit": "Click an enemy ship to send the battlesuit.", "eva": "Click a ship to send the crew across to it. Right click cancels.", "hack": "Click an enemy system to latch the probe onto it. Right click cancels.", "mind": "Click an enemy crew member you can see to take them over. Right click cancels."}.get(screen.aim_mode, "")
+		var hint: String = {"weapon": "Click a tile of an enemy ship to aim. Right click cancels.", "beam": "Press on an enemy tile and drag to aim the beam's sweep.", "teleport": "Click an enemy room to send boarders.", "suit": "Click an enemy ship to send the battlesuit.", "eva": "Click a ship to send the crew across to it. Right click cancels.", "hack": "Click an enemy system to latch the probe onto it. Right click cancels.", "tend": "Click a room of this ship for the Lymph Gland to tend. Right click cancels.", "mind": "Click an enemy crew member you can see to take them over. Right click cancels."}.get(screen.aim_mode, "")
 		_draw_notice(hint, size.y - 300, UiColours.TARGET_YELLOW)
 		var mouse := get_local_mouse_position()
 		var colour := UiColours.ENEMY_RED if screen._aim_is_autofire() else UiColours.TARGET_YELLOW

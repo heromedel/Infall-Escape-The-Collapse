@@ -4,7 +4,7 @@ extends RefCounted
 ## The store and the ship screen give these orders; every machine plays them here, so the run stays the same
 ## everywhere. Ships are named by their place in the squad, crew by their place in their ship's crew.
 
-const INSTALLABLE := ["medbay", "doors", "sensors", "crew-teleporter", "cloaking", "supershield", "evb-dock", "shields", "life-support", "hacking", "mind-control", "backup-battery", "eva-dock", "weapons"]
+const INSTALLABLE := ["medbay", "doors", "sensors", "crew-teleporter", "cloaking", "supershield", "evb-dock", "shields", "life-support", "hacking", "mind-control", "backup-battery", "eva-dock", "weapons", "lymph-gland"]
 const RACE_OWN := {"senti": {"hacking": "intrusion-array", "shields": "shield-projector", "medbay": "aaa"}, "azurethea": {"mind-control": "pheromone-gland"}}   # a race's own make of a system
 
 
@@ -405,6 +405,8 @@ static func ensure_stock(run: RunState) -> void:
 		systems.erase("evb-dock")
 	if race != "lykario":
 		systems.erase("cloaking")
+	if race != "malphen":
+		systems.erase("lymph-gland")
 	for index in range(systems.size() - 1, 0, -1):   # shuffled with the cluster's own numbers, the same on every machine
 		var other := rng.randi_range(0, index)
 		var swap = systems[index]

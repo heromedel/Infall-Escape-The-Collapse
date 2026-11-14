@@ -9,7 +9,7 @@ extends RefCounted
 
 const KINDS := ["power", "wpower", "aim", "aim_beam", "aim_suit", "untarget", "autofire", "move", "door", "doors",
 		"stations", "save_posts", "board", "recall", "suit", "cloak", "pause",
-		"hack", "pulse", "mind", "battery", "eva", "eva_home", "jump_out", "jump_out_all", "abandon", "eva_stay"]
+		"hack", "pulse", "mind", "battery", "eva", "eva_home", "jump_out", "jump_out_all", "abandon", "eva_stay", "tend"]
 
 
 # --- Naming things ------------------------------------------------------------------------------------------
@@ -197,6 +197,9 @@ static func apply(battle: BattleScreen, order: Dictionary) -> String:
 				ship.assign_stations()
 			if stayed == 0:
 				return "Nobody of this ship's crew is aboard a squad-mate's ship with a free bunk."
+		"tend":
+			if ship == null or not encounter.tend_room(ship, int(order.get("room", -1))):
+				return "The Lymph Gland isn't ready."
 		"battery":
 			if ship == null or not encounter.use_battery(ship):
 				return "The Backup Battery isn't ready."

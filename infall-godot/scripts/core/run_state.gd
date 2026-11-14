@@ -222,6 +222,8 @@ func jump_to(index: int) -> void:
 	jumps += 1
 	stats.jumps += 1
 	galaxy.advance_collapse(jumps)
+	for ship in living_ships():
+		ship.jump_heal()      # a Lymph Gland with a Growth Organ (GDD 8S)
 	_count_contract_jump()
 	var arrived: Dictionary = cluster()
 	arrived.visited = true

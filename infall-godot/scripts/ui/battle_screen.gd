@@ -288,6 +288,8 @@ func _show_note(note: Dictionary) -> void:
 			_sound("jump")
 			if note.kind == "jumped_out":
 				flash_message("The %s jumps clear of the fight." % ship.name)
+		"room_tended":
+			_sound("repair")
 		"helped":
 			if not quiet:
 				effects.float_text(note.position + Vector2(0, -20), "+", UiColours.POWER_GREEN, 26)

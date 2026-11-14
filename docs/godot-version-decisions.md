@@ -548,6 +548,13 @@ anything Claude added tagged Ai-Generated-Proposal.
 - **I — Proposed (Infall: Eco, 2026-11-14; heromedel: "makes sense"), built:** a store asks 75% of a ship's value
   on Normal, 50% on Easy and 100% on Hard (it was 115%).
 
+- **N — Built (2026-11-14), GDD 8S (Proposed, heromedel):** the Malphen systems. The Growth Organ is a clone bay:
+  a crew member of its ship who dies is regrown and steps out of it later (20, 15 or 10 s by its level), while it
+  has power; it heals nobody. The Lymph Gland hacks an enemy system as Hacking does; aimed at a room of its own
+  ship it makes repairs there twice as fast and heals allied crew in it, to three quarters of their health at
+  most; with a Growth Organ aboard it heals everyone on the ship by a quarter on each jump, up to full health.
+  Malphen stores sell the gland. **Ai-Generated-Proposal:** the regrow times, regrown crew stepping out at half
+  health, how long a room is tended (10, 15 or 20 s), the healing rates, and the quarter on a jump.
 - **M — Built (2026-11-14), heromedel: "missing weapons in general":** fifteen weapons from Infall: Ship Designs
   (`docs/godot-weapons/README.md` on its branch, Ai-Generated-Proposal), each in its race's naming style: the
   GATOS Sledge (heavy laser), Scythe and Reaper (beams), Brownout (heavy ion), Capacitor (ion charger), Torch

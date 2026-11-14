@@ -244,6 +244,10 @@ func _remove_the_dead() -> void:
 					note("avatar_lost", {"ship": member.ship, "crew": member, "position": member.ship.design.cell_centre(member.cell)})
 					ship.take_back_avatar(member)
 					continue
+				if ship.regrows(member):      # the Growth Organ regrows them (GDD 8S)
+					note("avatar_lost", {"ship": member.ship, "crew": member, "position": member.ship.design.cell_centre(member.cell)})
+					ship.take_back_growth(member)
+					continue
 				member.dead = true
 				member.path.clear()
 				note("crew_died", {"ship": member.ship, "crew": member, "position": member.ship.design.cell_centre(member.cell)})
@@ -1164,6 +1168,11 @@ func _tick_eva() -> void:
 					member.crossing = false
 					member.ship = member.home
 					member.home.take_back_avatar(member)
+				elif member.home.regrows(member):
+					member.in_suit = false
+					member.crossing = false
+					member.ship = member.home
+					member.home.take_back_growth(member)
 				else:
 					member.dead = true
 					note("crew_died", {"ship": member.home, "crew": member, "position": crossing.position})
@@ -1208,13 +1217,13 @@ func use_battery(ship: Ship) -> bool:
 
 
 func can_hack(ship: Ship) -> bool:
-	var hacking := ship.system_by("hacking")
+	var hacking := ship.hacker()
 	return hacking != null and ship.system_power(hacking) > 0 and ship.hack_cooldown <= 0
 
 
 ## Latches the ship's probe onto one system of an enemy ship. It holds there for the rest of the fight.
 func attach_hack(ship: Ship, target: Ship, system: ShipSystem) -> bool:
-	var hacking := ship.system_by("hacking")
+	var hacking := ship.hacker()
 	if hacking == null or ship.system_power(hacking) <= 0 or ship.hack_system != null:
 		return false
 	if target == null or system == null or target.is_gone() or target.side == ship.side or target.supershield > 0 or not target.systems.has(system):
@@ -1231,10 +1240,27 @@ func pulse_hack(ship: Ship) -> bool:
 		return false
 	if ship.side == 0 and wallet != null and not wallet.spend(HACK_COST):
 		return false
-	var pulse: int = HACK_PULSE_TICKS[clampi(ship.system_power(ship.system_by("hacking")), 1, 3)]
+	var pulse: int = HACK_PULSE_TICKS[clampi(ship.system_power(ship.hacker()), 1, 3)]
 	ship.hack_system.hacked_ticks = pulse
 	ship.hack_cooldown = pulse + HACK_COOLDOWN_TICKS
 	note("hack_pulse", {"ship": ship, "target": ship.hack_target, "system": ship.hack_system})
+	return true
+
+
+## A Lymph Gland tends a room of its own ship (GDD 8S); it costs what a hacking pulse does.
+func can_tend(ship: Ship) -> bool:
+	var gland := ship.system_by("lymph_gland")
+	return gland != null and ship.system_power(gland) > 0 and ship.lymph_cooldown <= 0
+
+
+func tend_room(ship: Ship, room_index: int) -> bool:
+	if not can_tend(ship) or room_index < 0 or room_index >= ship.rooms.size():
+		return false
+	if ship.side == 0 and wallet != null and not wallet.spend(HACK_COST):
+		return false
+	if not ship.tend_room(room_index):
+		return false
+	note("room_tended", {"ship": ship, "room": room_index})
 	return true
 
 

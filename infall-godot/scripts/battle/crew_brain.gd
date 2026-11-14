@@ -250,6 +250,8 @@ static func _repair_system(member: CrewMember, system: ShipSystem, ship: Ship, e
 	var speed := Ship.REPAIR_PER_TICK * _repair_speed(member, ship)
 	if member.skill_level(system.behaviour) > 0:
 		speed *= 1.0 + SKILLED_REPAIR_BONUS     # they know this system (GDD 7H)
+	if ship.lymph_ticks > 0 and system.room == ship.lymph_room and member.side == ship.side:
+		speed *= Ship.LYMPH_REPAIR      # a Lymph Gland is tending this room (GDD 8S)
 	if system.spored:
 		system.spore_progress += speed
 		if system.spore_progress >= 100.0:

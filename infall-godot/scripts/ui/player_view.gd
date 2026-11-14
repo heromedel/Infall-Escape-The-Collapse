@@ -420,6 +420,11 @@ func _click_while_aiming() -> void:
 			_give({"k": "eva", "s": _index(selected_ship), "ts": _index(hover_ship), "crew": going})
 			cancel_aim()
 		return
+	if aim_mode == "tend":
+		if hover_ship != null and hover_ship == selected_ship and hover_room >= 0:
+			_give({"k": "tend", "s": _index(selected_ship), "room": hover_room})
+			cancel_aim()
+		return
 	if aim_mode == "mind":
 		if hover_crew and hover_crew.side != 0 and selected_ship:
 			_give({"k": "mind", "s": _index(selected_ship), "home": _index(hover_crew.home), "crew": hover_crew.home.crew.find(hover_crew)})
@@ -748,12 +753,20 @@ func use_battery() -> void:
 
 ## Hacking: the first press aims the probe; once it holds, each press is a pulse.
 func start_hack() -> void:
-	if selected_ship == null or selected_ship.system_by("hacking") == null or not encounter.in_fight():
+	if selected_ship == null or selected_ship.hacker() == null or not encounter.in_fight():
 		return
 	if selected_ship.hack_system == null:
 		aim_mode = "hack"
 	else:
 		_give({"k": "pulse", "s": _index(selected_ship)})
+
+
+## The Lymph Gland tends a room of its own ship: the next click on one of that ship's rooms.
+func start_tend() -> void:
+	if selected_ship and encounter.can_tend(selected_ship):
+		aim_mode = "tend"
+	elif selected_ship and selected_ship.system_by("lymph_gland"):
+		hud.flash_message("The Lymph Gland isn't ready.")
 
 
 func start_mind_control() -> void:

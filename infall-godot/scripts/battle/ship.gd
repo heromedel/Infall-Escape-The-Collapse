@@ -743,12 +743,12 @@ func power_everything() -> void:
 	if reactor_type == "core":
 		for system in order:
 			system.enabled = false
-		for behaviour in ["aaa", "shields", "engines", "weapons", "oxygen", "medbay", "hacking", "mind_control", "teleporter", "evb_dock", "supershield", "cloaking"]:
+		for behaviour in ["aaa", "shields", "engines", "weapons", "oxygen", "medbay", "clone_bay", "hacking", "lymph_gland", "mind_control", "teleporter", "evb_dock", "supershield", "cloaking"]:
 			var system := system_by(behaviour)
 			if system and system.def.draws_power and core_load() < core_capacity():
 				system.enabled = true
 	elif reactor_type == "pool":
-		for behaviour in ["aaa", "shields", "engines", "supershield", "oxygen", "weapons", "medbay", "hacking", "mind_control", "teleporter", "evb_dock", "cloaking"]:
+		for behaviour in ["aaa", "shields", "engines", "supershield", "oxygen", "weapons", "medbay", "clone_bay", "hacking", "lymph_gland", "mind_control", "teleporter", "evb_dock", "cloaking"]:
 			var system := system_by(behaviour)
 			if system == null or system.behaviour == "weapons":
 				continue
@@ -905,6 +905,8 @@ func tick(in_fight: bool, rng: RandomNumberGenerator) -> void:
 	_tick_shields()
 	_tick_supershield()
 	_tick_avatars()
+	_tick_growths()
+	_tick_lymph()
 	_tick_jump_drive(in_fight)
 	_tick_cooldowns()
 	_tick_air()
@@ -1012,7 +1014,7 @@ func _tick_avatars() -> void:
 		elif member.ship == self:
 			member.health = minf(member.max_health, member.health + ARRAY_MEND_PER_TICK * slots)
 	for member in crew:
-		if not member.offline or member.dead or shown >= slots:
+		if not member.offline or member.dead or member.regrowing or shown >= slots:
 			continue
 		if member.rebroadcast_ticks > 0:
 			member.rebroadcast_ticks -= 1
@@ -1025,6 +1027,113 @@ func _tick_avatars() -> void:
 		member.previous_position = member.position
 		member.teleporting_ticks = 10
 		shown += 1
+
+
+# --- The Malphen systems (GDD 8S) --------------------------------------------------------------------------------
+
+const REGROW_TICKS := [0, 400, 300, 200]       # how long the Growth Organ takes to regrow a crew member, by its power
+const REGROWN_HEALTH := 0.5                    # of their full health, when they step out
+const LYMPH_TICKS := [0, 200, 300, 400]        # how long a room is tended, by the Lymph Gland's power
+const LYMPH_COOLDOWN_TICKS := 400
+const LYMPH_HEAL_PER_TICK := [0.0, 0.06, 0.09, 0.12]
+const LYMPH_HEAL_CAP := 0.75                   # tending a room heals crew to three quarters of their health, no more
+const LYMPH_REPAIR := 2.0                      # repairs in a tended room go this many times as fast
+const JUMP_HEAL := 0.25                        # of full health, for all aboard on a jump, with a gland and an organ
+
+var lymph_room: int = -1
+var lymph_ticks: int = 0
+var lymph_cooldown: int = 0
+
+
+## The system a ship hacks with: Hacking (or a race's own make of it), or a Malphen Lymph Gland.
+func hacker() -> ShipSystem:
+	var hacking := system_by("hacking")
+	return hacking if hacking else system_by("lymph_gland")
+
+
+## Whether a crew member who dies is regrown: their own ship has a Growth Organ that isn't broken.
+func regrows(member: CrewMember) -> bool:
+	var organ := system_by("clone_bay")
+	return member.home == self and organ != null and not organ.is_broken() and not destroyed
+
+
+## The organ takes a dead crew member back, to step out of it again later.
+func take_back_growth(member: CrewMember) -> void:
+	member.offline = true
+	member.regrowing = true
+	member.rebroadcast_ticks = REGROW_TICKS[clampi(system_by("clone_bay").level, 1, 3)]
+	member.health = member.max_health * REGROWN_HEALTH
+	member.end_mind_control()
+	member.path.clear()
+	member.melee_with = null
+	member.aim_at = null
+	member.stun_ticks = 0
+	if member.ship != self:
+		member.ship.visitors.erase(member)
+		member.ship = self
+
+
+## Growths wait while the organ has no power, and are lost with it if it is destroyed.
+func _tick_growths() -> void:
+	var organ := system_by("clone_bay")
+	for member in crew:
+		if not member.regrowing or member.dead:
+			continue
+		if organ == null or organ.is_broken():
+			member.regrowing = false
+			member.offline = false
+			member.dead = true
+			continue
+		if system_power(organ) <= 0:
+			continue
+		member.rebroadcast_ticks -= 1
+		if member.rebroadcast_ticks > 0:
+			continue
+		member.regrowing = false
+		member.offline = false
+		var cell := free_cell_in_room(organ.room, side, member)
+		member.cell = cell
+		member.destination = cell
+		member.position = design.cell_centre(cell)
+		member.previous_position = member.position
+		member.teleporting_ticks = 10
+
+
+## The Lymph Gland tends one room of its own ship for a while: repairs go faster there (CrewBrain) and allied crew in
+## it are healed, to three quarters of their health at most.
+func tend_room(room_index: int) -> bool:
+	var gland := system_by("lymph_gland")
+	if gland == null or system_power(gland) <= 0 or lymph_cooldown > 0 or room_index < 0 or room_index >= rooms.size():
+		return false
+	lymph_room = room_index
+	lymph_ticks = LYMPH_TICKS[clampi(system_power(gland), 1, 3)]
+	lymph_cooldown = lymph_ticks + LYMPH_COOLDOWN_TICKS
+	return true
+
+
+func _tick_lymph() -> void:
+	if lymph_ticks <= 0:
+		return
+	lymph_ticks -= 1
+	var gland := system_by("lymph_gland")
+	if gland == null or system_power(gland) <= 0:
+		lymph_ticks = 0
+		return
+	var rate: float = LYMPH_HEAL_PER_TICK[clampi(system_power(gland), 1, 3)]
+	for member in crew_in_room(lymph_room, side):
+		if member.health < member.max_health * LYMPH_HEAL_CAP:
+			member.health = minf(member.max_health * LYMPH_HEAL_CAP, member.health + rate)
+
+
+## On a jump a working Lymph Gland heals everyone aboard a little, if the ship also has a Growth Organ.
+func jump_heal() -> void:
+	var gland := system_by("lymph_gland")
+	var organ := system_by("clone_bay")
+	if gland == null or organ == null or gland.is_broken() or organ.is_broken():
+		return
+	for member in crew:
+		if not member.dead and member.ship == self:
+			member.health = minf(member.max_health, member.health + member.max_health * JUMP_HEAL)
 
 
 ## How many more Senti this ship's array could host, at its level (not its power now).
@@ -1080,9 +1189,11 @@ func _tick_cooldowns() -> void:
 			battery_cooldown = BATTERY_COOLDOWN_TICKS
 	elif battery_cooldown > 0:
 		battery_cooldown -= 1
-	var hacking := system_by("hacking")
+	var hacking := hacker()
 	if hack_cooldown > 0 and hacking and system_power(hacking) > 0:
 		hack_cooldown -= 1
+	if lymph_cooldown > 0 and hacking and system_power(hacking) > 0:
+		lymph_cooldown -= 1
 	var mind := system_by("mind_control")
 	if mind_cooldown > 0 and mind and system_power(mind) > 0:
 		mind_cooldown -= 1
@@ -1324,6 +1435,9 @@ func begin_encounter() -> void:
 	hack_target = null
 	hack_system = null
 	hack_cooldown = 0
+	lymph_room = -1
+	lymph_ticks = 0
+	lymph_cooldown = 0
 	mind_cooldown = 0
 	for system in systems:
 		system.hacked_ticks = 0

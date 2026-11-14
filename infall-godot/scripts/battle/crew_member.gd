@@ -34,6 +34,7 @@ var assigned: Array = []             # GV 4I: player ids of their own; empty fol
 var own_assignment := false          # assigned on their own, not with their ship                 # GV 15A: -1 none, 0 Sgt. up to 5 Cpt.
 var contract_id: int = 0           # a hired mercenary: the contract they came with (GV 7C); 0 for the squad's own
 var in_suit: bool = false
+var regrowing: bool = false         # dead, and being regrown by their ship's Growth Organ (GDD 8S)
 var eva_to: Ship = null            # ordered across to this ship in an EVA suit: walking to an airlock first (GDD 8R)
 var crossing: bool = false         # out between ships in an EVA suit
 var eva_air: int = 0               # ticks of air left in their EVA suit; it refills aboard their own squad's ships

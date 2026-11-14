@@ -137,7 +137,7 @@ func _manage_power() -> void:
 					ship.add_power(system)
 					guard += 1
 		"core":
-			var order := ["aaa", "shields", "weapons", "engines", "hacking", "mind_control", "teleporter", "evb_dock", "supershield", "cloaking", "oxygen", "medbay"]
+			var order := ["aaa", "shields", "weapons", "engines", "hacking", "lymph_gland", "mind_control", "clone_bay", "teleporter", "evb_dock", "supershield", "cloaking", "oxygen", "medbay"]
 			if _air_is_low():
 				order.erase("oxygen")
 				order.insert(1, "oxygen")
@@ -505,7 +505,21 @@ func _use_specials() -> void:
 		encounter.launch_suit(ship, target, planned.room if planned else -1)
 	if encounter.can_use_battery(ship) and encounter.in_fight():
 		encounter.use_battery(ship)
-	if ship.system_by("hacking"):
+	if encounter.can_tend(ship):
+		# The gland tends the room where the crew are most hurt, or where the worst damage is being repaired
+		var room := -1
+		var worst := 0.6
+		for member in ship.crew:
+			if not member.dead and member.is_active() and member.ship == ship and member.health / member.max_health < worst:
+				worst = member.health / member.max_health
+				room = ship.room_at(member.cell)
+		if room < 0:
+			for system in ship.systems:
+				if system.damage > 0 and not ship.crew_in_room(system.room, ship.side).is_empty():
+					room = system.room
+		if room >= 0:
+			encounter.tend_room(ship, room)
+	if ship.hacker():
 		if ship.hack_system == null:
 			# The probe goes where the plan says, else onto the shields, else the weapons
 			var planned := _plan_pick("hack", null)
