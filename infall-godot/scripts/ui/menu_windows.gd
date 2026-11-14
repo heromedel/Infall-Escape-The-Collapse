@@ -174,7 +174,7 @@ static func ship_select(on_pick: Callable, on_back: Callable) -> Overlay:
 
 ## The Tech victory's end screen (Infall: Lori, Ai-Generated-Proposal 2026-11-14).
 const TECH_WON_TITLE := "THE CROSSING"
-const TECH_WON_TEXT := "Seven pieces from seven peoples, fitted into one ship that was never meant to exist. The GATOS core powers it, the Azurethea engines steer it and the Mecha reinforcement holds it together. The Tentauri Supershield wraps it, the Senti array remembers the way, the Lykario autopilot flies it and the Malphen organ regrows whatever the crossing tears away.\n\nYour squad flies into the dark between galaxies, and the dark lets you through. Behind you, The Colony Ship follows your signal as far as it can.\n\nBehind it, the collapse reaches the rim. It will never reach where you are going."
+const TECH_WON_TEXT := "The best technology of other peoples, fitted into one ship that was never meant to exist. It flies into the dark between galaxies, and the dark lets it through.\n\nBehind you, The Colony Ship follows your signal as far as it can.\n\nBehind it, the collapse reaches the rim. It will never reach where you are going."
 
 static func end_screen(run: RunState, won: bool, on_done: Callable) -> Overlay:
 	var window := Overlay.new()

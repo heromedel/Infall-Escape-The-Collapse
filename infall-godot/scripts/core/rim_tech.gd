@@ -120,36 +120,48 @@ static func direction_to(run: RunState, race: String) -> String:
 	return COMPASS[posmod(int(round(toward.angle() / (TAU / 8.0))), 8)]
 
 
-## The state of the search, a line for each thing the one ship must carry: fitted, aboard but not fitted to that
-## ship yet, or missing, with a pointer to that race's space (Infall: Lori's pointer lines).
+static func _with_article(name: String) -> String:
+	if name.ends_with("s"):
+		return name       # "Azurethea Engines" takes no article
+	return ("an " if name.left(1).to_lower() in ["a", "e", "i", "o", "u"] else "a ") + name
+
+
+## The state of the search (Infall: Lori's format): the ship, then a line for each thing it must carry, "{need}:
+## {options}." and whether that is fitted, in the hold or on another ship, or missing, with a pointer to that
+## race's space.
 static func missing_lines(run: RunState) -> PackedStringArray:
 	var lines: PackedStringArray = []
 	var ship := run.crossing_ship()
 	if ship == null:
 		return lines
-	lines.append("The ship to make the crossing: the %s." % ship.name)
+	if run.has_all_tech():
+		lines.append("Everything the crossing needs is fitted to the %s. Head for the rim." % ship.name)
+		return lines
+	lines.append("To make the crossing, one ship needs these fitted:")
 	var fitted := run.tech_on(ship)
 	for group in groups():
+		var options: PackedStringArray = []
+		for race in group.races:
+			options.append(_with_article(name_of(race)))
+		if int(group.own_crew) > 0:
+			options.append("%d of your own people aboard" % int(group.own_crew))
+		var need := "%s: %s." % [group.name, " or ".join(options)] if group.races.size() > 1 or int(group.own_crew) > 0 else "%s." % name_of(group.races[0])
 		if run.group_done_on(ship, group):
-			var by: Array = group.races.filter(func(race): return fitted.has(race))
-			lines.append("%s: fitted (%s)." % [group.name, name_of(by[0]) if not by.is_empty() else "%d of your own people aboard" % int(group.own_crew)])
+			lines.append("%s Fitted to the %s." % [need, ship.name])
 			continue
 		var have: Array = group.races.filter(func(race): return run.has_tech(race))
 		if not have.is_empty():
-			var race: String = have[0]
-			lines.append("%s: you have the %s %s. A refit yard can bring that piece to the %s." % [group.name, name_of(race), "in the hold" if run.tech.has(race) else "on another of your ships", ship.name])
+			lines.append("%s %s. Fit it to the %s at a refit yard." % [need, "In the hold" if run.tech.has(have[0]) else "On another of your ships", ship.name])
 			continue
 		var ways: PackedStringArray = []
 		for race in group.races:
 			var race_name: String = Library.race(race).name
 			var direction := direction_to(run, race)
 			if direction == "":
-				ways.append("the %s (%s space is gone; look for %s ships, refugees and mercenaries)" % [name_of(race), race_name, race_name])
+				ways.append("%s space is gone: look for %s ships, refugees and mercenaries" % [race_name, race_name])
 			elif direction == "here":
-				ways.append("the %s (from %s ships, stores or space; you are in %s space now)" % [name_of(race), race_name, race_name])
+				ways.append("try %s ships, stores or space; you are in %s space now" % [race_name, race_name])
 			else:
-				ways.append("the %s (from %s ships, stores or space; the nearest %s region lies %s of you)" % [name_of(race), race_name, race_name, direction])
-		if int(group.own_crew) > 0:
-			ways.append("%d of your own people aboard that ship" % int(group.own_crew))
-		lines.append("%s, missing: %s." % [group.name, ", or ".join(ways)])
+				ways.append("try %s ships, stores or space; the nearest %s region lies %s of you" % [race_name, race_name, direction])
+		lines.append("%s Missing: %s." % [need, "; or ".join(ways)])
 	return lines

@@ -148,18 +148,20 @@ func _send_move(from: Ship, system: ShipSystem, to: Ship, room: int) -> void:
 
 
 func _confirm_sale(ship: Ship) -> void:
-	var room := 0
-	for other in run.own_ships():
-		if other != ship:
-			room += maxi(0, EventRunner.MAX_CREW_PER_SHIP - other.living_crew_count())
-	var crew := ship.living_crew_count()
+	var aboard: Array = ship.crew.filter(func(member: CrewMember): return not member.dead)
 	var window := Overlay.new()
 	get_parent().add_child(window)
 	window.place_panel(680)
 	window.add_title("SELL THE %s?" % ship.name.to_upper(), UiColours.WARNING)
-	window.add_text("The yard pays %s Mawjig. Its crew will move to your other ships where there's room. Anyone without a bunk leaves with it.%s" % [Mawjig.format(Refit.sell_ship_price(run, ship)), "" if room >= crew else " Your other ships have room for %d of its crew of %d." % [room, crew]], 20)     # Infall: Lori
-	window.add_button("1. Sell it.", func():
+	var price := "The yard pays %s Mawjig." % Mawjig.format(Refit.sell_ship_price(run, ship))
+	if aboard.is_empty():
+		window.add_text(price, 20)
+	else:      # Infall: Lori's wording, from heromedel (2026-11-14): crew don't move on their own
+		window.add_text("The %s still has crew aboard: %s. If you sell it now, they leave with it.%s%s" % [ship.name, ", ".join(aboard.map(func(member: CrewMember): return member.name)), "\n\n", price], 20)
+		window.add_button("1. Cancel and transfer them first.", window.close)
+	window.add_button("2. Sell it, crew and all." if not aboard.is_empty() else "1. Sell it.", func():
 		window.close()
 		give.call({"k": "refit", "op": "sell_ship", "sq": run.squad.find(ship)})
 		Sfx.play("buy"), UiColours.DAMAGED_RED)
-	window.add_button("2. Keep it.", window.close)
+	if aboard.is_empty():
+		window.add_button("2. Keep it.", window.close)

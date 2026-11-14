@@ -12,20 +12,20 @@
 	<event id="TECH_GOAL_FOUND" title="A Way Out" kind="neutral" bands="6-7" weight="3" unique="yes" after_collapse="yes">
 		<text>A transmission from The Colony Ship catches up with you, its signal weaker than ever.
 
-"Our engineers have found something in the old archives. No single race's ship could cross the dark between galaxies. But a ship built with the best of every race's technology just might. One power core, one engine, one shield, one archive, one autopilot, one hull, and one organ that heals what breaks.
+"Our engineers have found something in the old archives. No single race's ship could cross the dark between galaxies. But one ship fitted with the best of other races' technology just might: something to power it or keep it alive, something to fly it, something to hold it together, and a record to find the way across.
 
-"We're too big and too slow to rebuild in time. Your scouts aren't. If it comes to it, find those pieces and go without us. Somebody has to make it."</text>
+"We're too big and too slow to rebuild in time. Your scouts aren't. Find those pieces and fit them to one of your ships. If it comes to it, go without us. Somebody has to make it."</text>
 		<choice text="We'll find them.">
-			<outcome><text>Your squad begins a new search: the best technology of seven different races, from whoever will sell it, give it, lose it or surrender it.</text><tech_goal/></outcome>
+			<outcome><text>Your squad begins a new search: the best technology of other races, from whoever will sell it, give it, lose it or surrender it.</text><tech_goal/></outcome>
 		</choice>
 	</event>
 
 	<!-- "What techs are we missing": the check the squad can open at any time once the goal has started. The game fills
 	     one line per missing piece. -->
-	<event id="TECH_MISSING" title="The Seven Pieces" kind="message">
-		<text>Your squad holds {held} of the seven pieces. Still missing:
+	<event id="TECH_MISSING" title="The Crossing Ship" kind="message">
+		<text>To make the crossing, one ship needs these fitted:
 
-{missing}</text>
+{needs}</text>
 		<choice text="Continue..."/ requires="afford_tech:terran:1">
 	</event>
 
@@ -143,7 +143,7 @@ Then, without a sound, it splits open and lets the growth organ float free. By t
 	<event id="RIVAL_FIRST" title="The Long Odds" kind="rival" unique="yes">
 		<text>A heavy GATOS ship drops out of a jump right beside your squad, its hull darkened and its emblem scorched. Its captain hails you.
 
-"Commodore Marlowe, of the Long Odds. You've been collecting things. The best tech of every race. Nobody does that unless they've found a way out of this galaxy. Tell me how."</text>
+"Commodore Marlowe, of the Long Odds. You've been collecting things. The best tech of other races. Nobody does that unless they've found a way out of this galaxy. Tell me how."</text>
 		<choice text="Tell him nothing.">
 			<outcome><text>"Then I'll take it out of your wreckage."</text><fight squad="rival-hunt"/></outcome>
 		</choice>
@@ -185,13 +185,13 @@ Then, without a sound, it splits open and lets the growth organ float free. By t
 		<choice text="Continue..."/>
 	</event>
 
-	<!-- The ambush at the rim, when the squad holds all seven pieces. -->
+	<!-- The ambush at the rim, when one ship has every piece it needs fitted. -->
 	<event id="FINAL_RIVAL_TECH" title="Marlowe's Last Stand" kind="final" unique="yes">
-		<text>The rim is here. With all seven pieces aboard, your squad could make the crossing.
+		<text>The rim is here. With every piece fitted to one of your ships, it could make the crossing.
 
 Then the Long Odds drops out of a jump in front of you, and the rest of Marlowe's fleet drops in around it: every desperate ship that still answered his call. Marlowe sounds exhausted.
 
-"I'm not asking anymore. Seven pieces, and a way out. I'm taking them."</text>
+"I'm not asking anymore. Your ship, its pieces, and a way out. I'm taking them."</text>
 		<choice text="Offer him a place behind you.">
 			<outcome><text>"Behind you? Behind you is where the collapse is." He laughs, and it doesn't sound like laughing.</text><fight squad="final-rival-tech"/></outcome>
 		</choice>
@@ -205,9 +205,9 @@ Then the Long Odds drops out of a jump in front of you, and the rest of Marlowe'
 		</choice>
 	</event>
 
-	<!-- The rim without all seven, where the Tech victory is required (Infall: Lori's line). -->
+	<!-- The rim without what the crossing needs, where the Tech victory is required (Infall: Lori's line). -->
 	<event id="RIM_NO_WAY_OUT" title="The Rim" kind="final">
-		<text>The rim is here, but there is no way out yet. Without all seven pieces your squad can't cross the dark between galaxies. Find the ones you're missing.</text>
+		<text>The rim is here, but there is no way out yet. None of your ships has every piece it needs fitted to cross the dark between galaxies. Find what's missing and fit it to one ship.</text>
 		<choice text="Turn back."/>
 	</event>
 </events>

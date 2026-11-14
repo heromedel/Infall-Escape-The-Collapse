@@ -78,16 +78,6 @@ static func apply(run: RunState, order: Dictionary) -> void:
 		"sell_ship":
 			if ship and has_yard(run.cluster()) and sell_ship_refusal(run, ship).is_empty():
 				var price := sell_ship_price(run, ship)
-				for member in ship.crew.duplicate():
-					if member.dead:
-						continue
-					for other in run.own_ships():
-						if other != ship and can_host(other, member.race):
-							ship.crew.erase(member)
-							other.add_crew(member)
-							member.station_room = -1
-							other.assign_stations()
-							break
 				run.squad.erase(ship)
 				run.earn(price)
 				run.log_book.write("sold_ship", {"design": ship.design.id, "price": price}, "The %s was sold for %s." % [ship.name, Mawjig.format(price)])
