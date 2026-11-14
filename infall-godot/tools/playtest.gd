@@ -19,7 +19,7 @@ const SAFE_GAP := 560.0             # how far ahead of the collapse a careful pl
 const SIZE_VALUE := {"tiny": 150, "low": 450, "medium": 900, "high": 1500, "huge": 2200}
 const PLAYERS := {
 	"careless": {"focus": false, "events": "random", "explore": false, "flee_below": 0.0, "repair_to": 0.5, "shop": "odd", "reserve": 3, "think_every": 20, "gives_up_after": 600},
-	"watcher": {"focus": true, "events": "sees", "explore": true, "flee_below": 0.15, "repair_to": 0.8, "shop": "plan", "reserve": 6, "think_every": 10, "gives_up_after": 150},
+	"watcher": {"focus": true, "events": "sees", "explore": true, "flee_below": 0.15, "repair_to": 0.8, "shop": "plan", "reserve": 9, "think_every": 10, "gives_up_after": 150},
 	"expert": {"focus": true, "events": "knows", "explore": true, "flee_below": 0.3, "repair_to": 0.95, "shop": "all", "reserve": 10, "think_every": 4, "gives_up_after": 90},
 }
 
@@ -533,7 +533,7 @@ func _travel(run: RunState) -> bool:
 		if not there.visited and keeps_ahead and there.kind != "final" and (sideways < 0 or there.radius < run.galaxy.clusters[sideways].radius):
 			sideways = link
 	var pick := outward
-	if player.explore and sideways >= 0 and run.mawjig >= Mawjig.JUMP_COST * 4:
+	if player.explore and sideways >= 0 and run.mawjig >= Mawjig.JUMP_COST * 7:
 		pick = sideways
 	# A store the sensors show: worth the detour when the hull needs work or there is Mawjig to spend
 	if player.explore and (_squad_strength(run) < float(player.repair_to) or run.mawjig > 1800):

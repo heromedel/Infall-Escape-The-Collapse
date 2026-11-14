@@ -57,10 +57,10 @@ func _ready() -> void:
 	var life_region := _hud_region(life.display_name() + " (level")
 	if not life_region.is_empty():
 		await _click(life_region.rect.get_center(), MOUSE_BUTTON_RIGHT)
-		_check("right click switches Life Support off", not life.enabled)
+		_check("right click switches Life Support off", ship.system_power(life) == 0)
 		var medbay_region := _hud_region(medbay.display_name() + " (level")
 		await _click(medbay_region.rect.get_center(), MOUSE_BUTTON_LEFT)
-		_check("click switches the Medbay on", medbay.enabled)
+		_check("click switches the Medbay on", ship.system_power(medbay) > 0)
 	# 5b. A system's own key: Shift with it takes its power away, the key alone gives it back (Shields is A)
 	var shields: ShipSystem = ship.system_by("shields")
 	var shields_before := ship.system_power(shields)

@@ -61,7 +61,7 @@
 		<description>Near-pacifists defending what is theirs; they would rather disable you than destroy you.</description>
 	</squad>
 	<squad id="senti-pickets" name="Senti Pickets" race="senti" faction="senti" where_races="senti" where_states="Doomed,Border,Struggling,Doing Fine">
-		<tier bands="2-3"><ship design="relay-picket" count="1"/></tier>
+		<tier bands="3"><ship design="relay-picket" count="1"/></tier>
 		<tier bands="4-6"><ship design="relay-picket.archive" count="1"/></tier>
 		<tier bands="7-8"><ship design="relay-picket.archive" count="1"/><ship design="relay-picket" count="1-2"/></tier>
 		<conduct surrender_chance="40" surrender_hull="0.3" escape_chance="30" escape_hull="0.25" targets="sensors,shields,weapons" hail="senti"/>
