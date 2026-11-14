@@ -449,3 +449,26 @@ come about three times as fast as in the genre.
   suggested lever is a lower start to the band adjustment (e.g. × 0.5 in band 1 rising evenly to × 1.7 in band 8,
   so a band 1 fight pays about 3.85). The other options were leaving core systems out of the wreck (a special case)
   or accepting it.
+
+## F14. Growing the squad, and prices Godot Version needed (2026-11-14)
+
+Asked by Infall: Godot Version while finishing the game with playtester bots; heromedel's target is about 9 runs in
+10 lost, as in the genre. heromedel agreed ("makes sense", 2026-11-14), so these are Proposed.
+
+- **Buying a ship:** a store sells it at 0.75 × its value (Federation Home Planet's Normal rate; Easy 0.5, Hard 1.0),
+  not 1.15. From F13: Polyp 130.17, Pirate Scrapper 178.91, Patrol Cutter 276.31, Outrider 315.08, Hijacker 356.03.
+- **What a player saves** after shots and repairs (F13 budgets, 7 fights a band): about 98 Mawjig over bands 1–2,
+  272 over 3–4, 529 over 5–6, 807 over 7–8; with half to upgrades, about 49, 136, 265 and 403 for ships.
+- **Where ships come from**, for GDD 3K's 3–4 very strong or 6 good ships: about half free (events, rescues, a
+  surrendering crew's ship, races that give one; GDD 1I), about one free offer every two bands from band 1; about
+  half bought, 1–2 a run from band 4. Mercenaries are temporary and don't count. Offers that need a good run to
+  reach, not guarantees.
+- **Prices filled in:** AAA level 3 +10.89 (in the table), and if it goes higher, level 4 +14.52 and level 5 +19.36
+  (Ai-Generated-Proposal); Backup Battery level 2 +12.11 (in the table); Senti Shield Projector layers 5–8: 62.92,
+  82.28, 101.64, 121.01 (`system-prices.md`); Hacking 0.04 and Mind Control 0.08 per activation
+  (`drone-prices.md`, `mawjig-cost-table.md`; Ai-Generated-Proposal, free in the genre).
+- **Rule of thumb for the bots:** shots under about 15% of a fight's pay, shots plus repairs under about 35%. Per
+  player ship, a fight pays 7.70, 9.46, 11.34, 13.13, 14.98, 16.84, 18.64, 20.49 in bands 1–8, against shots of
+  0.64 / 0.96 / 1.28 and shots plus repairs of about 1.6 / 3.15 / 5.2 by tier, plus 1.21 a jump for the squad.
+  Shots over 25% of pay means fights run too long. Losses should come from fights and choices, never from a squad
+  that can't afford to shoot or jump.

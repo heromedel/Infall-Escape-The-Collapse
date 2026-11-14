@@ -56,6 +56,8 @@ then its structure, reactor, systems at their levels and weapons; crew are count
 - **Weapon mounts — Proposed (heromedel, 2026-10-31):** a mount costs 25 scrap (**6.05**) to add at a store, and each
   mount a ship has counts at that price in its value. FHP counts mounts but doesn't price them. Replaces the first
   guess of 4.84 (`economy-findings.md`, F10).
+- **Proposed (heromedel agreed, 2026-11-14):** a store sells a ship at **0.75 × its value**, Federation Home
+  Planet's Normal rate (`Economy.commissionPercent`: Easy 50, Normal 75, Hard 100). See `economy-findings.md`, F14.
 - **Likely (heromedel, 2026-10-31):** the wreck rate stays 2.5% of value (GDD 8I), so rewards rise with the new
   values; buying ships rises the same way, which offsets it.
 
@@ -86,7 +88,14 @@ layer costs no less than a Generator layer and budgets limit how many a ship car
 | 2 | 2 | 12.11 |
 | 3 | 3 | 24.21 |
 | 4 | 4 | 43.56 |
-| 5–8 | 5–8 | **Open:** "crazy expensive" (heromedel); no genre price exists above 4 layers, so Eco sets these |
+| 5 | 5 | 62.92 |
+| 6 | 6 | 82.28 |
+| 7 | 7 | 101.64 |
+| 8 | 8 | 121.01 |
+
+**Proposed (heromedel agreed, 2026-11-14; Eco):** layers 5–8 extend the genre's shield bar steps (100, 20, 30, 40,
+60, 80, 100 scrap) by +20 a bar, as the last steps rise: bars 9+10, 11+12, 13+14, 15+16 = 260, 340, 420 and 500
+scrap. Each layer past 4 costs more than the whole Generator's first four together, heromedel's "crazy expensive".
 
 ## New Infall systems (suggested, from FTL analogs)
 
