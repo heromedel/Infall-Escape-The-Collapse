@@ -24,6 +24,22 @@ anything Claude added tagged Ai-Generated-Proposal.
   becomes something drifting to salvage. The rest of GDD 2R (each state changing who is met and what a store has)
   is not built.
 
+- **E — Built (2026-11-14), GDD 2R; heromedel: "you can work on cluster simulation and how it affects available
+  events":** the galaxy changes a little after every jump.
+  - **Refugees move.** A cluster about to be swallowed sends its people out once; each group moves one cluster
+    outward per jump while the place it is in is Doomed, Struggling or Swallowed, rests where things are fine, and
+    settles when it reaches safe space of its own race. A cluster holding a group is Refugee.
+  - **At War.** A cluster beside one held by another race is At War when either race pushes into its neighbours;
+    it is a Border while that lasts. The war is over when the enemy's cluster is abandoned or swallowed.
+  - **Hemmed in.** A cluster at war with more enemy neighbours than friends is Struggling, however far the
+    collapse is.
+  - **Fronts move.** An inner cluster becomes a Border once a neighbour of its own race is swallowed, abandoned
+    or occupied.
+  - **In play.** At a cluster at war, two quiet arrivals in five become a fight, and the other side's ships are
+    met there too. The Refugee state already changes stores and events.
+  - **Ai-Generated-Proposal:** the Terrans, Azurethea, Tentauri and Senti flee; the Mecha, Lykario and Malphen
+    push into their neighbours; two Doomed clusters in three send a group.
+
 ## 3. Squad Combat
 
 - **A — Decided (heromedel, 2026-10-31):** a hit lands on one tile: the system on that tile and the crew standing

@@ -86,6 +86,7 @@ func _new_cluster(position: Vector2, rng: RandomNumberGenerator) -> Dictionary:
 		"links": [], "race": "", "region": -1, "rank": "", "states": [], "kind": "nothing", "hazard": "",
 		"visited": false, "seen": false, "seed": rng.randi(), "stars": stars, "store": false, "name": "",
 		"occupier": "", "event_done": false, "store_stock": {},
+		"refugees": "", "fled": false, "enemy": "",      # who is fleeing through here; whether its own people have left; who it is at war with
 	}
 
 
@@ -351,20 +352,21 @@ func update_states(jumps: int) -> void:
 				if cluster.rank == "border":
 					states.append("Border")
 				var roll := float(int(cluster.seed) % 1000) / 1000.0
-				if (states.has("Struggling") or states.has("Doomed")) and cluster.race in ["terran", "azurethea", "tentauri"] and roll < 0.22:
-					states.append("Refugee")
 				if states.has("Doomed") and roll > 0.8:
 					states.append("Abandoned")
 				if cluster.occupier != "":
 					states.append("Occupied")
 			else:
 				states.append("Abandoned" if collapse_radius > 0.0 and distance < BAND_DEPTH * 0.5 else "Unclaimed")
+			if cluster.refugees != "":
+				states.append("Refugee")
 		cluster.states = states
 		# An Abandoned cluster is left empty (GDD 2R): no store, and wreckage to salvage where one stood
 		if states.has("Abandoned") and cluster.store:
 			cluster.store = false
 			if cluster.kind == "store":
 				cluster.kind = "items"
+	_wars_and_fronts()
 	_spread_occupation()
 
 
@@ -392,6 +394,90 @@ func advance_collapse(jumps: int) -> void:
 	else:
 		collapse_radius += COLLAPSE_STEP
 	update_states(jumps)
+	_move_refugees()
+	update_states(jumps)
+
+
+# --- What the galaxy does between jumps (GDD 2R; heromedel, 2026-11-14) ----------------------------------------
+# Small rules run after every jump, so the map changes as the collapse grows: people flee outward a cluster at a
+# time, borders are at war, a cluster hemmed in by enemies struggles, and a war ends when the enemy's cluster is
+# abandoned or swallowed. Which races flee and which push into their neighbours is an Ai-Generated-Proposal from
+# the race profiles.
+
+const FLEEING_RACES := ["terran", "azurethea", "tentauri", "senti"]     # they leave ahead of the collapse
+const AGGRESSIVE_RACES := ["mecha", "lykario", "malphen"]                # they push into their neighbours
+
+
+## A race's cluster about to be swallowed sends its people out, once; every group already on the road moves one
+## cluster outward while the place it is in is Doomed, Struggling or Swallowed, and rests where things are fine.
+func _move_refugees() -> void:
+	for cluster in clusters:
+		if cluster.race in FLEEING_RACES and not cluster.fled and cluster.refugees == "" and cluster.states.has("Doomed"):
+			cluster.fled = true
+			if int(cluster.seed) % 3 != 0:      # two clusters in three send a group worth meeting
+				cluster.refugees = cluster.race
+	var order: Array = range(clusters.size())
+	order.sort_custom(func(a: int, b: int): return clusters[a].radius > clusters[b].radius)     # the farthest out move first
+	for index in order:
+		var here: Dictionary = clusters[index]
+		if here.refugees == "":
+			continue
+		if not (here.states.has("Doomed") or here.states.has("Struggling") or here.states.has("Swallowed")):
+			if here.race == here.refugees:
+				here.refugees = ""       # safe among their own people: they settle
+			continue
+		var best := -1
+		for link in here.links:
+			var there: Dictionary = clusters[link]
+			if there.states.has("Swallowed") or there.refugees != "" or there.radius <= here.radius or there.kind == "final":
+				continue
+			if best < 0 or there.radius > clusters[best].radius:
+				best = link
+		if best >= 0:
+			clusters[best].refugees = here.refugees
+			here.refugees = ""
+		elif here.states.has("Swallowed"):
+			here.refugees = ""       # they never got out
+
+
+## The race that holds a cluster now: its occupier, or its own; "" for empty, abandoned or swallowed space.
+func _holder(cluster: Dictionary) -> String:
+	if cluster.states.has("Swallowed") or cluster.states.has("Abandoned"):
+		return ""
+	return cluster.occupier if cluster.occupier != "" else cluster.race
+
+
+## At War: a cluster beside a cluster held by another race, where either of the two pushes into its neighbours. It
+## is a front line (Border) while that lasts, and Struggling when the enemy has it hemmed in. The war is over when
+## the enemy's cluster is abandoned or swallowed. An inner cluster becomes a front once a neighbour falls.
+func _wars_and_fronts() -> void:
+	for cluster in clusters:
+		var holder := _holder(cluster)
+		cluster.enemy = ""
+		if holder == "":
+			continue
+		var enemies := 0
+		var friends := 0
+		var fallen := false
+		for link in cluster.links:
+			var there: Dictionary = clusters[link]
+			var other := _holder(there)
+			if other == holder:
+				friends += 1
+			elif other != "" and (holder in AGGRESSIVE_RACES or other in AGGRESSIVE_RACES):
+				enemies += 1
+				if cluster.enemy == "":
+					cluster.enemy = other
+			if there.race == cluster.race and (there.states.has("Swallowed") or there.states.has("Abandoned") or there.occupier != ""):
+				fallen = true
+		var states: Array = cluster.states
+		if enemies > 0:
+			states.append("At War")
+		if (enemies > 0 or fallen) and not states.has("Border"):
+			states.append("Border")
+		if enemies > 0 and enemies > friends and states.has("Doing Fine"):
+			states.erase("Doing Fine")
+			states.append("Struggling")
 
 
 func is_swallowed(index: int) -> bool:
@@ -439,8 +525,8 @@ func to_save() -> Dictionary:
 	var changed := {}
 	for index in clusters.size():
 		var cluster: Dictionary = clusters[index]
-		if cluster.visited or cluster.seen or cluster.event_done or cluster.occupier != "" or not cluster.store_stock.is_empty() or (cluster.store and cluster.kind != "store"):
-			changed[str(index)] = {"visited": cluster.visited, "seen": cluster.seen, "event_done": cluster.event_done, "occupier": cluster.occupier, "store": cluster.store, "store_stock": cluster.store_stock}
+		if cluster.visited or cluster.seen or cluster.event_done or cluster.occupier != "" or cluster.refugees != "" or cluster.fled or not cluster.store_stock.is_empty() or (cluster.store and cluster.kind != "store"):
+			changed[str(index)] = {"visited": cluster.visited, "seen": cluster.seen, "event_done": cluster.event_done, "occupier": cluster.occupier, "store": cluster.store, "store_stock": cluster.store_stock, "refugees": cluster.refugees, "fled": cluster.fled}
 	return {"version": 2, "seed": seed_value, "bands": bands, "home_race": home_race, "collapse_radius": collapse_radius, "changed": changed}
 
 

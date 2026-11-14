@@ -24,6 +24,9 @@ func event_for_arrival() -> EventDef:
 		return Library.events.get("START_LAUNCH")
 	if cluster.event_done:
 		return before_or_after_collapse("REVISIT")
+	# A cluster at war is a front line: two quiet arrivals in five there turn into a fight (GDD 2R, Border: more fights)
+	if cluster.states.has("At War") and cluster.kind in ["nothing", "neutral"] and int(cluster.seed) % 5 < 2:
+		return pick("hostile")
 	return pick(cluster.kind)
 
 
@@ -396,6 +399,8 @@ func pick_squad(squad_id: String) -> SquadDef:
 		if squad.id.begins_with("final") or not squad.has_band(run.band()):
 			continue
 		var weight := squad_weight(squad, race, cluster.states)
+		if cluster.enemy != "" and squad.where_races.has(cluster.enemy):
+			weight += 2.0        # at war, the other side's ships are met here too (GDD 2R: ships of both sides)
 		if weight > 0.0:
 			options.append(squad)
 			weights.append(weight)
