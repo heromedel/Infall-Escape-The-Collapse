@@ -503,7 +503,8 @@ Version for its bots and the Senti captain plans, with a rerun of the Senti rows
 fell (watcher: band 4 29% from 35%, band 5 21% from 30%, band 6 37% from 54%, band 7 8% from 41%; expert: band 4 19%
 from 32%, bands 5 and 7 3–7%), and no fight was left or stalemated. Pay per Senti fight rose to 12–27 (was 4–10)
 because the fights are now won; shots 3–10% of pay. So the Senti problem was strategy, not price. Games won: watcher
-4 of 30, expert 16 of 30. The new Senti Census squad cost no hull in its 6 fights (too mild; with Ship Designs).
+4 of 30, expert 16 of 30. The new Senti Census squad cost no hull in its 6 fights. **heromedel (2026-11-14):** that is
+expected: a crew killer isn't meant to damage the hull, it's meant to kill crew, so judge it by crew lost, not hull.
 **For heromedel:** the expert now wins over half its games, against the genre's reported 9 in 10 lost (its
 creator's target, not heromedel's; Infall has no set target); that is difficulty, not economy, but worth a look.
 
