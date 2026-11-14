@@ -639,17 +639,17 @@ func fight_rewards(encounter: Encounter) -> Dictionary:
 			lines.append("%s surrendered: Mawjig +%s" % [ship.name, Mawjig.format(paid)])
 	if total > 0:
 		run.earn(total)
+	# A pledge is broken by destroying that race's own ships (not its pirates or mercenaries)
+	for ship in encounter.all_enemy_ships():
+		var flag: String = ship.design.faction
+		if (ship.destroyed or ship.crew_dead) and run.pledges.has(flag) and run.pledge_on_win != flag and (encounter.squad == null or not encounter.squad.id.begins_with("final")):
+			run.pledges.erase(flag)
+			lines.append("The %s withdraw their pledge to the convoy." % Library.race(flag).name)
 	# A pledge that was staked on this fight (the Lykario's fair hunt, won)
 	if run.pledge_on_win != "":
 		if run.pledge(run.pledge_on_win):
 			lines.append("The %s pledge to the convoy (%d of %d)." % [Library.race(run.pledge_on_win).name, run.pledge_count(), Alliance.needed])
 		run.pledge_on_win = ""
-	# A pledge is broken by destroying that race's own ships (not its pirates or mercenaries)
-	for ship in encounter.all_enemy_ships():
-		var flag: String = ship.design.faction
-		if (ship.destroyed or ship.crew_dead) and run.pledges.has(flag) and (encounter.squad == null or not encounter.squad.id.begins_with("final")):
-			run.pledges.erase(flag)
-			lines.append("The %s withdraw their pledge to the convoy." % Library.race(flag).name)
 	# The Tech victory's pieces (GV 2F), while the search is on: any ship of a race may carry that race's piece. A
 	# wreck gives it up now and then; a ship left whole, its crew dead, more often.
 	if run.tech_goal:

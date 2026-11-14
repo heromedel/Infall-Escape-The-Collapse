@@ -61,14 +61,17 @@
 	<!-- Mecha: only for profit or advantage; teamwork when their survival depends on it (Mecha 2-4). -->
 	<event id="ALLIANCE_MECHA" title="The Mecha and the Convoy" kind="alliance">
 		<text>A Mecha yard boss hears the offer and laughs. "A convoy. And what do the Mecha get for guarding everyone else's ships?"</text>
-		<choice text="Pay them to join." requires="mawjig:36.31">
+		<choice text="Pay them to join." requires="mawjig:36.31" also="state:Doomed,Struggling">
 			<outcome><text>"Now it's a contract." The Mecha pledge to the convoy, for as long as it pays.</text><mawjig amount="-36.31"/><pledge race="mecha"/></outcome>
 		</choice>
-		<choice text="Let {crew} show them what they gain." requires="crew_with:mecha:servicing-core,evb-dock">
+		<choice text="Let {crew} show them what they gain." requires="crew_with:mecha:servicing-core,evb-dock" also="state:Doomed,Struggling">
 			<outcome><text>{crew} lays it out in clipped Mecha code: every ship in the convoy needs repairs, parts and guns, and the Mecha would be the only yard in it. The yard boss likes those numbers. The Mecha pledge to the convoy.</text><pledge race="mecha"/></outcome>
 		</choice>
 		<choice text="Show them how many have already joined." requires="pledges:3" also="state:Doomed,Struggling">
 			<outcome><text>The yard boss counts the pledges twice. "Fine. Being left behind isn't profitable either." The Mecha pledge to the convoy.</text><pledge race="mecha"/></outcome>
+		</choice>
+		<choice text="Make the offer while their yards are still full." requires="not_state:Doomed,Struggling">
+			<outcome><text>"We are winning here. Why would the Mecha leave a place they are winning?" The yard boss waves you off. "Come back when a convoy is worth something to us."</text></outcome>
 		</choice>
 		<choice text="Walk away.">
 			<outcome><text>"Come back with a better offer," the yard boss calls after you.</text></outcome>
@@ -81,10 +84,10 @@
 		<choice text="Offer them the convoy's records to keep." requires="state:Doing Fine,Struggling">
 			<outcome><text>"Every people in it, kept safe. We, The Senti-, will fly with the convoy." The Senti pledge to it.</text><pledge race="senti"/></outcome>
 		</choice>
-		<choice text="Ask them only to keep the convoy's records." requires="state:Doomed,Refugee">
-			<outcome><text>"We, The Senti-, will not fly beside the living. We will keep what you are, and send a data ship to follow yours." The Senti pledge their archive to the convoy.</text><pledge race="senti"/></outcome>
+		<choice text="Fight through their pickets, and let them record everything your Array holds, and every living thing aboard." requires="system:aaa" also="state:Doomed,Refugee">
+			<outcome><text>"We, The Senti-, will have your records one way or another." Their pickets come for you first. Win, and they will take the records freely given, and keep the convoy's.</text><fight squad="senti-pickets" pledge="senti"/></outcome>
 		</choice>
-		<choice text="Let {crew} link with the station." requires="crew:senti">
+		<choice text="Let {crew} link with the station." requires="crew:senti" also="not_state:Doomed,Refugee">
 			<outcome><text>{crew} exchanges a single burst of data with the station. "I told them what the convoy is," {crew} says afterwards. The Senti pledge to it.</text><pledge race="senti"/></outcome>
 		</choice>
 		<choice text="Not now."/>
@@ -111,9 +114,12 @@
 	<!-- Malphen: they never speak and nobody takes them in. Their "pledge" is to let the convoy pass, bought with
 	     matter (Malphen 2, 5). -->
 	<event id="ALLIANCE_MALPHEN" title="The Malphen and the Convoy" kind="alliance">
-		<text>A Malphen ship drifts across your path, silent and swollen. Nobody takes the Malphen in, and nothing about it suggests it wants a place in any convoy. But it could let the convoy pass.</text>
-		<choice text="Jettison matter for it to feed on." requires="mawjig:24.21">
-			<outcome><text>The ship gathers every scrap of what you dumped, slowly, and turns away. It will let the convoy pass. That is as close to a pledge as the Malphen ever come.</text><mawjig amount="-24.21"/><pledge race="malphen"/></outcome>
+		<text>A Malphen ship drifts across your path, silent and swollen. Nobody takes the Malphen in, and nothing about it suggests it wants a place in any convoy. But it could let the convoy pass, if there were any way to speak to it: a gland of its own kind, or the Azurethea's.</text>
+		<choice text="Speak to it through the Lymph Gland, and jettison matter for it to feed on." requires="system:lymph-gland" also="mawjig:24.21">
+			<outcome><text>The gland's secretions drift across the gap, and for the first time the ship turns toward you as if it had heard something. It gathers every scrap of what you dumped, slowly, and turns away. It will let the convoy pass. That is as close to a pledge as the Malphen ever come.</text><mawjig amount="-24.21"/><pledge race="malphen"/></outcome>
+		</choice>
+		<choice text="Speak to it through the Pheromone Gland, and jettison matter for it to feed on." requires="system:pheromone-gland" also="mawjig:24.21">
+			<outcome><text>The pheromones are a crude language, but the ship answers them: a slow turn, a shudder along its hull. It gathers every scrap of what you dumped and turns away. It will let the convoy pass. That is as close to a pledge as the Malphen ever come.</text><mawjig amount="-24.21"/><pledge race="malphen"/></outcome>
 		</choice>
 		<choice text="Leave it."/>
 	</event>

@@ -102,6 +102,13 @@ anything Claude added tagged Ai-Generated-Proposal.
     destroys one of them.
   - The talks' texts are stand-ins until Infall: Lori's replace them. The playtesters can go for it
     (`GOAL=alliance`).
+  - **Changed (heromedel, 2026-11-14, later; `docs/ideas.md`):** all seven races are needed. The Mecha answer only
+    when Struggling or Doomed, and for a profit. Doomed Senti hear only a squad that has an Armoured Avatar Array,
+    past a fight with their pickets. The Malphen can't be spoken to without a Lymph Gland or a Pheromone Gland
+    aboard, and then take matter. The last fight is always the rogue Malphen squad, the Malphen Metastasis (Infall:
+    Ship Designs' Tumour and Lesions). A pledge staked on a fight (the Lykario hunt, the Senti pickets) is given
+    when the fight is won. Still to do with Infall: Lori's rewrite: a second condition or a challenge on every
+    "with X aboard" choice, and what each race contributes to the voyage.
 
 ## 3. Squad Combat
 

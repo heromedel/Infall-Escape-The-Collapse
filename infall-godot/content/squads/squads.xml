@@ -133,9 +133,9 @@
 		<conduct surrender_chance="0" escape_chance="0" targets="weapons,shields,piloting" hail="rival"/>
 		<description>The races that would not join the convoy, come to take its way out.</description>
 	</squad>
-	<squad id="final-rogue-malphen" name="The Rogue" race="malphen" faction="malphen" where_races="none">
-		<tier bands="1-8"><ship design="spawnling.broodmass" count="1"/><ship design="spawnling.swollen" count="1"/></tier>
+	<squad id="final-rogue-malphen" name="The Malphen Metastasis" race="malphen" faction="malphen" where_races="none">
+		<tier bands="1-8"><ship design="tumour" count="1"/><ship design="spawnling.metastasis" count="2-3"/></tier>
 		<conduct surrender_chance="0" escape_chance="0" targets="shields,engines" hail="malphen"/>
-		<description>A Malphen ship that follows no pledge, grown huge on everything the collapse left behind.</description>
+		<description>A rogue Malphen growth that follows no pledge. It may not even know what it is doing: it sees a line of colony ships passing, and wants to eat or infect them.</description>
 	</squad>
 </squads>
