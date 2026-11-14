@@ -9,6 +9,7 @@ const MAX_SQUAD := 6
 const LATE_ALLIES_TICKS := 600    # allies an event left "a long way behind" arrive after this long: 30 seconds
 
 var run: RunState
+var hard_fight: bool = false   # the event this arrival rolled is a fight the situation makes a hard one (Situations)
 var mercenary: Ship = null   # the hired ship a contract event is about: {merc}, {price}, {jumps} ("3 jumps")
 
 
@@ -19,6 +20,7 @@ func _init(owner: RunState) -> void:
 ## The event for arriving at the current cluster.
 func event_for_arrival() -> EventDef:
 	var cluster := run.cluster()
+	hard_fight = false
 	# The Vector Frame takes its place once the squad is in the last band or at the rim (GV 2H)
 	if VectorHunt.at_large(run) and (run.band() >= run.galaxy.bands or cluster.kind == "final"):
 		VectorHunt.place(run)
@@ -50,10 +52,10 @@ func event_for_arrival() -> EventDef:
 	var rival := _rival_event()
 	if rival:
 		return rival
-	# A cluster at war is a front line: two quiet arrivals in five there turn into a fight (GDD 2R, Border: more fights)
-	if cluster.states.has("At War") and cluster.kind in ["nothing", "neutral"] and int(cluster.seed) % 5 < 2:
-		return pick("hostile")
-	return pick(cluster.kind)
+	# A store and a hazard are places; anywhere else, what the squad meets comes from the situation (GDD 9D)
+	if cluster.kind in ["store", "hazard"]:
+		return pick(cluster.kind)
+	return pick_from_situation()
 
 
 ## What waits at the rim. With every piece of tech fitted to one ship: the rival's ambush and the Tech victory (GV 2F).
@@ -106,12 +108,67 @@ func opening_message() -> EventDef:
 	return null
 
 
+## Events come from the situation (GDD 9D; heromedel, 2026-11-14): no cluster is flagged hostile in advance. On
+## arrival the game compiles the list of events that could happen here, weights them by the situation (Situations:
+## who holds the cluster and how the squad's race stands with them, its states, people on the road, the squad's
+## reputation, the band) and rolls one. Each kind of event shares that kind's weight among its events.
+func pick_from_situation() -> EventDef:
+	var cluster := run.cluster()
+	var by_kind := Situations.kind_weights(run, cluster)
+	var candidates: Array[EventDef] = []
+	var weights: Array[float] = []
+	for kind in Situations.KINDS:
+		var pool := _fitting(kind)
+		var pool_total := 0.0
+		for weight in pool[1]:
+			pool_total += weight
+		if pool_total <= 0.0:
+			continue
+		for index in pool[0].size():
+			candidates.append(pool[0][index])
+			weights.append(float(by_kind[kind]) * pool[1][index] / pool_total)
+	if candidates.is_empty():
+		return Library.events.get("NOTHING_GENERIC")
+	var total := 0.0
+	for weight in weights:
+		total += weight
+	var roll := run.rng.randf() * total
+	var picked: EventDef = candidates.back()
+	for index in candidates.size():
+		roll -= weights[index]
+		if roll <= 0.0:
+			picked = candidates[index]
+			break
+	hard_fight = picked.kind == "hostile" and Situations.hard_here(run, cluster)
+	return picked
+
+
 func pick(kind: String) -> EventDef:
+	var pool := _fitting(kind)
+	var candidates: Array = pool[0]
+	var weights: Array = pool[1]
+	if candidates.is_empty():
+		if kind != "nothing":
+			return pick("nothing")
+		return Library.events.get("NOTHING_GENERIC")
+	var total := 0.0
+	for weight in weights:
+		total += weight
+	var roll := run.rng.randf() * total
+	for index in candidates.size():
+		roll -= weights[index]
+		if roll <= 0.0:
+			return candidates[index]
+	return candidates.back()
+
+
+## The events of a kind that could happen at this cluster now, and each one's weight: [events, weights].
+func _fitting(kind: String) -> Array:
 	var cluster := run.cluster()
 	var race: String = cluster.race if cluster.occupier == "" else cluster.occupier
 	var states: Array = cluster.states
-	var candidates: Array[EventDef] = []
-	var weights: Array[float] = []
+	var candidates: Array = []
+	var weights: Array = []
 	for def in Library.events.values():
 		if def.kind != kind or not def.fits(run.band(), states, race):
 			continue
@@ -139,19 +196,7 @@ func pick(kind: String) -> EventDef:
 			weight *= 3.0   # one of several ways to a piece, but not a rare one
 		candidates.append(def)
 		weights.append(weight)
-	if candidates.is_empty():
-		if kind != "nothing":
-			return pick("nothing")
-		return Library.events.get("NOTHING_GENERIC")
-	var total := 0.0
-	for weight in weights:
-		total += weight
-	var roll := run.rng.randf() * total
-	for index in candidates.size():
-		roll -= weights[index]
-		if roll <= 0.0:
-			return candidates[index]
-	return candidates.back()
+	return [candidates, weights]
 
 
 ## An event's opening text. The search for the right techs ends by pointing at the other way out, while the Vector
@@ -472,9 +517,11 @@ func _apply(tag: String, attrs: Dictionary, result: Dictionary) -> void:
 			run.pledge_on_win = attrs.get("pledge", "")
 			run.after_fight_event = attrs.get("then", "")
 			run.fight_terms = {}
-			for term in ["first_strike", "hold_back", "allies", "no_escape"]:
+			for term in ["first_strike", "hold_back", "allies", "no_escape", "preys"]:
 				if attrs.has(term):
 					run.fight_terms[term] = attrs[term]
+			if hard_fight:
+				run.fight_terms["harder"] = "yes"     # the situation makes this one hard: the enemy comes as if a band farther out
 			result.fight = attrs.get("squad", "")
 			result.fight_given = true
 			result.surprise = attrs.get("surprise", "no") == "yes"
@@ -584,6 +631,9 @@ func pick_squad(squad_id: String) -> SquadDef:
 		var weight := squad_weight(squad, race, cluster.states)
 		if cluster.enemy != "" and squad.where_races.has(cluster.enemy):
 			weight += 2.0        # at war, the other side's ships are met here too (GDD 2R: ships of both sides)
+		# People on the road turn to crime (the populations note): their own pirates are met where they pass through
+		if String(cluster.refugees) != "" and squad.faction == "pirate" and squad.race == cluster.refugees and not squad.where_races.has("none"):
+			weight += 2.0 * minf(1.0, Populations.pressure(cluster) * 2.0)
 		if weight > 0.0:
 			options.append(squad)
 			weights.append(weight)
@@ -618,7 +668,8 @@ func squad_weight(squad: SquadDef, race: String, states: Array) -> float:
 func build_enemy_ships(squad: SquadDef) -> Array[Ship]:
 	var ships: Array[Ship] = []
 	var difficulty_hull := {"Easy": 0.8, "Normal": 1.0, "Hard": 1.25}.get(run.difficulty, 1.0) as float
-	var fielded: Array[String] = squad.roll_ships(run.band(), run.rng)
+	var harder: int = 1 if String(run.fight_terms.get("harder", "")) == "yes" else 0
+	var fielded: Array[String] = squad.roll_ships(run.band() + harder, run.rng)
 	# An event's choice may keep some of them out of the fight (hold_back): the lead ship always fights
 	var held := String(run.fight_terms.get("hold_back", ""))
 	if held == "escorts":
@@ -631,7 +682,7 @@ func build_enemy_ships(squad: SquadDef) -> Array[Ship]:
 			continue
 		var ship := Ship.from_design(design, 1, run.rng, Settings.get_value("terran_conduits", false))
 		# Ships met farther out carry a little more hull than their file lists, as the genre scales by sector
-		var band_hull := 1.0 + 0.04 * (run.band() - 1)
+		var band_hull := 1.0 + 0.04 * (run.band() - 1 + harder)
 		ship.max_hull = maxi(3, int(round(ship.max_hull * difficulty_hull * band_hull)))
 		ship.hull = maxi(1, int(round(ship.max_hull * squad.starts_at)))
 		if design.base_id == VectorHunt.FRAME:
@@ -665,6 +716,7 @@ func apply_fight_terms(encounter: Encounter, allies: Array) -> void:
 			encounter.give_first_strike(0)
 		"enemy":
 			encounter.give_first_strike(1)
+	encounter.preying = String(terms.get("preys", "")) == "yes"
 	if encounter.squad and encounter.squad.id == VectorHunt.SQUAD:
 		encounter.no_escape = String(terms.get("no_escape", "")) == "yes" or run.vector_escapes >= VectorHunt.MAX_ESCAPES
 
@@ -767,6 +819,13 @@ func fight_rewards(encounter: Encounter) -> Dictionary:
 			lines.append("%s surrendered: Mawjig +%s" % [ship.name, Mawjig.format(paid)])
 	if total > 0:
 		run.earn(total)
+	# A reputation (GDD 9D): a race's own ships destroyed in a fight the squad chose to start against ships that
+	# meant it no harm are remembered in that race's space
+	if encounter.preying:
+		for ship in encounter.all_enemy_ships():
+			var flag: String = ship.design.faction
+			if (ship.destroyed or ship.crew_dead) and Galaxy.REGION_RACES.has(flag):
+				run.preyed[flag] = int(run.preyed.get(flag, 0)) + 1
 	# A pledge is broken by destroying that race's own ships (not its pirates or mercenaries)
 	for ship in encounter.all_enemy_ships():
 		var flag: String = ship.design.faction

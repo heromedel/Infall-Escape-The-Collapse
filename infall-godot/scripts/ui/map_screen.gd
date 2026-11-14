@@ -185,11 +185,20 @@ func _update_info() -> void:
 	if run.galaxy.is_rim(index):
 		lines.append("[color=#ffd46b]The rim: the edge of the galaxy, and the way out. Someone else wants out too.[/color]")
 	elif _readable(index):
-		var what: String = {"store": "A store", "hostile": "Ships on sensors", "distress": "A distress signal", "hazard": "A hazard", "items": "Something drifting", "neutral": "Ship traffic", "nothing": "Nothing much", "opening": ""}.get(cluster.kind, "")
+		# Sensors show places (a store, a hazard) and people (the populations note), never what will happen there (GDD 9D)
+		var what: String = {"store": "A store", "hazard": "A hazard"}.get(cluster.kind, "")
 		if cluster.kind == "hazard":
 			what = {"asteroids": "An asteroid field", "sun": "A star close by: flares", "nebula": "A nebula: sensors blind", "ion_storm": "An ion storm"}.get(cluster.hazard, "A hazard")
 		if not what.is_empty():
 			lines.append("Sensors: " + what)
+		var living: Dictionary = cluster.get("settled", {})
+		var passing: Dictionary = cluster.get("on_road", {})
+		for race in living:
+			if float(living[race]) >= 0.1:
+				lines.append("[color=#a8b8cc]People: %s %s[/color]" % [Populations.words(float(living[race])), Library.race(race).name])
+		for race in passing:
+			if float(passing[race]) >= 0.1:
+				lines.append("[color=#ffd46b]On the road: %s %s[/color]" % [Populations.words(float(passing[race])), Library.race(race).name])
 		if cluster.visited:
 			lines.append("[color=#a8b8cc]Visited[/color]")
 	else:
@@ -332,8 +341,6 @@ func _draw_cluster(index: int) -> void:
 				badge = "$"
 			"hazard":
 				badge = "!"
-			"distress":
-				badge = "?"
 		if not badge.is_empty():
 			draw_circle(at + Vector2(0, -24), 10, Color(0.05, 0.08, 0.14, 0.95))
 			draw_arc(at + Vector2(0, -24), 10, 0, TAU, 20, Color("#ffd46b") if badge == "$" else (UiColours.WARNING if badge == "!" else UiColours.ACCENT), 1.5, true)
@@ -439,7 +446,7 @@ func _draw_legend() -> void:
 		_draw_cluster_icon(Vector2(at.x + 26, y - 6), row[1], row[0] == "Swallowed")
 		UiKit.draw_text(self, Vector2(at.x + 46, y), row[0], 16, UiColours.TEXT_DIM)
 		y += 26
-	UiKit.draw_text(self, Vector2(at.x + 16, y + 2), "$ store   ! hazard   ? distress", 15, UiColours.TEXT_DIM, UiKit.font_bold())
+	UiKit.draw_text(self, Vector2(at.x + 16, y + 2), "$ store   ! hazard", 15, UiColours.TEXT_DIM, UiKit.font_bold())
 	y += 34
 	UiKit.draw_text(self, Vector2(at.x + 16, y), "REGIONS", 13, UiColours.TEXT_DIM, UiKit.font_bold())
 	y += 24

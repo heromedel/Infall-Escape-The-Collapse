@@ -156,7 +156,7 @@
 		</choice>
 		<choice text="Copy their charts while they read your logs." requires="system:hacking">
 			<outcome weight="2"><text>Your probe copies the picket's charts before it notices. You pass with everything they know about this region.</text><reveal/><mawjig size="medium"/></outcome>
-			<outcome weight="1"><text>"I am recording a theft." The picket's weapons come online.</text><fight squad="senti-pickets"/></outcome>
+			<outcome weight="1"><text>"I am recording a theft." The picket's weapons come online.</text><fight squad="senti-pickets" preys="yes"/></outcome>
 		</choice>
 		<choice text="Let {crew} share the records of their people." requires="crew:tentauri">
 			<outcome><text>{crew} shares songs and stories the archive has never heard. The picket opens the way and adds a gift of Mawjig for the archive's new pages.</text><mawjig size="medium"/></outcome>

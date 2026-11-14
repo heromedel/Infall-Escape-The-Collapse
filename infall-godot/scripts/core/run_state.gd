@@ -34,6 +34,7 @@ var vector_hull: float = 1.0         # the share of its hull it has
 var vector_crew: int = -1            # the crew it has left; -1 for all of them
 var vector_drive: String = ""        # "" while it is at large, then "whole", "scarred", "lost" or "fitted"
 var vector_ship: String = ""         # what the drive was fitted to
+var preyed: Dictionary = {}          # race -> its own ships the squad destroyed in fights it chose to start (GDD 9D: a reputation)
 var after_fight_event: String = ""   # the event that plays once the fight an event started is won
 var fight_terms: Dictionary = {}     # how the event that started a fight changes it: first_strike, hold_back, allies, no_escape
 var used_events: Array[String] = []
@@ -405,7 +406,7 @@ func to_save() -> Dictionary:
 			ships.append(ship.to_save())
 	return {
 		"game": "Infall: Escape The Collapse", "version": 2, "seed": seed_value, "current": current, "jumps": jumps,
-		"mawjig": mawjig, "cargo": cargo.duplicate(), "tech": tech.duplicate(), "tech_goal": tech_goal, "alliance_goal": alliance_goal, "pledges": pledges.duplicate(), "vector": vector_to_save(), "used_events": used_events.duplicate(), "stats": stats.duplicate(),
+		"mawjig": mawjig, "cargo": cargo.duplicate(), "tech": tech.duplicate(), "tech_goal": tech_goal, "alliance_goal": alliance_goal, "pledges": pledges.duplicate(), "vector": vector_to_save(), "preyed": preyed.duplicate(), "used_events": used_events.duplicate(), "stats": stats.duplicate(),
 		"difficulty": difficulty, "pending_fight": pending_fight, "next_contract_id": next_contract_id, "squad": ships, "galaxy": galaxy.to_save(), "rng_state": rng.state,
 	}
 
@@ -464,6 +465,8 @@ static func from_data(data: Dictionary) -> RunState:
 	run.alliance_goal = bool(data.get("alliance_goal", false))
 	run.pledges.assign(data.get("pledges", []))
 	run.vector_from_save(data.get("vector", {}))
+	for race in data.get("preyed", {}):
+		run.preyed[race] = int(data.preyed[race])
 	run.used_events.assign(data.get("used_events", []))
 	for key in data.get("stats", {}):
 		run.stats[key] = int(data.stats[key])

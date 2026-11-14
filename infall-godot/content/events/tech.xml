@@ -67,7 +67,7 @@
 		</choice>
 		<choice text="Copy their reinforcement plans." requires="system:hacking">
 			<outcome weight="1"><text>Your probe copies the plans before the yard notices. Your crews build the reinforcement at the next quiet cluster.</text><tech race="mecha"/></outcome>
-			<outcome weight="1"><text>"Theft? From us?" The yard boss sounds almost impressed. The frames come for you.</text><fight/></outcome>
+			<outcome weight="1"><text>"Theft? From us?" The yard boss sounds almost impressed. The frames come for you.</text><fight preys="yes"/></outcome>
 		</choice>
 		<choice text="Walk away."/>
 	</event>

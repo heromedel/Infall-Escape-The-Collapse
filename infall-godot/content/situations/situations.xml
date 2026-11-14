@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Events come from the situation (GDD 9D, Proposed, heromedel 2026-11-14). No cluster is flagged hostile in
+     advance. When the squad arrives, each kind of event gets a weight from what the squad finds there, and one event
+     is rolled from the whole list. "The way to get more hostile encounters is to tune the situations, the lists and
+     the encounters": this file is the situations.
+
+     Every number here is an Ai-Generated-Proposal (2026-11-14), set from heromedel's examples and the race profiles,
+     then from playtester runs. A weight multiplies; several that apply multiply together.
+
+     heromedel's examples, and where they are below:
+     - "GATOS who are not doing well may have pirates, bandits or other hostile GATOS events": own space is calm only
+       while it is Doing Fine (the <own> line).
+     - "Terrans going through Malphen space should get a lot more fights": the Malphen holder line and the pair.
+     - "Mecha going through struggling or doomed Azurethea space should end up in fights, maybe hard ones": the pair.
+     - "Anyone going through Mecha space could be challenged", a Mecha squad too: the Mecha holder line.
+     - "Pirate and raider attacks belong in any abandoned or doomed cluster and some struggling ones": the states.
+     - "Perhaps a reputation, such as whether the player has been preying on non-hostile ships of that race": the
+       <reputation> line. -->
+<situations>
+	<!-- The weight of each kind of event with nothing else known -->
+	<base hostile="2.0" distress="0.45" neutral="0.6" items="0.4" nothing="0.5"/>
+
+	<!-- Who holds the cluster: its occupier, or its own race; "none" for space nobody holds -->
+	<holder race="terran" hostile="0.9"/>
+	<holder race="azurethea" hostile="0.6" neutral="1.2"/>
+	<holder race="tentauri" hostile="0.6"/>
+	<holder race="senti" hostile="0.8"/>
+	<holder race="senti" states="Doomed" hostile="2.4"/>        <!-- doomed Senti mean to keep the squad's records, and have no use for its crew -->
+	<holder race="mecha" hostile="1.8"/>                        <!-- anyone could be challenged -->
+	<holder race="lykario" hostile="1.5"/>                      <!-- hunters -->
+	<holder race="malphen" hostile="2.6" neutral="0.4"/>        <!-- no race takes the Malphen in -->
+	<holder race="none" hostile="1.1" neutral="0.5" items="1.3" nothing="1.5"/>
+
+	<!-- The squad among its own people: calm while they are doing fine, and only then -->
+	<own states="Doing Fine" hostile="0.5" neutral="1.3"/>
+
+	<!-- The cluster's states (GDD 2R) -->
+	<state name="Doing Fine" hostile="0.7" distress="0.7" neutral="1.4"/>
+	<state name="Core" hostile="0.8" neutral="1.3" nothing="0.6"/>
+	<state name="Border" hostile="1.15" neutral="1.2"/>         <!-- raids, and trade -->
+	<state name="Struggling" hostile="1.25" distress="1.4"/>
+	<state name="Doomed" hostile="1.5" distress="1.8" neutral="0.6"/>
+	<state name="Abandoned" hostile="1.5" neutral="0.3" items="2.0" nothing="1.5"/>
+	<state name="At War" hostile="1.6" distress="1.4" items="1.4"/>
+	<state name="Occupied" hostile="1.3"/>
+
+	<!-- A squad of one race in another's space -->
+	<pair squad="terran" holder="malphen" hostile="1.25"/>
+	<pair squad="mecha" holder="azurethea" states="Struggling,Doomed" hostile="2.5" hard="yes"/>
+	<pair squad="mecha" holder="mecha" hostile="0.7"/>          <!-- they have shops and sometimes help each other, and still challenge -->
+
+	<!-- People on the road (populations, below): pressure is those passing through over those who live there. Each
+	     whole point of pressure adds this much to the weight, up to the cap: crime, and people asking for help. -->
+	<pressure hostile="1.6" distress="2.5" cap="2.0"/>
+
+	<!-- Each ship of a race's own (not its pirates) that the squad destroyed in a fight it chose to start adds this
+	     much in that race's space, up to the cap. A race pledged to the convoy holds its fire. -->
+	<reputation preyed="0.15" cap="2.0" pledged="0.5"/>
+
+	<!-- A little more trouble each band outward -->
+	<band hostile="0.03"/>
+
+	<!-- Cluster populations and their movement (docs/ideas.md, Proposed 2026-10-27), in Gatillions: 1,000 Gatillion
+	     is 1 Gatzillion. border: the people of a border cluster of that race; an inner cluster has inner times as
+	     many and a core cluster core times (from the note's example: a GATOS border cluster of 100, an Azurethea
+	     cluster of 50 and a core cluster of 250, a Tentauri border cluster of 30).
+	     moves_within: how many bands from the collapse its people start to leave (the Lykario within one; the Tentauri
+	     a minor migration from two). settled_share: the most of a large settled population that takes to the road
+	     (the note: "up to 10%"); a small one moves more of itself. -->
+	<populations inner="2.5" core="5" settled_share="0.10" small="30" small_share="0.25">
+		<people race="terran" border="100" moves_within="1.0"/>
+		<people race="azurethea" border="50" moves_within="1.5"/>
+		<people race="tentauri" border="30" moves_within="1.0" minor_within="2.0"/>
+		<people race="senti" border="40" moves_within="0.75"/>
+		<people race="mecha" border="80" moves_within="0.5"/>
+		<people race="lykario" border="40" moves_within="1.0"/>
+		<people race="malphen" border="60" moves_within="0.25"/>
+	</populations>
+</situations>

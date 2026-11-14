@@ -32,6 +32,9 @@ func load_all() -> void:
 	var alliance := XmlTree.load_file(CONTENT + "/alliance/alliance.xml")
 	if alliance:
 		Alliance.load_from(alliance)
+	var situations := XmlTree.load_file(CONTENT + "/situations/situations.xml")
+	if situations:
+		Situations.load_from(situations)
 	for problem in problems:
 		push_warning(problem)
 

@@ -770,7 +770,7 @@ func wait_here() -> void:
 	run.wait()
 	if run.mawjig < Mawjig.JUMP_COST and Library.events.has("STRANDED"):
 		show_event(Library.events["STRANDED"])
-	elif run.rng.randf() < 0.18 and run.cluster().kind != "final":
+	elif run.cluster().kind != "final" and run.rng.randf() < Situations.threat(run, run.cluster()) * 0.5:      # waiting where it is dangerous
 		show_event(runner.pick("hostile"))
 	elif Library.events.has("WAITED"):
 		show_event(runner.before_or_after_collapse("WAITED"))

@@ -43,6 +43,7 @@ var surrender_offered: bool = false
 var no_mawjig_warned: bool = false
 var gap: float = STANDARD_GAP         # this battle's distance between the squads' areas, in pixels
 var tech_wanted: Array[String] = []     # races whose piece of the Tech victory the squad still lacks (GV 2F)
+var preying: bool = false               # the squad chose this fight against ships that meant it no harm (GDD 9D: a reputation)
 var no_escape: bool = false             # the Vector Frame's drive is jammed or spent: it can't fold out of this fight
 var surrender_pays: bool = true         # false when a surrender was settled with a piece of tech in place of Mawjig
 var reinforcements: Array[Ship] = []    # enemy ships waiting to jump in, one for each enemy ship lost (the rival's squad)

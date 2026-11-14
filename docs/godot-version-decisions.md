@@ -26,19 +26,17 @@ anything Claude added tagged Ai-Generated-Proposal.
 
 - **E — Built (2026-11-14), GDD 2R; heromedel: "you can work on cluster simulation and how it affects available
   events":** the galaxy changes a little after every jump.
-  - **Refugees move.** A cluster about to be swallowed sends its people out once; each group moves one cluster
-    outward per jump while the place it is in is Doomed, Struggling or Swallowed, rests where things are fine, and
-    settles when it reaches safe space of its own race. A cluster holding a group is Refugee.
+  - **People move** (GV 2J, which replaced this point's first rule of one group for each Doomed cluster). A cluster
+    with a Gatillion or more of people passing through from elsewhere is Refugee.
   - **At War.** A cluster beside one held by another race is At War when either race pushes into its neighbours;
     it is a Border while that lasts. The war is over when the enemy's cluster is abandoned or swallowed.
   - **Hemmed in.** A cluster at war with more enemy neighbours than friends is Struggling, however far the
     collapse is.
   - **Fronts move.** An inner cluster becomes a Border once a neighbour of its own race is swallowed, abandoned
     or occupied.
-  - **In play.** At a cluster at war, two quiet arrivals in five become a fight, and the other side's ships are
-    met there too. The Refugee state already changes stores and events.
-  - **Ai-Generated-Proposal:** the Terrans, Azurethea, Tentauri and Senti flee; the Mecha, Lykario and Malphen
-    push into their neighbours; two Doomed clusters in three send a group.
+  - **In play.** At a cluster at war the other side's ships are met too, and the situation weighs toward fights
+    (GV 2I). The Refugee state already changes stores and events.
+  - **Ai-Generated-Proposal:** the Mecha, Lykario and Malphen push into their neighbours.
 
 - **F — Built (2026-11-14), heromedel: "the victory path that should come next is the get one tech from every
   race":** the Tech victory and its rival. The rule is `docs/ideas.md`, Tech victory (Proposed, heromedel
@@ -163,6 +161,51 @@ anything Claude added tagged Ai-Generated-Proposal.
     `tools/vector_test.tscn` checks the rules.
 
 ## 3. Squad Combat
+
+- **I — Built (2026-11-14), GDD 9D (Proposed, heromedel): events come from the situation.**
+  - **No cluster is flagged in advance.** A store and a hazard are places and stay where the map puts them. At
+    every other cluster, what the squad meets is rolled when it arrives.
+  - **The roll.** The game lists every event that fits the cluster (band, race, states), gives each kind of event
+    (hostile, distress, neutral, items, nothing) a weight from the situation, shares a kind's weight among its
+    events, and rolls one. `content/situations/situations.xml` holds the weights, one line for each thing that
+    counts, so the way to more fights somewhere is a number in that file.
+  - **What counts,** as heromedel listed it: who holds the cluster; the squad's race against theirs; the squad
+    among its own people (calm only while they are Doing Fine); the cluster's states (Doing Fine, Core, Border,
+    Struggling, Doomed, Abandoned, At War, Occupied); people on the road (GV 2J); a reputation; the band.
+  - **heromedel's examples, as built:** Terrans in Malphen space meet a fight on about two arrivals in three,
+    three in four where the Malphen are struggling; a Mecha squad in struggling or doomed Azurethea space meets
+    hard fights (the enemy comes as if a band farther out); anyone is challenged in Mecha space, a Mecha squad a
+    little less; abandoned and doomed clusters draw raiders; GATOS space is calm for a GATOS squad only while it
+    is Doing Fine.
+  - **A reputation.** A race's own ships destroyed in a fight the squad chose to start against ships that meant it
+    no harm (an event's fight marked `preys`) are remembered: each adds to the weight of hostile events in that
+    race's space. A race pledged to the convoy halves it.
+  - **Not shown to the player:** the map's sensors show a store, a hazard and the people of a cluster, never what
+    will happen there. "Ships on sensors" and the distress badge are gone.
+  - **Waiting** where it is dangerous is more dangerous: the chance of being found is half the cluster's chance of a
+    hostile arrival.
+  - **Ai-Generated-Proposal:** every number in the file; the three fights marked `preys` (the Mecha courier's
+    cargo, the Mecha yard's plans, the Senti picket's charts).
+  - **Not built:** a store with a fight in front of it; hazards rolled from the situation.
+
+- **J — Built (2026-11-14), `docs/ideas.md` "Cluster populations and population movement" (Proposed, heromedel
+  2026-10-27): populations.**
+  - **Gatillions.** Every cluster of a race has people, counted in Gatillions (1,000 is 1 Gatzillion): those who
+    live there and those on the road.
+  - **Leaving.** A race's people start to leave when the collapse is within that race's distance: the Lykario
+    within one band, the Tentauri a minor migration from two bands. A large settled population gets a tenth of
+    itself moving at most; a small one more.
+  - **Moving on.** People on the road move easily: half to all of a group goes on each jump while where it is is
+    Struggling, Doomed or too close for that race. They go outward, to their own people first, and settle among
+    their own where things are fine. Those in a cluster that is swallowed with no way out are lost.
+  - **Three effects and no others,** as the note has it: the numbers; the states (Refugee, and Struggling where the
+    people passing through are more than half those who live there); and the events (pressure, the people passing
+    through over those who live there, weighs toward hostile and distress events, and the travellers' own pirates
+    are met there).
+  - **Sensors** show a cluster's people and those on the road, within sensor range.
+  - **Ai-Generated-Proposal:** the sizes for races the note doesn't give (Senti 40, Lykario 40, Malphen 60, Mecha
+    80 in a border cluster), an inner cluster at 2.5 times a border one, the other races' distances, six jumps
+    for a cluster's share to get on the road, and the rule for where a group goes next.
 
 - **A — Decided (heromedel, 2026-10-31):** a hit lands on one tile: the system on that tile and the crew standing
   on it are hit, not the whole room; a beam hits only the tiles it passes through. Fires and breaches already

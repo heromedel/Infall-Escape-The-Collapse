@@ -34,6 +34,8 @@ var clusters: Array = []             # see _new_cluster
 var regions: Array = []              # {race, centre, size}
 var collapse_radius: float = 0.0     # 0 until the core collapses
 var start_index: int = 0
+var outward_first: Array = []        # every cluster's index, the farthest from the centre first (Populations)
+var people_move_within: float = 2.0  # the most bands from the collapse at which any race's people start to leave
 var _grid := {}                      # grid cell -> cluster indices, for finding neighbours fast
 
 
@@ -49,6 +51,7 @@ static func generate(seed_number: int, band_count: int, home: String = "terran")
 	galaxy._place_regions(rng)
 	galaxy._assign_regions()
 	galaxy._assign_contents(rng)
+	Populations.seed_galaxy(galaxy)
 	galaxy.update_states(0)
 	return galaxy
 
@@ -83,10 +86,11 @@ func _new_cluster(position: Vector2, rng: RandomNumberGenerator) -> Dictionary:
 		stars.append([rng.randf_range(-13, 13), rng.randf_range(-11, 11), rng.randf_range(1.2, 3.2)])
 	return {
 		"position": position, "radius": position.length(), "band": band_at(position.length()),
-		"links": [], "race": "", "region": -1, "rank": "", "states": [], "kind": "nothing", "hazard": "",
+		"links": [], "race": "", "region": -1, "rank": "", "states": [], "kind": "open", "hazard": "",
 		"visited": false, "seen": false, "seed": rng.randi(), "stars": stars, "store": false, "name": "",
 		"occupier": "", "event_done": false, "store_stock": {},
-		"refugees": "", "fled": false, "enemy": "",      # who is fleeing through here; whether its own people have left; who it is at war with
+		"refugees": "", "enemy": "",      # the race with the most people on the road here; who it is at war with
+		"settled": {}, "on_road": {},     # its people, by race, in Gatillions: those who live here and those passing through (Populations)
 	}
 
 
@@ -316,19 +320,13 @@ func _assign_contents(rng: RandomNumberGenerator) -> void:
 		if roll < store_chance:
 			cluster.kind = "store"
 			cluster.store = true
-		elif roll < store_chance + hostile_chance:
-			cluster.kind = "hostile"
-		elif roll < store_chance + hostile_chance + 0.11:
-			cluster.kind = "distress"
-		elif roll < store_chance + hostile_chance + 0.21:
-			cluster.kind = "neutral"
-		elif roll < store_chance + hostile_chance + 0.31:
-			cluster.kind = "items"
-		elif roll < store_chance + hostile_chance + 0.38:
+		elif roll >= store_chance + hostile_chance + 0.31 and roll < store_chance + hostile_chance + 0.38:
 			cluster.kind = "hazard"
 			cluster.hazard = ["asteroids", "sun", "nebula", "ion_storm"][rng.randi_range(0, 3)]
 		else:
-			cluster.kind = "nothing"
+			# No cluster is flagged hostile, or anything else, in advance (GDD 9D): what the squad meets is rolled from
+			# the situation when it arrives (Situations)
+			cluster.kind = "open"
 
 
 ## Recomputes every cluster's states from the collapse and the regions (GDD 2R). Called after every jump.
@@ -360,12 +358,17 @@ func update_states(jumps: int) -> void:
 				states.append("Abandoned" if collapse_radius > 0.0 and distance < BAND_DEPTH * 0.5 else "Unclaimed")
 			if cluster.refugees != "":
 				states.append("Refugee")
+				# More people passing through than the place can carry (the populations note: a small population
+				# "can't support this many refugees")
+				if states.has("Doing Fine") and Populations.pressure(cluster) > Populations.TOO_MANY:
+					states.erase("Doing Fine")
+					states.append("Struggling")
 		cluster.states = states
 		# An Abandoned cluster is left empty (GDD 2R): no store, and wreckage to salvage where one stood
 		if states.has("Abandoned") and cluster.store:
 			cluster.store = false
 			if cluster.kind == "store":
-				cluster.kind = "items"
+				cluster.kind = "open"
 	_wars_and_fronts()
 	_spread_occupation()
 
@@ -394,50 +397,17 @@ func advance_collapse(jumps: int) -> void:
 	else:
 		collapse_radius += COLLAPSE_STEP
 	update_states(jumps)
-	_move_refugees()
+	Populations.step(self, jumps)      # people leave ahead of the collapse, and those on the road move on
 	update_states(jumps)
 
 
 # --- What the galaxy does between jumps (GDD 2R; heromedel, 2026-11-14) ----------------------------------------
-# Small rules run after every jump, so the map changes as the collapse grows: people flee outward a cluster at a
-# time, borders are at war, a cluster hemmed in by enemies struggles, and a war ends when the enemy's cluster is
-# abandoned or swallowed. Which races flee and which push into their neighbours is an Ai-Generated-Proposal from
-# the race profiles.
+# Small rules run after every jump, so the map changes as the collapse grows: people leave ahead of it and move on
+# outward (Populations), borders are at war, a cluster hemmed in by enemies struggles, and a war ends when the enemy's cluster is
+# abandoned or swallowed. Which races push into their neighbours is an Ai-Generated-Proposal from the race
+# profiles.
 
-const FLEEING_RACES := ["terran", "azurethea", "tentauri", "senti"]     # they leave ahead of the collapse
 const AGGRESSIVE_RACES := ["mecha", "lykario", "malphen"]                # they push into their neighbours
-
-
-## A race's cluster about to be swallowed sends its people out, once; every group already on the road moves one
-## cluster outward while the place it is in is Doomed, Struggling or Swallowed, and rests where things are fine.
-func _move_refugees() -> void:
-	for cluster in clusters:
-		if cluster.race in FLEEING_RACES and not cluster.fled and cluster.refugees == "" and cluster.states.has("Doomed"):
-			cluster.fled = true
-			if int(cluster.seed) % 3 != 0:      # two clusters in three send a group worth meeting
-				cluster.refugees = cluster.race
-	var order: Array = range(clusters.size())
-	order.sort_custom(func(a: int, b: int): return clusters[a].radius > clusters[b].radius)     # the farthest out move first
-	for index in order:
-		var here: Dictionary = clusters[index]
-		if here.refugees == "":
-			continue
-		if not (here.states.has("Doomed") or here.states.has("Struggling") or here.states.has("Swallowed")):
-			if here.race == here.refugees:
-				here.refugees = ""       # safe among their own people: they settle
-			continue
-		var best := -1
-		for link in here.links:
-			var there: Dictionary = clusters[link]
-			if there.states.has("Swallowed") or there.refugees != "" or there.radius <= here.radius or there.kind == "final":
-				continue
-			if best < 0 or there.radius > clusters[best].radius:
-				best = link
-		if best >= 0:
-			clusters[best].refugees = here.refugees
-			here.refugees = ""
-		elif here.states.has("Swallowed"):
-			here.refugees = ""       # they never got out
 
 
 ## The race that holds a cluster now: its occupier, or its own; "" for empty, abandoned or swallowed space.
@@ -525,8 +495,15 @@ func to_save() -> Dictionary:
 	var changed := {}
 	for index in clusters.size():
 		var cluster: Dictionary = clusters[index]
-		if cluster.visited or cluster.seen or cluster.event_done or cluster.occupier != "" or cluster.refugees != "" or cluster.fled or not cluster.store_stock.is_empty() or (cluster.store and cluster.kind != "store"):
-			changed[str(index)] = {"visited": cluster.visited, "seen": cluster.seen, "event_done": cluster.event_done, "occupier": cluster.occupier, "store": cluster.store, "store_stock": cluster.store_stock, "refugees": cluster.refugees, "fled": cluster.fled}
+		# A swallowed cluster's people are gone, which loading works out for itself
+		var moved: bool = not cluster.states.has("Swallowed") and (not cluster.on_road.is_empty() or (cluster.race != "" and absf(float(cluster.settled.get(cluster.race, 0.0)) - Populations.home(cluster)) > 0.05))
+		if cluster.visited or cluster.seen or cluster.event_done or cluster.occupier != "" or cluster.refugees != "" or moved or not cluster.store_stock.is_empty() or (cluster.store and cluster.kind != "store") or cluster.get("talked", false):
+			changed[str(index)] = {"visited": cluster.visited, "seen": cluster.seen, "event_done": cluster.event_done, "occupier": cluster.occupier, "store": cluster.store, "store_stock": cluster.store_stock, "refugees": cluster.refugees}
+			if moved:
+				changed[str(index)]["settled"] = cluster.settled.duplicate()
+				changed[str(index)]["on_road"] = cluster.on_road.duplicate()
+			if cluster.get("talked", false):
+				changed[str(index)]["talked"] = true
 	return {"version": 2, "seed": seed_value, "bands": bands, "home_race": home_race, "collapse_radius": collapse_radius, "changed": changed}
 
 
@@ -538,4 +515,8 @@ static func from_save(data: Dictionary) -> Galaxy:
 		for field in data.changed[key]:
 			cluster[field] = data.changed[key][field]
 	galaxy.update_states(0)
+	for cluster in galaxy.clusters:
+		if cluster.states.has("Swallowed"):
+			cluster.settled = {}
+			cluster.on_road = {}
 	return galaxy

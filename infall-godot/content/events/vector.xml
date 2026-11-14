@@ -29,7 +29,7 @@ You pass the manifest to The Colony Ship. The answer comes back at once.
 
 "If the Mecha have a way out, we need it. Find that ship."</text>
 		<choice text="Take the cargo.">
-			<outcome><text>You strip the courier's hold before its escort drops out of its jump. Wherever the Vector Frame is, it will be one part short.</text><vector_goal/><vector_part/><mawjig size="low"/><fight squad="mecha-light-attack"/></outcome>
+			<outcome><text>You strip the courier's hold before its escort drops out of its jump. Wherever the Vector Frame is, it will be one part short.</text><vector_goal/><vector_part/><mawjig size="low"/><fight squad="mecha-light-attack" preys="yes"/></outcome>
 		</choice>
 		<choice text="Repair its drive, for a fee.">
 			<outcome><text>The courier pays a fair price and not a bit more. While your crew work, its pilot can't stop boasting: the Vector Frame will be waiting near the rim, and nobody will ever catch it.</text><vector_goal/><mawjig size="low"/></outcome>
