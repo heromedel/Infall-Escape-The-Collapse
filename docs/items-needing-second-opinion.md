@@ -22,6 +22,7 @@ reviewed its part on 2026-10-31; what was changed is under **Checked**, and what
 
 1. **Shield levels in ship.xml:** stored as bars (level 2 is one layer, as in the genre) while GDD 8H's shield test
    counts a level per layer. Which one the files mean needs settling.
+   heromedel (2026-11-14): 8H's shield test is Rejected; every ship but the Senti uses the classic Generator (GDD 8Q).
 2. **The growth organ** (Malphen) is 6.05 as a placeholder until it has a table price (Eco).
 3. **15 crew damage a hull point** is unchecked. Repair, fire-fighting and the teleporter now use the wiki's
    timings (GV 7E).
