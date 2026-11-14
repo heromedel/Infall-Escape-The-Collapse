@@ -172,9 +172,9 @@ static func ship_select(on_pick: Callable, on_back: Callable) -> Overlay:
 	return window
 
 
-## The Alliance victory's end screen (Ai-Generated-Proposal until Infall: Lori words it).
+## The Alliance victory's end screen (Infall: Lori, Ai-Generated-Proposal 2026-11-14).
 const ALLIANCE_WON_TITLE := "THE CONVOY"
-const ALLIANCE_WON_TEXT := "The last of the ones who refused falls away behind you. One by one the colony ships of the races that pledged drop out of their jumps and form up: yours, and the ones that agreed to fly beside it.\n\nNo single people could have made this crossing. The convoy turns toward the dark between galaxies and goes in together.\n\nBehind it, the collapse reaches the rim. It will never reach where you are going."
+const ALLIANCE_WON_TEXT := "The way out is clear. One by one, the convoy's ships make the jump into the dark between galaxies: The Colony Ship first, then every people that pledged, each guarding the next.\n\nNobody makes the crossing alone. That was the point.\n\nBehind them, the collapse reaches the rim. It will never reach where they are going."
 
 ## The Tech victory's end screen (Infall: Lori, Ai-Generated-Proposal 2026-11-14).
 const TECH_WON_TITLE := "THE CROSSING"

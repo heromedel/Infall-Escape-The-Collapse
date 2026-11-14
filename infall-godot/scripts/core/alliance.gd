@@ -53,7 +53,7 @@ static func refusers(run: RunState) -> Array[String]:
 static func lines(run: RunState) -> PackedStringArray:
 	var out: PackedStringArray = []
 	var pledged: Array = races.filter(func(race): return run.has_pledge(race))
-	out.append("The convoy: %d of %d races pledged (%s)." % [pledged.size(), needed, ", ".join(pledged.map(func(race): return Library.race(race).name))])
+	out.append("The convoy: %d of %d peoples pledged (%s)." % [pledged.size(), needed, ", ".join(pledged.map(func(race): return Library.race(race).name))])     # Infall: Lori's lines
 	if run.alliance_ready():
 		out.append("Enough have pledged. Head for the rim; more allies mean fewer enemies there.")
 	for race in races:

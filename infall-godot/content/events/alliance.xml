@@ -1,116 +1,135 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- The Alliance victory's talks (GV 2G; docs/ideas.md, "Alliance victory, first plan", with Infall: Lori's check).
-     Every text here is an Ai-Generated-Proposal by Infall: Godot Version, a stand-in until Infall: Lori's file
-     replaces it. What each race asks, and when it agrees, follows Lori's check of the plan:
-     - a race answers by the state of the cluster it is asked in (requires="state:..." / "not_state:...");
-     - the GATOS are easy when doing fine or struggling and refuse when doomed; the others are easiest when doomed;
-     - a blue choice comes from a crew member of a race on decent terms with the one asked, aboard a ship with that
-       race's own system (requires="crew_with:race:system");
-     - the Malphen never join: their pledge is to let the convoy pass, paid in matter.
-     kind="alliance": played as a talk, on arrival in a race's space or among its refugees, or asked for at its store.
-     Effects: <alliance_goal/> starts it; <pledge race=""/> wins that race; <fight squad="" pledge=""/> wins it
-     only if the fight is won. -->
+<!-- The Alliance victory's talks, by Infall: Lori (2026-11-14), replacing Infall: Godot Version's stand-ins in
+     infall-godot/content/events/alliance.xml. Same ids and hooks. Every text is Ai-Generated-Proposal (2026-11-14),
+     built on heromedel's words (docs/ideas.md, "Alliance victory, first plan", Proposed) and checked against
+     docs/lore-facts.md and docs/race-profiles.md.
+     A refusal reads as "not yet": the talk can come up again elsewhere until the race pledges. -->
 <events>
 	<event id="ALLIANCE_PROPOSED" title="A Convoy" kind="alliance" unique="yes">
 		<text>A transmission from The Colony Ship reaches you as your squad crosses into another people's space.
 
-"We are not the only colony ship running from this. No single people can make the crossing alone, but a convoy might: each race's ship escorting the next. Ask them. Start with the ones who have already lost their homes."</text>
+"We are not the only colony ship running from this. No single people can make the crossing alone, but a convoy might, each ship guarding the next. Ask the others to join us. Start with the ones who have already lost their homes: they have the least left to lose."</text>
 		<choice text="We'll ask them.">
-			<outcome><text>Your squad carries a new offer with it: a place in the convoy, for any people who will fly beside the others.</text><alliance_goal/></outcome>
+			<outcome><text>Your squad carries a new offer with it: a place in the convoy for any people who will fly beside the others.</text><alliance_goal/></outcome>
 		</choice>
 	</event>
 
+	<!-- Azurethea: peaceful, slow to share when doing fine; cooperative when struggling; they willingly become
+	     refugees (Azurethea 2-5). Blue offers: the Tentauri shield, the Senti archive, or one of their own. -->
 	<event id="ALLIANCE_AZURETHEA" title="The Azurethea and the Convoy" kind="alliance">
-		<text>An Azurethea elder listens to the offer of a place in the convoy without interrupting.</text>
-		<choice text="Offer their refugees passage in the convoy." requires="state:Doomed,Refugee,Struggling">
-			<outcome><text>"We have nowhere left to tend. We will fly beside you." The Azurethea pledge their colony ship to the convoy.</text><pledge race="azurethea"/></outcome>
+		<text>An Azurethea elder listens to the offer of a place in the convoy without interrupting, wings folded, then answers softly.
+
+"You are asking us to leave our home and trust strangers to fly beside us."</text>
+		<choice text="Offer their people passage in the convoy." requires="state:Doomed,Refugee,Struggling">
+			<outcome><text>"We have already learned to leave," the elder says. "We would rather leave together." The Azurethea pledge their colony ship to the convoy.</text><pledge race="azurethea"/></outcome>
 		</choice>
-		<choice text="Let {crew} promise the convoy's shields will cover them." requires="crew_with:tentauri:supershield">
-			<outcome><text>{crew} speaks softly of flying beside them. The elder bows. The Azurethea pledge to the convoy.</text><pledge race="azurethea"/></outcome>
+		<choice text="Let {crew} promise that the convoy's shields will cover them." requires="crew_with:tentauri:supershield">
+			<outcome><text>{crew} speaks quietly of shells of light around every ship in the convoy. The elder lowers their wings. The Azurethea pledge to the convoy.</text><pledge race="azurethea"/></outcome>
 		</choice>
 		<choice text="Let {crew} offer to keep their people's records." requires="crew_with:senti:aaa">
-			<outcome><text>"We, The Senti-, will remember every one of you." The elder agrees. The Azurethea pledge to the convoy.</text><pledge race="azurethea"/></outcome>
+			<outcome><text>"We, The Senti-, will keep the name of every Azurethea aboard, whatever happens on the way." The elder is silent for a long moment, then agrees. The Azurethea pledge to the convoy.</text><pledge race="azurethea"/></outcome>
+		</choice>
+		<choice text="Let {crew} speak with the elder." requires="crew:azurethea">
+			<outcome><text>{crew} and the elder talk for a long time, in the quiet way of their people. When it's over, the Azurethea pledge to the convoy.</text><pledge race="azurethea"/></outcome>
 		</choice>
 		<choice text="Ask them to leave a home that is still whole." requires="not_state:Doomed,Refugee,Struggling">
-			<outcome><text>"Our gardens still grow. Ask us again when they do not."</text></outcome>
+			<outcome><text>"Our home is still whole," the elder says gently. "Ask us again if that changes. We will remember that you asked."</text></outcome>
 		</choice>
 		<choice text="Leave them be."/>
 	</event>
 
+	<!-- Tentauri: quiet, two voices; joint operations when struggling; highly cooperative when doomed
+	     (Tentauri 2-5). -->
 	<event id="ALLIANCE_TENTAURI" title="The Tentauri and the Convoy" kind="alliance">
 		<text>Two Tentauri answer your hail, their voices in step. "A convoy. Many ships, flying as one. Show us that you can fly as one."</text>
 		<choice text="Fly a joint operation with them." requires="state:Doomed,Refugee,Struggling,Border">
-			<outcome weight="2"><text>You cross the cluster beside them, shields overlapping. At the far side they answer: the Tentauri pledge to the convoy.</text><pledge race="tentauri"/></outcome>
-			<outcome weight="1"><text>Raiders find you halfway across. The Tentauri hold beside you, and pledge to the convoy when it is over.</text><pledge race="tentauri"/><fight/></outcome>
+			<outcome weight="2"><text>You cross the cluster beside them, your shields overlapping theirs. At the far side the two voices answer together: the Tentauri pledge to the convoy.</text><pledge race="tentauri"/></outcome>
+			<outcome weight="1"><text>Raiders find you halfway across. The Tentauri hold their place beside you, and before the shooting starts they say it plainly: they will fly with the convoy.</text><pledge race="tentauri"/><fight/></outcome>
 		</choice>
-		<choice text="Let {crew} answer for the Azurethea already in the convoy." requires="crew:azurethea" also="pledged:azurethea">
-			<outcome><text>{crew} speaks of the gardens the convoy will carry. The Tentauri pledge to it.</text><pledge race="tentauri"/></outcome>
+		<choice text="Let {crew} speak for the Azurethea already in the convoy." requires="crew:azurethea" also="pledged:azurethea">
+			<outcome><text>{crew} tells them how gently the Azurethea fly, and how many of them the convoy already carries. The Tentauri pledge to it.</text><pledge race="tentauri"/></outcome>
+		</choice>
+		<choice text="Let {crew} answer them." requires="crew:tentauri">
+			<outcome><text>{crew} answers in the same soft voice. The two Tentauri do not need to hear more. They pledge to the convoy.</text><pledge race="tentauri"/></outcome>
 		</choice>
 		<choice text="Ask them to leave a home that is still whole." requires="not_state:Doomed,Refugee,Struggling,Border">
-			<outcome><text>"We are whole here. We do not need to fly as one yet."</text></outcome>
+			<outcome><text>"We are whole here. We do not need to fly as one yet. Ask us when we do."</text></outcome>
 		</choice>
 		<choice text="Leave them be."/>
 	</event>
 
+	<!-- Mecha: only for profit or advantage; teamwork when their survival depends on it (Mecha 2-4). -->
 	<event id="ALLIANCE_MECHA" title="The Mecha and the Convoy" kind="alliance">
-		<text>A Mecha yard boss hears the offer and smiles. "A convoy. And what do the Mecha gain by guarding everyone else's ships?"</text>
+		<text>A Mecha yard boss hears the offer and laughs. "A convoy. And what do the Mecha get for guarding everyone else's ships?"</text>
 		<choice text="Pay them to join." requires="mawjig:36.31">
-			<outcome><text>"Now it is a contract." The Mecha pledge to the convoy, for as long as it profits them.</text><mawjig amount="-36.31"/><pledge race="mecha"/></outcome>
+			<outcome><text>"Now it's a contract." The Mecha pledge to the convoy, for as long as it pays.</text><mawjig amount="-36.31"/><pledge race="mecha"/></outcome>
 		</choice>
 		<choice text="Let {crew} show them what they gain." requires="crew_with:mecha:servicing-core,evb-dock">
-			<outcome><text>{crew} lays out the numbers in clipped Mecha code: every ship in the convoy is a customer. The Mecha pledge to it.</text><pledge race="mecha"/></outcome>
+			<outcome><text>{crew} lays it out in clipped Mecha code: every ship in the convoy needs repairs, parts and guns, and the Mecha would be the only yard in it. The yard boss likes those numbers. The Mecha pledge to the convoy.</text><pledge race="mecha"/></outcome>
 		</choice>
 		<choice text="Show them how many have already joined." requires="pledges:3" also="state:Doomed,Struggling">
-			<outcome><text>The yard boss counts the pledges twice. "Nobody leaves the Mecha behind at a profit." They pledge to the convoy.</text><pledge race="mecha"/></outcome>
+			<outcome><text>The yard boss counts the pledges twice. "Fine. Being left behind isn't profitable either." The Mecha pledge to the convoy.</text><pledge race="mecha"/></outcome>
 		</choice>
-		<choice text="Walk away."/>
+		<choice text="Walk away.">
+			<outcome><text>"Come back with a better offer," the yard boss calls after you.</text></outcome>
+		</choice>
 	</event>
 
+	<!-- Senti: records first; doomed Senti keep data but do not fly beside the living (Senti 2-5). -->
 	<event id="ALLIANCE_SENTI" title="The Senti and the Convoy" kind="alliance">
 		<text>A Senti archive station hails you, its light lines bright. "We, The Senti-, have recorded your offer. A convoy is a record that moves."</text>
-		<choice text="Offer the convoy's records for them to keep." requires="state:Doing Fine,Struggling">
-			<outcome><text>"Every people in it, kept. We, The Senti-, will fly with the convoy." The Senti pledge to it.</text><pledge race="senti"/></outcome>
+		<choice text="Offer them the convoy's records to keep." requires="state:Doing Fine,Struggling">
+			<outcome><text>"Every people in it, kept safe. We, The Senti-, will fly with the convoy." The Senti pledge to it.</text><pledge race="senti"/></outcome>
 		</choice>
 		<choice text="Ask them only to keep the convoy's records." requires="state:Doomed,Refugee">
-			<outcome><text>"We, The Senti-, will not fly beside the living. We will keep what you are." The Senti pledge their archive to the convoy.</text><pledge race="senti"/></outcome>
+			<outcome><text>"We, The Senti-, will not fly beside the living. We will keep what you are, and send a data ship to follow yours." The Senti pledge their archive to the convoy.</text><pledge race="senti"/></outcome>
 		</choice>
 		<choice text="Let {crew} link with the station." requires="crew:senti">
-			<outcome><text>{crew} exchanges a single burst of data with the station. The Senti pledge to the convoy.</text><pledge race="senti"/></outcome>
+			<outcome><text>{crew} exchanges a single burst of data with the station. "I told them what the convoy is," {crew} says afterwards. The Senti pledge to it.</text><pledge race="senti"/></outcome>
 		</choice>
 		<choice text="Not now."/>
 	</event>
 
+	<!-- Lykario: they won't ride in a convoy but will hunt for it; anyone who proves themselves on a hunt is
+	     welcome (Lykario 2-5). No Azurethea blue: bordering Lykario hunt the Azurethea. -->
 	<event id="ALLIANCE_LYKARIO" title="The Lykario and the Convoy" kind="alliance">
-		<text>A Lykario pack leader laughs at the offer. "Ride in a convoy? No. But a convoy draws prey, and someone has to hunt for it. Show us you are worth hunting beside."</text>
+		<text>A Lykario packleader laughs at the offer. "Ride in a convoy, like prey? No. But a convoy draws prey, and someone has to hunt for it. Show us you're worth hunting beside."</text>
 		<choice text="Accept a fair hunt against them.">
-			<outcome><text>"Good!" The pack comes for you, and it is not playing.</text><fight squad="lykario-pack" pledge="lykario"/></outcome>
+			<outcome><text>"Good!" The pack comes for you, and it is not playing. Win, and they'll hunt for the convoy.</text><fight squad="lykario-pack" pledge="lykario"/></outcome>
 		</choice>
 		<choice text="Let {crew} vouch for your squad." requires="crew_with:lykario:cloaking,crew-teleporter">
-			<outcome><text>{crew} tells the hunt as it happened. The pack leader grins. The Lykario pledge to hunt for the convoy.</text><pledge race="lykario"/></outcome>
+			<outcome><text>{crew} tells the story of your last fight, with a few details improved. The packleader grins. The Lykario pledge to hunt for the convoy.</text><pledge race="lykario"/></outcome>
 		</choice>
-		<choice text="Let {crew} offer a contract: escort pay." requires="crew:terran" also="mawjig:12.11">
-			<outcome><text>{crew} talks pay, GATOS style. The Lykario pledge to hunt for the convoy, and take the first payment now.</text><mawjig amount="-12.11"/><pledge race="lykario"/></outcome>
+		<choice text="Let {crew} offer them a contract." requires="crew:terran" also="mawjig:12.11">
+			<outcome><text>{crew} talks pay, GATOS style: so much a jump for every raider the pack runs off. The Lykario take the first payment and pledge to hunt for the convoy.</text><mawjig amount="-12.11"/><pledge race="lykario"/></outcome>
 		</choice>
-		<choice text="Move on."/>
+		<choice text="Move on.">
+			<outcome><text>"Come back when you want a real hunt!" the packleader calls.</text></outcome>
+		</choice>
 	</event>
 
+	<!-- Malphen: they never speak and nobody takes them in. Their "pledge" is to let the convoy pass, bought with
+	     matter (Malphen 2, 5). -->
 	<event id="ALLIANCE_MALPHEN" title="The Malphen and the Convoy" kind="alliance">
-		<text>A Malphen ship drifts across your path, silent. No race takes the Malphen in, and nothing it does suggests it wants a place in the convoy. But it could let the convoy pass.</text>
+		<text>A Malphen ship drifts across your path, silent and swollen. Nobody takes the Malphen in, and nothing about it suggests it wants a place in any convoy. But it could let the convoy pass.</text>
 		<choice text="Jettison matter for it to feed on." requires="mawjig:24.21">
-			<outcome><text>The ship gathers every scrap, slowly, and turns away. It will let the convoy pass. That is as close to a pledge as the Malphen come.</text><mawjig amount="-24.21"/><pledge race="malphen"/></outcome>
+			<outcome><text>The ship gathers every scrap of what you dumped, slowly, and turns away. It will let the convoy pass. That is as close to a pledge as the Malphen ever come.</text><mawjig amount="-24.21"/><pledge race="malphen"/></outcome>
 		</choice>
 		<choice text="Leave it."/>
 	</event>
 
+	<!-- The squad's own race is pledged from the start; this talk only answers if the player asks anyway. -->
 	<event id="ALLIANCE_TERRAN" title="The GATOS and the Convoy" kind="alliance">
-		<text>A GATOS hub answers your hail.</text>
-		<choice text="Ask them to join."><outcome><text>"We're already in it."</text></outcome></choice>
+		<text>A GATOS hub answers your hail.
+
+"The convoy? The Colony Ship is GATOS. We were the first to sign."</text>
+		<choice text="Continue..."/>
 	</event>
 
 	<event id="FINAL_ALLIANCE" title="The Ones Who Refused" kind="final" unique="yes">
-		<text>The rim is here, and behind you the convoy is forming: every people that pledged. Ahead, across the way out, hang the ships of the ones who refused, or were never asked.
+		<text>The rim is here. Behind you, the convoy is forming: every people that pledged. Ahead, across the way out, hang the ships of the ones who refused, or were never asked.
 
-"There is room on that path for one convoy," their leader says. "It will not be yours."
+"There's room on that path for one convoy," their leader says. "It won't be yours."
 
 The ships of your allies drop out of their jumps beside you.</text>
 		<choice text="Tell them there is still room in the convoy.">
@@ -122,7 +141,7 @@ The ships of your allies drop out of their jumps beside you.</text>
 	</event>
 
 	<event id="FINAL_ALLIANCE_ALL" title="The Rogue" kind="final" unique="yes">
-		<text>The rim is here, and every people in the galaxy that could be asked has pledged to the convoy. For a moment the way out is empty.
+		<text>The rim is here, and every people that could be asked has pledged to the convoy. For a moment the way out is empty.
 
 Then something vast and living uncoils across it: a Malphen ship that follows no pledge, grown huge on everything the collapse left behind.
 
@@ -132,3 +151,19 @@ The ships of your allies drop out of their jumps beside you.</text>
 		</choice>
 	</event>
 </events>
+
+<!-- Lines for the code:
+
+THE ALLIANCE END SCREEN, title "THE CONVOY":
+The way out is clear. One by one, the convoy's ships make the jump into the dark between galaxies: The Colony Ship
+first, then every people that pledged, each guarding the next.
+
+Nobody makes the crossing alone. That was the point.
+
+Behind them, the collapse reaches the rim. It will never reach where they are going.
+
+Map lines:
+"The convoy: {n} of {needed} peoples pledged ({names})."
+Per race, its space still there: "{race}: their nearest space lies {direction} of you."
+Per race, its space gone: "{race}: their space is gone. Look for their refugees and ships."
+Per race, pledged: "{race}: pledged to the convoy." -->
