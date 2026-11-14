@@ -9,7 +9,7 @@ extends RefCounted
 
 const KINDS := ["power", "wpower", "aim", "aim_beam", "aim_suit", "untarget", "autofire", "move", "door", "doors",
 		"stations", "save_posts", "board", "recall", "suit", "cloak", "pause",
-		"hack", "pulse", "mind", "battery", "eva", "eva_home"]
+		"hack", "pulse", "mind", "battery", "eva", "eva_home", "jump_out"]
 
 
 # --- Naming things ------------------------------------------------------------------------------------------
@@ -180,6 +180,9 @@ static func apply(battle: BattleScreen, order: Dictionary) -> String:
 		"battery":
 			if ship == null or not encounter.use_battery(ship):
 				return "The Backup Battery isn't ready."
+		"jump_out":
+			if ship == null or not encounter.jump_out(ship):
+				return "That ship can't jump out yet."
 		"pulse":
 			if ship == null or not encounter.pulse_hack(ship):
 				return "Hacking isn't ready."

@@ -493,6 +493,9 @@ func _on_fight_over(outcome: String, finished: Encounter) -> void:
 		"surrendered":
 			window.add_title("THEY SURRENDER", UiColours.POWER_GREEN)
 			window.add_text("They power down and pay to be let go." if finished.surrender_pays else "They are gone, and what you demanded is in your hold.", 20)
+		"withdrew":
+			window.add_title("YOUR SHIPS GOT CLEAR", UiColours.WARNING)
+			window.add_text("Every ship still in the fight is lost. The ones that jumped out regroup once the enemy has moved on. There is nothing left here to salvage.", 20)
 		"enemy_fled":
 			window.add_title("THEY GOT AWAY", UiColours.WARNING)
 			window.add_text("The enemy's Jigawatt Drive flares and they're gone. There is nothing left here to salvage.", 20)

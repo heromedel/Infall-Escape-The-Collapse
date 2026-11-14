@@ -219,7 +219,7 @@ func step() -> void:
 	_remove_the_dead()
 	for ship in ships:
 		ship.tick(fighting, rng)
-		if not ship.destroyed:
+		if not ship.destroyed and not ship.escaped:
 			_tick_weapons(ship, fighting)
 	if fighting and tick_count % 10 == 0:
 		for ship in ai:
@@ -267,6 +267,13 @@ func _check_outcome() -> void:
 	if not outcome.is_empty():
 		return
 	if living(0).all(func(ship: Ship): return ship.is_mercenary()):
+		# Ships of the squad's own that jumped out of the fight keep the run alive (GV 3N)
+		if fight_started and ships.any(func(ship: Ship): return ship.side == 0 and ship.escaped and not ship.destroyed and not ship.crew_dead and not ship.is_mercenary()):
+			outcome = "withdrew"
+			_bring_boarders_home()
+			bring_back_jumped_out()
+			note("fight_over", {"outcome": outcome})
+			return
 		outcome = "lost"   # mercenaries fly with the squad but don't keep a run alive (GDD 7G)
 		note("squad_lost")
 		return
@@ -290,12 +297,48 @@ func _check_outcome() -> void:
 		else:
 			outcome = "enemy_fled"
 		_bring_boarders_home()
+		bring_back_jumped_out()
 		note("fight_over", {"outcome": outcome})
+
+
+# --- One ship jumping out of the fight (GV 3N; heromedel, 2026-11-14) ------------------------------------------
+
+## Whether a ship of the squad can jump out of the fight on its own: its own drive charged, the Mawjig for a jump,
+## and another ship still fighting (the last ship out is the squad leaving, by the map).
+func can_jump_out(ship: Ship) -> bool:
+	if ship == null or ship.side != 0 or ship.is_gone() or not in_fight() or not ship.jump_ready():
+		return false
+	if wallet != null and wallet.mawjig < Mawjig.JUMP_COST:
+		return false
+	return living(0).size() > 1
+
+
+## The ship jumps clear of the fight. It waits there and rejoins when the fight ends; its crew aboard other ships
+## stay where they are.
+func jump_out(ship: Ship) -> bool:
+	if not can_jump_out(ship):
+		return false
+	if wallet != null:
+		wallet.spend(Mawjig.JUMP_COST)
+	ship.escaped = true
+	ship.jump_charge = 0.0
+	for slot in ship.weapons:
+		slot.clear_target()
+	note("jumped_out", {"ship": ship})
+	return true
+
+
+## The ships that jumped out rejoin the squad: the fight is over, or the squad is leaving.
+func bring_back_jumped_out() -> void:
+	for ship in ships:
+		if ship.side == 0 and ship.escaped:
+			ship.escaped = false
 
 
 ## When the squad jumps away, crew aboard other ships or out in battlesuits are left behind and lost, as in the
 ## genre.
 func leave_behind_away_crew() -> void:
+	bring_back_jumped_out()
 	for ship in living(0):
 		for member in ship.crew:
 			# Crew aboard a squad-mate's ship jump with the squad; those aboard an enemy or outside in a suit are lost

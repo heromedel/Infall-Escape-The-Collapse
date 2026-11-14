@@ -283,9 +283,11 @@ func _show_note(note: Dictionary) -> void:
 			paused = true
 			paused_by = 0
 			surrender_offered.emit(ship)
-		"enemy_escaped":
+		"enemy_escaped", "jumped_out":
 			effects.sparkle(ship.world_position, Color(0.8, 0.9, 1.0))
 			_sound("jump")
+			if note.kind == "jumped_out":
+				flash_message("The %s jumps clear of the fight." % ship.name)
 		"no_mawjig":
 			flash_message("Not enough Mawjig to fire.")
 		"fight_over":

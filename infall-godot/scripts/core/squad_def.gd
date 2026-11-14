@@ -14,6 +14,7 @@ var escape_chance: int = 0
 var escape_hull: float = 0.25
 var leave_after: float = 0.0      # seconds; its ships break off and jump away after this long (the rival)
 var breaks_off_at: float = 0.0    # and at once when their hull falls below this share
+var starts_at: float = 1.0        # the share of their hull its ships start a fight with (the rival comes scarred)
 var augment: String = ""          # the name of what lets them do it, shown on their ships (Jig Drive MC-Flywheel)
 var reinforcements: Array[String] = []   # designs that jump in, one by one, to replace its ships as they are lost
 var targets: PackedStringArray = []   # systems the squad prefers to aim at, in order
@@ -50,6 +51,7 @@ static func from_xml(node: XmlTree) -> SquadDef:
 		def.leave_after = conduct.get_float("leave_after", 0.0)
 		def.breaks_off_at = conduct.get_float("breaks_off_at", 0.0)
 		def.augment = conduct.get_attr("augment", "")
+		def.starts_at = conduct.get_float("starts_at", 1.0)
 		def.targets = conduct.get_attr("targets", "").split(",", false)
 		def.hail = conduct.get_attr("hail", "hostile")
 	var description_node := node.first("description")

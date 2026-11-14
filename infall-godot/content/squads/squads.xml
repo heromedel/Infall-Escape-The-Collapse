@@ -105,16 +105,17 @@
 	</squad>
 	<!-- The rival (heromedel, 2026-11-14): Commodore Marlowe's Long Odds, the Last Fleet's lead ship, meets a squad
 	     that is collecting the pieces alone in each of the last two bands. It carries a Jig Drive MC-Flywheel (Mawjig-Charged): the
-	     moment its hull falls below 25% it jumps away. With every piece of tech aboard, it ambushes the squad at
+	     moment its hull falls below 25% it jumps away. It comes to those meetings already scarred, at 70% of its hull. With every piece of tech aboard, it ambushes the squad at
 	     the rim with what is left of its squad, its MC-Flywheel spent, and its first two losses are replaced. -->
 	<squad id="rival-hunt" name="The Long Odds" race="terran" faction="pirate" where_races="none">
 		<tier bands="1-8"><ship design="rival-flagship" count="1"/></tier>
-		<conduct surrender_chance="0" escape_chance="0" breaks_off_at="0.25" augment="Jig Drive MC-Flywheel" targets="weapons,shields,piloting" hail="rival"/>
+		<conduct surrender_chance="0" escape_chance="0" breaks_off_at="0.25" starts_at="0.7" augment="Jig Drive MC-Flywheel" targets="weapons,shields,piloting" hail="rival"/>
 		<description>Commodore Marlowe, come to learn how you mean to leave the galaxy.</description>
 	</squad>
 	<squad id="final-rival-tech" name="The Last Fleet" race="terran" faction="pirate" where_races="none">
 		<tier bands="1-8"><ship design="rival-flagship" count="1"/><ship design="patrol-cutter.checkpoint" count="1"/></tier>
-		<reinforce design="mercenary-gunship.desperate" count="2"/>
+		<reinforce design="mercenary-gunship.desperate" count="1"/>
+		<reinforce design="mercenary-gunship" count="1"/>
 		<conduct surrender_chance="0" escape_chance="0" targets="weapons,shields,piloting" hail="rival"/>
 		<description>Marlowe's last stand at the rim: every desperate ship that still answered his call.</description>
 	</squad>

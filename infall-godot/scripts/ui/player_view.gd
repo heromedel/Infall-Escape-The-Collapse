@@ -718,6 +718,12 @@ func recall_eva() -> void:
 		_give({"k": "eva_home", "s": _index(selected_ship)})
 
 
+## The selected ship jumps out of the fight on its own (GV 3N).
+func jump_out() -> void:
+	if selected_ship and encounter.can_jump_out(selected_ship):
+		_give({"k": "jump_out", "s": _index(selected_ship)})
+
+
 func use_battery() -> void:
 	if selected_ship:
 		_give({"k": "battery", "s": _index(selected_ship)})

@@ -83,6 +83,7 @@ func _summary(reports: Array) -> void:
 	var counts := held.keys()
 	counts.sort()
 	print("Tech victories %d. Pieces held at the end: %s. Pieces came by: %s. Meetings with the rival: %d." % [tech_wins, ", ".join(counts.map(func(n): return "%d pieces in %d runs" % [n, held[n]])), str(how), reports.reduce(func(sum: int, r): return sum + int(r.rival), 0)])
+	print("Runs that ended without a race's piece: %s" % str(_missing))
 	var band_line := PackedStringArray()
 	for band in range(1, 9):
 		band_line.append("band %d: %d" % [band, bands.get(band, 0)])
@@ -200,12 +201,21 @@ func _close(report: Dictionary, run: RunState) -> Dictionary:
 	report.ships = run.living_ships().size()
 	report.mawjig = run.mawjig
 	report.tech = run.tech.size()
+	for race in run.missing_tech():
+		_missing[race] = int(_missing.get(race, 0)) + 1
 	report.tech_how = _tech_how.duplicate()
 	_tech_how.clear()
 	return report
 
 
+var _missing := {}       # race -> runs that ended without its piece
 var _tech_how := {}      # how this run's pieces came: event, bought, taken, surrender
+
+
+## What a player going for the Tech victory keeps back when paying for a dear piece: plenty while there is a run
+## still to fly, only the jumps to the rim in the last two bands, where Mawjig is good for nothing else.
+func _tech_spare(run: RunState) -> int:
+	return TECH_SPARE if run.band() < run.galaxy.bands - 1 else Mawjig.JUMP_COST * 6
 
 
 func _count_tech(run: RunState, before: int, way: String) -> void:
@@ -315,7 +325,7 @@ func _choice_value(runner: EventRunner, choice: Dictionary) -> float:
 	if runner.is_blue(choice):
 		value += 150.0
 	# Going for the Tech victory a player still keeps the squad fed: a dear piece waits until there is Mawjig to spare
-	if goal == "tech" and value > 5000.0 and runner.most_given_away(choice) > 1000 and run.mawjig - runner.most_given_away(choice) < TECH_SPARE:
+	if goal == "tech" and value > 5000.0 and runner.most_given_away(choice) > 1000 and run.mawjig - runner.most_given_away(choice) < _tech_spare(run):
 		value -= 9000.0
 	if run.mawjig + minf(0.0, value) < Mawjig.JUMP_COST * 3:
 		value -= 5000.0     # never pay down to where the squad can't jump
@@ -377,6 +387,11 @@ func _fight(run: RunState, runner: EventRunner, squad: SquadDef) -> String:
 					captains[ship].think()
 			if _losing(encounter) and encounter.can_squad_jump() and run.mawjig >= Mawjig.JUMP_COST:
 				return _leave(run, encounter, "fled")
+			# A ship about to be lost jumps out on its own when its drive is ready (GV 3N); the careless player never does
+			if float(player.flee_below) > 0.0:
+				for ship in encounter.living(0):
+					if float(ship.hull) / ship.max_hull < float(player.flee_below) * 0.7 and encounter.can_jump_out(ship):
+						encounter.jump_out(ship)
 		for note in encounter.notes:
 			if note.kind == "surrender_offer":
 				# A losing Malphen ship gives up its growth organ to a squad that lacks it, in place of Mawjig
@@ -393,7 +408,7 @@ func _fight(run: RunState, runner: EventRunner, squad: SquadDef) -> String:
 		ticks += 1
 	if encounter.outcome.is_empty():
 		return _leave(run, encounter, "stalemate")
-	return encounter.outcome
+	return "fled" if encounter.outcome == "withdrew" else encounter.outcome
 
 
 ## The enemy ship the whole squad shoots. The watcher takes the one that looks weakest; the expert the one that
@@ -460,7 +475,7 @@ func _shop(run: RunState) -> void:
 		Refit.apply(run, {"op": "repair", "points": points})
 	# Going for the Tech victory: the piece this store sells
 	var piece := RimTech.sold_at(run.cluster())
-	if goal == "tech" and piece != "" and not run.has_tech(piece) and run.mawjig - RimTech.price(piece, run.band()) >= maxi(reserve, TECH_SPARE):
+	if goal == "tech" and piece != "" and not run.has_tech(piece) and run.mawjig - RimTech.price(piece, run.band()) >= maxi(reserve, _tech_spare(run)):
 		var pieces := run.tech.size()
 		Refit.apply(run, {"op": "buy_tech", "race": piece, "price": RimTech.price(piece, run.band())})
 		_count_tech(run, pieces, "bought")
@@ -654,7 +669,7 @@ func _toward_tech(run: RunState) -> int:
 				var site := String(there.get("tech_site", ""))
 				# A piece that is plainly bought (the GATOS core, the Mecha's deal) is worth the trip only with the Mawjig for it
 				var dear: bool = site in ["terran", "mecha"]
-				if missing.has(site) and (not dear or run.mawjig - RimTech.price(site, int(there.band)) >= TECH_SPARE):
+				if missing.has(site) and (not dear or run.mawjig - RimTech.price(site, int(there.band)) >= _tech_spare(run)):
 					return first_hop[link]
 				next.append(link)
 		frontier = next

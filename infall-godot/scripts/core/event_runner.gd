@@ -502,7 +502,7 @@ func build_enemy_ships(squad: SquadDef) -> Array[Ship]:
 		# Ships met farther out carry a little more hull than their file lists, as the genre scales by sector
 		var band_hull := 1.0 + 0.04 * (run.band() - 1)
 		ship.max_hull = maxi(3, int(round(ship.max_hull * difficulty_hull * band_hull)))
-		ship.hull = ship.max_hull
+		ship.hull = maxi(1, int(round(ship.max_hull * squad.starts_at)))
 		ships.append(ship)
 	return ships
 
