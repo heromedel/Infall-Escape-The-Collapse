@@ -5,6 +5,7 @@
 	<reactor type="pool" level="12"/>
 	<description>It holds its brood back, one, two, three, and then lets them all go at once.</description>
 	<system id="weapons" tile="1,-2" level="4" wall="north"/>
+	<system id="lymph-gland" tile="-2,1" level="2" wall="west"/>
 	<weapons>
 		<weapon id="brood-swarm" mount="3"/>
 		<weapon id="flesh-mortar" mount="4"/>

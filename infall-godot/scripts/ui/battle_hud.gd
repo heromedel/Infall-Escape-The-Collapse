@@ -915,7 +915,7 @@ func _system_buttons(ship: Ship, system: ShipSystem) -> Array:
 		"battery":
 			return [["bolt", func(): screen.use_battery(), "Switch on the Backup Battery: %d extra power for 30 s, then 20 s to recharge." % (2 * system.level), encounter.can_use_battery(ship), ship.battery_cooldown]]
 		"lymph_gland":
-			var tend := ["mend", func(): screen.start_tend(), "Tend one of this ship's rooms: click it. Repairs there go twice as fast and your crew in it are healed, to three quarters of their health (%s Mawjig)." % Mawjig.format(Encounter.HACK_COST), encounter.can_tend(ship), ship.lymph_cooldown]
+			var tend := ["mend", func(): screen.start_tend(), "Tend one of this ship's rooms: click it. Repairs there go twice as fast and your crew in it are healed, to three quarters of their health.", encounter.can_tend(ship), ship.lymph_cooldown]
 			if ship.system_by("hacking") != null:
 				return [tend]
 			if ship.hack_system == null:

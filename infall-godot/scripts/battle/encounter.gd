@@ -1247,7 +1247,7 @@ func pulse_hack(ship: Ship) -> bool:
 	return true
 
 
-## A Lymph Gland tends a room of its own ship (GDD 8S); it costs what a hacking pulse does.
+## A Lymph Gland tends a room of its own ship (GDD 8S).
 func can_tend(ship: Ship) -> bool:
 	var gland := ship.system_by("lymph_gland")
 	return gland != null and ship.system_power(gland) > 0 and ship.lymph_cooldown <= 0
@@ -1256,9 +1256,7 @@ func can_tend(ship: Ship) -> bool:
 func tend_room(ship: Ship, room_index: int) -> bool:
 	if not can_tend(ship) or room_index < 0 or room_index >= ship.rooms.size():
 		return false
-	if ship.side == 0 and wallet != null and not wallet.spend(HACK_COST):
-		return false
-	if not ship.tend_room(room_index):
+	if not ship.tend_room(room_index):       # tending its own rooms is free, like a Medbay (Infall: Eco, F19)
 		return false
 	note("room_tended", {"ship": ship, "room": room_index})
 	return true

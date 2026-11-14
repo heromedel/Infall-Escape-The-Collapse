@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Malphen "Tumour", lead of the Malphen Metastasis: the rogue Malphen squad of the Alliance victory's last fight
+     (docs/ideas.md; heromedel's "Malphen Cancer Growth"). Ai-Generated-Proposal (2026-11-14), Infall: Ship Designs.
+     A large living ship that wants to eat or infect a line of colony ships out of instinct. Malphen high tech (race
+     profile 10): swarm missiles, infection, flak; a Growth Organ (their clone bay, GDD 8S) and a Lymph Gland (GDD 8S)
+     beside it, so a jump heals everyone aboard. Ship names: growths, named by those who face them (Likely). -->
+<ship id="tumour" name="Malphen Tumour" class="Tumour" race="malphen" faction="malphen" style="malphen" center="Tile" hull="30" missiles="12">
+	<reactor type="pool" level="19"/>
+	<description>A swollen mass the size of a cruiser, still growing. It does not answer. It wants the colony ships.</description>
+	<room id="0" from="-1,-3" to="1,-2" name="Head"/>
+	<room id="1" from="-3,-1" to="-1,1" name="Left lobe"/>
+	<room id="2" from="0,-1" to="0,1" name="Core"/>
+	<room id="3" from="1,-1" to="3,1" name="Right lobe"/>
+	<room id="4" from="-1,2" to="1,3" name="Brood sac"/>
+	<system id="weapons" label="A" tile="-1,-3" level="3" wall="north"/>
+	<system id="piloting" tile="0,-3" level="1" wall="north"/>
+	<system id="weapons" label="B" tile="1,-3" level="2" wall="north"/>
+	<system id="shields" tile="-3,-1" level="6" wall="west"/>
+	<system id="growth-organ" tile="-3,1" level="2" wall="west"/>
+	<system id="lymph-gland" tile="-2,1" level="2" wall="south"/>
+	<system id="engines" tile="3,-1" level="3" wall="east"/>
+	<system id="life-support" tile="2,1" level="1" wall="south"/>
+	<door id="0" tile="0,-2" facing="south"/>
+	<door id="1" tile="0,0" facing="west"/>
+	<door id="2" tile="0,0" facing="east"/>
+	<door id="3" tile="0,1" facing="south"/>
+	<door id="4" tile="-3,0" facing="west" note="airlock"/>
+	<door id="5" tile="3,0" facing="east" note="airlock"/>
+	<mount id="1" tile="-2,-3" slide="up"/>
+	<mount id="2" tile="2,-3" slide="up"/>
+	<mount id="3" tile="-4,-1" slide="left"/>
+	<mount id="4" tile="4,-1" slide="right"/>
+	<mount id="5" tile="-2,3" slide="left"/>
+	<mount id="6" tile="2,3" slide="right"/>
+	<weapons>
+		<weapon id="brood-swarm" mount="1" system="A"/>
+		<weapon id="gristle-missile" mount="3" system="A"/>
+		<weapon id="bone-flak" mount="2" system="B"/>
+		<weapon id="flesh-mortar" mount="4" system="B"/>
+	</weapons>
+	<crew>
+		<member race="malphen" station="piloting"/>
+		<member race="malphen" station="weapons"/>
+		<member race="malphen" station="shields"/>
+		<member race="malphen" station="engines"/>
+		<member race="malphen"/>
+	</crew>
+	<!-- It wants to infect, not to destroy: flak pops shields for the missiles, infection goes into the guns, then the
+	     engines so nothing escapes; the gland disrupts their shields. -->
+	<ai plan="destroy">
+		<target system="shields" weapon="Bone Flak" weight="0.85"/>
+		<target system="shields" weapon="Brood Swarm" when="enemyHeavyShields" weight="0.85"/>
+		<target system="weapons" weapon="Gristle Missile" weight="0.85"/>
+		<target system="weapons" weapon="Brood Swarm" weight="0.8"/>
+		<target system="engines" weapon="Flesh Mortar" weight="0.75"/>
+		<hack system="shields" weight="0.8"/>
+	</ai>
+</ship>

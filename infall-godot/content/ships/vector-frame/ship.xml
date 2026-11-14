@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Mecha "Vector Frame", bands 7-8 and the rim: the ship that carries the Mawjig Vector Drive (docs/ideas.md, Vector Drive
+     victory, Proposed). Ai-Generated-Proposal (2026-11-14), Infall: Ship Designs. Mecha high tech (race profile 10): the
+     most hull of any race (a Hull Polarizer, GDD 8T), a heavy hull beam, two EVB-style threats, average shields.
+     The drive is its Engines. It shares the heart of the ship with the Shields, so a player who wants the shields down
+     must decide how hard to hit the room that holds the prize; the Servicing Core is next door so the Mecha can
+     mend it fast. Every system carries its own power (Mecha). -->
+<ship id="vector-frame" name="Mecha Vector Frame" class="Vector Frame" race="mecha" faction="mecha" style="mecha" center_x="Point" center_y="Tile" hull="30">
+	<reactor type="none" level="0"/>
+	<description>A huge black battle-cross with a folded star at its heart: the Mawjig Vector Drive. Break it and nobody leaves this galaxy on it.</description>
+	<room id="0" from="-1,-3" to="1,-2" name="Command deck"/>
+	<room id="1" from="-4,-2" to="-2,-1" name="Suit bay"/>
+	<room id="2" from="2,-2" to="4,-1" name="Weapon bay"/>
+	<room id="3" from="-1,-1" to="1,1" name="Drive room"/>
+	<room id="4" from="-3,0" to="-2,1" name="Core room"/>
+	<room id="5" from="2,0" to="3,1" name="Life support room"/>
+	<system id="piloting" tile="-1,-3" level="2" wall="north"/>
+	<system id="doors" tile="1,-3" level="2" wall="north"/>
+	<system id="evb-dock" tile="-4,-2" level="3" own_power="3" wall="west"/>
+	<system id="weapon-pod" label="A" tile="4,-2" level="5" own_power="4" wall="east"/>
+	<system id="weapon-pod" label="B" tile="3,-2" level="2" own_power="2" wall="north"/>
+	<system id="vector-drive" tile="-1,0" level="5" own_power="5" wall="west"/>
+	<system id="shields" tile="1,0" level="6" own_power="6" wall="east"/>
+	<system id="servicing-core" tile="-3,1" level="2" own_power="2" wall="none"/>
+	<system id="hull-polarizer" tile="-3,0" level="1" wall="west"/>
+	<system id="life-support" tile="3,1" level="1" own_power="1" wall="east"/>
+	<door id="0" tile="1,-2" facing="south"/>
+	<door id="1" tile="-1,-2" facing="west"/>
+	<door id="2" tile="1,-2" facing="east"/>
+	<door id="3" tile="-1,1" facing="west"/>
+	<door id="4" tile="1,1" facing="east"/>
+	<door id="5" tile="-4,-1" facing="west" note="airlock"/>
+	<door id="6" tile="4,-1" facing="east" note="airlock"/>
+	<mount id="1" tile="-2,-3" slide="up"/>
+	<mount id="2" tile="2,-3" slide="up"/>
+	<mount id="3" tile="-5,-2" slide="left"/>
+	<mount id="4" tile="5,-2" slide="right"/>
+	<mount id="5" tile="-4,1" slide="left"/>
+	<mount id="6" tile="4,1" slide="right"/>
+	<weapons>
+		<weapon id="hb-mr-hull-beam" mount="2" system="A"/>
+		<weapon id="hm-st-hull-missile" mount="4" system="A"/>
+		<weapon id="ts-st-light-laser" mount="1" system="B"/>
+	</weapons>
+	<suits>
+		<suit id="laser-battlesuit"/>
+	</suits>
+	<crew>
+		<member race="mecha" station="piloting"/>
+		<member race="mecha" station="weapons"/>
+		<member race="mecha" station="weapons"/>
+		<member race="mecha" station="evb_dock"/>
+		<member race="mecha" station="shields"/>
+		<member race="mecha" station="engines"/>
+	</crew>
+	<!-- It guts ships: the suit and the light laser pop the shields, the hull beam and missile gut the guns. -->
+	<ai plan="destroy">
+		<suit system="shields" suit="laser" weight="0.85"/>
+		<target system="shields" weapon="HM-ST Hull Missile" when="enemyHeavyShields" weight="0.85"/>
+		<target system="shields" weapon="TS-ST Light Laser" weight="0.8"/>
+		<target system="weapons" weapon="HB-MR Hull Beam" when="enemyShieldsDown" weight="0.85"/>
+		<target system="weapons" weapon="HM-ST Hull Missile" weight="0.8"/>
+		<target system="piloting" weapon="HB-MR Hull Beam" when="enemyWeaponsDown" weight="0.6"/>
+	</ai>
+</ship>

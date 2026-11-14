@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The Mawjig Vector Drive (docs/ideas.md, Vector Drive victory; Proposed, heromedel 2026-11-14): the drive the Mecha
+     built to fold space and leave the galaxy. It is the ship's Engines. Taken whole, it can be fitted to another ship,
+     or to The Colony Ship. Priced as a core system (Infall: Eco, finding F19). -->
+<system id="vector-drive" name="Mawjig Vector Drive" behaviour="engines" max_level="8" draws_power="yes" manned="yes" buy="36.31" upgrades="2.42,3.63,7.26,9.68,14.52,19.36,29.04" icon="engines" hotkey="S" order="20">
+	<description>A drive that folds space: the one way a single ship could leave this galaxy. It also serves as the ship's Engines.</description>
+	<level>5% evasion</level>
+	<level>10% evasion</level>
+	<level>15% evasion</level>
+	<level>20% evasion</level>
+	<level>25% evasion</level>
+	<level>28% evasion</level>
+	<level>31% evasion</level>
+	<level>35% evasion</level>
+</system>

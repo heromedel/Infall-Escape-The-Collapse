@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Malphen "Lesion", a smaller growth of the Malphen Metastasis (2-3 beside the Tumour), a patch of the Cyst (spawnling).
+     Ai-Generated-Proposal (2026-11-14). Stronger than a Broodmass: Brood Swarm and infection, two shield layers, and a
+     Lymph Gland at (-2,1) in the left lobe beside the Growth Organ (GDD 8S). -->
+<loadout id="metastasis" ship="spawnling" name="Malphen Lesion" class="Lesion" inherit="patch" hull="24" missiles="8">
+	<reactor type="pool" level="15"/>
+	<description>A growth broken off the Tumour, as hungry as the rest of it.</description>
+	<system id="shields" tile="-1,-2" level="4" wall="north"/>
+	<system id="weapons" tile="1,-2" level="4" wall="north"/>
+	<system id="engines" tile="2,1" level="2" wall="east"/>
+	<system id="growth-organ" tile="-2,0" level="2" wall="west"/>
+	<system id="lymph-gland" tile="-2,1" level="2" wall="west"/>
+	<weapons>
+		<weapon id="brood-swarm" mount="3"/>
+		<weapon id="gristle-missile" mount="4"/>
+		<weapon id="flesh-mortar" mount="1"/>
+	</weapons>
+	<crew>
+		<member race="malphen" count="4"/>
+	</crew>
+	<ai plan="destroy">
+		<target system="shields" weapon="Brood Swarm" when="enemyHeavyShields" weight="0.85"/>
+		<target system="weapons" weapon="Gristle Missile" weight="0.85"/>
+		<target system="weapons" weapon="Brood Swarm" weight="0.8"/>
+		<target system="engines" weapon="Flesh Mortar" weight="0.7"/>
+		<hack system="shields" weight="0.8"/>
+	</ai>
+</loadout>

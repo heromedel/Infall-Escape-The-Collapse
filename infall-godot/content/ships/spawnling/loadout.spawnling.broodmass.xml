@@ -5,6 +5,7 @@
 	<system id="weapons" tile="1,-2" level="4" wall="north"/>
 	<system id="growth-organ" tile="-2,0" level="3" wall="west"/>
 	<system id="engines" tile="2,1" level="2" wall="east"/>
+	<system id="lymph-gland" tile="-2,1" level="2" wall="west"/>
 	<weapons>
 		<weapon id="flesh-mortar" mount="3"/>
 		<weapon id="gristle-missile" mount="4"/>

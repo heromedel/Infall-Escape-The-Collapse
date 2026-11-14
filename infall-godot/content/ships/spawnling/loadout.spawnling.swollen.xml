@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <loadout id="swollen" ship="spawnling" name="Malphen Cyst" class="Swollen Cyst" inherit="patch" hull="14">
 	<system id="weapons" tile="1,-2" level="3" wall="north"/>
+	<system id="lymph-gland" tile="-2,1" level="1" wall="west"/>
 	<weapons>
 		<weapon id="gristle-missile" mount="3"/>
 		<weapon id="flesh-mortar" mount="4"/>

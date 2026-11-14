@@ -2,8 +2,9 @@
 <!-- The Malphen Lymph Gland (GDD 8S, Proposed, heromedel 2026-11-14). Against an enemy ship it works like Hacking.
      Aimed at a room of its own ship it boosts repair work there and heals allied crew in the room, to at most 75% of
      their health. On a jump, if the ship also has a Growth Organ, it heals all crew aboard a little, up to 100%.
-     Prices are Hacking's until Infall: Eco sets them; how long and how much are Ai-Generated-Proposals. -->
-<system id="lymph-gland" name="Lymph Gland" behaviour="lymph_gland" max_level="3" draws_power="yes" manned="no" buy="19.36" upgrades="8.47,12.11" icon="growth_organ" hotkey="N" order="46">
+     Prices: Infall: Eco, finding F19 (Hacking plus half a Medbay); a pulse against an enemy costs what Hacking's does
+     and tending its own rooms is free. How long and how much it heals are Ai-Generated-Proposals. -->
+<system id="lymph-gland" name="Lymph Gland" behaviour="lymph_gland" max_level="3" draws_power="yes" manned="no" buy="25.41" upgrades="12.71,19.97" icon="growth_organ" hotkey="N" order="46">
 	<description>A Malphen gland. Its secretions swell an enemy system shut for a while, or, in one of your own rooms, speed repairs and knit crew back to three quarters of their health. With a Growth Organ aboard it heals the whole crew a little on every jump.</description>
 	<level>Short swelling; slow knitting</level>
 	<level>Longer swelling; quicker knitting</level>
