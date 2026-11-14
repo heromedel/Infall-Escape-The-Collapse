@@ -25,6 +25,7 @@ const OPTIONS := {
 	"collapsed_cards_reopen": [true, [true, false], "Collapsed Cards Reopen on Change"],
 	"reopened_cards_fold_back": [true, [true, false], "Reopened Cards Fold Back"],
 	"low_mawjig_warning": [true, [true, false], "Low Mawjig Warning"],
+	"hints": [true, [true, false], "Hints in Early Fights"],
 	"gatos_species": ["Terrans", ["Terrans", "Tabbys"], "GATOS Species"],
 	"mouse_control": ["Left Selects, Right Orders", ["Left Selects, Right Orders", "Left Selects and Orders, Right Deselects"], "Mouse Control"],
 	"local_coop_view": ["Split", ["Split", "Shared"], "Local Co-op View"],
@@ -38,7 +39,7 @@ const OPTIONS := {
 
 ## The settings window's tabs (GV 14G), in order, and the settings on each.
 const TABS := {
-	"Game": ["run_length", "difficulty", "terran_conduits", "gatos_species", "low_mawjig_warning"],
+	"Game": ["run_length", "difficulty", "terran_conduits", "gatos_species", "low_mawjig_warning", "hints"],
 	"Battle": ["battlefield", "formation", "auto_pause", "auto_pause_seconds", "event_auto_pause", "screen_shake", "player_power_colour", "player_power_specific", "enemy_terran_colour"],
 	"Controls": ["mouse_control", "map_zoom"],
 	"HUD": ["hud_layout", "hud_card_opacity", "collapsed_cards_reopen", "reopened_cards_fold_back"],

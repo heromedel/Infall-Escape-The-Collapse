@@ -1114,6 +1114,8 @@ func _draw_overlays() -> void:
 			var by := screen.battle.paused_by
 			line = ("paused by %s · " % session.titled_name(by) if by > 0 else "") + ("press Space to resume" if screen.is_admiral() else "%s resumes" % session.titled_name(session.admiral))
 		UiKit.draw_text(self, Vector2(centre.x, 178), line, 17, UiColours.TEXT_DIM, null, HORIZONTAL_ALIGNMENT_CENTER, 0)
+	if screen.aim_mode == "" and _wants_a_hint():
+		_draw_notice("To attack: click a weapon at the bottom, then a room of the enemy ship. Space pauses.", size.y - 300, UiColours.TARGET_YELLOW)
 	if screen.aim_mode != "":
 		var hint: String = {"weapon": "Click a tile of an enemy ship to aim. Right click cancels.", "beam": "Press on an enemy tile and drag to aim the beam's sweep.", "teleport": "Click an enemy room to send boarders.", "suit": "Click an enemy ship to send the battlesuit.", "hack": "Click an enemy system to latch the probe onto it. Right click cancels.", "mind": "Click an enemy crew member you can see to take them over. Right click cancels."}.get(screen.aim_mode, "")
 		_draw_notice(hint, size.y - 300, UiColours.TARGET_YELLOW)
@@ -1133,6 +1135,17 @@ func _draw_overlays() -> void:
 
 
 ## A line of text on a dark plate, centred on the screen, so it reads over any ship or star.
+## A new player's first fights: nothing is aimed yet and the squad has never beaten a ship (GDD 2G, stage 1).
+func _wants_a_hint() -> bool:
+	if not Settings.get_value("hints", true) or screen.run == null or not screen.encounter.in_fight() or screen.run.stats.ships_destroyed > 0:
+		return false
+	for ship in screen.encounter.living(0):
+		for slot in ship.weapons:
+			if slot.has_target():
+				return false
+	return true
+
+
 func _draw_notice(text: String, baseline: float, colour: Color, alpha: float = 1.0) -> void:
 	var font := UiKit.font_bold()
 	var width := font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, 19).x

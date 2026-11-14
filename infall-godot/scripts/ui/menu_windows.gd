@@ -26,6 +26,7 @@ static func pause_menu(on_resume: Callable, on_settings: Callable, on_save_quit:
 	window.add_title("PAUSED")
 	window.add_button("Resume", func(): on_resume.call(); window.close())
 	window.add_button("Settings", func(): on_settings.call())
+	window.add_button("How to play", func(): window.get_parent().add_child(how_to_play()))
 	window.add_button("Open the logs folder", func(): on_logs.call())
 	window.add_button(leave_text, func(): on_save_quit.call(); window.close())
 	window.add_button("Save and quit the game", func(): on_quit.call())
@@ -33,6 +34,31 @@ static func pause_menu(on_resume: Callable, on_settings: Callable, on_save_quit:
 
 
 ## The settings, in tabs (GV 14G). Each setting lists its default first.
+## The essentials on one page, for the title screen and the pause menu.
+const HOW_TO_PLAY := [
+	["The goal", "Jump from cluster to cluster toward the rim of the galaxy, ahead of the collapse, and beat whoever is waiting at the way out. The run is lost when every scout ship is gone."],
+	["Mawjig", "Fuel, ammunition and money in one. A jump costs 1.21, every shot a little, and stores take it for repairs, weapons, crew and ships. Won fights and events pay it."],
+	["Pause", "Space. Give orders while paused."],
+	["Attack", "Click a weapon (or press 1 to 6), then click a room of an enemy ship. It fires when charged. V or AUTOFIRE keeps weapons firing."],
+	["Power", "Click a system's bars to give it power, right click to take it away. Or use the key in its tooltip, with Shift to take away."],
+	["Crew", "Click a crew member or drag a box, then right click a room to send them. They man the console, repair, put out fires and fight boarders there. TO STATIONS (Enter) sends everyone back."],
+	["A system's buttons", "Small buttons above a system use it: open or close the doors, send or recall boarders, cloak, hack, mind control, the battery."],
+	["Look around", "Mouse wheel zooms, middle drag or the arrow keys pan, Home shows the whole fight, Tab picks your next ship."],
+	["Jump and shop", "J or JUMP opens the map: click a cluster joined to yours, then jump. U or SHIP upgrades your ships. A cluster with a store shows a STORE button."],
+	["Leaving a fight", "When the Jigawatt Drive is charged you can jump away from a fight you are losing."],
+]
+
+
+static func how_to_play() -> Overlay:
+	var window := Overlay.new()
+	window.place_panel(980)
+	window.add_title("HOW TO PLAY")
+	for entry in HOW_TO_PLAY:
+		window.add_text("[b]%s.[/b]  %s" % entry, 17)
+	window.add_button("Close", window.close)
+	return window
+
+
 static func settings(tab: String = "Game") -> Overlay:
 	var window := Overlay.new()
 	window.place_panel(820)

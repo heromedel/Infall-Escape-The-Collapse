@@ -25,7 +25,7 @@ func _ready() -> void:
 	var menu := VBoxContainer.new()
 	menu.add_theme_constant_override("separation", 12)
 	menu.set_anchors_and_offsets_preset(Control.PRESET_CENTER_LEFT)
-	menu.position = Vector2(140, -40)
+	menu.position = Vector2(140, -170)
 	add_child(menu)
 	var title := UiKit.title_label("INFALL", 110, Color("#eef3ff"))
 	menu.add_child(title)
@@ -39,6 +39,7 @@ func _ready() -> void:
 	menu.add_child(UiKit.button("NEW RUN", func(): new_run_pressed.emit(), 340))
 	menu.add_child(UiKit.button("PLAYERS AND LAN", func(): players_pressed.emit(), 340))
 	menu.add_child(UiKit.button("SETTINGS", func(): settings_pressed.emit(), 340))
+	menu.add_child(UiKit.button("HOW TO PLAY", func(): add_child(MenuWindows.how_to_play()), 340))
 	menu.add_child(UiKit.button("QUIT", func(): quit_pressed.emit(), 340))
 	for child in menu.get_children():
 		if child is Button:

@@ -77,10 +77,11 @@
 	</squad>
 	<squad id="malphen-growth" name="Malphen Growth" race="malphen" faction="malphen" where_races="malphen,any" where_states="Abandoned,Doing Fine,Struggling,Doomed,Unclaimed">
 		<tier bands="1"><ship design="polyp" count="1"/><ship design="polyp.flak" count="1"/></tier>
-		<tier bands="2"><ship design="polyp" count="2"/><ship design="polyp.flak" count="0-1"/></tier>
+		<tier bands="2"><ship design="polyp" count="2"/></tier>
 		<tier bands="3"><ship design="spawnling" count="1"/></tier>
 		<tier bands="4"><ship design="spawnling.swollen" count="1"/></tier>
-		<tier bands="5-6"><ship design="spawnling.broodmass" count="1"/></tier>
+		<tier bands="5"><ship design="spawnling.swollen" count="1"/><ship design="spawnling" count="0-1"/></tier>
+		<tier bands="6"><ship design="spawnling.broodmass" count="1"/></tier>
 		<tier bands="7-8"><ship design="spawnling.broodmass" count="1"/><ship design="spawnling" count="1-2"/></tier>
 		<conduct surrender_chance="30" surrender_hull="0.3" escape_chance="25" escape_hull="0.2" targets="shields,engines" hail="malphen"/>
 		<description>Living ships that infect what they hit. When beaten they jettison matter and flee.</description>
