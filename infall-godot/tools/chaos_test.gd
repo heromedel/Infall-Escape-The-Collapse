@@ -879,11 +879,11 @@ func _probe_jump_right_after_win() -> void:
 		return
 	var fight: Encounter = main.encounter
 	main.battle.paused = false
+	var before: int = main.run.mawjig     # before the win: the reward is paid the moment the fight ends
 	main.console._run("win")
 	await _frames(3)
 	if fight.outcome != "won":
 		return
-	var before: int = main.run.mawjig
 	var jumps: int = main.run.jumps
 	if main.run.mawjig < Mawjig.JUMP_COST:
 		main.console._run("mawjig 2")   # the map only offers a jump the squad can pay for

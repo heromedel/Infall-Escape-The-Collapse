@@ -50,6 +50,23 @@ by Infall: Lori.
    that refused or were never asked. With all seven pledged, it is a rogue Malphen ship (heromedel).
 8. **A broken pledge.** A pledge is lost if the squad destroys that race's ships after it was given.
 
+**Infall: Lori's check (2026-11-14), against the lore and the race profiles, by point:**
+
+1. A race must also be winnable outside its own space, since its space may be swallowed: at its refugee convoys,
+   its stations and its ships elsewhere, and at its stores as well as in events.
+2. Not every race is easiest when doomed. The GATOS run the other way: doing well or struggling they come
+   together easily, doomed they turn on outsiders and refuse. Doomed Senti pledge data only. The Lykario pledge to
+   hunt for the convoy, not to ride in it; doomed is still their easiest state. The Mecha never join for passage
+   alone. The Azurethea and Tentauri fit the point as written.
+3. The GATOS doing fine or struggling ask "show us who else has joined". No race takes the Malphen in: a Malphen
+   pledge is best read as letting the convoy pass, or following at a distance. Open for heromedel: whether
+   pledging the Malphen should cost the Azurethea or Tentauri some goodwill.
+4. The Azurethea offer is breathable air for the other race's refugees, not a Medbay. The GATOS pair with the AZC,
+   the Lykario with Cloaking or the Crew Teleporter, the Mecha with the Cybernetic Servicing Core or the EVB Dock.
+   A blue choice should come only from a race on decent terms with the one being asked: a Lykario vouching to the
+   Azurethea should not help.
+8. Only for attacking that race's own ships first: not for defending against its pirates, raiders or mercenaries.
+
 ### ??? victory, alternate version (2026-10-21)
 
 Getting powerful enough to survive inside the collapse requires getting nearly to the rim, then becoming powerful

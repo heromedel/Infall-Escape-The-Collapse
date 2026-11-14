@@ -266,7 +266,9 @@ func _check_crews() -> void:
 func _check_outcome() -> void:
 	if not outcome.is_empty():
 		return
-	if living(0).all(func(ship: Ship): return ship.is_mercenary()):
+	# A fight won the same moment the last ship jumps clear is won
+	var beaten := fight_started and living(1).is_empty() and reinforcements.is_empty() and _replacing == null and enemy_ships().any(func(ship: Ship): return ship.destroyed or ship.crew_dead)
+	if living(0).all(func(ship: Ship): return ship.is_mercenary()) and not (beaten and not jumped_out().is_empty()):
 		# Ships of the squad's own that jumped out of the fight keep the run alive (GV 3N)
 		if fight_started and jumped_out().any(func(ship: Ship): return not ship.is_mercenary()):
 			outcome = "withdrew"
