@@ -279,6 +279,10 @@ anything Claude added tagged Ai-Generated-Proposal.
   hold is fitted to a ship here. Moving a power core, Life Support, Piloting or Engines asks first, in Infall: Lori's words.
   The yard also buys a ship (Infall: Eco, finding F17: half of what a store asks for the design, less damage);
   its crew move to the other ships where there is room. Crew already move between ships on the ship screen.
+- **G — Built (2026-11-14), heromedel:** a yard also moves a system to another tile or room of the same ship (GDD
+  5N). A store can sell a further Weapons system: it starts at level 1 with its own row of slots and letter, and
+  costs 1.21 more to install for each weapon system the ship already has (GDD 8M; Infall: Eco, finding F10). The
+  Mecha's piece is the Hull Polarizer (GDD 8T).
 - **F — Built (2026-11-14), GDD 8R (heromedel):** the EVA Dock has a third button: crew of the ship who crossed to
   a squad-mate stay there and join its crew.
 

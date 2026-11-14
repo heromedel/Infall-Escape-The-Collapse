@@ -4,7 +4,7 @@ extends RefCounted
 ## The store and the ship screen give these orders; every machine plays them here, so the run stays the same
 ## everywhere. Ships are named by their place in the squad, crew by their place in their ship's crew.
 
-const INSTALLABLE := ["medbay", "doors", "sensors", "crew-teleporter", "cloaking", "supershield", "evb-dock", "shields", "life-support", "hacking", "mind-control", "backup-battery", "eva-dock"]
+const INSTALLABLE := ["medbay", "doors", "sensors", "crew-teleporter", "cloaking", "supershield", "evb-dock", "shields", "life-support", "hacking", "mind-control", "backup-battery", "eva-dock", "weapons"]
 const RACE_OWN := {"senti": {"hacking": "intrusion-array", "shields": "shield-projector", "medbay": "aaa"}, "azurethea": {"mind-control": "pheromone-gland"}}   # a race's own make of a system
 
 
@@ -49,6 +49,8 @@ static func apply(run: RunState, order: Dictionary) -> void:
 				ensure_stock(run)
 				var installed := ShipOutfitter.install_system(ship, def, int(order.room))
 				installed.make = run.cluster().race if run.cluster().race != "" else "terran"     # the store's own make
+				if def.behaviour == "weapons":
+					label_weapon_systems(ship)
 				run.cluster().store_stock.sold.append("system:" + def.id)
 				run.log_book.write("installed", {"system": def.id, "room": order.room}, "Installed %s on the %s." % [def.name, ship.name])
 		"buy_ship":
@@ -130,6 +132,34 @@ static func _member(ship: Ship, order: Dictionary) -> CrewMember:
 	return ship.crew[index] if ship and index >= 0 and index < ship.crew.size() else null
 
 
+# --- A further weapon system (GDD 8M; Infall: Eco, finding F10) -------------------------------------------------
+
+const WEAPON_SYSTEM_STEP := 121      # each further weapon system costs a jump's Mawjig more to install than the one before
+
+## What a store asks to install one more weapon system on a ship: 4.84 for a first, 1.21 more for each it has.
+static func weapon_system_price(ship: Ship, scale: float) -> int:
+	var def := Library.system("weapons")
+	return Mawjig.amount((def.buy_price + WEAPON_SYSTEM_STEP * ship.weapon_systems().size()) * scale / 100.0)
+
+
+## Weapon systems on one ship are told apart by a letter (GDD 8L): A, B, C, in the order they were fitted.
+static func label_weapon_systems(ship: Ship) -> void:
+	var taken := {}
+	for system in ship.weapon_systems():
+		if system.label != "":
+			taken[system.label] = true
+	if ship.weapon_systems().size() < 2:
+		return
+	for system in ship.weapon_systems():
+		if system.label == "":
+			for letter in ["A", "B", "C", "D", "E", "F"]:
+				if not taken.has(letter):
+					system.label = letter
+					taken[letter] = true
+					break
+	ship.group_weapons()
+
+
 # --- The refit yard (GV 5E; heromedel, 2026-11-14) --------------------------------------------------------------
 # Some stores can move a system from one of the squad's ships to another, for a quarter of its value, and buy a ship.
 
@@ -163,13 +193,15 @@ static func move_price(ship: Ship, system: ShipSystem) -> int:
 
 ## Why a system can't go from one ship to another at all, or "" when some room of the other ship may take it.
 static func move_refusal_between(run: RunState, from: Ship, system: ShipSystem, to: Ship) -> String:
-	if from == to:
-		return "It is already on that ship."
 	if from.is_mercenary() or to.is_mercenary():
 		return "A mercenary's ship isn't yours to refit."
 	if system.behaviour in ["weapons", "weapon_pod"] and not from.weapons_on(system).is_empty():
 		return "Move its weapons to the hold first."
-	var theirs := to.system_by(system.behaviour)
+	if from == to:      # to another tile or room of the same ship (GDD 5N)
+		if ShipOutfitter.room_for_new_system(to, system.def) < 0:
+			return "The %s has no other tile that can take it." % to.name
+		return "" if run.mawjig >= move_price(from, system) else "Not enough Mawjig."
+	var theirs := traded_for(system, to)
 	if theirs != null:
 		return ""       # a ship that has that kind of system trades its own for this one
 	if system.behaviour == "power_core":
@@ -183,7 +215,7 @@ static func move_refusal_between(run: RunState, from: Ship, system: ShipSystem, 
 
 static func move_refusal(run: RunState, from: Ship, system: ShipSystem, to: Ship, room: int) -> String:
 	var why := move_refusal_between(run, from, system, to)
-	if not why.is_empty() or to.system_by(system.behaviour) != null:
+	if not why.is_empty() or traded_for(system, to) != null:
 		return why
 	return ShipOutfitter.install_refusal(to, system.def, room)
 
@@ -204,7 +236,7 @@ static func move_warning(from: Ship, system: ShipSystem) -> String:
 
 ## Moves a system to another ship: into a room, or, when that ship has a system of the same kind, in trade for it.
 static func move_system(from: Ship, system: ShipSystem, to: Ship, room: int) -> void:
-	var theirs := to.system_by(system.behaviour)
+	var theirs := traded_for(system, to)
 	if theirs != null:
 		ShipOutfitter.swap_systems(from, system, to, theirs)
 		if system.behaviour == "power_core":
@@ -221,6 +253,8 @@ static func move_system(from: Ship, system: ShipSystem, to: Ship, room: int) -> 
 
 ## Whether the move is a trade, and for what: the other ship's system of the same kind, or null.
 static func traded_for(system: ShipSystem, to: Ship) -> ShipSystem:
+	if to.systems.has(system) or system.behaviour == "weapons":
+		return null     # a move within one ship is no trade; and a ship may carry several weapon systems (GDD 8L)
 	return to.system_by(system.behaviour)
 
 

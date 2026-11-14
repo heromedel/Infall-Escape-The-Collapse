@@ -110,7 +110,7 @@ static func install_system(ship: Ship, def: SystemDef, room_index: int) -> ShipS
 	return system
 
 
-const REINFORCEMENT_HULL := 5      # the hull points a Mecha Hull Reinforcement adds to the ship it braces
+const POLARIZER_HULL := 5      # the hull points a Mecha Hull Polarizer adds to its ship (GDD 8T)
 
 ## Two ships trade systems of the same kind: each takes the other's tile.
 static func swap_systems(ship_a: Ship, system_a: ShipSystem, ship_b: Ship, system_b: ShipSystem) -> void:
@@ -143,9 +143,9 @@ static func place_system(ship: Ship, system: ShipSystem, room_index: int) -> voi
 	ship.rooms[room_index].systems.append(system)
 	if system.behaviour == "power_core":
 		ship.core_cell = cell
-	if system.behaviour == "hull_reinforcement":
-		ship.max_hull += REINFORCEMENT_HULL
-		ship.hull += REINFORCEMENT_HULL
+	if system.behaviour == "hull_polarizer":
+		ship.max_hull += POLARIZER_HULL
+		ship.hull += POLARIZER_HULL
 	_join_conduits(ship, room_index)
 
 
@@ -156,8 +156,8 @@ static func remove_system(ship: Ship, system: ShipSystem) -> void:
 		ship.rooms[system.room].systems.erase(system)
 	if system.manned_by:
 		system.manned_by = null
-	if system.behaviour == "hull_reinforcement":
-		ship.max_hull = maxi(1, ship.max_hull - REINFORCEMENT_HULL)
+	if system.behaviour == "hull_polarizer":
+		ship.max_hull = maxi(1, ship.max_hull - POLARIZER_HULL)
 		ship.hull = clampi(ship.hull, 1, ship.max_hull)
 
 

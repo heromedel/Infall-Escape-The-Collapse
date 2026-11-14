@@ -58,15 +58,14 @@ func rebuild() -> void:
 			var name := UiKit.label("%s  ·  %s %d" % [system.def.name + (" " + system.label if system.label != "" else ""), "power" if system.behaviour == "power_core" else "level", level], 16)
 			name.custom_minimum_size = Vector2(430, 0)
 			row.add_child(name)
-			var targets: Array[Ship] = run.own_ships().filter(func(other: Ship): return Refit.move_refusal_between(run, ship, system, other).is_empty())
+			var targets: Array[Ship] = run.own_ships().filter(func(other: Ship): return Refit.move_refusal_between(run, ship, system, other).is_empty())     # its own ship among them: another tile
 			var price := Refit.move_price(ship, system)
 			var move := UiKit.button("MOVE TO...  -%s" % Mawjig.format(price), func(): _choose_ship(ship, system), 210)
 			move.disabled = targets.is_empty()
 			if targets.is_empty():
 				var reasons: PackedStringArray = []
 				for other in run.own_ships():
-					if other != ship:
-						reasons.append(Refit.move_refusal_between(run, ship, system, other))
+					reasons.append(Refit.move_refusal_between(run, ship, system, other))
 				move.tooltip_text = "\n".join(reasons) if not reasons.is_empty() else "There is no other ship to move it to."
 			row.add_child(move)
 			if targets.is_empty():
@@ -81,13 +80,13 @@ func _choose_ship(from: Ship, system: ShipSystem) -> void:
 	get_parent().add_child(window)
 	window.place_panel(640)
 	window.add_title("MOVE THE %s" % system.def.name.to_upper())
-	window.add_text("From the %s, for %s Mawjig. To which ship?" % [from.name, Mawjig.format(Refit.move_price(from, system))], 18, UiColours.TEXT_DIM)
+	window.add_text("From the %s, for %s Mawjig. Where to?" % [from.name, Mawjig.format(Refit.move_price(from, system))], 18, UiColours.TEXT_DIM)
 	for other in run.own_ships():
-		if other == from:
-			continue
 		var why := Refit.move_refusal_between(run, from, system, other)
 		var theirs := Refit.traded_for(system, other)
 		var label := "To the %s." % other.name if theirs == null else "To the %s, in trade for its %s (level %d)." % [other.name, theirs.def.name, theirs.level]
+		if other == from:
+			label = "To another tile or room of the %s." % from.name
 		var button := window.add_button(label if why.is_empty() else "%s: %s" % [other.name, why], func():
 			window.close()
 			if theirs != null:
@@ -133,7 +132,7 @@ func _choose_room(from: Ship, system: ShipSystem, to: Ship) -> void:
 
 
 func _confirm_move(from: Ship, system: ShipSystem, to: Ship, room: int) -> void:
-	var warning := Refit.move_warning(from, system)
+	var warning := Refit.move_warning(from, system) if from != to else ""       # it stays aboard: nothing is lost
 	if warning.is_empty():
 		_send_move(from, system, to, room)
 		return

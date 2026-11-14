@@ -84,9 +84,16 @@ func _rebuild() -> void:
 		var price := Mawjig.amount(def.buy_price * _price_scale() / 100.0)
 		var has: ShipSystem = ship.system_by(def.behaviour)      # a ship has one system of a kind: one shield system, one hacking system
 		var owned := has != null
+		if def.behaviour == "weapons":       # but it may carry several weapon systems, each dearer to install than the last (GDD 8M)
+			owned = false
+			price = Refit.weapon_system_price(ship, _price_scale())
 		var sold: bool = stock.sold.has("system:" + system_id) or owned
 		var why := "" if not owned else ("\nAlready installed on the %s." % ship.name if has.def.id == system_id else "\nThe %s has %s in its place." % [ship.name, has.def.name])
-		right.add_child(_card(def.name, def.description + why, price, sold, func(): _buy_system(def, price), null, "INSTALLED" if owned else "SOLD"))
+		var title: String = def.name
+		if def.behaviour == "weapons":
+			title = "Another Weapons system" if not ship.weapon_systems().is_empty() else def.name
+			why = "\nThe %s has %d. A further one starts at level 1 with a row of slots of its own; each costs more to install than the last." % [ship.name, ship.weapon_systems().size()]
+		right.add_child(_card(title, def.description + why, price, sold, func(): _buy_system(def, price), null, "INSTALLED" if owned else "SOLD"))
 	if stock.ship != "" and not stock.sold.has("ship"):
 		var design := Library.ship(stock.ship)
 		if design:

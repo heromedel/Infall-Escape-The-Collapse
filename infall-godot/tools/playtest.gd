@@ -360,6 +360,12 @@ func _resolve(runner: EventRunner, event: EventDef) -> Dictionary:
 		var safe: Array = choices.filter(func(c): return runner.most_given_away(c) <= 0 or runner.run.mawjig - runner.most_given_away(c) >= keep)
 		if not safe.is_empty():
 			choices = safe
+	# A player who plays by what they see almost never pays an attacker off: only with the squad's hulls low
+	# (heromedel, 2026-11-14)
+	if skill == "watcher" and _squad_strength(runner.run) >= 0.5 and event.choices.any(func(c): return _can_fight(c)):
+		var unpaid: Array = choices.filter(func(c): return runner.most_given_away(c) <= 0)
+		if not unpaid.is_empty():
+			choices = unpaid
 	var choice: Dictionary = choices[runner.run.rng.randi_range(0, choices.size() - 1)]
 	match String(player.events):
 		"sees":
@@ -390,6 +396,14 @@ func _resolve(runner: EventRunner, event: EventDef) -> Dictionary:
 	var result := runner.resolve(choice, runner.crew_for_choice(choice))
 	_count_tech(runner.run, pieces, "event")
 	return result
+
+
+func _can_fight(choice: Dictionary) -> bool:
+	for outcome in choice.get("outcomes", []):
+		for effect in outcome.effects:
+			if String(effect.tag) == "fight":
+				return true
+	return false
 
 
 func _offers_a_ship(choice: Dictionary) -> bool:

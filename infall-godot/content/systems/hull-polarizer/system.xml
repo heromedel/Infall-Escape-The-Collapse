@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The Mecha Hull Polarizer (GDD 8T, Proposed, heromedel 2026-11-14): the Mecha's reinforcement of a hull and their
+     piece of the Tech victory; one per ship. Ai-Generated-Proposal, Infall: Godot Version: it draws no power, nobody
+     mans it, and the ship has 5 more hull points. The price is a core system's (Infall: Eco, finding F16). -->
+<system id="hull-polarizer" name="Hull Polarizer" behaviour="hull_polarizer" max_level="1" draws_power="no" manned="no" buy="36.31" upgrades="" icon="doors" hotkey="" order="70">
+	<description>Mecha plating that polarizes a hull against forces no other ship could take. The ship has 5 more hull points.</description>
+	<level>Polarized</level>
+</system>
