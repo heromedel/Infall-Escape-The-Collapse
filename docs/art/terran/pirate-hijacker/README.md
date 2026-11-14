@@ -66,6 +66,10 @@ Terran designs for a while (race profiles, Terrans 1, Likely). See `docs/art/REA
 
 ## Floor plans
 
+**Examples only (heromedel, 2026-11-14):** these floor plan drawings are examples, not floor art used in a game. No
+build loads them. A ship's real floor plan is data: the rooms, doors and systems in its XML layout (GDD 5G to 5K),
+which the game draws on its own when there is no art.
+
 **Redrawn 2026-11-13** to Ship Designs' layout of 2026-10-27 (`docs/ship-suggestions.md`, Terran Pirate Hijacker,
 step 8, and the Cutpurse and Pickpocket patches); the plans accepted on 2026-10-23 and 2026-10-26 are in git history.
 `floor-plans/floorplans.png` shows the three loadouts side by side.

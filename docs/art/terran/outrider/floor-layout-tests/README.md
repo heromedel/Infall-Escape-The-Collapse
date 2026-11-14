@@ -1,5 +1,9 @@
 # SC-1 Outrider floor layout tests
 
+**Examples only (heromedel, 2026-11-14):** these floor plan drawings are examples, not floor art used in a game. No
+build loads them. A ship's real floor plan is data: the rooms, doors and systems in its XML layout (GDD 5G to 5K),
+which the game draws on its own when there is no art.
+
 Mockups of the Outrider's floor plan: rooms, single-tile systems, doors, airlocks and the Terran conduit ring,
 drawn over the accepted hull (`../outrider-hull.svg`). Nothing here is decided. Every layout is an
 **Ai-Generated-Proposal** until heromedel reviews it.

@@ -59,6 +59,10 @@ every Terran ship is a rocket or a shuttle.
 
 ## Floor plans, weapons and loadouts (2026-10-25)
 
+**Examples only (heromedel, 2026-11-14):** these floor plan drawings are examples, not floor art used in a game. No
+build loads them. A ship's real floor plan is data: the rooms, doors and systems in its XML layout (GDD 5G to 5K),
+which the game draws on its own when there is no art.
+
 - **Floor plans** (`battle-cross/floor-plans/`, built by `tools/floor_bc.py`): a floor layer and a plan on the hull for
   each loadout, in the Mecha pixel style: a light deck so the dark crew read clearly, dark walls with a lit rim, steel
   door slabs, airlocks only in the floor plan (two, in the spare bay, never marked on the hull). Consoles are the

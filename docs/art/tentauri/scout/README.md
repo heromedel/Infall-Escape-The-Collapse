@@ -27,6 +27,10 @@ Terran. Prismatic mother-of-pearl colours, light from the upper left.
 
 ## Floor plan
 
+**Examples only (heromedel, 2026-11-14):** these floor plan drawings are examples, not floor art used in a game. No
+build loads them. A ship's real floor plan is data: the rooms, doors and systems in its XML layout (GDD 5G to 5K),
+which the game draws on its own when there is no art.
+
 `floor-plan/`: the floor layer on its own (`tentauri-scout-floor.*`) and the plan on the armed hull
 (`tentauri-scout-plan.*`). Biomechanical, so there are no conduits and no conduit layer.
 
