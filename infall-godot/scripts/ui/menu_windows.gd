@@ -47,7 +47,9 @@ const HOW_TO_PLAY := [
 	["A system's buttons", "Small buttons above a system use it: open or close the doors, send or recall boarders, cloak, hack, mind control, the battery."],
 	["Look around", "Mouse wheel zooms, middle drag or the arrow keys pan, Home shows the whole fight, Tab picks your next ship."],
 	["Jump and shop", "J or JUMP opens the map: click a cluster joined to yours, then jump. U or SHIP upgrades your ships. A cluster with a store shows a STORE button."],
-	["Leaving a fight", "When the Jigawatt Drive is charged you can jump away from a fight you are losing."],
+	["Leaving a fight", "Each ship jumps clear on its own once its drive is charged (JUMP OUT), and comes back if the fight is won. When the squad is clear, the map opens and the jump to another cluster costs the usual 1.21. JUMP with only some ships clear leaves the rest behind."],
+	["Refit yards", "Some stores have a yard: it moves a system from one of your ships to another for a quarter of its value, and buys ships."],
+	["The crossing", "Late in a run The Colony Ship asks you to find the best technology of the other races and fit it to one ship. The map then says what that ship still lacks and which way to look."],
 ]
 
 

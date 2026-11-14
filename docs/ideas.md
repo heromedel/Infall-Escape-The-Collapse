@@ -16,6 +16,40 @@ ship (GDD 1D) to escape.
 | Collection | Amass enough wealth and upgrades to prepare the colony ship to slingshot around the collapse, which distorts space and time and flings it to another galaxy. |
 | ??? (secret) | Fly into the collapse. Ships take significant damage or are destroyed. Once 3 beacons deep, escape becomes impossible, but they can meet a mysterious hostile alien race that seems to live in the collapse. About 8 or more jumps deep, they may find out this race is the cause of the collapse and destroy its command ship. Where the race comes from is probably never explained. The colony ship is not taken into the collapse. |
 
+### Alliance victory, first plan (2026-11-14)
+
+**Proposed (heromedel, 2026-11-14):** get enough races to agree to build a Colony Ship convoy, escorting each other on
+a long caravan journey through hyperspace. The squad still gets to the rim, though the final battle could be
+different: maybe a battle against the races who refused and were not included, or, if somehow all were, a rogue
+Malphen ship. Races are convinced through stations and events, especially as their home worlds are lost, and
+especially through blue text events. His example: a Senti crew member on a ship with a databank (the Armoured Avatar
+Array) could have a blue response to a certain group of events: "We have our data backed up. Give us yours, prepare a
+data ship of your own to follow our colony ship, and we can escort many races through hyperspace and still have
+their data if they die along the way." Which events can start an alliance, how and when, needs thought, then a check
+by Infall: Lori.
+
+**Ai-Generated-Proposal (2026-11-14), Infall: Godot Version**, a first plan to correct; none of it is agreed:
+
+1. **A pledge per race.** A race joins the convoy once, by an alliance event in its own space. The squad's own race
+   is pledged from the start: The Colony Ship is the convoy's first ship.
+2. **The collapse does half the persuading.** How a race answers depends on the state of the cluster it is asked in.
+   Doing Fine: it refuses, or names a high price. Struggling: a favour or a fair price. Doomed or Refugee: it
+   agrees for passage. So the squad looks for each race where it is losing its space.
+3. **Each race asks in its own way.** GATOS: a contract. Azurethea: their refugees carried or protected. Mecha: a
+   deal that profits them. Tentauri: a joint operation flown beside them. Senti: records traded for records.
+   Lykario: a fair hunt, won. Malphen: no words, only matter given to it.
+4. **Blue text from the races already aboard (heromedel's example).** A crew member of a race, with the system
+   that race is known for on the same ship, opens a blue choice in the other races' alliance events. Senti with an
+   Armoured Avatar Array: "we will keep your people's records". Tentauri with a Supershield: "we will fly beside
+   you". Mecha: "here is what you gain". Azurethea with a Medbay: they tend the other race's wounded. Lykario: they
+   vouch for the hunt. GATOS: a hired escort. Each ally makes the next one easier to win.
+5. **When.** The Colony Ship proposes the convoy once the collapse is known and the squad has met a second race;
+   pledges can be won from then on, so this victory is worked at through most of a run.
+6. **Enough.** Four races of the seven, the squad's own among them.
+7. **At the rim.** Each pledged race sends a ship that fights beside the squad. The enemy is a squad of the races
+   that refused or were never asked. With all seven pledged, it is a rogue Malphen ship (heromedel).
+8. **A broken pledge.** A pledge is lost if the squad destroys that race's ships after it was given.
+
 ### ??? victory, alternate version (2026-10-21)
 
 Getting powerful enough to survive inside the collapse requires getting nearly to the rim, then becoming powerful

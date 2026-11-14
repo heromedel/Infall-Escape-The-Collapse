@@ -99,12 +99,12 @@ func _summary(reports: Array) -> void:
 	names.sort_custom(func(a, b): return killers[a] > killers[b])
 	print("ended by  " + ", ".join(names.map(func(name): return "%s %d" % [name, killers[name]])))
 	print("waits for want of Mawjig: %d" % _starved)
-	print("\nband squad                 fights  lost  left  hull lost  shots  paid  shots/paid")
+	print("\nband squad                 fights  lost  left  hull lost  crew lost  shots  paid  shots/paid")
 	var keys := _fights.keys()
 	keys.sort()
 	for key in keys:
 		var row: Dictionary = _fights[key]
-		print("%-26s %6d %5d %5d %8.0f%% %6.2f %6.2f %8.0f%%" % [key, row.fights, row.lost, row.left, 100.0 * row.hull / row.fights, row.spent / 100.0 / row.fights, row.paid / 100.0 / row.fights, 100.0 * row.spent / maxf(1.0, row.paid)])
+		print("%-26s %6d %5d %5d %8.0f%% %9.2f %6.2f %6.2f %8.0f%%" % [key, row.fights, row.lost, row.left, 100.0 * row.hull / row.fights, float(row.crew) / row.fights, row.spent / 100.0 / row.fights, row.paid / 100.0 / row.fights, 100.0 * row.spent / maxf(1.0, row.paid)])
 
 
 func _play_one(seed_number: int, ship_id: String) -> Dictionary:
@@ -129,6 +129,7 @@ func _play_one(seed_number: int, ship_id: String) -> Dictionary:
 				var squad := runner.pick_squad(result.fight)
 				var band := run.band()
 				var hull_before := _hull(run)
+				var crew_before := _crew(run)
 				var mawjig_before := run.mawjig
 				if verbose and run.cluster().kind == "final":
 					for ship in run.living_ships():
@@ -146,7 +147,7 @@ func _play_one(seed_number: int, ship_id: String) -> Dictionary:
 						runner.trade_surrender_for_tech(rewards)
 						_count_tech(run, pieces, "surrender")
 					paid = run.mawjig - before_pay
-				_note_fight(band, squad.id, outcome, hull_before, _hull(run), spent, paid)
+				_note_fight(band, squad.id, outcome, hull_before, _hull(run), spent, paid, crew_before - _crew(run))
 				if verbose:
 					print("    jump %d band %d: %s vs %s, hulls %s, mawjig %s" % [run.jumps, run.band(), outcome, squad.id, str(run.squad.map(func(s): return "%d/%d" % [s.hull, s.max_hull])), Mawjig.format(run.mawjig)])
 				match outcome:
@@ -194,15 +195,25 @@ func _hull(run: RunState) -> Array:
 	return [left, whole]
 
 
-func _note_fight(band: int, squad_id: String, outcome: String, before: Array, after: Array, spent: int, paid: int) -> void:
+## The squad's living crew.
+func _crew(run: RunState) -> int:
+	var count := 0
+	for ship in run.squad:
+		if not ship.destroyed:
+			count += ship.living_crew_count()
+	return count
+
+
+func _note_fight(band: int, squad_id: String, outcome: String, before: Array, after: Array, spent: int, paid: int, crew_lost: int = 0) -> void:
 	var key := "%d %s" % [band, squad_id]
 	if not _fights.has(key):
-		_fights[key] = {"fights": 0, "lost": 0, "left": 0, "hull": 0.0, "spent": 0, "paid": 0}
+		_fights[key] = {"fights": 0, "lost": 0, "left": 0, "hull": 0.0, "spent": 0, "paid": 0, "crew": 0}
 	var row: Dictionary = _fights[key]
 	row.fights += 1
 	row.lost += 1 if outcome == "lost" else 0
 	row.left += 1 if outcome in ["fled", "stalemate"] else 0
 	row.hull += float(before[0] - after[0]) / maxf(1.0, float(before[1]))
+	row.crew += maxi(0, crew_lost)
 	row.spent += spent
 	row.paid += paid
 

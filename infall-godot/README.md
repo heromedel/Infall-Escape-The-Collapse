@@ -122,6 +122,21 @@ How it was tested and what the playtesters found is in `docs/handoffs/build-repo
 - `Beams vs Shields: Penetrate (Classic) > Hit (Damages Shields First)` (GDD 8Q), and the Doors subsystem's two
   buttons, doors and airlocks, each flipping between open and close.
 
+- **Captains weigh the fight** (GV 3L): damage coming in against damage going out and both hulls, to change
+  tactics, surrender or run; a change is held for 15 s.
+- **The galaxy changes after every jump** (GV 2E): refugees move, borders are at war, fronts shift.
+- **Seven more enemy ships from Infall: Ship Designs:** the Quiet Ledger and Final Archive, the Howler, Hawkmoth,
+  Breacher, Sellsword and Spear Grass, each beside the ship its squad already fields in those bands.
+- **The Tech victory and its rival** (GV 2F): the best technology of the other races, fitted to one ship. The search
+  starts two bands from the rim; the map points to regions. Commodore Marlowe's Long Odds hunts a squad that is
+  collecting, and ambushes it at the rim. `Tech Victory: Optional > Required` and `Tech Victory Pieces: One of
+  Each Pair > All Seven`.
+- **Leaving a fight** (GDD 6F, GV 3N): each ship jumps clear on its own charged drive at no cost; the squad's jump
+  to another cluster costs the 1.21.
+- **Refit yards** (GDD 5N, GV 5E): move or trade a system between ships for a quarter of its value, fit a piece
+  from the hold, sell a ship. The EVA Dock's third button lets crew who crossed to a squad-mate stay.
+- The playtesters can go for the Tech victory (`GOAL=tech`), and the expert buys systems.
+
 ## Filled in from the genre or the lore (Ai-Generated-Proposals, 2026-10-31)
 
 Where the design docs are silent, this build fills the gap with the genre's behaviour or extrapolates from the race
