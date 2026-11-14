@@ -1208,6 +1208,8 @@ pricing.
 | `light-attack-frame/loadout.light-attack-frame.breacher.xml` | Mecha | Breacher | 4–6 | Mecha Raiders | the battle-cross with hull 12, two shield layers, a breach missile in the pod and an EVB Dock in the spare bay beside its airlock; 3 Mecha |
 | `mercenary-gunship/ship.xml` | Terran (GATOS) | MG-3 "Sellsword" | 4–6 | GATOS Checkpoint | a broad mercenary gunship between two nacelles; Triblast and Longshot, a Crew Teleporter; AZC 3; 5 Terrans |
 | `spear-grass/ship.xml` | Tentauri | Spear Grass | 4–6 | Tentauri Passage | on Arty's barbed arrowhead hull (accepted 2026-11-14) and its cross of rooms: Tendril Beam and a Defense Laser on two weapon systems, two shield layers, Supershield 3, Engines 3; Medbay, Life Support and Supershield in the stern; 3 Tentauri. It strips the guns, then the engines, and passes |
+| `rival-flagship/ship.xml` | Terran (GATOS) | BC-9 "Last Hope" | 7–8 | the Last Fleet (lead) | the Tech victory's rival (heromedel, 2026-11-14): met alone once or twice near the end and escaping, then leading the ambush at the rim. A broad battlecruiser with two nacelles, AZC 4, three shield layers, Hailstorm, Longshot, Hammer and an ion gun, a teleporter; 7 Terrans, hull 28 |
+| `mercenary-gunship/loadout.mercenary-gunship.desperate.xml` | Terran (GATOS) | MG-3 "Forlorn Hope" | 7–8 | the Last Fleet (replacements) | desperate Terrans who jump in to replace the rival squad's first two losses; stronger than a Marauder: AZC 4, three layers, Hailstorm and Longshot, teleporter 3; 6 Terrans, hull 24 |
 
 The Census Picket stays a loadout of the Relay Picket (Hacking fits on a free engine-room tile), as the game has it.
 

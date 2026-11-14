@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GATOS "MG-3 'Forlorn Hope'", a desperate gunship of the Last Fleet, bands 7-8, a patch of the MG-3 Sellsword.
+     Ai-Generated-Proposal (2026-11-14), asked by heromedel: desperate Terrans who jump in to replace the rival
+     squad's first two losses in the final battle. Stronger than a Pirate Marauder: AZC 4, three shield layers, a
+     5-shot laser and a heavy missile, a level 3 teleporter and six crew. -->
+<loadout id="desperate" ship="mercenary-gunship" name="MG-3 Forlorn Hope" class="Desperate Gunship" inherit="patch" hull="24" missiles="10">
+	<reactor type="core" level="4"/>
+	<description>Stripped, overgunned and out of options. Its crew jumped in to die for the escape route, and they mean to take you with them.</description>
+	<system id="shields" tile="-1,-3" level="6" wall="north"/>
+	<system id="weapons" tile="1,-3" level="6" wall="north"/>
+	<system id="engines" tile="-1,3" level="4" wall="south"/>
+	<system id="crew-teleporter" tile="-2,1" level="3" wall="west"/>
+	<system id="medbay" tile="2,1" level="3" wall="east"/>
+	<weapons>
+		<weapon id="gat-5-1" mount="1"/>
+		<weapon id="gat-m2" mount="2"/>
+	</weapons>
+	<crew>
+		<member race="terran" station="piloting"/>
+		<member race="terran" station="weapons"/>
+		<member race="terran" station="shields"/>
+		<member race="terran" station="teleporter"/>
+		<member race="terran" station="teleporter"/>
+		<member race="terran" station="teleporter"/>
+	</crew>
+	<ai plan="destroy">
+		<target system="shields" weapon="Gat M2" when="enemyHeavyShields" weight="0.85"/>
+		<target unless="ownCrewIn" system="shields" weapon="Gat 5.1" weight="0.85"/>
+		<target unless="ownCrewIn" system="weapons" weapon="Gat M2" weight="0.85"/>
+		<target unless="ownCrewIn" system="weapons" weapon="Gat 5.1" when="enemyShieldsDown" weight="0.8"/>
+		<board system="weapons" when="enemyShieldsDown" weight="0.85"/>
+		<board system="piloting" when="enemyWeaponsDown" weight="0.7"/>
+	</ai>
+</loadout>
