@@ -5,7 +5,8 @@ extends Node
 ##             can be lost. It never harms its own ships on purpose.
 ##   watcher   a good player who goes by what is on the screen: focuses the squad's fire on the weakest enemy,
 ##             shoots weapons then shields, takes blue choices, explores while the collapse is far off, keeps the
-##             hull patched and upgrades to a plan. It can't see what an event choice leads to.
+##             hull patched and upgrades to a plan. It can't see what an event choice leads to, but takes a ship
+##             when one is offered.
 ##   expert    knows the game: what every event choice is worth, which enemy to kill first, when to leave a
 ##             fight, and how to spend everything before the end. Thinks five times a second, as a player who
 ##             pauses does. Shows whether a run can be won.
@@ -200,6 +201,10 @@ func _resolve(runner: EventRunner, event: EventDef) -> Dictionary:
 			for each in choices:
 				if runner.is_blue(each):
 					choice = each
+			# A choice that plainly offers a ship: anyone takes that
+			for each in choices:
+				if _offers_a_ship(each):
+					choice = each
 		"knows":
 			var best := -INF
 			for each in choices:
@@ -208,6 +213,14 @@ func _resolve(runner: EventRunner, event: EventDef) -> Dictionary:
 					best = value
 					choice = each
 	return runner.resolve(choice, runner.crew_for_choice(choice))
+
+
+func _offers_a_ship(choice: Dictionary) -> bool:
+	for outcome in choice.get("outcomes", []):
+		for effect in outcome.effects:
+			if String(effect.tag) == "ship":
+				return true
+	return false
 
 
 ## What a choice is worth to this player, in hundredths of Mawjig: the average over its outcomes.

@@ -858,9 +858,13 @@ func _system_buttons(ship: Ship, system: ShipSystem) -> Array:
 	var fighting := encounter.in_fight()
 	match system.behaviour:
 		"doors":
+			# Two buttons (heromedel, 2026-11-14): the inner doors and the airlocks. Each opens them all, and
+			# turns into its close button as soon as one of its kind is open.
+			var inner_open := ship.doors.any(func(door: ShipDoor): return not door.to_space and door.held_open)
+			var lock_open := ship.doors.any(func(door: ShipDoor): return door.to_space and door.held_open)
 			return [
-				["open", func(): screen.set_all_doors(ship, true, false), "Open every inner door. Press again while they are all open to open the airlocks too. Hotkey: Z", ship.doors_controllable(), -1],
-				["close", func(): screen.set_all_doors(ship, false, false), "Close every door, airlocks too. Hotkey: X", ship.doors_controllable(), -1]]
+				["close" if inner_open else "open", func(): screen.set_doors(ship, not inner_open, false), "Close every inner door." if inner_open else "Open every inner door. Hotkeys: Z opens the doors (again: the airlocks too), X closes everything.", ship.doors_controllable(), -1],
+				["close_air" if lock_open else "open_air", func(): screen.set_doors(ship, not lock_open, true), "Close every airlock." if lock_open else "Open every airlock: the air and any fire in the rooms beside them go out into space.", ship.doors_controllable(), -1]]
 		"teleporter":
 			var ready := encounter.can_teleport(ship)
 			return [
@@ -887,16 +891,21 @@ func _icon_button(rect: Rect2, glyph: String, action: Callable, tooltip: String,
 	var colour := UiColours.TEXT if enabled else Color(UiColours.TEXT_DIM, 0.5)
 	var c := rect.get_center()
 	match glyph:
-		"open":      # two door leaves apart, arrows outward
-			draw_line(c + Vector2(-9, -6), c + Vector2(-9, 6), colour, 2.5)
-			draw_line(c + Vector2(9, -6), c + Vector2(9, 6), colour, 2.5)
-			draw_colored_polygon(PackedVector2Array([c + Vector2(-1, 0), c + Vector2(-6, -4), c + Vector2(-6, 4)]), colour)
-			draw_colored_polygon(PackedVector2Array([c + Vector2(1, 0), c + Vector2(6, -4), c + Vector2(6, 4)]), colour)
-		"close":     # two door leaves together
-			draw_line(c + Vector2(-2, -6), c + Vector2(-2, 6), colour, 2.5)
-			draw_line(c + Vector2(2, -6), c + Vector2(2, 6), colour, 2.5)
-			draw_colored_polygon(PackedVector2Array([c + Vector2(-5, 0), c + Vector2(-10, -4), c + Vector2(-10, 4)]), colour)
-			draw_colored_polygon(PackedVector2Array([c + Vector2(5, 0), c + Vector2(10, -4), c + Vector2(10, 4)]), colour)
+		"open", "open_air":       # two door leaves apart, arrows pointing out
+			draw_line(c + Vector2(-7, -6), c + Vector2(-7, 6), colour, 2.2)
+			draw_line(c + Vector2(7, -6), c + Vector2(7, 6), colour, 2.2)
+			draw_colored_polygon(PackedVector2Array([c + Vector2(-15, 0), c + Vector2(-10, -4), c + Vector2(-10, 4)]), colour)
+			draw_colored_polygon(PackedVector2Array([c + Vector2(15, 0), c + Vector2(10, -4), c + Vector2(10, 4)]), colour)
+		"close":                  # two door leaves together, arrows pointing in
+			draw_line(c + Vector2(-2, -6), c + Vector2(-2, 6), colour, 2.2)
+			draw_line(c + Vector2(2, -6), c + Vector2(2, 6), colour, 2.2)
+			draw_colored_polygon(PackedVector2Array([c + Vector2(-7, 0), c + Vector2(-12, -4), c + Vector2(-12, 4)]), colour)
+			draw_colored_polygon(PackedVector2Array([c + Vector2(7, 0), c + Vector2(12, -4), c + Vector2(12, 4)]), colour)
+		"close_air":              # the airlock's leaves, arrows pointing in
+			draw_line(c + Vector2(-7, -6), c + Vector2(-7, 6), colour, 2.2)
+			draw_line(c + Vector2(7, -6), c + Vector2(7, 6), colour, 2.2)
+			draw_colored_polygon(PackedVector2Array([c + Vector2(-10, 0), c + Vector2(-15, -4), c + Vector2(-15, 4)]), colour)
+			draw_colored_polygon(PackedVector2Array([c + Vector2(10, 0), c + Vector2(15, -4), c + Vector2(15, 4)]), colour)
 		"send":      # an arrow out
 			draw_line(c + Vector2(0, 6), c + Vector2(0, -2), colour, 2.5)
 			draw_colored_polygon(PackedVector2Array([c + Vector2(0, -7), c + Vector2(-6, -1), c + Vector2(6, -1)]), colour)
@@ -905,6 +914,13 @@ func _icon_button(rect: Rect2, glyph: String, action: Callable, tooltip: String,
 			draw_colored_polygon(PackedVector2Array([c + Vector2(0, 7), c + Vector2(-6, 1), c + Vector2(6, 1)]), colour)
 		_:           # use it
 			draw_colored_polygon(PackedVector2Array([c + Vector2(-5, -6), c + Vector2(7, 0), c + Vector2(-5, 6)]), colour)
+	if glyph.ends_with("_air"):
+		# Air between the leaves: two wavy lines
+		for row in [-2.5, 2.5]:
+			var wave := PackedVector2Array()
+			for step in 9:
+				wave.append(c + Vector2(-4.0 + step, row + sin(step * 0.8) * 1.2))
+			draw_polyline(wave, colour, 1.1, true)
 	if cooldown > 0:
 		draw_rect(Rect2(rect.position + Vector2(3, rect.size.y - 4), Vector2((rect.size.x - 6) * clampf(1.0 - cooldown / 600.0, 0.0, 1.0), 2.5)), UiColours.ACCENT)
 

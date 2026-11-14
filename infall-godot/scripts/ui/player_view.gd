@@ -790,6 +790,15 @@ func set_all_doors(ship: Ship, open: bool, airlocks: bool) -> void:
 	Sfx.play("door")
 
 
+## The Doors subsystem's buttons: every inner door, or every airlock, opened or closed, and nothing else.
+func set_doors(ship: Ship, open: bool, airlocks: bool) -> void:
+	if not ship.doors_controllable():
+		hud.flash_message("The Doors system isn't working.")
+		return
+	_give({"k": "doors", "s": _index(ship), "open": open, "airlocks": airlocks, "only": true})
+	Sfx.play("door")
+
+
 func return_to_stations() -> void:
 	if selected_ship:
 		_give({"k": "stations", "s": _index(selected_ship)})
