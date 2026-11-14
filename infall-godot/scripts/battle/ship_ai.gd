@@ -143,6 +143,15 @@ func _aim_weapons() -> void:
 
 
 func _aim(slot: WeaponSlot, taken_rooms: Array[int]) -> void:
+	# Against a ship with many shield layers (a Senti Shield Projector, or three layers and more), what ignores
+	# shields goes for the shield room: missiles and bombs are the natural counter (GDD 8Q; heromedel, 2026-11-14)
+	var shields := target.system_by("shields")
+	if slot.def.ignores_shields() and shields and not shields.is_broken() and target.shield_layers > 0 and not careless \
+			and (shields.def.bars_per_layer == 1 or target.shield_layer_capacity() >= 3) and not (_spares_own_crew() and _own_crew_in(shields.room)):
+		taken_rooms.append(shields.room)
+		slot.aim_at(target, shields.cell)
+		slot.autofire = true
+		return
 	# The plan is rolled once per aim, so the choice sticks until the weapon is aimed again
 	var planned := _plan_pick("target", slot.def)
 	var room_index := planned.room if planned else _pick_room(slot.def, taken_rooms)

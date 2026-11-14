@@ -35,4 +35,12 @@
 		<member race="senti" station="piloting"/>
 		<member race="senti" station="weapons"/>
 	</crew>
+	<!-- The Senti's answer to shields (heromedel, 2026-11-14): the stronger beam cuts the shield room first; the weaker
+	     one sweeps it too, so it lands as the layer drops. With the shields down, both go for the weapons. -->
+	<ai plan="destroy">
+		<target system="shields" weapon="1B 02 V1" unless="enemyShieldsDown" weight="0.9"/>
+		<target system="shields" weapon="2B 01 V1" unless="enemyShieldsDown" weight="0.8"/>
+		<target system="weapons" weapon="1B 02 V1" when="enemyShieldsDown" weight="0.8"/>
+		<target system="weapons" weapon="2B 01 V1" when="enemyShieldsDown" weight="0.7"/>
+	</ai>
 </ship>

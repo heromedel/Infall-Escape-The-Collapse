@@ -21,7 +21,9 @@
 	</crew>
 	<ai plan="crew-kill">
 		<hack system="medbay" weight="0.9"/>
-		<target system="medbay" weapon="2B 01 F1" weight="0.8"/>
-		<target system="oxygen" weapon="2B 01 F1" weight="0.7"/>
+		<target system="shields" weapon="1B 02 V1" unless="enemyShieldsDown" weight="0.9"/>
+		<target system="shields" weapon="2B 01 F1" unless="enemyShieldsDown" weight="0.8"/>
+		<target system="medbay" weapon="2B 01 F1" when="enemyShieldsDown" weight="0.8"/>
+		<target system="oxygen" weapon="2B 01 F1" when="enemyShieldsDown" weight="0.7"/>
 	</ai>
 </loadout>

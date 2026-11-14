@@ -18,4 +18,13 @@
 		<member race="senti" station="weapons"/>
 		<member race="senti" station="shields"/>
 	</crew>
+	<!-- Lasers at the shield room while the shields are up; the beam waits for the layers to drop (heromedel, 2026-11-14) -->
+	<ai plan="destroy">
+		<hack system="shields" weight="0.8"/>
+		<target system="shields" weapon="2L 02 V1" unless="enemyShieldsDown" weight="0.9"/>
+		<target system="shields" weapon="1L 02 P1" unless="enemyShieldsDown" weight="0.8"/>
+		<target system="weapons" weapon="2B 01 V1" when="enemyShieldsDown" weight="0.8"/>
+		<target system="shields" weapon="2B 01 V1" unless="enemyShieldsDown" weight="0.7"/>
+		<target system="weapons" weapon="2L 02 V1" when="enemyShieldsDown" weight="0.7"/>
+	</ai>
 </loadout>
