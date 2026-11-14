@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The genre's Backup Battery (race profiles, Senti 6: the Senti like them). Prices from docs/reference/system-prices.md;
+     power and times are the genre's. Text by Infall: Lori (2026-11-14). -->
+<system id="backup-battery" name="Backup Battery" behaviour="battery" max_level="2" draws_power="no" manned="no" buy="8.47" upgrades="12.11" icon="battery" order="80">
+	<description>When switched on, gives the ship extra power for a short time, then needs time to recharge.</description>
+	<level>2 extra power for 30 s</level>
+	<level>4 extra power for 30 s</level>
+</system>

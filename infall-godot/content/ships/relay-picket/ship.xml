@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- docs/ship-suggestions.md, Senti-GPH "Relay Picket" (as updated 2026-11-13): a Senti core of 7 bars, a Shield
-     Projector, the Armoured Avatar Array in the middle of the big room, two beams, two Senti. No Life Support or
-     Medbay: Senti don't breathe, and the array mends them. The Backup Battery of the docs is not in the game yet. -->
+     Projector, the Armoured Avatar Array in the middle of the big room, a Backup Battery, two beams, two Senti. No Life Support or
+     Medbay: Senti don't breathe, and the array mends them. -->
 <ship id="relay-picket" name="Senti Relay Picket" class="Relay Picket" race="senti" faction="senti" style="senti" center="Tile" hull="10">
 	<reactor type="pool" level="7"/>
 	<description>A station picket built round its Armoured Avatar Array. It reads everything about you before it decides anything. Its crew don't breathe, so it carries no Life Support.</description>
@@ -16,6 +16,7 @@
 	<system id="aaa" tile="0,0" level="2" wall="none"/>
 	<system id="shield-projector" tile="1,1" level="1" wall="east"/>
 	<system id="engines" tile="-1,2" level="1" wall="south"/>
+	<system id="backup-battery" tile="1,-1" level="1" wall="east"/>
 	<door id="0" tile="0,-2" facing="south"/>
 	<door id="1" tile="-1,0" facing="west"/>
 	<door id="2" tile="1,0" facing="east"/>

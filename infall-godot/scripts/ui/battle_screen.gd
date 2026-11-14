@@ -274,6 +274,8 @@ func _show_note(note: Dictionary) -> void:
 			squad_lost.emit()
 		"cloaked":
 			_sound("cloak")
+		"battery_on":
+			_sound("power_up")
 		"hack_attached":
 			_sound("target")
 		"hack_pulse":

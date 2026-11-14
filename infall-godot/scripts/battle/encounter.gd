@@ -853,6 +853,19 @@ const MIND_COOLDOWN_TICKS := 400
 const MIND_COST := 8
 
 
+func can_use_battery(ship: Ship) -> bool:
+	var battery := ship.system_by("battery")
+	return battery != null and not battery.is_broken() and ship.battery_ticks <= 0 and ship.battery_cooldown <= 0
+
+
+func use_battery(ship: Ship) -> bool:
+	if not can_use_battery(ship):
+		return false
+	ship.battery_ticks = Ship.BATTERY_TICKS
+	note("battery_on", {"ship": ship})
+	return true
+
+
 func can_hack(ship: Ship) -> bool:
 	var hacking := ship.system_by("hacking")
 	return hacking != null and ship.system_power(hacking) > 0 and ship.hack_cooldown <= 0

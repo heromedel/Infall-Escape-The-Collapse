@@ -66,6 +66,8 @@ var teleporter_cooldown: int = 0
 var hack_target: Ship = null        # the ship this ship's hacking probe is latched onto, for the fight
 var hack_system: ShipSystem = null  # and the system it holds
 var hack_cooldown: int = 0
+var battery_ticks: int = 0          # the Backup Battery is giving its extra power for this long
+var battery_cooldown: int = 0
 var mind_cooldown: int = 0
 var evb_cooldown: int = 0
 var suit_out: bool = false
@@ -481,7 +483,13 @@ func system_power_without_weapons(system: ShipSystem) -> int:
 
 
 func reactor_total() -> int:
-	return maxi(0, reactor_level - reactor_penalty)
+	return maxi(0, reactor_level - reactor_penalty + battery_power())
+
+
+## The extra power a running Backup Battery gives: two bars a level, as in the genre.
+func battery_power() -> int:
+	var battery := system_by("battery")
+	return 2 * battery.usable_bars() if battery and battery_ticks > 0 else 0
 
 
 func reactor_used() -> int:
@@ -502,7 +510,7 @@ func reactor_free() -> int:
 
 ## How many power-hungry systems the AZC runs at once (2 per level).
 func core_capacity() -> int:
-	return maxi(0, reactor_level * 2 - core_capacity_penalty)
+	return maxi(0, reactor_level * 2 - core_capacity_penalty + battery_power() / 2)
 
 
 func core_load() -> int:
@@ -677,12 +685,12 @@ func power_everything() -> void:
 	if reactor_type == "core":
 		for system in order:
 			system.enabled = false
-		for behaviour in ["shields", "engines", "weapons", "oxygen", "medbay", "teleporter", "evb_dock", "supershield", "cloaking"]:
+		for behaviour in ["aaa", "shields", "engines", "weapons", "oxygen", "medbay", "hacking", "mind_control", "teleporter", "evb_dock", "supershield", "cloaking"]:
 			var system := system_by(behaviour)
 			if system and system.def.draws_power and core_load() < core_capacity():
 				system.enabled = true
 	elif reactor_type == "pool":
-		for behaviour in ["shields", "engines", "supershield", "oxygen", "weapons", "medbay", "teleporter", "evb_dock", "cloaking"]:
+		for behaviour in ["aaa", "shields", "engines", "supershield", "oxygen", "weapons", "medbay", "hacking", "mind_control", "teleporter", "evb_dock", "cloaking"]:
 			var system := system_by(behaviour)
 			if system == null or system.behaviour == "weapons":
 				continue
@@ -895,6 +903,8 @@ func _tick_shields() -> void:
 # it works again; they don't die from this. A Senti killed in a fight is broadcast again from the array after a
 # while (as the genre's clone bay does, 12, 9 or 7 s by power). Aboard their own ship the array also mends them.
 
+const BATTERY_TICKS := 600            # 30 s of extra power, then 20 s to recharge (the genre's)
+const BATTERY_COOLDOWN_TICKS := 400
 const REBROADCAST_TICKS := [240, 240, 180, 140]
 const ARRAY_MEND_PER_TICK := 0.1        # health a tick per bar of power (Ai-Generated-Proposal): a third of a medbay
 
@@ -999,6 +1009,12 @@ func _tick_cooldowns() -> void:
 	for system in systems:
 		if system.hacked_ticks > 0:
 			system.hacked_ticks -= 1
+	if battery_ticks > 0:
+		battery_ticks -= 1
+		if battery_ticks == 0:
+			battery_cooldown = BATTERY_COOLDOWN_TICKS
+	elif battery_cooldown > 0:
+		battery_cooldown -= 1
 	var hacking := system_by("hacking")
 	if hack_cooldown > 0 and hacking and system_power(hacking) > 0:
 		hack_cooldown -= 1
@@ -1236,6 +1252,8 @@ func begin_encounter() -> void:
 	cloak_cooldown = 0
 	teleporter_cooldown = 240
 	evb_cooldown = 60
+	battery_ticks = 0
+	battery_cooldown = 0
 	hack_target = null
 	hack_system = null
 	hack_cooldown = 0

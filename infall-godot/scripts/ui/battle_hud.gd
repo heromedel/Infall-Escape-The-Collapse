@@ -858,6 +858,8 @@ func _special_buttons(ship: Ship) -> Array:
 	var cloak := ship.system_by("cloaking")
 	if cloak:
 		buttons.append(["CLOAK", func(): screen.cloak(ship), "Hide the ship: most shots miss and its weapons hold their charge. Hotkey: C", ship.cloak_ticks <= 0 and ship.cloak_cooldown <= 0 and ship.system_power(cloak) > 0, ship.cloak_cooldown])
+	if ship.system_by("battery"):
+		buttons.append(["BATTERY", func(): screen.use_battery(), "Switch on the Backup Battery: %d extra power for 30 s, then 20 s to recharge." % (2 * ship.system_by("battery").level), encounter.can_use_battery(ship), ship.battery_cooldown])
 	var hacking := ship.system_by("hacking")
 	if hacking:
 		if ship.hack_system == null:

@@ -104,6 +104,9 @@ func _play_one(seed_number: int, ship_id: String) -> Dictionary:
 				var band := run.band()
 				var hull_before := _hull(run)
 				var mawjig_before := run.mawjig
+				if verbose and run.cluster().kind == "final":
+					for ship in run.living_ships():
+						print("      at the final: %s hull %d/%d shields %d weapons %s crew %d reactor %d" % [ship.design.id, ship.hull, ship.max_hull, ship.shield_layer_capacity(), str(ship.weapons.map(func(slot): return slot.def.id)), ship.living_crew_count(), ship.reactor_level])
 				var outcome := _fight(run, runner, squad)
 				var spent := mawjig_before - run.mawjig
 				var paid := 0
@@ -489,6 +492,29 @@ func _wish_list(ship: Ship, run: RunState) -> Array:
 
 # --- The map --------------------------------------------------------------------------------------------------
 
+## The first jump toward the nearest store the squad's sensors show (GDD 2E) that it hasn't been to and can reach
+## ahead of the collapse; -1 when there is none.
+func _toward_store(run: RunState) -> int:
+	var reach := maxi(1, run.sensor_range())
+	var first_hop := {run.current: -1}
+	var frontier := [run.current]
+	for depth in range(1, reach + 1):
+		var next: Array = []
+		for at in frontier:
+			for link in run.galaxy.clusters[at].links:
+				if first_hop.has(link) or run.galaxy.is_swallowed(link):
+					continue
+				var there: Dictionary = run.galaxy.clusters[link]
+				if run.galaxy.collapse_radius > 0.0 and there.radius - run.galaxy.collapse_radius - Galaxy.COLLAPSE_STEP * (depth + 1) < 200.0:
+					continue
+				first_hop[link] = link if at == run.current else first_hop[at]
+				if there.store and not there.visited:
+					return first_hop[link]
+				next.append(link)
+		frontier = next
+	return -1
+
+
 ## Jumps to the next cluster; false when the squad can't jump (it waits). The careless player always heads straight out.
 ## The others look around while the collapse is far behind: an unvisited cluster nearby before one farther out.
 func _travel(run: RunState) -> bool:
@@ -506,15 +532,14 @@ func _travel(run: RunState) -> bool:
 		var keeps_ahead: bool = run.galaxy.collapse_radius <= 0.0 or there.radius - run.galaxy.collapse_radius - Galaxy.COLLAPSE_STEP > SAFE_GAP
 		if not there.visited and keeps_ahead and there.kind != "final" and (sideways < 0 or there.radius < run.galaxy.clusters[sideways].radius):
 			sideways = link
-	var hurt := _squad_strength(run) < 0.6
 	var pick := outward
 	if player.explore and sideways >= 0 and run.mawjig >= Mawjig.JUMP_COST * 4:
 		pick = sideways
-		if hurt:
-			# Hurt: a store within reach comes first
-			for link in here.links:
-				if run.can_jump_to(link) and run.galaxy.clusters[link].store and not run.galaxy.clusters[link].visited:
-					pick = link
+	# A store the sensors show: worth the detour when the hull needs work or there is Mawjig to spend
+	if player.explore and (_squad_strength(run) < float(player.repair_to) or run.mawjig > 1800):
+		var store := _toward_store(run)
+		if store >= 0:
+			pick = store
 	if pick < 0:
 		return false
 	run.jump_to(pick)

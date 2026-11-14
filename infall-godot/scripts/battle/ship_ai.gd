@@ -45,7 +45,7 @@ func think() -> void:
 func _manage_power() -> void:
 	match ship.reactor_type:
 		"pool":
-			var wanted := ["shields", "weapons", "engines", "supershield", "cloaking", "teleporter", "evb_dock"]
+			var wanted := ["aaa", "shields", "weapons", "engines", "supershield", "hacking", "mind_control", "cloaking", "teleporter", "evb_dock"]
 			if _air_is_low():
 				wanted.insert(1, "oxygen")
 			else:
@@ -61,7 +61,7 @@ func _manage_power() -> void:
 					ship.add_power(system)
 					guard += 1
 		"core":
-			var order := ["shields", "weapons", "engines", "teleporter", "evb_dock", "supershield", "cloaking", "oxygen", "medbay"]
+			var order := ["aaa", "shields", "weapons", "engines", "hacking", "mind_control", "teleporter", "evb_dock", "supershield", "cloaking", "oxygen", "medbay"]
 			if _air_is_low():
 				order.erase("oxygen")
 				order.insert(1, "oxygen")
@@ -381,6 +381,8 @@ func _use_specials() -> void:
 	if ship.system_by("evb_dock") and not ship.suit_out:
 		var planned := _plan_pick("suit", null)
 		encounter.launch_suit(ship, target, planned.room if planned else -1)
+	if encounter.can_use_battery(ship) and encounter.in_fight():
+		encounter.use_battery(ship)
 	if ship.system_by("hacking"):
 		if ship.hack_system == null:
 			# The probe goes where the plan says, else onto the shields, else the weapons

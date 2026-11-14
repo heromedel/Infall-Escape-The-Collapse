@@ -71,6 +71,10 @@ static func draw(canvas: CanvasItem, icon: String, centre: Vector2, size: float,
 			canvas.draw_rect(Rect2(centre + Vector2(-s * 0.5, -s * 0.15), Vector2(s, s * 0.45)), colour, false, w)
 			canvas.draw_line(centre + Vector2(-s * 0.32, -s * 0.18), centre + Vector2(s * 0.32, -s * 0.18), colour, w * 1.3, true)
 			canvas.draw_line(centre + Vector2(-s * 0.7, s * 0.75), centre + Vector2(s * 0.7, s * 0.75), colour, w, true)
+		"battery":       # a cell with its cap and a bolt
+			canvas.draw_rect(Rect2(centre + Vector2(-s * 0.5, -s * 0.6), Vector2(s, s * 1.45)), colour, false, w)
+			canvas.draw_rect(Rect2(centre + Vector2(-s * 0.2, -s * 0.9), Vector2(s * 0.4, s * 0.3)), colour)
+			canvas.draw_polyline(PackedVector2Array([centre + Vector2(s * 0.15, -s * 0.35), centre + Vector2(-s * 0.2, s * 0.15), centre + Vector2(s * 0.2, s * 0.15), centre + Vector2(-s * 0.15, s * 0.65)]), colour, w, true)
 		"aaa":           # a broadcast mast over a figure: three rings and a small avatar
 			canvas.draw_circle(centre + Vector2(0, -s * 0.35), s * 0.2, colour)
 			canvas.draw_line(centre + Vector2(0, -s * 0.1), centre + Vector2(0, s * 0.45), colour, w * 1.4, true)

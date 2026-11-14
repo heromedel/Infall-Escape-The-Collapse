@@ -7,7 +7,7 @@
 	<system id="weapons" tile="-1,-1" level="6" wall="west"/>
 	<system id="engines" tile="-1,2" level="2" wall="south"/>
 	<system id="aaa" tile="0,0" level="3" wall="none"/>
-	<system id="intrusion-array" tile="1,-1" level="1" wall="east"/>
+	<system id="intrusion-array" tile="-1,1" level="1" wall="west"/>
 	<weapons>
 		<weapon id="2l-02-v1" mount="1"/>
 		<weapon id="1l-02-p1" mount="2"/>

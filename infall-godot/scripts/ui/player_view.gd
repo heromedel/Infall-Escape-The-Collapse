@@ -692,6 +692,11 @@ func start_suit_launch() -> void:
 		aim_mode = "suit"
 
 
+func use_battery() -> void:
+	if selected_ship:
+		_give({"k": "battery", "s": _index(selected_ship)})
+
+
 ## Hacking: the first press aims the probe; once it holds, each press is a pulse.
 func start_hack() -> void:
 	if selected_ship == null or selected_ship.system_by("hacking") == null or not encounter.in_fight():
