@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Infall: Lori, 2026-11-14, for Infall: Godot Version. Descriptions and level notes in the style of
+     content/systems/*/system.xml. Only the text: ids, prices (docs/reference/system-prices.md), hotkeys and order
+     are for the Godot session to fill in. Everything here is Ai-Generated-Proposal (2026-11-14) unless a source is named.
+     Seconds and power marked "genre" are the genre's numbers from memory: check them against the community wiki before
+     building, as with GV 7E's timings. -->
+<systems>
+	<!-- Hacking. Docs: Senti-GPH mid and high tech (race profiles, Senti 10); any race can buy one. -->
+	<system id="hacking" name="Hacking" max_level="3" manned="no">
+		<description>Fires a probe that latches onto one enemy system. Once it holds, you can see into that room, and each pulse shuts the system down for a few seconds.</description>
+		<level>Each pulse lasts 4 s (genre)</level>
+		<level>Each pulse lasts 7 s (genre)</level>
+		<level>Each pulse lasts 10 s (genre)</level>
+	</system>
+
+	<!-- The Senti's own Hacking. The docs give it no name. Name: the Intrusion Array, after the Armoured Avatar Array:
+	     the Senti are made of information, so they reach into an enemy system through its own signals. -->
+	<system id="intrusion-array" name="Intrusion Array" max_level="3" manned="no">
+		<description>The Senti's hacking. It reaches into one enemy system through its own signals. Once it holds, you can see into that room, and each pulse shuts the system down for a few seconds.</description>
+		<level>Each pulse lasts 4 s (genre)</level>
+		<level>Each pulse lasts 7 s (genre)</level>
+		<level>Each pulse lasts 10 s (genre)</level>
+	</system>
+
+	<!-- Mind Control. Docs: an idea for the Azurethea (race profiles, Azurethea 10, mid tech: "their spores also mind
+	     control someone in the room, pacifying the enemy and making them fight each other"). -->
+	<system id="mind-control" name="Mind Control" max_level="3" manned="no">
+		<description>Takes over one enemy crew member for a while. Until it wears off, they fight for your side.</description>
+		<level>Lasts 14 s (genre)</level>
+		<level>Lasts 20 s (genre)</level>
+		<level>Lasts 28 s (genre)</level>
+	</system>
+
+	<!-- The Azurethea's own Mind Control. The docs give it no name. Name: the Pheromone Gland. Insects steer each
+	     other with pheromones, the Azurethea's weapons are named after insect parts (Likely), and their tech is
+	     biological spores. -->
+	<system id="pheromone-gland" name="Pheromone Gland" max_level="3" manned="no">
+		<description>The Azurethea's mind control. A cloud of pheromone spores turns one enemy crew member against their own side for a while.</description>
+		<level>Lasts 14 s (genre)</level>
+		<level>Lasts 20 s (genre)</level>
+		<level>Lasts 28 s (genre)</level>
+	</system>
+
+	<!-- The AAA. Race profiles, Senti-GPH 6 and 9; one avatar per level and the return of the killed are from
+	     Godot's request. Three levels, as system-prices.md prices it. -->
+	<system id="aaa" name="Armoured Avatar Array" max_level="3" manned="no">
+		<description>Stores and broadcasts the ship's Senti crew. A Senti killed in a fight is broadcast again from the array. If the array is damaged, fewer Senti can be broadcast until it is repaired.</description>
+		<level>Hosts one Senti</level>
+		<level>Hosts two Senti</level>
+		<level>Hosts three Senti</level>
+	</system>
+
+	<!-- The Senti Shield Projector. GDD 8Q (Proposed): one bar a layer; layers coming back half as fast is the doc's
+	     idea. One level per layer, priced as a Generator layer of the same number (Likely). Write each level as
+	     "N shield layers" up to max_level. -->
+	<system id="shield-projector" name="Shield Projector" manned="yes">
+		<description>The Senti's shields. Every bar of power holds one shield layer, and each layer stops one laser or flak hit. Layers come back half as fast as a Shield Generator's. Missiles and bombs pass through.</description>
+		<level>One shield layer</level>
+		<level>Two shield layers</level>
+		<level>Three shield layers</level>
+		<level>Four shield layers</level>
+	</system>
+
+	<!-- The Backup Battery, the genre's (race profiles, Senti-GPH 6: the Senti like them; Tentauri stores stock them).
+	     Two levels, as system-prices.md prices it. -->
+	<system id="backup-battery" name="Backup Battery" max_level="2" manned="no">
+		<description>When switched on, gives the ship extra power for a short time, then needs time to recharge.</description>
+		<level>2 extra power for 30 s (genre)</level>
+		<level>4 extra power for 30 s (genre)</level>
+	</system>
+
+	<!-- Optional: the Senti system battery (race profiles, Senti-GPH 6, Ai-Generated-Proposal), if it is built. -->
+	<system id="system-battery" name="System Battery" max_level="2" manned="no">
+		<description>A battery bound to one system, most often the Armoured Avatar Array. It keeps that system powered when the core or its conduit is cut.</description>
+		<level>Keeps one bar powered</level>
+		<level>Keeps two bars powered</level>
+	</system>
+</systems>
