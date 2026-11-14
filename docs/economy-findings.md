@@ -498,3 +498,11 @@ was changed.
 (captain plans): against the Senti, hit the Shield Projector with missiles or bombs, which ignore shields (GDD 8Q);
 playing as the Senti, beam the enemy's shield room right before firing the stronger beam. Passed to Infall: Godot
 Version for its bots and the Senti captain plans, with a rerun of the Senti rows asked for. No price change.
+
+**Rerun with both counters (Godot Version, 2026-11-14, same seeds, 30 games each):** hull lost against Senti pickets
+fell (watcher: band 4 29% from 35%, band 5 21% from 30%, band 6 37% from 54%, band 7 8% from 41%; expert: band 4 19%
+from 32%, bands 5 and 7 3–7%), and no fight was left or stalemated. Pay per Senti fight rose to 12–27 (was 4–10)
+because the fights are now won; shots 3–10% of pay. So the Senti problem was strategy, not price. Games won: watcher
+4 of 30, expert 16 of 30. The new Senti Census squad cost no hull in its 6 fights (too mild; with Ship Designs).
+**For heromedel:** the expert now wins over half its games, against a target of about 9 in 10 lost; that is
+difficulty, not economy, but worth a look.
