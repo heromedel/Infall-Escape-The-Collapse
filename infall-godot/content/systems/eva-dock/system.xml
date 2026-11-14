@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The EVA Dock (GDD 8R, Proposed). Price from docs/reference/system-prices.md (a teleporter x 0.75). Levels only add
+     suit air. How the crossing works in the game is an Ai-Generated-Proposal (2026-11-14). -->
+<system id="eva-dock" name="EVA Dock" behaviour="eva_dock" max_level="3" draws_power="yes" manned="no" buy="16.34" upgrades="5.45,10.89" icon="evb_dock" order="36">
+	<description>A crew member suits up here, leaves by the airlock and crosses to another ship: to help a squad-mate with repairs or boarders, or to board an enemy. Slower than a teleporter, and the suit's air runs out.</description>
+	<level>Suits carry 25 s of air</level>
+	<level>Suits carry 40 s of air</level>
+	<level>Suits carry 55 s of air</level>
+</system>

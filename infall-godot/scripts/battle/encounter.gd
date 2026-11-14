@@ -129,6 +129,7 @@ func step() -> void:
 	_tick_bombs()
 	_tick_beams()
 	_tick_suits()
+	_tick_eva()
 	_check_crews()
 	_check_outcome()
 
@@ -193,10 +194,14 @@ func _check_outcome() -> void:
 func leave_behind_away_crew() -> void:
 	for ship in living(0):
 		for member in ship.crew:
-			if not member.dead and not member.offline and (member.ship != ship or member.in_suit):
+			# Crew aboard a squad-mate's ship jump with the squad; those aboard an enemy or outside in a suit are lost
+			if not member.dead and not member.offline and (member.in_suit or (member.ship != ship and member.ship.side != ship.side)):
 				member.dead = true
 				note("crew_died", {"ship": ship, "crew": member, "position": Vector2.ZERO})
+			elif member.ship != ship and not member.dead:
+				_land(member, ship, member.station_room if member.station_room >= 0 else 0)
 		ship.suit_out = false
+	crossings.clear()
 	suits = suits.filter(func(s): return s.side != 0)
 
 
@@ -854,6 +859,126 @@ func cloak(ship: Ship) -> bool:
 	ship.cloak_ticks = [100, 100, 200, 300][mini(ship.system_power(system), 3)]
 	note("cloaked", {"ship": ship})
 	return true
+
+
+# --- The EVA Dock (GDD 8R) ------------------------------------------------------------------------------------
+# A crew member of a ship with an EVA Dock walks to an airlock, crosses to another ship in a suit and steps in at
+# one of its airlocks: a squad-mate's, to help there, or an enemy's, to board it. The crossing takes the real
+# distance at a suit's speed, and uses the suit's air; the dock's level only adds air. Out of air, they lose health
+# until they arrive. They come home the same way. Ships don't aim at a crew member in a suit (heromedel, 2026-11-13).
+# How it works in detail is an Ai-Generated-Proposal: any number may be out, suits are kept, and the air refills
+# aboard their own squad's ships.
+
+const EVA_AIR_TICKS := [500, 500, 800, 1100]     # 25, 40 or 55 s by the dock's power
+
+var crossings: Array = []     # {member, to, cell, position, previous_position}: crew out between ships
+
+
+func can_eva(member: CrewMember) -> bool:
+	var dock := member.home.system_by("eva_dock") if member.home else null
+	return dock != null and not member.home.is_gone() and member.home.system_power(dock) > 0 and member.is_active() and member.mind_ticks <= 0
+
+
+## Sends a crew member across to another ship: they walk to an airlock of the ship they are on, then cross.
+func order_eva(member: CrewMember, target: Ship) -> bool:
+	if not can_eva(member) or target == null or target.is_gone() or target == member.ship or target.supershield > 0:
+		return false
+	var gate := _eva_gate(member)
+	if gate == Ship.NO_CELL or _airlock_nearest(target, member.ship.world_position) == Ship.NO_CELL:
+		return false
+	if not CrewBrain.walk_to(member, gate, member.side == 0):
+		return false
+	member.eva_to = target
+	return true
+
+
+## The airlock a crew member leaves by: aboard their own ship, the dock's; aboard another, the nearest.
+func _eva_gate(member: CrewMember) -> Vector2i:
+	var ship := member.ship
+	if ship == member.home:
+		var dock := ship.system_by("eva_dock")
+		for door in ship.doors:
+			if door.to_space and (door.cell_a == dock.cell or ship.room_at(door.cell_a) == dock.room):
+				return door.cell_a
+	return _airlock_nearest(ship, local_to_world(ship, ship.design.cell_centre(member.cell)))
+
+
+func _airlock_nearest(ship: Ship, world_point: Vector2) -> Vector2i:
+	var best := Ship.NO_CELL
+	var best_distance := INF
+	for door in ship.doors:
+		if not door.to_space:
+			continue
+		var distance := world_point.distance_to(local_to_world(ship, ship.design.cell_centre(door.cell_a)))
+		if distance < best_distance:
+			best_distance = distance
+			best = door.cell_a
+	return best
+
+
+func _tick_eva() -> void:
+	# Those who have reached their airlock step out
+	for ship in ships:
+		for member in ship.crew_present():
+			if member.eva_to == null or not member.path.is_empty() or member.teleporting_ticks > 0:
+				continue
+			var target := member.eva_to
+			member.eva_to = null
+			var at_airlock := ship.doors.any(func(door: ShipDoor): return door.to_space and door.cell_a == member.cell)
+			if not at_airlock or target.is_gone() or not can_eva(member):
+				continue
+			if ship.side == member.side:
+				member.eva_air = EVA_AIR_TICKS[clampi(member.home.system_power(member.home.system_by("eva_dock")), 0, 3)]
+			var from := local_to_world(ship, ship.design.cell_centre(member.cell))
+			if ship != member.home:
+				ship.visitors.erase(member)
+			member.in_suit = true
+			member.crossing = true
+			member.melee_with = null
+			member.aim_at = null
+			crossings.append({"member": member, "to": target, "cell": _airlock_nearest(target, from), "position": from, "previous_position": from})
+			note("eva_out", {"ship": ship, "crew": member, "position": from})
+	# Those outside fly on
+	var still: Array = []
+	for crossing in crossings:
+		var member: CrewMember = crossing.member
+		if member.dead:
+			continue
+		var target: Ship = crossing.to
+		if target.is_gone():
+			# Nowhere to go: back to their own ship, if it is still there
+			if member.home.is_gone():
+				member.dead = true
+				note("crew_died", {"ship": member.home, "crew": member, "position": crossing.position})
+				continue
+			crossing.to = member.home
+			crossing.cell = _airlock_nearest(member.home, crossing.position)
+			target = member.home
+		member.eva_air -= 1
+		if member.eva_air <= 0:
+			member.health -= Ship.SUFFOCATION_PER_TICK
+			if member.health <= 0.0:
+				if member.home.holds_avatar(member):
+					member.in_suit = false
+					member.crossing = false
+					member.ship = member.home
+					member.home.take_back_avatar(member)
+				else:
+					member.dead = true
+					note("crew_died", {"ship": member.home, "crew": member, "position": crossing.position})
+				continue
+		var goal := local_to_world(target, target.design.cell_centre(crossing.cell))
+		crossing.previous_position = crossing.position
+		crossing.position = (crossing.position as Vector2).move_toward(goal, SUIT_SPEED)
+		if (crossing.position as Vector2).distance_to(goal) > 1.0:
+			still.append(crossing)
+			continue
+		member.in_suit = false
+		member.crossing = false
+		member.ship = member.home      # _land moves them from where they last stood
+		_land(member, target, target.room_at(crossing.cell))
+		note("eva_in", {"ship": target, "crew": member, "position": goal})
+	crossings = still
 
 
 # --- Hacking and Mind Control ---------------------------------------------------------------------------------

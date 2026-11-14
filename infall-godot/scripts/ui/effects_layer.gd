@@ -157,6 +157,16 @@ func _draw_solid_shots() -> void:
 					rock.append(at + Vector2.from_angle(_time * 4.0 + index * TAU / 7.0) * size * (0.75 + 0.25 * sin(index * 2.3)))
 				draw_colored_polygon(rock, Color("#8b7d6b") if shot.kind == "asteroid" else Color("#b9ab92"))
 				draw_polyline(rock + PackedVector2Array([rock[0]]), Color("#3a332b"), 1.2, true)
+	for crossing in encounter.crossings:
+		var real_at: Vector2 = (crossing.previous_position as Vector2).lerp(crossing.position, alpha)
+		if encounter.in_gap(real_at):
+			continue
+		var figure := _v(real_at)
+		var walker: CrewMember = crossing.member
+		var tint := Color("#d6dde8") if walker.eva_air > 0 else Color("#ff6a5a")     # red when the air is gone
+		draw_circle(figure, 5.5, Color(0.05, 0.07, 0.11))
+		draw_arc(figure, 5.5, 0, TAU, 14, tint, 1.6, true)
+		draw_circle(figure + Vector2(0, -1), 2.2, tint)
 	for suit in encounter.suits:
 		if suit.gone:
 			continue

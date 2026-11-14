@@ -419,6 +419,19 @@ anything Claude added tagged Ai-Generated-Proposal.
   system. The Pirate Hijacker (Twinshot on A, Sporewing on B; its loadouts as the docs have them) and the Tentauri
   scout and Pappus (one weapon on each) use it. Not built from 8M: slots set by a system's level, `maxSlots`, and
   mounts kept for one system.
+- **K — Built (2026-11-14), GDD 8R (Proposed):** the EVA Dock. A crew member of a ship with one walks to an
+  airlock, crosses to another ship in a suit and steps in at one of its airlocks: a squad-mate's, to repair or
+  fight boarders there, or an enemy's, to board it; they come home the same way. The crossing takes the real
+  distance at a suit's speed and uses the suit's air (25, 40 or 55 s by the dock's level); out of air, they lose
+  health until they arrive. Ships don't aim at them. Stores sell the dock (16.34). **Ai-Generated-Proposal:** any
+  number may be out, suits are kept, the air refills aboard their own squad's ships, they enter an enemy by any
+  airlock, and a Supershield keeps them out as it does boarders. No enemy captain uses it yet.
+- **L — Built (2026-11-14):** the three Senti crew killers (`docs/deck-collapse-ships/senti-crew-killers`), as
+  loadouts on the Relay Picket's floor plan, in the squad Senti Census, met where Senti are Doomed or Struggling.
+  Their weapons: fire beams, a breach laser, an anti-crew beam that passes shields and wounds the crew it sweeps,
+  and a bio bomb that wounds everyone in a room. **Ai-Generated-Proposal:** more Projector layers and hull than
+  the docs' files, and the weapons' charge times and prices. They are mild in fights so far; Ship Designs has been
+  asked for their own floor plans.
 - **I — Proposed (Infall: Eco, 2026-11-14; heromedel: "makes sense"), built:** a store asks 75% of a ship's value
   on Normal, 50% on Easy and 100% on Hard (it was 115%).
 

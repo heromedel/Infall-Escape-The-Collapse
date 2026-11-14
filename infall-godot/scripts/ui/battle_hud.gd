@@ -552,6 +552,8 @@ func _crew_status(member: CrewMember) -> String:
 		return "not broadcast"
 	if member.mind_ticks > 0:
 		return "mind controlled!"
+	if member.crossing:
+		return "crossing in a suit"
 	if member.in_suit:
 		return "in a battlesuit"
 	if member.suffocating:
@@ -648,7 +650,7 @@ func _button(rect: Rect2, text: String, action: Callable, tooltip: String = "", 
 const SYSTEM_COLUMN := 44.0
 const POWER_HEIGHT := 182.0
 const ICON_BASE := 42.0             # how far above the card's bottom a system's icon sits; its short name goes under it
-const SHORT_NAMES := {"shields": "SHLD", "engines": "ENG", "weapons": "WPN", "oxygen": "AIR", "medbay": "MED", "teleporter": "TELE", "cloaking": "CLOAK", "evb_dock": "EVB", "hacking": "HACK", "mind_control": "MIND", "aaa": "ARRAY", "supershield": "SUPER", "piloting": "PILOT", "sensors": "SENS", "doors": "DOORS", "battery": "BATT", "growth_organ": "GROW", "servicing_core": "CORE"}
+const SHORT_NAMES := {"eva_dock": "EVA", "shields": "SHLD", "engines": "ENG", "weapons": "WPN", "oxygen": "AIR", "medbay": "MED", "teleporter": "TELE", "cloaking": "CLOAK", "evb_dock": "EVB", "hacking": "HACK", "mind_control": "MIND", "aaa": "ARRAY", "supershield": "SUPER", "piloting": "PILOT", "sensors": "SENS", "doors": "DOORS", "battery": "BATT", "growth_organ": "GROW", "servicing_core": "CORE"}
 const POWER_BAR := 9.0
 
 
@@ -901,6 +903,10 @@ func _system_buttons(ship: Ship, system: ShipSystem) -> Array:
 				["recall", func(): screen.recall_boarders(), "Bring every boarder home. Hotkey: R", ready, -1]]
 		"evb_dock":
 			return [["go", func(): screen.start_suit_launch(), "A crew member in the EVB Dock room suits up and flies out to fight an enemy ship. Each launch uses a new suit (%s Mawjig). Hotkey: B" % Mawjig.format(Library.weapon(ship.suits[0]).cost_per_volley) if not ship.suits.is_empty() else "No suits left.", fighting and ship.evb_cooldown <= 0 and not ship.suits.is_empty() and not ship.suit_out and ship.system_power(system) > 0, ship.evb_cooldown]]
+		"eva_dock":
+			return [
+				["send", func(): screen.start_eva(), "Send crew across to another ship in EVA suits: the crew you have selected, or whoever stands in the dock's room. Then click the ship, a squad-mate's or an enemy's.", ship.system_power(system) > 0, -1],
+				["recall", func(): screen.recall_eva(), "Call home every crew member of this ship who is aboard another.", ship.system_power(system) > 0, -1]]
 		"cloaking":
 			return [["cloak", func(): screen.cloak(ship), "Hide the ship: most shots miss and its weapons hold their charge. Hotkey: C", ship.cloak_ticks <= 0 and ship.cloak_cooldown <= 0 and ship.system_power(system) > 0, ship.cloak_cooldown]]
 		"battery":
@@ -1179,7 +1185,7 @@ func _draw_overlays() -> void:
 	if screen.aim_mode == "" and _wants_a_hint():
 		_draw_notice("To attack: click a weapon at the bottom, then a room of the enemy ship. Space pauses.", 226, UiColours.TARGET_YELLOW)
 	if screen.aim_mode != "":
-		var hint: String = {"weapon": "Click a tile of an enemy ship to aim. Right click cancels.", "beam": "Press on an enemy tile and drag to aim the beam's sweep.", "teleport": "Click an enemy room to send boarders.", "suit": "Click an enemy ship to send the battlesuit.", "hack": "Click an enemy system to latch the probe onto it. Right click cancels.", "mind": "Click an enemy crew member you can see to take them over. Right click cancels."}.get(screen.aim_mode, "")
+		var hint: String = {"weapon": "Click a tile of an enemy ship to aim. Right click cancels.", "beam": "Press on an enemy tile and drag to aim the beam's sweep.", "teleport": "Click an enemy room to send boarders.", "suit": "Click an enemy ship to send the battlesuit.", "eva": "Click a ship to send the crew across to it. Right click cancels.", "hack": "Click an enemy system to latch the probe onto it. Right click cancels.", "mind": "Click an enemy crew member you can see to take them over. Right click cancels."}.get(screen.aim_mode, "")
 		_draw_notice(hint, size.y - 300, UiColours.TARGET_YELLOW)
 		var mouse := get_local_mouse_position()
 		var colour := UiColours.ENEMY_RED if screen._aim_is_autofire() else UiColours.TARGET_YELLOW

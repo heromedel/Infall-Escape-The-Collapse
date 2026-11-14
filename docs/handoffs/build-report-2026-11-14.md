@@ -67,6 +67,8 @@ Still rough, from the last round:
 | `Beams vs Shields: Penetrate (Classic) > Hit (Damages Shields First)` | GDD 8Q | Off by default. With Hit, the Senti beam ships win their duels about a quarter sooner |
 | Two door buttons that flip between open and close | heromedel (his option B and icons) | Doors and airlocks |
 | Several weapon systems on one ship | GDD 8L | A row of slots for each; each draws on its own bars and has its own gunner. The Pirate Hijacker and the Tentauri scout have Weapons A and B, as the docs have them |
+| The EVA Dock | GDD 8R; heromedel "all of it" | Crew cross to another ship in a suit. The open details are filled in as Ai-Generated-Proposals (GV 8K) |
+| The three Senti crew killers | `docs/deck-collapse-ships` | With fire beams, a breach laser, an anti-crew beam and a bio bomb. Mild in fights so far |
 | Short names under the system icons; a different sign on each system's button | Second blind test | SHLD, ENG, WPN A… |
 | The dock rule, the Hijacker's door, the Patrol Cutter's hull, the shields room value | Earlier the same day | |
 
@@ -100,8 +102,6 @@ Not fixed:
 ## Not built
 
 - From GDD 8M: weapon slots set by a system's level, `maxSlots`, and mounts kept for one weapon system.
-- The EVA Dock (GDD 8R, Proposed, with open questions).
-- The three Senti crew killers: they also need fire beams, an anti-crew beam and bio bombs.
 - The Senti system battery; seeing into a hacked room; mind control's bonus at higher levels.
 
 ## Tests at the end of the day

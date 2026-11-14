@@ -9,7 +9,7 @@ extends RefCounted
 
 const KINDS := ["power", "wpower", "aim", "aim_beam", "aim_suit", "untarget", "autofire", "move", "door", "doors",
 		"stations", "save_posts", "board", "recall", "suit", "cloak", "pause",
-		"hack", "pulse", "mind", "battery"]
+		"hack", "pulse", "mind", "battery", "eva", "eva_home"]
 
 
 # --- Naming things ------------------------------------------------------------------------------------------
@@ -163,6 +163,20 @@ static func apply(battle: BattleScreen, order: Dictionary) -> String:
 			var index := int(order.get("sys", -1))
 			if ship == null or target == null or index < 0 or index >= target.systems.size() or not encounter.attach_hack(ship, target, target.systems[index]):
 				return "The probe can't latch on there."
+		"eva":
+			var target := _ship(encounter, order, "ts")
+			var sent := 0
+			if ship and target:
+				for index in order.get("crew", []):
+					if int(index) >= 0 and int(index) < ship.crew.size() and encounter.order_eva(ship.crew[int(index)], target):
+						sent += 1
+			if sent == 0:
+				return "Nobody could make that crossing."
+		"eva_home":
+			if ship:
+				for member in ship.crew:
+					if member.ship != ship and member.is_active():
+						encounter.order_eva(member, ship)
 		"battery":
 			if ship == null or not encounter.use_battery(ship):
 				return "The Backup Battery isn't ready."

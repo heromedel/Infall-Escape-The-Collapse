@@ -51,6 +51,7 @@ static func walk_to(member: CrewMember, goal: Vector2i, from_player: bool = fals
 	member.path = route
 	member.destination = goal
 	member.player_ordered = from_player
+	member.eva_to = null          # a new order replaces an order to cross to another ship
 	member.melee_with = null      # walking off a shared tile ends that melee; the one left behind may follow
 	return true
 

@@ -11,6 +11,9 @@ var out := ""
 var zoom_ship: Ship = null
 
 
+var _eva_walker: CrewMember = null
+
+
 func _ready() -> void:
 	if OS.get_environment("BATTLEFIELD") != "":
 		Settings._values["battlefield"] = OS.get_environment("BATTLEFIELD")
@@ -45,6 +48,11 @@ func _ready() -> void:
 		encounter.fight_started = true
 		encounter.attach_hack(players[0], enemies[0], enemies[0].system_by("shields"))
 		encounter.pulse_hack(players[0])
+	if OS.get_environment("USE").contains("eva") and not enemies.is_empty():
+		encounter.fight_started = true
+		var walker: CrewMember = players[0].crew[players[0].crew.size() - 1]
+		print("eva ordered: ", encounter.order_eva(walker, enemies[0]))
+		_eva_walker = walker
 	if OS.get_environment("USE").contains("mind") and not enemies.is_empty():
 		encounter.fight_started = true
 		encounter.mind_control(players[0], enemies[0].crew[0])

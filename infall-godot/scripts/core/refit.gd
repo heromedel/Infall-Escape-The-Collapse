@@ -4,7 +4,7 @@ extends RefCounted
 ## The store and the ship screen give these orders; every machine plays them here, so the run stays the same
 ## everywhere. Ships are named by their place in the squad, crew by their place in their ship's crew.
 
-const INSTALLABLE := ["medbay", "doors", "sensors", "crew-teleporter", "cloaking", "supershield", "evb-dock", "shields", "life-support", "hacking", "mind-control", "backup-battery"]
+const INSTALLABLE := ["medbay", "doors", "sensors", "crew-teleporter", "cloaking", "supershield", "evb-dock", "shields", "life-support", "hacking", "mind-control", "backup-battery", "eva-dock"]
 const RACE_OWN := {"senti": {"hacking": "intrusion-array", "shields": "shield-projector", "medbay": "aaa"}, "azurethea": {"mind-control": "pheromone-gland"}}   # a race's own make of a system
 
 

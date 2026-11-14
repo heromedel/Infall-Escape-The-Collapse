@@ -404,6 +404,22 @@ func _mouse_button(event: InputEventMouseButton) -> void:
 
 
 func _click_while_aiming() -> void:
+	if aim_mode == "eva":
+		if hover_ship and selected_ship and hover_ship != selected_ship and not hover_ship.is_gone():
+			var dock := selected_ship.system_by("eva_dock")
+			var going: Array = []
+			for index in selected_ship.crew.size():
+				var member: CrewMember = selected_ship.crew[index]
+				if member.selected and member.is_active():
+					going.append(index)
+			if going.is_empty() and dock:
+				for index in selected_ship.crew.size():
+					var member: CrewMember = selected_ship.crew[index]
+					if member.is_active() and member.ship == selected_ship and selected_ship.room_at(member.cell) == dock.room:
+						going.append(index)
+			_give({"k": "eva", "s": _index(selected_ship), "ts": _index(hover_ship), "crew": going})
+			cancel_aim()
+		return
 	if aim_mode == "mind":
 		if hover_crew and hover_crew.side != 0 and selected_ship:
 			_give({"k": "mind", "s": _index(selected_ship), "home": _index(hover_crew.home), "crew": hover_crew.home.crew.find(hover_crew)})
@@ -690,6 +706,16 @@ func recall_boarders() -> void:
 func start_suit_launch() -> void:
 	if selected_ship and selected_ship.system_by("evb_dock") and encounter.in_fight():
 		aim_mode = "suit"
+
+
+func start_eva() -> void:
+	if selected_ship and selected_ship.system_by("eva_dock") and selected_ship.system_power(selected_ship.system_by("eva_dock")) > 0:
+		aim_mode = "eva"
+
+
+func recall_eva() -> void:
+	if selected_ship:
+		_give({"k": "eva_home", "s": _index(selected_ship)})
 
 
 func use_battery() -> void:
