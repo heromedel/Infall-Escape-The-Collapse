@@ -144,24 +144,24 @@ static func missing_lines(run: RunState) -> PackedStringArray:
 		for race in group.races:
 			options.append(_with_article(name_of(race)))
 		if int(group.own_crew) > 0:
-			options.append("%d of your own people aboard" % int(group.own_crew))
+			options.append("%d crew of your own people on that ship" % int(group.own_crew))
 		var need := "%s: %s." % [group.name, " or ".join(options)] if group.races.size() > 1 or int(group.own_crew) > 0 else "%s." % name_of(group.races[0])
 		if run.group_done_on(ship, group):
 			lines.append("%s Fitted to the %s." % [need, ship.name])
 			continue
 		var have: Array = group.races.filter(func(race): return run.has_tech(race))
 		if not have.is_empty():
-			lines.append("%s %s. Fit it to the %s at a refit yard." % [need, "In the hold" if run.tech.has(have[0]) else "On another of your ships", ship.name])
+			lines.append("%s You have one %s: a refit yard can fit it to the %s." % [need, "in the hold" if run.tech.has(have[0]) else "on another ship", ship.name])
 			continue
 		var ways: PackedStringArray = []
 		for race in group.races:
 			var race_name: String = Library.race(race).name
 			var direction := direction_to(run, race)
 			if direction == "":
-				ways.append("%s space is gone: look for %s ships, refugees and mercenaries" % [race_name, race_name])
+				ways.append("%s space is gone; look for their ships and refugees" % race_name)
 			elif direction == "here":
-				ways.append("try %s ships, stores or space; you are in %s space now" % [race_name, race_name])
+				ways.append("%s ships and stores, here" % race_name)
 			else:
-				ways.append("try %s ships, stores or space; the nearest %s region lies %s of you" % [race_name, race_name, direction])
-		lines.append("%s Missing: %s." % [need, "; or ".join(ways)])
+				ways.append("%s ships and stores, %s of you" % [race_name, direction])
+		lines.append("%s Missing. Try %s." % [need, ", or ".join(ways)])
 	return lines

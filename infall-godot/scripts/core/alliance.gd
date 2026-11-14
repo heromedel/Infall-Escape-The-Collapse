@@ -56,6 +56,8 @@ static func lines(run: RunState) -> PackedStringArray:
 	out.append("The convoy: %d of %d peoples pledged (%s)." % [pledged.size(), needed, ", ".join(pledged.map(func(race): return Library.race(race).name))])     # Infall: Lori's lines
 	if run.alliance_ready():
 		out.append("Enough have pledged. Head for the rim; more allies mean fewer enemies there.")
+	else:
+		out.append("Ask a people at one of their stores, or meet them in their space.")
 	for race in races:
 		if run.has_pledge(race):
 			continue
@@ -64,7 +66,7 @@ static func lines(run: RunState) -> PackedStringArray:
 		if direction == "":
 			out.append("%s: their space is gone. Look for their refugees and ships." % name)
 		elif direction == "here":
-			out.append("%s: you are in their space. Ask at their stores, or keep travelling here." % name)
+			out.append("%s: you are in their space." % name)
 		else:
-			out.append("%s: their nearest space lies %s of you." % [name, direction])
+			out.append("%s: %s of you." % [name, direction])
 	return out

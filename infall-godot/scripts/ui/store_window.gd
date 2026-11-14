@@ -99,7 +99,7 @@ func _rebuild() -> void:
 		var held := run.has_tech(piece)
 		var price := RimTech.price(piece, run.band())
 		right.add_child(_section("THE CROSSING  ·  %d of %d fitted" % [run.tech_count(), run.tech_total()]))
-		right.add_child(_card(RimTech.name_of(piece), "%s\n%s: one of the pieces a ship needs to cross to another galaxy. It goes to your hold; a refit yard fits it." % [RimTech.pieces[piece].line, RimTech.name_of(piece)], price, held, func(): _buy_tech(piece, price), null, "HELD"))
+		right.add_child(_card(RimTech.name_of(piece), "%s\n%s: one of the pieces a ship needs to cross to another galaxy. It goes to your hold; a refit yard fits it." % [RimTech.pieces[piece].line, RimTech.name_of(piece)], price, held, func(): _buy_tech(piece, price), null, "YOU HAVE IT"))
 	var ask := Alliance.race_to_ask(run, run.cluster())
 	if ask != "":
 		right.add_child(_section("THE CONVOY"))

@@ -59,8 +59,9 @@ func open(run_state: RunState, jumping_allowed: bool) -> void:
 	_info.bbcode_enabled = true
 	_info.fit_content = true
 	_info.scroll_active = false
-	_info.custom_minimum_size = Vector2(380, 0)
+	_info.custom_minimum_size = Vector2(400, 0)
 	_info.position = Vector2(30, 120)
+	_info.add_theme_stylebox_override("normal", UiKit.box(Color(0.03, 0.05, 0.09, 0.82), UiColours.BORDER_DIM, 1, 4, 12))     # the text reads over the stars
 	_info.add_theme_font_size_override("normal_font_size", 18)
 	_info.add_theme_font_size_override("bold_font_size", 18)
 	add_child(_info)
@@ -211,12 +212,12 @@ func _update_info() -> void:
 		var convoy := Alliance.lines(run)
 		lines.append("[color=#ffd46b]%s[/color]" % convoy[0])
 		for line_index in range(1, convoy.size()):
-			lines.append("[color=#a8b8cc]%s[/color]" % convoy[line_index])
+			lines.append("[font_size=15][color=#a8b8cc]%s[/color][/font_size]" % convoy[line_index])
 	if run.tech_goal:
 		lines.append("")
 		lines.append("[color=#ffd46b]The crossing: %d of %d fitted to one ship[/color]" % [run.tech_count(), run.tech_total()])
 		for line in RimTech.missing_lines(run):
-			lines.append("[color=#a8b8cc]%s[/color]" % line)
+			lines.append("[font_size=15][color=#a8b8cc]%s[/color][/font_size]" % line)
 	_info.text = "\n".join(lines)
 
 

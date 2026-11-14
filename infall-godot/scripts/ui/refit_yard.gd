@@ -6,13 +6,15 @@ extends Overlay
 var run: RunState
 var give: Callable                    # sends a refit order to the stream
 var _content: VBoxContainer
+var _money: RichTextLabel
 
 
 func open(run_state: RunState, give_order: Callable) -> void:
 	run = run_state
 	give = give_order
-	place_panel(1040, 0)
+	place_panel(1240, 0)
 	add_title("REFIT YARD")
+	_money = add_text("", 20, Color("#ffd46b"))
 	add_text("Move a system from one of your ships to another, for a quarter of its value. It goes into a room of your choice: a Medbay needs a room without manned systems, and an EVA or EVB Dock needs an airlock.", 17, UiColours.TEXT_DIM)
 	_content = scrolling_area()
 	add_button("BACK TO THE STORE", close)
@@ -23,6 +25,7 @@ func rebuild() -> void:
 	if _content == null:
 		return
 	clear(_content)
+	_money.text = "Mawjig %s" % Mawjig.format(run.mawjig)
 	if not run.tech.is_empty():
 		_content.add_child(UiKit.label("IN THE HOLD", 18, Color("#ffd46b"), true))
 		for race in run.tech:
@@ -31,7 +34,7 @@ func rebuild() -> void:
 			var name := UiKit.label(RimTech.name_of(race), 16)
 			name.custom_minimum_size = Vector2(430, 0)
 			row.add_child(name)
-			var fit := UiKit.button("FIT  " + Mawjig.format(Refit.fit_price(race)), func(): _choose_ship_for_piece(race), 150)
+			var fit := UiKit.button("FIT TO...  -%s" % Mawjig.format(Refit.fit_price(race)), func(): _choose_ship_for_piece(race), 210)
 			fit.disabled = not run.own_ships().any(func(ship: Ship): return Refit.fit_refusal(run, race, ship).is_empty())
 			row.add_child(fit)
 			_content.add_child(row)
@@ -57,7 +60,7 @@ func rebuild() -> void:
 			row.add_child(name)
 			var targets: Array[Ship] = run.own_ships().filter(func(other: Ship): return Refit.move_refusal_between(run, ship, system, other).is_empty())
 			var price := Refit.move_price(ship, system)
-			var move := UiKit.button("MOVE  " + Mawjig.format(price), func(): _choose_ship(ship, system), 150)
+			var move := UiKit.button("MOVE TO...  -%s" % Mawjig.format(price), func(): _choose_ship(ship, system), 210)
 			move.disabled = targets.is_empty()
 			if targets.is_empty():
 				var reasons: PackedStringArray = []
@@ -66,6 +69,9 @@ func rebuild() -> void:
 						reasons.append(Refit.move_refusal_between(run, ship, system, other))
 				move.tooltip_text = "\n".join(reasons) if not reasons.is_empty() else "There is no other ship to move it to."
 			row.add_child(move)
+			if targets.is_empty():
+				var why_label := UiKit.label(move.tooltip_text.split("\n")[0], 14, UiColours.TEXT_DIM)
+				row.add_child(why_label)
 			_content.add_child(row)
 		_content.add_child(HSeparator.new())
 

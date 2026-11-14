@@ -677,8 +677,8 @@ func _leave_the_fight(view: PlayerView) -> void:
 	view.open_window(window)
 	window.place_panel(720)
 	window.add_title("LEAVE THEM BEHIND?", UiColours.WARNING)
-	var clear_names := ", ".join(clear.map(func(ship: Ship): return ship.name))
-	var fighting_names := ", ".join(fighting.map(func(ship: Ship): return ship.name))
+	var clear_names := " and ".join(clear.map(func(ship: Ship): return "The " + ship.name))
+	var fighting_names := " and ".join(fighting.map(func(ship: Ship): return "The " + ship.name))
 	window.add_text("%s %s clear of the fight. %s %s still in it, and will be lost with everyone aboard if you jump now." % [clear_names, "is" if clear.size() == 1 else "are", fighting_names, "is" if fighting.size() == 1 else "are"], 20)     # Infall: Lori
 	window.add_button("1. Leave them and plot the jump.", func():
 		window.close()
