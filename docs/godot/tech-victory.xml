@@ -31,20 +31,20 @@
 	<event id="TECH_GOAL_FOUND" title="A Way Out" kind="neutral" bands="6-7" weight="3" unique="yes" after_collapse="yes">
 		<text>A transmission from The Colony Ship catches up with you, its signal weaker than ever.
 
-"Our engineers have found something in the old archives. No single race's ship could cross the dark between galaxies. But a ship built with the best of every race's technology just might. One power core, one engine, one shield, one archive, one autopilot, one hull, and one organ that heals what breaks.
+"Our engineers have found something in the old archives. No single race's ship could cross the dark between galaxies. But one ship fitted with the best of other races' technology just might: something to power it or keep it alive, something to fly it, something to hold it together, and a record to find the way across.
 
-"We're too big and too slow to rebuild in time. Your scouts aren't. If it comes to it, find those pieces and go without us. Somebody has to make it."</text>
+"We're too big and too slow to rebuild in time. Your scouts aren't. Find those pieces and fit them to one of your ships. If it comes to it, go without us. Somebody has to make it."</text>
 		<choice text="We'll find them.">
-			<outcome><text>Your squad begins a new search: the best technology of seven different races, from whoever will sell it, give it, lose it or surrender it.</text><tech_goal/></outcome>
+			<outcome><text>Your squad begins a new search: the best technology of other races, from whoever will sell it, give it, lose it or surrender it.</text><tech_goal/></outcome>
 		</choice>
 	</event>
 
 	<!-- "What techs are we missing": the check the squad can open at any time once the goal has started. The game fills
 	     one line per missing piece. -->
-	<event id="TECH_MISSING" title="The Seven Pieces" kind="message">
-		<text>Your squad holds {held} of the seven pieces. Still missing:
+	<event id="TECH_MISSING" title="The Crossing Ship" kind="message">
+		<text>To make the crossing, one ship needs these fitted:
 
-{missing}</text>
+{needs}</text>
 		<choice text="Continue..."/>
 	</event>
 
@@ -162,7 +162,7 @@ Then, without a sound, it splits open and lets the growth organ float free. By t
 	<event id="RIVAL_FIRST" title="The Long Odds" kind="hostile" bands="7" weight="3" unique="yes">
 		<text>A heavy GATOS ship drops out of a jump right beside your squad, its hull darkened and its emblem scorched. Its captain hails you.
 
-"Commodore Marlowe, of the Long Odds. You've been collecting things. The best tech of every race. Nobody does that unless they've found a way out of this galaxy. Tell me how."</text>
+"Commodore Marlowe, of the Long Odds. You've been collecting things. The best tech of other races. Nobody does that unless they've found a way out of this galaxy. Tell me how."</text>
 		<choice text="Tell him nothing.">
 			<outcome><text>"Then I'll take it out of your wreckage."</text><fight squad="rival-hunt"/></outcome>
 		</choice>
@@ -204,13 +204,13 @@ Then, without a sound, it splits open and lets the growth organ float free. By t
 		<choice text="Continue..."/>
 	</event>
 
-	<!-- The ambush at the rim, when the squad holds all seven pieces. -->
+	<!-- The ambush at the rim, when one ship has every piece it needs fitted. -->
 	<event id="FINAL_RIVAL_TECH" title="Marlowe's Last Stand" kind="final" unique="yes">
-		<text>The rim is here. With all seven pieces aboard, your squad could make the crossing.
+		<text>The rim is here. With every piece fitted to one of your ships, it could make the crossing.
 
 Then the Long Odds drops out of a jump in front of you, and the rest of Marlowe's fleet drops in around it: every desperate ship that still answered his call. Marlowe sounds exhausted.
 
-"I'm not asking anymore. Seven pieces, and a way out. I'm taking them."</text>
+"I'm not asking anymore. Your ship, its pieces, and a way out. I'm taking them."</text>
 		<choice text="Offer him a place behind you.">
 			<outcome><text>"Behind you? Behind you is where the collapse is." He laughs, and it doesn't sound like laughing.</text><fight squad="final-rival-tech"/></outcome>
 		</choice>
@@ -228,29 +228,33 @@ Then the Long Odds drops out of a jump in front of you, and the rest of Marlowe'
 
 <!-- Lines for the code:
 
-THE CHECK (TECH_MISSING): one line per missing piece, with a pointer, not a destination:
-"{tech}: from {race} ships, stores or space. The nearest {race} region lies {direction} of you."
-When the collapse has taken every {race} region the squad could reach:
-"{tech}: {race} space is gone. Look for {race} ships, refugees and mercenaries instead."
-When nothing is missing: "All seven pieces are aboard. Head for the rim."
+THE CHECK (TECH_MISSING), {needs}: one line per need, worded to fit either setting (pairs or all seven).
+A need is "{need}: {options}." followed by its status. {options} is one piece ("a Senti Armoured Avatar Array") or a
+pair ("a GATOS Armoured ZeroPoint Core or a Malphen Growth Organ"); {need} is Power, Flight, Hull, Record, or the
+piece's race with all seven.
+Status, fitted: "Fitted to the {ship}."
+Status, in the hold: "In the hold. Fit it to the {ship} at a refit yard."
+Status, missing: "Missing. Try {race} ships, stores or space; the nearest {race} region lies {direction} of you."
+Missing, when that race's space is gone: "Missing. {race} space is gone: look for {race} ships, refugees and mercenaries."
+When everything is fitted: "Everything the crossing needs is fitted to the {ship}. Head for the rim."
 
 Taking a piece from a ship of that race:
 Wreck salvaged: "Your crews pull the {tech} out of the wreck of the {ship}."
 Ship left whole (surrender or crew killed): "You strip the {tech} out of the {ship} and let what's left of it limp away."
 Malphen surrender: "The Malphen ship says nothing. It jettisons the {tech} and powers up its drive."
 Choice to demand a piece from a surrendering ship: "Demand their {tech} as the price of surrender."
-Store row for a piece: "{tech}: one of the seven pieces you need to cross to another galaxy."
+Store row for a piece: "{tech}: one of the pieces a ship needs to cross to another galaxy."
 
 MID-FIGHT, when one of the rival's lost ships is replaced by a stronger one:
 Another darkened hull drops out of a jump to take the fallen ship's place. Its crew aren't waiting for orders anymore.
 
 The rim without all seven, when the Tech victory is required:
-"The rim is here, but there is no way out yet. Without all seven pieces your squad can't cross the dark between galaxies. Find the ones you're missing."
+"The rim is here, but there is no way out yet. None of your ships has every piece it needs fitted to cross the dark between galaxies. Find what's missing and fit it to one ship."
 
 THE TECH VICTORY END SCREEN, title "THE CROSSING":
-Seven pieces from seven peoples, fitted into one ship that was never meant to exist. The GATOS core powers it, the Azurethea engines steer it and the Mecha reinforcement holds it together. The Tentauri Supershield wraps it, the Senti array remembers the way, the Lykario autopilot flies it and the Malphen organ regrows whatever the crossing tears away.
+The best technology of other peoples, fitted into one ship that was never meant to exist. It flies into the dark between galaxies, and the dark lets it through.
 
-Your squad flies into the dark between galaxies, and the dark lets you through. Behind you, The Colony Ship follows your signal as far as it can.
+Behind you, The Colony Ship follows your signal as far as it can.
 
 Behind it, the collapse reaches the rim. It will never reach where you are going.
 
