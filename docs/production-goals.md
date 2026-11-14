@@ -108,6 +108,17 @@ which with the shared pools (section 3) lands near FTL's 647, as the measuring s
 Each goal lists what must exist. "Exists" means in the docs, priced and checked, in the form a coder can build from:
 ships in `ship-suggestions.md`, weapons in the cost tables, events in Lori's event files, squads in a squad file.
 
+**Audit against the Godot build (Production, 2026-11-14).** The build in `infall-godot/` (README; `docs/godot-version-decisions.md`;
+`docs/handoffs/overnight-report-2026-11-13.md`) was counted against these goals. Its content folder holds: 15 ship
+files with 16 loadouts across all 7 core races; 11 squads with conduct, one per race plus pirates, scrappers,
+checkpoints and the Last Fleet; 36 weapons; 17 systems; 87 events in 7 files (79 reported in the README);
+8 bands; all cluster states of 2R plus Core and Unclaimed; LAN, split screen, saves, stores, hail and surrender,
+mercenaries, the final battle at the rim. By the goal tables below, Goal P is done, Goal A is done apart from its
+own open design rows, and Goal B is built in breadth (every race, every band, the end) but not in depth (its ship,
+squad and event counts). What was built ahead of the docs is tagged in the README as Ai-Generated-Proposal: 13 of the
+15 hulls, about 23 weapons, the squads' conduct, map generation and the open timings. Those are the review backlog
+for Ship Designs, Lori, Eco and heromedel (`docs/items-needing-second-opinion.md`), not production gaps.
+
 ### Goal P: first prototype
 
 **Ai-Generated-Proposal (2026-10-26).** Goal A is the smallest thing a player could call a game; this is the smallest
@@ -131,44 +142,47 @@ Steps from P to A, each one line of work: AZC and conduits on the Terran ship; t
 counter; a generated map of one band; the event window with one of Lori's opening texts; a store; the second
 squad; host and join over LAN; the remaining Goal A rows.
 
+**Status (2026-11-14):** done. Every row and every step from P to A is in the Godot build; the one departure is that
+saves are JSON, not XML or text (coding rule 11 says hand-readable, which JSON is).
+
 ### Goal A: minimum playable prototype
 
 One playable race, a short run, every core loop present once.
 
-| Area | Needed | Status (2026-10-23) |
-|---|---|---|
-| Network and players | Host and join flow designed before any other code (heromedel: step 0): Captain hosts, Commanders join by LAN direct IP (4A), assignment of ships and crew (4C, 4D), shared pool (4E), drop in and out (4F), Pause Control and Turn Mode settings (4H, 4I), event choice voting (4M), pause and vote indicators (4L) | Decided in the GDD; the host flow and what the network carries each tick are not written |
-| Player race | Terrans (7C): the Terran Starting Scout, AZC with conduits (7E), conduit setting | Scout designed; conduit rules and routing need a worked ruleset |
-| Enemy races | GATOS (doing fine patrols, doomed pirates) and the Mecha (border, EVB suits, system integration) | Mecha Light Attack Frame (1 hull, 2 loadouts) and the Light Attack Pair squad done and merged 2026-10-23 (`handoffs/done/2026-10-23-1417-ship-designs-mecha-light-attack-squad.md`); 1 more Mecha low hull still needed; Terran Pirate Hijacker exists (mid tier, band 5: needs a low-tier pirate) |
-| Bands | 1–3 (low tier); the run ends at the band 3 edge with a results screen | |
-| Map | Open cluster map (2C) with Terran and Mecha regions, neutral clusters between, deep/inner/border ranks (2K), no dead ends (2F), the 5-jump opening (2P), the collapse ring (2Q); states in play: Doing Fine, Doomed, Border | Generation rules (region shapes, how many clusters, link rules) are not written |
-| Ships | Terran: Outrider + 1 more hull (patrol or pirate) with bands 1–3 loadouts; Mecha: Light Attack Frame loadouts for bands 1–3, including one weak enough for a band 1 budget (F6: 137), + 1 more hull if needed = 3–4 hulls | 3 hulls (Outrider; Pirate Hijacker hull with the Cutpurse bands 1–3 loadout, done 2026-10-23, `handoffs/done/2026-10-23-2130-ship-designs-terran-pirate-low-loadout.md`; Light Attack Frame, whose pair is a band 2–3 squad, band 1 loadout still needed). Art done for the Outrider, both pirate loadouts and the Mecha Light Attack Frame (battle-cross hull, hull laser and suit dock loadouts, standard and open-stern floor plans, DS-ST Hull Laser and laser battlesuit), all with floor plans; the Tentauri scout has art too (`docs/art/`) |
-| Squads | Terran doing fine 2, Terran doomed 2, Mecha border 2, Mecha doing fine 1, mixed border 1 = 8 templates, sizes 1–3 | 2 of 8 (Light Attack Pair; Terran Pirates with the Cutpurse in its Low row); squad format: heromedel's `rough-example-squad-layout.md` (Proposed), conduct lines optional |
-| Events | shared: collapse opening 5, nothing 1 (3 texts), store 1 (3 texts), hazards 3 of 6 (nebula, asteroids, sun) with 6 events, distress 6, items 6, neutral 8; Terran doing fine 15, Terran doomed 8; Mecha doing fine 10, border 5 = about 70 events | 8 of about 70: collapse opening 5 and Terran store texts 3 done and merged 2026-10-23 (`events-collapse-opening-and-terran-stores.md`; `handoffs/done/2026-10-23-2052-lori-collapse-opening-and-store-texts.md`); two sample events exist (`events-sample.md`) |
-| Weapons | Terran 4 (2 exist), Mecha 3, stolen or found 2 = 9 | 5 of 9 (Gat 3.1, Gat M1, Gat 2.1, DS-ST Hull Laser, laser battlesuit; the Sporewing is Azurethea) |
-| Systems | FTL's core set renamed as decided (Life Support 8B), conduits and AZC, EVB Dock with 1 suit type, Supershield only if the Tentauri replace the Mecha | Prices exist for all; behaviour of EVB and conduits needs a ruleset |
-| Crew | Terran, Mecha traits (integration timing, slow, tough); Terran name list | Traits proposed in profiles; no name lists. Art: Mecha crew sheet, HalfMech pilot sheet, Cybernetic Servicing Core and Mecha console done (`docs/art/mecha/`); Tentauri crew sheet done; no Terran crew art yet |
-| Economy | Mawjig display, jump 1.21, wait 0.21, rewards bands 1–3, repair prices, store prices | Tables exist |
-| Combat | FTL rules on fixed ticks (3E), pan and zoom (3C), formation (3H), Hail with surrender (3O), wall breaches off | |
-| Win and loss | Loss: all scouts gone (1F); end: band 3 reached | |
+| Area | Needed | Status (2026-10-23) | Built (Godot, 2026-11-14) |
+|---|---|---|---|
+| Network and players | Host and join flow designed before any other code (heromedel: step 0): Captain hosts, Commanders join by LAN direct IP (4A), assignment of ships and crew (4C, 4D), shared pool (4E), drop in and out (4F), Pause Control and Turn Mode settings (4H, 4I), event choice voting (4M), pause and vote indicators (4L) | Decided in the GDD; the host flow and what the network carries each tick are not written | Done: the game runs as a server with its players as clients; LAN by IP, join at any time; Admiral assigns ships and crew, remembered on leaving (4F); split screen up to six; Pause Control; event choices. Turn Mode and voting (4I, 4M): not seen in the README |
+| Player race | Terrans (7C): the Terran Starting Scout, AZC with conduits (7E), conduit setting | Scout designed; conduit rules and routing need a worked ruleset | Done: Outrider with the AZC and conduits (unbroken path to the AZC powers a system, concerns.md item 3's last proposal; no reroute action); default conduits for ships listing none |
+| Enemy races | GATOS (doing fine patrols, doomed pirates) and the Mecha (border, EVB suits, system integration) | Mecha Light Attack Frame (1 hull, 2 loadouts) and the Light Attack Pair squad done and merged 2026-10-23 (`handoffs/done/2026-10-23-1417-ship-designs-mecha-light-attack-squad.md`); 1 more Mecha low hull still needed; Terran Pirate Hijacker exists (mid tier, band 5: needs a low-tier pirate) | Done: GATOS Patrol Cutter (approved 2026-11-13) and Checkpoint squad, Pirate Hijacker with Pickpocket, Cutpurse and Marauder, Pirate Scrapper; Mecha Light Attack Frame with three loadouts, Assault Frame with Siege; Mecha Light Attack and Raiders squads |
+| Bands | 1–3 (low tier); the run ends at the band 3 edge with a results screen | | Done and past: 8 bands, about ten jumps each (galaxy.gd); no band 3 results screen since the run goes to the rim |
+| Map | Open cluster map (2C) with Terran and Mecha regions, neutral clusters between, deep/inner/border ranks (2K), no dead ends (2F), the 5-jump opening (2P), the collapse ring (2Q); states in play: Doing Fine, Doomed, Border | Generation rules (region shapes, how many clusters, link rules) are not written | Done as Ai-Generated-Proposal: a disc of four spiral arms around the core, regions placed at random, cluster contents by chance, start in GATOS space, any way but through the core, the rim ends the run; all 2R states plus Core and Unclaimed, recomputed every jump; the 5-jump opening; the ring grows a fixed distance per jump or wait (2S) |
+| Ships | Terran: Outrider + 1 more hull (patrol or pirate) with bands 1–3 loadouts; Mecha: Light Attack Frame loadouts for bands 1–3, including one weak enough for a band 1 budget (F6: 137), + 1 more hull if needed = 3–4 hulls | 3 hulls (Outrider; Pirate Hijacker hull with the Cutpurse bands 1–3 loadout, done 2026-10-23, `handoffs/done/2026-10-23-2130-ship-designs-terran-pirate-low-loadout.md`; Light Attack Frame, whose pair is a band 2–3 squad, band 1 loadout still needed). Art done for the Outrider, both pirate loadouts and the Mecha Light Attack Frame (battle-cross hull, hull laser and suit dock loadouts, standard and open-stern floor plans, DS-ST Hull Laser and laser battlesuit), all with floor plans; the Tentauri scout has art too (`docs/art/`) | Done: 15 hulls, 16 loadouts; 4 Terran (Outrider, Patrol Cutter, Hijacker, Scrapper), 2 Mecha. Hull art for the Outrider, Hijacker and Cutpurse, Light Attack Frame, Patrol Cutter and Tentauri scout; others drawn from their floor plan in the race's style (5K) |
+| Squads | Terran doing fine 2, Terran doomed 2, Mecha border 2, Mecha doing fine 1, mixed border 1 = 8 templates, sizes 1–3 | 2 of 8 (Light Attack Pair; Terran Pirates with the Cutpurse in its Low row); squad format: heromedel's `rough-example-squad-layout.md` (Proposed), conduct lines optional | Done in count: 11 squads with conduct (surrender and escape chances, targets, Hail answers), state and region gating. Not the 8 templates listed here: the build has one squad per faction that scales by band instead of several per state |
+| Events | shared: collapse opening 5, nothing 1 (3 texts), store 1 (3 texts), hazards 3 of 6 (nebula, asteroids, sun) with 6 events, distress 6, items 6, neutral 8; Terran doing fine 15, Terran doomed 8; Mecha doing fine 10, border 5 = about 70 events | 8 of about 70: collapse opening 5 and Terran store texts 3 done and merged 2026-10-23 (`events-collapse-opening-and-terran-stores.md`; `handoffs/done/2026-10-23-2052-lori-collapse-opening-and-store-texts.md`); two sample events exist (`events-sample.md`) | Done in count: 87 events (core 17 with Lori's opening, distress 10, hazards 7, hostile 16, items 7, neutral 17, stores 13 with Lori's GATOS texts), blue choices for crew races and systems. Beyond Lori's 8, the texts are the Godot session's: Lori's review is the backlog |
+| Weapons | Terran 4 (2 exist), Mecha 3, stolen or found 2 = 9 | 5 of 9 (Gat 3.1, Gat M1, Gat 2.1, DS-ST Hull Laser, laser battlesuit; the Sporewing is Azurethea) | Done and past: 36 weapons across every race, 10 Terran, 5 Mecha; about 23 are Ai-Generated-Proposals priced with the budget and cost tables |
+| Systems | FTL's core set renamed as decided (Life Support 8B), conduits and AZC, EVB Dock with 1 suit type, Supershield only if the Tentauri replace the Mecha | Prices exist for all; behaviour of EVB and conduits needs a ruleset | Done: 17 system files, the AZC, EVB Dock with laser battlesuits, Supershield, Cloaking, Crew Teleporter, Servicing Core, growth organ, weapon pod. Several weapon systems on one ship (8L) parked. The AAA is missing, so the Relay Picket's crew killers are not in |
+| Crew | Terran, Mecha traits (integration timing, slow, tough); Terran name list | Traits proposed in profiles; no name lists. Art: Mecha crew sheet, HalfMech pilot sheet, Cybernetic Servicing Core and Mecha console done (`docs/art/mecha/`); Tentauri crew sheet done; no Terran crew art yet | Done: race files for all 7 with traits and XP rates; GATOS names (Lori's wording), the GATOS Species setting (Terrans > Tabbys); top-down, facing and token art styles (GV 7F); Terran and Mecha sheets, Tentauri facing sheet |
+| Economy | Mawjig display, jump 1.21, wait 0.21, rewards bands 1–3, repair prices, store prices | Tables exist | Done: one pool, jump 1.21, wait 0.25, every volley costs, wreck 2.5% of ship value times band adjustment, +30% for a crew kill (8I), prices as prices, ship values from their parts, mercenary prices by band |
+| Combat | FTL rules on fixed ticks (3E), pan and zoom (3C), formation (3H), Hail with surrender (3O), wall breaches off | | Done: 20 ticks a second, curved formation on a wide horizontal field, pan and zoom, hail with surrender and escape, tile targeting, beams drag, fire through doors only, venting, breaches, crew fights and skills, the Tentauri reach, controllers and keys |
+| Win and loss | Loss: all scouts gone (1F); end: band 3 reached | | Done: lose when every scout ship is gone (1F); win by reaching the rim and beating the Last Fleet, a band of doomed GATOS (ideas: default final enemy); starting ships unlock with distance (7C) |
 
 ### Goal B: playable through to the end
 
-| Area | Needed on top of A |
-|---|---|
-| Bands | 1–8, with mid and high tier ships for every race in play, enemy squads up to 6 ships, rewards and prices for all bands, grinding allowed (2O; concern 1) |
-| Races | 3: GATOS, Mecha, and one biomechanical race (Tentauri, whose scout exists, or Azurethea, whose Stinger exists), so the Tech victory's parts can later come from 3 races |
-| States | all seven in play: Doing Fine, Struggling, Doomed, Border, Refugee, Occupied, Abandoned; Swallowed as the map edge; Core and At War stay Open unless decided |
-| Map | full galaxy: random region placement (2M), race strength from placement (2N), 8 hidden bands (2H), the rim; ring expands one jump per jump |
-| Ships | 3–4 hulls per race × 3 = about 10, each with its band-range loadouts (about 30–36 loadouts) |
-| Squads | 15 per race × 3 = 45 plus 2 neutral convoys and the final rival |
-| Events | per race 93 × 3 = about 280, shared pool 120 = about 400 (70 from A) |
-| Weapons | 8 per race × 3 = 24 plus 6 neutral or stolen = 30 |
-| Systems | all of FTL's (8A) under their Infall names, plus the race systems of the 3 races; Jigawatt Drive (6D) |
-| Victory | reach an outer rim cluster and fight the final rival (doomed Terran band); the Tech victory (ideas) waits for its 3 races' parts and goes in at C |
-| Mercenaries | FTL's mercenary (7G): fight, or pay to scout a region; they cannot slow the collapse |
-| Ship loss and replacement | wrecks of own ships, replacement ships from events and stores (1I; needs review), 3–4 strong or 6 good ships by the end (3K) |
-| Save and load | a run can be saved and resumed, including the collapse position |
+| Area | Needed on top of A | Built (Godot, 2026-11-14) |
+|---|---|---|
+| Bands | 1–8, with mid and high tier ships for every race in play, enemy squads up to 6 ships, rewards and prices for all bands, grinding allowed (2O; concern 1) | Bands done; squads to six a side done; rewards and prices for all bands done. Mid and high tier loadouts: only Marauder (7–8), Siege, Vanguard, Huntmaster, Archive, Broodmass, Swollen; most hulls have one loadout |
+| Races | 3: GATOS, Mecha, and one biomechanical race (Tentauri, whose scout exists, or Azurethea, whose Stinger exists), so the Tech victory's parts can later come from 3 races | Past: all 7 core races are in, each with a ship, a squad, weapons and crew traits |
+| States | all seven in play: Doing Fine, Struggling, Doomed, Border, Refugee, Occupied, Abandoned; Swallowed as the map edge; Core and At War stay Open unless decided | Done, with Core and Unclaimed; At War not seen |
+| Map | full galaxy: random region placement (2M), race strength from placement (2N), 8 hidden bands (2H), the rim; ring expands one jump per jump | Done as Ai-Generated-Proposal (see Goal A, Map); hidden bands and the rim done |
+| Ships | 3–4 hulls per race × 3 = about 10, each with its band-range loadouts (about 30–36 loadouts) | 15 hulls, 16 loadouts of about 10 hulls and 30–36 loadouts: hulls past, loadouts about half |
+| Squads | 15 per race × 3 = 45 plus 2 neutral convoys and the final rival | 11 of 45: one scaling squad per faction, plus pirates, scrappers, checkpoint, the Last Fleet; no convoys |
+| Events | per race 93 × 3 = about 280, shared pool 120 = about 400 (70 from A) | 87 of about 400 |
+| Weapons | 8 per race × 3 = 24 plus 6 neutral or stolen = 30 | 36 of 30: past in count; review pending |
+| Systems | all of FTL's (8A) under their Infall names, plus the race systems of the 3 races; Jigawatt Drive (6D) | Done but the AAA; Jigawatt Drive is the drive in play |
+| Victory | reach an outer rim cluster and fight the final rival (doomed Terran band); the Tech victory (ideas) waits for its 3 races' parts and goes in at C | Done: the rim and the Last Fleet |
+| Mercenaries | FTL's mercenary (7G): fight, or pay to scout a region; they cannot slow the collapse | Done: renewable contracts, four mercenary events, prices by band |
+| Ship loss and replacement | wrecks of own ships, replacement ships from events and stores (1I; needs review), 3–4 strong or 6 good ships by the end (3K) | Partly: ships are lost; replacement by purchase and surrender; survivors only by surrender and by choice |
+| Save and load | a run can be saved and resumed, including the collapse position | Done: hand-readable JSON saves with the seed, in the user data folder |
 
 ### Goal C: alpha
 

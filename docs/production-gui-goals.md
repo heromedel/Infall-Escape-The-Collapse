@@ -10,25 +10,25 @@ Points this list stands on: Decided 3C, 3E, 4B–4N, 10A, 12B; Likely 2D, 3A, 3H
 
 ## Screens and flows
 
-| Screen or flow | Goal | What it must do | Who |
-|---|---|---|---|
-| Title screen | A | New run, continue, join game, settings, quit; the game's name and a first visual identity (10B Open) | Arty for art; layout mockup |
-| Host and join | A | Host a run (becomes Captain), join by direct IP (4A), lobby showing players and assignments (4C, 4D), start | Production spec; heromedel decides |
-| New run | A | Pick starting race and ship (Terran only in A), difficulty later, multiplayer settings (4G: Pause Control, Turn Mode, Event Choices, Captain Transfer) | |
-| Galaxy map | A | Cluster nodes drawn as dot groups (2J), links, current squad, collapse ring (2Q), cluster state marks (2R), store and distress marks within sensor range (2E), clamped zoom with a setting (2D), Jump and Wait (6B) buttons, Mawjig and squad summary | Arty: map art |
-| Cluster arrival and event window | A | Event text, choices, blue options marked, votes shown per player (4M), auto-pause (4K), results | |
-| Battle screen | A | Player squad bottom, enemy squad top (3A), curved formation (3H), pan and zoom camera (3C), 16:9 with GUI bands top and bottom (3J); ships at FTL room scale (3D) | Arty: ship and room art |
-| Per-ship panel | A | Selecting a ship shows its systems, power or conduits, hull, crew and weapons beside it (3B); Terran conduit view and reroute; weapon targeting on any enemy ship (3L) | mockups first (12A) |
-| Hail window | A | Ask or offer surrender, pay passage, other options per squad conduct (3O) | |
-| Pause, vote and lock-in indicator | A | Who paused, who voted, who locked in commands (4L); turn-mode auto pause (4I) | |
-| Store | A | FTL-style sections (systems, weapons, crew, repair, Mawjig can't be bought: it is the currency), stock by cluster state, race-themed texts | |
-| Ship upgrade and crew screens | A | Upgrade systems and AZC or reactor, move crew, assign ships and crew to players (4C) | |
-| Results and run end | A | Run lost (1F) or band 3 reached; later the escape (B) | |
-| Settings | A | Multiplayer settings, map zoom, conduits toggle, controls, sound; defaults shown first; a Classic group for settings that bring play closer to the genre's default (GDD 1K, Likely), never naming FTL | |
-| Save and load | B | Resume a run; the host saves (4N) | |
-| Rim and escape | B | The last clusters, the final battle, the escape sequence | Arty |
-| Victory and unlocks | C | Tech victory flow, race and ship unlocks (7C) | |
-| Debug and admin | A | Console or panel: give Mawjig, spawn squad, reveal map, jump to band, logs on screen (standards: more logs and admin commands) | |
+| Screen or flow | Goal | What it must do | Who | Built (Godot, 2026-11-14) |
+|---|---|---|---|---|
+| Title screen | A | New run, continue, join game, settings, quit; the game's name and a first visual identity (10B Open) | Arty for art; layout mockup | Done (title_screen.gd); visual identity still Open |
+| Host and join | A | Host a run (becomes Captain), join by direct IP (4A), lobby showing players and assignments (4C, 4D), start | Production spec; heromedel decides | Done: Players window, LAN by IP, join any time, split screen |
+| New run | A | Pick starting race and ship (Terran only in A), difficulty later, multiplayer settings (4G: Pause Control, Turn Mode, Event Choices, Captain Transfer) | | Done: starting ships unlock with distance; GATOS Species and other settings |
+| Galaxy map | A | Cluster nodes drawn as dot groups (2J), links, current squad, collapse ring (2Q), cluster state marks (2R), store and distress marks within sensor range (2E), clamped zoom with a setting (2D), Jump and Wait (6B) buttons, Mawjig and squad summary | Arty: map art | Done: dot-group clusters, regions, collapse ring, sensor range, Jump and Wait buttons, whole-galaxy overview |
+| Cluster arrival and event window | A | Event text, choices, blue options marked, votes shown per player (4M), auto-pause (4K), results | | Done: event window with blue choices, number keys; voting not built |
+| Battle screen | A | Player squad bottom, enemy squad top (3A), curved formation (3H), pan and zoom camera (3C), 16:9 with GUI bands top and bottom (3J); ships at FTL room scale (3D) | Arty: ship and room art | Done: horizontal field, curved formation, pan and zoom, HUD cards that dock and fold |
+| Per-ship panel | A | Selecting a ship shows its systems, power or conduits, hull, crew and weapons beside it (3B); Terran conduit view and reroute; weapon targeting on any enemy ship (3L) | mockups first (12A) | Done: hull and shields float by each ship; ship status cards (GV 14H); tile targeting; AZC on/off switching, no reroute action |
+| Hail window | A | Ask or offer surrender, pay passage, other options per squad conduct (3O) | | Done: surrender and escape per squad conduct |
+| Pause, vote and lock-in indicator | A | Who paused, who voted, who locked in commands (4L); turn-mode auto pause (4I) | | Pause done; vote and lock-in not built (Turn Mode not built) |
+| Store | A | FTL-style sections (systems, weapons, crew, repair, Mawjig can't be bought: it is the currency), stock by cluster state, race-themed texts | | Done: store window; Abandoned clusters lose their store; race store texts |
+| Ship upgrade and crew screens | A | Upgrade systems and AZC or reactor, move crew, assign ships and crew to players (4C) | | Done: ship screen (upgrades, weapons, crew), Player setup for assignments |
+| Results and run end | A | Run lost (1F) or band 3 reached; later the escape (B) | | Done: loss (1F) and the Last Fleet at the rim |
+| Settings | A | Multiplayer settings, map zoom, conduits toggle, controls, sound; defaults shown first; a Classic group for settings that bring play closer to the genre's default (GDD 1K, Likely), never naming FTL | | Done: tabs, defaults first, Art Style, Shield Levels, Power Color, HUD layout; a Classic group as such not seen |
+| Save and load | B | Resume a run; the host saves (4N) | | Done: JSON saves with the seed |
+| Rim and escape | B | The last clusters, the final battle, the escape sequence | Arty | Rim and final battle done; no escape sequence |
+| Victory and unlocks | C | Tech victory flow, race and ship unlocks (7C) | | Starting-ship unlocks done; Tech victory not built |
+| Debug and admin | A | Console or panel: give Mawjig, spawn squad, reveal map, jump to band, logs on screen (standards: more logs and admin commands) | | Done: debug console, chaos tester, auto run, run logs |
 
 ## Assets
 
@@ -43,8 +43,8 @@ Points this list stands on: Decided 3C, 3E, 4B–4N, 10A, 12B; Likely 2D, 3A, 3H
 | Event images | B | race and situation images for events, as FTL's planets and ships | | Arty |
 | Race portraits and ship silhouettes | A | for the hail window and event text | | Arty |
 | GUI skin | A | panels, buttons, bars, chips; readable at squad zoom (concern 2) | | Arty with mockups |
-| Fonts | A | one for GUI, one for event text | licensed for games | |
-| Sound | D | weapons, systems, alerts, UI; music per race and state | | later session |
+| Fonts | A | one for GUI, one for event text | licensed for games. Built: fonts in `infall-godot/fonts/` | |
+| Sound | D | weapons, systems, alerts, UI; music per race and state | Built early: every effect and three music tracks synthesized by `tools/make_audio.py`, placeholders | later session |
 | Title and store capsule | D | key art, trailer stills (concern 2) | | Arty |
 
 ## GUI decisions needed first
