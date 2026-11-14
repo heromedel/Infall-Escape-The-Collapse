@@ -112,12 +112,89 @@ and fight (20 of 20) tests pass. Input 27 of 27, co-op 22 of 22. The LAN test an
 test failed once while the machine was busy with playtests, and passed when run on its own). Chaos: four seeds
 clean, one with a display and one with two players. The exported game starts without errors.
 
-## Questions
+## Questions (answered 2026-11-14: Q1 the difficulty looks right as it is; Q2 the overview; Q3 all of it)
 
-- **Q1.** The watcher, a good player, wins about one game in five and the careless player none. You said nine
-  losses in ten is normal. Do you want Normal made a little harder, and if so in the middle bands (where the
-  expert loses little hull) or at the Last Fleet?
+- **Q1.** The watcher, a good player, wins about one game in five and the careless player none. Nine losses in
+  ten is said to be the genre's own target (heromedel, 2026-11-14: it is not his; Infall has no set win rate). Do
+  you want Normal made a little harder, and if so in the middle bands (where the expert loses little hull) or at
+  the Last Fleet?
 - **Q2.** Should a fight open zoomed on your own ship, with the enemy off screen until you zoom out, or stay as the
   overview it is now?
 - **Q3.** What next: the EVA Dock, the three Senti crew killers and their weapons, or more ships and events for the
   middle bands?
+
+# Later the same day
+
+Everything below was built after the report above, from heromedel's messages through the day and by way of Infall:
+Lori, Eco and Ship Designs. The Windows build `infall-godot/build/windows/Infall.zip` is from the last commit.
+
+## What was built
+
+| Thing | From | Notes |
+|---|---|---|
+| Captains weigh the fight | heromedel | Damage in against damage out and both hulls; a change of tactics needs 5 s to settle and is kept 15 s (GV 3L) |
+| The galaxy changes after every jump | heromedel | Refugees move, borders are at war, fronts shift (GV 2E) |
+| Seven enemy ships | Infall: Ship Designs | Quiet Ledger, Final Archive, Howler, Hawkmoth, Breacher, Sellsword, Spear Grass |
+| The Tech victory | heromedel; `docs/ideas.md` | The pieces are races' own systems, fitted to one ship. The search starts two bands from the rim; the map points to regions (GV 2F) |
+| The rival | heromedel | Commodore Marlowe's Long Odds: two hunts, jumping away below 25% hull by its Jig Drive MC-Flywheel, then the ambush at the rim with one replacement |
+| Leaving a fight | heromedel (GDD 6F) | Each ship jumps clear on its own charged drive at no cost; the squad's jump costs the 1.21. SHIP OUT under JUMP |
+| Refit yards | heromedel (GDD 5N) | Move or trade a system between ships for a quarter of its value, fit a piece from the hold, sell a ship. Four warnings |
+| EVA crew can stay | heromedel (GDD 8R) | A third button on the EVA Dock |
+| The Alliance victory | heromedel; plan in `docs/ideas.md`, checked by Infall: Lori | Pledges won in talks, by the cluster's state and by who is aboard; four of seven; allies at the rim (GV 2G) |
+| Fifteen weapons, five new rules | heromedel; Infall: Ship Designs | Charge and chain weapons; healing, repair and lockdown bombs; fire and ion bombs; GATOS beams; eight loadouts carrying them (GV 8M) |
+| Settings | | `Tech Victory: Optional > Required`; `Tech Victory Pieces: One of Each Pair > All Seven` |
+
+## What the playtests show now
+
+One round on the last code, seeds 2000 on. A win is a whole game.
+
+| Playtester | Games | Won | Of those |
+|---|---|---|---|
+| Watcher, no goal | 30 | 5 | 3 by the Alliance victory, 2 by the plain ending |
+| Expert, no goal | 30 | 9 | 5 by the Alliance victory, 4 by the plain ending |
+| Expert going for the Tech victory | 20 | 3 | 2 Tech victories, 1 plain |
+| Expert going for the Alliance victory | 20 | 5 | 4 Alliance victories, 1 plain |
+
+1. **The game is harder than this morning.** The expert won about half its games then and 9 of 30 now, the third
+   heromedel called right. What changed in between: stronger enemy loadouts in bands 2 to 8, captains that change tactics, the
+   rival's hunts, and the expert spending on new systems (Hacking, Mind Control, a Teleporter, a Battery, Cloaking)
+   where it used to buy only upgrades.
+2. **The Tech victory can be won, and is the hardest.** Of 20 games going for it, six had all four needs fitted
+   to one ship, and two won the ambush. Before the pieces had to be on one ship and before pairs, with all seven,
+   it was two of 20 that even held the pieces.
+3. **The Alliance victory is the easiest,** and it happens to players who are not trying: three of the watcher's
+   five wins were Alliance, because talks come up on arrival and the allied ships help at the rim.
+4. **The rival's hunts** cost about a sixth of the squad's hull. Over all four sets they destroyed three squads.
+5. **The watcher runs out of Mawjig more than before:** 184 waits over 30 games, and three games swallowed by the
+   collapse. Fights pay and cost what they did; the cause is not found yet.
+6. **Crew killers, judged by crew** (heromedel by way of Eco). Crew lost per fight: the Last Fleet 5.5, Senti
+   pickets 0.8, Azurethea wardens 0.7, GATOS pirates 0.4, and the Senti Census 0 in its three fights. They do not
+   kill crew.
+
+## Checks
+
+Compile, content (57 weapons, 25 systems, 133 events), galaxy, mercenary, ship value, crew fight and fight tests
+pass. Input 27 of 27, co-op 22 of 22, the LAN run test passes. Chaos: seeds 11, 12 and 13 clean (a stale probe in
+the chaos test was fixed). A blind tester looked at the new screens; fixed from it: a panel behind the map's text
+and shorter lines, SHIP OUT as a button under JUMP, clearer yard buttons with the reason a move isn't possible.
+
+Not fixed from it: weapon panels over the squad's ships in a fight, the hint banner over the enemy ship, Senti
+weapon code names, two crew for sale with the same picture.
+
+## Not built
+
+- Enemy captains do not use the yard, the EVA Dock, or hold a charge weapon to fire several volleys at once.
+- A Short run has no Tech victory.
+- The Collection (colony ship), Exploration and secret victories.
+- Infall: Lori's next batch of events (At War, refugees on the move, yards, bands 7 and 8) is asked for.
+
+## Questions
+
+- **Q1.** The Tech victory's pieces: one of each pair, as `docs/ideas.md` had it in October, or all seven, as you
+  said this morning? Both are built; the default is the pairs. Genetic diversity stands in as six of your own
+  people aboard the one ship.
+- **Q2.** The Alliance plan in `docs/ideas.md` (eight points, with Lori's check) is built as written. Which points
+  are wrong? Two in particular: is four of seven the right number, and should pledging the Malphen cost goodwill
+  with the Azurethea or the Tentauri?
+- **Q3.** The Alliance victory comes to players who are not trying for it. Leave it, or should the squad have to
+  choose to pursue it?
