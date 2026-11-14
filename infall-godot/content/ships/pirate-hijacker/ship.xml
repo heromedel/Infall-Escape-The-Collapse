@@ -33,7 +33,7 @@
 	<door id="1" tile="1,-4" facing="south"/>
 	<door id="2" tile="-1,-2" facing="east"/>
 	<door id="3" tile="-2,-2" facing="south"/>
-	<door id="4" tile="2,-2" facing="south"/>
+	<!-- No door 4: Ship Designs took out the one from the weapons room to the starboard flank (2026-11-13); the flank is reached by door 6. -->
 	<door id="5" tile="-1,-1" facing="west"/>
 	<door id="6" tile="1,0" facing="east"/>
 	<door id="7" tile="-1,-2" facing="south"/>

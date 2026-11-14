@@ -94,8 +94,8 @@ the points are in `docs/godot-version-decisions.md` (GV 2D, 3K, 4K, 5B, 5C, 7Gâ€
   (`tools/lan_run_test.sh`, `CHAOS_PLAYERS=2 tools/chaos.sh`).
 - Beams deal damage again (they had not since tile targeting).
 - After heromedel's answers the next morning: keys as the genre has them and number keys for event choices; each
-  status card folds on its own; Specific Power Color with every species' colour and a picker; `Shield Levels: By
-  Bar > By Layer` (By Layer makes a shield level a whole layer, GDD 8H); a two-ship first Malphen squad and the
+  status card folds on its own; Specific Power Color with every species' colour and a picker; shield power
+  moving in pairs as in the genre; a two-ship first Malphen squad and the
   GATOS Scrappers; a dock goes at an airlock (GDD 5D).
 
 ## Filled in from the genre or the lore (Ai-Generated-Proposals, 2026-10-31)

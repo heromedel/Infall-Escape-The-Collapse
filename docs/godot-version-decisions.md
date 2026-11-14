@@ -375,16 +375,10 @@ anything Claude added tagged Ai-Generated-Proposal.
   10.89); mercenary prices rise with the band like wreck rewards, times 1.(band − 1); the sized event rewards are
   7 low, 11 medium and 7 high, the genre's split (which reward moved is an **Ai-Generated-Proposal**); 15 crew
   damage a point of damage stays.
-  - **Decided (heromedel, 2026-11-13), built:** shield levels as layers are a setting that defaults to how the
-    genre works, `Shield Levels: By Bar > By Layer`. By Layer is the shield test (GDD 8H): a level is a whole
-    layer, two power at a press, two damage or two ion to lose, bought at the layer prices of `system-prices.md`
-    (12.11, 24.21, 43.56), and drawn as one block. It is a run rule, so every machine uses the host's. Ship files
-    stay in bars either way. **Ai-Generated-Proposal:** damage and ion are counted apart (one of each loses
-    nothing), and the first layer costs the Shields system's buy price in both modes.
-  - **Superseded (heromedel, 2026-11-13):** By Layer makes shields tougher than the genre's (a layer there falls
-    to the first damage or ion), and a setting over every ship takes too much rebalancing. One power for one
-    layer becomes the Senti Shield Projector, a second shield system (GDD 8Q, Proposed). The By Layer value comes
-    out when that is built.
+  - **Built (2026-11-14), heromedel's go:** shields are the genre's classic ones (GDD 8Q). Shield power moves in
+    pairs, and a layer that loses a bar to damage or ion gives up the other bar too. The `Shield Levels` setting
+    of 2026-11-13 is gone. A shields room is valued at 10% of Shields' level-1 price, 3.03 (Eco); every ship's
+    value matches `economy-findings.md` F13.
 - **E — Fixed (2026-11-13):** no beam weapon had dealt damage since tile targeting was built (a beam was never
   given its list of tiles cut). They work again.
 
@@ -548,6 +542,7 @@ All built in the build of 2026-11-05.
 | 2026-11-13 | A dying crew member plays their sheet's death frames, then fades (GV 7F). |
 | 2026-11-13 | heromedel's answers to the overnight report: keys match the genre's and event choices take number keys (GV 3K); a two-ship first Malphen squad and the GATOS Scrappers (GV 5C); each status card folds on its own (GV 14H); Specific Power Color lists every species and has a picker (GV 14I); `Shield Levels: By Bar > By Layer` (GV 8D); the 5% repair bonus stays as a placeholder (GV 7J). |
 | 2026-11-13 | Two shield systems proposed, the Mawjig Shield Generator and the Senti Shield Projector, and the setting `Beams vs Shields: Penetrate (Classic) > Hit (Damages Shields First)` (GDD 8Q); for Ship Designs to weigh before any is built. |
+| 2026-11-14 | Built: classic shields as the genre has them (power in pairs), the `Shield Levels` setting removed, the shields room at 3.03, and the Hijacker's door 4 taken out as Ship Designs did (GV 8D). |
 | 2026-11-13 | For the next build, on heromedel's go: the classic shield fixed to the genre's (shield power moves in pairs, a damaged or ionised layer frees its other bar, the `Shield Levels` setting removed), and a hull's power-colour stripe following the ship's power colour. The EVA Dock is written up as GDD 8R (Proposed). |
 | 2026-11-13 | An EVA or EVB Dock sits at an airlock: on its tile, or in a room with an airlock that has no system on its tile (GDD 5D, GV 5B). |
 | 2026-11-13 | The overnight plan (`docs/handoffs/overnight-plan-2026-11-13.md`, report beside it): co-op fixes and tests (GV 4K), closer to the genre (GV 3K), Player Power Color (GV 14I), the Medbay rule and the docs' ships (GV 5B, 5C), Abandoned clusters (GV 2D), Animal Senses, the reach and the repair bonus (GV 7H–7J), Eco's prices (GV 8D), ship status cards (GV 14H). |

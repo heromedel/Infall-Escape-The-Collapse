@@ -5,7 +5,7 @@ extends RefCounted
 ## and the shipyard sells by it, so it is never typed into a ship file.
 ##
 ##   structure: 2.42 a hull point; a room holding a system 10% of that system's level-1 price (its dearest system's,
-##              the AZC's at 18.15, shields' for one layer); other rooms and doors 0.48 each; 6.05 a weapon mount
+##              the AZC's at 18.15); other rooms and doors 0.48 each; 6.05 a weapon mount
 ##              (one per weapon when a ship lists no mounts)
 ##   reactor:   bars at the banded per-bar prices, the AZC's levels, or 8.47 a self-powered bar (Mecha)
 ##   systems:   the level-1 price plus every step up to the system's level
@@ -17,10 +17,6 @@ const DOOR := 48
 const MOUNT := 605
 const SYSTEM_ROOM_PERCENT := 0.1
 const SELF_POWERED_BAR := 847
-## Systems whose files count a smaller step than the docs' level 1: shields are stored in bars, two to a layer, while
-## the shield test (GDD 8H) prices a layer as level 1.
-const DOCS_LEVEL_ONE := {"shields": 2}
-
 
 static func of(design: ShipDesign) -> int:
 	return structure(design) + reactor(design) + systems(design) + weapons(design)
@@ -80,7 +76,4 @@ static func _level_one_price(system_id: String) -> int:
 		return 0
 	if def.behaviour == "power_core":
 		return ShipOutfitter.AZC_STEP_PRICES[0]
-	var price := def.buy_price
-	for level in range(1, DOCS_LEVEL_ONE.get(system_id, 1)):
-		price += def.upgrade_price(level)
-	return price
+	return def.buy_price

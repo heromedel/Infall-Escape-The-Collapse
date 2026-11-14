@@ -12,7 +12,6 @@ var draws_power: bool = true    # takes reactor (or core) capacity; subsystems d
 var manned: bool = false        # a crew member at its console gives a bonus
 var buy_price: int = 0          # Mawjig hundredths to install at level 1
 var upgrade_prices: Array[int] = []   # step prices for level 2, 3, ...
-var layer_upgrade_prices: Array[int] = []   # shields under Shield Levels: By Layer: the prices of layer 2, 3, ...
 var description: String = ""
 var level_notes: PackedStringArray = []
 var icon: String = ""
@@ -31,8 +30,6 @@ static func from_xml(node: XmlTree) -> SystemDef:
 	def.buy_price = Mawjig.amount(node.get_float("buy", 0.0))
 	for step in node.get_attr("upgrades", "").split(",", false):
 		def.upgrade_prices.append(Mawjig.amount(float(step)))
-	for step in node.get_attr("layer_upgrades", "").split(",", false):
-		def.layer_upgrade_prices.append(Mawjig.amount(float(step)))
 	def.icon = node.get_attr("icon", def.behaviour)
 	def.hotkey = node.get_attr("hotkey", "")
 	def.order = node.get_int("order", 50)
@@ -50,14 +47,6 @@ func upgrade_price(level: int) -> int:
 	if index < 0 or index >= upgrade_prices.size() or level >= max_level:
 		return -1
 	return upgrade_prices[index]
-
-
-## The price of the step from `layer` layers to one more (two bars at once), or -1 at the top.
-func layer_upgrade_price(layer: int) -> int:
-	var index := layer - 1
-	if index < 0 or index >= layer_upgrade_prices.size() or layer * 2 >= max_level:
-		return -1
-	return layer_upgrade_prices[index]
 
 
 func level_note(level: int) -> String:

@@ -705,11 +705,8 @@ func _draw_system_column(ship: Ship, system: ShipSystem, base: Vector2, column: 
 	var level := system.level
 	var colour := UiColours.player_power(ship.race)      # Player Power Color (GDD 14D)
 	var bar_width := column - 14.0
-	var step := system.bars_per_level()
 	for index in level:
 		var cell := Rect2(base + Vector2(4, -index * (bar_height + 2) - bar_height - 22), Vector2(bar_width, bar_height))
-		if index % step < step - 1:
-			cell = cell.grow_side(SIDE_TOP, 2.0)     # a level of two bars is drawn as one block, with no gap
 		var fill := UiColours.BAR_EMPTY
 		var from_top := level - 1 - index
 		if from_top < system.damage:
@@ -743,7 +740,7 @@ func _draw_system_column(ship: Ship, system: ShipSystem, base: Vector2, column: 
 
 func _system_tooltip(ship: Ship, system: ShipSystem) -> String:
 	var lines := PackedStringArray()
-	lines.append("%s (level %d)" % [system.display_name(), system.shown_level()])
+	lines.append("%s (level %d)" % [system.display_name(), system.level])
 	lines.append(system.def.description)
 	var note := system.def.level_note(system.level if system.behaviour != "shields" else system.level)
 	if not note.is_empty():
@@ -1103,7 +1100,7 @@ func _draw_room_info(ship: Ship, room_index: int) -> void:
 			console = system
 	if console:
 		lines.append(console.display_name())
-		lines.append("Level %d · power %d" % [console.shown_level(), ship.system_power(console)])
+		lines.append("Level %d · power %d" % [console.level, ship.system_power(console)])
 		if console.damage > 0:
 			lines.append("%d bar%s damaged" % [console.damage, "" if console.damage == 1 else "s"])
 		if console.ion > 0:

@@ -85,7 +85,7 @@ func _systems_column() -> VBoxContainer:
 	var systems := ship.systems.filter(func(s): return s.behaviour != "power_core")
 	systems.sort_custom(func(a, b): return a.def.order < b.def.order)
 	for system in systems:
-		column.add_child(_upgrade_row(system.display_name(), system.shown_level(), system.def.max_level / system.bars_per_level(), ShipOutfitter.system_upgrade_price(system), func():
+		column.add_child(_upgrade_row(system.display_name(), system.level, system.def.max_level, ShipOutfitter.system_upgrade_price(system), func():
 			_order({"op": "upgrade_system", "sys": ship.systems.find(system)})
 			Sfx.play("upgrade"), system.def.level_note(system.level)))
 	return column

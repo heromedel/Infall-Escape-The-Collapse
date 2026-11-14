@@ -538,9 +538,14 @@ func refresh_conduit_power() -> void:
 				todo.append(next)
 
 
-## The bars one press gives a system: one, or what completes a whole shield level (ShipSystem.bars_per_level).
+## The bars one press gives a system, and takes from it: its power step, or what evens out a part step.
 func _bars_a_press_adds(system: ShipSystem) -> int:
-	return system.bars_per_level() - system.power % system.bars_per_level()
+	return system.power_step() - system.power % system.power_step()
+
+
+func _bars_a_press_takes(system: ShipSystem) -> int:
+	var part := system.power % system.power_step()
+	return part if part > 0 else mini(system.power, system.power_step())
 
 
 func can_add_power(system: ShipSystem) -> bool:
@@ -583,8 +588,7 @@ func remove_power(system: ShipSystem) -> bool:
 			system.power_lost = 0
 			if system.power <= 0:
 				return false
-			var odd := system.power % system.bars_per_level()
-			system.power -= odd if odd > 0 else system.bars_per_level()
+			system.power -= _bars_a_press_takes(system)
 		"core":
 			if not system.enabled:
 				return false
@@ -690,13 +694,14 @@ func settle_power() -> void:
 		for system in systems:
 			if system.def.draws_power and system.behaviour != "weapons":
 				var kept := clampi(system.power, 0, system.working_bars())
+				kept -= kept % system.power_step()     # a shield layer that loses a bar gives up the other too
 				system.power_lost += system.power - kept
 				system.power = kept
 		while reactor_used() > reactor_total():
 			var dropped := false
 			for system in systems:
 				if system.def.draws_power and system.behaviour != "weapons" and system.power > 0:
-					system.power -= 1
+					system.power -= _bars_a_press_takes(system)
 					dropped = true
 					break
 			if not dropped:
@@ -717,12 +722,13 @@ func settle_power() -> void:
 func give_back_power() -> void:
 	if reactor_type == "pool":
 		for system in systems:
-			while system.power_lost > 0 and system.power < system.working_bars():
-				if reactor_free() <= 0:
+			var step := system.power_step()
+			while system.power_lost >= step and system.power + step <= system.working_bars():
+				if reactor_free() < step:
 					system.power_lost = 0
 					break
-				system.power += 1
-				system.power_lost -= 1
+				system.power += step
+				system.power_lost -= step
 	for slot in weapons:
 		if not slot.power_lost or slot.powered:
 			continue
