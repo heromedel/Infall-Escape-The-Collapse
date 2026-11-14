@@ -168,6 +168,11 @@ anything Claude added tagged Ai-Generated-Proposal.
     Pirate Scrapper keeps a place: its own squad, GATOS Scrappers, in bands 1 and 2. "None of these are made as
     hard rules; ships should go where the fun, balance and challenge are."
 
+- **D — Built (2026-11-14):** the Relay Picket is the docs' one (`ship-suggestions.md`, as updated 2026-11-13: a
+  7-bar Senti core, a Shield Projector, the Armoured Avatar Array, a Backup Battery, two beams, two Senti). The
+  Archive Cruiser, its mid-tier loadout, is an **Ai-Generated-Proposal**: three Projector layers, three Senti, the
+  Intrusion Array, two lasers and a beam. Senti pickets are met from band 3, as the docs have it.
+
 ## 6. Jump Travel
 
 - **A — Decided (heromedel, 2026-10-31):** the manual's "needs at least 1.21 Jigawatts" (GDD 9B) stays: a Jigawatt
@@ -360,6 +365,15 @@ anything Claude added tagged Ai-Generated-Proposal.
   faster. **Placeholder (heromedel, 2026-11-13):** 5% for now, Infall: Eco's figure (half of one repair level);
   it has not been tested.
 
+- **K — Decided (heromedel, 2026-11-14), built:** `Terran Ship Conduits: Off > On`. Conduits stay in the game as a
+  setting, off by default, since a player's grasp of them can't be tested by bots. With it off every ship's power
+  is a pool of bars, the player's and the enemy's alike (an AZC level is five bars).
+- **L — Built (2026-11-14), race profiles Senti 6 and 9:** the Armoured Avatar Array. One Senti per bar of its
+  power (heromedel, 2026-11-13). Damage or ion holds the Senti over the limit in the array until it works again;
+  they don't die from it. A Senti struck down in a fight is broadcast again from the array after 12, 9 or 7 s
+  (the genre's clone bay times). A Senti needs room in an array to join a ship; Senti stores sell the array.
+  **Ai-Generated-Proposal:** the array mends its Senti aboard their own ship, a third as fast as a medbay.
+
 ## 8. Weapons and Systems
 
 - **A — Likely (Infall: Eco, 2026-10-31):** event rewards follow the genre's curve by band; the battlesuit gives
@@ -384,6 +398,20 @@ anything Claude added tagged Ai-Generated-Proposal.
     value matches `economy-findings.md` F13.
 - **E — Fixed (2026-11-13):** no beam weapon had dealt damage since tile targeting was built (a beam was never
   given its list of tiles cut). They work again.
+
+- **F — Built (2026-11-14), GDD 8A:** Hacking and Mind Control, with the genre's timings (a pulse of 4, 7 or 10 s;
+  control for 14, 20 or 28 s; 20 s to ready again). The probe latches onto one enemy system for the fight and a
+  pulse shuts it down; mind control puts one enemy crew member on your side. A use costs 0.04 and 0.08 Mawjig
+  (Infall: Eco, **Ai-Generated-Proposal**). The Senti's make is the Intrusion Array and the Azurethea's the
+  Pheromone Gland (heromedel, Likely, 2026-11-14; names by Infall: Lori). Not built: seeing into a hacked room,
+  and mind control's bonus at higher levels.
+- **G — Built (2026-11-14), GDD 8Q (Proposed):** the Senti Shield Projector. One bar a layer, layers back half as
+  fast, up to eight; each layer priced as a Generator layer (5 to 8: 62.92, 82.28, 101.64, 121.01, Infall: Eco,
+  **Ai-Generated-Proposal**). A ship has it or the Generator. Not built: the `Beams vs Shields` setting.
+- **H — Built (2026-11-14):** the genre's Backup Battery: two extra power a level for 30 s, then 20 s to recharge;
+  8.47, level 2 another 12.11.
+- **I — Proposed (Infall: Eco, 2026-11-14; heromedel: "makes sense"), built:** a store asks 75% of a ship's value
+  on Normal, 50% on Easy and 100% on Hard (it was 115%).
 
 ## 14. User Interface
 
@@ -434,6 +462,12 @@ anything Claude added tagged Ai-Generated-Proposal.
   - **Decided (heromedel, 2026-11-13), built:** the Specific Color is both a list of every species' power colour
     and a picker: `Specific Power Color: GATOS Green > Pirate Orange > Mecha Purple > Tentauri Pink > Azurethea
     Blue > Senti Yellow-Green > Lykario Silver > Malphen Pink-Orange > Custom`, and Custom opens a colour picker.
+
+- **J — Built (2026-11-14):** How to Play on the title and pause menus, and a hint in a new player's first fights
+  (`Hints in Early Fights: On > Off`), after three blind testers looked at screenshots and none could tell how to
+  attack. From the same reports: titles on the SYSTEMS and SUBSYSTEMS cards, "1 of 10 POWER FREE", BUY and UPGRADE
+  on price buttons, INSTALLED for a system the ship has, the title screen's overlap, the enemy ship clear of the
+  top bar. TO STATIONS and SAVE STATIONS are heromedel's wording.
 
 ## 15. Ranks and Titles
 

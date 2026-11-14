@@ -27,8 +27,7 @@ the Last Fleet. Lose when every scout ship is gone (GDD 1F).
 | Power a system | Click its bars to add power, right click to remove. On the AZC (Terran conduit ships), click to switch a system on or off | |
 | Power a weapon | Right click its slot | |
 | Doors | Click a door; the open and close buttons on the Doors subsystem (open pressed twice opens the airlocks) | |
-| Board, recall, launch suit, cloak | T (BOARD), RECALL, E (LAUNCH SUIT), C (CLOAK) | |
-| Crew back to stations | Z | |
+| Use a system | The small buttons above it: send and recall boarders (T, R), cloak (C), hack (N), mind control (M), the battery, launch a suit (B) | |
 | Zoom | Mouse wheel | RT / R2 in, LT / L2 out |
 | Pan | Middle drag, arrow keys | Right stick |
 | Frame the whole fight | Home | |
@@ -98,6 +97,25 @@ the points are in `docs/godot-version-decisions.md` (GV 2D, 3K, 4K, 5B, 5C, 7Gâ€
   moving in pairs as in the genre; a two-ship first Malphen squad and the
   GATOS Scrappers; a dock goes at an airlock (GDD 5D).
 
+## Added on 2026-11-14 (finishing the game)
+
+How it was tested and what the playtesters found is in `docs/handoffs/build-report-2026-11-14.md`; the points are in
+`docs/godot-version-decisions.md`. In short:
+
+- **A classic reactor by default:** `Terran Ship Conduits: Off > On`. Every ship's power is a pool of bars unless
+  the setting is turned on.
+- **Hacking and Mind Control** (the Senti's Intrusion Array, the Azurethea's Pheromone Gland), and the **Backup
+  Battery**: the genre's systems with its timings, for the player and for enemy captains.
+- **The Senti:** the Shield Projector (one bar a layer, up to eight, back half as fast), the Armoured Avatar Array
+  (one Senti per bar of power; struck-down Senti are broadcast again), and the docs' Relay Picket.
+- **The end of a run:** Infall: Lori's events for bands 6 to 8, the Last Fleet's hail with four choices, and the
+  end screens.
+- **A system's controls are icon buttons on the system,** as in the genre; no SPECIALS card and no VENT button.
+- **How to Play** on the title and pause menus, and `Hints in Early Fights: On > Off`.
+- **A store ship costs 75% of its value** on Normal (Infall: Eco), in place of 115%.
+- **Playtesters** (`tools/playtest`): three bots that play whole runs, careless, watcher and expert.
+- A hull's stripe takes the ship's power colour (the Patrol Cutter).
+
 ## Filled in from the genre or the lore (Ai-Generated-Proposals, 2026-10-31)
 
 Where the design docs are silent, this build fills the gap with the genre's behaviour or extrapolates from the race
@@ -142,6 +160,9 @@ share a screen (three across and two down for five or six). The Admiral leaving 
 - The vote and lock-in multiplayer settings, and player profiles (GV 4G).
 - The Tech victory and other victory paths (ideas); the win is reaching the rim.
 - Augments and drones (the design moves drones into EVB suits and race systems).
+- Several weapon systems on one ship (GDD 8L), the EVA Dock (GDD 8R), the Senti system battery, the three Senti
+  crew killers (they need fire beams, an anti-crew beam and bio bombs), and beams that hit shields first
+  (`Beams vs Shields`, GDD 8Q).
 
 ## Crew art still to fill in (GV 7F)
 
