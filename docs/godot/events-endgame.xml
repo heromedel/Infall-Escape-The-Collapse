@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Infall: Lori, 2026-11-14, for Infall: Godot Version. Every event here is Ai-Generated-Proposal (2026-11-14).
+     The end of a run (GDD 2G): stage 5, acquiring the means to jump to another galaxy (bands 6-7); stage 6, the final
+     stretch, others desperate to escape (band 8); stage 7, the final encounter (FINAL_RIVAL, replacing the one in
+     core.xml). Checked against docs/lore-facts.md and docs/race-profiles.md. Effects and requirements are only the
+     ones event_runner.gd understands. -->
+<events>
+	<!-- Stage 5: the means to make the jump (tech, alliances, exploration) -->
+	<event id="SENTI_RIM_CHARTS" title="Charts of the Rim" kind="neutral" races="senti" states="Doing Fine,Struggling" bands="6-7" weight="1.5" unique="yes" after_collapse="yes">
+		<text>A Senti archive station is still broadcasting, even this far from the core. A hologram resolves on your screen.
+
+"We, The Senti-, have kept every chart of the rim that anyone has ever made. A few of them show stable space beyond it. You may have them, for a price."</text>
+		<choice text="Pay for the charts." requires="mawjig:6.05">
+			<outcome><text>The station sends everything it has: routes, failed attempts, and the few stretches of stable space that held. The way to the rim is clearer than it has ever been.</text><mawjig amount="-6.05"/><reveal/></outcome>
+		</choice>
+		<choice text="Offer your sensor logs of the collapse instead." requires="system:sensors">
+			<outcome><text>The hologram goes still while the station reads your logs.
+
+"We, The Senti-, did not have this. Take the charts."</text><reveal/></outcome>
+		</choice>
+		<choice text="Let {crew} ask for them." requires="crew:senti">
+			<outcome><text>{crew} speaks with the station in a single burst of data. The charts arrive at once, along with a new entry in the archive: your squad's name, and where it was going.</text><reveal/><mawjig size="tiny"/></outcome>
+		</choice>
+		<choice text="Move on."/>
+	</event>
+
+	<event id="GATOS_LONG_JUMP_REFIT" title="A Refit for the Long Jump" kind="neutral" races="terran" states="Doing Fine,Struggling" bands="6-7" weight="1.5" unique="yes" after_collapse="yes">
+		<text>A GATOS shipyard near the rim is working around the clock. Its foreman hails you, tired but proud.
+
+"Everyone wants the same thing now: ships that can take one last, very long jump. We've done a hundred refits this week. We can do yours."</text>
+		<choice text="Pay for the refit." requires="mawjig:9.66">
+			<outcome><text>The yard's crews swarm over your ships for a full day. When they are done, one of your systems runs better than it ever has.</text><mawjig amount="-9.66"/><upgrade/></outcome>
+		</choice>
+		<choice text="Ask for a quick patch-up instead." requires="mawjig:2.42">
+			<outcome><text>The yard patches your worst damage between bigger jobs and sends you on your way.</text><mawjig amount="-2.42"/><hull amount="8"/></outcome>
+		</choice>
+		<choice text="Let {crew} talk shop with the foreman." requires="crew:terran">
+			<outcome><text>{crew} and the foreman trade stories until the foreman laughs and cuts the price in half. "For the scouts flying ahead of a colony ship? It's the least we can do."</text><mawjig amount="-4.84"/><upgrade/></outcome>
+		</choice>
+		<choice text="Leave."/>
+	</event>
+
+	<event id="AZURETHEA_EDGE_EXPLORERS" title="The Edge of the Map" kind="neutral" races="azurethea" bands="6-7" weight="1.5" unique="yes" after_collapse="yes">
+		<text>An Azurethea explorer ship rests at the very edge of its people's charts, wings folded. Its crew hail you.
+
+"We came to see what lies beyond the rim, and we found it: the dark, and a few paths through it that do not close. We would rather those paths were used than forgotten."</text>
+		<choice text="Ask them to share their charts.">
+			<outcome><text>They send you every path they found. "May you be the ones who use them."</text><reveal/></outcome>
+		</choice>
+		<choice text="Invite one of them to come with you.">
+			<outcome><text>One of the explorers wants to see the paths used with their own eyes, and joins your crew. The others send you their charts.</text><reveal/><crew race="azurethea"/></outcome>
+		</choice>
+		<choice text="Let {crew} speak with them." requires="crew:azurethea">
+			<outcome><text>{crew} talks with them for a long time. Afterwards, the explorers give you their charts and tend one of your systems before they go.</text><reveal/><upgrade/></outcome>
+		</choice>
+	</event>
+
+	<event id="RIM_ALLIANCE" title="Strength in Numbers" kind="neutral" states="Refugee,Struggling,Doomed,Border" bands="6-7" weight="1.2" unique="yes" after_collapse="yes">
+		<text>A council of captains has gathered in this cluster: GATOS, Tentauri, Azurethea, and one Mecha frame keeping its distance. They have heard that The Colony Ship is coming, and they hail you together.
+
+"Nobody gets out of this galaxy alone. Lead us to the rim, and we'll fly with you and share what we have."</text>
+		<choice text="Agree to lead them.">
+			<outcome><text>The captains cheer. A GATOS patrol cutter takes its place in your formation, and the others pool what they can spare.</text><ship design="patrol-cutter"/><mawjig size="low"/></outcome>
+		</choice>
+		<choice text="Let {crew} speak for you." requires="crew:tentauri">
+			<outcome><text>{crew} talks quietly with the Tentauri captains. A small Tentauri ship joins your formation, shields up, and stays there.</text><ship design="tentauri-scout"/><mawjig size="low"/></outcome>
+		</choice>
+		<choice text="Thank them, but fly alone.">
+			<outcome><text>The council is quiet for a moment. Then it sends you what it can anyway. "Good luck, scouts."</text><mawjig size="low"/></outcome>
+		</choice>
+	</event>
+
+	<!-- Stage 6: the final stretch, everyone desperate to get out -->
+	<event id="RIM_CROWDED_LANE" title="The Crowded Lane" kind="hostile" bands="8" weight="1.5" unique="yes" after_collapse="yes">
+		<text>The stable lane through this cluster is packed with ships of every size, all trying to jump at once. Two of them are already trading fire over who goes first. A hail cuts across every channel.
+
+"Get out of the lane! We were here first!"</text>
+		<choice text="Push through and fight for your place.">
+			<outcome><text>Your squad forces its way into the lane, and the nearest ships open fire.</text><fight/></outcome>
+		</choice>
+		<choice text="Wait for the crush to clear.">
+			<outcome><text>You hold back while the others fight it out. By the time the lane clears, the ships that fought over it are drifting wrecks. Your crews salvage what they can.</text><mawjig size="low"/></outcome>
+		</choice>
+		<choice text="Cloak and slip through while they argue." requires="system:cloaking">
+			<outcome><text>Your squad passes through the crush unseen. Nobody in the lane ever knows you were there.</text></outcome>
+		</choice>
+	</event>
+
+	<event id="RIM_NO_ROOM" title="No Room Left" kind="distress" bands="8" weight="1.2" unique="yes" after_collapse="yes">
+		<text>A transport packed far beyond its limits drifts at the edge of the lane, its drive burned out. Its captain hails you, voice steady.
+
+"We won't make the jump. Our {gatos:children|kittens} might, if anyone has room for them."</text>
+		<choice text="Take as many as your ships can carry.">
+			<outcome><text>Your crews make room in every corridor. One of the parents, a pilot, asks to earn their place in your crew.</text><crew race="region"/></outcome>
+		</choice>
+		<choice text="Send Mawjig for their drive." requires="mawjig:1.21">
+			<outcome><text>Their engineers patch the drive with what you send. The transport limps into the lane behind you.</text><mawjig amount="-1.21"/></outcome>
+		</choice>
+		<choice text="There's no room. Move on."/>
+	</event>
+
+	<event id="RIM_DRIVE_RAIDERS" title="Drives for the Taking" kind="hostile" bands="8" weight="1.5" after_collapse="yes">
+		<text>Ships with no colours and mismatched hulls drop out of a jump around you. Their drives are burned out, and they have seen that yours are not.
+
+"Hand over one ship with a working Jigawatt Drive and the rest of you can go."</text>
+		<choice text="Never.">
+			<outcome><text>"Then we'll take all of them."</text><fight/></outcome>
+		</choice>
+		<choice text="Offer them Mawjig instead." requires="mawjig:3.63">
+			<outcome weight="2"><text>They take it and scatter, still cursing you.</text><mawjig amount="-3.63"/></outcome>
+			<outcome weight="1"><text>"Mawjig won't get us out of here. A ship will."</text><fight/></outcome>
+		</choice>
+		<choice text="Let {crew} answer them." requires="crew:mecha">
+			<outcome><text>{crew} tells them, bluntly, how badly a fight would go for them. The raiders believe it and scatter.</text></outcome>
+		</choice>
+	</event>
+
+	<event id="RIM_TOO_LATE" title="Too Late" kind="neutral" states="Doing Fine,Struggling" bands="8" weight="1.2" unique="yes" after_collapse="yes">
+		<text>The worlds of this cluster are only now waking up to the collapse. Their broadcasts have gone from laughing about "core panic" to begging for ships. A port official hails you directly.
+
+"You came from the core. Tell me the truth. How long do we have?"</text>
+		<choice text="Tell them the truth.">
+			<outcome><text>The line goes quiet. Then the official thanks you and sends over everything left in the port's depot. "Better you have it than no one."</text><mawjig size="medium"/></outcome>
+		</choice>
+		<choice text="Tell them to follow The Colony Ship's path.">
+			<outcome><text>The official writes down every cluster you name. Before you jump, the first ships are already leaving the port.</text></outcome>
+		</choice>
+		<choice text="Tell them there is still time.">
+			<outcome><text>"Thank you," the official says, and you can hear that they don't believe you.</text></outcome>
+		</choice>
+	</event>
+
+	<!-- Stage 7: the final encounter. Replaces FINAL_RIVAL in core.xml; every choice leads to the fight. -->
+	<event id="FINAL_RIVAL" title="The Last Fleet" kind="final" unique="yes">
+		<text>Beyond this cluster there is nothing but the dark between galaxies. Your sensors find a path out, a run of stable space your Jigawatt Drives could follow, and The Colony Ship could follow you.
+
+You are not alone. Darkened GATOS hulls with scorched emblems hang over the way out. Their leader hails you.
+
+"We know where you're going. We've followed scouts like you all the way from the core. There's room for one fleet on that path, and it's going to be ours."</text>
+		<choice text="Tell them The Colony Ship is coming, with everyone aboard it.">
+			<outcome><text>The leader laughs. "Everyone? Then everyone can wait behind us."</text><fight squad="final-rival"/></outcome>
+		</choice>
+		<choice text="Offer to share the path.">
+			<outcome><text>A long silence. "We had a colony ship too. It's back there, in the dark." Their weapons come online.</text><fight squad="final-rival"/></outcome>
+		</choice>
+		<choice text="Let {crew} speak to them, GATOS to GATOS." requires="crew:terran">
+			<outcome><text>{crew} talks about the alliance, and what it used to mean. For a moment nobody answers.
+
+"There is no alliance anymore," the leader says at last. "There's just us."</text><fight squad="final-rival"/></outcome>
+		</choice>
+		<choice text="No more talking.">
+			<outcome><text>Your squad's weapons come online, and so do theirs.</text><fight squad="final-rival"/></outcome>
+		</choice>
+	</event>
+</events>
+<!-- End screens (menu_windows.gd end_screen), for the code to use:
+
+WON, title "THE WAY OUT":
+The Last Fleet breaks apart behind you. Ahead there is nothing but the dark between galaxies, and a path your scouts have charted all the way across it.
+
+The Colony Ship's signal comes through clear for the first time in weeks. "We see your beacon. We're coming. Every one of us."
+
+Behind it, the collapse keeps growing. It will never reach you now.
+
+LOST, title "THE SCOUTS ARE GONE":
+The last of your scout ships is gone. Somewhere behind you, The Colony Ship waits for a signal that will never come, and the collapse moves on.
+
+LOST AT THE FINAL BATTLE (optional third text, when the last ship falls in the final cluster):
+The last of your scout ships is gone. The Last Fleet takes the path out alone, and behind it the way closes. Somewhere back in the dark, The Colony Ship waits for a signal that will never come.
+-->
