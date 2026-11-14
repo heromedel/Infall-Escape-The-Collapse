@@ -82,7 +82,13 @@ func _summary(reports: Array) -> void:
 			how[way] = how.get(way, 0) + int(report.tech_how[way])
 	var counts := held.keys()
 	counts.sort()
-	print("Tech victories %d. Pieces held at the end: %s. Pieces came by: %s. Meetings with the rival: %d." % [tech_wins, ", ".join(counts.map(func(n): return "%d pieces in %d runs" % [n, held[n]])), str(how), reports.reduce(func(sum: int, r): return sum + int(r.rival), 0)])
+	print("Of the crossing's %d needs, the most one ship carried: %s. Pieces fitted or moved at yards: %d." % [RunState.new().tech_total() if false else RimTech.groups().size(), ", ".join(counts.map(func(n): return "%d in %d runs" % [n, held[n]])), _fitted])
+	var anywhere := {}
+	for report in reports:
+		anywhere[report.held] = anywhere.get(report.held, 0) + 1
+	var held_counts := anywhere.keys()
+	held_counts.sort()
+	print("Tech victories %d. Races' pieces held anywhere in the squad, at most: %s. Pieces came by: %s. Meetings with the rival: %d." % [tech_wins, ", ".join(held_counts.map(func(n): return "%d pieces in %d runs" % [n, anywhere[n]])), str(how), reports.reduce(func(sum: int, r): return sum + int(r.rival), 0)])
 	print("Runs where the search began: %d. Runs that never had a race's piece: %s" % [reports.filter(func(r): return r.goal).size(), str(_missing)])
 	print("Systems bought: %s" % str(_systems_bought))
 	var band_line := PackedStringArray()
@@ -104,7 +110,7 @@ func _summary(reports: Array) -> void:
 func _play_one(seed_number: int, ship_id: String) -> Dictionary:
 	var run := RunState.start(seed_number, ship_id)
 	var runner := EventRunner.new(run)
-	var report := {"seed": seed_number, "result": "LOST", "band": 1, "jumps": 0, "fights": 0, "won": 0, "fled": 0, "stalemates": 0, "ships": 1, "most_ships": 1, "mawjig": 0, "ended_by": "ran out of jumps", "tech": 0, "lacked": [], "goal": false, "victory": "", "tech_how": {}, "rival": 0}
+	var report := {"seed": seed_number, "result": "LOST", "band": 1, "jumps": 0, "fights": 0, "won": 0, "fled": 0, "stalemates": 0, "ships": 1, "most_ships": 1, "mawjig": 0, "ended_by": "ran out of jumps", "tech": 0, "held": 0, "lacked": [], "goal": false, "victory": "", "tech_how": {}, "rival": 0}
 	while run.jumps < 400:
 		var event := runner.opening_message()
 		if event:
@@ -132,11 +138,11 @@ func _play_one(seed_number: int, ship_id: String) -> Dictionary:
 				var paid := 0
 				if outcome in ["won", "surrendered"]:
 					var before_pay := run.mawjig
-					var held_before := run.tech_count()
+					var held_before := _held(run)
 					var rewards := runner.fight_rewards(_last)
 					_count_tech(run, held_before, "taken")
 					if goal == "tech":
-						var pieces := run.tech_count()
+						var pieces := _held(run)
 						runner.trade_surrender_for_tech(rewards)
 						_count_tech(run, pieces, "surrender")
 					paid = run.mawjig - before_pay
@@ -163,9 +169,10 @@ func _play_one(seed_number: int, ship_id: String) -> Dictionary:
 				_shop(run)
 		run.clear_lost_ships()
 		report.most_ships = maxi(report.most_ships, run.living_ships().size())
-		if run.tech_count() >= int(report.tech):     # the most pieces the squad had aboard at once, and what it lacked then
+		if run.tech_count() >= int(report.tech):     # the most of the crossing's needs one ship carried, and what was lacking then
 			report.tech = run.tech_count()
 			report.lacked = run.missing_tech()
+		report.held = maxi(int(report.held), _held(run))
 		report.goal = run.tech_goal
 		_rest(run)
 		if not _travel(run):
@@ -224,9 +231,52 @@ func _tech_spare(run: RunState) -> int:
 	return TECH_SPARE if run.band() < run.galaxy.bands - 1 else Mawjig.JUMP_COST * 6
 
 
+## How many races' pieces the squad has anywhere: fitted to a ship or in the hold.
+func _held(run: RunState) -> int:
+	var count := 0
+	for race in RimTech.order:
+		if run.has_tech(race):
+			count += 1
+	return count
+
+
+## At a refit yard, a player going for the Tech victory brings the pieces together on one ship: those in the hold
+## are fitted, and those on other ships are moved or traded across.
+func _gather_pieces(run: RunState, reserve: int) -> void:
+	var target := run.crossing_ship()
+	if target == null or not Refit.has_yard(run.cluster()):
+		return
+	var index := run.squad.find(target)
+	for race in run.tech.duplicate():
+		var def := Library.system(RimTech.pieces[race].system)
+		if def == null or run.mawjig - Refit.fit_price(race) < reserve or not Refit.fit_refusal(run, race, target).is_empty():
+			continue
+		var room := -1 if target.system_by(def.behaviour) != null else ShipOutfitter.room_for_new_system(target, def)
+		Refit.apply(run, {"op": "fit_tech", "race": race, "sq": index, "room": room})
+		_fitted += 1
+	for other in run.own_ships():
+		if other == target:
+			continue
+		for race in run.tech_on(other):
+			if run.tech_on(target).has(race):
+				continue
+			var system: ShipSystem = null
+			for each in other.systems:
+				if RimTech.is_piece(each, race):
+					system = each
+			if system == null or run.mawjig - Refit.move_price(other, system) < reserve or not Refit.move_refusal_between(run, other, system, target).is_empty():
+				continue
+			var room := -1 if target.system_by(system.behaviour) != null else ShipOutfitter.room_for_new_system(target, system.def)
+			Refit.apply(run, {"op": "move_system", "sq": run.squad.find(other), "sys": other.systems.find(system), "to": index, "room": room})
+			_fitted += 1
+
+
+var _fitted := 0         # pieces fitted or moved to the one ship at yards, over all runs
+
+
 func _count_tech(run: RunState, before: int, way: String) -> void:
-	if run.tech_count() > before:
-		_tech_how[way] = int(_tech_how.get(way, 0)) + run.tech_count() - before
+	if _held(run) > before:
+		_tech_how[way] = int(_tech_how.get(way, 0)) + _held(run) - before
 
 
 ## Between clusters a player lets the crew finish repairs, and heal if the ship has a working medbay.
@@ -268,7 +318,7 @@ func _resolve(runner: EventRunner, event: EventDef) -> Dictionary:
 				if value > best:
 					best = value
 					choice = each
-	var pieces := runner.run.tech_count()
+	var pieces := _held(runner.run)
 	var result := runner.resolve(choice, runner.crew_for_choice(choice))
 	_count_tech(runner.run, pieces, "event")
 	return result
@@ -403,7 +453,7 @@ func _fight(run: RunState, runner: EventRunner, squad: SquadDef) -> String:
 				# A losing Malphen ship gives up its growth organ to a squad that lacks it, in place of Mawjig
 				var from: Ship = note.ship
 				if from.design.race == "malphen" and encounter.tech_wanted.has("malphen") and not run.has_tech("malphen"):
-					var pieces := run.tech_count()
+					var pieces := _held(run)
 					run.give_tech("malphen", "surrender")
 					_count_tech(run, pieces, "surrender")
 					encounter.surrender_pays = false
@@ -479,10 +529,12 @@ func _shop(run: RunState) -> void:
 	var points := mini(wanted, maxi(0, (run.mawjig - reserve) / per_point))
 	if points > 0:
 		Refit.apply(run, {"op": "repair", "points": points})
+	if goal == "tech" and run.tech_goal:
+		_gather_pieces(run, reserve)
 	# Going for the Tech victory: the piece this store sells
 	var piece := RimTech.sold_at(run.cluster())
 	if goal == "tech" and run.tech_goal and piece != "" and not run.has_tech(piece) and run.mawjig - RimTech.price(piece, run.band()) >= maxi(reserve, _tech_spare(run)):
-		var pieces := run.tech_count()
+		var pieces := _held(run)
 		Refit.apply(run, {"op": "buy_tech", "race": piece, "price": RimTech.price(piece, run.band())})
 		_count_tech(run, pieces, "bought")
 	if player.shop == "odd":

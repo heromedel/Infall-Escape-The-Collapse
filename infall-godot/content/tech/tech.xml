@@ -11,14 +11,20 @@
      core system does, 36.31, times the band adjustment; the Mecha's good deal is 1.5 times that; a ship left whole
      carries its race's piece 1 time in 5 before band 6 and 1 in 3 from it. wreck_chance, a piece pulled from a
      wreck, is Infall: Godot Version's stand-in.
+     pair: docs/ideas.md's requirement idea (2026-10-21): "one from each pair: power core or clone bay; engine or
+     autopilot; shield or reinforcements; archive or genetic diversity". The setting Tech Victory Pieces chooses
+     between one of each pair and all seven. Either way the pieces must all be fitted to one ship (heromedel,
+     2026-11-14: "all on one ship, not just in the squad"). own_crew: the Record pair's other half, genetic
+     diversity, stands in as that many living crew of the squad's own race aboard that ship (Ai-Generated-Proposal;
+     the docs say "maybe 3 males and 3 females of your core race", and the game has no crew sex).
      goal_bands_from_rim: how many bands before the last the goal's event comes (band 6 of 8). demand_band: the first
      band where a surrendering ship can be asked for its piece. -->
-<tech price="36.31" goal_bands_from_rim="2" demand_band="6" steal_chance="0.2" steal_chance_late="0.33" late_band="6" wreck_chance="0.1">
-	<piece race="terran" system="azc" name="GATOS Armoured ZeroPoint Core">The GATOS power core: no power limit for anything joined to it. The crossing will need all the power it can get.</piece>
-	<piece race="azurethea" system="engines" name="Azurethea Engines">Grown, not built: the most agile drive in the galaxy, made by the Azurethea for their own ships.</piece>
-	<piece race="mecha" system="hull-reinforcement" name="Mecha Hull Reinforcement" price_share="1.5" surrendered="no">Mecha bracing that holds a hull together under forces no other ship could take.</piece>
-	<piece race="tentauri" system="supershield" name="Tentauri Supershield Generator">A Tentauri shell of energy outside the shields, to wrap a ship through the dark between galaxies.</piece>
-	<piece race="senti" system="aaa" name="Senti Armoured Avatar Array">The Senti archive of minds and records, the information to find the way across.</piece>
-	<piece race="lykario" system="piloting" name="Lykario Autopilot">Lykario piloting that flies a ship alone while its crew are away: the only pilot that can fly the whole crossing.</piece>
-	<piece race="malphen" system="growth-organ" name="Malphen Growth Organ" sold="no">A living Malphen organ. It regrows whatever the crossing tears away.</piece>
+<tech price="36.31" own_crew="6" own_crew_pair="Record" goal_bands_from_rim="2" demand_band="6" steal_chance="0.2" steal_chance_late="0.33" late_band="6" wreck_chance="0.1">
+	<piece race="terran" pair="Power" system="azc" name="GATOS Armoured ZeroPoint Core">The GATOS power core: no power limit for anything joined to it. The crossing will need all the power it can get.</piece>
+	<piece race="azurethea" pair="Flight" system="engines" name="Azurethea Engines">Grown, not built: the most agile drive in the galaxy, made by the Azurethea for their own ships.</piece>
+	<piece race="mecha" pair="Hull" system="hull-reinforcement" name="Mecha Hull Reinforcement" price_share="1.5" surrendered="no">Mecha bracing that holds a hull together under forces no other ship could take.</piece>
+	<piece race="tentauri" pair="Hull" system="supershield" name="Tentauri Supershield Generator">A Tentauri shell of energy outside the shields, to wrap a ship through the dark between galaxies.</piece>
+	<piece race="senti" pair="Record" system="aaa" name="Senti Armoured Avatar Array">The Senti archive of minds and records, the information to find the way across.</piece>
+	<piece race="lykario" pair="Flight" system="piloting" name="Lykario Autopilot">Lykario piloting that flies a ship alone while its crew are away: the only pilot that can fly the whole crossing.</piece>
+	<piece race="malphen" pair="Power" system="growth-organ" name="Malphen Growth Organ" sold="no">A living Malphen organ. It regrows whatever the crossing tears away.</piece>
 </tech>

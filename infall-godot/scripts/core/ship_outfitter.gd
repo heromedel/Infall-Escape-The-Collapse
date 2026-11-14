@@ -110,6 +110,26 @@ static func install_system(ship: Ship, def: SystemDef, room_index: int) -> ShipS
 	return system
 
 
+const REINFORCEMENT_HULL := 5      # the hull points a Mecha Hull Reinforcement adds to the ship it braces
+
+## Two ships trade systems of the same kind: each takes the other's tile.
+static func swap_systems(ship_a: Ship, system_a: ShipSystem, ship_b: Ship, system_b: ShipSystem) -> void:
+	var spot_a := [system_a.room, system_a.cell, system_a.wall]
+	var spot_b := [system_b.room, system_b.cell, system_b.wall]
+	remove_system(ship_a, system_a)
+	remove_system(ship_b, system_b)
+	for move in [[ship_b, system_a, spot_b], [ship_a, system_b, spot_a]]:
+		var ship: Ship = move[0]
+		var system: ShipSystem = move[1]
+		system.room = move[2][0]
+		system.cell = move[2][1]
+		system.wall = move[2][2]
+		system.own_power = system.level if ship.reactor_type == "none" else 0
+		system.power = 0
+		ship.systems.append(system)
+		ship.rooms[system.room].systems.append(system)
+
+
 ## Puts a system, new or taken off another ship, on a free tile of a room: a dock on the room's airlock tile.
 static func place_system(ship: Ship, system: ShipSystem, room_index: int) -> void:
 	var cell := _free_airlock_cell(ship, room_index) if system.behaviour in DOCKS else _free_console_cell(ship, room_index)
@@ -123,6 +143,9 @@ static func place_system(ship: Ship, system: ShipSystem, room_index: int) -> voi
 	ship.rooms[room_index].systems.append(system)
 	if system.behaviour == "power_core":
 		ship.core_cell = cell
+	if system.behaviour == "hull_reinforcement":
+		ship.max_hull += REINFORCEMENT_HULL
+		ship.hull += REINFORCEMENT_HULL
 	_join_conduits(ship, room_index)
 
 
@@ -133,6 +156,9 @@ static func remove_system(ship: Ship, system: ShipSystem) -> void:
 		ship.rooms[system.room].systems.erase(system)
 	if system.manned_by:
 		system.manned_by = null
+	if system.behaviour == "hull_reinforcement":
+		ship.max_hull = maxi(1, ship.max_hull - REINFORCEMENT_HULL)
+		ship.hull = clampi(ship.hull, 1, ship.max_hull)
 
 
 static func _free_console_cell(ship: Ship, room_index: int) -> Vector2i:

@@ -208,7 +208,7 @@ func _update_info() -> void:
 			lines.append("[color=#7d8ba0]Not linked to your cluster.[/color]")
 	if run.tech_goal:
 		lines.append("")
-		lines.append("[color=#ffd46b]The seven pieces: %d of %d aboard[/color]" % [run.tech_count(), RimTech.order.size()])
+		lines.append("[color=#ffd46b]The crossing: %d of %d fitted to one ship[/color]" % [run.tech_count(), run.tech_total()])
 		for line in RimTech.missing_lines(run):
 			lines.append("[color=#a8b8cc]%s[/color]" % line)
 	_info.text = "\n".join(lines)

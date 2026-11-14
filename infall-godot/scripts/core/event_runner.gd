@@ -388,10 +388,10 @@ func _apply(tag: String, attrs: Dictionary, result: Dictionary) -> void:
 			if race_id == "" or race_id == "region":
 				race_id = run.cluster().race
 			if run.give_tech(race_id, "event"):
-				result.lines.append("%s: in the hold (%d of %d)" % [RimTech.name_of(race_id), run.tech_count(), RimTech.order.size()])
+				result.lines.append("%s: in the hold. A refit yard can fit it to a ship." % RimTech.name_of(race_id))
 		"tech_goal":
 			run.tech_goal = true
-			result.lines.append("The seven pieces: %d of %d aboard. The map shows where to look for the rest." % [run.tech_count(), RimTech.order.size()])
+			result.lines.append("The crossing: %d of %d fitted to one ship. The map shows where to look for the rest." % [run.tech_count(), run.tech_total()])
 		"fight":
 			result.fight = attrs.get("squad", "")
 			result.fight_given = true
@@ -566,10 +566,10 @@ func fight_rewards(encounter: Encounter) -> Dictionary:
 				continue
 			if ship.crew_dead and not ship.destroyed and run.rng.randf() < RimTech.steal_chance_in(run.band()):
 				run.give_tech(race, "taken")
-				lines.append("You strip the %s out of the %s. (%d of %d)" % [RimTech.name_of(race), ship.name, run.tech_count(), RimTech.order.size()])
+				lines.append("You strip the %s out of the %s. It is in the hold." % [RimTech.name_of(race), ship.name])
 			elif ship.destroyed and run.rng.randf() < RimTech.wreck_chance:
 				run.give_tech(race, "salvaged")
-				lines.append("Your crews pull the %s out of the wreck of the %s. (%d of %d)" % [RimTech.name_of(race), ship.name, run.tech_count(), RimTech.order.size()])
+				lines.append("Your crews pull the %s out of the wreck of the %s. It is in the hold." % [RimTech.name_of(race), ship.name])
 	# And close to the rim, a ship that surrenders can be asked for its piece in place of its Mawjig
 	var demand := ""
 	if run.tech_goal and surrender_paid > 0 and run.band() >= RimTech.demand_band:

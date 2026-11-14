@@ -23,6 +23,19 @@ func rebuild() -> void:
 	if _content == null:
 		return
 	clear(_content)
+	if not run.tech.is_empty():
+		_content.add_child(UiKit.label("IN THE HOLD", 18, Color("#ffd46b"), true))
+		for race in run.tech:
+			var row := HBoxContainer.new()
+			row.add_theme_constant_override("separation", 10)
+			var name := UiKit.label(RimTech.name_of(race), 16)
+			name.custom_minimum_size = Vector2(430, 0)
+			row.add_child(name)
+			var fit := UiKit.button("FIT  " + Mawjig.format(Refit.fit_price(race)), func(): _choose_ship_for_piece(race), 150)
+			fit.disabled = not run.own_ships().any(func(ship: Ship): return Refit.fit_refusal(run, race, ship).is_empty())
+			row.add_child(fit)
+			_content.add_child(row)
+		_content.add_child(HSeparator.new())
 	for ship in run.own_ships():
 		var head := HBoxContainer.new()
 		head.add_child(UiKit.label(ship.name.to_upper(), 18, UiColours.ACCENT, true))
@@ -67,11 +80,43 @@ func _choose_ship(from: Ship, system: ShipSystem) -> void:
 		if other == from:
 			continue
 		var why := Refit.move_refusal_between(run, from, system, other)
-		var button := window.add_button("To the %s." % other.name if why.is_empty() else "%s: %s" % [other.name, why], func():
+		var theirs := Refit.traded_for(system, other)
+		var label := "To the %s." % other.name if theirs == null else "To the %s, in trade for its %s (level %d)." % [other.name, theirs.def.name, theirs.level]
+		var button := window.add_button(label if why.is_empty() else "%s: %s" % [other.name, why], func():
 			window.close()
-			_choose_room(from, system, other))
+			if theirs != null:
+				_send_move(from, system, other, -1)       # a trade: each system takes the other's tile
+			else:
+				_choose_room(from, system, other))
 		button.disabled = not why.is_empty()
 	window.add_button("Cancel", window.close)
+
+
+func _choose_ship_for_piece(race: String) -> void:
+	var def := Library.system(RimTech.pieces[race].system)
+	var window := Overlay.new()
+	get_parent().add_child(window)
+	window.place_panel(640)
+	window.add_title("FIT THE %s" % RimTech.name_of(race).to_upper())
+	window.add_text("From the hold, for %s Mawjig. To which ship? A ship that has %s of its own has it rebuilt as this one." % [Mawjig.format(Refit.fit_price(race)), def.name], 18, UiColours.TEXT_DIM)
+	for ship in run.own_ships():
+		var why := Refit.fit_refusal(run, race, ship)
+		var button := window.add_button("To the %s." % ship.name if why.is_empty() else "%s: %s" % [ship.name, why], func():
+			window.close()
+			if ship.system_by(def.behaviour) != null:
+				_send_fit(race, ship, -1)
+			else:
+				var picker := RoomPicker.new()
+				get_parent().add_child(picker)
+				picker.open(ship, def)
+				picker.picked.connect(func(room: int): _send_fit(race, ship, room)))
+		button.disabled = not why.is_empty()
+	window.add_button("Cancel", window.close)
+
+
+func _send_fit(race: String, ship: Ship, room: int) -> void:
+	give.call({"k": "refit", "op": "fit_tech", "race": race, "sq": run.squad.find(ship), "room": room})
+	Sfx.play("buy")
 
 
 func _choose_room(from: Ship, system: ShipSystem, to: Ship) -> void:

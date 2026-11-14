@@ -45,10 +45,18 @@ anything Claude added tagged Ai-Generated-Proposal.
   2026-11-14, on Infall: Lori's branch): the pieces are goals, not destinations.
   - **The pieces.** Each is a race's own version of a real system: the GATOS Armoured ZeroPoint Core, Azurethea
     Engines, the Tentauri Supershield Generator, the Senti Armoured Avatar Array, the Lykario Autopilot (their
-    Piloting), the Malphen Growth Organ, and the Mecha Hull Reinforcement. A piece counts when a ship of the squad
-    has that system in that race's make, or when it is in the squad's hold. Every system now records the race that
-    built it: its ship's race, or the race whose store sold it. So a squad that starts in the Outrider has the
-    GATOS core from the first jump, and buying an Azurethea ship brings its Engines.
+    Piloting), the Malphen Growth Organ, and the Mecha Hull Reinforcement (a new system: 5 more hull points).
+    Every system records the race that built it: its ship's race, or the race whose store sold it.
+  - **All on one ship (heromedel, 2026-11-14: "all on one ship, not just in the squad"):** a piece counts when it
+    is fitted to the one ship that will make the crossing: the squad's own ship that carries the most of them. A
+    piece that is taken, bought or given goes to the hold. A refit yard (GV 5E) fits it to a ship, and moves or
+    trades a piece between ships. So a squad that starts in the Outrider has the GATOS core fitted from the first
+    jump, and an Azurethea ship's Engines can be traded across to it at a yard.
+  - **Which pieces (`docs/ideas.md`, 2026-10-21, "one from each pair"):** a setting, `Tech Victory Pieces: One of
+    Each Pair > All Seven`. The pairs are Power (the GATOS core or the Malphen Growth Organ), Flight (Azurethea
+    Engines or the Lykario Autopilot), Hull (the Tentauri Supershield or the Mecha Hull Reinforcement) and Record
+    (the Senti Armoured Avatar Array or genetic diversity). **Open for heromedel:** which of the two is the rule;
+    he said "one tech from every race" and then asked whether the docs' pairs were meant.
   - **The goal starts late.** On the squad's first arrival two bands from the rim, The Colony Ship's message
     (TECH_GOAL_FOUND) begins the search. From then the map lists how many pieces are aboard and, for each one
     missing, which way that race's nearest space lies: a pointer to a region, never a marked place.
@@ -68,9 +76,11 @@ anything Claude added tagged Ai-Generated-Proposal.
     victory.
   - **Setting:** `Tech Victory: Optional > Required`. Optional: without all seven the rim is as before, the Last
     Fleet and the plain ending. Required: without all seven there is no way out at the rim yet.
-  - **Not built:** the Mecha Hull Reinforcement as a system of its own (it is only ever a piece in the hold); a
-    Short run has no Tech victory.
-  - **Ai-Generated-Proposal:** a wreck gives up its piece 1 time in 10; the rival wants two pieces aboard before
+  - **Not built:** a Short run has no Tech victory.
+  - **Ai-Generated-Proposal:** genetic diversity stands in as six living crew of the squad's own race aboard the
+    one ship (the docs say "maybe 3 males and 3 females of your core race"; the game has no crew sex); fitting a
+    piece from the hold costs a quarter of that system's price, and a ship that already has that kind of system has
+    it rebuilt as the piece where it stands, keeping its level; a wreck gives up its piece 1 time in 10; the rival wants two pieces aboard before
     it hunts and comes to those meetings at 70% of its hull; the ambush is the Long Odds and a Checkpoint Cutter,
     replaced by a Forlorn Hope and a Sellsword; the setting and its default; the pointers are compass directions
     as the map shows them.
@@ -246,8 +256,9 @@ anything Claude added tagged Ai-Generated-Proposal.
 - **E — Built (2026-11-14), GDD 5N (Proposed, heromedel):** refit yards. A store with a yard (one with a ship for
   sale, and half the others) moves a system from one of the squad's ships to another for a quarter of its value at
   its level, into a room the player picks, under the same placement rules as a purchase. A ship can't take a kind
-  of system it already has, a weapons system moves only with its weapons off, and a mercenary's ship is not the
-  squad's to refit. Moving a power core, Life Support, Piloting or Engines asks first, in Infall: Lori's words.
+  of system it already has: the two ships trade theirs, each taking the other's tile. A weapons system moves only
+  with its weapons off, and a mercenary's ship is not the squad's to refit. A piece of the Tech victory in the
+  hold is fitted to a ship here. Moving a power core, Life Support, Piloting or Engines asks first, in Infall: Lori's words.
   The yard also buys a ship (Infall: Eco, finding F17: half of what a store asks for the design, less damage);
   its crew move to the other ships where there is room. Crew already move between ships on the ship screen.
 - **F — Built (2026-11-14), GDD 8R (heromedel):** the EVA Dock has a third button: crew of the ship who crossed to

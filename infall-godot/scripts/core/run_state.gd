@@ -60,28 +60,59 @@ func spend(cents: int) -> bool:
 
 # --- The Tech victory's pieces --------------------------------------------------------------------------------
 
-## Whether the squad has a race's piece: in the hold, or as that race's own make of the system on one of its ships.
+## Whether the squad has a race's piece anywhere: in the hold, or fitted to one of its ships.
 func has_tech(race: String) -> bool:
-	return tech.has(race) or carries_tech(race)
+	return tech.has(race) or own_ships().any(func(ship: Ship): return tech_on(ship).has(race))
 
 
-func carries_tech(race: String) -> bool:
-	var behaviour := RimTech.behaviour_of(race)
-	if behaviour.is_empty():
-		return false
-	for ship in own_ships():
-		for system in ship.systems:
-			if system.behaviour == behaviour and system.make == race:
-				return true
+## The races whose piece is fitted to a ship.
+func tech_on(ship: Ship) -> Array[String]:
+	var fitted: Array[String] = []
+	for race in RimTech.order:
+		if ship.systems.any(func(system: ShipSystem): return RimTech.is_piece(system, race)):
+			fitted.append(race)
+	return fitted
+
+
+## Whether a ship carries what one of the crossing's needs asks for (RimTech.groups).
+func group_done_on(ship: Ship, group: Dictionary) -> bool:
+	var fitted := tech_on(ship)
+	if group.races.any(func(race): return fitted.has(race)):
+		return true
+	if int(group.own_crew) > 0:
+		var own := 0
+		for member in ship.crew:
+			if not member.dead and member.race.id == galaxy.home_race:
+				own += 1
+		return own >= int(group.own_crew)
 	return false
 
 
+func tech_score(ship: Ship) -> int:
+	var score := 0
+	for group in RimTech.groups():
+		if group_done_on(ship, group):
+			score += 1
+	return score
+
+
+## The ship that would make the crossing (heromedel, 2026-11-14: the pieces must all be on one ship): the squad's
+## own ship that carries the most of what is needed.
+func crossing_ship() -> Ship:
+	var best: Ship = null
+	for ship in own_ships():
+		if best == null or tech_score(ship) > tech_score(best):
+			best = ship
+	return best
+
+
 func tech_count() -> int:
-	var count := 0
-	for race in RimTech.order:
-		if has_tech(race):
-			count += 1
-	return count
+	var ship := crossing_ship()
+	return tech_score(ship) if ship else 0
+
+
+func tech_total() -> int:
+	return RimTech.groups().size()
 
 
 ## Puts a race's piece in the hold. False when the squad already has it, or there is no such piece.
@@ -90,18 +121,24 @@ func give_tech(race: String, how: String = "") -> bool:
 		return false
 	tech.append(race)
 	if log_book:
-		log_book.write("tech", {"race": race, "how": how, "held": tech_count()}, "The squad has the %s (%d of %d)." % [RimTech.name_of(race), tech_count(), RimTech.order.size()])
+		log_book.write("tech", {"race": race, "how": how}, "The squad has the %s in its hold." % RimTech.name_of(race))
 	return true
 
 
 func has_all_tech() -> bool:
-	return not RimTech.order.is_empty() and RimTech.order.all(func(race): return has_tech(race))
+	return tech_total() > 0 and tech_count() >= tech_total()
 
 
+## The races whose piece is still worth finding: those of each need the one ship lacks and the squad has nowhere.
 func missing_tech() -> Array[String]:
 	var missing: Array[String] = []
-	for race in RimTech.order:
-		if not has_tech(race):
+	var ship := crossing_ship()
+	for group in RimTech.groups():
+		if ship and group_done_on(ship, group):
+			continue
+		if group.races.any(func(race): return has_tech(race)):
+			continue
+		for race in group.races:
 			missing.append(race)
 	return missing
 

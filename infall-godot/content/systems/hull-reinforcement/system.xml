@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The Mecha's piece of the Tech victory as a system of its own (docs/ideas.md: "Mecha ship reinforcements";
+     Infall: Lori's name). Ai-Generated-Proposal (2026-11-14), Infall: Godot Version: it draws no power, nobody mans
+     it, and the ship it braces has 5 more hull points. The price is a core system's (Infall: Eco, finding F16). -->
+<system id="hull-reinforcement" name="Hull Reinforcement" behaviour="hull_reinforcement" max_level="1" draws_power="no" manned="no" buy="36.31" upgrades="" icon="doors" hotkey="" order="70">
+	<description>Mecha bracing that holds a hull together under forces no other ship could take. The ship has 5 more hull points.</description>
+	<level>Braced</level>
+</system>

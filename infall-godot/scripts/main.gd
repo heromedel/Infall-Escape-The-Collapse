@@ -513,7 +513,7 @@ func _on_fight_over(outcome: String, finished: Encounter) -> void:
 		var trade: Array[Button] = []
 		trade.append(window.add_button("Demand their %s as the price of surrender (hand back the %s Mawjig)." % [piece, Mawjig.format(int(rewards.surrender_paid))], func():
 			if runner.trade_surrender_for_tech(rewards):
-				trade[0].text = "They hand over the %s (%d of %d)." % [piece, run.tech_count(), RimTech.order.size()]
+				trade[0].text = "They hand over the %s. It is in the hold." % piece
 			trade[0].disabled = true
 			run_changed.emit(), Color("#ffd46b")))
 	var survivors: Array = rewards.get("survivors", [])

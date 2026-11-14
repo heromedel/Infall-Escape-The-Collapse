@@ -70,6 +70,11 @@ static func apply(run: RunState, order: Dictionary) -> void:
 			if system and to and has_yard(run.cluster()) and move_refusal(run, ship, system, to, int(order.room)).is_empty() and run.spend(move_price(ship, system)):
 				move_system(ship, system, to, int(order.room))
 				run.log_book.write("refit", {"system": system.def.id, "from": ship.design.id, "to": to.design.id}, "The %s was moved from the %s to the %s." % [system.def.name, ship.name, to.name])
+		"fit_tech":
+			var race := String(order.race)
+			if ship and has_yard(run.cluster()) and fit_refusal(run, race, ship, int(order.room)).is_empty() and run.spend(fit_price(race)):
+				fit_tech(run, race, ship, int(order.room))
+				run.log_book.write("fitted", {"race": race, "ship": ship.design.id}, "The %s was fitted to the %s." % [RimTech.name_of(race), ship.name])
 		"sell_ship":
 			if ship and has_yard(run.cluster()) and sell_ship_refusal(run, ship).is_empty():
 				var price := sell_ship_price(run, ship)
@@ -174,11 +179,11 @@ static func move_refusal_between(run: RunState, from: Ship, system: ShipSystem, 
 		return "A mercenary's ship isn't yours to refit."
 	if system.behaviour in ["weapons", "weapon_pod"] and not from.weapons_on(system).is_empty():
 		return "Move its weapons to the hold first."
+	var theirs := to.system_by(system.behaviour)
+	if theirs != null:
+		return ""       # a ship that has that kind of system trades its own for this one
 	if system.behaviour == "power_core":
-		if to.reactor_type != "core" or to.system_by("power_core") != null:
-			return "The %s has its own reactor." % to.name
-	elif to.system_by(system.behaviour) != null:
-		return "The %s already has its own %s." % [to.name, to.system_by(system.behaviour).def.name]
+		return "The %s has a reactor of its own, with no core to trade." % to.name
 	if ShipOutfitter.room_for_new_system(to, system.def) < 0:
 		return "The %s has no room that can take it." % to.name
 	if run.mawjig < move_price(from, system):
@@ -188,7 +193,9 @@ static func move_refusal_between(run: RunState, from: Ship, system: ShipSystem, 
 
 static func move_refusal(run: RunState, from: Ship, system: ShipSystem, to: Ship, room: int) -> String:
 	var why := move_refusal_between(run, from, system, to)
-	return why if not why.is_empty() else ShipOutfitter.install_refusal(to, system.def, room)
+	if not why.is_empty() or to.system_by(system.behaviour) != null:
+		return why
+	return ShipOutfitter.install_refusal(to, system.def, room)
 
 
 ## What the squad is warned of before a system that a ship can't do without is moved off it, or "".
@@ -205,15 +212,67 @@ static func move_warning(from: Ship, system: ShipSystem) -> String:
 	return ""
 
 
+## Moves a system to another ship: into a room, or, when that ship has a system of the same kind, in trade for it.
 static func move_system(from: Ship, system: ShipSystem, to: Ship, room: int) -> void:
-	ShipOutfitter.remove_system(from, system)
-	ShipOutfitter.place_system(to, system, room)
-	if system.behaviour == "power_core":
-		to.reactor_level = from.reactor_level
-		from.reactor_level = 0
+	var theirs := to.system_by(system.behaviour)
+	if theirs != null:
+		ShipOutfitter.swap_systems(from, system, to, theirs)
+		if system.behaviour == "power_core":
+			var level := to.reactor_level
+			to.reactor_level = from.reactor_level
+			from.reactor_level = level
+	else:
+		ShipOutfitter.remove_system(from, system)
+		ShipOutfitter.place_system(to, system, room)
 	for each in [from, to]:
 		each.settle_power()
 		each.assign_stations()
+
+
+## Whether the move is a trade, and for what: the other ship's system of the same kind, or null.
+static func traded_for(system: ShipSystem, to: Ship) -> ShipSystem:
+	return to.system_by(system.behaviour)
+
+
+# --- Fitting a piece of the Tech victory from the hold (GV 2F) ---------------------------------------------------
+
+static func fit_price(race: String) -> int:
+	var def := Library.system(RimTech.pieces[race].system) if RimTech.pieces.has(race) else null
+	return Mawjig.no_trailing_zero(int(round(def.buy_price * MOVE_SHARE))) if def else 0
+
+
+## Why a piece in the hold can't be fitted to a ship, or "". A ship that has that kind of system has it rebuilt as
+## the piece, where it stands; otherwise the piece needs a room.
+static func fit_refusal(run: RunState, race: String, ship: Ship, room: int = -1) -> String:
+	if not run.tech.has(race) or not RimTech.pieces.has(race):
+		return "That piece isn't in the hold."
+	var def := Library.system(RimTech.pieces[race].system)
+	if def == null or ship.is_mercenary():
+		return "It can't be fitted to that ship."
+	if def.behaviour == "power_core" and ship.system_by("power_core") == null:
+		return "The %s has a reactor of its own, with no core to replace." % ship.name
+	if run.mawjig < fit_price(race):
+		return "Not enough Mawjig."
+	if ship.system_by(def.behaviour) != null:
+		return ""
+	if ShipOutfitter.room_for_new_system(ship, def) < 0:
+		return "The %s has no room that can take it." % ship.name
+	return "" if room < 0 else ShipOutfitter.install_refusal(ship, def, room)
+
+
+static func fit_tech(run: RunState, race: String, ship: Ship, room: int) -> void:
+	var def := Library.system(RimTech.pieces[race].system)
+	var own := ship.system_by(def.behaviour)
+	if own != null:
+		own.def = def          # the ship's own system is rebuilt as the piece, keeping its tile and its level
+		own.level = mini(own.level, def.max_level)
+		own.make = race
+	else:
+		var system := ShipOutfitter.install_system(ship, def, room)
+		system.make = race
+	run.tech.erase(race)
+	ship.settle_power()
+	ship.assign_stations()
 
 
 ## What a yard pays for a ship (Infall: Eco, finding F17): half of what a store asks for its design, less 1.21 for
