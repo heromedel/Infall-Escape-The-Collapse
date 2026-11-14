@@ -541,3 +541,17 @@ Asked by Infall: Godot Version. All Ai-Generated-Proposal unless noted.
    stores more often rather than lowering the price.
 5. **Crew killers** kill about 1.7 crew a fight, the same as ordinary ships (Godot Version's duels): not a price
    question; see `concerns.md`, concern 5.
+
+## F18. Waits rising with the victory paths (2026-11-14, for heromedel's review)
+
+Godot Version's round from seed 2000 (after refit yards, real-system Tech pieces and the Alliance victory): the
+watcher bot waited for want of Mawjig 184 times in 30 games (about 6 a game, from about 2 in F15) and was swallowed 3
+times, while fights cost and paid the same (0.49 shots and 11.64 pay a fight, against 0.52 and 12.74). So the cause
+is outside fights. Suspects, in order: more jumps per fight on the way to race clusters for the victory paths; new
+spending (yard moves and fits, bought systems, pieces); fewer paying fights per band. Asked for a per-game breakdown
+(jumps, fights won, Mawjig spent by category, balance at each Wait). Suggested (Ai-Generated-Proposal): if it is
+travel, add paying encounters or events along the race routes rather than make Mawjig cheaper. No price change yet.
+
+Wins that round: watcher 5 of 30 (3 Alliance), expert 9 of 30 (5 Alliance), expert going for Tech 3 of 20, going for
+Alliance 5 of 20. Crew lost per fight: the Senti Census crew killers 0 in 3 fights, the lowest of any enemy (the Last
+Fleet 5.5, Senti pickets 0.8): with Ship Designs and heromedel (concern 5).
