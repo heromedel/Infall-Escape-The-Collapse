@@ -38,7 +38,7 @@ static func start(seed_number: int, ship_id: String) -> RunState:
 	run.current = run.galaxy.start_index
 	run.galaxy.clusters[run.current].visited = true
 	run.mawjig = Mawjig.amount(START_MAWJIG + (6.03 if run.difficulty == "Easy" else 0.0))
-	var ship := Ship.from_design(Library.ship(ship_id), 0, run.rng, Settings.get_value("terran_conduits", true))
+	var ship := Ship.from_design(Library.ship(ship_id), 0, run.rng, Settings.get_value("terran_conduits", false))
 	run.squad.append(ship)
 	run.log_book = LogBook.open_for_run(seed_number)
 	run.log_book.write("run_started", {"seed": seed_number, "ship": ship_id, "bands": band_count}, "A new run begins with the %s. Seed %d." % [ship.name, seed_number])

@@ -298,7 +298,7 @@ func _apply(tag: String, attrs: Dictionary, result: Dictionary) -> void:
 				return
 			var design := Library.ship(attrs.get("design", "outrider"))
 			if design:
-				var ship := Ship.from_design(design, 0, run.rng, Settings.get_value("terran_conduits", true))
+				var ship := Ship.from_design(design, 0, run.rng, Settings.get_value("terran_conduits", false))
 				if attrs.has("hull"):
 					ship.hull = clampi(int(attrs.hull), 1, ship.max_hull)
 				ship.name = attrs.get("name", ship.name)

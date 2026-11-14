@@ -53,7 +53,7 @@ static func apply(run: RunState, order: Dictionary) -> void:
 			var design := Library.ship(order.id)
 			if design and run.living_ships().size() < EventRunner.MAX_SQUAD and run.spend(int(order.price)):
 				ensure_stock(run)
-				var bought := Ship.from_design(design, 0, run.rng, Settings.get_value("terran_conduits", true))
+				var bought := Ship.from_design(design, 0, run.rng, Settings.get_value("terran_conduits", false))
 				run.squad.append(bought)
 				run.cluster().store_stock.sold.append("ship")
 				run.log_book.write("bought_ship", {"design": design.id, "price": order.price}, "The %s joined the squad." % bought.name)

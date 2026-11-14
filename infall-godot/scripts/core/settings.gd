@@ -9,7 +9,7 @@ const OPTIONS := {
 	"auto_pause": [false, [false, true], "Auto Pause"],
 	"auto_pause_seconds": [5.0, [5.0, 3.0, 8.0, 12.0], "Auto Pause Interval (seconds)"],
 	"event_auto_pause": [true, [true, false], "Events Pause the Game"],
-	"terran_conduits": [true, [true, false], "Terran Ship Conduits"],
+	"terran_conduits": [false, [false, true], "Terran Ship Conduits"],     # off: a classic reactor (heromedel, 2026-11-14)
 	"player_power_colour": ["Default (Green)", ["Default (Green)", "Racial", "Specific Color"], "Player Power Color"],
 	"player_power_specific": ["GATOS Green", ["GATOS Green", "Pirate Orange", "Mecha Purple", "Tentauri Pink", "Azurethea Blue",
 			"Senti Yellow-Green", "Lykario Silver", "Malphen Pink-Orange", "Custom"], "Specific Power Color"],

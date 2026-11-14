@@ -105,7 +105,7 @@ func execute(line: String) -> void:
 		"ship":
 			var design := Library.ship(words[1] if words.size() > 1 else "outrider")
 			if design:
-				run.squad.append(Ship.from_design(design, 0, run.rng, Settings.get_value("terran_conduits", true)))
+				run.squad.append(Ship.from_design(design, 0, run.rng, Settings.get_value("terran_conduits", false)))
 				main.arrive_at_cluster()
 				_say("Added the %s." % design.name)
 			else:
