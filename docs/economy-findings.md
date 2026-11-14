@@ -506,3 +506,18 @@ because the fights are now won; shots 3–10% of pay. So the Senti problem was s
 4 of 30, expert 16 of 30. The new Senti Census squad cost no hull in its 6 fights (too mild; with Ship Designs).
 **For heromedel:** the expert now wins over half its games, against a target of about 9 in 10 lost; that is
 difficulty, not economy, but worth a look.
+
+## F16. Tech victory: piece prices (2026-11-14, for heromedel's review)
+
+Asked by Infall: Godot Version, building heromedel's Tech victory (`ideas.md`, Victory paths: one piece of tech from
+each of the seven races, carried to the rim; bought, from events, stolen, or demanded in surrender; never bought
+from the Malphen; the Mecha only on a good deal). All Ai-Generated-Proposal.
+
+1. **Store price:** 36.31 × 1.(band − 1), the wreck-reward curve (GDD 8I): band 3 43.57, band 4 47.21, band 5 50.83,
+   band 6 54.47, band 7 58.11, band 8 61.73. 36.31 is 150 scrap, heromedel's core-system price (FHP's
+   `CORE_SYSTEM`, used in `system-prices.md`), since each piece is a race's own version of a core part. Buying about
+   4 of the 7 in bands 5–6 costs about 210, inside the expert bot's 130–300 spare (F15).
+2. **Mecha good deal:** 1.5 × that band's store price (65.36 to 92.61), or a trade of one system or weapon worth at
+   least that.
+3. **Taking it from a whole ship** (crew dead): a 1-in-5 chance per ship from band 3 (or 1 in 3 from band 6, if it
+   should grow toward the rim). With two or three crew kills of a race, about 40–50%: a real route, not a sure one.
