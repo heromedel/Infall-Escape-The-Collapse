@@ -142,6 +142,8 @@ func _weapons_column() -> VBoxContainer:
 	if not ship.suits.is_empty():
 		column.add_child(UiKit.label("EVB suits: %s" % Library.weapon(ship.suits[0]).name, 16))
 	column.add_child(UiKit.label("THE HOLD", 16, UiColours.ACCENT, true))
+	for race in run.tech:
+		column.add_child(UiKit.label("Rim tech: %s" % RimTech.name_of(race), 15, Color("#ffd46b")))
 	if run.cargo.is_empty():
 		column.add_child(UiKit.label("Empty.", 15, UiColours.TEXT_DIM))
 	for index in run.cargo.size():

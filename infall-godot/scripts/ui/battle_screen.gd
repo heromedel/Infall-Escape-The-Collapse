@@ -183,6 +183,9 @@ func shake(amount: float) -> void:
 
 # --- What happened: effects, sounds, decisions ----------------------------------------------------------------
 
+## Shown when a lost enemy ship is replaced (Infall: Lori).
+const REINFORCEMENT_LINE := "Another darkened hull drops out of a jump to take the fallen ship's place. Its crew aren't waiting for orders anymore."
+
 func _read_notes() -> void:
 	for note in encounter.notes:
 		_show_note(note)
@@ -194,7 +197,24 @@ func _read_notes() -> void:
 func _show_note(note: Dictionary) -> void:
 	var ship: Ship = note.get("ship") if note.get("ship") is Ship else null
 	var quiet := session != null and session.catching_up
+	if ship and not views.has(ship) and note.kind != "reinforcement":
+		return      # about a wreck a reinforcement has since taken the place of
 	match note.kind:
+		"reinforcement":
+			var lost: Ship = note.replaces
+			if views.has(lost):
+				views[lost].queue_free()
+				views.erase(lost)
+			var view := ShipView.new()
+			view.setup(ship, encounter)
+			world.add_child(view)
+			views[ship] = view
+			effects.sparkle(ship.world_position, Color(0.8, 0.9, 1.0))
+			_sound("jump")
+			flash_message(REINFORCEMENT_LINE)
+			for player in player_views:
+				if player.hover_ship == lost:
+					player.hover_ship = null
 		"shot":
 			var weapon: WeaponDef = note.weapon
 			_sound(weapon.shot_sound(), -6.0 if ship and ship.side == 1 else -3.0)

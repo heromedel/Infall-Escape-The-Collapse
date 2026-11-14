@@ -30,6 +30,8 @@ var verbose := false
 var _last: Encounter
 var _fights: Dictionary = {}        # "band squad" -> what happened in every fight against it, for the balance table
 var _starved := 0                   # times a squad had to wait because it couldn't pay for a jump
+var goal := ""                      # "tech": the player goes for the Tech victory (GOAL=tech)
+const TECH_SPARE := 2500            # what a player going for the Tech victory keeps back when paying for a dear piece
 
 
 func _ready() -> void:
@@ -38,13 +40,16 @@ func _ready() -> void:
 	skill = _env("SKILL", "watcher")
 	player = PLAYERS[skill]
 	verbose = _env("VERBOSE", "") != ""
+	goal = _env("GOAL", "")
+	if _env("TECH", "") != "":
+		Settings._values["tech_victory"] = _env("TECH", "Optional")
 	if _env("DIFFICULTY", "") != "":
 		Settings._values["difficulty"] = _env("DIFFICULTY", "Normal")
 	var reports: Array = []
 	for index in runs:
 		var report := _play_one(first + index, _env("SHIP", "outrider"))
 		reports.append(report)
-		print("run %d %-5s band %d jump %3d  fights %2d (%2d won, %d fled, %d stalemates)  most ships %d  mawjig %7s  %s" % [report.seed, report.result, report.band, report.jumps, report.fights, report.won, report.fled, report.stalemates, report.most_ships, Mawjig.format(report.mawjig), report.ended_by])
+		print("run %d %-5s band %d jump %3d  fights %2d (%2d won, %d fled, %d stalemates)  most ships %d  mawjig %7s  tech %d  %s" % [report.seed, report.result, report.band, report.jumps, report.fights, report.won, report.fled, report.stalemates, report.most_ships, Mawjig.format(report.mawjig), report.tech, report.ended_by])
 	_summary(reports)
 	get_tree().quit()
 
@@ -68,6 +73,16 @@ func _summary(reports: Array) -> void:
 			bands[report.band] = bands.get(report.band, 0) + 1
 			killers[report.ended_by] = killers.get(report.ended_by, 0) + 1
 	print("\n%s: %d of %d runs won (%.0f%%). Fights %d, stalemates %d, fights fled %d." % [skill, wins, reports.size(), 100.0 * wins / maxi(1, reports.size()), fights, stalemates, fled])
+	var tech_wins := reports.filter(func(r): return r.result == "WON" and r.victory == "tech").size()
+	var held := {}
+	var how := {}
+	for report in reports:
+		held[report.tech] = held.get(report.tech, 0) + 1
+		for way in report.tech_how:
+			how[way] = how.get(way, 0) + int(report.tech_how[way])
+	var counts := held.keys()
+	counts.sort()
+	print("Tech victories %d. Pieces held at the end: %s. Pieces came by: %s. Meetings with the rival: %d." % [tech_wins, ", ".join(counts.map(func(n): return "%d pieces in %d runs" % [n, held[n]])), str(how), reports.reduce(func(sum: int, r): return sum + int(r.rival), 0)])
 	var band_line := PackedStringArray()
 	for band in range(1, 9):
 		band_line.append("band %d: %d" % [band, bands.get(band, 0)])
@@ -87,7 +102,7 @@ func _summary(reports: Array) -> void:
 func _play_one(seed_number: int, ship_id: String) -> Dictionary:
 	var run := RunState.start(seed_number, ship_id)
 	var runner := EventRunner.new(run)
-	var report := {"seed": seed_number, "result": "LOST", "band": 1, "jumps": 0, "fights": 0, "won": 0, "fled": 0, "stalemates": 0, "ships": 1, "most_ships": 1, "mawjig": 0, "ended_by": "ran out of jumps"}
+	var report := {"seed": seed_number, "result": "LOST", "band": 1, "jumps": 0, "fights": 0, "won": 0, "fled": 0, "stalemates": 0, "ships": 1, "most_ships": 1, "mawjig": 0, "ended_by": "ran out of jumps", "tech": 0, "victory": "", "tech_how": {}, "rival": 0}
 	while run.jumps < 400:
 		var event := runner.opening_message()
 		if event:
@@ -96,6 +111,8 @@ func _play_one(seed_number: int, ship_id: String) -> Dictionary:
 		run.cluster().event_done = true
 		if event:
 			run.used_events.append(event.id)
+			if event.kind == "rival":
+				report.rival += 1
 			var result := _resolve(runner, event)
 			while not String(result.next_event).is_empty():
 				result = _resolve(runner, Library.events[result.next_event])
@@ -113,7 +130,13 @@ func _play_one(seed_number: int, ship_id: String) -> Dictionary:
 				var paid := 0
 				if outcome in ["won", "surrendered"]:
 					var before_pay := run.mawjig
-					runner.fight_rewards(_last)
+					var held_before := run.tech.size()
+					var rewards := runner.fight_rewards(_last)
+					_count_tech(run, held_before, "taken")
+					if goal == "tech":
+						var pieces := run.tech.size()
+						runner.trade_surrender_for_tech(rewards)
+						_count_tech(run, pieces, "surrender")
 					paid = run.mawjig - before_pay
 				_note_fight(band, squad.id, outcome, hull_before, _hull(run), spent, paid)
 				if verbose:
@@ -131,7 +154,8 @@ func _play_one(seed_number: int, ship_id: String) -> Dictionary:
 						return _close(report, run)
 				if run.cluster().kind == "final" and outcome in ["won", "surrendered"]:
 					report.result = "WON"
-					report.ended_by = "reached the rim"
+					report.victory = "tech" if run.has_all_tech() else "escape"
+					report.ended_by = "reached the rim" if report.victory == "escape" else "the Tech victory"
 					return _close(report, run)
 			if result.store or run.cluster().store:
 				_shop(run)
@@ -175,7 +199,18 @@ func _close(report: Dictionary, run: RunState) -> Dictionary:
 	report.jumps = run.jumps
 	report.ships = run.living_ships().size()
 	report.mawjig = run.mawjig
+	report.tech = run.tech.size()
+	report.tech_how = _tech_how.duplicate()
+	_tech_how.clear()
 	return report
+
+
+var _tech_how := {}      # how this run's pieces came: event, bought, taken, surrender
+
+
+func _count_tech(run: RunState, before: int, way: String) -> void:
+	if run.tech.size() > before:
+		_tech_how[way] = int(_tech_how.get(way, 0)) + run.tech.size() - before
 
 
 ## Between clusters a player lets the crew finish repairs, and heal if the ship has a working medbay.
@@ -205,6 +240,11 @@ func _resolve(runner: EventRunner, event: EventDef) -> Dictionary:
 			for each in choices:
 				if _offers_a_ship(each):
 					choice = each
+			# Going for the Tech victory: the choice that hands over a piece
+			if goal == "tech":
+				for each in choices:
+					if _choice_value(runner, each) > 5000.0:
+						choice = each
 		"knows":
 			var best := -INF
 			for each in choices:
@@ -212,7 +252,10 @@ func _resolve(runner: EventRunner, event: EventDef) -> Dictionary:
 				if value > best:
 					best = value
 					choice = each
-	return runner.resolve(choice, runner.crew_for_choice(choice))
+	var pieces := runner.run.tech.size()
+	var result := runner.resolve(choice, runner.crew_for_choice(choice))
+	_count_tech(runner.run, pieces, "event")
+	return result
 
 
 func _offers_a_ship(choice: Dictionary) -> bool:
@@ -234,9 +277,15 @@ func _choice_value(runner: EventRunner, choice: Dictionary) -> float:
 		for effect in outcome.effects:
 			var attrs: Dictionary = effect.attrs
 			match String(effect.tag):
+				"tech":
+					var piece: String = attrs.get("race", "")
+					if not run.has_tech(piece):
+						value += 9000.0 if goal == "tech" else 400.0
 				"mawjig":
 					if attrs.has("size"):
 						value += SIZE_VALUE.get(attrs.size, 600) * run.band_adjustment()
+					elif attrs.has("tech"):
+						value -= RimTech.price(attrs.tech, run.band(), float(attrs.get("share", "1")))
 					else:
 						value += float(attrs.get("amount", "0")) * 100.0
 				"fight":
@@ -265,6 +314,9 @@ func _choice_value(runner: EventRunner, choice: Dictionary) -> float:
 	var value := total / maxf(1.0, weights)
 	if runner.is_blue(choice):
 		value += 150.0
+	# Going for the Tech victory a player still keeps the squad fed: a dear piece waits until there is Mawjig to spare
+	if goal == "tech" and value > 5000.0 and runner.most_given_away(choice) > 1000 and run.mawjig - runner.most_given_away(choice) < TECH_SPARE:
+		value -= 9000.0
 	if run.mawjig + minf(0.0, value) < Mawjig.JUMP_COST * 3:
 		value -= 5000.0     # never pay down to where the squad can't jump
 	return value
@@ -291,6 +343,8 @@ func _fight(run: RunState, runner: EventRunner, squad: SquadDef) -> String:
 	encounter.wallet = run
 	encounter.squad = squad
 	encounter.setup(run.living_ships(), enemies, run.jumps)
+	encounter.reinforcements = runner.build_reinforcements(squad)
+	encounter.tech_wanted = runner.tech_wanted()
 	_last = encounter
 	var captains := {}
 	for ship in encounter.living(0):
@@ -325,6 +379,13 @@ func _fight(run: RunState, runner: EventRunner, squad: SquadDef) -> String:
 				return _leave(run, encounter, "fled")
 		for note in encounter.notes:
 			if note.kind == "surrender_offer":
+				# A losing Malphen ship gives up its growth organ to a squad that lacks it, in place of Mawjig
+				var from: Ship = note.ship
+				if from.design.race == "malphen" and encounter.tech_wanted.has("malphen") and not run.has_tech("malphen"):
+					var pieces := run.tech.size()
+					run.give_tech("malphen", "surrender")
+					_count_tech(run, pieces, "surrender")
+					encounter.surrender_pays = false
 				for enemy in encounter.living(1):
 					enemy.surrendered = true
 		encounter.notes.clear()
@@ -397,6 +458,12 @@ func _shop(run: RunState) -> void:
 	var points := mini(wanted, maxi(0, (run.mawjig - reserve) / per_point))
 	if points > 0:
 		Refit.apply(run, {"op": "repair", "points": points})
+	# Going for the Tech victory: the piece this store sells
+	var piece := RimTech.sold_at(run.cluster())
+	if goal == "tech" and piece != "" and not run.has_tech(piece) and run.mawjig - RimTech.price(piece, run.band()) >= maxi(reserve, TECH_SPARE):
+		var pieces := run.tech.size()
+		Refit.apply(run, {"op": "buy_tech", "race": piece, "price": RimTech.price(piece, run.band())})
+		_count_tech(run, pieces, "bought")
 	if player.shop == "odd":
 		# The careless player buys one thing, whatever comes up first
 		for ship in run.living_ships():
@@ -540,7 +607,9 @@ func _travel(run: RunState) -> bool:
 		if not run.can_jump_to(link):
 			continue
 		var there: Dictionary = run.galaxy.clusters[link]
-		if outward < 0 or there.radius > run.galaxy.clusters[outward].radius:
+		# Going for the Tech victory, the rim waits until every piece is aboard, while the collapse allows
+		var holds_off: bool = goal == "tech" and there.kind == "final" and not run.has_all_tech() and run.collapse_distance() > SAFE_GAP * 2.0
+		if not holds_off and (outward < 0 or there.radius > run.galaxy.clusters[outward].radius):
 			outward = link
 		var keeps_ahead: bool = run.galaxy.collapse_radius <= 0.0 or there.radius - run.galaxy.collapse_radius - Galaxy.COLLAPSE_STEP > SAFE_GAP
 		if not there.visited and keeps_ahead and there.kind != "final" and (sideways < 0 or there.radius < run.galaxy.clusters[sideways].radius):
@@ -553,7 +622,40 @@ func _travel(run: RunState) -> bool:
 		var store := _toward_store(run)
 		if store >= 0:
 			pick = store
+	if goal == "tech" and not run.has_all_tech():
+		var site := _toward_tech(run)
+		if site >= 0:
+			pick = site
 	if pick < 0:
 		return false
 	run.jump_to(pick)
 	return true
+
+
+## The first jump toward the nearest tech site of a race whose piece the squad lacks (the map shows them all), that
+## it can reach ahead of the collapse and pay the jumps to; -1 when there is none within a dozen jumps.
+func _toward_tech(run: RunState) -> int:
+	var missing := run.missing_tech()
+	var reach := mini(12, (run.mawjig / Mawjig.JUMP_COST) - 3)
+	var first_hop := {run.current: -1}
+	var frontier := [run.current]
+	for depth in range(1, reach + 1):
+		var next: Array = []
+		for at in frontier:
+			for link in run.galaxy.clusters[at].links:
+				if first_hop.has(link) or run.galaxy.is_swallowed(link):
+					continue
+				var there: Dictionary = run.galaxy.clusters[link]
+				if there.kind == "final":
+					continue
+				if run.galaxy.collapse_radius > 0.0 and there.radius - run.galaxy.collapse_radius - Galaxy.COLLAPSE_STEP * (depth + 1) < 200.0:
+					continue
+				first_hop[link] = link if at == run.current else first_hop[at]
+				var site := String(there.get("tech_site", ""))
+				# A piece that is plainly bought (the GATOS core, the Mecha's deal) is worth the trip only with the Mawjig for it
+				var dear: bool = site in ["terran", "mecha"]
+				if missing.has(site) and (not dear or run.mawjig - RimTech.price(site, int(there.band)) >= TECH_SPARE):
+					return first_hop[link]
+				next.append(link)
+		frontier = next
+	return -1

@@ -1138,6 +1138,8 @@ func _draw_floating_status(ship: Ship) -> void:
 		state = "JUMPING %d%%" % int(ship.jump_charge * 100.0)
 	elif ship.is_cloaked():
 		state = "CLOAKED"
+	elif ship.side == 1 and screen.encounter.squad and screen.encounter.squad.breaks_off_at > 0.0:
+		state = screen.encounter.squad.augment.to_upper()       # it will jump away when its hull falls far enough
 	else:
 		state = "EVADE %d%%" % ship.evasion()
 	UiKit.draw_text(self, rect.position + Vector2(width - 10, 19), state, 12, UiColours.WARNING if state != "EVADE %d%%" % ship.evasion() else UiColours.TEXT_DIM, UiKit.font_bold(), HORIZONTAL_ALIGNMENT_RIGHT, 0)

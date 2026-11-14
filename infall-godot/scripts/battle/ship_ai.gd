@@ -636,11 +636,18 @@ func _consider_conduct() -> void:
 		_outlook_rolled = true
 		surrender_hull = 1.0
 		escape_hull = 1.0
+	if ship.charging_escape and ship.jump_ready():
+		ship.escaped = true
+		encounter.note("enemy_escaped", {"ship": ship})
+		return
 	if outlook == "winning":
 		return
 	if not surrender_rolled and hull_fraction <= surrender_hull:
 		surrender_rolled = true
-		if not encounter.surrender_offered and encounter.rng.randi_range(1, 100) <= surrender_chance:
+		# A losing Malphen ship always gives in to a squad that lacks its growth organ (GV 2F: they answer with matter)
+		var rolled := encounter.rng.randi_range(1, 100) <= surrender_chance
+		var gives_its_organ: bool = ship.design.race == "malphen" and encounter.tech_wanted.has("malphen")
+		if not encounter.surrender_offered and (rolled or gives_its_organ):
 			encounter.surrender_offered = true
 			encounter.note("surrender_offer", {"ship": ship})
 	if not escape_rolled and hull_fraction <= escape_hull:
@@ -649,6 +656,3 @@ func _consider_conduct() -> void:
 			ship.charging_escape = true
 			ship.jump_charge = 0.0
 			encounter.note("enemy_charging_escape", {"ship": ship})
-	if ship.charging_escape and ship.jump_ready():
-		ship.escaped = true
-		encounter.note("enemy_escaped", {"ship": ship})

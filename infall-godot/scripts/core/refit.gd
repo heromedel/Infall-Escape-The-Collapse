@@ -58,6 +58,10 @@ static func apply(run: RunState, order: Dictionary) -> void:
 				run.squad.append(bought)
 				run.cluster().store_stock.sold.append("ship")
 				run.log_book.write("bought_ship", {"design": design.id, "price": order.price}, "The %s joined the squad." % bought.name)
+		"buy_tech":
+			var race := RimTech.sold_at(run.cluster())
+			if race != "" and race == String(order.race) and not run.has_tech(race) and run.spend(RimTech.price(race, run.band())):
+				run.give_tech(race, "bought")
 		"sell":
 			var index := int(order.index)
 			if index >= 0 and index < run.cargo.size() and run.cargo[index] == order.id:

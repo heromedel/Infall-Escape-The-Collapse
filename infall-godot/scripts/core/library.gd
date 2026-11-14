@@ -26,6 +26,9 @@ func load_all() -> void:
 	_load_ships()
 	_load_squads()
 	_load_events()
+	var tech := XmlTree.load_file(CONTENT + "/tech/tech.xml")
+	if tech:
+		RimTech.load_from(tech)
 	for problem in problems:
 		push_warning(problem)
 

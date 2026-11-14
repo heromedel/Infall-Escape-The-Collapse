@@ -170,11 +170,18 @@ static func ship_select(on_pick: Callable, on_back: Callable) -> Overlay:
 	return window
 
 
+## The Tech victory's end screen (Infall: Lori, Ai-Generated-Proposal 2026-11-14).
+const TECH_WON_TITLE := "THE CROSSING"
+const TECH_WON_TEXT := "Seven pieces from seven peoples, fitted into one machine that was never meant to exist. The Long Haul powers it, the Wingbeat Engine steers it and the Mecha bracing holds it together. The Mantle Shield wraps it, the Archive Seed remembers the way, the Tracker Autopilot flies it and the Brood Heart regrows whatever the crossing tears away.\n\nThe Colony Ship follows your squad into the dark between galaxies, and the dark lets you through.\n\nBehind you, the collapse reaches the rim. It will never reach where you are going."
+
 static func end_screen(run: RunState, won: bool, on_done: Callable) -> Overlay:
 	var window := Overlay.new()
 	window.dim.color = Color(0, 0.0, 0.02, 0.85)
 	window.place_panel(860)
-	if won:
+	if won and run.victory == "tech":
+		window.add_title(TECH_WON_TITLE, Color("#ffd46b"))
+		window.add_text(TECH_WON_TEXT, 20)
+	elif won:
 		window.add_title("THE WAY OUT", Color("#ffd46b"))
 		window.add_text("The Last Fleet breaks apart behind you. Ahead there is nothing but the dark between galaxies, and a path your scouts have charted all the way across it.\n\nThe Colony Ship's signal comes through clear for the first time in weeks. \"We see your beacon. We're coming. Every one of us.\"\n\nBehind it, the collapse keeps growing. It will never reach you now.", 20)
 	else:

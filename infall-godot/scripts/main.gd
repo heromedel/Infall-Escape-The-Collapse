@@ -458,6 +458,8 @@ func start_fight(squad_id: String) -> void:
 	encounter.band = run.band()
 	encounter.hazard = _hazard_here()
 	encounter.setup(run.living_ships(), enemies, int(run.cluster().seed) + run.jumps)
+	encounter.reinforcements = runner.build_reinforcements(enemy_squad)
+	encounter.tech_wanted = runner.tech_wanted()
 	run.pending_fight = enemy_squad.id
 	battle.show_encounter(encounter, run, int(run.cluster().seed), run.collapse_nearness(), false)
 	battle.paused = Settings.get_value("event_auto_pause", true)
@@ -490,7 +492,7 @@ func _on_fight_over(outcome: String, finished: Encounter) -> void:
 			window.add_text(_after_fight_text(), 20)
 		"surrendered":
 			window.add_title("THEY SURRENDER", UiColours.POWER_GREEN)
-			window.add_text("They power down and pay to be let go.", 20)
+			window.add_text("They power down and pay to be let go." if finished.surrender_pays else "They are gone, and what you demanded is in your hold.", 20)
 		"enemy_fled":
 			window.add_title("THEY GOT AWAY", UiColours.WARNING)
 			window.add_text("The enemy's Jigawatt Drive flares and they're gone. There is nothing left here to salvage.", 20)
@@ -499,6 +501,14 @@ func _on_fight_over(outcome: String, finished: Encounter) -> void:
 			window.add_text("The enemy breaks off and leaves you to go your way.", 20)
 	for line in rewards.lines:
 		window.body.add_child(UiKit.label(line, 18, UiColours.POWER_GREEN, true))
+	if String(rewards.get("tech_demand", "")) != "":
+		var piece := RimTech.name_of(rewards.tech_demand)
+		var trade: Array[Button] = []
+		trade.append(window.add_button("Demand their %s as the price of surrender (hand back the %s Mawjig)." % [piece, Mawjig.format(int(rewards.surrender_paid))], func():
+			if runner.trade_surrender_for_tech(rewards):
+				trade[0].text = "They hand over the %s (%d of %d)." % [piece, run.tech.size(), RimTech.order.size()]
+			trade[0].disabled = true
+			run_changed.emit(), Color("#ffd46b")))
 	var survivors: Array = rewards.get("survivors", [])
 	for index in survivors.size():
 		var survivor: Dictionary = survivors[index]
@@ -544,12 +554,36 @@ func _after_fight(final_fight: bool) -> void:
 	if final_fight:
 		_win_run()
 		return
+	var fought := enemy_squad
 	_show_quiet_cluster()
 	run.save_to_disk()
+	var after_rival := runner.after_rival_event(fought)
+	if after_rival:
+		show_event(after_rival, _mercenaries_after_fight)
+		return
 	_mercenaries_after_fight()
 
 
+## A losing Malphen ship and a squad without the Brood Heart: the surrender is settled with the organ, not Mawjig
+## (heromedel by way of Infall: Lori, 2026-11-14: "a negotiated surrender during a fight the squad is winning").
+func _malphen_offers_its_organ() -> void:
+	var window := EventWindow.new()
+	window.shared = true
+	_open_shared(window)
+	window.show_event(Library.events["MALPHEN_SURRENDER_TECH"], runner, "")
+	window.resolved.connect(func(_result: Dictionary):
+		if run.has_tech("malphen"):
+			encounter.surrender_pays = false
+			for enemy in encounter.living(1):
+				enemy.surrendered = true
+		battle.paused = false
+		run_changed.emit())
+
+
 func _on_surrender_offered(ship: Ship) -> void:
+	if ship.design.race == "malphen" and encounter.tech_wanted.has("malphen") and not run.has_tech("malphen") and Library.events.has("MALPHEN_SURRENDER_TECH"):
+		_malphen_offers_its_organ()
+		return
 	var value := 0
 	for enemy in encounter.living(1):
 		value += Mawjig.amount(enemy.design.value * 0.025 * run.band_adjustment() * 0.5 / 100.0)
@@ -592,9 +626,10 @@ func _on_squad_lost() -> void:
 func _win_run() -> void:
 	run.over = true
 	run.won = true
+	run.victory = "tech" if run.has_all_tech() else "escape"
 	run.save_to_disk()
 	Profile.unlock("win")
-	run.log_book.write("run_won", run.stats, "The squad reached the rim and beat the Last Fleet. The colony ship has its way out.")
+	run.log_book.write("run_won", run.stats, "The squad reached the rim and beat the Last Fleet. The colony ship has its way out." if run.victory == "escape" else "The squad carried a piece of every race's tech to the rim and beat the Last Fleet's ambush. The Tech victory.")
 	_open(MenuWindows.end_screen(run, true, _after_the_end))
 
 

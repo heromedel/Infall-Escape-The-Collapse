@@ -12,6 +12,10 @@ var surrender_chance: int = 0     # percent, rolled once when a ship first drops
 var surrender_hull: float = 0.3
 var escape_chance: int = 0
 var escape_hull: float = 0.25
+var leave_after: float = 0.0      # seconds; its ships break off and jump away after this long (the rival)
+var breaks_off_at: float = 0.0    # and at once when their hull falls below this share
+var augment: String = ""          # the name of what lets them do it, shown on their ships (Jig Drive MC-Flywheel)
+var reinforcements: Array[String] = []   # designs that jump in, one by one, to replace its ships as they are lost
 var targets: PackedStringArray = []   # systems the squad prefers to aim at, in order
 var hail: String = "hostile"      # which Hail answers it gives
 var description: String = ""
@@ -34,12 +38,18 @@ static func from_xml(node: XmlTree) -> SquadDef:
 			var counts := ship.get_attr("count", "1").split("-")
 			entry.ships.append({"design": ship.get_attr("design"), "min": int(counts[0]), "max": int(counts[counts.size() - 1])})
 		def.tiers.append(entry)
+	for extra in node.all("reinforce"):
+		for copy in extra.get_int("count", 1):
+			def.reinforcements.append(extra.get_attr("design"))
 	var conduct := node.first("conduct")
 	if conduct:
 		def.surrender_chance = conduct.get_int("surrender_chance", 0)
 		def.surrender_hull = conduct.get_float("surrender_hull", 0.3)
 		def.escape_chance = conduct.get_int("escape_chance", 0)
 		def.escape_hull = conduct.get_float("escape_hull", 0.25)
+		def.leave_after = conduct.get_float("leave_after", 0.0)
+		def.breaks_off_at = conduct.get_float("breaks_off_at", 0.0)
+		def.augment = conduct.get_attr("augment", "")
 		def.targets = conduct.get_attr("targets", "").split(",", false)
 		def.hail = conduct.get_attr("hail", "hostile")
 	var description_node := node.first("description")

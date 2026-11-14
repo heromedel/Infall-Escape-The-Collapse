@@ -50,6 +50,7 @@
 		<tier bands="1-2"><ship design="tentauri-scout.pappus" count="1"/></tier>
 		<tier bands="3"><ship design="tentauri-scout" count="1"/></tier>
 		<tier bands="4-6"><ship design="tentauri-warden" count="1"/><ship design="tentauri-scout" count="0-1"/></tier>
+		<tier bands="4-6"><ship design="spear-grass" count="1"/></tier>
 		<tier bands="7-8"><ship design="tentauri-warden.vanguard" count="1"/><ship design="tentauri-warden" count="1"/></tier>
 		<conduct surrender_chance="60" surrender_hull="0.4" escape_chance="70" escape_hull="0.4" targets="weapons" hail="tentauri"/>
 		<description>Tentauri forcing their way through: they want past you, not your death.</description>
@@ -101,5 +102,20 @@
 		<tier bands="1-8"><ship design="pirate-hijacker.marauder" count="2"/><ship design="patrol-cutter.checkpoint" count="1"/></tier>
 		<conduct surrender_chance="0" escape_chance="0" targets="weapons,shields,piloting" hail="rival"/>
 		<description>A band of doomed, desperate GATOS who want your escape route for themselves (ideas: default final enemy).</description>
+	</squad>
+	<!-- The rival (heromedel, 2026-11-14): Commodore Marlowe's Long Odds, the Last Fleet's lead ship, meets a squad
+	     that is collecting the pieces alone in each of the last two bands. It carries a Jig Drive MC-Flywheel (Mawjig-Charged): the
+	     moment its hull falls below 25% it jumps away. With every piece of tech aboard, it ambushes the squad at
+	     the rim with what is left of its squad, its MC-Flywheel spent, and its first two losses are replaced. -->
+	<squad id="rival-hunt" name="The Long Odds" race="terran" faction="pirate" where_races="none">
+		<tier bands="1-8"><ship design="rival-flagship" count="1"/></tier>
+		<conduct surrender_chance="0" escape_chance="0" breaks_off_at="0.25" augment="Jig Drive MC-Flywheel" targets="weapons,shields,piloting" hail="rival"/>
+		<description>Commodore Marlowe, come to learn how you mean to leave the galaxy.</description>
+	</squad>
+	<squad id="final-rival-tech" name="The Last Fleet" race="terran" faction="pirate" where_races="none">
+		<tier bands="1-8"><ship design="rival-flagship" count="1"/><ship design="patrol-cutter.checkpoint" count="1"/></tier>
+		<reinforce design="mercenary-gunship.desperate" count="2"/>
+		<conduct surrender_chance="0" escape_chance="0" targets="weapons,shields,piloting" hail="rival"/>
+		<description>Marlowe's last stand at the rim: every desperate ship that still answered his call.</description>
 	</squad>
 </squads>

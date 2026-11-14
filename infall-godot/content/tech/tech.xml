@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- The Tech victory's seven pieces, one from each race (docs/ideas.md, Victory paths; GV 2F). heromedel, 2026-11-14:
+     "get one tech from every race ... ways to buy them, or events to get them, or ways to steal them, or maybe demand
+     one in surrender if you are close enough to the rim ... you can't buy the Malphen one ... Mecha would not
+     surrender a system unless offered a good deal". A piece is carried in the squad's hold; it does nothing in a fight.
+     Names and lines: Infall: Lori (Ai-Generated-Proposal, 2026-11-14), each in its race's own style.
+     Prices and chances: Infall: Eco (Ai-Generated-Proposal, 2026-11-14, economy finding F16): a piece costs what a
+     core system does, 36.31, times the band adjustment; the Mecha's good deal is 1.5 times that; a ship left whole,
+     its crew dead, carries its race's piece 1 time in 5 in bands 3 to 5 and 1 in 3 from band 6.
+     from_band: the first band with tech sites and store rows. demand_band: the first band where a surrendering ship
+     can be asked for its piece. -->
+<tech price="36.31" from_band="3" demand_band="6" steal_chance="0.2" steal_chance_late="0.33" late_band="6">
+	<piece race="terran" name="AZC Mk IX &quot;Long Haul&quot;">A GATOS Armoured ZeroPoint Core, overbuilt to power one impossibly long jump.</piece>
+	<piece race="azurethea" name="Wingbeat Engine">An Azurethea engine, grown rather than built: the most agile drive in the galaxy.</piece>
+	<piece race="mecha" name="Full Frame - Stress Rated - Hull Reinforcement" price_share="1.5" surrendered="no">Mecha bracing that holds a hull together under forces no other ship could take.</piece>
+	<piece race="tentauri" name="Mantle Shield">A Tentauri shield that wraps a whole ship the way a mantle wraps its body.</piece>
+	<piece race="senti" name="Archive Seed AS 01 V1">A copy of the Senti Archive's core: every route and record the Senti have ever kept.</piece>
+	<piece race="lykario" name="Tracker Autopilot">A Lykario autopilot that flies a ship alone while its crew are away on the hunt.</piece>
+	<piece race="malphen" name="Brood Heart" sold="no">A Malphen growth organ, still alive. It regrows whatever is torn away.</piece>
+</tech>

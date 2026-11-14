@@ -39,12 +39,12 @@ static func from_xml(node: XmlTree) -> EventDef:
 	for choice_node in node.all("choice"):
 		def.choices.append(_read_choice(choice_node))
 	if def.choices.is_empty():
-		def.choices.append({"text": "Continue...", "requires": "", "outcomes": [{"weight": 1.0, "text": "", "effects": []}]})
+		def.choices.append({"text": "Continue...", "requires": "", "also": "", "outcomes": [{"weight": 1.0, "text": "", "effects": []}]})
 	return def
 
 
 static func _read_choice(node: XmlTree) -> Dictionary:
-	var choice := {"text": node.get_attr("text", "Continue..."), "requires": node.get_attr("requires", ""), "outcomes": []}
+	var choice := {"text": node.get_attr("text", "Continue..."), "requires": node.get_attr("requires", ""), "also": node.get_attr("also", ""), "outcomes": []}
 	var outcome_nodes := node.all("outcome")
 	if outcome_nodes.is_empty():
 		choice.outcomes.append(_read_outcome(node))

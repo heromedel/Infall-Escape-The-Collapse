@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- GATOS "BC-9 'Last Hope'", the Tech victory's rival, bands 7-8. Ai-Generated-Proposal (2026-11-14), Infall: Ship Designs,
+     asked by heromedel through Infall: Godot Version: a Terran ship that is hard to fight, met alone once or twice near
+     the end and escaping each time (jealous and scared of the player), then leading the Last Fleet's ambush at the rim.
+     A battlecruiser of the mercenary GATOS (race profile Terrans 1, Decided 2026-11-13): broad, with two nacelle rooms,
+     AZC 4 (eight systems at full), three shield layers, four guns, boarders. The Medbay is alone in the starboard
+     nacelle (GDD 5B). Designation plus nickname, as the SC-1 "Outrider". -->
+<ship id="rival-flagship" name="BC-9 Last Hope" class="Battlecruiser" race="terran" faction="gatos" style="terran" center="Tile" hull="28" missiles="12">
+	<reactor type="core" level="4"/>
+	<description>The last of a GATOS fleet, painted over and armed to the teeth. They want your way out, and they will take it from you.</description>
+	<room id="0" from="-1,-4" to="1,-3" name="Bridge"/>
+	<room id="1" from="-1,-2" to="1,-1" name="Mid hall"/>
+	<room id="2" from="-3,-2" to="-2,0" name="Port nacelle"/>
+	<room id="3" from="2,-2" to="3,0" name="Starboard nacelle"/>
+	<room id="4" from="-1,0" to="1,1" name="Core room"/>
+	<room id="5" from="-2,2" to="2,2" name="Aft hall"/>
+	<room id="6" from="-1,3" to="1,4" name="Engine room"/>
+	<system id="shields" tile="-1,-4" level="6" wall="north"/>
+	<system id="piloting" tile="0,-4" level="3" wall="north"/>
+	<system id="weapons" tile="1,-4" level="8" wall="north"/>
+	<system id="sensors" tile="-1,-2" level="3" wall="west"/>
+	<system id="doors" tile="1,-2" level="3" wall="east"/>
+	<system id="crew-teleporter" tile="-3,-2" level="2" wall="west"/>
+	<system id="medbay" tile="3,-2" level="3" wall="east"/>
+	<system id="azc" tile="-1,1" level="4" wall="none"/>
+	<system id="life-support" tile="-2,2" level="2" wall="west"/>
+	<system id="engines" tile="-1,4" level="5" wall="south"/>
+	<door id="0" tile="0,-3" facing="south"/>
+	<door id="1" tile="-1,-1" facing="west"/>
+	<door id="2" tile="1,-1" facing="east"/>
+	<door id="3" tile="0,-1" facing="south"/>
+	<door id="4" tile="1,1" facing="south"/>
+	<door id="5" tile="0,2" facing="south"/>
+	<door id="6" tile="-3,0" facing="west" note="airlock"/>
+	<door id="7" tile="3,0" facing="east" note="airlock"/>
+	<mount id="1" tile="-2,-4" slide="up"/>
+	<mount id="2" tile="2,-4" slide="up"/>
+	<mount id="3" tile="-4,-1" slide="left"/>
+	<mount id="4" tile="4,-1" slide="right"/>
+	<mount id="5" tile="-3,1" slide="left"/>
+	<mount id="6" tile="3,1" slide="right"/>
+	<weapons>
+		<weapon id="gat-5-1" mount="1"/>
+		<weapon id="gat-m2" mount="2"/>
+		<weapon id="gat-1-2" mount="3"/>
+		<weapon id="gat-i1" mount="4"/>
+	</weapons>
+	<crew>
+		<member race="terran" station="piloting"/>
+		<member race="terran" station="weapons"/>
+		<member race="terran" station="shields"/>
+		<member race="terran" station="engines"/>
+		<member race="terran" station="teleporter"/>
+		<member race="terran" station="teleporter"/>
+		<member race="terran"/>
+	</crew>
+	<!-- Ion the shields and let the Hailstorm through, missile the guns, then board while you're bare. -->
+	<ai plan="destroy">
+		<target system="shields" weapon="Gat M2" when="enemyHeavyShields" weight="0.85"/>
+		<target unless="ownCrewIn" system="shields" weapon="Gat I1" weight="0.85"/>
+		<target unless="ownCrewIn" system="shields" weapon="Gat 5.1" weight="0.8"/>
+		<target unless="ownCrewIn" system="weapons" weapon="Gat M2" weight="0.85"/>
+		<target unless="ownCrewIn" system="weapons" weapon="Gat 1.2" weight="0.8"/>
+		<target unless="ownCrewIn" system="weapons" weapon="Gat 5.1" when="enemyShieldsDown" weight="0.8"/>
+		<target unless="ownCrewIn" system="piloting" weapon="Gat 1.2" when="enemyWeaponsDown" weight="0.6"/>
+		<board system="weapons" when="enemyShieldsDown" weight="0.8"/>
+		<board system="medbay" when="enemyWounded" weight="0.6"/>
+	</ai>
+</ship>

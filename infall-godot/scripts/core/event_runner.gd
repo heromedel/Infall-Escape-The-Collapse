@@ -19,15 +19,56 @@ func _init(owner: RunState) -> void:
 func event_for_arrival() -> EventDef:
 	var cluster := run.cluster()
 	if cluster.kind == "final":
-		return Library.events.get("FINAL_RIVAL")
+		return final_event()
 	if cluster.kind == "opening":
 		return Library.events.get("START_LAUNCH")
+	# A race's tech site plays its event until the squad has the piece (GV 2F: never left to luck)
+	var site: String = cluster.get("tech_site", "")
+	if site != "" and not run.has_tech(site) and Library.events.has(RimTech.site_event(site)):
+		return Library.events[RimTech.site_event(site)]
 	if cluster.event_done:
 		return before_or_after_collapse("REVISIT")
+	var rival := _rival_event()
+	if rival:
+		return rival
 	# A cluster at war is a front line: two quiet arrivals in five there turn into a fight (GDD 2R, Border: more fights)
 	if cluster.states.has("At War") and cluster.kind in ["nothing", "neutral"] and int(cluster.seed) % 5 < 2:
 		return pick("hostile")
 	return pick(cluster.kind)
+
+
+## What waits at the rim (GV 2F). With every piece of tech aboard, the rival's ambush and the Tech victory. Without
+## them: the Last Fleet as ever, or, where the Tech victory is required, no way out yet.
+func final_event() -> EventDef:
+	if run.has_all_tech() and Library.events.has("FINAL_RIVAL_TECH"):
+		return Library.events["FINAL_RIVAL_TECH"]
+	if Settings.get_value("tech_victory", "Optional") == "Required" and Library.events.has("RIM_NO_WAY_OUT"):
+		return Library.events["RIM_NO_WAY_OUT"]
+	return Library.events.get("FINAL_RIVAL")
+
+
+## The rival hunts a squad that is collecting the pieces (two or more aboard, or the Tech victory required) in the
+## last two bands (heromedel, 2026-11-14): one meeting in each, on one arrival in three, by the cluster's own number
+## so every machine and every reload agree.
+func _rival_event() -> EventDef:
+	if run.tech.size() < 2 and Settings.get_value("tech_victory", "Optional") != "Required":
+		return null
+	var last: int = run.galaxy.bands
+	for step in [["RIVAL_FIRST", last - 1], ["RIVAL_SECOND", last]]:
+		var id: String = step[0]
+		if run.used_events.has(id):
+			continue
+		if not Library.events.has(id) or run.band() < int(step[1]) or run.cluster().store:
+			return null
+		return Library.events[id] if int(run.cluster().seed) % 3 == 0 else null
+	return null
+
+
+## The event after a meeting with the rival, when it has broken off (or been beaten), or null.
+func after_rival_event(squad: SquadDef) -> EventDef:
+	if squad == null or squad.id != "rival-hunt":
+		return null
+	return Library.events.get("RIVAL_SECOND_AFTER" if run.used_events.has("RIVAL_SECOND") else "RIVAL_FIRST_AFTER")
 
 
 ## The collapse opening message laid over this jump's event (GDD 2P), or null.
@@ -92,7 +133,11 @@ func fill_text(text: String, crew_name: String = "") -> String:
 
 ## Whether the squad can take a choice; blue choices the squad can't take are not shown at all, as in the genre.
 func can_take(choice: Dictionary) -> bool:
-	var requirement: String = choice.requires
+	return _meets(choice.requires) and _meets(choice.get("also", ""))
+
+
+## Whether the squad meets one requirement: "crew:race", "system:id", "mawjig:amount", "tech:race" and so on.
+func _meets(requirement: String) -> bool:
 	if requirement.is_empty():
 		return true
 	var parts := requirement.split(":")
@@ -121,6 +166,12 @@ func can_take(choice: Dictionary) -> bool:
 			return collapse_known()
 		"renewal":
 			return mercenary != null and run.mawjig >= run.renewal_price(mercenary)
+		"tech":
+			return run.has_tech(parts[1])
+		"no_tech":
+			return not run.has_tech(parts[1])
+		"afford_tech":      # the price of a race's piece here, times a share: "afford_tech:mecha:0.6"
+			return run.mawjig >= RimTech.price(parts[1], run.band(), float(parts[2]) if parts.size() > 2 else 1.0)
 	return true
 
 
@@ -203,6 +254,8 @@ func most_given_away(choice: Dictionary) -> int:
 
 ## A Mawjig effect's written amount in cents; one marked by_band (a mercenary's price) rises with the band.
 func _fixed_amount(attrs: Dictionary) -> int:
+	if attrs.has("tech"):       # the price of a race's piece here, times a share
+		return -RimTech.price(attrs.tech, run.band(), float(attrs.get("share", "1")))
 	var amount := float(attrs.get("amount", "0"))
 	if attrs.get("by_band", "") == "yes":
 		return -run.hire_price(-amount) if amount < 0.0 else run.hire_price(amount)
@@ -322,6 +375,12 @@ func _apply(tag: String, attrs: Dictionary, result: Dictionary) -> void:
 			if mercenary:
 				run.release(mercenary)
 				result.lines.append("The %s leaves the squad" % mercenary.name)
+		"tech":
+			var race_id: String = attrs.get("race", "")
+			if race_id == "" or race_id == "region":
+				race_id = run.cluster().race
+			if run.give_tech(race_id, "event"):
+				result.lines.append("Rim tech: %s (%d of %d)" % [RimTech.name_of(race_id), run.tech.size(), RimTech.order.size()])
 		"fight":
 			result.fight = attrs.get("squad", "")
 			result.fight_given = true
@@ -448,12 +507,27 @@ func build_enemy_ships(squad: SquadDef) -> Array[Ship]:
 	return ships
 
 
+## The ships a squad has waiting to replace its losses, built as its others are.
+func build_reinforcements(squad: SquadDef) -> Array[Ship]:
+	var ships: Array[Ship] = []
+	var difficulty_hull := {"Easy": 0.8, "Normal": 1.0, "Hard": 1.25}.get(run.difficulty, 1.0) as float
+	for design_id in squad.reinforcements:
+		var design := Library.ship(design_id)
+		if design:
+			var ship := Ship.from_design(design, 1, run.rng, Settings.get_value("terran_conduits", false))
+			ship.max_hull = maxi(3, int(round(ship.max_hull * difficulty_hull * (1.0 + 0.04 * (run.band() - 1)))))
+			ship.hull = ship.max_hull
+			ships.append(ship)
+	return ships
+
+
 ## What a won fight pays (GDD 8I): each wreck 2.5% of the ship's value times the band adjustment; a ship whose
 ## crew were killed pays about 30% more; a surrender pays about half, on its own terms.
 func fight_rewards(encounter: Encounter) -> Dictionary:
 	var total := 0
+	var surrender_paid := 0
 	var lines: Array = []
-	for ship in encounter.enemy_ships():
+	for ship in encounter.all_enemy_ships():
 		var base := ship.design.value * 0.025 * run.band_adjustment()
 		if ship.crew_dead and not ship.destroyed:
 			var paid := Mawjig.amount(base * 1.3 / 100.0)
@@ -465,15 +539,29 @@ func fight_rewards(encounter: Encounter) -> Dictionary:
 			total += paid
 			lines.append("%s wreckage converted: Mawjig +%s" % [ship.name, Mawjig.format(paid)])
 			run.stats.ships_destroyed += 1
-		elif ship.surrendered:
+		elif ship.surrendered and encounter.surrender_pays:
 			var paid := Mawjig.amount(base * 0.5 / 100.0)
 			total += paid
+			surrender_paid += paid
 			lines.append("%s surrendered: Mawjig +%s" % [ship.name, Mawjig.format(paid)])
 	if total > 0:
 		run.earn(total)
+	# The Tech victory's pieces (GV 2F): a ship left whole, its crew dead, may carry its race's piece
+	for ship in encounter.all_enemy_ships():
+		var race: String = ship.design.race
+		if ship.crew_dead and not ship.destroyed and RimTech.pieces.has(race) and not run.has_tech(race) and run.band() >= RimTech.from_band and run.rng.randf() < RimTech.steal_chance_in(run.band()):
+			run.give_tech(race, "taken")
+			lines.append("You strip the %s out of the %s. (%d of %d)" % [RimTech.name_of(race), ship.name, run.tech.size(), RimTech.order.size()])
+	# And close to the rim, a ship that surrenders can be asked for its piece in place of its Mawjig
+	var demand := ""
+	if surrender_paid > 0 and run.band() >= RimTech.demand_band:
+		for ship in encounter.all_enemy_ships():
+			var race: String = ship.design.race
+			if ship.surrendered and RimTech.pieces.has(race) and RimTech.pieces[race].surrendered and not run.has_tech(race):
+				demand = race
 	# Now and then something useful survives in the wreckage
 	var beaten := 0
-	for ship in encounter.enemy_ships():
+	for ship in encounter.all_enemy_ships():
 		if ship.destroyed or ship.crew_dead:
 			beaten += 1
 	if beaten > 0 and run.rng.randf() < 0.18:
@@ -493,7 +581,26 @@ func fight_rewards(encounter: Encounter) -> Dictionary:
 			if not crew.is_empty():
 				var member: CrewMember = crew[run.rng.randi_range(0, crew.size() - 1)]
 				survivors.append({"race": member.race.id, "name": member.name, "why": "has had enough of the %s" % ship.name})
-	return {"mawjig": total, "lines": lines, "survivors": survivors}
+	return {"mawjig": total, "lines": lines, "survivors": survivors, "tech_demand": demand, "surrender_paid": surrender_paid}
+
+
+## The races whose piece the squad still lacks, where pieces are to be had at all (for a fight's captains).
+func tech_wanted() -> Array[String]:
+	var wanted: Array[String] = []
+	if run.band() >= RimTech.from_band:
+		wanted = run.missing_tech()
+	return wanted
+
+
+## The squad hands back a surrender's Mawjig and takes the ship's piece of tech instead.
+func trade_surrender_for_tech(rewards: Dictionary) -> bool:
+	var race: String = rewards.get("tech_demand", "")
+	if race == "" or run.has_tech(race):
+		return false
+	run.mawjig = maxi(0, run.mawjig - int(rewards.get("surrender_paid", 0)))
+	run.give_tech(race, "surrender")
+	rewards["tech_demand"] = ""
+	return true
 
 
 ## Takes a survivor aboard the first ship with room. Returns the ship, or null when every ship is full.

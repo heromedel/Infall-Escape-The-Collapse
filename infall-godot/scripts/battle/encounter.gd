@@ -42,6 +42,13 @@ var fight_started: bool = false
 var surrender_offered: bool = false
 var no_mawjig_warned: bool = false
 var gap: float = STANDARD_GAP         # this battle's distance between the squads' areas, in pixels
+var tech_wanted: Array[String] = []     # races whose piece of the Tech victory the squad still lacks (GV 2F)
+var surrender_pays: bool = true         # false when a surrender was settled with a piece of tech in place of Mawjig
+var reinforcements: Array[Ship] = []    # enemy ships waiting to jump in, one for each enemy ship lost (the rival's squad)
+var cleared: Array[Ship] = []           # enemy wrecks a reinforcement has taken the place of; still paid for
+var _replacing: Ship = null
+var _replace_at: int = 0
+const REINFORCE_DELAY_TICKS := 160      # 8 s after a ship is lost, so its end is seen first
 var surrendered_boarders: Array[CrewMember] = []   # enemy boarders left aboard our ships when theirs was destroyed
 
 
@@ -68,6 +75,61 @@ func setup(player_ships: Array, enemy_ships: Array, seed_value: int) -> void:
 	for ship in ships:
 		ship.power_everything()
 		ship.begin_encounter()
+
+
+## A ship with a Jig Drive MC-Flywheel (the rival's lead ship) jumps away the moment its hull falls below a share of
+## its full hull, whatever state its drive is in: it never stays to be destroyed (heromedel, 2026-11-14: "each time
+## it escapes"; "when their hp is below like 25% the ship jumps").
+func _tick_break_off() -> void:
+	if squad == null or (squad.leave_after <= 0.0 and squad.breaks_off_at <= 0.0) or not outcome.is_empty():
+		return
+	for ship in living(1):
+		var hurt: bool = squad.breaks_off_at > 0.0 and ship.hull < ship.max_hull * squad.breaks_off_at
+		var seen_enough: bool = squad.leave_after > 0.0 and tick_count >= int(squad.leave_after * TICKS)
+		if hurt or seen_enough:
+			ship.escaped = true
+			note("enemy_escaped", {"ship": ship})
+
+
+## Every enemy ship of the fight, with the wrecks that reinforcements have replaced.
+func all_enemy_ships() -> Array[Ship]:
+	var list := enemy_ships()
+	list.append_array(cleared)
+	return list
+
+
+## A lost enemy ship is replaced by the next one waiting, in the same place (heromedel, 2026-11-14: the rival's
+## desperate squad "might even replace some of their losses with more powerful desperate Terrans").
+func _tick_reinforcements() -> void:
+	if reinforcements.is_empty() and _replacing == null:
+		return
+	if _replacing == null:
+		for ship in ships:
+			if ship.side == 1 and ship.destroyed:
+				_replacing = ship
+				_replace_at = tick_count + REINFORCE_DELAY_TICKS
+				break
+		return
+	if tick_count < _replace_at:
+		return
+	var lost := _replacing
+	_replacing = null
+	if reinforcements.is_empty():
+		return
+	var arriving: Ship = reinforcements.pop_front()
+	var centre := lost.world_position - Formation.hull_bounds(lost.design).get_center() if lost.facing_down else lost.world_position + Formation.hull_bounds(lost.design).get_center()
+	arriving.facing_down = lost.facing_down
+	arriving.world_position = centre + Formation.hull_bounds(arriving.design).get_center() if arriving.facing_down else centre - Formation.hull_bounds(arriving.design).get_center()
+	ships.erase(lost)
+	cleared.append(lost)
+	ships.append(arriving)
+	ai[arriving] = ShipAI.new(arriving, self)
+	arriving.event_sink = note
+	arriving.visitors.clear()
+	arriving.begin_encounter()
+	arriving.place_crew_at_stations()
+	arriving.power_everything()
+	note("reinforcement", {"ship": arriving, "replaces": lost})
 
 
 func note(kind: String, data: Dictionary = {}) -> void:
@@ -163,6 +225,8 @@ func step() -> void:
 		for ship in ai:
 			if not ship.is_gone() and not ship.surrendered:
 				ai[ship].think()
+	_tick_reinforcements()
+	_tick_break_off()
 	_tick_projectiles()
 	_tick_bombs()
 	_tick_beams()
@@ -209,11 +273,13 @@ func _check_outcome() -> void:
 	if not fight_started:
 		return
 	var enemies_left := living(1)
+	if enemies_left.is_empty() and (not reinforcements.is_empty() or _replacing != null) and enemy_ships().any(func(ship: Ship): return ship.destroyed):
+		return      # more of them are on their way
 	if enemies_left.is_empty():
 		var any_fled := false
 		var any_beaten := false
 		var any_surrendered := false
-		for ship in enemy_ships():
+		for ship in all_enemy_ships():
 			any_fled = any_fled or ship.escaped
 			any_beaten = any_beaten or ship.destroyed or ship.crew_dead
 			any_surrendered = any_surrendered or ship.surrendered

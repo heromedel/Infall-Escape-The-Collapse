@@ -94,6 +94,12 @@ func _rebuild() -> void:
 			var full := run.living_ships().size() >= EventRunner.MAX_SQUAD
 			right.add_child(_section("SHIPYARD"))
 			right.add_child(_card(design.name, "%s\nHull %d, crew %d. Joins your squad with its crew." % [design.description, design.hull, design.crew.size()], price, full, func(): _buy_ship(design, price)))
+	var piece := RimTech.sold_at(run.cluster())
+	if piece != "":
+		var held := run.has_tech(piece)
+		var price := RimTech.price(piece, run.band())
+		right.add_child(_section("RIM TECH  ·  %d of %d held" % [run.tech.size(), RimTech.order.size()]))
+		right.add_child(_card(RimTech.name_of(piece), "%s\n%s: one of the seven pieces you need to cross to another galaxy." % [RimTech.pieces[piece].line, RimTech.name_of(piece)], price, held, func(): _buy_tech(piece, price), null, "HELD"))
 	right.add_child(_section("REPAIRS"))
 	var per_point := Refit.repair_price(run)
 	var damaged := 0
@@ -215,6 +221,11 @@ func _buy_system(def: SystemDef, price: int) -> void:
 	picker.picked.connect(func(room: int):
 		_order({"op": "buy_system", "id": def.id, "price": price, "room": room})
 		Sfx.play("buy"))
+
+
+func _buy_tech(race: String, price: int) -> void:
+	_order({"op": "buy_tech", "race": race, "price": price})
+	Sfx.play("buy")
 
 
 func _buy_ship(design: ShipDesign, price: int) -> void:
