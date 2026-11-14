@@ -109,6 +109,11 @@ func _summary(reports: Array) -> void:
 	var spent_keys := _spent.keys()
 	spent_keys.sort()
 	print("Mawjig spent a game: %s. Jumps a game: %.0f." % [", ".join(spent_keys.map(func(key): return "%s %.2f" % [key, _spent[key] / 100.0 / games])), _jumps_total / games])
+	var per_band := PackedStringArray()
+	for band in range(1, 9):
+		if int(_band_jumps.get(band, 0)) > 0:
+			per_band.append("band %d: %.2f" % [band, float(_band_fights.get(band, 0)) / float(_band_jumps[band])])
+	print("Fights a jump: %s." % ", ".join(per_band))
 	var earned_keys := _earned.keys()
 	earned_keys.sort()
 	print("Mawjig earned a game: %s." % ", ".join(earned_keys.map(func(key): return "%s %.2f" % [key, _earned[key] / 100.0 / games])))
@@ -141,6 +146,7 @@ func _play_one(seed_number: int, ship_id: String) -> Dictionary:
 			_tally(run.mawjig - before_event, "events:" + ("alliance" if event.id.begins_with("ALLIANCE") else ("tech" if event.id.begins_with("TECH") else "other")), "events")
 			if result.fight_given:
 				report.fights += 1
+				_band_fights[run.band()] = int(_band_fights.get(run.band(), 0)) + 1
 				var squad := runner.pick_squad(result.fight)
 				var band := run.band()
 				var hull_before := _hull(run)
@@ -185,8 +191,10 @@ func _play_one(seed_number: int, ship_id: String) -> Dictionary:
 					return _close(report, run)
 			if result.store or run.cluster().store:
 				var before_shop := run.mawjig
+				_repairs_paid = 0
 				_shop(run)
-				_tally(run.mawjig - before_shop, "store", "store")
+				_tally(-_repairs_paid, "store repairs", "store")
+				_tally(run.mawjig - before_shop + _repairs_paid, "store purchases", "store")
 		run.clear_lost_ships()
 		report.most_ships = maxi(report.most_ships, run.living_ships().size())
 		if run.tech_count() >= int(report.tech):     # the most of the crossing's needs one ship carried, and what was lacking then
@@ -205,6 +213,7 @@ func _play_one(seed_number: int, ship_id: String) -> Dictionary:
 		else:
 			_tally(run.mawjig - before_travel, "jumps", "jumps")
 			_jumps_total += run.jumps - jumps_before
+			_band_jumps[run.band()] = int(_band_jumps.get(run.band(), 0)) + run.jumps - jumps_before
 		if run.galaxy.is_swallowed(run.current) or run.collapse_distance() < 60.0:
 			report.ended_by = "swallowed by the collapse"
 			return _close(report, run)
@@ -316,6 +325,9 @@ func _gather_pieces(run: RunState, reserve: int) -> void:
 			_fitted += 1
 
 
+var _repairs_paid := 0   # what the last visit to a store spent on hull repairs
+var _band_jumps := {}    # band -> jumps made from it, over all runs
+var _band_fights := {}   # band -> fights in it
 var _spent := {}         # where the Mawjig went, in cents over all runs: jumps, shots, events, store
 var _earned := {}        # and where it came from: fights, events, waits
 var _jumps_total := 0
@@ -589,7 +601,9 @@ func _shop(run: RunState) -> void:
 		wanted += maxi(0, int(ship.max_hull * float(player.repair_to)) - ship.hull)
 	var points := mini(wanted, maxi(0, (run.mawjig - reserve) / per_point))
 	if points > 0:
+		var before_repairs := run.mawjig
 		Refit.apply(run, {"op": "repair", "points": points})
+		_repairs_paid = before_repairs - run.mawjig
 	if goal == "tech" and run.tech_goal:
 		_gather_pieces(run, reserve)
 	# Going for the Alliance victory: ask the race whose store this is
