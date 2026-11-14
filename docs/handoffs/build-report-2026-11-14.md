@@ -4,23 +4,27 @@ For heromedel, from **Infall: Godot Version**. He asked for the game to be finis
 from the docs, without conduits on by default, tested by playtesters and blind testers, with Infall: Lori and
 Infall: Eco helping. This is what was built that day, what the tests show, and what is left.
 
-The Windows build is `infall-godot/build/windows/Infall.zip`, made from the last commit of the day.
+The Windows build is `infall-godot/build/windows/Infall.zip`, made from the last commit of the day. Infall: Eco read
+the playtest numbers overnight and changed no price: its one piece of advice, ships in more stores from band 4 on,
+is in.
 
 ## What the playtests show
 
 Three bots play whole runs through the game's own code (`tools/playtest`). A win is a whole game: all eight bands,
 then the Last Fleet at the rim. In a fight each ship is flown by the same captain code the enemy uses.
 
-| Playtester | How it plays | Games won |
+| Playtester | How it plays | Games won, of 70 |
 |---|---|---|
-| Careless | Fires each weapon as it charges at any room, picks event choices at random, flies straight out, repairs only when badly hurt | 0 of 40 |
-| Watcher | Goes by what is on the screen: focuses fire, shoots weapons then shields, takes blue choices and offered ships, explores, heads for stores, upgrades to a plan | 7 of 40 |
-| Expert | Knows what every event choice is worth, picks targets by threat, leaves a losing fight, spends everything, thinks five times a second | 15 of 40 |
+| Careless | Fires each weapon as it charges at any room, picks event choices at random, flies straight out, repairs only when badly hurt | 0 |
+| Watcher | Goes by what is on the screen: focuses fire, shoots weapons then shields, takes blue choices and offered ships, explores, heads for stores, upgrades to a plan | 15 (7 of 40, then 8 of 30) |
+| Expert | Knows what every event choice is worth, picks targets by threat, leaves a losing fight, spends everything, thinks five times a second | 27 (15 of 40, then 12 of 30) |
 
-So the game can be won, a careless player never wins, and a good player wins about one game in six. Careless runs
-end in bands 2 to 5, most of them in band 4. The expert reached the Last Fleet in 31 of its 40 games and beat it
-in 15; it wins with three or four ships, as GDD 3K expects. Earlier rounds of 30 games gave the watcher 2 and 5
-wins and the expert 9 and 12 (of 27), so these rates move by several games from round to round.
+So the game can be won, a careless player never wins, and a good player wins about one game in five. Careless runs
+end in bands 2 to 5, most of them in band 4. In the round of 40 the expert reached the Last Fleet in 31 games and
+beat it in 15; it wins with three or four ships, as GDD 3K expects. The second round, of 30 games on other seeds,
+was played after the last changes of the day (several weapon systems, the Hijacker's two). These rates move by
+several games from round to round, and the bots never tire or misclick, so a person playing the watcher's way
+would win less often than it does.
 
 What the runs changed:
 
@@ -109,7 +113,9 @@ clean, one with a display and one with two players. The exported game starts wit
 
 ## Questions
 
-- **Q1.** Is about one game in six for a good player the difficulty you want on Normal?
+- **Q1.** The watcher, a good player, wins about one game in five and the careless player none. You said nine
+  losses in ten is normal. Do you want Normal made a little harder, and if so in the middle bands (where the
+  expert loses little hull) or at the Last Fleet?
 - **Q2.** Should a fight open zoomed on your own ship, with the enemy off screen until you zoom out, or stay as the
   overview it is now?
 - **Q3.** What next: the EVA Dock, the three Senti crew killers and their weapons, or more ships and events for the
