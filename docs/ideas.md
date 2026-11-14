@@ -16,9 +16,12 @@ ship (GDD 1D) to escape.
 | Collection | Amass enough wealth and upgrades to prepare the colony ship to slingshot around the collapse, which distorts space and time and flings it to another galaxy. |
 | ??? (secret) | Fly into the collapse. Ships take significant damage or are destroyed. Once 3 beacons deep, escape becomes impossible, but they can meet a mysterious hostile alien race that seems to live in the collapse. About 8 or more jumps deep, they may find out this race is the cause of the collapse and destroy its command ship. Where the race comes from is probably never explained. The colony ship is not taken into the collapse. |
 
-**Proposed (heromedel, 2026-11-14), Tech victory:** the pieces are not rare events. The player must visit and trigger
-all seven to win, so each can be reached on purpose (built in the Godot version from
-`docs/godot/tech-victory.xml`).
+**Proposed (heromedel, 2026-11-14), Tech victory:** the pieces are goals, not destinations. Each is that race's own
+version of a real system, so it can come from any of that race's ships (bought, salvaged, demanded in a surrender,
+stolen), its stores or its events; with luck all seven could be bought along the way. The goal starts late in a run,
+when an event finds that this might be a way out but the squad has to find the tech itself, possibly leaving The
+Colony Ship behind. The squad can then check what it is missing and get pointers to regions that might have it. Not
+fixed places on the map, since the collapse keeps moving. Text: `docs/godot/tech-victory.xml`.
 
 ### ??? victory, alternate version (2026-10-21)
 
