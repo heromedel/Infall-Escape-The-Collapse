@@ -563,3 +563,9 @@ about 3 waits a game. **Structural point for heromedel:** the watcher fights abo
 jump), where F4–F13 assumed 0.7 and the genre sits between (about 31% of its beacons are hostile lists, plus neutral
 events that turn hostile). So jumps take 44% of fight pay, and a game nets only about +18 over the 12.11 start. If the
 early game should be less tight, the lever is more paying encounters per jump, not cheaper jumps (6C is Decided).
+
+**Split by category (Godot Version, first 6 watcher games, rough):** store purchases 84.70, repairs 13.72, jumps 97.40
+(80 jumps), shots 10.50, pledges 8.07, other events 7.78 a game; earned fights 213.01, events 36.80, waits 0.79. Fights
+a jump by band: 0.30, 0.27, 0.24, 0.28, 0.22, 0.15, 0.47, 0.36 (bands 1–8): about a quarter, lowest in band 6.
+Repairs are small (about 6% of fight pay), so the store money goes to upgrades, as in the genre. Band 6 is where more
+paying encounters would help most.
