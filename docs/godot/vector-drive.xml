@@ -110,6 +110,66 @@ The Colony Ship's warning comes through behind it: "Careful. If that drive is da
 			<outcome><text>Your probe latches onto the Vector Frame's drive. Whatever happens now, it isn't leaving.</text><fight squad="final-vector" no_escape="yes"/></outcome>
 		</choice>
 	</event>
+
+	<!-- Added 2026-11-14 for Godot's hunt (GV 2H, Ai-Generated-Proposal): the rim without the Vector Frame, the second
+	     and third meetings, and the rim with the drive held or lost. New hook: <vector_drive/> hands the squad the
+	     drive undamaged (VECTOR_CORNERED's deal). The Mecha take a surrender only for a profit and when hurt
+	     (race profiles, Mecha 2-3): here the profit is keeping their frame. -->
+	<event id="RIM_VECTOR_ELSEWHERE" title="The Rim" kind="final">
+		<text>The rim is here: the last clusters before the dark between galaxies. The Vector Frame is not.
+
+It was here, though. A fold that size leaves a scar in space, and your sensors can still read which way it bent.</text>
+		<choice text="Follow the scar.">
+			<outcome><text>The scar runs along the rim, not out of the galaxy. Wherever the Vector Frame went, it hasn't crossed yet.</text><vector_trail/></outcome>
+		</choice>
+	</event>
+
+	<!-- The second meeting, after it folded away once. -->
+	<event id="VECTOR_CAUGHT" title="The Vector Frame" kind="message">
+		<text>The Vector Frame is here, still patching the holes you left in it. Its captain hails you, a little less cheerful than last time.
+
+"Again? Good. We weren't finished either."</text>
+		<choice text="Open fire before its repairs are done.">
+			<outcome><text>Your squad fires first, straight into the patches.</text><fight squad="final-vector" first_strike="squad"/></outcome>
+		</choice>
+		<choice text="Jam the drive before it can fold away again." requires="system:hacking">
+			<outcome><text>This time your probe is waiting for the drive. The Vector Frame isn't folding anywhere.</text><fight squad="final-vector" no_escape="yes"/></outcome>
+		</choice>
+		<choice text="Give them their contest again.">
+			<outcome><text>"Deal. Again." The escorts pull back to watch. The Vector Frame fires first, of course.</text><fight squad="final-vector" hold_back="escorts" first_strike="enemy"/></outcome>
+		</choice>
+	</event>
+
+	<!-- The third meeting: its drive is spent, so it cannot fold away, and it is hurt enough to take a deal. -->
+	<event id="VECTOR_CORNERED" title="The Vector Frame" kind="message">
+		<text>The Vector Frame is here, and it isn't going anywhere. Two folds have spent its drive. It can't charge another.
+
+Its captain hails you, and for the first time doesn't sound cheerful at all. "Fine. No more running. Come and win it, if you can."</text>
+		<choice text="Open fire.">
+			<outcome><text>Your squad fires first. There's nowhere left for it to go.</text><fight squad="final-vector" first_strike="squad"/></outcome>
+		</choice>
+		<choice text="Offer them their frame for the drive.">
+			<outcome weight="1"><text>A long silence. Then the captain laughs, not happily. "A frame that still flies is worth more than a drive that's spent. Take it." The Mecha cut the Mawjig Vector Drive loose and push it across to you, undamaged.</text><vector_drive/></outcome>
+			<outcome weight="2"><text>"Sell it? We'd rather lose it." The Vector Frame's weapons come online.</text><fight squad="final-vector"/></outcome>
+		</choice>
+		<choice text="Let {crew} make them the offer." requires="crew_with:mecha:servicing-core,evb-dock">
+			<outcome><text>{crew} lays it out in clipped Mecha code: a spent drive, a frame that still flies, and a squad that will win either way. The captain runs the numbers and gives up. The Mecha cut the Mawjig Vector Drive loose and push it across to you, undamaged.</text><vector_drive/></outcome>
+		</choice>
+	</event>
+
+	<event id="RIM_DRIVE_HELD" title="The Rim" kind="final">
+		<text>The rim is here, and the Mawjig Vector Drive is in your hold. Out here it's only cargo. Fitted, it could fold space.
+
+Any store can fit it to one of your ships. A refit yard can fit it to The Colony Ship.</text>
+		<choice text="Turn back and have it fitted."/>
+	</event>
+
+	<event id="RIM_DRIVE_LOST" title="The Rim" kind="final">
+		<text>The rim is here: the last clusters before the dark between galaxies. Without the Mawjig Vector Drive, nothing in your squad can cross it.
+
+Behind you, the collapse keeps coming.</text>
+		<choice text="Turn back."/>
+	</event>
 </events>
 
 <!-- Lines for the code:
@@ -156,4 +216,19 @@ around it, every passenger and every crew member, and the galaxy is gone.
 Behind you, the collapse reaches the rim. Nobody you saved will ever see it.
 
 The Mecha built that drive to save themselves. You took it. Wherever The Colony Ship arrives, it arrives as the ones
-who did. -->
+who did.
+
+The Vector Frame's hail greeting (it takes no terms):
+"No terms. You want the drive? Come and win it."
+
+Fight messages:
+When it starts charging its fold: "The Vector Frame is charging its fold. Finish it, or stop the drive."
+When its fold is lost because the drive was hit: "The Vector Frame's drive is hit, and its fold falls apart. If it
+dies now, the drive dies with it."
+When an ally that set out late arrives: "{ally} drops out of its jump and joins the fight."
+
+THE LOST RUN, when the drive was destroyed and no other victory is allowed, title "NO WAY ACROSS":
+The Mawjig Vector Drive is gone, and with it the only way across that you found. Your squad holds the rim for as
+long as it can.
+
+The collapse reaches the edge of the galaxy. Then there is no edge at all. -->
