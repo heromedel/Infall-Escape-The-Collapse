@@ -194,8 +194,8 @@ weapon code names, two crew for sale with the same picture.
 
 ## Questions
 
-- **Q1.** The Tech victory's pieces: one of each pair, as `docs/ideas.md` had it in October, or all seven, as you
-  said this morning? Both are built; the default is the pairs. Genetic diversity stands in as six of your own
+- **Q1 (answered 2026-11-14: one of each pair).** The Tech victory's pieces: one of each pair, as `docs/ideas.md`
+  had it in October, or all seven, as you said this morning? Both are built; the default is the pairs. Genetic diversity stands in as six of your own
   people aboard the one ship.
 - **Q2.** The Alliance plan in `docs/ideas.md` (eight points, with Lori's check) is built as written. Which points
   are wrong? Two in particular: is four of seven the right number, and should pledging the Malphen cost goodwill

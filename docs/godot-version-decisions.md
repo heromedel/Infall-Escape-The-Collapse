@@ -55,8 +55,8 @@ anything Claude added tagged Ai-Generated-Proposal.
   - **Which pieces (`docs/ideas.md`, 2026-10-21, "one from each pair"):** a setting, `Tech Victory Pieces: One of
     Each Pair > All Seven`. The pairs are Power (the GATOS core or the Malphen Growth Organ), Flight (Azurethea
     Engines or the Lykario Autopilot), Hull (the Tentauri Supershield or the Mecha Hull Reinforcement) and Record
-    (the Senti Armoured Avatar Array or genetic diversity). **Open for heromedel:** which of the two is the rule;
-    he said "one tech from every race" and then asked whether the docs' pairs were meant.
+    (the Senti Armoured Avatar Array or genetic diversity). **Decided (heromedel, 2026-11-14):** one of each pair is
+    the rule; All Seven stays as the setting's other value.
   - **The goal starts late.** On the squad's first arrival two bands from the rim, The Colony Ship's message
     (TECH_GOAL_FOUND) begins the search. From then the map lists how many pieces are aboard and, for each one
     missing, which way that race's nearest space lies: a pointer to a region, never a marked place.
