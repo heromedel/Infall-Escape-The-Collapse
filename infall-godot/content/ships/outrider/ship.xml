@@ -4,7 +4,7 @@
 <ship id="outrider" name="SC-1 Outrider" class="Scout Cruiser" race="terran" faction="gatos" style="terran" center="Tile" hull="30">
 	<reactor type="core" level="2"/>
 	<art hull="outrider-hull-2x.png" scale="0.5" center="230,362.5"/>
-	<description>A shuttle-shaped scout cruiser in white and pale grey with blue trim. It rides out ahead of the colony ship, an all-rounder with good sensors. Its power runs through a conduit wheel around an armoured core, so no single cut leaves a system dark.</description>
+	<description>A rugged scout cruiser that rides out ahead of The Colony Ship. It's an all-rounder with good sensors, built around an armoured core.</description>
 
 	<room id="0" from="-1,-6" to="1,-5" name="Bridge"/>
 	<room id="1" from="-1,-4" to="1,-3" name="Sensors and doors"/>

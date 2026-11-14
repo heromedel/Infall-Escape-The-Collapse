@@ -196,7 +196,8 @@ static func ensure_stock(run: RunState) -> void:
 	var crew_races := [race, "terran"] if race != "malphen" else ["terran"]
 	for count in (1 if short else 2):
 		stock.crew.append(crew_races[rng.randi_range(0, crew_races.size() - 1)])
-	if (cluster.race == "terran" and cluster.rank != "border" and rng.randf() < 0.45) or (cluster.states.has("Refugee") and rng.randf() < 0.5):
+	var late: bool = int(cluster.band) >= 4 and rng.randf() < 0.35      # from band 4 on, more stores have a ship to sell (Infall: Eco, 2026-11-14)
+	if (cluster.race == "terran" and cluster.rank != "border" and rng.randf() < 0.45) or (cluster.states.has("Refugee") and rng.randf() < 0.5) or late:
 		var ships := {"terran": ["patrol-cutter", "outrider"], "tentauri": ["tentauri-scout"], "azurethea": ["moth-skiff"], "lykario": ["packrunner"], "senti": ["relay-picket"], "mecha": ["light-attack-frame"]}.get(race, ["patrol-cutter"]) as Array
 		stock.ship = ships[rng.randi_range(0, ships.size() - 1)]
 	cluster.store_stock = stock
