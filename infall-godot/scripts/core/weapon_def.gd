@@ -28,7 +28,9 @@ var spores: bool = false        # disables the system hit until it is cleared li
 var pierce: int = 0
 var hull_bonus: bool = false    # double damage to a room without a system
 var defensive: bool = false     # shoots down incoming missiles and suits when charged and not aimed
-var crew_damage: int = 15       # per point of damage, to every crew member in the room
+var crew_damage: int = 15       # per point of damage, to the crew on the tile hit
+var crew_flat: int = 0          # health taken from crew whatever the damage: the genre's anti-crew weapons, which leave the ship whole
+var whole_room: bool = false    # the crew hurt are everyone in the room, not only those on the tile (a bomb's cloud)
 var beam_length: float = 0.0    # beams: how far the sweep runs, in pixels
 var colour: Color = Color("#ff5a3c")
 var projectile_speed: float = 900.0
@@ -70,6 +72,8 @@ static func from_xml(node: XmlTree, folder: String) -> WeaponDef:
 	def.hull_bonus = node.get_bool("hull_bonus", false)
 	def.defensive = node.get_bool("defensive", false)
 	def.crew_damage = node.get_int("crew_damage", 15)
+	def.crew_flat = node.get_int("crew_hurt", 0)
+	def.whole_room = node.get_bool("whole_room", false)
 	def.beam_length = node.get_float("beam_length", 0.0)
 	def.colour = Color(node.get_attr("colour", "#ff5a3c"))
 	def.projectile_speed = node.get_float("speed", 900.0 if def.type != "missile" else 620.0)
@@ -123,6 +127,8 @@ func stat_line() -> String:
 				parts.append("%d shot%s x %d damage" % [shots, "" if shots == 1 else "s", damage])
 			else:
 				parts.append("%d shot%s, no hull damage" % [shots, "" if shots == 1 else "s"])
+	if crew_flat > 0:
+		parts.append("hurts crew %d%s" % [crew_flat, " in the whole room" if whole_room else ""])
 	if ion > 0:
 		parts.append("ion %d" % ion)
 	if spores:

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- docs/deck-collapse-ships/senti-crew-killers/senti-census-picket.xml (Ai-Generated-Proposal, 2026-10-29): a doomed-Senti crew killer,
+     on the Relay Picket's floor plan until Infall: Ship Designs gives it its own. One Senti per AAA level (heromedel,
+     2026-11-13). The docs' system battery is not in the game. Its Shield Projector has more layers and its hull more points than the docs'
+     file (an Ai-Generated-Proposal, GDD 8Q: about twice another ship's layers): with the docs' it fell before it fired. -->
+<loadout id="census" ship="relay-picket" name="Senti Census Picket" class="Census Picket" inherit="patch" hull="14">
+	<reactor type="pool" level="10"/>
+	<description>It sets your ship on fire and sweeps your crew with beams. Its own crew are holograms: fire can't hurt them and they need no air.</description>
+	<system id="sensors" tile="1,-2" level="2" wall="north"/>
+	<system id="shield-projector" tile="1,1" level="2" wall="east"/>
+	<system id="aaa" tile="0,0" level="2" wall="none"/>
+	<system id="intrusion-array" tile="-1,1" level="1" wall="west"/>
+	<system id="weapons" tile="-1,-1" level="3" wall="west"/>
+	<weapons>
+		<weapon id="2b-01-f1" mount="1"/>
+		<weapon id="1b-02-v1" mount="2"/>
+	</weapons>
+	<crew>
+		<member race="senti" station="piloting"/>
+		<member race="senti" station="weapons"/>
+	</crew>
+	<ai plan="crew-kill">
+		<hack system="medbay" weight="0.9"/>
+		<target system="medbay" weapon="2B 01 F1" weight="0.8"/>
+		<target system="oxygen" weapon="2B 01 F1" weight="0.7"/>
+	</ai>
+</loadout>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- A Senti crew killer's weapon (docs/deck-collapse-ships/senti-crew-killers). Power, shots, damage and effects as given
+     there; charge time, price and cost per volley are Ai-Generated-Proposals (2026-11-14) from the nearest weapons the game has. -->
+<weapon id="2l-01-b1" name="2L 01 B1" race="senti" tech="mechanical" type="laser" power="2" shots="2" damage="1" charge="12.0" cost="0.06" price="9.68" colour="#4ff0ff" breach="60">
+	<description>2-shot laser, 1 damage, breach version 1. It opens rooms to space.</description>
+</weapon>

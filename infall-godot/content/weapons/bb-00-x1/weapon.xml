@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- A Senti crew killer's weapon (docs/deck-collapse-ships/senti-crew-killers). Power, shots, damage and effects as given
+     there; charge time, price and cost per volley are Ai-Generated-Proposals (2026-11-14) from the nearest weapons the game has. -->
+<weapon id="bb-00-x1" name="BB 00 X1" race="senti" tech="mechanical" type="bomb" power="2" shots="1" damage="0" charge="14.0" cost="0.11" price="10.89" colour="#4ff0ff" crew_hurt="60" crew_damage="0" whole_room="yes">
+	<description>Bio bomb, no damage, anti-crew version 1. Broadcast straight into a room, it wounds everyone there and leaves the ship whole.</description>
+</weapon>

@@ -67,6 +67,13 @@
 		<conduct surrender_chance="40" surrender_hull="0.3" escape_chance="30" escape_hull="0.25" targets="sensors,shields,weapons" hail="senti"/>
 		<description>Senti relay ships. Doomed, they have no qualms about killing the living, while keeping their records.</description>
 	</squad>
+	<squad id="senti-census" name="Senti Census" race="senti" faction="senti" where_races="senti" where_states="Doomed,Struggling">
+		<tier bands="3-4"><ship design="relay-picket.census" count="1"/></tier>
+		<tier bands="5-6"><ship design="relay-picket.ledger" count="1"/></tier>
+		<tier bands="7-8"><ship design="relay-picket.final-archive" count="1"/><ship design="relay-picket" count="0-1"/></tier>
+		<conduct surrender_chance="0" escape_chance="20" escape_hull="0.2" targets="medbay,oxygen,weapons" hail="senti"/>
+		<description>Doomed Senti who mean to keep your ship and your records, and have no use for your crew.</description>
+	</squad>
 	<squad id="lykario-pack" name="Lykario Pack" race="lykario" faction="lykario" where_races="lykario,any" where_states="Border,Refugee,Doing Fine,Struggling,Doomed,Unclaimed">
 		<tier bands="1"><ship design="outrider.scrap-hound" count="1"/></tier>
 		<tier bands="2-3"><ship design="packrunner" count="1"/></tier>

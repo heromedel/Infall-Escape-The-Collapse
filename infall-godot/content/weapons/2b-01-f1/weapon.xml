@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- A Senti crew killer's weapon (docs/deck-collapse-ships/senti-crew-killers). Power, shots, damage and effects as given
+     there; charge time, price and cost per volley are Ai-Generated-Proposals (2026-11-14) from the nearest weapons the game has. -->
+<weapon id="2b-01-f1" name="2B 01 F1" race="senti" tech="mechanical" type="beam" power="2" shots="1" damage="1" charge="16.0" cost="0.07" price="9.68" colour="#4ff0ff" beam_length="80" fire="100">
+	<description>2-room beam, 1 damage, fire version 1. Every tile it cuts catches fire.</description>
+</weapon>

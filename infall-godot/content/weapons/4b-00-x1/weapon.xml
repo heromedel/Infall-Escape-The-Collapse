@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- A Senti crew killer's weapon (docs/deck-collapse-ships/senti-crew-killers). Power, shots, damage and effects as given
+     there; charge time, price and cost per volley are Ai-Generated-Proposals (2026-11-14) from the nearest weapons the game has. -->
+<weapon id="4b-00-x1" name="4B 00 X1" race="senti" tech="mechanical" type="beam" power="3" shots="1" damage="0" charge="16.0" cost="0.09" price="12.11" colour="#4ff0ff" beam_length="160" crew_hurt="45" crew_damage="0">
+	<description>4-room beam, no damage, anti-crew version 1. It passes shields and hull and wounds every crew member it sweeps.</description>
+</weapon>

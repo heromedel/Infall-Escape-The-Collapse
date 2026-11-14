@@ -543,8 +543,9 @@ func _hit_tile(target: Ship, cell: Vector2i, weapon: WeaponDef, world_point: Vec
 	var system := _system_on(target, cell)
 	if damage > 0 and system:
 		target.damage_system(system, damage)
-	var crew_hurt := (weapon.crew_damage if weapon else 15) * damage
-	for member in target.crew_on_tile(cell):
+	var crew_hurt := (weapon.crew_damage if weapon else 15) * damage + (weapon.crew_flat if weapon else 0)
+	var caught: Array[CrewMember] = target.crew_in_room(room_index) if weapon and weapon.whole_room else target.crew_on_tile(cell)
+	for member in caught:
 		member.health -= crew_hurt
 		if weapon and weapon.stun_ticks > 0:
 			member.stun_ticks = maxi(member.stun_ticks, weapon.stun_ticks)
@@ -625,12 +626,13 @@ func _tick_beams() -> void:
 		# the beam's full damage; a beam of no damage still takes a layer a tile.
 		var hits_shields: bool = Settings.get_value("beams_vs_shields", "Penetrate (Classic)") != "Penetrate (Classic)"
 		var shielded := weapon.damage if hits_shields else maxi(0, weapon.damage - target.shield_layers)
+		var anti_crew: bool = weapon.damage == 0 and weapon.crew_flat > 0      # passes shields, as the genre's anti-crew beam does
 		if target.supershield > 0:
 			if beam.ticks == 1:
 				target.supershield = maxi(0, target.supershield - weapon.damage)
 				note("supershield_hit", {"ship": target, "position": local_to_world(target, beam.start)})
 			beam.blocked = true
-		elif shielded <= 0 and not hits_shields:
+		elif shielded <= 0 and not hits_shields and not anti_crew:
 			beam.blocked = true
 		var t: float = float(beam.ticks) / beam.total
 		var sweep_point: Vector2 = beam.start.lerp(beam.end, clampf(t, 0.0, 1.0))
@@ -657,6 +659,7 @@ func _tick_beams() -> void:
 				applied.fire_chance = weapon.fire_chance
 				applied.breach_chance = weapon.breach_chance
 				applied.crew_damage = weapon.crew_damage
+				applied.crew_flat = weapon.crew_flat
 				applied.colour = weapon.colour
 				_hit_tile(target, cell, applied, local_to_world(target, sweep_point), beam.source, first_in_room)
 		if beam.ticks < beam.total + 6:

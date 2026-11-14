@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- docs/deck-collapse-ships/senti-crew-killers/senti-quiet-ledger.xml (Ai-Generated-Proposal, 2026-10-29): a doomed-Senti crew killer,
+     on the Relay Picket's floor plan until Infall: Ship Designs gives it its own. One Senti per AAA level (heromedel,
+     2026-11-13). The docs' system battery is not in the game. Its Shield Projector has more layers and its hull more points than the docs'
+     file (an Ai-Generated-Proposal, GDD 8Q: about twice another ship's layers): with the docs' it fell before it fired. -->
+<loadout id="ledger" ship="relay-picket" name="Senti Quiet Ledger" class="Quiet Ledger" inherit="patch" hull="18">
+	<reactor type="pool" level="16"/>
+	<description>It burns some rooms and opens others to space, then sends its holograms into the rooms nobody else can live in.</description>
+	<system id="piloting" tile="-1,-2" level="2" wall="north"/>
+	<system id="sensors" tile="1,-2" level="2" wall="north"/>
+	<system id="shield-projector" tile="1,1" level="3" wall="east"/>
+	<system id="engines" tile="-1,2" level="2" wall="south"/>
+	<system id="aaa" tile="0,0" level="3" wall="none"/>
+	<system id="intrusion-array" tile="-1,1" level="2" wall="west"/>
+	<system id="crew-teleporter" tile="1,2" level="2" wall="south"/>
+	<system id="weapons" tile="-1,-1" level="4" wall="west"/>
+	<weapons>
+		<weapon id="3b-01-f1" mount="1"/>
+		<weapon id="2l-01-b1" mount="2"/>
+	</weapons>
+	<crew>
+		<member race="senti" station="piloting"/>
+		<member race="senti" station="weapons"/>
+		<member race="senti" station="teleporter"/>
+	</crew>
+	<ai plan="crew-kill">
+		<hack system="doors" weight="0.6"/>
+		<hack system="medbay" weight="0.9"/>
+		<target system="oxygen" weapon="2L 01 B1" weight="0.8"/>
+		<target system="medbay" weapon="3B 01 F1" weight="0.8"/>
+		<board system="oxygen" weight="0.6"/>
+	</ai>
+</loadout>

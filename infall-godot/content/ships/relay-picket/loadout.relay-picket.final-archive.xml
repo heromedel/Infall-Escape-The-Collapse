@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- docs/deck-collapse-ships/senti-crew-killers/senti-final-archive.xml (Ai-Generated-Proposal, 2026-10-29): a doomed-Senti crew killer,
+     on the Relay Picket's floor plan until Infall: Ship Designs gives it its own. One Senti per AAA level (heromedel,
+     2026-11-13). The docs' system battery is not in the game. Its Shield Projector has more layers and its hull more points than the docs'
+     file (an Ai-Generated-Proposal, GDD 8Q: about twice another ship's layers): with the docs' it fell before it fired. -->
+<loadout id="final-archive" ship="relay-picket" name="Senti Final Archive" class="Final Archive" inherit="patch" hull="24">
+	<reactor type="pool" level="21"/>
+	<description>It kills the crew and keeps the ship: a beam that wounds crew through shields and hull, and bio bombs broadcast straight into a room.</description>
+	<system id="piloting" tile="-1,-2" level="2" wall="north"/>
+	<system id="sensors" tile="1,-2" level="3" wall="north"/>
+	<system id="shield-projector" tile="1,1" level="5" wall="east"/>
+	<system id="engines" tile="-1,2" level="2" wall="south"/>
+	<system id="aaa" tile="0,0" level="3" wall="none"/>
+	<system id="intrusion-array" tile="-1,1" level="2" wall="west"/>
+	<system id="crew-teleporter" tile="1,2" level="2" wall="south"/>
+	<system id="weapons" tile="-1,-1" level="7" wall="west"/>
+	<weapons>
+		<weapon id="4b-00-x1" mount="1"/>
+		<weapon id="bb-00-x1" mount="2"/>
+		<weapon id="3b-01-f1" mount="3"/>
+	</weapons>
+	<crew>
+		<member race="senti" station="piloting"/>
+		<member race="senti" station="weapons"/>
+		<member race="senti" station="teleporter"/>
+	</crew>
+	<ai plan="crew-kill">
+		<hack system="medbay" weight="0.9"/>
+		<target system="medbay" weapon="BB 00 X1" weight="0.9"/>
+		<target system="oxygen" weapon="3B 01 F1" weight="0.8"/>
+	</ai>
+</loadout>
