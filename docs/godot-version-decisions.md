@@ -407,7 +407,9 @@ anything Claude added tagged Ai-Generated-Proposal.
   and mind control's bonus at higher levels.
 - **G — Built (2026-11-14), GDD 8Q (Proposed):** the Senti Shield Projector. One bar a layer, layers back half as
   fast, up to eight; each layer priced as a Generator layer (5 to 8: 62.92, 82.28, 101.64, 121.01, Infall: Eco,
-  **Ai-Generated-Proposal**). A ship has it or the Generator. Not built: the `Beams vs Shields` setting.
+  **Ai-Generated-Proposal**). A ship has it or the Generator. The setting `Beams vs Shields: Penetrate (Classic) >
+  Hit (Damages Shields First)` is built as GDD 8Q describes it: with Hit, each tile a beam crosses takes down one
+  layer, and once the layers are gone the tiles after it take the beam's full damage.
 - **H — Built (2026-11-14):** the genre's Backup Battery: two extra power a level for 30 s, then 20 s to recharge;
   8.47, level 2 another 12.11.
 - **I — Proposed (Infall: Eco, 2026-11-14; heromedel: "makes sense"), built:** a store asks 75% of a ship's value

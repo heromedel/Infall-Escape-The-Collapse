@@ -619,13 +619,17 @@ func _tick_beams() -> void:
 		if target.destroyed:
 			continue
 		var weapon: WeaponDef = beam.weapon
-		var shielded := maxi(0, weapon.damage - target.shield_layers)
+		# Beams vs Shields (GDD 8Q). Penetrate, the genre's: each layer cuts the beam's damage by one. Hit: each
+		# tile the beam crosses takes down one layer instead, and once the layers are gone the tiles after it take
+		# the beam's full damage; a beam of no damage still takes a layer a tile.
+		var hits_shields: bool = Settings.get_value("beams_vs_shields", "Penetrate (Classic)") != "Penetrate (Classic)"
+		var shielded := weapon.damage if hits_shields else maxi(0, weapon.damage - target.shield_layers)
 		if target.supershield > 0:
 			if beam.ticks == 1:
 				target.supershield = maxi(0, target.supershield - weapon.damage)
 				note("supershield_hit", {"ship": target, "position": local_to_world(target, beam.start)})
 			beam.blocked = true
-		elif shielded <= 0:
+		elif shielded <= 0 and not hits_shields:
 			beam.blocked = true
 		var t: float = float(beam.ticks) / beam.total
 		var sweep_point: Vector2 = beam.start.lerp(beam.end, clampf(t, 0.0, 1.0))
@@ -636,6 +640,13 @@ func _tick_beams() -> void:
 			if room_index >= 0 and not beam.tiles_hit.has(cell):
 				# A beam cuts every tile it crosses; the hull takes its damage once per room swept
 				beam.tiles_hit.append(cell)
+				if hits_shields and target.shield_layers > 0:
+					target.shield_layers -= 1
+					target.shield_progress = 0.0
+					note("shield_hit", {"ship": target, "position": local_to_world(target, sweep_point)})
+					if beam.ticks < beam.total + 6:
+						still.append(beam)
+					continue
 				var first_in_room: bool = not beam.rooms_hit.has(room_index)
 				if first_in_room:
 					beam.rooms_hit.append(room_index)

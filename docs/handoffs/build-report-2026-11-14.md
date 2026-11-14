@@ -60,6 +60,8 @@ Still rough, from the last round:
 | TO STATIONS, SAVE STATIONS | heromedel | |
 | How to Play; a hint in early fights | Blind testers | `Hints in Early Fights: On > Off` |
 | A hull's stripe in the ship's power colour | heromedel, 2026-11-13 | The Patrol Cutter |
+| `Beams vs Shields: Penetrate (Classic) > Hit (Damages Shields First)` | GDD 8Q | Off by default. With Hit, the Senti beam ships win their duels about a quarter sooner |
+| Two door buttons that flip between open and close | heromedel (his option B and icons) | Doors and airlocks |
 | The dock rule, the Hijacker's door, the Patrol Cutter's hull, the shields room value | Earlier the same day | |
 
 ## Blind testers
@@ -94,7 +96,6 @@ Not fixed:
 - Several weapon systems on one ship (GDD 8L). It is the largest piece left: the simulation, the weapon rows and
   the ship files all change.
 - The EVA Dock (GDD 8R, Proposed, with open questions).
-- `Beams vs Shields: Penetrate (Classic) > Hit (Damages Shields First)` (GDD 8Q).
 - The three Senti crew killers: they also need fire beams, an anti-crew beam and bio bombs.
 - The Senti system battery; seeing into a hacked room; mind control's bonus at higher levels.
 
