@@ -8,6 +8,7 @@
 		<tier bands="3"><ship design="pirate-hijacker.cutpurse" count="1"/><ship design="pirate-hijacker.pickpocket" count="0-1"/></tier>
 		<tier bands="4"><ship design="pirate-hijacker" count="1"/></tier>
 		<tier bands="5-6"><ship design="pirate-hijacker" count="1-2"/></tier>
+		<tier bands="5-6"><ship design="pirate-hijacker.firebrand" count="1"/></tier>
 		<tier bands="7-8"><ship design="pirate-hijacker.marauder" count="1"/><ship design="pirate-hijacker" count="1"/></tier>
 		<conduct surrender_chance="45" surrender_hull="0.35" escape_chance="30" escape_hull="0.25" targets="weapons,piloting" hail="pirate"/>
 		<description>Doomed GATOS turned criminal: they want your ship intact, so they stop your weapons and board.</description>
@@ -23,6 +24,9 @@
 		<tier bands="2-3"><ship design="patrol-cutter" count="1"/></tier>
 		<tier bands="4-6"><ship design="patrol-cutter.checkpoint" count="1"/></tier>
 		<tier bands="4-6"><ship design="mercenary-gunship" count="1"/></tier>
+		<tier bands="2-3"><ship design="patrol-cutter.scythe" count="1"/></tier>
+		<tier bands="4-6"><ship design="patrol-cutter.sledge" count="1"/></tier>
+		<tier bands="7-8"><ship design="patrol-cutter.reaper" count="1"/><ship design="patrol-cutter.sledge" count="1"/></tier>
 		<tier bands="7-8"><ship design="patrol-cutter.checkpoint" count="2"/></tier>
 		<conduct surrender_chance="35" surrender_hull="0.3" escape_chance="20" escape_hull="0.2" targets="shields,weapons" hail="checkpoint"/>
 		<description>A doomed GATOS hub's patrol, running scans, tolls and shakedowns.</description>
@@ -41,6 +45,7 @@
 		<tier bands="2"><ship design="light-attack-frame.opensternsuitdock" count="1"/></tier>
 		<tier bands="3-4"><ship design="light-attack-frame" count="1-2"/></tier>
 		<tier bands="4-6"><ship design="light-attack-frame.breacher" count="1"/></tier>
+		<tier bands="3-4"><ship design="light-attack-frame.hullbreaker" count="1"/></tier>
 		<tier bands="5-6"><ship design="assault-frame" count="1"/></tier>
 		<tier bands="7-8"><ship design="assault-frame.siege" count="1"/><ship design="light-attack-frame" count="1"/></tier>
 		<conduct surrender_chance="30" surrender_hull="0.35" escape_chance="40" escape_hull="0.3" targets="weapons,shields" hail="mecha"/>
@@ -51,6 +56,7 @@
 		<tier bands="3"><ship design="tentauri-scout" count="1"/></tier>
 		<tier bands="4-6"><ship design="tentauri-warden" count="1"/><ship design="tentauri-scout" count="0-1"/></tier>
 		<tier bands="4-6"><ship design="spear-grass" count="1"/></tier>
+		<tier bands="4-6"><ship design="tentauri-warden.tender" count="1"/></tier>
 		<tier bands="7-8"><ship design="tentauri-warden.vanguard" count="1"/><ship design="tentauri-warden" count="1"/></tier>
 		<conduct surrender_chance="60" surrender_hull="0.4" escape_chance="70" escape_hull="0.4" targets="weapons" hail="tentauri"/>
 		<description>Tentauri forcing their way through: they want past you, not your death.</description>
@@ -83,6 +89,7 @@
 		<tier bands="2-3"><ship design="packrunner" count="1"/></tier>
 		<tier bands="4-6"><ship design="packrunner.huntmaster" count="1"/><ship design="packrunner" count="0-1"/></tier>
 		<tier bands="4-6"><ship design="pirate-hijacker.howler" count="1"/></tier>
+		<tier bands="3-6"><ship design="packrunner.chaser" count="1"/></tier>
 		<tier bands="7-8"><ship design="packrunner.huntmaster" count="2"/></tier>
 		<conduct surrender_chance="20" surrender_hull="0.25" escape_chance="35" escape_hull="0.25" targets="weapons,oxygen" hail="lykario"/>
 		<description>A hunt. They board, and they keep going.</description>
@@ -94,6 +101,7 @@
 		<tier bands="4"><ship design="spawnling.swollen" count="1"/></tier>
 		<tier bands="5"><ship design="spawnling.swollen" count="1"/><ship design="spawnling" count="0-1"/></tier>
 		<tier bands="6"><ship design="spawnling.broodmass" count="1"/></tier>
+		<tier bands="6"><ship design="spawnling.swarm" count="1"/></tier>
 		<tier bands="7-8"><ship design="spawnling.broodmass" count="1"/><ship design="spawnling" count="1-2"/></tier>
 		<conduct surrender_chance="30" surrender_hull="0.3" escape_chance="25" escape_hull="0.2" targets="shields,engines" hail="malphen"/>
 		<description>Living ships that infect what they hit. When beaten they jettison matter and flee.</description>

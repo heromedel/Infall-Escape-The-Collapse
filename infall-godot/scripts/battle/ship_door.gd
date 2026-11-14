@@ -12,10 +12,11 @@ var held_open: bool = false        # opened from the bridge (or the door panel)
 var passing_ticks: int = 0         # open for a moment while someone walks through
 var health: float = 100.0          # what a boarder has to break
 var broken_open_ticks: int = 0
+var locked_ticks: int = 0          # sealed by a lockdown bomb: nobody passes, and it can't be held open
 
 
 func is_open() -> bool:
-	return held_open or passing_ticks > 0 or broken_open_ticks > 0
+	return locked_ticks <= 0 and (held_open or passing_ticks > 0 or broken_open_ticks > 0)
 
 
 func other_cell(cell: Vector2i) -> Vector2i:

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Ai-Generated-Proposal (2026-11-14), Infall: Godot Version: a loadout carrying the weapons Infall: Ship Designs wrote that day
+     (docs/godot-weapons/README.md names the squad and bands for each weapon). -->
+<loadout id="swarm" ship="spawnling" name="Malphen Swarmer" class="Swarmer" inherit="patch" hull="16">
+	<reactor type="pool" level="12"/>
+	<description>It holds its brood back, one, two, three, and then lets them all go at once.</description>
+	<system id="weapons" tile="1,-2" level="4" wall="north"/>
+	<weapons>
+		<weapon id="brood-swarm" mount="3"/>
+		<weapon id="flesh-mortar" mount="4"/>
+	</weapons>
+</loadout>

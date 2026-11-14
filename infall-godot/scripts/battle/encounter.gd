@@ -405,9 +405,17 @@ func _tick_weapons(ship: Ship, fighting: bool) -> void:
 		var needed := slot.charge_needed(ship.tech)
 		if slot.powered and not ship.is_cloaked():
 			if fighting or slot.charge > 0.0:
-				slot.charge = minf(needed, slot.charge + rate)
+				slot.charge = minf(needed * slot.def.charges, slot.charge + rate)     # a charge weapon stores several volleys
 		elif not slot.powered:
 			slot.charge = maxf(0.0, slot.charge - 3.0)
+			slot.chain_count = 0
+		# A chain weapon loses its run when it sits charged and silent
+		if slot.def.chain and slot.chain_count > 0 and slot.charge >= needed and not slot.is_firing():
+			slot.idle_ticks += 1
+			if slot.idle_ticks > 60 or not fighting:
+				slot.chain_count = 0
+		else:
+			slot.idle_ticks = 0
 		if slot.is_firing():
 			slot.shot_timer -= 1
 			if slot.shot_timer <= 0:
@@ -425,12 +433,15 @@ func _tick_weapons(ship: Ship, fighting: bool) -> void:
 
 
 func _start_volley(ship: Ship, slot: WeaponSlot, gunner: CrewMember) -> void:
-	if ship.side == 0 and wallet != null and not wallet.spend(slot.def.cost_per_volley):
+	var volleys := maxi(1, slot.stored_volleys(ship.tech))      # a charge weapon fires all it holds
+	if ship.side == 0 and wallet != null and not wallet.spend(slot.def.cost_per_volley * volleys):
 		if not no_mawjig_warned:
 			no_mawjig_warned = true
 			note("no_mawjig", {"ship": ship})
 		return
 	slot.charge = 0.0
+	if slot.def.chain:
+		slot.chain_count = mini(3, slot.chain_count + 1)
 	slot.volley_target_ship = slot.target_ship
 	slot.volley_target_room = slot.target_room
 	slot.volley_target_cell = slot.target_cell if slot.target_ship and slot.target_ship.room_at(slot.target_cell) >= 0 else _any_cell(slot.target_ship, slot.target_room)
@@ -443,10 +454,10 @@ func _start_volley(ship: Ship, slot: WeaponSlot, gunner: CrewMember) -> void:
 		"beam":
 			_start_beam(ship, slot)
 		"flak":
-			for shot in slot.def.shots:
+			for shot in slot.def.shots * volleys:
 				_fire_one_shot(ship, slot)
 		_:
-			slot.shots_left = slot.def.shots
+			slot.shots_left = slot.def.shots * volleys
 			slot.shot_timer = 0
 	if not slot.autofire:
 		slot.clear_target()
@@ -731,6 +742,13 @@ func _hit_tile(target: Ship, cell: Vector2i, weapon: WeaponDef, world_point: Vec
 		if weapon.infection_chance > 0 and rng.randi_range(1, 100) <= weapon.infection_chance:
 			room.infection = maxf(room.infection, 30.0)
 			note("infected", {"ship": target, "room": room_index})
+	if weapon and weapon.lockdown_ticks > 0:
+		for door in target.doors:
+			if target.room_at(door.cell_a) == room_index or (not door.to_space and target.room_at(door.cell_b) == room_index):
+				door.locked_ticks = weapon.lockdown_ticks
+	if weapon and weapon.heal > 0 and source != null:
+		for member in target.crew_in_room(room_index, source.side):      # the owner's boarders in that room
+			member.health = minf(member.max_health, member.health + weapon.heal)
 	note("hit", {"ship": target, "room": room_index, "cell": cell, "damage": hull_damage, "position": world_point, "weapon": weapon, "source": source})
 
 
@@ -740,6 +758,23 @@ func _system_on(ship: Ship, cell: Vector2i) -> ShipSystem:
 		if system.cell == cell:
 			return system
 	return null
+
+
+## A healing or repair bomb lands where its owner's side stands: crew of that side in the room are healed, and the
+## system on the tile is repaired. On an enemy ship only the healing applies (the owner's boarders there).
+func _help_tile(target: Ship, cell: Vector2i, weapon: WeaponDef, world_point: Vector2, source: Ship) -> void:
+	var room_index := target.room_at(cell)
+	if room_index < 0 or weapon == null:
+		return
+	if weapon.heal > 0:
+		for member in target.crew_in_room(room_index, source.side):
+			member.health = minf(member.max_health, member.health + weapon.heal)
+	if weapon.repair > 0 and target.side == source.side:
+		for system in target.rooms[room_index].systems:
+			if system.cell == cell and system.damage > 0:
+				system.damage = maxi(0, system.damage - weapon.repair)
+				target.settle_power()
+	note("helped", {"ship": target, "room": room_index, "cell": cell, "position": world_point, "weapon": weapon, "source": source})
 
 
 func _tick_bombs() -> void:
@@ -753,6 +788,10 @@ func _tick_bombs() -> void:
 		if target.is_gone():
 			continue
 		var point := local_to_world(target, target.design.cell_centre(bomb.cell))
+		var source: Ship = bomb.source
+		if source != null and source.side == target.side:
+			_help_tile(target, bomb.cell, bomb.weapon, point, source)      # a healing or repair bomb on the squad's own ship
+			continue
 		if rng.randi_range(1, 100) <= target.evasion():
 			note("miss", {"ship": target, "position": point})
 			continue

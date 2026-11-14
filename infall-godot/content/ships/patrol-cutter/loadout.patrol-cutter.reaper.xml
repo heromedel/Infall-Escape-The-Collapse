@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Ai-Generated-Proposal (2026-11-14), Infall: Godot Version: a loadout carrying the weapons Infall: Ship Designs wrote that day
+     (docs/godot-weapons/README.md names the squad and bands for each weapon). -->
+<loadout id="reaper" ship="patrol-cutter" name="GATOS Reaper Cutter" class="Reaper Cutter" inherit="patch" hull="18">
+	<reactor type="core" level="4"/>
+	<description>The alliance's last checkpoint ships carry a heavy beam and a heavy laser, and no patience.</description>
+	<system id="shields" tile="-2,-2" level="6" wall="west"/>
+	<system id="engines" tile="0,4" level="3" wall="south"/>
+	<system id="weapons" tile="1,-4" level="6" wall="north"/>
+	<weapons>
+		<weapon id="gat-b2" mount="3"/>
+		<weapon id="gat-2-2" mount="4"/>
+	</weapons>
+</loadout>

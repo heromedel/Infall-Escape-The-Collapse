@@ -223,7 +223,33 @@ func _aim_weapons() -> void:
 			_aim(slot, taken_rooms)
 
 
+## A healing bomb goes to the captain's most hurt crew member, wherever they are; a repair bomb to its own most
+## damaged system. With nobody hurt and nothing broken the bomb is held.
+func _aim_help(slot: WeaponSlot) -> void:
+	slot.clear_target()
+	if slot.def.heal > 0:
+		var worst: CrewMember = null
+		for member in ship.crew:
+			if not member.dead and member.is_active() and member.health < member.max_health * 0.6 and (worst == null or member.health < worst.health):
+				worst = member
+		if worst and not worst.ship.is_gone():
+			slot.aim_at(worst.ship, worst.cell)
+			slot.autofire = false
+			return
+	if slot.def.repair > 0:
+		var broken: ShipSystem = null
+		for system in ship.systems:
+			if system.damage > 0 and (broken == null or system.damage > broken.damage):
+				broken = system
+		if broken:
+			slot.aim_at(ship, broken.cell)
+			slot.autofire = false
+
+
 func _aim(slot: WeaponSlot, taken_rooms: Array[int]) -> void:
+	if slot.def.helps_own_side():
+		_aim_help(slot)
+		return
 	# Against a ship with many shield layers (a Senti Shield Projector, or three layers and more), what ignores
 	# shields goes for the shield room: missiles and bombs are the natural counter (GDD 8Q; heromedel, 2026-11-14)
 	var shields := target.system_by("shields")

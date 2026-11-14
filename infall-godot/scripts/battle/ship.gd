@@ -1095,6 +1095,8 @@ func _tick_cooldowns() -> void:
 	if evb_cooldown > 0 and dock and system_power(dock) > 0:
 		evb_cooldown -= 1
 	for door in doors:
+		if door.locked_ticks > 0:
+			door.locked_ticks -= 1
 		if door.passing_ticks > 0:
 			door.passing_ticks -= 1
 		if door.broken_open_ticks > 0:

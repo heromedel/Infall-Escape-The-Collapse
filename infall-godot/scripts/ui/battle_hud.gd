@@ -850,7 +850,7 @@ func _draw_weapons(ship: Ship, card_at: Vector2) -> void:
 func _draw_weapon_slot(ship: Ship, slot: WeaponSlot, index: int, rect: Rect2) -> void:
 	var armed := screen.aim_slot == slot
 	var needed := slot.charge_needed(ship.tech)
-	var charge := clampf(slot.charge / maxf(1.0, needed), 0.0, 1.0)
+	var charge := clampf(slot.charge / maxf(1.0, needed * slot.def.charges), 0.0, 1.0)
 	var border := UiColours.BORDER_DIM
 	if armed:
 		border = UiColours.ENEMY_RED if screen._aim_is_autofire() else UiColours.TARGET_YELLOW
@@ -868,6 +868,8 @@ func _draw_weapon_slot(ship: Ship, slot: WeaponSlot, index: int, rect: Rect2) ->
 	var state := "OFF"
 	if slot.powered:
 		state = "READY" if charge >= 1.0 else "%.1fs" % ((needed - slot.charge) / 20.0)
+		if slot.def.charges > 1 and slot.charge >= needed:
+			state = "READY x%d" % slot.stored_volleys(ship.tech)
 		if slot.def.defensive and not slot.has_target() and charge >= 1.0:
 			state = "DEFENDING"
 	UiKit.draw_text(self, rect.position + Vector2(rect.size.x - 10, 42), state, 13, UiColours.POWER_GREEN if charge >= 1.0 and slot.powered else UiColours.TEXT_DIM, UiKit.font_bold(), HORIZONTAL_ALIGNMENT_RIGHT, 0)

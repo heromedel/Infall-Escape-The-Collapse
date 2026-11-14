@@ -145,6 +145,9 @@ static func _step(member: CrewMember) -> void:
 	var ship := member.ship
 	var next: Vector2i = member.path[0]
 	var door := door_between(ship, member.cell, next)
+	if door and door.locked_ticks > 0:
+		member.task = "waiting"       # sealed by a lockdown bomb: nobody passes until it lifts
+		return
 	if door and not door.is_open():
 		var hostile := member.side != ship.side
 		if hostile and ship.doors_controllable():

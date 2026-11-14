@@ -26,6 +26,8 @@ var volley_target_cell := Vector2i(999, 999)
 var volley_target_suit: Battlesuit = null
 var slide: float = 0.0              # 0 stowed, 1 slid out past the hull (drawing only)
 var fired_flash: int = 0
+var chain_count: int = 0            # volleys fired in a row by a chain weapon (0 to 3)
+var idle_ticks: int = 0             # how long a chain weapon has sat charged without firing
 
 
 static func create(weapon_def: WeaponDef, mount: int) -> WeaponSlot:
@@ -39,7 +41,14 @@ func charge_needed(ship_tech: String) -> float:
 	var ticks := float(def.charge_ticks)
 	if def.tech != ship_tech:
 		ticks *= 1.2               # a weapon works best on a system of its own tech type (GDD 8E)
+	if def.chain:
+		ticks *= 1.0 - chain_count / 6.0     # down to half over three volleys
 	return ticks
+
+
+## How many volleys a charge weapon holds now.
+func stored_volleys(ship_tech: String) -> int:
+	return clampi(int(charge / charge_needed(ship_tech)), 0, def.charges)
 
 
 func is_charged(ship_tech: String) -> bool:

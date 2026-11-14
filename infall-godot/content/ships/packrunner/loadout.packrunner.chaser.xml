@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Ai-Generated-Proposal (2026-11-14), Infall: Godot Version: a loadout carrying the weapons Infall: Ship Designs wrote that day
+     (docs/godot-weapons/README.md names the squad and bands for each weapon). -->
+<loadout id="chaser" ship="packrunner" name="Lykario Chaser" class="Chaser" inherit="patch" hull="13">
+	<reactor type="pool" level="12"/>
+	<description>Its laser fires faster the longer the chase goes on, and it throws healing to its pack once they are aboard you.</description>
+	<system id="shields" tile="2,-1" level="4" wall="east"/>
+	<system id="crew-teleporter" tile="-2,-1" level="2" wall="west"/>
+	<system id="weapons" tile="1,-3" level="3" wall="north"/>
+	<weapons>
+		<weapon id="chase" mount="3"/>
+		<weapon id="pack-call" mount="4"/>
+	</weapons>
+</loadout>

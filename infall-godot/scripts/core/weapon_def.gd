@@ -26,6 +26,11 @@ var ion: int = 0
 var stun_ticks: int = 0
 var spores: bool = false        # disables the system hit until it is cleared like a repair
 var pierce: int = 0
+var charges: int = 1             # volleys it can store and fire together (the genre's charge weapons)
+var chain: bool = false          # each volley fired without a break shortens the next charge, down to half
+var heal: int = 0                # a bomb that heals its owner's crew in the room it lands in, on either ship
+var lockdown_ticks: int = 0      # a bomb that seals the doors of the room it lands in for this long
+var repair: int = 0              # a bomb that repairs this much damage of the system on its owner's tile
 var hull_bonus: bool = false    # double damage to a room without a system
 var defensive: bool = false     # shoots down incoming missiles and suits when charged and not aimed
 var crew_damage: int = 15       # per point of damage, to the crew on the tile hit
@@ -69,6 +74,11 @@ static func from_xml(node: XmlTree, folder: String) -> WeaponDef:
 	def.stun_ticks = int(round(node.get_float("stun", 0.0) * TICKS_PER_SECOND))
 	def.spores = node.get_bool("spores", false)
 	def.pierce = node.get_int("pierce", 0)
+	def.charges = maxi(1, node.get_int("charges", 1))
+	def.chain = node.get_bool("chain", false)
+	def.heal = node.get_int("heal", 0)
+	def.lockdown_ticks = int(round(node.get_float("lockdown", 0.0) * TICKS_PER_SECOND))
+	def.repair = node.get_int("repair", 0)
 	def.hull_bonus = node.get_bool("hull_bonus", false)
 	def.defensive = node.get_bool("defensive", false)
 	def.crew_damage = node.get_int("crew_damage", 15)
@@ -108,6 +118,11 @@ func charge_seconds() -> float:
 	return float(charge_ticks) / TICKS_PER_SECOND
 
 
+## A weapon the squad uses on its own ships and crew: a healing or repair bomb.
+func helps_own_side() -> bool:
+	return heal > 0 or repair > 0
+
+
 func ignores_shields() -> bool:
 	return type in ["missile", "bomb"]
 
@@ -143,6 +158,16 @@ func stat_line() -> String:
 		parts.append("conduit damage %d%%" % conduit_chance)
 	if infection_chance > 0:
 		parts.append("infection %d%%" % infection_chance)
+	if charges > 1:
+		parts.append("stores up to %d volleys" % charges)
+	if chain:
+		parts.append("charges faster with each volley")
+	if heal > 0:
+		parts.append("heals your crew in the room by %d" % heal)
+	if lockdown_ticks > 0:
+		parts.append("seals the room's doors for %d s" % (lockdown_ticks / TICKS_PER_SECOND))
+	if repair > 0:
+		parts.append("repairs %d damage of your own system" % repair)
 	if pierce > 0:
 		parts.append("pierces %d shield layer%s" % [pierce, "" if pierce == 1 else "s"])
 	if hull_bonus:

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Ai-Generated-Proposal (2026-11-14), Infall: Godot Version: a loadout carrying the weapons Infall: Ship Designs wrote that day
+     (docs/godot-weapons/README.md names the squad and bands for each weapon). -->
+<loadout id="firebrand" ship="pirate-hijacker" name="Pirate Firebrand" class="Firebrand" inherit="patch" hull="16">
+	<reactor type="core" level="4"/>
+	<description>It ions your shields flat in one stored burst, then sets the room on fire and boards through the smoke.</description>
+	<system id="shields" tile="-2,-3" level="4" wall="west"/>
+	<system id="weapons" label="A" tile="2,-3" level="4" wall="east"/>
+	<weapons>
+		<weapon id="gat-ic3" mount="3" system="A"/>
+		<weapon id="gat-x2" mount="1" system="A"/>
+		<weapon id="gat-i2" mount="4" system="B"/>
+	</weapons>
+</loadout>

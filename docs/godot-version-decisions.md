@@ -544,6 +544,18 @@ anything Claude added tagged Ai-Generated-Proposal.
 - **I — Proposed (Infall: Eco, 2026-11-14; heromedel: "makes sense"), built:** a store asks 75% of a ship's value
   on Normal, 50% on Easy and 100% on Hard (it was 115%).
 
+- **M — Built (2026-11-14), heromedel: "missing weapons in general":** fifteen weapons from Infall: Ship Designs
+  (`docs/godot-weapons/README.md` on its branch, Ai-Generated-Proposal), each in its race's naming style: the
+  GATOS Sledge (heavy laser), Scythe and Reaper (beams), Brownout (heavy ion), Capacitor (ion charger), Torch
+  (fire bomb) and Blackout (ion bomb); the Mecha Fire Beam, Hull Missile and Lockdown Bomb; the Lykario Chase
+  (chain laser) and Pack Call (healing bomb); the Tentauri Grasp (ion stunner) and Bud (repair bomb); the Malphen
+  Brood Swarm. Five rules were built for them: a weapon that stores several volleys and fires them together
+  (`charges`), one that charges faster with each volley in a row (`chain`), and bombs that heal the owner's crew
+  in a room, repair the owner's system on a tile, or seal a room's doors for a time (`heal`, `repair`,
+  `lockdown`). A healing or repair bomb can be aimed at the squad's own ships. Eight enemy loadouts carry them
+  (the Sledge, Scythe and Reaper Cutters, the Firebrand, the Chaser, the Tender, the Swarmer and the
+  Hullbreaker), in the squads and bands the README names; stores sell them as they do any weapon.
+
 ## 14. User Interface
 
 - **A — Proposed (heromedel, 2026-10-31):** the HUD's sections are cards the player can drag by a small bar at

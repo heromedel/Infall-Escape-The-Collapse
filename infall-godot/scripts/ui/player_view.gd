@@ -425,7 +425,8 @@ func _click_while_aiming() -> void:
 			_give({"k": "mind", "s": _index(selected_ship), "home": _index(hover_crew.home), "crew": hover_crew.home.crew.find(hover_crew)})
 			cancel_aim()
 		return
-	if hover_ship == null or hover_ship.side != 1 or hover_ship.is_gone():
+	var helps: bool = aim_mode == "weapon" and aim_slot != null and aim_slot.def.helps_own_side()     # a healing or repair bomb goes to the squad's own ships too
+	if hover_ship == null or (hover_ship.side != 1 and not helps) or hover_ship.is_gone():
 		var suit := _suit_under_pointer()
 		if aim_mode == "weapon" and suit:
 			_give({"k": "aim_suit", "s": _index(aim_ship), "w": aim_ship.weapons.find(aim_slot), "suit": encounter.suits.find(suit), "auto": _aim_is_autofire()})
@@ -872,7 +873,7 @@ func _draw_marks() -> void:
 	var room_rect := Rect2(design.cell_top_left(room.rect.position), Vector2(room.rect.size) * ShipDesign.TILE)
 	var tile_rect := Rect2(design.cell_top_left(hover_cell), Vector2.ONE * ShipDesign.TILE).grow(-2.5)
 	var mark := Color.TRANSPARENT
-	if aim_mode in ["weapon", "beam"] and hover_ship.side == 1:
+	if aim_mode in ["weapon", "beam"] and (hover_ship.side == 1 or (aim_slot != null and aim_slot.def.helps_own_side())):
 		mark = UiColours.TARGET_YELLOW if not _aim_is_autofire() else UiColours.ENEMY_RED
 		canvas.draw_rect(room_rect.grow(-1.5), Color(mark, 0.35), false, 3.0)
 	elif aim_mode != "" and hover_ship.side == 1:

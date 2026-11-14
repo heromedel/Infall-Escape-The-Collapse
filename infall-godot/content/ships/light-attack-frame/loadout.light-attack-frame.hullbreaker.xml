@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Ai-Generated-Proposal (2026-11-14), Infall: Godot Version: a loadout carrying the weapons Infall: Ship Designs wrote that day
+     (docs/godot-weapons/README.md names the squad and bands for each weapon). -->
+<loadout id="hullbreaker" ship="light-attack-frame" name="Mecha Hullbreaker" class="Hullbreaker" inherit="patch" hull="11" missiles="8">
+	<description>A battle-cross built around one hull missile. It aims for the rooms nobody is standing in.</description>
+	<system id="weapon-pod" tile="3,-1" level="3" own_power="2" wall="east" max_slots="1"/>
+	<weapons>
+		<weapon id="hm-st-hull-missile" mount="4"/>
+	</weapons>
+</loadout>
