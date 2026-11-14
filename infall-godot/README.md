@@ -26,7 +26,7 @@ the Last Fleet. Lose when every scout ship is gone (GDD 1F).
 | Fire once / autofire | Aim normally fires once (yellow mark); hold Ctrl to switch. V or AUTOFIRE flips the default (red mark) | |
 | Power a system | Click its bars to add power, right click to remove. On the AZC (Terran conduit ships), click to switch a system on or off | |
 | Power a weapon | Right click its slot | |
-| Doors | Click a door; OPEN DOORS / CLOSE DOORS / VENT buttons | |
+| Doors | Click a door; the open and close buttons on the Doors subsystem (open pressed twice opens the airlocks) | |
 | Board, recall, launch suit, cloak | T (BOARD), RECALL, E (LAUNCH SUIT), C (CLOAK) | |
 | Crew back to stations | Z | |
 | Zoom | Mouse wheel | RT / R2 in, LT / L2 out |

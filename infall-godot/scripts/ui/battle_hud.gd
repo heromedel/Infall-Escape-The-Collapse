@@ -739,6 +739,10 @@ func _draw_system_column(ship: Ship, system: ShipSystem, base: Vector2, column: 
 		var flash := 0.5 + 0.5 * sin(_time * 9.0)
 		draw_circle(icon_centre + Vector2(-12, -12), 5, Color(UiColours.DAMAGED_RED, flash))
 	var rect := Rect2(base + Vector2(0, -level * (bar_height + 2) - 30), Vector2(column - 4, level * (bar_height + 2) + 48))
+	var button_at := Vector2(base.x + 1, maxf(base.y + 30.0 - POWER_HEIGHT + 26.0, rect.position.y - 22.0))
+	for entry in _system_buttons(ship, system):
+		_icon_button(Rect2(button_at, Vector2(column - 8, 20)), entry[0], entry[1], entry[2], entry[3], entry[4])
+		button_at.y -= 23.0
 	var tooltip := _system_tooltip(ship, system)
 	if main and ship.reactor_type != "none":
 		_region(rect, func(): screen.system_power(ship, system, true), tooltip, func(): screen.system_power(ship, system, false))
@@ -846,36 +850,67 @@ func _draw_weapon_slot(ship: Ship, slot: WeaponSlot, index: int, rect: Rect2) ->
 # --- Specials, the drive and the squad's resources -------------------------------------------------------------
 
 ## The special system buttons: boarding, suits, cloaking and the doors.
-func _special_buttons(ship: Ship) -> Array:
-	var buttons: Array = []
+## The buttons a system has, drawn above its bars as the genre does: [glyph, action, tooltip, enabled, cooldown].
+## Doors: open and close. Teleporter: send and recall. Cloaking, hacking, mind control, the battery and the EVB
+## Dock: one to use it.
+func _system_buttons(ship: Ship, system: ShipSystem) -> Array:
 	var encounter := screen.encounter
-	var teleporter := ship.system_by("teleporter")
-	if teleporter:
-		var ready := encounter.can_teleport(ship)
-		buttons.append(["BOARD", func(): screen.start_teleport(), "Send the crew standing in the teleporter room to an enemy room. Hotkey: T", ready and encounter.in_fight(), ship.teleporter_cooldown])
-		buttons.append(["RECALL", func(): screen.recall_boarders(), "Bring every boarder home. Hotkey: R", ready, -1])
-	var dock := ship.system_by("evb_dock")
-	if dock:
-		buttons.append(["LAUNCH SUIT", func(): screen.start_suit_launch(), "A crew member in the EVB Dock room suits up and flies out to fight an enemy ship. Each launch uses a new suit (%s Mawjig). Hotkey: B" % Mawjig.format(Library.weapon(ship.suits[0]).cost_per_volley if not ship.suits.is_empty() else 21), not ship.suit_out and ship.evb_cooldown <= 0 and encounter.in_fight(), ship.evb_cooldown])
-	var cloak := ship.system_by("cloaking")
-	if cloak:
-		buttons.append(["CLOAK", func(): screen.cloak(ship), "Hide the ship: most shots miss and its weapons hold their charge. Hotkey: C", ship.cloak_ticks <= 0 and ship.cloak_cooldown <= 0 and ship.system_power(cloak) > 0, ship.cloak_cooldown])
-	if ship.system_by("battery"):
-		buttons.append(["BATTERY", func(): screen.use_battery(), "Switch on the Backup Battery: %d extra power for 30 s, then 20 s to recharge." % (2 * ship.system_by("battery").level), encounter.can_use_battery(ship), ship.battery_cooldown])
-	var hacking := ship.system_by("hacking")
-	if hacking:
-		if ship.hack_system == null:
-			buttons.append(["HACK", func(): screen.start_hack(), "Latch %s onto one enemy system: click its room. It holds there for the fight. Hotkey: N" % hacking.def.name, encounter.in_fight() and ship.system_power(hacking) > 0, -1])
-		else:
-			buttons.append(["PULSE HACK", func(): screen.start_hack(), "Shut down the %s of the %s for a few seconds (%s Mawjig). Hotkey: N" % [ship.hack_system.def.name, ship.hack_target.name, Mawjig.format(Encounter.HACK_COST)], encounter.can_hack(ship) and encounter.in_fight(), ship.hack_cooldown])
-	var mind := ship.system_by("mind_control")
-	if mind:
-		buttons.append(["MIND CONTROL", func(): screen.start_mind_control(), "Take over one enemy crew member you can see, aboard their ship or yours: click them (%s Mawjig). Hotkey: M" % Mawjig.format(Encounter.MIND_COST), encounter.can_mind_control(ship) and encounter.in_fight(), ship.mind_cooldown])
-	if ship.has_system("doors"):
-		buttons.append(["OPEN DOORS", func(): screen.set_all_doors(ship, true, false), "Opens every inner door. Press again while they are all open to open the airlocks too. Hotkey: Z", ship.doors_controllable(), -1])
-		buttons.append(["CLOSE DOORS", func(): screen.set_all_doors(ship, false, false), "Close every door, airlocks too. Hotkey: X", ship.doors_controllable(), -1])
-		buttons.append(["VENT", func(): screen.set_all_doors(ship, true, true), "Open the airlocks to vent air and fires into space.", ship.doors_controllable(), -1])
-	return buttons
+	var fighting := encounter.in_fight()
+	match system.behaviour:
+		"doors":
+			return [
+				["open", func(): screen.set_all_doors(ship, true, false), "Open every inner door. Press again while they are all open to open the airlocks too. Hotkey: Z", ship.doors_controllable(), -1],
+				["close", func(): screen.set_all_doors(ship, false, false), "Close every door, airlocks too. Hotkey: X", ship.doors_controllable(), -1]]
+		"teleporter":
+			var ready := encounter.can_teleport(ship)
+			return [
+				["send", func(): screen.start_teleport(), "Send the crew standing in the teleporter room to an enemy room. Hotkey: T", ready and fighting, ship.teleporter_cooldown],
+				["recall", func(): screen.recall_boarders(), "Bring every boarder home. Hotkey: R", ready, -1]]
+		"evb_dock":
+			return [["go", func(): screen.start_suit_launch(), "A crew member in the EVB Dock room suits up and flies out to fight an enemy ship. Each launch uses a new suit (%s Mawjig). Hotkey: B" % Mawjig.format(Library.weapon(ship.suits[0]).cost_per_volley) if not ship.suits.is_empty() else "No suits left.", fighting and ship.evb_cooldown <= 0 and not ship.suits.is_empty() and not ship.suit_out and ship.system_power(system) > 0, ship.evb_cooldown]]
+		"cloaking":
+			return [["go", func(): screen.cloak(ship), "Hide the ship: most shots miss and its weapons hold their charge. Hotkey: C", ship.cloak_ticks <= 0 and ship.cloak_cooldown <= 0 and ship.system_power(system) > 0, ship.cloak_cooldown]]
+		"battery":
+			return [["go", func(): screen.use_battery(), "Switch on the Backup Battery: %d extra power for 30 s, then 20 s to recharge." % (2 * system.level), encounter.can_use_battery(ship), ship.battery_cooldown]]
+		"hacking":
+			if ship.hack_system == null:
+				return [["go", func(): screen.start_hack(), "Latch %s onto one enemy system: click its room. It holds there for the fight. Hotkey: N" % system.def.name, fighting and ship.system_power(system) > 0, -1]]
+			return [["go", func(): screen.start_hack(), "Shut down the %s of the %s for a few seconds (%s Mawjig). Hotkey: N" % [ship.hack_system.def.name, ship.hack_target.name, Mawjig.format(Encounter.HACK_COST)], encounter.can_hack(ship) and fighting, ship.hack_cooldown]]
+		"mind_control":
+			return [["go", func(): screen.start_mind_control(), "Take over one enemy crew member you can see, aboard their ship or yours: click them (%s Mawjig). Hotkey: M" % Mawjig.format(Encounter.MIND_COST), encounter.can_mind_control(ship) and fighting, ship.mind_cooldown]]
+	return []
+
+
+## A small button with a drawn sign on it, for a system's own controls.
+func _icon_button(rect: Rect2, glyph: String, action: Callable, tooltip: String, enabled: bool, cooldown: int) -> void:
+	_button(rect, "", action, tooltip, enabled)
+	var colour := UiColours.TEXT if enabled else Color(UiColours.TEXT_DIM, 0.5)
+	var c := rect.get_center()
+	match glyph:
+		"open":      # two door leaves apart, arrows outward
+			draw_line(c + Vector2(-9, -6), c + Vector2(-9, 6), colour, 2.5)
+			draw_line(c + Vector2(9, -6), c + Vector2(9, 6), colour, 2.5)
+			draw_colored_polygon(PackedVector2Array([c + Vector2(-1, 0), c + Vector2(-6, -4), c + Vector2(-6, 4)]), colour)
+			draw_colored_polygon(PackedVector2Array([c + Vector2(1, 0), c + Vector2(6, -4), c + Vector2(6, 4)]), colour)
+		"close":     # two door leaves together
+			draw_line(c + Vector2(-2, -6), c + Vector2(-2, 6), colour, 2.5)
+			draw_line(c + Vector2(2, -6), c + Vector2(2, 6), colour, 2.5)
+			draw_colored_polygon(PackedVector2Array([c + Vector2(-5, 0), c + Vector2(-10, -4), c + Vector2(-10, 4)]), colour)
+			draw_colored_polygon(PackedVector2Array([c + Vector2(5, 0), c + Vector2(10, -4), c + Vector2(10, 4)]), colour)
+		"send":      # an arrow out
+			draw_line(c + Vector2(0, 6), c + Vector2(0, -2), colour, 2.5)
+			draw_colored_polygon(PackedVector2Array([c + Vector2(0, -7), c + Vector2(-6, -1), c + Vector2(6, -1)]), colour)
+		"recall":    # an arrow home
+			draw_line(c + Vector2(0, -6), c + Vector2(0, 2), colour, 2.5)
+			draw_colored_polygon(PackedVector2Array([c + Vector2(0, 7), c + Vector2(-6, 1), c + Vector2(6, 1)]), colour)
+		_:           # use it
+			draw_colored_polygon(PackedVector2Array([c + Vector2(-5, -6), c + Vector2(7, 0), c + Vector2(-5, 6)]), colour)
+	if cooldown > 0:
+		draw_rect(Rect2(rect.position + Vector2(3, rect.size.y - 4), Vector2((rect.size.x - 6) * clampf(1.0 - cooldown / 600.0, 0.0, 1.0), 2.5)), UiColours.ACCENT)
+
+
+func _special_buttons(_ship: Ship) -> Array:
+	return []       # every special is a button on its own system now (heromedel, 2026-11-14: as the genre has them)
 
 
 func _draw_specials(ship: Ship, at: Vector2) -> void:

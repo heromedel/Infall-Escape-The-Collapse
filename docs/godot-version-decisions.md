@@ -83,7 +83,10 @@ anything Claude added tagged Ai-Generated-Proposal.
       them moved. Cloaking is H, the Crew Teleporter G and the Supershield Y, so every system key works both ways.
       Open Doors is Z and Close Doors X, Recall R, Return to Stations Enter, look at the selected ship Q, launch
       a suit B.
-  - Open Doors pressed again, with every inner door open, opens the airlocks too. Vent stays.
+  - Open Doors pressed again, with every inner door open, opens the airlocks too.
+    - **Decided (heromedel, 2026-11-14), built:** no separate VENT button, and no SPECIALS card: as in the genre,
+      a system's own controls are small icon buttons on the system (doors open and close on the Doors subsystem;
+      teleporter send and recall; cloaking, hacking, mind control, the battery and the EVB Dock one each).
   - While the mouse player aims, the arrow is hidden: the reticle is the cursor (reference frame 02).
   - An enemy's empty shield pip shows its recharge as a bar (reference frame 17).
   - A weapon file can name its launch sound; without one it gets its kind's (missile, flak, ion, spore, heavy or
