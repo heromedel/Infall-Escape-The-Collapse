@@ -142,6 +142,7 @@ Lori, Eco and Ship Designs. The Windows build `infall-godot/build/windows/Infall
 | EVA crew can stay | heromedel (GDD 8R) | A third button on the EVA Dock |
 | The Alliance victory | heromedel; plan in `docs/ideas.md`, checked by Infall: Lori | Pledges won in talks, by the cluster's state and by who is aboard; four of seven; allies at the rim (GV 2G) |
 | Fifteen weapons, five new rules | heromedel; Infall: Ship Designs | Charge and chain weapons; healing, repair and lockdown bombs; fire and ion bombs; GATOS beams; eight loadouts carrying them (GV 8M) |
+| Twelve more events | heromedel; Infall: Lori | Clusters at war, refugees on the move, yards, the last two bands. 145 events in all; they went in after the playtest round |
 | Settings | | `Tech Victory: Optional > Required`; `Tech Victory Pieces: One of Each Pair > All Seven` |
 
 ## What the playtests show now
@@ -173,7 +174,7 @@ One round on the last code, seeds 2000 on. A win is a whole game.
 
 ## Checks
 
-Compile, content (57 weapons, 25 systems, 133 events), galaxy, mercenary, ship value, crew fight and fight tests
+Compile, content (57 weapons, 25 systems, 145 events), galaxy, mercenary, ship value, crew fight and fight tests
 pass. Input 27 of 27, co-op 22 of 22, the LAN run test passes. Chaos: seeds 11, 12 and 13 clean (a stale probe in
 the chaos test was fixed). A blind tester looked at the new screens; fixed from it: a panel behind the map's text
 and shorter lines, SHIP OUT as a button under JUMP, clearer yard buttons with the reason a move isn't possible.
@@ -186,7 +187,6 @@ weapon code names, two crew for sale with the same picture.
 - Enemy captains do not use the yard, the EVA Dock, or hold a charge weapon to fire several volleys at once.
 - A Short run has no Tech victory.
 - The Collection (colony ship), Exploration and secret victories.
-- Infall: Lori's next batch of events (At War, refugees on the move, yards, bands 7 and 8) is asked for.
 
 ## Questions
 

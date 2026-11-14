@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Infall: Lori, 2026-11-14, for Infall: Godot Version: twelve events for what the game gained today. Every event here
+     is Ai-Generated-Proposal (2026-11-14). Checked against docs/lore-facts.md and docs/race-profiles.md.
+     1. At War (GDD 2R): WAR_CROSSFIRE, WAR_WOUNDED, WAR_ARMS_DEALER, WAR_CEASEFIRE.
+     2. Refugees on the move: REFUGEE_COLUMN, REFUGEE_CAMP, REFUGEE_EMPTY_SHIP.
+     3. Yards: YARD_CHEAP_REFIT, YARD_SPARE_HULL.
+     4. Bands 7-8, not fights: LATE_LAST_BROADCAST, LATE_CLEARANCE, LATE_STOWAWAYS.
+     5. crew_with blue choices in WAR_CEASEFIRE (Senti with the AAA) and REFUGEE_CAMP (Tentauri with a Supershield).
+     Senti record keeping (a Senti trait, race profiles 2-5) is also a plain crew:senti blue in REFUGEE_CAMP and
+     LATE_LAST_BROADCAST.
+     Note: a plain <fight/> picks a squad that fits the cluster's own race, so in At War events no choice promises
+     to fight "for" the cluster's owners. -->
+<events>
+	<!-- 1. At War -->
+	<event id="WAR_CROSSFIRE" title="Crossfire" kind="hostile" states="At War" bands="2-8" weight="2">
+		<text>You jump straight into the middle of a battle. Ships of both sides are trading fire across the cluster, and nobody is checking whose side your squad is on.</text>
+		<choice text="Hold back and wait for it to end.">
+			<outcome weight="2"><text>The fighting moves on. When it's over, the wrecks it left behind are worth converting.</text><mawjig size="medium"/></outcome>
+			<outcome weight="1"><text>The fighting comes to you. One side decides you're with the other.</text><fight/></outcome>
+		</choice>
+		<choice text="Cloak and slip through the battle." requires="system:cloaking">
+			<outcome><text>You cross the cluster between the two lines, unseen by both.</text></outcome>
+		</choice>
+		<choice text="Charge your drives and get out of the way.">
+			<outcome><text>A stray volley rakes one of your ships before you clear the battle.</text><hull amount="-3"/></outcome>
+		</choice>
+	</event>
+
+	<event id="WAR_WOUNDED" title="Left Behind" kind="distress" states="At War,Border" bands="2-8" weight="1.5">
+		<text>A crippled {race} warship drifts at the edge of the fighting, left behind when its side pulled back. Its captain hails you, out of breath.
+
+"We've got wounded and no medbay left. Take them, and you can take whatever we've got left in the hold."</text>
+		<choice text="Take the wounded aboard.">
+			<outcome><text>Your crews carry the wounded across. The captain keeps the promise, and when the ship's own people come back for it, one of the wounded asks to stay with you.</text><mawjig size="low"/><crew race="region"/></outcome>
+		</choice>
+		<choice text="Strip their hold and leave them.">
+			<outcome><text>You take what's in the hold. The captain watches you go and says nothing at all.</text><mawjig size="medium"/></outcome>
+		</choice>
+		<choice text="Leave them for their own side to find."/>
+	</event>
+
+	<event id="WAR_ARMS_DEALER" title="Both Sides" kind="neutral" states="At War,Border" bands="3-8" weight="1.2">
+		<text>A trader's barge sits exactly between the two front lines, flying no colors, selling weapons to whoever comes alongside. Its owner hails you cheerfully.
+
+"Wars are good for business. Yours could be next. Looking to buy?"</text>
+		<choice text="Buy a weapon." requires="mawjig:4.84">
+			<outcome><text>The trader sells you a weapon still warm from the last customer's test fire.</text><mawjig amount="-4.84"/><weapon tier="mid"/></outcome>
+		</choice>
+		<choice text="Copy their buyer list and sell it to one side." requires="system:hacking">
+			<outcome weight="2"><text>Your probe copies the trader's records. One side pays well to learn who has been arming the other.</text><mawjig size="medium"/></outcome>
+			<outcome weight="1"><text>The trader catches your probe and calls in a favor from a buyer.</text><fight/></outcome>
+		</choice>
+		<choice text="Move on."/>
+	</event>
+
+	<event id="WAR_CEASEFIRE" title="Neutral Ground" kind="neutral" states="At War" bands="3-8" weight="1">
+		<text>Captains from both sides of the war have agreed to talk, but only through someone who belongs to neither. Your squad is the only neutral party in the cluster.</text>
+		<choice text="Carry their messages back and forth.">
+			<outcome weight="2"><text>It takes most of a day. When it's done, both sides pull back from the border, and each pays you something for the trouble.</text><mawjig size="medium"/></outcome>
+			<outcome weight="1"><text>One side uses the talks to move its ships into position. The ceasefire breaks with you in the middle of it.</text><fight/></outcome>
+		</choice>
+		<choice text="Let {crew} record the agreement, so neither side can deny it." requires="crew_with:senti:aaa">
+			<outcome><text>{crew} records every word, and both sides know the record cannot be lost. Neither side can break the agreement without everyone knowing. Both pay you, and the border goes quiet.</text><mawjig size="high"/></outcome>
+		</choice>
+		<choice text="Stay out of it."/>
+	</event>
+
+	<!-- 2. Refugees on the move -->
+	<event id="REFUGEE_COLUMN" title="The Column" kind="neutral" states="Refugee" bands="2-8" weight="1.5">
+		<text>A long column of refugee ships is crossing the cluster, far from the space they came from. Their lead ship hails you.
+
+"We've been running for weeks. We don't need saving. We just need someone to tell us which way the clusters are still standing."</text>
+		<choice text="Share your charts with them.">
+			<outcome><text>The column turns onto the route you gave them. As the last ship passes, its pilot asks to stay with your squad instead.</text><crew race="region"/></outcome>
+		</choice>
+		<choice text="Trade your charts for their supplies.">
+			<outcome><text>They pay what they can spare, which isn't much.</text><mawjig size="low"/></outcome>
+		</choice>
+		<choice text="Wish them luck."/>
+	</event>
+
+	<event id="REFUGEE_CAMP" title="The Camp" kind="neutral" states="Refugee" bands="2-8" weight="1.2">
+		<text>An old station has become a refugee camp: people of half a dozen races crammed into every corridor, waiting for a ship that can take them further. Its organizer hails you, exhausted.
+
+"We can't all leave. But if you can help even some of us, help us."</text>
+		<choice text="Give them Mawjig for their transports." requires="mawjig:2.42">
+			<outcome><text>Two transports fuel up and leave with as many people as they can carry. The organizer thanks you twice.</text><mawjig amount="-2.42"/></outcome>
+		</choice>
+		<choice text="Let {crew} cover the transports with a Supershield on the way out." requires="crew_with:tentauri:supershield">
+			<outcome><text>{crew} flies escort beside the transports, the Supershield wrapped around the column. Every ship gets out. The camp sends you what it can, and a volunteer.</text><mawjig size="low"/><crew race="region"/></outcome>
+		</choice>
+		<choice text="Let {crew} keep a record of everyone here." requires="crew:senti">
+			<outcome><text>{crew} records every name in the camp. "Whatever happens to them, they will not be forgotten," {crew} says. The camp has little to give, but gives it anyway.</text><mawjig size="low"/></outcome>
+		</choice>
+		<choice text="You can't help them all."/>
+	</event>
+
+	<event id="REFUGEE_EMPTY_SHIP" title="No One To Fly It" kind="distress" states="Refugee" bands="3-7" weight="1" unique="yes">
+		<text>An Azurethea skiff full of refugees drifts with its drive cold. Its only pilot was hurt in the last jump, and nobody else aboard knows how to fly it.
+
+"Take us to the next safe cluster," one of them asks softly. "Then keep the skiff. We will travel on with the others from there."</text>
+		<choice text="Fly them to safety and keep the skiff.">
+			<outcome><text>One of your crew flies the skiff the whole way. At the next safe cluster the refugees step off with their pilot, and the skiff unfolds its wings beside your squad.</text><ship design="moth-skiff"/></outcome>
+		</choice>
+		<choice text="Give them directions and leave them."/>
+	</event>
+
+	<!-- 3. Yards -->
+	<event id="YARD_CHEAP_REFIT" title="End of the Line" kind="neutral" states="Struggling,Doomed" bands="3-8" weight="1.2">
+		<text>A shipyard is closing for good. Its last crew hails you before they leave.
+
+"We can do one more job before we go. Half price. We'd rather the parts go into a ship that's still flying."</text>
+		<choice text="Pay for a refit." requires="mawjig:4.84">
+			<outcome><text>The yard's last crew works through the night. One of your systems runs better than it ever has.</text><mawjig amount="-4.84"/><upgrade/></outcome>
+		</choice>
+		<choice text="Pay for hull repairs." requires="mawjig:1.81">
+			<outcome><text>They patch your hulls with the yard's last plating.</text><mawjig amount="-1.81"/><hull amount="8"/></outcome>
+		</choice>
+		<choice text="Wish them luck."/>
+	</event>
+
+	<event id="YARD_SPARE_HULL" title="A Spare Hull" kind="neutral" races="terran" bands="3-7" weight="0.8" unique="yes">
+		<text>A shipyard has a finished scout cruiser in its cradle and no buyer for it. The foreman hails you.
+
+"Its owner never came back for it. I'd rather sell it cheap than watch the collapse take it."</text>
+		<choice text="Buy the ship." requires="mawjig:16.94">
+			<outcome><text>The cruiser rolls out of its cradle and falls in with your squad.</text><mawjig amount="-16.94"/><ship design="outrider"/></outcome>
+		</choice>
+		<choice text="Not today."/>
+	</event>
+
+	<!-- 4. Bands 7-8: others desperate to get out, not fights -->
+	<event id="LATE_LAST_BROADCAST" title="The Last Broadcast" kind="neutral" bands="7-8" weight="1.2" unique="yes" after_collapse="yes">
+		<text>A world at the edge of the collapse is sending one message on every channel, over and over: the names of everyone who couldn't get off it.</text>
+		<choice text="Record it and send it to The Colony Ship.">
+			<outcome><text>You record the whole list and pass it on. The Colony Ship answers with a single line: "We'll carry them too."</text></outcome>
+		</choice>
+		<choice text="Let {crew} keep every name." requires="crew:senti">
+			<outcome><text>{crew} records the list, name by name. "Now they are somewhere," {crew} says.</text></outcome>
+		</choice>
+		<choice text="Jump on."/>
+	</event>
+
+	<event id="LATE_CLEARANCE" title="Everything Must Go" kind="neutral" bands="7-8" weight="1.2" after_collapse="yes">
+		<text>A trading hub is selling everything it has before the collapse reaches it. Prices mean nothing anymore. The last traders only want enough Mawjig to jump.</text>
+		<choice text="Buy what they have." requires="mawjig:3.63">
+			<outcome><text>You pay what they ask, and they load more into your holds than it's worth.</text><mawjig amount="-3.63"/><weapon tier="mid"/><hull amount="5"/></outcome>
+		</choice>
+		<choice text="Give them the Mawjig to jump, and take nothing." requires="mawjig:1.21">
+			<outcome><text>The last traders thank you and leave. On their way out, they open the hub's stores to your squad.</text><mawjig amount="-1.21"/><store/></outcome>
+		</choice>
+		<choice text="Move on."/>
+	</event>
+
+	<event id="LATE_STOWAWAYS" title="Stowaways" kind="neutral" bands="7-8" weight="1" unique="yes" after_collapse="yes">
+		<text>Halfway through the jump checks, your crew find people hiding in a cargo hold: a family who slipped aboard at your last stop, terrified of being sent back.</text>
+		<choice text="Let them stay.">
+			<outcome><text>They cry with relief. One of them, an engineer, starts work on your ship before you've even finished talking.</text><crew race="terran"/></outcome>
+		</choice>
+		<choice text="Leave them at the next safe cluster.">
+			<outcome><text>You set them down where it's safe for now. They thank you anyway.</text></outcome>
+		</choice>
+	</event>
+</events>
