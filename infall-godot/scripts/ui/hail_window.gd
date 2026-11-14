@@ -22,9 +22,9 @@ func open(run_state: RunState, current: Encounter, enemy_squad: SquadDef) -> voi
 	add_separator()
 	var toll := Mawjig.amount(1.81 * run.band_adjustment() * maxf(1.0, encounter.living(1).size()))
 	add_button("1. Demand their surrender.", func(): _demand(hail))
-	if hail not in ["rival", "malphen"]:
+	if hail not in ["rival", "malphen", "vector"]:
 		add_button("2. Tell them you only want to pass through.", func(): _ask_passage(hail))
-	if hail != "rival":
+	if hail not in ["rival", "vector"]:
 		var offer := add_button("3. Offer %s Mawjig to be left alone." % Mawjig.format(toll), func(): _offer(hail, toll))
 		offer.disabled = run.mawjig < toll
 	add_button("4. Close the channel.", func(): decided.emit("", 0); close())
@@ -48,6 +48,8 @@ func _greeting(hail: String) -> String:
 			return "Laughter and howling come over the channel. \"Good hunting! Why stop now?\""
 		"malphen":
 			return "There is no answer. Only static, and something on the channel that sounds like breathing."
+		"vector":      # a stand-in by Infall: Godot Version (Ai-Generated-Proposal)
+			return "The channel opens on a dark visor lit purple, and a laugh. \"Terms? You came for a contest. Win it.\""
 		"rival":
 			return "\"We know where you're going,\" the fleet's leader says. \"There's only room for one of us out there.\""
 	return "The enemy answers your hail."
@@ -64,7 +66,7 @@ func _enemy_strength() -> float:
 
 func _demand(hail: String) -> void:
 	var chance := (squad.surrender_chance if squad else 20) * (1.6 - _enemy_strength())
-	if hail == "rival" or hail == "malphen":
+	if hail in ["rival", "malphen", "vector"]:
 		chance = 0
 	if run.rng.randf() * 100.0 < chance:
 		_result("They power down their weapons. \"Fine. Take this and let us go.\"", "surrendered", 0)

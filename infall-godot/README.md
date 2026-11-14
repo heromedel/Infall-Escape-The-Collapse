@@ -129,8 +129,14 @@ How it was tested and what the playtesters found is in `docs/handoffs/build-repo
   Breacher, Sellsword and Spear Grass, each beside the ship its squad already fields in those bands.
 - **The Tech victory and its rival** (GV 2F): the best technology of the other races, fitted to one ship. The search
   starts two bands from the rim; the map points to regions. Commodore Marlowe's Long Odds hunts a squad that is
-  collecting, and ambushes it at the rim. `Tech Victory: Optional > Required` and `Tech Victory Pieces: One of
-  Each Pair > All Seven`.
+  collecting, and ambushes it at the rim. `Tech Victory: On > Off` and `Tech Victory Pieces: One of Each Pair >
+  All Seven`.
+- **The Vector Drive victory** (GV 2H), in place of the Last Fleet at the rim: the Mecha's Vector Frame waits along
+  the rim with a drive that can leave the galaxy. Destroy it with the drive damaged and the drive is gone; beaten
+  down, it folds away unless the drive is damaged or jammed. The drive goes to one of your ships (that ship leaves
+  alone) or, at a refit yard, to The Colony Ship (everyone leaves). `Rim Victory: Vector Drive > Last Fleet`.
+- **The Alliance victory** (GV 2G) needs all seven peoples, each with its own terms; the last fight is the
+  Metastasis. `Alliance Victory: On > Off`.
 - **Leaving a fight** (GDD 6F, GV 3N): each ship jumps clear on its own charged drive at no cost; the squad's jump
   to another cluster costs the 1.21.
 - **Refit yards** (GDD 5N, GV 5E): move or trade a system between ships for a quarter of its value, fit a piece

@@ -126,16 +126,21 @@
 		<conduct surrender_chance="0" escape_chance="0" targets="weapons,shields,piloting" hail="rival"/>
 		<description>Marlowe's last stand at the rim: every desperate ship that still answered his call.</description>
 	</squad>
-	<!-- The Alliance victory's last fights (GV 2G): a ship from each race that never pledged (the game fills this
-	     squad from content/alliance), or, with every race pledged, a rogue Malphen ship (heromedel, 2026-11-14). -->
-	<squad id="final-refusers" name="The Ones Who Refused" race="terran" faction="pirate" where_races="none">
-		<tier bands="1-8"><ship design="pirate-hijacker.marauder" count="1"/></tier>
-		<conduct surrender_chance="0" escape_chance="0" targets="weapons,shields,piloting" hail="rival"/>
-		<description>The races that would not join the convoy, come to take its way out.</description>
-	</squad>
-	<squad id="final-rogue-malphen" name="The Malphen Metastasis" race="malphen" faction="malphen" where_races="none">
+	<!-- The Alliance victory's last fight (GV 2G; heromedel, 2026-11-14): with every people pledged, a rogue Malphen
+	     growth, the Metastasis (name checked by Infall: Lori). -->
+	<squad id="final-rogue-malphen" name="The Metastasis" race="malphen" faction="malphen" where_races="none">
 		<tier bands="1-8"><ship design="tumour" count="1"/><ship design="spawnling.metastasis" count="2-3"/></tier>
 		<conduct surrender_chance="0" escape_chance="0" targets="shields,engines" hail="malphen"/>
 		<description>A rogue Malphen growth that follows no pledge. It may not even know what it is doing: it sees a line of colony ships passing, and wants to eat or infect them.</description>
+	</squad>
+	<!-- The Vector Drive victory (GV 2H; heromedel, 2026-11-14): the Mecha's Vector Frame and its escorts (Infall: Ship
+	     Designs' three), a different set each time it is met. Beaten down, the Vector Frame folds away on its drive,
+	     unless the drive is damaged, jammed or spent; its escorts stay and fight. -->
+	<squad id="final-vector" name="The Vector Frame" race="mecha" faction="mecha" where_races="none">
+		<tier bands="1-8"><ship design="vector-frame" count="1"/><ship design="assault-frame" count="2"/></tier>
+		<tier bands="1-8"><ship design="vector-frame" count="1"/><ship design="assault-frame.siege" count="1"/><ship design="light-attack-frame.breacher" count="1"/></tier>
+		<tier bands="1-8"><ship design="vector-frame" count="1"/><ship design="assault-frame" count="1"/><ship design="light-attack-frame" count="2"/></tier>
+		<conduct surrender_chance="0" escape_chance="0" breaks_off_at="0.25" break_off_design="vector-frame" break_off_needs="vector-drive" augment="Mawjig Vector Drive" targets="weapons,shields,piloting" hail="vector"/>
+		<description>The best frame the Mecha ever built, and the drive that could take one ship out of this galaxy. They were hoping for a contest before they leave.</description>
 	</squad>
 </squads>

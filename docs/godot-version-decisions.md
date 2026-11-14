@@ -74,8 +74,8 @@ anything Claude added tagged Ai-Generated-Proposal.
     below 25% (heromedel). With all seven aboard it ambushes the squad at the rim, the flywheel spent, and its
     first two losses are replaced by ships that jump in where the wrecks were. Winning that fight is the Tech
     victory.
-  - **Setting:** `Tech Victory: Optional > Required`. Optional: without all seven the rim is as before, the Last
-    Fleet and the plain ending. Required: without all seven there is no way out at the rim yet.
+  - **Setting:** `Tech Victory: On > Off` (heromedel, 2026-11-14: a setting for every victory). The earlier
+    `Optional > Required` is gone: what the rim holds without the pieces is the Rim Victory's to say (GV 2H).
   - **Not built:** a Short run has no Tech victory.
   - **Ai-Generated-Proposal:** genetic diversity stands in as six living crew of the squad's own race aboard the
     one ship (the docs say "maybe 3 males and 3 females of your core race"; the game has no crew sex); fitting a
@@ -95,9 +95,10 @@ anything Claude added tagged Ai-Generated-Proposal.
     by a fair hunt, won; the Malphen only let the convoy pass, for matter.
   - **Blue choices** come from crew of other races aboard a ship that has that race's own system (heromedel's
     example: a Senti with the Armoured Avatar Array offers to keep a people's records).
-  - **Enough** is four of the seven. The map lists who has pledged and which way the others' space lies.
+  - **Enough** is all seven (heromedel, 2026-11-14). The map lists who has pledged and which way the others' space
+    lies.
   - **At the rim** each pledged race's ship joins the squad for the last fight, as far as the squad has room,
-    against a ship from each race that never pledged; with every race pledged, a rogue Malphen ship (heromedel).
+    against a rogue Malphen squad, the Metastasis (heromedel; the name checked by Infall: Lori).
   - **A pledged race** no longer sends its own ships against the squad, and withdraws its pledge if the squad
     destroys one of them.
   - The talks' texts are stand-ins until Infall: Lori's replace them. The playtesters can go for it
@@ -107,8 +108,59 @@ anything Claude added tagged Ai-Generated-Proposal.
     past a fight with their pickets. The Malphen can't be spoken to without a Lymph Gland or a Pheromone Gland
     aboard, and then take matter. The last fight is always the rogue Malphen squad, the Malphen Metastasis (Infall:
     Ship Designs' Tumour and Lesions). A pledge staked on a fight (the Lykario hunt, the Senti pickets) is given
-    when the fight is won. Still to do with Infall: Lori's rewrite: a second condition or a challenge on every
-    "with X aboard" choice, and what each race contributes to the voyage.
+    when the fight is won.
+  - **Infall: Lori's rewrite is in** (2026-11-14; every text Ai-Generated-Proposal). Each people gives the convoy
+    one thing: GATOS cores and power, Azurethea air, Tentauri shields, Mecha yards (for a price), Senti memory and
+    biological data, the Lykario hunt, and a Malphen growth that follows and turns waste back into matter. A refusal
+    is never final. A blue choice from a race aboard also needs that race pledged, or a cluster state, and works in
+    states where the plain choice doesn't. A race's talk can be split by the cluster's state: the Mecha doing well
+    refuse and offer a contest that pledges nothing; doomed Senti are a fight (the Census), then the archive, which
+    wants an Armoured Avatar Array and everything recorded. The Malphen take Mawjig, or the promise of a convoy
+    already five strong.
+  - **The last fight changes with the choice** (GDD 9E): close ranks (allies from the start), strike first (the
+    squad's weapons start charged, the allies arrive 30 seconds in), or, with a gland, send part of the growth away
+    (one Lesion fewer).
+  - **Setting:** `Alliance Victory: On > Off`.
+  - **Not built:** a doomed Senti store behind a fight, and several fights deep in doomed Senti space; they wait for
+    events from the situation (GDD 9D).
+
+- **H — Built (2026-11-14), heromedel: the Vector Drive victory** (`docs/ideas.md`, "Vector Drive victory" and "A
+  setting for every victory"). It replaces the plain victory, the Last Fleet at the rim.
+  - **Setting:** `Rim Victory: Vector Drive > Last Fleet` (heromedel: shown as the Vector Drive victory by default,
+    with a toggle to the old Last Fleet victory).
+  - **The ship** is the Mecha's Vector Frame (Infall: Ship Designs; named by Infall: Lori after the Mecha's
+    frames). Its Mawjig Vector Drive is its Engines and shares a room with its Shields.
+  - **The goal is mentioned early** (heromedel): the squad's first arrival from band 2 on, the collapse known,
+    plays VECTOR_FIRST_WORD. It is mentioned again where the search for the right techs begins. Trail events come
+    up in bands 6 to 8. All of them are Infall: Lori's.
+  - **Catch 1 (heromedel):** a Vector Frame destroyed while its drive is damaged takes the drive with it. Mended
+    before the ship dies, the drive is recovered, scarred. Killing the crew takes the ship and its drive whole.
+  - **Catch 2 (heromedel):** a refit yard fits the drive to The Colony Ship for 242.01 Mawjig (Infall: Eco, F19),
+    and everyone leaves: the end screen THE FOLD. Fitted to one of the squad's ships, 9.08, that ship leaves alone:
+    THE VECTOR.
+  - **Met more than once (heromedel):** it gets back only some of its hull, and its escorts are not always the
+    same ships.
+  - **Each choice at the meeting changes the fight** (GDD 9E; Lori's choices): open fire (the squad's weapons start
+    charged), their contest (the escorts hold back; the Vector Frame's weapons start charged), or, with Hacking,
+    jam the drive (it can't get away).
+  - **Ai-Generated-Proposal, all of the following:**
+    - *Where it is.* It takes a place on the rim, two to four jumps along it from where the squad would arrive,
+      when the squad enters the last band or finds a trail. With a trail the map gives its heading; with two, or
+      once it has been met, the cluster's name. A squad that reaches the rim elsewhere finds its wake there.
+    - *How it gets away.* Under a quarter of its hull it charges a fold for 12 seconds and is gone, to a cluster
+      close by. A damaged, hacked or ionised drive loses the charge, so hitting the drive stops it, at the risk of
+      catch 1. It folds away twice at most; after that its drive is spent. It comes back with 30% more of its hull
+      the first time and 15% the second, and with the crew it had left and one more.
+    - *A part taken early* (the first event's cargo) lowers its shields a level.
+    - *The escorts* are one of Ship Designs' three sets, rolled at each meeting: two Assault Frames; a Siege Frame
+      and a Breacher; an Assault Frame and two Light Attack Frames.
+    - *Fitting.* A ship of the squad's can be fitted in the window after the fight or at any store; The Colony
+      Ship only at a refit yard. A scarred drive costs 4.54 more. Fitting ends the run, won.
+    - *The drive lost:* the run goes on if the Tech or the Alliance victory is allowed, and is lost if neither is.
+    - *Stand-in texts by Infall: Godot Version,* until Lori's: the rim without the Vector Frame, the second
+      meeting, the rim with the drive held or lost, and its hail.
+  - The playtesters hunt it, spare the drive's room once the ship is half beaten, and fit the drive.
+    `tools/vector_test.tscn` checks the rules.
 
 ## 3. Squad Combat
 
@@ -715,6 +767,7 @@ All built in the build of 2026-11-05.
 
 | Date | Decision |
 | --- | --- |
+| 2026-11-14 | Built on heromedel's word: the Vector Drive victory in place of the Last Fleet (GV 2H), a setting for every victory (`Rim Victory`, `Tech Victory`, `Alliance Victory`), and the Alliance victory as all seven with Infall: Lori's rewritten talks and the Metastasis (GV 2G). |
 | 2026-10-31 | The doc started; today's decisions recorded (GV 2A–14D). |
 | 2026-10-31 | The GATOS are cats: the Galactic Alliance of Tabby Occupied Systems (GV 7A, race profiles). |
 | 2026-10-31 | Mercenaries on renewable contracts (GV 7C), for the next build; HalfMechs may be learned through a Mecha crew member (GV 7B). |

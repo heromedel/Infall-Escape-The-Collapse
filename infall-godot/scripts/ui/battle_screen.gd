@@ -288,6 +288,15 @@ func _show_note(note: Dictionary) -> void:
 			_sound("jump")
 			if note.kind == "jumped_out":
 				flash_message("The %s jumps clear of the fight." % ship.name)
+		"enemy_charging_escape":
+			if encounter.squad and encounter.squad.break_off_design == ship.design.base_id:
+				flash_message("The %s is charging its drive to fold away. Finish it, or stop the drive." % ship.name)
+		"fold_stopped":
+			flash_message("The %s loses its fold: its drive can't hold the charge." % ship.name)
+		"ally_arrived":
+			effects.sparkle(ship.world_position, Color(0.8, 0.9, 1.0))
+			_sound("jump")
+			flash_message("The %s arrives." % ship.name)
 		"room_tended":
 			_sound("repair")
 		"helped":

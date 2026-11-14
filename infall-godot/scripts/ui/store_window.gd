@@ -107,6 +107,20 @@ func _rebuild() -> void:
 		var price := RimTech.price(piece, run.band())
 		right.add_child(_section("THE CROSSING  ·  %d of %d fitted" % [run.tech_count(), run.tech_total()]))
 		right.add_child(_card(RimTech.name_of(piece), "%s\n%s: one of the pieces a ship needs to cross to another galaxy. It goes to your hold; a refit yard fits it." % [RimTech.pieces[piece].line, RimTech.name_of(piece)], price, held, func(): _buy_tech(piece, price), null, "YOU HAVE IT"))
+	# The Mawjig Vector Drive, taken from the Vector Frame (GV 2H): to one of the squad's ships, or to The Colony Ship
+	if VectorHunt.drive_held(run):
+		right.add_child(_section("THE MAWJIG VECTOR DRIVE"))
+		var colony_refusal := VectorHunt.fit_refusal(run, null)
+		var colony := _card("Fit it to The Colony Ship", "Your scouts dock and go aboard, and The Colony Ship makes the jump." + ("" if Refit.has_yard(run.cluster()) else "
+Only a refit yard can do this, and this store has none."),
+				VectorHunt.colony_price(run), not Refit.has_yard(run.cluster()), func(): _fit_vector(-1), null, "NO YARD")
+		colony.tooltip_text = colony_refusal
+		right.add_child(colony)
+		for index in run.squad.size():
+			var scout: Ship = run.squad[index]
+			if scout.is_gone() or scout.is_mercenary():
+				continue
+			right.add_child(_card("Fit it to the %s" % scout.name, "That ship makes the jump. Nobody else does.", VectorHunt.scout_price(run), false, func(): _fit_vector(index)))
 	var ask := Alliance.race_to_ask(run, run.cluster())
 	if ask != "":
 		right.add_child(_section("THE CONVOY"))
@@ -238,6 +252,16 @@ func _buy_weapon(def: WeaponDef, price: int) -> void:
 func _buy_crew(race: RaceDef, index: int, price: int) -> void:
 	_order({"op": "buy_crew", "race": race.id, "index": index, "price": price})
 	Sfx.play("buy")
+
+
+## Fits the Mawjig Vector Drive: to a ship of the squad, or (index -1) to The Colony Ship. It ends the run, won.
+func _fit_vector(index: int) -> void:
+	var to: Ship = run.squad[index] if index >= 0 else null
+	if not VectorHunt.fit_refusal(run, to).is_empty():
+		Sfx.play("deny")
+		return
+	give.call({"k": "refit", "op": "fit_vector", "sq": index})
+	close()
 
 
 func _buy_system(def: SystemDef, price: int) -> void:

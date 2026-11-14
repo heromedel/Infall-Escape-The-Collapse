@@ -213,6 +213,12 @@ func _update_info() -> void:
 		lines.append("[color=#ffd46b]%s[/color]" % convoy[0])
 		for line_index in range(1, convoy.size()):
 			lines.append("[font_size=15][color=#a8b8cc]%s[/color][/font_size]" % convoy[line_index])
+	var vector := VectorHunt.map_lines(run)
+	if not vector.is_empty():
+		lines.append("")
+		lines.append("[color=#ffd46b]%s[/color]" % vector[0])
+		for line_index in range(1, vector.size()):
+			lines.append("[font_size=15][color=#a8b8cc]%s[/color][/font_size]" % vector[line_index])
 	if run.tech_goal:
 		lines.append("")
 		lines.append("[color=#ffd46b]The crossing: %d of %d fitted to one ship[/color]" % [run.tech_count(), run.tech_total()])

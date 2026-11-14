@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Prices in Mawjig from docs/reference/system-prices.md. "buy" installs level 1; "upgrades" are the step prices for each level after. -->
 <system id="growth-organ" name="Growth Organ" behaviour="clone_bay" max_level="3" draws_power="yes" manned="no" buy="12.11" upgrades="8.47,10.89" icon="growth_organ" hotkey="D" order="52">
-	<description>The Malphen clone bay (GDD 8S): a ship's own tissue regrows the crew who die, as growths, at half their health. It needs power to grow them. It heals nobody; a Lymph Gland does that.</description>
+	<description>The Malphen clone bay: a ship's own living tissue. Crew who die aboard are grown back in it, as growths of the ship.</description>
 	<level>Regrows slowly</level>
 	<level>Regrows quickly</level>
 	<level>Regrows very quickly</level>

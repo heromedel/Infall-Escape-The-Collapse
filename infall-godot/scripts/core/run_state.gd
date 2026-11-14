@@ -22,7 +22,20 @@ var alliance_goal: bool = false      # The Colony Ship has proposed the convoy (
 var pledge_on_win: String = ""       # the race that pledges if the fight an event just started is won
 var pledges: Array[String] = []      # races pledged to the convoy, besides the squad's own (content/alliance)
 var tech_goal: bool = false          # the search for the seven pieces has begun (the TECH_GOAL_FOUND event)
-var victory: String = ""             # how a won run was won: "escape" or "tech"
+var victory: String = ""             # how a won run was won: "escape", "tech", "alliance", "vector" or "fold"
+# The Vector Drive victory (VectorHunt, GV 2H)
+var vector_goal: bool = false        # the squad has heard of the Vector Frame (the VECTOR_FIRST_WORD event)
+var vector_trail: int = 0            # how much of its trail the squad has found
+var vector_parts: int = 0            # parts of it the squad took before it was finished
+var vector_at: int = -1              # the cluster it waits at; -1 until it takes its place near the rim
+var vector_met: int = 0              # fights with it so far
+var vector_escapes: int = 0          # times it folded away
+var vector_hull: float = 1.0         # the share of its hull it has
+var vector_crew: int = -1            # the crew it has left; -1 for all of them
+var vector_drive: String = ""        # "" while it is at large, then "whole", "scarred", "lost" or "fitted"
+var vector_ship: String = ""         # what the drive was fitted to
+var after_fight_event: String = ""   # the event that plays once the fight an event started is won
+var fight_terms: Dictionary = {}     # how the event that started a fight changes it: first_strike, hold_back, allies, no_escape
 var used_events: Array[String] = []
 var stats := {"ships_destroyed": 0, "crews_killed": 0, "jumps": 0, "mawjig_earned": 0, "events": 0, "ships_lost": 0}
 var over: bool = false
@@ -82,7 +95,7 @@ func pledge_count() -> int:
 
 
 func alliance_ready() -> bool:
-	return alliance_goal and pledge_count() >= Alliance.needed
+	return alliance_goal and pledge_count() >= Alliance.needed and Settings.get_value("alliance_victory", true)
 
 
 # --- The Tech victory's pieces --------------------------------------------------------------------------------
@@ -222,6 +235,7 @@ func jump_to(index: int) -> void:
 	jumps += 1
 	stats.jumps += 1
 	galaxy.advance_collapse(jumps)
+	VectorHunt.keep_ahead_of_the_collapse(self)
 	for ship in living_ships():
 		ship.jump_heal()      # a Lymph Gland with a Growth Organ (GDD 8S)
 	_count_contract_jump()
@@ -236,6 +250,7 @@ func wait() -> void:
 	earn(Mawjig.WAIT_GAIN)
 	jumps += 1
 	galaxy.advance_collapse(jumps)
+	VectorHunt.keep_ahead_of_the_collapse(self)
 	_count_contract_jump()
 	log_book.write("wait", {"cluster": current, "mawjig": mawjig}, "The squad waited at %s and gathered 0.25 Mawjig." % cluster().name)
 
@@ -363,6 +378,26 @@ func sensor_range() -> int:
 
 # --- Saving ---------------------------------------------------------------------------------------------------
 
+func vector_to_save() -> Dictionary:
+	return {"goal": vector_goal, "trail": vector_trail, "parts": vector_parts, "at": vector_at, "met": vector_met, "escapes": vector_escapes,
+			"hull": vector_hull, "crew": vector_crew, "drive": vector_drive, "ship": vector_ship, "after": after_fight_event, "terms": fight_terms.duplicate()}
+
+
+func vector_from_save(data: Dictionary) -> void:
+	vector_goal = bool(data.get("goal", false))
+	vector_trail = int(data.get("trail", 0))
+	vector_parts = int(data.get("parts", 0))
+	vector_at = int(data.get("at", -1))
+	vector_met = int(data.get("met", 0))
+	vector_escapes = int(data.get("escapes", 0))
+	vector_hull = float(data.get("hull", 1.0))
+	vector_crew = int(data.get("crew", -1))
+	vector_drive = String(data.get("drive", ""))
+	vector_ship = String(data.get("ship", ""))
+	after_fight_event = String(data.get("after", ""))
+	fight_terms = data.get("terms", {})
+
+
 func to_save() -> Dictionary:
 	var ships: Array = []
 	for ship in squad:
@@ -370,7 +405,7 @@ func to_save() -> Dictionary:
 			ships.append(ship.to_save())
 	return {
 		"game": "Infall: Escape The Collapse", "version": 2, "seed": seed_value, "current": current, "jumps": jumps,
-		"mawjig": mawjig, "cargo": cargo.duplicate(), "tech": tech.duplicate(), "tech_goal": tech_goal, "alliance_goal": alliance_goal, "pledges": pledges.duplicate(), "used_events": used_events.duplicate(), "stats": stats.duplicate(),
+		"mawjig": mawjig, "cargo": cargo.duplicate(), "tech": tech.duplicate(), "tech_goal": tech_goal, "alliance_goal": alliance_goal, "pledges": pledges.duplicate(), "vector": vector_to_save(), "used_events": used_events.duplicate(), "stats": stats.duplicate(),
 		"difficulty": difficulty, "pending_fight": pending_fight, "next_contract_id": next_contract_id, "squad": ships, "galaxy": galaxy.to_save(), "rng_state": rng.state,
 	}
 
@@ -428,6 +463,7 @@ static func from_data(data: Dictionary) -> RunState:
 	run.tech_goal = bool(data.get("tech_goal", false))
 	run.alliance_goal = bool(data.get("alliance_goal", false))
 	run.pledges.assign(data.get("pledges", []))
+	run.vector_from_save(data.get("vector", {}))
 	run.used_events.assign(data.get("used_events", []))
 	for key in data.get("stats", {}):
 		run.stats[key] = int(data.stats[key])

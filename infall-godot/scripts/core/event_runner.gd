@@ -6,6 +6,7 @@ extends RefCounted
 
 const MAX_CREW_PER_SHIP := 8
 const MAX_SQUAD := 6
+const LATE_ALLIES_TICKS := 600    # allies an event left "a long way behind" arrive after this long: 30 seconds
 
 var run: RunState
 var mercenary: Ship = null   # the hired ship a contract event is about: {merc}, {price}, {jumps} ("3 jumps")
@@ -18,22 +19,32 @@ func _init(owner: RunState) -> void:
 ## The event for arriving at the current cluster.
 func event_for_arrival() -> EventDef:
 	var cluster := run.cluster()
+	# The Vector Frame takes its place once the squad is in the last band or at the rim (GV 2H)
+	if VectorHunt.at_large(run) and (run.band() >= run.galaxy.bands or cluster.kind == "final"):
+		VectorHunt.place(run)
 	if cluster.kind == "final":
 		return final_event()
 	if cluster.kind == "opening":
 		return Library.events.get("START_LAUNCH")
+	# Where the Vector Frame folded away to, off the rim
+	if VectorHunt.at_large(run) and run.current == run.vector_at and Library.events.has("VECTOR_CAUGHT"):
+		return Library.events["VECTOR_CAUGHT"]
 	# The search for the seven pieces begins on the squad's first arrival two bands from the rim (GV 2F)
-	if not run.tech_goal and run.galaxy.bands >= 8 and run.band() >= run.galaxy.bands - RimTech.goal_bands_from_rim and not cluster.store \
+	if Settings.get_value("tech_victory", true) and not run.tech_goal and run.galaxy.bands >= 8 and run.band() >= run.galaxy.bands - RimTech.goal_bands_from_rim and not cluster.store \
 			and Library.events.has("TECH_GOAL_FOUND") and not run.used_events.has("TECH_GOAL_FOUND") and not cluster.event_done:
 		return Library.events["TECH_GOAL_FOUND"]
 	# The Colony Ship proposes the convoy when the squad first reaches another race's space, the collapse known (GV 2G)
-	if not run.alliance_goal and collapse_known() and cluster.race != "" and cluster.race != run.galaxy.home_race and not cluster.store \
+	if Settings.get_value("alliance_victory", true) and not run.alliance_goal and collapse_known() and cluster.race != "" and cluster.race != run.galaxy.home_race and not cluster.store \
 			and Library.events.has("ALLIANCE_PROPOSED") and not run.used_events.has("ALLIANCE_PROPOSED") and not cluster.event_done:
 		return Library.events["ALLIANCE_PROPOSED"]
+	# The first word of the Vector Frame: early, from the second band on (GV 2H; heromedel: "mentioned early on")
+	if VectorHunt.allowed() and not run.vector_goal and collapse_known() and run.band() >= 2 and not cluster.store and not cluster.event_done \
+			and Library.events.has("VECTOR_FIRST_WORD") and not run.used_events.has("VECTOR_FIRST_WORD"):
+		return Library.events["VECTOR_FIRST_WORD"]
 	# A talk with a race that has not pledged: on one arrival in three in its space or among its refugees
 	var ask := Alliance.race_to_ask(run, cluster)
 	if ask != "" and not cluster.event_done and not cluster.store and int(cluster.seed) % Alliance.talk_one_in == 1:
-		return Library.events[Alliance.talk_event(ask)]
+		return Library.events[Alliance.talk_event(ask, cluster)]
 	if cluster.event_done:
 		return before_or_after_collapse("REVISIT")
 	var rival := _rival_event()
@@ -45,24 +56,30 @@ func event_for_arrival() -> EventDef:
 	return pick(cluster.kind)
 
 
-## What waits at the rim (GV 2F). With every piece of tech aboard, the rival's ambush and the Tech victory. Without
-## them: the Last Fleet as ever, or, where the Tech victory is required, no way out yet.
+## What waits at the rim. With every piece of tech fitted to one ship: the rival's ambush and the Tech victory (GV 2F).
+## With every people pledged: the Metastasis and the Alliance victory (GV 2G). Otherwise the Rim Victory setting
+## decides (GV 2H): the Mecha's Vector Frame, somewhere along the rim, or the old Last Fleet.
 func final_event() -> EventDef:
-	if run.tech_goal and run.has_all_tech() and Library.events.has("FINAL_RIVAL_TECH"):
+	if Settings.get_value("tech_victory", true) and run.tech_goal and run.has_all_tech() and Library.events.has("FINAL_RIVAL_TECH"):
 		return Library.events["FINAL_RIVAL_TECH"]
-	if run.alliance_ready() and Library.events.has("FINAL_ALLIANCE"):
-		var everyone: bool = Alliance.refusers(run).is_empty() and Library.events.has("FINAL_ALLIANCE_ALL")
-		return Library.events["FINAL_ALLIANCE_ALL" if everyone else "FINAL_ALLIANCE"]
-	if Settings.get_value("tech_victory", "Optional") == "Required" and Library.events.has("RIM_NO_WAY_OUT"):
-		return Library.events["RIM_NO_WAY_OUT"]
-	return Library.events.get("FINAL_RIVAL")
+	if run.alliance_ready() and Library.events.has("FINAL_ALLIANCE_ALL"):
+		return Library.events["FINAL_ALLIANCE_ALL"]
+	if not VectorHunt.allowed():
+		return Library.events.get("FINAL_RIVAL")
+	if VectorHunt.drive_held(run):
+		return Library.events.get("RIM_DRIVE_HELD")
+	if run.vector_drive == "lost":
+		return Library.events.get("RIM_NO_WAY_OUT" if run.tech_goal and Settings.get_value("tech_victory", true) else "RIM_DRIVE_LOST")
+	if run.current == run.vector_at:
+		return Library.events.get("FINAL_VECTOR" if run.vector_met == 0 else "VECTOR_CAUGHT")
+	return Library.events.get("RIM_VECTOR_ELSEWHERE")
 
 
 ## The rival hunts a squad that is collecting the pieces (two or more aboard, or the Tech victory required) in the
 ## last two bands (heromedel, 2026-11-14): one meeting in each, on one arrival in three, by the cluster's own number
 ## so every machine and every reload agree.
 func _rival_event() -> EventDef:
-	if (not run.tech_goal or run.tech_count() < 2) and Settings.get_value("tech_victory", "Optional") != "Required":
+	if not run.tech_goal or run.tech_count() < 2 or not Settings.get_value("tech_victory", true):
 		return null
 	var last: int = run.galaxy.bands
 	for step in [["RIVAL_FIRST", last - 1], ["RIVAL_SECOND", last]]:
@@ -108,6 +125,9 @@ func pick(kind: String) -> EventDef:
 			continue
 		if def.id == "TECH_GOAL_FOUND":
 			continue
+		# The Vector Frame's trail: only while the squad is looking for it and it is still out there
+		if def.id.begins_with("VECTOR_") and (def.id == "VECTOR_FIRST_WORD" or not run.vector_goal or not VectorHunt.at_large(run)):
+			continue
 		if not def.hazard.is_empty() and def.hazard != cluster.hazard:
 			continue
 		var weight: float = def.weight
@@ -132,6 +152,14 @@ func pick(kind: String) -> EventDef:
 		if roll <= 0.0:
 			return candidates[index]
 	return candidates.back()
+
+
+## An event's opening text. The search for the right techs ends by pointing at the other way out, while the Vector
+## Frame is still out there (Infall: Lori's paragraph; heromedel: "mentioned again").
+func event_text(def: EventDef) -> String:
+	if def.id == "TECH_GOAL_FOUND" and VectorHunt.at_large(run) and run.vector_goal:
+		return def.text + "\n\nThere may be another way. If the Mecha's Vector Frame is real, its drive could take a single ship across in one jump. Take that, and you'll need none of this."
+	return def.text
 
 
 ## The text with placeholders filled: {crew} a crew member who fits the choice, {race} the cluster's race.
@@ -164,10 +192,13 @@ func _meets(requirement: String) -> bool:
 		"crew":
 			return _crew_of_race(parts[1]) != null
 		"system":
+			# Several ids, "system:pheromone-gland,lymph-gland", are those systems themselves, any one of them. A single
+			# name is the system's kind, so a race's own make counts too (the Pheromone Gland is Mind Control).
+			var ids := parts[1].split(",")
 			for ship in run.living_ships():
-				# By the system's kind, so a race's own make counts too (the Pheromone Gland is Mind Control)
-				if ship.system_by(parts[1]) or ship.system_by_id(parts[1]) or ship.system_by(parts[1].replace("-", "_")):
-					return true
+				for id in ids:
+					if ship.system_by_id(id) or (ids.size() == 1 and (ship.system_by(id) or ship.system_by(id.replace("-", "_")))):
+						return true
 			return false
 		"mawjig":
 			return run.mawjig >= Mawjig.amount(float(parts[1]))
@@ -236,8 +267,11 @@ func requirement_label(choice: Dictionary) -> String:
 		"crew":
 			return "(%s Crew)" % Library.race(parts[1]).name
 		"system":
-			var def := Library.system(parts[1])
-			return "(%s)" % (def.name if def else parts[1].capitalize())
+			var names: Array = []
+			for id in parts[1].split(","):
+				var def := Library.system(id)
+				names.append(def.name if def else id.capitalize())
+			return "(%s)" % " or ".join(names)
 		"weapon":
 			return "(%s)" % parts[1].capitalize()
 		"mawjig":
@@ -436,9 +470,27 @@ func _apply(tag: String, attrs: Dictionary, result: Dictionary) -> void:
 			result.lines.append("The crossing: %d of %d fitted to one ship. The map shows where to look for the rest." % [run.tech_count(), run.tech_total()])
 		"fight":
 			run.pledge_on_win = attrs.get("pledge", "")
+			run.after_fight_event = attrs.get("then", "")
+			run.fight_terms = {}
+			for term in ["first_strike", "hold_back", "allies", "no_escape"]:
+				if attrs.has(term):
+					run.fight_terms[term] = attrs[term]
 			result.fight = attrs.get("squad", "")
 			result.fight_given = true
 			result.surprise = attrs.get("surprise", "no") == "yes"
+		"vector_goal":
+			if not run.vector_goal:
+				run.vector_goal = true
+				result.lines.append("The Vector Frame: somewhere near the rim. Find its trail.")
+		"vector_trail":
+			run.vector_goal = true
+			run.vector_trail += 1
+			VectorHunt.place(run)
+			for line in VectorHunt.map_lines(run):
+				result.lines.append(line)
+		"vector_part":
+			run.vector_parts += 1
+			result.lines.append("The Vector Frame will meet you one part short: its shields a level lower.")
 		"store":
 			result.store = true
 			run.cluster().store = true
@@ -567,8 +619,12 @@ func build_enemy_ships(squad: SquadDef) -> Array[Ship]:
 	var ships: Array[Ship] = []
 	var difficulty_hull := {"Easy": 0.8, "Normal": 1.0, "Hard": 1.25}.get(run.difficulty, 1.0) as float
 	var fielded: Array[String] = squad.roll_ships(run.band(), run.rng)
-	if squad.id == "final-refusers":
-		fielded = Alliance.refusers(run)       # a ship from each race that never pledged
+	# An event's choice may keep some of them out of the fight (hold_back): the lead ship always fights
+	var held := String(run.fight_terms.get("hold_back", ""))
+	if held == "escorts":
+		fielded = fielded.slice(0, 1)
+	elif held.is_valid_int():
+		fielded = fielded.slice(0, maxi(1, fielded.size() - int(held)))
 	for design_id in fielded:
 		var design := Library.ship(design_id)
 		if design == null:
@@ -578,15 +634,87 @@ func build_enemy_ships(squad: SquadDef) -> Array[Ship]:
 		var band_hull := 1.0 + 0.04 * (run.band() - 1)
 		ship.max_hull = maxi(3, int(round(ship.max_hull * difficulty_hull * band_hull)))
 		ship.hull = maxi(1, int(round(ship.max_hull * squad.starts_at)))
+		if design.base_id == VectorHunt.FRAME:
+			_scar_the_vector_frame(ship)
 		ships.append(ship)
 	return ships
+
+
+## The Vector Frame as the squad's hunt has left it (GV 2H): the hull it had when it last got away and a little
+## more, the crew it has left, and its shields a level lower for each part taken before it was finished.
+func _scar_the_vector_frame(ship: Ship) -> void:
+	ship.hull = clampi(int(round(ship.max_hull * run.vector_hull)), 1, ship.max_hull)
+	var shields := ship.system_by("shields")
+	if shields:
+		shields.level = maxi(1, shields.level - run.vector_parts)
+		shields.own_power = mini(shields.own_power, shields.level)
+	if run.vector_crew >= 0:
+		while ship.crew.size() > maxi(2, run.vector_crew):
+			ship.crew.pop_back()
+		ship.assign_stations()
+
+
+## The fight an event started, changed by the choice that started it (GDD 9E): who fires first, allies that come late,
+## a drive that is jammed. Called once the encounter is set up.
+func apply_fight_terms(encounter: Encounter, allies: Array) -> void:
+	var terms := run.fight_terms
+	if String(terms.get("allies", "")) == "late":
+		encounter.hold_allies_back(allies, LATE_ALLIES_TICKS)
+	match String(terms.get("first_strike", "")):
+		"squad":
+			encounter.give_first_strike(0)
+		"enemy":
+			encounter.give_first_strike(1)
+	if encounter.squad and encounter.squad.id == VectorHunt.SQUAD:
+		encounter.no_escape = String(terms.get("no_escape", "")) == "yes" or run.vector_escapes >= VectorHunt.MAX_ESCAPES
+
+
+## What a fight did to the hunt for the Vector Frame, as lines for the window after it (Infall: Lori's). It folded
+## away; or it is beaten, and its drive is taken or lost; or the squad left it there.
+func vector_after_fight(encounter: Encounter) -> Array:
+	var lines: Array = []
+	var frame: Ship = null
+	for ship in encounter.all_enemy_ships():
+		if ship.design.base_id == VectorHunt.FRAME:
+			frame = ship
+	if frame == null or not VectorHunt.at_large(run):
+		return lines
+	run.vector_met += 1
+	if frame.destroyed or frame.crew_dead:
+		var drive := frame.system_by_id(VectorHunt.DRIVE)
+		if frame.destroyed and drive != null and drive.damage > 0:
+			run.vector_drive = "lost"
+			lines.append("The Vector Frame breaks apart with its drive still damaged. The Mawjig Vector Drive goes with it, folding into nothing. Whatever way out it offered is gone.")
+		elif drive != null and (drive.was_damaged or drive.damage > 0):
+			run.vector_drive = "scarred"
+			lines.append("The Mawjig Vector Drive comes out of the wreck scarred but whole. It may need repairs once it's fitted.")
+		else:
+			run.vector_drive = "whole"
+			lines.append("The Mawjig Vector Drive comes out of the wreck whole. Your engineers start fitting it before the debris has stopped moving.")
+		run.log_book.write("vector_drive", {"drive": run.vector_drive}, "The Vector Frame was beaten: its drive is %s." % run.vector_drive)
+		return lines
+	# Still flying: it keeps the damage, less what it can mend, and the crew it has left
+	var folded: bool = frame.escaped and encounter.outcome != "withdrew"
+	var mends: float = VectorHunt.RECOVERS[mini(run.vector_escapes, VectorHunt.RECOVERS.size() - 1)]
+	run.vector_hull = clampf(float(frame.hull) / frame.max_hull + mends, 0.2, 1.0)
+	run.vector_crew = mini(frame.design.crew.size(), frame.living_crew_count() + 1)
+	if folded:
+		run.vector_escapes += 1
+		VectorHunt.flee(run)
+		lines.append("The Vector Frame folds away, burning. It hasn't gone far, and it won't have time to repair it all.")
+		for line in VectorHunt.map_lines(run):
+			lines.append(line)
+		run.log_book.write("vector_fled", {"to": run.vector_at, "hull": run.vector_hull}, "The Vector Frame folded away.")
+	else:
+		run.cluster().event_done = false     # it is still here if the squad comes back
+	return lines
 
 
 ## At the rim, each pledged race's ship joins the squad for the last fight, as far as the squad has room: flown by
 ## the player, as a mercenary's is.
 func add_allies(squad: SquadDef) -> Array[Ship]:
 	var joined: Array[Ship] = []
-	if squad == null or squad.id not in ["final-refusers", "final-rogue-malphen"]:
+	if squad == null or squad.id != "final-rogue-malphen":
 		return joined
 	for race in Alliance.races:
 		var design := Library.ship(String(Alliance.ally.get(race, "")))

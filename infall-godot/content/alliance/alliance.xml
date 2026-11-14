@@ -4,8 +4,7 @@
      last fight is against the races who refused and were not included, or a rogue Malphen ship if all joined.
      needed: how many races must be pledged, the squad's own among them: all seven (heromedel, 2026-11-14: each
      contributes something to the multi-generational voyage). The last fight is then always the rogue Malphen squad.
-     ally: the ship a pledged race sends to fight beside the squad at the rim, and the ship it fields against the
-     squad if it refused. The Malphen send none: no race takes them in, so their pledge is to let the convoy pass
+     ally: the ship a pledged race sends to fight beside the squad at the rim. The Malphen send none: no race takes them in, so their pledge is to let the convoy pass
      (Infall: Lori's check). Ship choices are Ai-Generated-Proposals. -->
 <alliance needed="7" talk_one_in="3">
 	<race id="terran" ally="patrol-cutter.checkpoint"/>
@@ -14,5 +13,5 @@
 	<race id="tentauri" ally="tentauri-warden.vanguard"/>
 	<race id="senti" ally="relay-picket.archive"/>
 	<race id="lykario" ally="packrunner.huntmaster"/>
-	<race id="malphen" ally="" foe="spawnling.swollen"/>
+	<race id="malphen" ally=""/>
 </alliance>

@@ -5,7 +5,7 @@
      Prices: Infall: Eco, finding F19 (Hacking plus half a Medbay); a pulse against an enemy costs what Hacking's does
      and tending its own rooms is free. How long and how much it heals are Ai-Generated-Proposals. -->
 <system id="lymph-gland" name="Lymph Gland" behaviour="lymph_gland" max_level="3" draws_power="yes" manned="no" buy="25.41" upgrades="12.71,19.97" icon="growth_organ" hotkey="N" order="46">
-	<description>A Malphen gland. Its secretions swell an enemy system shut for a while, or, in one of your own rooms, speed repairs and knit crew back to three quarters of their health. With a Growth Organ aboard it heals the whole crew a little on every jump.</description>
+	<description>A Malphen gland that pumps living fluid wherever it is sent. Sent into an enemy system, it clogs it. Sent into one of your own rooms, it speeds repairs there and heals your crew, though never fully. With a Growth Organ aboard, it tends every crew member a little after each jump. Its scent is also one of the few ways to reach the Malphen at all.</description>
 	<level>Short swelling; slow knitting</level>
 	<level>Longer swelling; quicker knitting</level>
 	<level>Long swelling; quick knitting</level>

@@ -27,7 +27,9 @@ const OPTIONS := {
 	"low_mawjig_warning": [true, [true, false], "Low Mawjig Warning"],
 	"hints": [true, [true, false], "Hints in Early Fights"],
 	"beams_vs_shields": ["Penetrate (Classic)", ["Penetrate (Classic)", "Hit (Damages Shields First)"], "Beams vs Shields"],     # GDD 8Q
-	"tech_victory": ["Optional", ["Optional", "Required"], "Tech Victory"],     # GV 2F
+	"rim_victory": ["Vector Drive", ["Vector Drive", "Last Fleet"], "Rim Victory"],     # GV 2H: a setting for every victory
+	"tech_victory": [true, [true, false], "Tech Victory"],     # GV 2F
+	"alliance_victory": [true, [true, false], "Alliance Victory"],     # GV 2G
 	"tech_pieces": ["One of Each Pair", ["One of Each Pair", "All Seven"], "Tech Victory Pieces"],     # GV 2F
 	"gatos_species": ["Terrans", ["Terrans", "Tabbys"], "GATOS Species"],
 	"mouse_control": ["Left Selects, Right Orders", ["Left Selects, Right Orders", "Left Selects and Orders, Right Deselects"], "Mouse Control"],
@@ -42,7 +44,7 @@ const OPTIONS := {
 
 ## The settings window's tabs (GV 14G), in order, and the settings on each.
 const TABS := {
-	"Game": ["run_length", "difficulty", "tech_victory", "tech_pieces", "terran_conduits", "gatos_species", "low_mawjig_warning", "hints"],
+	"Game": ["run_length", "difficulty", "rim_victory", "tech_victory", "tech_pieces", "alliance_victory", "terran_conduits", "gatos_species", "low_mawjig_warning", "hints"],
 	"Battle": ["battlefield", "formation", "auto_pause", "auto_pause_seconds", "event_auto_pause", "screen_shake", "beams_vs_shields", "player_power_colour", "player_power_specific", "enemy_terran_colour"],
 	"Controls": ["mouse_control", "map_zoom"],
 	"HUD": ["hud_layout", "hud_card_opacity", "collapsed_cards_reopen", "reopened_cards_fold_back"],
@@ -52,7 +54,7 @@ const TABS := {
 
 ## Settings that change what happens in a run, not just how it looks: in a session every machine uses the host's
 ## (GV 4C), so the simulation runs the same everywhere.
-const RULES := ["terran_conduits", "tech_victory", "tech_pieces", "beams_vs_shields", "run_length", "difficulty", "formation", "gatos_species", "auto_pause",
+const RULES := ["terran_conduits", "rim_victory", "tech_victory", "tech_pieces", "alliance_victory", "beams_vs_shields", "run_length", "difficulty", "formation", "gatos_species", "auto_pause",
 		"auto_pause_seconds", "event_auto_pause"]
 
 var _values: Dictionary = {}
@@ -66,7 +68,10 @@ func _ready() -> void:
 	var file := ConfigFile.new()
 	if file.load(PATH) == OK:
 		for id in OPTIONS:
-			_values[id] = file.get_value("settings", id, _values[id])
+			var saved: Variant = file.get_value("settings", id, _values[id])
+			# A value an older build saved that is no longer one of the choices falls back to the default
+			if OPTIONS[id][1].is_empty() or OPTIONS[id][1].has(saved):
+				_values[id] = saved
 	apply_display()
 
 

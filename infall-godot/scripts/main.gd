@@ -13,6 +13,7 @@ extends Node
 const MERCENARIES_LEAVE_CHANCE := 0.75
 ## How long a won fight shows before the victory window covers it.
 const AFTER_FIGHT_SECONDS := 1.6
+const FINAL_SQUADS := ["final-rival", "final-rival-tech", "final-rogue-malphen"]   # beating one of these at the rim wins the run
 
 signal run_changed                    # a refit or an event changed the squad: open windows show it again
 
@@ -301,11 +302,13 @@ func apply_order(order: Dictionary) -> void:
 			var asked := Alliance.race_to_ask(run, run.cluster())
 			if asked != "" and not run.cluster().get("talked", false):
 				run.cluster()["talked"] = true
-				show_event(Library.events[Alliance.talk_event(asked)])
+				show_event(Library.events[Alliance.talk_event(asked, run.cluster())])
 		"refit":
 			Refit.apply(run, order)
 			_refresh_quiet_cluster(false)
 			run_changed.emit()
+			if run.victory in ["vector", "fold"] and not run.over:
+				_win_run()      # the Mawjig Vector Drive is fitted (GV 2H)
 		"rule":
 			if Settings.session_rules.has(order.id):
 				Settings.session_rules[order.id] = order.value
@@ -456,7 +459,7 @@ func start_fight(squad_id: String) -> void:
 	var asked := Time.get_ticks_usec()
 	enemy_squad = runner.pick_squad(squad_id)
 	run.count_mercenary_crew()
-	runner.add_allies(enemy_squad)       # at the rim, pledged races' ships fight beside the squad (GV 2G)
+	var allies := runner.add_allies(enemy_squad)       # at the rim, pledged races' ships fight beside the squad (GV 2G)
 	var enemies := runner.build_enemy_ships(enemy_squad)
 	encounter = Encounter.new()
 	encounter.wallet = run
@@ -466,6 +469,7 @@ func start_fight(squad_id: String) -> void:
 	encounter.setup(run.living_ships(), enemies, int(run.cluster().seed) + run.jumps)
 	encounter.reinforcements = runner.build_reinforcements(enemy_squad)
 	encounter.tech_wanted = runner.tech_wanted()
+	runner.apply_fight_terms(encounter, allies)      # what the event's choice changed about this fight (GDD 9E)
 	run.pending_fight = enemy_squad.id
 	battle.show_encounter(encounter, run, int(run.cluster().seed), run.collapse_nearness(), false)
 	battle.paused = Settings.get_value("event_auto_pause", true)
@@ -483,18 +487,23 @@ func start_fight(squad_id: String) -> void:
 ## last explosion can be seen.
 func _on_fight_over(outcome: String, finished: Encounter) -> void:
 	run.pending_fight = ""
+	run.fight_terms = {}
 	Sfx.play_music("explore")
 	if outcome == "lost":
 		return
+	var vector_lines := runner.vector_after_fight(finished)      # the hunt for the Vector Frame (GV 2H)
 	if outcome == "withdrew":
 		# The squad is clear of the fight: straight to the map, to choose where the long jump goes
+		run.after_fight_event = ""
 		_after_fight(false, true)
 		var admiral := view_of(session.admiral) if session.admiral_is_local() else null
 		if admiral and not session.catching_up:
 			open_map(admiral)
 		return
 	var rewards := runner.fight_rewards(finished) if outcome in ["won", "surrendered"] else {"mawjig": 0, "lines": []}
-	var final_fight: bool = run.cluster().kind == "final" and outcome in ["won", "surrendered"]
+	var final_fight: bool = run.cluster().kind == "final" and outcome in ["won", "surrendered"] and enemy_squad != null and enemy_squad.id in FINAL_SQUADS
+	if outcome not in ["won", "surrendered"]:
+		run.after_fight_event = ""
 	var window := Overlay.new()
 	window.shared = true
 	_open_shared(window, false)
@@ -514,6 +523,20 @@ func _on_fight_over(outcome: String, finished: Encounter) -> void:
 			window.add_text("The enemy breaks off and leaves you to go your way.", 20)
 	for line in rewards.lines:
 		window.body.add_child(UiKit.label(line, 18, UiColours.POWER_GREEN, true))
+	for line in vector_lines:
+		window.body.add_child(UiKit.label(line, 18, UiColours.DAMAGED_RED if run.vector_drive == "lost" else Color("#ffd46b"), true))
+	# The drive can be fitted to one of the squad's ships here and now: that ship leaves, alone
+	if VectorHunt.drive_held(run) and not vector_lines.is_empty():
+		window.add_text("Fit the Mawjig Vector Drive to one of your ships: that ship makes the jump. Nobody else does. Or carry it to a refit yard: fitted to The Colony Ship (%s Mawjig), everyone makes the jump." % Mawjig.format(VectorHunt.colony_price(run)), 18)
+		for index in run.squad.size():
+			var ship: Ship = run.squad[index]
+			if ship.is_gone() or ship.is_mercenary():
+				continue
+			var fit := window.add_button("Fit it to the %s  ·  %s Mawjig" % [ship.name, Mawjig.format(VectorHunt.scout_price(run))], func():
+				window.close()
+				if VectorHunt.fit(run, ship):
+					_win_run(), Color("#ffd46b"))
+			fit.disabled = not VectorHunt.fit_refusal(run, ship).is_empty()
 	if String(rewards.get("tech_demand", "")) != "":
 		var piece := RimTech.name_of(rewards.tech_demand)
 		var trade: Array[Button] = []
@@ -564,8 +587,14 @@ func _after_fight_text() -> String:
 
 func _after_fight(final_fight: bool, squad_left: bool = false) -> void:
 	run.clear_lost_ships()
+	if run.over:
+		return      # the drive was fitted from the window after the fight
 	if final_fight:
 		_win_run()
+		return
+	# The Vector Drive is gone and no other victory is allowed: there is no way out left (GV 2H)
+	if run.vector_drive == "lost" and VectorHunt.allowed() and not _another_way_out():
+		_on_squad_lost()
 		return
 	var fought := enemy_squad
 	_show_quiet_cluster()
@@ -573,6 +602,12 @@ func _after_fight(final_fight: bool, squad_left: bool = false) -> void:
 	var after_rival := runner.after_rival_event(fought) if not squad_left else null
 	if after_rival:
 		show_event(after_rival, _mercenaries_after_fight)
+		return
+	# The event a fight was fought for (an event's <fight then="...">)
+	var then_id := run.after_fight_event
+	run.after_fight_event = ""
+	if not squad_left and then_id != "" and Library.events.has(then_id):
+		show_event(Library.events[then_id], _mercenaries_after_fight)
 		return
 	_mercenaries_after_fight()
 
@@ -628,10 +663,15 @@ func _on_hail_decided(outcome: String, _paid: int) -> void:
 				enemy.escaped = true
 
 
+## Whether a run that has lost the Vector Drive can still be won: by the Tech victory or the Alliance victory.
+func _another_way_out() -> bool:
+	return Settings.get_value("tech_victory", true) or Settings.get_value("alliance_victory", true)
+
+
 func _on_squad_lost() -> void:
 	run.over = true
 	run.save_to_disk()
-	run.log_book.write("run_lost", run.stats, "The last scout ship is gone. The run is over.")
+	run.log_book.write("run_lost", run.stats, "The Mawjig Vector Drive is gone, and there is no other way out. The run is over." if run.vector_drive == "lost" and not run.living_ships().is_empty() else "The last scout ship is gone. The run is over.")
 	Sfx.play_music("title")
 	get_tree().create_timer(2.5).timeout.connect(func(): _open(MenuWindows.end_screen(run, false, _after_the_end)))
 
@@ -640,10 +680,15 @@ func _win_run() -> void:
 	run.over = true
 	run.won = true
 	var beaten: String = enemy_squad.id if enemy_squad else ""
-	run.victory = "alliance" if beaten in ["final-refusers", "final-rogue-malphen"] else ("tech" if beaten == "final-rival-tech" and run.has_all_tech() else "escape")
+	if run.victory not in ["vector", "fold"]:
+		run.victory = "alliance" if beaten == "final-rogue-malphen" else ("tech" if beaten == "final-rival-tech" and run.has_all_tech() else "escape")
 	run.save_to_disk()
 	Profile.unlock("win")
-	run.log_book.write("run_won", run.stats, "The squad reached the rim and beat the Last Fleet. The colony ship has its way out." if run.victory == "escape" else "The squad carried a piece of every race's tech to the rim and beat the Last Fleet's ambush. The Tech victory.")
+	run.log_book.write("run_won", run.stats, {"escape": "The squad reached the rim and beat the Last Fleet. The colony ship has its way out.",
+			"tech": "The squad fitted one ship for the crossing and beat the Last Fleet's ambush. The Tech victory.",
+			"alliance": "Every people pledged to the convoy, and it beat the Metastasis at the rim. The Alliance victory.",
+			"vector": "The Mawjig Vector Drive was fitted to the %s, and it left the galaxy alone. The Vector Drive victory." % run.vector_ship,
+			"fold": "The Mawjig Vector Drive was fitted to The Colony Ship, and everyone left the galaxy. The Vector Drive victory."}.get(run.victory, "The run was won."))
 	_open(MenuWindows.end_screen(run, true, _after_the_end))
 
 

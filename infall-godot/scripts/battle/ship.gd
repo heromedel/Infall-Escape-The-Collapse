@@ -73,6 +73,8 @@ var evb_cooldown: int = 0
 var suit_out: bool = false
 var destroyed: bool = false
 var escaped: bool = false
+var fold_ticks: int = 0            # how far the Vector Frame has charged its fold out of the fight
+var late_ticks: int = 0            # an ally still on its way to the fight: it arrives when this runs out
 var surrendered: bool = false
 var crew_dead: bool = false
 ## A hired mercenary's contract (GV 7C), empty for the squad's own ships: {id, jumps, jumps_left, pay, crew_at_start}.
@@ -1340,6 +1342,7 @@ func damage_system(system: ShipSystem, bars: int) -> void:
 	var before := system.damage
 	system.damage = mini(system.level, system.damage + bars)
 	if system.damage > before:
+		system.was_damaged = true
 		_note("system_damaged", {"system": system})
 
 

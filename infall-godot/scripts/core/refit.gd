@@ -77,6 +77,10 @@ static func apply(run: RunState, order: Dictionary) -> void:
 			if ship and has_yard(run.cluster()) and fit_refusal(run, race, ship, int(order.room)).is_empty() and run.spend(fit_price(race)):
 				fit_tech(run, race, ship, int(order.room))
 				run.log_book.write("fitted", {"race": race, "ship": ship.design.id}, "The %s was fitted to the %s." % [RimTech.name_of(race), ship.name])
+		"fit_vector":      # the Mawjig Vector Drive: to one of the squad's ships, or (no ship) to The Colony Ship at a yard
+			var fitted_to := ship if int(order.get("sq", -1)) >= 0 else null
+			if (fitted_to != null or int(order.get("sq", -1)) < 0) and VectorHunt.fit(run, fitted_to):
+				run.log_book.write("vector_fitted", {"to": run.vector_ship}, "The Mawjig Vector Drive was fitted to %s." % run.vector_ship)
 		"sell_ship":
 			if ship and has_yard(run.cluster()) and sell_ship_refusal(run, ship).is_empty():
 				var price := sell_ship_price(run, ship)

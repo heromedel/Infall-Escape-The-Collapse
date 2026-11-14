@@ -26,7 +26,7 @@ func _show_opening() -> void:
 		body.add_child(UiKit.label(header, 15, UiColours.TEXT_DIM, true))
 	if not def.title.is_empty():
 		add_title(def.title)
-	add_text(runner.fill_text(def.text), 21)
+	add_text(runner.fill_text(runner.event_text(def)), 21)
 	add_separator()
 	var number := 1
 	for choice in def.choices:

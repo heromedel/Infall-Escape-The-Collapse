@@ -43,6 +43,7 @@ var surrender_offered: bool = false
 var no_mawjig_warned: bool = false
 var gap: float = STANDARD_GAP         # this battle's distance between the squads' areas, in pixels
 var tech_wanted: Array[String] = []     # races whose piece of the Tech victory the squad still lacks (GV 2F)
+var no_escape: bool = false             # the Vector Frame's drive is jammed or spent: it can't fold out of this fight
 var surrender_pays: bool = true         # false when a surrender was settled with a piece of tech in place of Mawjig
 var reinforcements: Array[Ship] = []    # enemy ships waiting to jump in, one for each enemy ship lost (the rival's squad)
 var cleared: Array[Ship] = []           # enemy wrecks a reinforcement has taken the place of; still paid for
@@ -80,15 +81,71 @@ func setup(player_ships: Array, enemy_ships: Array, seed_value: int) -> void:
 ## A ship with a Jig Drive MC-Flywheel (the rival's lead ship) jumps away the moment its hull falls below a share of
 ## its full hull, whatever state its drive is in: it never stays to be destroyed (heromedel, 2026-11-14: "each time
 ## it escapes"; "when their hp is below like 25% the ship jumps").
+## An ally that set out late arrives (an event's allies="late").
+func _tick_late_allies() -> void:
+	for ship in ships:
+		if ship.late_ticks > 0:
+			ship.late_ticks -= 1
+			if ship.late_ticks == 0 and outcome.is_empty():
+				ship.escaped = false
+				note("ally_arrived", {"ship": ship})
+
+
+## The side an event gave the first strike starts with its powered weapons charged.
+func give_first_strike(side_index: int) -> void:
+	for ship in ships:
+		if ship.side == side_index and ship.late_ticks == 0:
+			for slot in ship.weapons:
+				if slot.powered:
+					slot.charge = slot.charge_needed(ship.tech)
+
+
+## Allies that are a long way behind: out of the fight until they arrive.
+func hold_allies_back(allies: Array, ticks: int) -> void:
+	for ship in allies:
+		ship.late_ticks = ticks
+		ship.escaped = true
+
+
 func _tick_break_off() -> void:
 	if squad == null or (squad.leave_after <= 0.0 and squad.breaks_off_at <= 0.0) or not outcome.is_empty():
 		return
 	for ship in living(1):
+		if squad.break_off_design != "":
+			if ship.design.base_id == squad.break_off_design:
+				_tick_fold(ship)
+			continue
 		var hurt: bool = squad.breaks_off_at > 0.0 and ship.hull < ship.max_hull * squad.breaks_off_at
 		var seen_enough: bool = squad.leave_after > 0.0 and tick_count >= int(squad.leave_after * TICKS)
 		if hurt or seen_enough:
 			ship.escaped = true
 			note("enemy_escaped", {"ship": ship})
+
+
+## The Vector Frame folds away on its drive (VectorHunt, GV 2H). Beaten down, it charges the fold for a while; the
+## charge is lost, and starts again, whenever the drive is damaged, hacked or ionised, and it can't fold at all with
+## its drive jammed or spent. The squad has that long to finish it, or to stop it by hitting the drive, which risks
+## the drive: a ship destroyed with its drive damaged takes the drive with it.
+const FOLD_TICKS := 240
+
+func _tick_fold(ship: Ship) -> void:
+	var drive := ship.system_by_id(squad.break_off_needs)
+	var able: bool = not no_escape and drive != null and not drive.is_damaged() and drive.hacked_ticks <= 0 and drive.ion <= 0
+	if not able or ship.hull >= ship.max_hull * squad.breaks_off_at:
+		if ship.charging_escape:
+			ship.charging_escape = false
+			note("fold_stopped", {"ship": ship})
+		ship.fold_ticks = 0
+		return
+	if not ship.charging_escape:
+		ship.charging_escape = true
+		ship.fold_ticks = 0
+		note("enemy_charging_escape", {"ship": ship})
+	ship.fold_ticks += 1
+	ship.jump_charge = minf(0.99, float(ship.fold_ticks) / FOLD_TICKS)
+	if ship.fold_ticks >= FOLD_TICKS:
+		ship.escaped = true
+		note("enemy_escaped", {"ship": ship})
 
 
 ## Every enemy ship of the fight, with the wrecks that reinforcements have replaced.
@@ -227,6 +284,7 @@ func step() -> void:
 				ai[ship].think()
 	_tick_reinforcements()
 	_tick_break_off()
+	_tick_late_allies()
 	_tick_projectiles()
 	_tick_bombs()
 	_tick_beams()
@@ -331,7 +389,7 @@ func jump_out(ship: Ship) -> bool:
 func jumped_out() -> Array[Ship]:
 	var list: Array[Ship] = []
 	for ship in ships:
-		if ship.side == 0 and ship.escaped and not ship.destroyed and not ship.crew_dead:
+		if ship.side == 0 and ship.escaped and not ship.destroyed and not ship.crew_dead and ship.late_ticks == 0:
 			list.append(ship)
 	return list
 
@@ -352,6 +410,7 @@ func bring_back_jumped_out() -> void:
 	for ship in ships:
 		if ship.side == 0 and ship.escaped:
 			ship.escaped = false
+			ship.late_ticks = 0
 
 
 ## When the squad jumps away, crew aboard other ships or out in battlesuits are left behind and lost, as in the

@@ -36,7 +36,7 @@ static func pause_menu(on_resume: Callable, on_settings: Callable, on_save_quit:
 ## The settings, in tabs (GV 14G). Each setting lists its default first.
 ## The essentials on one page, for the title screen and the pause menu.
 const HOW_TO_PLAY := [
-	["The goal", "Jump from cluster to cluster toward the rim of the galaxy, ahead of the collapse, and beat whoever is waiting at the way out. The run is lost when every scout ship is gone."],
+	["The goal", "Jump from cluster to cluster toward the rim of the galaxy, ahead of the collapse, and find a way out of it. There are three: the Vector Frame's drive, the crossing and the convoy. The run is lost when every scout ship is gone."],
 	["Mawjig", "Fuel, ammunition and money in one. A jump costs 1.21 and every shot costs a little. Stores take it for repairs, weapons, crew and ships. Won fights and events pay it."],
 	["The collapse", "It grows from the centre of the galaxy with every jump and every wait, and swallows the clusters it reaches. Stay ahead of it."],
 	["Your ship", "Hull is its health. Each shield layer stops one laser hit and then recharges. Evasion is the chance a shot misses you: it needs a pilot and powered engines. Air keeps the crew alive."],
@@ -49,7 +49,11 @@ const HOW_TO_PLAY := [
 	["Jump and shop", "J or JUMP opens the map: click a cluster joined to yours, then jump. U or SHIP upgrades your ships. A cluster with a store shows a STORE button."],
 	["Leaving a fight", "Each ship jumps clear on its own once its drive is charged (JUMP OUT), and comes back if the fight is won. When the squad is clear, the map opens and the jump to another cluster costs the usual 1.21. JUMP with only some ships clear leaves the rest behind."],
 	["Refit yards", "Some stores have a yard: it moves a system from one of your ships to another for a quarter of its value, and buys ships."],
+	["The Vector Frame", "The Mecha have built a ship around a drive that can leave the galaxy. It waits somewhere along the rim; the map says what you know of where. Beat it and its drive is yours: fitted to one of your ships, that ship leaves alone; fitted to The Colony Ship at a refit yard, everyone leaves."],
+	["Its drive", "Destroy the Vector Frame while its drive is damaged and the drive is gone with it. Beaten down, the ship folds away on that drive unless the drive is damaged or jammed, and you meet it again nearby, partly mended. Killing its crew takes the ship whole."],
 	["The crossing", "Late in a run The Colony Ship asks you to find the best technology of the other races and fit it to one ship. The map then says what that ship still lacks and which way to look."],
+	["The convoy", "The Colony Ship asks you to win every people to a convoy that flies out together. Each one wants something different, and says so when you ask in its space or at its stores. With all of them pledged, they fight beside you at the rim."],
+	["Which victories", "The Game settings switch the crossing and the convoy on or off, and can put the old Last Fleet at the rim in place of the Vector Frame."],
 ]
 
 
@@ -174,7 +178,16 @@ static func ship_select(on_pick: Callable, on_back: Callable) -> Overlay:
 
 ## The Alliance victory's end screen (Infall: Lori, Ai-Generated-Proposal 2026-11-14).
 const ALLIANCE_WON_TITLE := "THE CONVOY"
-const ALLIANCE_WON_TEXT := "The way out is clear. One by one, the convoy's ships make the jump into the dark between galaxies: The Colony Ship first, then every people that pledged, each guarding the next.\n\nNobody makes the crossing alone. That was the point.\n\nBehind them, the collapse reaches the rim. It will never reach where they are going."
+
+## The Alliance end screen for the convoy of all seven (Infall: Lori, Ai-Generated-Proposal 2026-11-14).
+const CONVOY_WON_TEXT := "The way out is clear. The convoy leaves the galaxy the long way, flying as one: The Colony Ship and every people that pledged, each guarding the next.\n\nThe crossing will take longer than anyone aboard will live. Their children will see the middle of it. Their grandchildren's grandchildren may see the end.\n\nThe GATOS cores keep it powered. The Azurethea keep its air. The Tentauri shield it. The Mecha keep it flying, for a price. The Senti remember the way. The Lykario hunt whatever comes for it. Behind it all, a Malphen growth feeds on what the convoy leaves, and grows it back.\n\nNobody makes the crossing alone. That was the point."
+
+## The Vector Drive victory's end screens (Infall: Lori, Ai-Generated-Proposal 2026-11-14): fitted to one of the
+## squad's ships, and fitted to The Colony Ship.
+const VECTOR_WON_TITLE := "THE VECTOR"
+const VECTOR_WON_TEXT := "The Mawjig Vector Drive folds space around one ship, and the galaxy is gone.\n\nAboard are the crew it could carry. Nobody else. Behind you, The Colony Ship is still flying toward a rim it will never cross.\n\nThe Mecha built that drive to save themselves. You took it. Wherever you arrive, you arrive as the ones who did."
+const FOLD_WON_TITLE := "THE FOLD"
+const FOLD_WON_TEXT := "Your scouts dock one by one, and their crews go aboard The Colony Ship. Then the Mawjig Vector Drive folds space around it, every passenger and every crew member, and the galaxy is gone.\n\nBehind you, the collapse reaches the rim. Nobody you saved will ever see it.\n\nThe Mecha built that drive to save themselves. You took it. Wherever The Colony Ship arrives, it arrives as the ones who did."
 
 ## The Tech victory's end screen (Infall: Lori, Ai-Generated-Proposal 2026-11-14).
 const TECH_WON_TITLE := "THE CROSSING"
@@ -186,7 +199,13 @@ static func end_screen(run: RunState, won: bool, on_done: Callable) -> Overlay:
 	window.place_panel(860)
 	if won and run.victory == "alliance":
 		window.add_title(ALLIANCE_WON_TITLE, Color("#ffd46b"))
-		window.add_text(ALLIANCE_WON_TEXT, 20)
+		window.add_text(CONVOY_WON_TEXT, 20)
+	elif won and run.victory == "vector":
+		window.add_title(VECTOR_WON_TITLE, Color("#ffd46b"))
+		window.add_text(VECTOR_WON_TEXT, 20)
+	elif won and run.victory == "fold":
+		window.add_title(FOLD_WON_TITLE, Color("#ffd46b"))
+		window.add_text(FOLD_WON_TEXT, 20)
 	elif won and run.victory == "tech":
 		window.add_title(TECH_WON_TITLE, Color("#ffd46b"))
 		window.add_text(TECH_WON_TEXT, 20)
@@ -195,7 +214,9 @@ static func end_screen(run: RunState, won: bool, on_done: Callable) -> Overlay:
 		window.add_text("The Last Fleet breaks apart behind you. Ahead there is nothing but the dark between galaxies, and a path your scouts have charted all the way across it.\n\nThe Colony Ship's signal comes through clear for the first time in weeks. \"We see your beacon. We're coming. Every one of us.\"\n\nBehind it, the collapse keeps growing. It will never reach you now.", 20)
 	else:
 		window.add_title("THE SCOUTS ARE GONE", UiColours.DAMAGED_RED)
-		if run.cluster().kind == "final":
+		if run.vector_drive == "lost" and not run.living_ships().is_empty():
+			window.add_text("The Mawjig Vector Drive is gone, folded into nothing with the ship that carried it. There was one way out of this galaxy, and your squad broke it.\n\nBehind you, The Colony Ship is still flying toward the rim. There is nothing there for it now.", 20)
+		elif run.cluster().kind == "final" and not VectorHunt.allowed():
 			window.add_text("The last of your scout ships is gone. The Last Fleet takes the path out alone, and behind it the way closes. Somewhere back in the dark, The Colony Ship waits for a signal that will never come.", 20)
 		else:
 			window.add_text("The last of your scout ships is gone. Somewhere behind you, The Colony Ship waits for a signal that will never come, and the collapse moves on.", 20)

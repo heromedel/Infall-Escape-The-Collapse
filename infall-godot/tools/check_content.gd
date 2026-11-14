@@ -12,7 +12,74 @@ func _ready() -> void:
 		print("PROBLEM: ", p)
 	_check_docks()
 	_check_species_words()
+	_check_events()
 	get_tree().quit()
+
+
+## Every event's requirements, effects and references must be ones the game knows: a misspelt requirement is always
+## met, and a fight with a squad that isn't there picks a random one.
+const REQUIREMENTS := ["crew", "system", "mawjig", "hire", "weapon", "squad", "collapse", "renewal", "tech", "no_tech", "pledged", "not_pledged",
+		"pledges", "state", "not_state", "crew_with", "afford_tech"]
+const EFFECTS := ["mawjig", "hull", "repair", "crew", "crew_hurt", "crew_lose", "weapon", "system_damage", "upgrade", "ship", "renew_contract",
+		"end_contract", "tech", "alliance_goal", "pledge", "tech_goal", "fight", "store", "event", "reveal", "xp", "vector_goal", "vector_trail", "vector_part"]
+const STATES := ["Doing Fine", "Struggling", "Doomed", "Refugee", "Core", "Border", "Occupied", "At War", "Abandoned", "Unclaimed", "Collapsing"]
+
+func _check_events() -> void:
+	var choices := 0
+	for id in Library.events:
+		var def: EventDef = Library.events[id]
+		for state in def.states:
+			if not STATES.has(state):
+				print("PROBLEM: event %s: unknown state %s" % [id, state])
+		for choice in def.choices:
+			choices += 1
+			for requirement in [String(choice.requires), String(choice.get("also", ""))]:
+				if String(requirement).is_empty():
+					continue
+				var parts: PackedStringArray = String(requirement).split(":")
+				if not REQUIREMENTS.has(parts[0]):
+					print("PROBLEM: event %s: unknown requirement %s" % [id, requirement])
+				elif parts[0] in ["crew", "crew_with", "pledged", "not_pledged", "tech", "no_tech", "afford_tech"] and Library.race(parts[1]) == null:
+					print("PROBLEM: event %s: unknown race in %s" % [id, requirement])
+				elif parts[0] in ["state", "not_state"]:
+					for state in parts[1].split(","):
+						if not STATES.has(state):
+							print("PROBLEM: event %s: unknown state in %s" % [id, requirement])
+				elif parts[0] == "system" and parts[1].contains(","):
+					for system_id in parts[1].split(","):
+						if Library.system(system_id) == null:
+							print("PROBLEM: event %s: unknown system in %s" % [id, requirement])
+				elif parts[0] == "crew_with" and parts.size() > 2:
+					for system_id in parts[2].split(","):
+						if Library.system(system_id) == null:
+							print("PROBLEM: event %s: unknown system in %s" % [id, requirement])
+			for outcome in choice.outcomes:
+				for effect in outcome.effects:
+					var attrs: Dictionary = effect.attrs
+					if not EFFECTS.has(effect.tag):
+						print("PROBLEM: event %s: unknown effect <%s>" % [id, effect.tag])
+					if effect.tag == "fight":
+						if attrs.has("squad") and not Library.squads.has(attrs.squad):
+							print("PROBLEM: event %s: fight with unknown squad %s" % [id, attrs.squad])
+						if attrs.has("then") and not Library.events.has(attrs.then):
+							print("PROBLEM: event %s: fight then unknown event %s" % [id, attrs.then])
+						if attrs.has("pledge") and Library.race(attrs.pledge) == null:
+							print("PROBLEM: event %s: fight pledges unknown race %s" % [id, attrs.pledge])
+					if effect.tag == "event" and not Library.events.has(attrs.get("id", "")):
+						print("PROBLEM: event %s: leads to unknown event %s" % [id, attrs.get("id", "")])
+					if effect.tag == "ship" and Library.ship(attrs.get("design", "outrider")) == null:
+						print("PROBLEM: event %s: unknown ship %s" % [id, attrs.get("design", "")])
+					if effect.tag in ["pledge", "tech", "crew"] and attrs.get("race", "") not in ["", "region"] and Library.race(attrs.race) == null:
+						print("PROBLEM: event %s: <%s> with unknown race %s" % [id, effect.tag, attrs.race])
+	for squad in Library.squads.values():
+		for tier in squad.tiers:
+			for ship in tier.ships:
+				if Library.ship(ship.design) == null:
+					print("PROBLEM: squad %s: unknown ship %s" % [squad.id, ship.design])
+		for design in squad.reinforcements:
+			if Library.ship(design) == null:
+				print("PROBLEM: squad %s: unknown reinforcement %s" % [squad.id, design])
+	print("event choices checked: ", choices)
 
 
 ## A ship's EVA or EVB Dock sits at an airlock (GDD 5D).

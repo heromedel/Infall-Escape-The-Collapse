@@ -41,8 +41,10 @@ func _ready() -> void:
 	player = PLAYERS[skill]
 	verbose = _env("VERBOSE", "") != ""
 	goal = _env("GOAL", "")
-	if _env("TECH", "") != "":
-		Settings._values["tech_victory"] = _env("TECH", "Optional")
+	# Which victories are allowed: TECH=Off, ALLIANCE=Off, RIM="Last Fleet" (the default is the Vector Drive)
+	Settings._values["tech_victory"] = _env("TECH", "On") != "Off"
+	Settings._values["alliance_victory"] = _env("ALLIANCE", "On") != "Off"
+	Settings._values["rim_victory"] = _env("RIM", "Vector Drive")
 	if _env("DIFFICULTY", "") != "":
 		Settings._values["difficulty"] = _env("DIFFICULTY", "Normal")
 	var reports: Array = []
@@ -94,6 +96,9 @@ func _summary(reports: Array) -> void:
 		pledged[report.pledges] = pledged.get(report.pledges, 0) + 1
 	var pledge_counts := pledged.keys()
 	pledge_counts.sort()
+	var met := reports.filter(func(r): return int(r.vector) > 0).size()
+	print("Vector Drive victories: one ship %d, The Colony Ship %d. Runs that met the Vector Frame: %d. Drive destroyed: %d." % [reports.filter(func(r): return r.result == "WON" and r.victory == "vector").size(),
+			reports.filter(func(r): return r.result == "WON" and r.victory == "fold").size(), met, reports.filter(func(r): return String(r.ended_by) == "the Vector Drive was destroyed").size()])
 	print("Alliance victories %d. Races pledged at most (of %d needed): %s. Talks at stores: %d." % [reports.filter(func(r): return r.result == "WON" and r.victory == "alliance").size(), Alliance.needed, ", ".join(pledge_counts.map(func(n): return "%d in %d runs" % [n, pledged[n]])), _talks])
 	print("Runs where the search began: %d. Runs that never had a race's piece: %s" % [reports.filter(func(r): return r.goal).size(), str(_missing)])
 	print("Systems bought: %s" % str(_systems_bought))
@@ -128,7 +133,7 @@ func _summary(reports: Array) -> void:
 func _play_one(seed_number: int, ship_id: String) -> Dictionary:
 	var run := RunState.start(seed_number, ship_id)
 	var runner := EventRunner.new(run)
-	var report := {"seed": seed_number, "result": "LOST", "band": 1, "jumps": 0, "fights": 0, "won": 0, "fled": 0, "stalemates": 0, "ships": 1, "most_ships": 1, "mawjig": 0, "ended_by": "ran out of jumps", "tech": 0, "held": 0, "pledges": 0, "lacked": [], "goal": false, "victory": "", "tech_how": {}, "rival": 0}
+	var report := {"seed": seed_number, "result": "LOST", "band": 1, "jumps": 0, "fights": 0, "won": 0, "fled": 0, "stalemates": 0, "ships": 1, "most_ships": 1, "mawjig": 0, "ended_by": "ran out of jumps", "tech": 0, "held": 0, "pledges": 0, "lacked": [], "goal": false, "victory": "", "tech_how": {}, "rival": 0, "vector": 0}
 	while run.jumps < 400:
 		var event := runner.opening_message()
 		if event:
@@ -156,6 +161,8 @@ func _play_one(seed_number: int, ship_id: String) -> Dictionary:
 					for ship in run.living_ships():
 						print("      at the final: %s hull %d/%d shields %d weapons %s crew %d reactor %d" % [ship.design.id, ship.hull, ship.max_hull, ship.shield_layer_capacity(), str(ship.weapons.map(func(slot): return slot.def.id)), ship.living_crew_count(), ship.reactor_level])
 				var outcome := _fight(run, runner, squad)
+				if squad.id == VectorHunt.SQUAD:
+					report.vector += 1
 				var spent := mawjig_before - run.mawjig
 				_tally(-spent, "shots", "fights")
 				var paid := 0
@@ -184,10 +191,19 @@ func _play_one(seed_number: int, ship_id: String) -> Dictionary:
 						var gone := run.squad.filter(func(s): return s.destroyed).size()
 						report.ended_by = "%s (%s)" % [squad.id, "ships destroyed" if gone > 0 else "crew killed"]
 						return _close(report, run)
-				if run.cluster().kind == "final" and outcome in ["won", "surrendered"]:
+				if run.cluster().kind == "final" and outcome in ["won", "surrendered"] and squad.id in ["final-rival", "final-rival-tech", "final-rogue-malphen"]:
 					report.result = "WON"
-					report.victory = "alliance" if squad.id in ["final-refusers", "final-rogue-malphen"] else ("tech" if squad.id == "final-rival-tech" else "escape")
+					report.victory = "alliance" if squad.id == "final-rogue-malphen" else ("tech" if squad.id == "final-rival-tech" else "escape")
 					report.ended_by = {"escape": "reached the rim", "tech": "the Tech victory", "alliance": "the Alliance victory"}[report.victory]
+					return _close(report, run)
+				# The event a fight was fought for (the doomed Senti's archive, a yard's route)
+				var then_id := run.after_fight_event
+				run.after_fight_event = ""
+				if outcome in ["won", "surrendered"] and then_id != "" and Library.events.has(then_id):
+					_resolve(runner, Library.events[then_id])
+				# The Vector Frame (GV 2H): its drive taken, or lost with it
+				if run.vector_drive == "lost" and goal == "":
+					report.ended_by = "the Vector Drive was destroyed"
 					return _close(report, run)
 			if result.store or run.cluster().store:
 				var before_shop := run.mawjig
@@ -196,6 +212,11 @@ func _play_one(seed_number: int, ship_id: String) -> Dictionary:
 				_tally(-_repairs_paid, "store repairs", "store")
 				_tally(run.mawjig - before_shop + _repairs_paid, "store purchases", "store")
 		run.clear_lost_ships()
+		if VectorHunt.drive_held(run) and _fit_the_drive(run):
+			report.result = "WON"
+			report.victory = run.victory
+			report.ended_by = "the Vector Drive, fitted to %s (%s)" % ["The Colony Ship" if run.victory == "fold" else "one ship", "whole" if not _drive_scarred else "scarred"]
+			return _close(report, run)
 		report.most_ships = maxi(report.most_ships, run.living_ships().size())
 		if run.tech_count() >= int(report.tech):     # the most of the crossing's needs one ship carried, and what was lacking then
 			report.tech = run.tech_count()
@@ -218,6 +239,47 @@ func _play_one(seed_number: int, ship_id: String) -> Dictionary:
 			report.ended_by = "swallowed by the collapse"
 			return _close(report, run)
 	return _close(report, run)
+
+
+## With the drive in the hold: fitted to The Colony Ship at a refit yard by a player who has the Mawjig for it and
+## the time to reach one, to one of the squad's own ships by anyone else. True once it is fitted.
+var _drive_scarred := false
+
+func _fit_the_drive(run: RunState) -> bool:
+	_drive_scarred = run.vector_drive == "scarred"
+	var for_everyone: bool = skill != "careless" and run.mawjig >= VectorHunt.colony_price(run) + Mawjig.JUMP_COST * 3 and run.collapse_distance() > SAFE_GAP
+	if for_everyone:
+		if Refit.has_yard(run.cluster()):
+			return VectorHunt.fit(run, null)
+		if _toward_yard(run) >= 0:
+			return false        # on the way to a yard
+	var own: Array = run.living_ships().filter(func(s): return not s.is_mercenary())
+	return not own.is_empty() and VectorHunt.fit(run, own[0])
+
+
+## The first jump toward the nearest cluster a test picks, ahead of the collapse; -1 when none is within reach.
+func _toward(run: RunState, wanted: Callable, reach: int = 12) -> int:
+	var first_hop := {run.current: -1}
+	var frontier := [run.current]
+	for depth in range(1, reach + 1):
+		var next: Array = []
+		for at in frontier:
+			for link in run.galaxy.clusters[at].links:
+				if first_hop.has(link) or run.galaxy.is_swallowed(link):
+					continue
+				var there: Dictionary = run.galaxy.clusters[link]
+				if run.galaxy.collapse_radius > 0.0 and there.radius - run.galaxy.collapse_radius - Galaxy.COLLAPSE_STEP * (depth + 1) < 100.0:
+					continue
+				first_hop[link] = link if at == run.current else first_hop[at]
+				if wanted.call(link, there):
+					return first_hop[link]
+				next.append(link)
+		frontier = next
+	return -1
+
+
+func _toward_yard(run: RunState) -> int:
+	return _toward(run, func(_index, there): return Refit.has_yard(there), 8)
 
 
 ## The squad's hull as [points left, points when whole].
@@ -490,14 +552,24 @@ func _ship_short_of_crew(run: RunState) -> bool:
 # --- Fights ---------------------------------------------------------------------------------------------------
 
 func _fight(run: RunState, runner: EventRunner, squad: SquadDef) -> String:
-	runner.add_allies(squad)
+	var outcome := _fight_it(run, runner, squad)
+	if outcome != "lost":
+		runner.vector_after_fight(_last)
+	run.fight_terms = {}
+	return outcome
+
+
+func _fight_it(run: RunState, runner: EventRunner, squad: SquadDef) -> String:
+	var allies := runner.add_allies(squad)
 	var enemies := runner.build_enemy_ships(squad)
 	var encounter := Encounter.new()
 	encounter.wallet = run
 	encounter.squad = squad
+	encounter.band = run.band()
 	encounter.setup(run.living_ships(), enemies, run.jumps)
 	encounter.reinforcements = runner.build_reinforcements(squad)
 	encounter.tech_wanted = runner.tech_wanted()
+	runner.apply_fight_terms(encounter, allies)
 	_last = encounter
 	var captains := {}
 	for ship in encounter.living(0):
@@ -559,7 +631,16 @@ func _fight(run: RunState, runner: EventRunner, squad: SquadDef) -> String:
 func _focus(encounter: Encounter) -> Ship:
 	var best: Ship = null
 	var best_score := -INF
-	for enemy in encounter.living(1):
+	var fighting := encounter.living(1)
+	# A ship being left to mend the drive the squad wants whole is not the one to shoot (the Vector Frame)
+	var drive_squad := encounter.squad if encounter.squad and encounter.squad.break_off_needs != "" and skill != "careless" else null
+	if drive_squad:
+		var others := fighting.filter(func(enemy):
+			var drive: ShipSystem = enemy.system_by_id(drive_squad.break_off_needs) if enemy.design.base_id == drive_squad.break_off_design else null
+			return drive == null or not drive.is_damaged() or float(enemy.hull) / enemy.max_hull > 0.2)
+		if not others.is_empty():
+			fighting = others
+	for enemy in fighting:
 		var toughness := float(enemy.hull + enemy.shield_layers * 4 + enemy.supershield * 2)
 		var score := -toughness
 		if skill == "expert":
@@ -809,6 +890,16 @@ func _travel(run: RunState) -> bool:
 		var site := _toward_tech(run)
 		if site >= 0:
 			pick = site
+	# The hunt for the Vector Frame, once the squad knows where it is: straight for it. With its drive in the hold
+	# and Mawjig for The Colony Ship: for a refit yard.
+	if VectorHunt.at_large(run) and run.vector_at >= 0 and (run.vector_trail > 0 or run.vector_met > 0) and goal == "" and run.band() >= run.galaxy.bands - 1:
+		var frame := _toward(run, func(index, _there): return index == run.vector_at, 14)
+		if frame >= 0:
+			pick = frame
+	if VectorHunt.drive_held(run):
+		var yard := _toward_yard(run)
+		if yard >= 0:
+			pick = yard
 	if pick < 0:
 		return false
 	run.jump_to(pick)

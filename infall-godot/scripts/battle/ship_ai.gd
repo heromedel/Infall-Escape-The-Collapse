@@ -22,6 +22,7 @@ var outlook: String = "even"            # how the fight is going for this captai
 var pressed: bool = false               # at the rate things are going, its side has under half a minute left
 var _weighed: Array = []                # [tick, our hull points, their hull points] over the last while
 var _outlook_rolled: bool = false
+var _spared_room: int = -1               # a room of the target this captain won't shoot: the one with a drive worth taking
 var careless: bool = false              # fires each weapon as it charges, at any room (a playtester who doesn't try)
 
 
@@ -172,8 +173,40 @@ func _anyone_hurt() -> bool:
 
 # --- Weapons --------------------------------------------------------------------------------------------------
 
+# --- A ship worth taking whole (the Vector Frame, GV 2H) ---------------------------------------------------------
+# Its drive is the prize: destroyed while the drive is damaged, the ship takes the drive with it. A captain that
+# wants the drive stops shooting the drive's room once the ship is half beaten, holds its fire on a ship that is
+# nearly gone while the drive is being mended, and hits the drive only to stop the ship folding away.
+
+## The prize ship's drive, when this captain's target is one; else null.
+func _prize_drive(of: Ship) -> ShipSystem:
+	var squad := encounter.squad
+	if ship.side != 0 or careless or squad == null or squad.break_off_needs == "" or of == null or of.design.base_id != squad.break_off_design:
+		return null
+	return of.system_by_id(squad.break_off_needs)
+
+
+## "free": shoot anything. "spare": anything but the drive's room. "hold": cease fire on it. "stop": hit the drive.
+func _prize_policy(of: Ship) -> String:
+	var drive := _prize_drive(of)
+	if drive == null:
+		return "free"
+	var share := float(of.hull) / of.max_hull
+	if drive.is_damaged():
+		return "hold" if share <= 0.2 else "spare"
+	if of.charging_escape and of.jump_charge >= 0.6 and of.hull > 3:
+		return "stop"
+	return "free" if share > 0.5 else "spare"
+
+
 func _choose_target() -> void:
 	var options := encounter.living(1 - ship.side)
+	# A prize being left to mend its drive: turn on its escorts meanwhile
+	var others := options.filter(func(other): return _prize_policy(other) != "hold")
+	if not others.is_empty():
+		options = others
+		if target != null and not options.has(target):
+			target = null
 	if options.is_empty():
 		target = null
 		return
@@ -206,9 +239,24 @@ func _aim_weapons() -> void:
 				lasers_close = false
 	var hold_lasers := laser_count >= 2 and not lasers_ready and lasers_close and target.shield_layers > 0 and not careless
 	var taken_rooms: Array[int] = []
+	var policy := _prize_policy(target)
+	var prize := _prize_drive(target)
+	_spared_room = prize.room if prize and policy in ["spare", "hold"] else -1
+	var stopping := false
 	for slot in ship.weapons:
 		if not slot.powered:
 			continue
+		if policy == "hold":
+			if slot.target_ship == target:
+				slot.clear_target()
+			continue
+		if policy == "stop" and not stopping and not slot.def.defensive and not slot.def.helps_own_side() and slot.def.type != "beam":
+			stopping = true        # one weapon at the drive, to break the fold
+			slot.aim_at(target, prize.cell)
+			slot.autofire = false
+			continue
+		if _spared_room >= 0 and slot.target_ship == target and slot.target_room == _spared_room:
+			slot.clear_target()
 		if slot.def.defensive:
 			# Defend unless the player's shields are already down
 			if target.shield_layers == 0 and target.supershield == 0:
@@ -253,7 +301,7 @@ func _aim(slot: WeaponSlot, taken_rooms: Array[int]) -> void:
 	# Against a ship with many shield layers (a Senti Shield Projector, or three layers and more), what ignores
 	# shields goes for the shield room: missiles and bombs are the natural counter (GDD 8Q; heromedel, 2026-11-14)
 	var shields := target.system_by("shields")
-	if slot.def.ignores_shields() and shields and not shields.is_broken() and target.shield_layers > 0 and not careless \
+	if slot.def.ignores_shields() and shields and not shields.is_broken() and target.shield_layers > 0 and not careless and shields.room != _spared_room \
 			and (shields.def.bars_per_layer == 1 or target.shield_layer_capacity() >= 3) and not (_spares_own_crew() and _own_crew_in(shields.room)):
 		taken_rooms.append(shields.room)
 		slot.aim_at(target, shields.cell)
@@ -261,6 +309,8 @@ func _aim(slot: WeaponSlot, taken_rooms: Array[int]) -> void:
 		return
 	# The plan is rolled once per aim, so the choice sticks until the weapon is aimed again
 	var planned := _plan_pick("target", slot.def)
+	if planned and planned.room == _spared_room:
+		planned = null
 	var room_index := planned.room if planned else _pick_room(slot.def, taken_rooms)
 	if room_index < 0:
 		return
@@ -302,7 +352,7 @@ func _pick_room(weapon: WeaponDef, taken_rooms: Array[int]) -> int:
 	if not first.is_empty():
 		for behaviour in first:
 			var system := target.system_by(behaviour)
-			if system and not taken_rooms.has(system.room) and not system.is_broken() and not (spare and _own_crew_in(system.room)):
+			if system and not taken_rooms.has(system.room) and not system.is_broken() and not (spare and _own_crew_in(system.room)) and system.room != _spared_room:
 				return system.room
 	var crew_kill := ship.design.plan != null and ship.design.plan.plan == "crew-kill"
 	var total := 0
@@ -318,7 +368,7 @@ func _pick_room(weapon: WeaponDef, taken_rooms: Array[int]) -> int:
 			weight += 3 * target.crew_in_room(room.index, target.side).size()
 		if taken_rooms.has(room.index):
 			weight = maxi(1, weight / 3)
-		if spare and _own_crew_in(room.index):
+		if (spare and _own_crew_in(room.index)) or room.index == _spared_room:
 			weight = 0
 		weights.append(weight)
 		total += weight

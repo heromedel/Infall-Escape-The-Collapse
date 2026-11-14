@@ -11,6 +11,7 @@ var label: String = ""
 var make: String = ""              # the race that built it: a race's own version of a system is its piece of the Tech victory
 var level: int = 1
 var damage: int = 0                # broken bars
+var was_damaged: bool = false      # damaged at some point, even if mended since
 var repair_progress: float = 0.0   # toward the next bar repaired, 0 to 100
 var ion: int = 0
 var ion_ticks: int = 0

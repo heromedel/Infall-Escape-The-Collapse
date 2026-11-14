@@ -1158,11 +1158,18 @@ func _draw_floating_status(ship: Ship) -> void:
 	elif ship.surrendered:
 		state = "SURRENDERED"
 	elif ship.charging_escape:
-		state = "JUMPING %d%%" % int(ship.jump_charge * 100.0)
+		state = ("FOLDING %d%%" if ship.fold_ticks > 0 else "JUMPING %d%%") % int(ship.jump_charge * 100.0)
 	elif ship.is_cloaked():
 		state = "CLOAKED"
-	elif ship.side == 1 and screen.encounter.squad and screen.encounter.squad.breaks_off_at > 0.0:
+	elif ship.side == 1 and screen.encounter.squad and screen.encounter.squad.breaks_off_at > 0.0 and screen.encounter.squad.break_off_design in ["", ship.design.base_id]:
 		state = screen.encounter.squad.augment.to_upper()       # it will jump away when its hull falls far enough
+		if screen.encounter.squad.break_off_design != "":
+			# The Vector Frame's drive: jammed or spent it can't fold away; damaged, it can't either, and is lost with the ship
+			var drive := ship.system_by_id(screen.encounter.squad.break_off_needs)
+			if screen.encounter.no_escape:
+				state += " · JAMMED"
+			elif drive and drive.is_damaged():
+				state += " · DAMAGED"
 	else:
 		state = "EVADE %d%%" % ship.evasion()
 	UiKit.draw_text(self, rect.position + Vector2(width - 10, 19), state, 12, UiColours.WARNING if state != "EVADE %d%%" % ship.evasion() else UiColours.TEXT_DIM, UiKit.font_bold(), HORIZONTAL_ALIGNMENT_RIGHT, 0)
