@@ -79,6 +79,14 @@ func setup(view_ship: Ship, owner: Encounter) -> void:
 		sprite.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR_WITH_MIPMAPS
 		if ship.design.art_nearest:
 			sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST_WITH_MIPMAPS
+		if ship.design.art_stripe.a > 0.0:
+			# The hull's stripes are in its power colour (style guide, GATOS ships): green on a player's ship,
+			# pirate orange on a non-player one. The art is drawn once and the stripe colour swapped here.
+			var material := ShaderMaterial.new()
+			material.shader = _stripe_shader()
+			material.set_shader_parameter("stripe", ship.design.art_stripe)
+			material.set_shader_parameter("power", power_colour)
+			sprite.material = material
 		_hull_layer = sprite
 	else:
 		var painter := HullPainter.new()
@@ -128,6 +136,29 @@ func shield_hit(world_point: Vector2, supershield: bool = false) -> void:
 		list.pop_front()
 
 
+static var _stripe: Shader = null
+
+## Repaints the pixels of one colour family (the stripe's hue) in another colour, keeping each pixel's brightness.
+static func _stripe_shader() -> Shader:
+	if _stripe == null:
+		_stripe = Shader.new()
+		_stripe.code = """shader_type canvas_item;
+uniform vec4 stripe : source_color = vec4(0.4, 1.0, 0.4, 1.0);
+uniform vec4 power : source_color = vec4(0.4, 1.0, 0.4, 1.0);
+void fragment() {
+	vec4 c = texture(TEXTURE, UV);
+	float top = max(c.r, max(c.g, c.b));
+	float low = min(c.r, min(c.g, c.b));
+	vec3 tint = c.rgb / max(top, 0.001);
+	vec3 want = stripe.rgb / max(max(stripe.r, max(stripe.g, stripe.b)), 0.001);
+	float alike = 1.0 - smoothstep(0.18, 0.42, distance(tint, want));
+	float vivid = smoothstep(0.12, 0.3, top - low);
+	vec3 swapped = power.rgb / max(max(power.r, max(power.g, power.b)), 0.001) * top;
+	COLOR = vec4(mix(c.rgb, swapped, alike * vivid), c.a);
+}"""
+	return _stripe
+
+
 ## The ship's power colour: the player's choice for their own ships (GDD 14D), the race's for an enemy.
 func _power_colour() -> Color:
 	return UiColours.player_power(ship.race) if ship.side == 0 else UiColours.enemy_power(ship.faction, ship.race)
@@ -136,6 +167,8 @@ func _power_colour() -> Color:
 func _process(delta: float) -> void:
 	time += delta
 	power_colour = _power_colour()      # a setting, so it can change mid-fight
+	if _hull_layer is Sprite2D and _hull_layer.material:
+		(_hull_layer.material as ShaderMaterial).set_shader_parameter("power", power_colour)
 	position = encounter.to_view(ship.world_position)   # a ship sits whole on its side of the squeezed gap
 	rotation = PI if ship.facing_down else 0.0
 	for hit in _hits + _super_hits:

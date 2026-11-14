@@ -31,7 +31,7 @@
 	<door id="8" tile="-2,0" facing="west"/>
 	<door id="9" tile="2,1" facing="east"/>
 	<!-- Hull art by Infall: Arty (docs/art/terran/patrol-cutter on Cloud-C-Art), approved by heromedel 2026-11-13. Mounts are art pixels on the 1x hull. -->
-	<art hull="patrol-cutter-hull-2x.png" scale="0.5" center="220,235"/>
+	<art hull="patrol-cutter-hull-2x.png" scale="0.5" center="220,235" stripe="#66FF66"/>
 	<mount id="1" x="30" y="116" slide="up"/>
 	<mount id="2" x="410" y="116" slide="up"/>
 	<mount id="3" x="116" y="123" slide="up"/>

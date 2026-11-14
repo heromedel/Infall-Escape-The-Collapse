@@ -38,6 +38,7 @@ var art_path: String = ""
 var art_scale: float = 1.0
 var art_centre := Vector2.ZERO   # the art pixel (at scale 1) that sits on the ship's centre
 var art_nearest: bool = false
+var art_stripe := Color(0, 0, 0, 0)   # the colour on the hull art that stands for the ship's power colour; none when clear
 var description: String = ""
 var problems: PackedStringArray = []
 var folder: String = ""
@@ -162,6 +163,8 @@ func _read(node: XmlTree) -> void:
 				var centre_parts := child.get_attr("center", "0,0").split(",")
 				art_centre = Vector2(float(centre_parts[0]), float(centre_parts[1]))
 				art_nearest = child.get_attr("filter", "") == "nearest"
+				if child.has_attr("stripe"):
+					art_stripe = Color(child.get_attr("stripe"))
 			"room":
 				var corner_a: Vector2i = to_cell.call(child.get_attr("from"))
 				var corner_b: Vector2i = to_cell.call(child.get_attr("to", child.get_attr("from")))
