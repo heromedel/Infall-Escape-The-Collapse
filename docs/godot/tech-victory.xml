@@ -23,8 +23,13 @@
 </techs>
 
 <events>
-	<!-- 2. One event per race, in that race's own space. -->
-	<event id="TECH_TERRAN" title="The Long Haul" kind="neutral" races="terran" states="Doing Fine,Struggling" bands="3-8" weight="2" unique="yes">
+	<!-- 2. One event per race, in that race's own space. heromedel (2026-11-14): these are not rare events. The player
+	     must visit and trigger all seven to win, so each one can be reached on purpose: kind="tech" marks it as placed,
+	     not rolled. Suggested: one cluster in each race's region holds its TECH_ event and shows it on the map (line
+	     below), and the piece can also be had from that race's ships by surrender (the demand line), so a squad is
+	     never stuck waiting for luck. The states= on each event are the states it reads best in; if a placed cluster
+	     ends up in another state, keep the event anyway. -->
+	<event id="TECH_TERRAN" title="The Long Haul" kind="tech" races="terran" states="Doing Fine,Struggling" bands="3-8" unique="yes">
 		<text>A GATOS shipyard is building something it can't sell: an Armoured ZeroPoint Core far too big for any ship it makes. The yard boss hails you, half proud and half desperate.
 
 "We built it for a jump nobody's made yet. Nobody around here can afford it now. You look like people heading somewhere far."</text>
@@ -37,10 +42,10 @@
 		<choice text="Not now."/>
 	</event>
 
-	<event id="TECH_AZURETHEA" title="Grown, Not Built" kind="neutral" races="azurethea" states="Struggling,Refugee,Doomed" bands="3-8" weight="2" unique="yes">
+	<event id="TECH_AZURETHEA" title="Grown, Not Built" kind="tech" races="azurethea" states="Struggling,Refugee,Doomed" bands="3-8" unique="yes">
 		<text>An Azurethea outpost is tending something in its hold: an engine still half grown, its veins pulsing slowly. Its keeper hails you.
 
-"Once we would never have shared this. Now our people need passage more than we need secrets. Help us move our refugees, and the engine is yours."</text>
+"Once we would never have shared this. The collapse has changed what even we will trade. Our refugees need passage more than we need secrets. Pay for it, and the engine is yours."</text>
 		<choice text="Pay for their refugees' passage." requires="no_tech:azurethea">
 			<outcome><text>Your Mawjig buys passage for a whole convoy of Azurethea refugees. The keeper seals the Wingbeat Engine into your hold. "Fly it gently. It remembers."</text><mawjig amount="-9.68"/><tech race="azurethea"/></outcome>
 		</choice>
@@ -50,7 +55,7 @@
 		<choice text="Move on."/>
 	</event>
 
-	<event id="TECH_MECHA" title="A Good Deal" kind="neutral" races="mecha" states="Doing Fine,Core,Struggling,Border" bands="3-8" weight="2" unique="yes">
+	<event id="TECH_MECHA" title="A Good Deal" kind="tech" races="mecha" states="Doing Fine,Core,Struggling,Border" bands="3-8" unique="yes">
 		<text>A Mecha yard boss hails you, already smiling. "We heard you want our hull bracing. Everyone wants it. Nobody gets it for free. Make us a good offer."</text>
 		<choice text="Pay their price." requires="no_tech:mecha">
 			<outcome><text>"Pleasure doing business." The bracing is loaded aboard, and the yard boss is still laughing when you jump.</text><mawjig amount="-30.25"/><tech race="mecha"/></outcome>
@@ -65,7 +70,7 @@
 		<choice text="Walk away."/>
 	</event>
 
-	<event id="TECH_TENTAURI" title="The Mantle" kind="neutral" races="tentauri" states="Struggling,Doomed,Border" bands="3-8" weight="2" unique="yes">
+	<event id="TECH_TENTAURI" title="The Mantle" kind="tech" races="tentauri" states="Struggling,Doomed,Border" bands="3-8" unique="yes">
 		<text>Two Tentauri hail you, their voices soft and in step. "We have a shield we cannot carry where we are going. We would give it to someone who flies with us, once."</text>
 		<choice text="Fly a joint operation with them." requires="no_tech:tentauri">
 			<outcome weight="2"><text>You cross the cluster beside them without trouble. At the far side they pass the Mantle Shield to your ship and drift on alone.</text><tech race="tentauri"/></outcome>
@@ -77,7 +82,7 @@
 		<choice text="Decline."/>
 	</event>
 
-	<event id="TECH_SENTI" title="The Archive Seed" kind="neutral" races="senti" states="Doing Fine,Struggling" bands="3-8" weight="2" unique="yes">
+	<event id="TECH_SENTI" title="The Archive Seed" kind="tech" races="senti" states="Doing Fine,Struggling" bands="3-8" unique="yes">
 		<text>A Senti archive station hails you, its light lines bright. "We, The Senti-, keep a seed of our archive for anyone who means to leave this galaxy. It is not sold. It is traded, record for record."</text>
 		<choice text="Trade your home world's records." requires="no_tech:senti">
 			<outcome><text>You transmit everything your ships carry about the world you left. The station reads it all, then sends the Archive Seed in return. "We, The Senti-, will remember your world. Now you will remember ours."</text><tech race="senti"/></outcome>
@@ -91,7 +96,7 @@
 		<choice text="Not now."/>
 	</event>
 
-	<event id="TECH_LYKARIO" title="Stolen Goods" kind="neutral" races="lykario" states="Doing Fine,Border,Struggling" bands="3-8" weight="2" unique="yes">
+	<event id="TECH_LYKARIO" title="Stolen Goods" kind="tech" races="lykario" states="Doing Fine,Border,Struggling" bands="3-8" unique="yes">
 		<text>A Lykario trader grins over the channel. "The best autopilot in the galaxy. Flies your ship while you're off hunting. Stolen, of course, so it's cheap."</text>
 		<choice text="Buy it." requires="no_tech:lykario">
 			<outcome><text>"Pleasure! Don't ask who it was stolen from." The Tracker Autopilot goes into your hold.</text><mawjig amount="-9.68"/><tech race="lykario"/></outcome>
@@ -107,7 +112,7 @@
 	</event>
 
 	<!-- The Malphen never sell: their piece is cut out of a living ship. -->
-	<event id="TECH_MALPHEN" title="The Brood Heart" kind="hostile" races="malphen,any" states="Abandoned,Doomed,Unclaimed" bands="3-8" weight="2" unique="yes">
+	<event id="TECH_MALPHEN" title="The Brood Heart" kind="tech" races="malphen,any" states="Abandoned,Doomed,Unclaimed" bands="3-8" unique="yes">
 		<text>A huge Malphen ship lies dormant in an overgrown wreck field, barely moving. Deep inside it, your sensors read a growth organ still beating. Nobody sells one of those. You'll have to cut it out.</text>
 		<choice text="Send a team in to cut it out." requires="no_tech:malphen">
 			<outcome weight="2"><text>Your team cuts its way through the living hull and back out again with the Brood Heart sealed in a crate. Behind them, the ship begins to wake.</text><tech race="malphen"/><crew_hurt amount="30"/></outcome>
@@ -214,6 +219,8 @@ The Colony Ship follows your squad into the dark between galaxies, and the dark 
 Behind you, the collapse reaches the rim. It will never reach where you are going.
 
 6. SHORT LINES:
+Map marker on the cluster that holds a race's TECH_ event: "{race} technology: the {tech} can be found here."
+Map marker once the squad holds it: "{race} technology: aboard."
 Store row for a piece: "{tech}: one of the seven pieces you need to cross to another galaxy."
 Choice to demand a piece from a surrendering ship: "Demand their {tech} as the price of surrender."
 Reward line when a piece is taken from a ship left whole: "You strip the {tech} out of the {ship} and let its crew limp away."
