@@ -452,8 +452,8 @@ come about three times as fast as in the genre.
 
 ## F14. Growing the squad, and prices Godot Version needed (2026-11-14)
 
-Asked by Infall: Godot Version while finishing the game with playtester bots; heromedel's target is about 9 runs in
-10 lost, as in the genre. heromedel agreed ("makes sense", 2026-11-14), so these are Proposed.
+Asked by Infall: Godot Version while finishing the game with playtester bots. About 9 runs in 10 lost is the genre's
+creator's reported target, not heromedel's (heromedel, 2026-11-14). heromedel agreed ("makes sense", 2026-11-14), so these are Proposed.
 
 - **Buying a ship:** a store sells it at 0.75 × its value (Federation Home Planet's Normal rate; Easy 0.5, Hard 1.0),
   not 1.15. From F13: Polyp 130.17, Pirate Scrapper 178.91, Patrol Cutter 276.31, Outrider 315.08, Hijacker 356.03.
@@ -491,8 +491,8 @@ was changed.
 5. **Senti pickets** take 32–54% of hull a fight and pay little (they flee or stalemate): the one fight that costs
    more than it pays. A combat-balance question for Ship Designs and heromedel. Suggested: either a non-fight payoff
    (GDD 8I surrender or negotiation, e.g. a records trade), or less damage, or more value.
-6. **Win rates:** a good player wins about one game in six. Sits sensibly around heromedel's target of about 9 runs in
-   10 lost; nothing for the economy to push.
+6. **Win rates:** a good player wins about one game in six. Sits sensibly around the genre's reported 9 runs in 10 lost
+   (its creator's target, not heromedel's); nothing for the economy to push.
 
 **heromedel (2026-11-14), on 5:** the Senti picket fights have counters, and both go into the ship strategies
 (captain plans): against the Senti, hit the Shield Projector with missiles or bombs, which ignore shields (GDD 8Q);
@@ -504,8 +504,8 @@ fell (watcher: band 4 29% from 35%, band 5 21% from 30%, band 6 37% from 54%, ba
 from 32%, bands 5 and 7 3–7%), and no fight was left or stalemated. Pay per Senti fight rose to 12–27 (was 4–10)
 because the fights are now won; shots 3–10% of pay. So the Senti problem was strategy, not price. Games won: watcher
 4 of 30, expert 16 of 30. The new Senti Census squad cost no hull in its 6 fights (too mild; with Ship Designs).
-**For heromedel:** the expert now wins over half its games, against a target of about 9 in 10 lost; that is
-difficulty, not economy, but worth a look.
+**For heromedel:** the expert now wins over half its games, against the genre's reported 9 in 10 lost (its
+creator's target, not heromedel's; Infall has no set target); that is difficulty, not economy, but worth a look.
 
 ## F16. Tech victory: piece prices (2026-11-14, for heromedel's review)
 
