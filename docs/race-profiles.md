@@ -141,6 +141,7 @@ The starting race (GDD 7C). The name is deliberate, to avoid a plain Federation 
       Idea: their spores also mind control someone in the room, pacifying the enemy and making them fight each
       other. This would give mind control to the Azurethea. Possibly boarding crews, especially when they
       outnumber the other ship's crew. Higher evasion.
+      - **Pheromone Gland — Likely (heromedel, 2026-11-14):** the name of the Azurethea's own Mind Control system.
     - High tech: many weapon systems, missiles, a high-hull carapace, spore systems and weapons, good sensors,
       high evasion, medium shields at most.
 
@@ -358,6 +359,7 @@ Homeworlds. (Earlier: octopus-like, working label "Octopods".)
 10. **Ship tiers — Proposed (2026-10-21):**
     - Low: beams, good sensors, a small AAA.
     - Mid: hacking, a larger AAA.
+      - **Intrusion Array — Likely (heromedel, 2026-11-14):** the name of the Senti's own Hacking system.
     - High: more hacking, an upgraded AAA, shield-penetrating technologies or weapons; not likely missiles.
 
 ## Lykario (draft, 2026-10-21)

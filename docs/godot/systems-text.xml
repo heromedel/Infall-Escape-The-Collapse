@@ -13,7 +13,7 @@
 		<level>Each pulse lasts 10 s (genre)</level>
 	</system>
 
-	<!-- The Senti's own Hacking. The docs give it no name. Name: the Intrusion Array, after the Armoured Avatar Array:
+	<!-- The Senti's own Hacking. Name approved by heromedel (Likely, 2026-11-14): the Intrusion Array, after the Armoured Avatar Array:
 	     the Senti are made of information, so they reach into an enemy system through its own signals. -->
 	<system id="intrusion-array" name="Intrusion Array" max_level="3" manned="no">
 		<description>The Senti's hacking. It reaches into one enemy system through its own signals. Once it holds, you can see into that room, and each pulse shuts the system down for a few seconds.</description>
@@ -31,7 +31,7 @@
 		<level>Lasts 28 s (genre)</level>
 	</system>
 
-	<!-- The Azurethea's own Mind Control. The docs give it no name. Name: the Pheromone Gland. Insects steer each
+	<!-- The Azurethea's own Mind Control. Name approved by heromedel (Likely, 2026-11-14): the Pheromone Gland. Insects steer each
 	     other with pheromones, the Azurethea's weapons are named after insect parts (Likely), and their tech is
 	     biological spores. -->
 	<system id="pheromone-gland" name="Pheromone Gland" max_level="3" manned="no">
