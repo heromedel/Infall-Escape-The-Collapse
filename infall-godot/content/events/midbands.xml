@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Infall: Lori, 2026-11-14, for Infall: Godot Version. Twelve events for bands 3-6, where playtests found fights mild
+     and variety low. Every event here is Ai-Generated-Proposal (2026-11-14). Checked against docs/lore-facts.md and
+     docs/race-profiles.md. Only effects and requirements that event_runner.gd handles.
+     (a) ships and mercenaries: AZURETHEA_SKIFF_REFUGEES, TENTAURI_SEEDPOD_CONVOY (free ships), GATOS_DESERTERS (a
+         free ship through a blue choice), MERCENARY_LYKARIO_HUNTMASTER, MECHA_FRAME_SALE (a ship for sale).
+     (b) hostile with a choice first: PIRATE_MARAUDER, MECHA_SUPPLY_CONVOY, LYKARIO_CHALLENGE, MALPHEN_POLYP_NEST.
+     (c) Senti with a non-fight payoff: SENTI_RECORDS_TOLL, SENTI_FLICKERING_ARRAY.
+     (d) a cluster's state shown: OCCUPIED_RESISTANCE (Occupied), plus the Struggling, Refugee and Doomed states in
+         AZURETHEA_SKIFF_REFUGEES, MECHA_FRAME_SALE and GATOS_DESERTERS. -->
+<events>
+	<!-- (a) Ships and mercenaries -->
+	<event id="AZURETHEA_SKIFF_REFUGEES" title="Folded Wings" kind="distress" races="azurethea" states="Struggling,Refugee" bands="3-5" weight="1.2" unique="yes">
+		<text>A small Azurethea skiff drifts at the edge of the cluster, its wings folded tight. Its two crew hail you, softly and without much hope.
+
+"Our home cluster is lost. We have never been refugees before. If you are going somewhere safer, we would like to go with you, and we can fly."</text>
+		<choice text="Welcome them to the squad.">
+			<outcome><text>The skiff unfolds its wings and takes a place in your formation. Its crew thank you for every jump you make together.</text><ship design="moth-skiff"/></outcome>
+		</choice>
+		<choice text="Give them Mawjig and directions instead." requires="mawjig:1.21">
+			<outcome><text>They take the Mawjig gratefully and turn toward the nearest safe cluster you can name.</text><mawjig amount="-1.21"/></outcome>
+		</choice>
+		<choice text="Let {crew} speak with them." requires="crew:azurethea">
+			<outcome><text>{crew} talks with them for a long time. When the skiff joins your formation, its crew have already tended one of your systems as thanks.</text><ship design="moth-skiff"/><upgrade/></outcome>
+		</choice>
+		<choice text="You can't take them."/>
+	</event>
+
+	<event id="TENTAURI_SEEDPOD_CONVOY" title="Joint Operations" kind="distress" races="tentauri,any" states="Struggling,Refugee,Border" bands="4-6" weight="1" unique="yes">
+		<text>A heavily shielded Tentauri ship is shepherding a line of refugee transports across the cluster. Two voices hail you at once.
+
+"We could use another squad beside us until the convoy is through. After that, we would fly on with you, if you will have us."</text>
+		<choice text="Fly escort with them.">
+			<outcome weight="2"><text>The convoy crosses the cluster without a shot fired. The Tentauri ship leaves the refugees at the far side and takes its place in your formation.</text><ship design="tentauri-warden"/></outcome>
+			<outcome weight="1"><text>Raiders hit the convoy halfway across.</text><fight/></outcome>
+		</choice>
+		<choice text="Use your sensors to find them a clear route." requires="system:sensors">
+			<outcome><text>Your sensors pick out a quiet path through the cluster. The convoy crosses it untouched, and the Tentauri ship falls in beside you afterwards.</text><ship design="tentauri-warden"/></outcome>
+		</choice>
+		<choice text="Wish them luck."/>
+	</event>
+
+	<event id="GATOS_DESERTERS" title="Not Our Checkpoint" kind="neutral" races="terran" states="Doomed,Struggling" bands="4-6" weight="1" unique="yes">
+		<text>A GATOS patrol cutter hails you on a private channel, its checkpoint emblem freshly scraped off.
+
+"They told us to shake down everyone who came through. Refugees, families, everyone. We said no, and now we can't go back."</text>
+		<choice text="Wish them well and send them some Mawjig." requires="mawjig:1.21">
+			<outcome><text>"It's more than our own people gave us," the captain says, and jumps away.</text><mawjig amount="-1.21"/></outcome>
+		</choice>
+		<choice text="Let {crew} invite them to fly with you." requires="crew:terran">
+			<outcome><text>{crew} talks about The Colony Ship and the GATOS who still remember what the alliance was for. The cutter falls into formation beside you.</text><ship design="patrol-cutter"/></outcome>
+		</choice>
+		<choice text="Leave them to it."/>
+	</event>
+
+	<event id="MERCENARY_LYKARIO_HUNTMASTER" title="The Huntmaster" kind="neutral" races="lykario,any" states="Border,Doing Fine,Unclaimed" bands="4-6" weight="0.8" unique="yes">
+		<text>A Lykario ship covered in trophies matches your course. Its captain grins over the channel.
+
+"You hunt bigger prey than I do. Pay me, and my pack hunts with you for a while. When it stops being fun, we leave."</text>
+		<choice text="Hire them." requires="hire:9.66">
+			<outcome><text>The Huntmaster howls and falls in at the edge of your formation.</text><mawjig amount="-9.66" by_band="yes"/><ship design="packrunner.huntmaster" contract="3" pay="9.66" by_band="yes"/></outcome>
+		</choice>
+		<choice text="Let {crew} offer a joint hunt instead." requires="crew:lykario">
+			<outcome><text>{crew} and the captain trade boasts until the captain laughs. "A joint hunt, then. Half price, for good sport."</text><mawjig amount="-4.84" by_band="yes"/><ship design="packrunner.huntmaster" contract="3" pay="4.84" by_band="yes"/></outcome>
+		</choice>
+		<choice text="No thanks.">
+			<outcome><text>"Your loss!" The Huntmaster peels away, still grinning.</text></outcome>
+		</choice>
+	</event>
+
+	<event id="MECHA_FRAME_SALE" title="A Frame for Sale" kind="neutral" races="mecha" states="Struggling,Border" bands="3-6" weight="1" unique="yes">
+		<text>A Mecha yard has more frames than it has pilots to fly them. Its yard boss hails you, sounding pleased with an idea.
+
+"Times are hard. Even for us. One frame, fully armed, sold to whoever pays. We like profit more than we like you."</text>
+		<choice text="Buy the frame." requires="mawjig:14.52">
+			<outcome><text>The frame drops out of its cradle and falls in behind your squad. Its systems are already tuned to your fleet's codes.</text><mawjig amount="-14.52"/><ship design="light-attack-frame"/></outcome>
+		</choice>
+		<choice text="Let {crew} haggle." requires="crew:mecha">
+			<outcome><text>{crew} and the yard boss trade clipped bursts of Mecha code until the yard boss gives up. The price drops by a third.</text><mawjig amount="-9.68"/><ship design="light-attack-frame"/></outcome>
+		</choice>
+		<choice text="Not today."/>
+	</event>
+
+	<!-- (b) Hostile, with a choice before the fight -->
+	<event id="PIRATE_MARAUDER" title="Surrender a Ship" kind="hostile" races="terran,any" states="Doomed,Border,Abandoned,Unclaimed" bands="3-6" weight="1.5">
+		<text>A pirate Marauder drops out of a jump with its weapons already charged, its hull patched with stolen plating. Its captain sounds bored.
+
+"Pick one of your ships and send it over empty. Keep the rest. That's the best offer you'll get today."</text>
+		<choice text="Refuse.">
+			<outcome><text>"Then we take the lot."</text><fight squad="terran-pirates"/></outcome>
+		</choice>
+		<choice text="Offer them Mawjig instead." requires="mawjig:3.63">
+			<outcome weight="2"><text>The captain counts it twice and lets you go.</text><mawjig amount="-3.63"/></outcome>
+			<outcome weight="1"><text>"Mawjig runs out. Ships don't."</text><fight squad="terran-pirates"/></outcome>
+		</choice>
+		<choice text="Hack their weapons and dare them to fire." requires="system:hacking">
+			<outcome><text>Their weapon panels go dark one after another. The pirates jump away before you can find out what else you can do.</text></outcome>
+		</choice>
+		<choice text="Take control of their captain." requires="system:mind-control">
+			<outcome><text>The captain stops mid-sentence, then orders the crew to pay you for your trouble. By the time the order wears off, the transfer has gone through and the pirates jump away, furious.</text><mawjig size="medium"/></outcome>
+		</choice>
+	</event>
+
+	<event id="MECHA_SUPPLY_CONVOY" title="Mecha Supply Line" kind="hostile" races="mecha" states="Border,Occupied,Doing Fine" bands="3-6" weight="1.2">
+		<text>A string of Mecha supply pods drifts through the cluster under a light guard of frames. Nobody has noticed you yet.</text>
+		<choice text="Attack the guard and take the pods.">
+			<outcome><text>The frames turn on you at once.</text><fight/></outcome>
+		</choice>
+		<choice text="Cloak and steal a pod from the back of the line." requires="system:cloaking">
+			<outcome><text>You slip in, grab the last pod and slip out again. Its contents convert into a good haul of Mawjig.</text><mawjig size="medium"/></outcome>
+		</choice>
+		<choice text="Teleport a team into one of the pods." requires="system:crew-teleporter">
+			<outcome weight="2"><text>Your team cracks the pod open and teleports back with a crated weapon before the guard notices.</text><weapon tier="mid"/></outcome>
+			<outcome weight="1"><text>The pod was a decoy, full of armed Mecha. Your team gets out, and the guard comes for you.</text><crew_hurt amount="30"/><fight/></outcome>
+		</choice>
+		<choice text="Leave them alone."/>
+	</event>
+
+	<event id="LYKARIO_CHALLENGE" title="A Fair Hunt" kind="hostile" races="lykario" states="Doing Fine,Border" bands="3-6" weight="1.2">
+		<text>A Lykario packleader hails you, delighted. "Scouts! You look fast. Let's see who's the better hunter. No hard feelings, whoever wins."</text>
+		<choice text="Accept the challenge.">
+			<outcome><text>The pack howls and comes at you.</text><fight squad="lykario-pack"/></outcome>
+		</choice>
+		<choice text="Pay them to hunt someone else." requires="mawjig:1.81">
+			<outcome><text>"Boring," the packleader says, but takes the Mawjig and goes off howling.</text><mawjig amount="-1.81"/></outcome>
+		</choice>
+		<choice text="Let {crew} accept on your behalf." requires="crew:lykario">
+			<outcome><text>{crew} answers the challenge with a hunting call of their own. The pack laughs and calls it a draw. One of them asks to hunt with you instead.</text><crew race="lykario"/></outcome>
+		</choice>
+		<choice text="Turn the packleader against the pack." requires="system:mind-control">
+			<outcome><text>For a few seconds the packleader calls off the hunt and orders the pack home. By the time the order wears off, the pack is gone, and the packleader is laughing too hard to chase you.</text></outcome>
+		</choice>
+	</event>
+
+	<event id="MALPHEN_POLYP_NEST" title="The Nest" kind="hostile" races="malphen,any" states="Abandoned,Unclaimed" bands="3-6" weight="1.2">
+		<text>A drifting wreck is half overgrown, and three small living ships cling to it like ticks. As you come closer, they let go and turn toward you.</text>
+		<choice text="Open fire.">
+			<outcome><fight squad="malphen-growth"/></outcome>
+		</choice>
+		<choice text="Jettison some matter and back away." requires="mawjig:1.21">
+			<outcome weight="3"><text>The living ships swarm over the matter you dumped. None of them follows you.</text><mawjig amount="-1.21"/></outcome>
+			<outcome weight="1"><text>They ignore the offering and keep coming.</text><fight squad="malphen-growth"/></outcome>
+		</choice>
+		<choice text="Use your sensors to find a way past them." requires="system:sensors">
+			<outcome><text>Your sensors find a path through the wreckage that the living ships can't see into. You pass without waking them, and salvage a little of the wreck on the way.</text><mawjig size="low"/></outcome>
+		</choice>
+	</event>
+
+	<!-- (c) Senti, with a payoff that isn't a fight -->
+	<event id="SENTI_RECORDS_TOLL" title="A Toll in Records" kind="neutral" races="senti" states="Border,Doing Fine,Struggling" bands="3-6" weight="1.5">
+		<text>A Senti picket holds the way through the cluster, its light lines bright. A hologram resolves on your screen.
+
+"We, The Senti-, do not charge Mawjig for passage. We charge records. Show us something we have not seen, and you may pass."</text>
+		<choice text="Trade your sensor logs." requires="system:sensors">
+			<outcome><text>The picket reads your logs in a moment. "We, The Senti-, thank you. Take our charts in return."</text><reveal/><mawjig size="low"/></outcome>
+		</choice>
+		<choice text="Copy their charts while they read your logs." requires="system:hacking">
+			<outcome weight="2"><text>Your probe copies the picket's charts before it notices. You pass with everything they know about this region.</text><reveal/><mawjig size="medium"/></outcome>
+			<outcome weight="1"><text>"I am recording a theft." The picket's weapons come online.</text><fight squad="senti-pickets"/></outcome>
+		</choice>
+		<choice text="Let {crew} share the records of their people." requires="crew:tentauri">
+			<outcome><text>{crew} shares songs and stories the archive has never heard. The picket opens the way and adds a gift of Mawjig for the archive's new pages.</text><mawjig size="medium"/></outcome>
+		</choice>
+		<choice text="Turn back and go around."/>
+	</event>
+
+	<event id="SENTI_FLICKERING_ARRAY" title="The Flickering Array" kind="distress" races="senti,any" states="Struggling,Border,Doomed" bands="3-6" weight="1">
+		<text>A Senti ship drifts with its Armoured Avatar Array failing. Its crew flicker in and out of view on your screen, mid-sentence.
+
+"We, The Senti-, request help. Each time the array falters, fewer of us come back."</text>
+		<choice text="Send your crew to repair the array.">
+			<outcome weight="2"><text>Your crew get the array steady again. The Senti record everything your crew did, and teach them a little of what they know in return.</text><xp skill="repair" amount="40"/><mawjig size="low"/></outcome>
+			<outcome weight="1"><text>The array surges as your crew work on it, and {crew} is caught in the surge. It holds, and the Senti thank you.</text><crew_hurt amount="25"/><mawjig size="low"/></outcome>
+		</choice>
+		<choice text="Offer one of them a place on your own array." requires="system:aaa">
+			<outcome><text>One avatar steps across into your Armoured Avatar Array before theirs gives out. "I will make myself useful," it says.</text><crew race="senti"/></outcome>
+		</choice>
+		<choice text="Let {crew} link with their array." requires="crew:senti">
+			<outcome><text>{crew} links with the failing array and steadies it from inside. The Senti send over a share of their Mawjig as thanks.</text><mawjig size="medium"/></outcome>
+		</choice>
+		<choice text="Move on."/>
+	</event>
+
+	<!-- (d) A cluster's state shown -->
+	<event id="OCCUPIED_RESISTANCE" title="The Resistance" kind="neutral" states="Occupied" bands="3-6" weight="1.5">
+		<text>A shuttle of {race} fighters hails you on a hidden channel. Their cluster has been taken, but they haven't given up on it.
+
+"The occupiers scan every ship that leaves. Yours, they don't know. Carry a few of us past their patrols, and we'll make it worth your while."</text>
+		<choice text="Smuggle them out.">
+			<outcome weight="2"><text>Nobody stops you. At the edge of the cluster, the fighters pay you what they can, and one of them asks to stay with your crew.</text><mawjig size="low"/><crew race="region"/></outcome>
+			<outcome weight="1"><text>A patrol scans you on the way out and opens fire.</text><fight/></outcome>
+		</choice>
+		<choice text="Cloak and carry them out unseen." requires="system:cloaking">
+			<outcome><text>You slip past every patrol. The fighters pay you, and one of them asks to stay with your crew.</text><mawjig size="low"/><crew race="region"/></outcome>
+		</choice>
+		<choice text="Refuse. It's not your fight."/>
+	</event>
+</events>

@@ -69,6 +69,7 @@ Still rough, from the last round:
 | Several weapon systems on one ship | GDD 8L | A row of slots for each; each draws on its own bars and has its own gunner. The Pirate Hijacker and the Tentauri scout have Weapons A and B, as the docs have them |
 | The EVA Dock | GDD 8R; heromedel "all of it" | Crew cross to another ship in a suit. The open details are filled in as Ai-Generated-Proposals (GV 8K) |
 | The three Senti crew killers | `docs/deck-collapse-ships` | With fire beams, a breach laser, an anti-crew beam and a bio bomb. Mild in fights so far |
+| Twelve events for bands 3 to 6 | Infall: Lori | Ships and mercenaries on offer, hostile events with a choice before the fight, Senti events that pay without a fight. 107 events in all |
 | Short names under the system icons; a different sign on each system's button | Second blind test | SHLD, ENG, WPN A… |
 | The dock rule, the Hijacker's door, the Patrol Cutter's hull, the shields room value | Earlier the same day | |
 

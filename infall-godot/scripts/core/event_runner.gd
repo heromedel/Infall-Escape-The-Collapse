@@ -98,7 +98,8 @@ func can_take(choice: Dictionary) -> bool:
 			return _crew_of_race(parts[1]) != null
 		"system":
 			for ship in run.living_ships():
-				if ship.system_by(parts[1]) or ship.system_by_id(parts[1]):
+				# By the system's kind, so a race's own make counts too (the Pheromone Gland is Mind Control)
+				if ship.system_by(parts[1]) or ship.system_by_id(parts[1]) or ship.system_by(parts[1].replace("-", "_")):
 					return true
 			return false
 		"mawjig":
