@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Infall: Ship Designs, Ai-Generated-Proposal (2026-11-14): a genre weapon the game lacked, in the tentauri naming style.
+     Shape (power, shots, damage, effects) after the genre (docs/reference/ftl-baseline.md); charge time and price from
+     docs/reference/weapon-budget-table.md, cost per volley from docs/reference/mawjig-cost-table.md. Bands: 3-8. -->
+<weapon id="bud" name="Bud" race="tentauri" tech="biomechanical" type="bomb" power="1" shots="1" damage="0" charge="14.0" cost="0.16" price="12.54" colour="#ffc0ec" bands="3-8" repair="2" crew_damage="0">
+	<description>Set on one of its own systems, it grows the damage back. NEW RULE: repair.</description>
+</weapon>
