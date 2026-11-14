@@ -18,6 +18,10 @@ var boarding_party_out: bool = false
 var gathering: Array[CrewMember] = []   # crew called to the teleporter to board
 var fixed_target: bool = false          # the target is chosen for this captain (a squad focusing its fire)
 var preferred_targets: Array = []       # the systems this captain shoots first, in place of its squad's conduct
+var outlook: String = "even"            # how the fight is going for this captain's side: winning, even, losing, hopeless, stalled
+var pressed: bool = false               # at the rate things are going, its side has under half a minute left
+var _weighed: Array = []                # [tick, our hull points, their hull points] over the last while
+var _outlook_rolled: bool = false
 var careless: bool = false              # fires each weapon as it charges, at any room (a playtester who doesn't try)
 
 
@@ -30,6 +34,7 @@ func think() -> void:
 	if ship.destroyed or ship.crew_dead:
 		return
 	_manage_power()
+	_weigh()
 	if not fixed_target or target == null or target.is_gone():
 		_choose_target()
 	_aim_weapons()
@@ -38,6 +43,41 @@ func think() -> void:
 	_use_specials()
 	if ship.side == 1:
 		_consider_conduct()     # surrender and escape are the enemy squad's conduct
+
+
+# --- Weighing the fight (heromedel, 2026-11-14) ----------------------------------------------------------------
+# A good captain doesn't wait for a hull number. It weighs the damage coming in against the damage going out, both
+# as measured over the last while and as the weapons on each side stand now, against the hull each side has left.
+# From that it changes what it shoots at, and decides whether to run or offer surrender, beside its ship's own plan.
+
+const WEIGH_WINDOW_TICKS := 400     # the last 20 s
+
+
+func _weigh() -> void:
+	var ours := encounter.hull_points(ship.side)
+	var theirs := encounter.hull_points(1 - ship.side)
+	_weighed.append([encounter.tick_count, ours, theirs])
+	while _weighed.size() > 1 and encounter.tick_count - int(_weighed[0][0]) > WEIGH_WINDOW_TICKS:
+		_weighed.pop_front()
+	var seconds := maxf(1.0, (encounter.tick_count - int(_weighed[0][0])) / 20.0)
+	var taken := maxf(0.0, float(_weighed[0][1]) - ours) / seconds
+	var dealt := maxf(0.0, float(_weighed[0][2]) - theirs) / seconds
+	# What the weapons could do counts for half, so the quiet before the first volleys doesn't read as a stalemate
+	var incoming := maxf(taken, encounter.potential_damage(1 - ship.side) * 0.5)
+	var outgoing := maxf(dealt, encounter.potential_damage(ship.side) * 0.5)
+	var our_time := ours / maxf(incoming, 0.0001)
+	var their_time := theirs / maxf(outgoing, 0.0001)
+	pressed = incoming > 0.0001 and our_time < 30.0
+	if incoming <= 0.0001 and outgoing <= 0.0001:
+		outlook = "stalled" if seconds >= 19.0 else "even"
+	elif outgoing <= 0.0001:
+		outlook = "hopeless"
+	elif our_time < their_time * 0.6:
+		outlook = "losing"
+	elif their_time < our_time * 0.6:
+		outlook = "winning"
+	else:
+		outlook = "even"
 
 
 # --- Power ----------------------------------------------------------------------------------------------------
@@ -100,6 +140,11 @@ func _choose_target() -> void:
 	var options := encounter.living(1 - ship.side)
 	if options.is_empty():
 		target = null
+		return
+	if outlook in ["hopeless", "stalled"] and options.size() > 1:
+		# Nothing is getting through: turn on the ship with the fewest shield layers
+		options.sort_custom(func(a, b): return a.shield_layers < b.shield_layers)
+		target = options[0]
 		return
 	if target != null and options.has(target) and encounter.rng.randf() > 0.02:
 		return
@@ -186,6 +231,12 @@ func _pick_room(weapon: WeaponDef, taken_rooms: Array[int]) -> int:
 	if careless:
 		return encounter.rng.randi_range(0, target.rooms.size() - 1)
 	var first: Array = preferred_targets if not preferred_targets.is_empty() else (encounter.squad.targets if encounter.squad and ship.side == 1 else [])
+	# A change of tactics by how the fight is going: nothing landing, go for the shields; taking a beating, go for
+	# the weapons that are doing it
+	if outlook in ["hopeless", "stalled"] and target.shield_layers > 0:
+		first = ["shields"] + first
+	elif outlook == "losing":
+		first = ["weapons"] + first
 	if not first.is_empty():
 		for behaviour in first:
 			var system := target.system_by(behaviour)
@@ -521,6 +572,14 @@ func _consider_conduct() -> void:
 	var escape_chance := squad.escape_chance if squad else 25
 	var escape_hull := squad.escape_hull if squad else 0.25
 	var hull_fraction := float(ship.hull) / float(ship.max_hull)
+	# Weighed, not only counted: a captain that is losing with under half a minute left thinks of giving up or
+	# running before its hull says so, and one that is winning fights on however low its hull is
+	if outlook in ["losing", "hopeless"] and pressed and not _outlook_rolled and encounter.tick_count > 200:
+		_outlook_rolled = true
+		surrender_hull = 1.0
+		escape_hull = 1.0
+	if outlook == "winning":
+		return
 	if not surrender_rolled and hull_fraction <= surrender_hull:
 		surrender_rolled = true
 		if not encounter.surrender_offered and encounter.rng.randi_range(1, 100) <= surrender_chance:

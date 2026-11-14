@@ -100,6 +100,44 @@ func living(side_index: int) -> Array[Ship]:
 	return list
 
 
+## The hull points a side has left, over all its ships still in the fight.
+func hull_points(side_index: int) -> float:
+	var points := 0.0
+	for ship in living(side_index):
+		points += maxi(0, ship.hull)
+	return points
+
+
+## The hull damage a second a side's weapons could land as its systems stand now: each powered weapon's volley
+## against the other side's shield layers and evasion, over its charge time. A captain weighs the fight with it.
+func potential_damage(side_index: int) -> float:
+	var foes := living(1 - side_index)
+	if foes.is_empty():
+		return 0.0
+	var layers := 0.0
+	var dodge := 0.0
+	for foe in foes:
+		layers += foe.max_shield_layers() + (1 if foe.supershield > 0 else 0)
+		dodge += foe.evasion() / 100.0
+	layers /= foes.size()
+	dodge /= foes.size()
+	var total := 0.0
+	for ship in living(side_index):
+		for slot in ship.weapons:
+			if not slot.powered or slot.def.defensive or slot.def.type == "suit":
+				continue
+			var def := slot.def
+			var volley := 0.0
+			if def.ignores_shields():
+				volley = def.shots * def.damage
+			elif def.type == "beam":
+				volley = maxf(0.0, def.damage - layers) * 2.0
+			else:
+				volley = maxf(0.0, def.shots - layers) * def.damage
+			total += volley * (1.0 - dodge) / maxf(1.0, def.charge_ticks / 20.0)
+	return total
+
+
 func in_fight() -> bool:
 	return fight_started and outcome.is_empty() and not living(1).is_empty()
 

@@ -111,6 +111,18 @@ anything Claude added tagged Ai-Generated-Proposal.
     event screens show. Built for every window of numbered choices; 1 also presses a window's only button.
   - Not settled: the gap between a volley's shots (0.25 s in the game; no figure found).
 
+- **L — Built (2026-11-14), heromedel:** captains weigh the fight. Each captain compares the damage coming in
+  with the damage going out, as measured over the last 20 s and as each side's weapons stand now, against the hull
+  each side has left. From that it changes tactics (nothing landing: go for the shields, or turn on the ship with
+  the fewest layers; taking a beating: go for the weapons doing it), and an enemy captain that is losing with
+  under half a minute left thinks of surrender or escape before its hull says so, while one that is winning
+  fights on however low its hull is. This runs beside the ship's own plan and its squad's conduct.
+  **Ai-Generated-Proposal:** the 20 s window, "losing" as lasting under 0.6 of the other side's time, and the
+  half minute.
+- **M — Built (2026-11-14), heromedel by way of Infall: Eco:** against a Shield Projector, or three layers and
+  more, a captain sends what ignores shields at the shield room; the Senti plans cut the shield room first. Senti
+  picket fights fell from 32 to 54% of hull lost to 0 to 37%, with no stalemates.
+
 ## 4. Multiplayer
 
 - **A — Decided (heromedel, 2026-11-01):** there is no separate single player: the game always runs a server that
