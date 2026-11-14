@@ -119,6 +119,21 @@
 		<choice text="Leave it sleeping."/>
 	</event>
 
+	<!-- heromedel's idea (2026-11-14): the Malphen give up their organ the way they surrender, with matter and no
+	     words (race profiles, Malphen: diplomacy through matter). -->
+	<event id="TECH_MALPHEN_SURRENDER" title="No Words" kind="hostile" races="malphen,any" states="Abandoned,Doomed,Unclaimed,Struggling" bands="3-8" weight="2" unique="yes">
+		<text>A Malphen ship drifts out of the wreckage of some other fight, torn open and leaking. Deep inside it, your sensors read a growth organ still beating. It is in no state to fight you.</text>
+		<choice text="Demand the organ, or you will finish them off." requires="no_tech:malphen">
+			<outcome><text>The Malphen don't answer. They never do. The ship only turns and begins to drift away from you.
+
+Then, without a sound, it splits open and lets the growth organ float free. By the time your crews have it aboard, the ship has powered up its drive and is gone.</text><tech race="malphen"/></outcome>
+		</choice>
+		<choice text="Finish them off.">
+			<outcome><text>The ship turns to face you, slowly, like something cornered.</text><fight squad="malphen-growth"/></outcome>
+		</choice>
+		<choice text="Let it go."/>
+	</event>
+
 	<!-- 3. The rival, given a face: Commodore Marlowe and the Long Odds (doomed GATOS, jealous and scared). -->
 	<event id="RIVAL_FIRST" title="The Long Odds" kind="hostile" bands="7" weight="3" unique="yes">
 		<text>A heavy GATOS ship drops out of a jump right beside your squad, its hull darkened and its emblem scorched. Its captain hails you.
@@ -203,6 +218,7 @@ Behind you, the collapse reaches the rim. It will never reach where you are goin
 Store row for a piece: "{tech}: one of the seven pieces you need to cross to another galaxy."
 Choice to demand a piece from a surrendering ship: "Demand their {tech} as the price of surrender."
 Reward line when a piece is taken from a ship left whole: "You strip the {tech} out of the {ship} and let its crew limp away."
+The same, when the ship is Malphen (they answer with matter, never words): "The Malphen ship says nothing. It jettisons the {tech} and powers up its drive."
 The rim without all seven, when the Tech victory is required: "The rim is here, but there is no way out yet. Without all seven pieces your squad can't cross the dark between galaxies. Go back and find the ones you're missing."
 
 Names picked: the rival's leader is Commodore Marlowe (a GATOS name from the shared list, so it fits Terrans and Tabbys);
