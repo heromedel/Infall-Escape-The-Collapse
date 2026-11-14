@@ -166,8 +166,12 @@ One round on the last code, seeds 2000 on. A win is a whole game.
 3. **The Alliance victory is the easiest,** and it happens to players who are not trying: three of the watcher's
    five wins were Alliance, because talks come up on arrival and the allied ships help at the rim.
 4. **The rival's hunts** cost about a sixth of the squad's hull. Over all four sets they destroyed three squads.
-5. **The watcher runs out of Mawjig more than before:** 184 waits over 30 games, and three games swallowed by the
-   collapse. Fights pay and cost what they did; the cause is not found yet.
+5. **The watcher ran out of Mawjig more than before** (184 waits over 30 games). Found: the playtester was
+   paying for convoy pledges (about 12 Mawjig a game, a cost that is new) even when that left it unable to jump,
+   where a player gets the low Mawjig warning. With the playtester keeping its jumps in reserve, the waits fall to
+   89 over 30 games, about 3 a game, against 2 a game before the victories went in. Where a watcher's Mawjig goes
+   in a game: the store about 114, jumps about 92 (76 jumps), pledges about 10, shots about 10, other events
+   about 7. The playtest now prints this.
 6. **Crew killers, judged by crew** (heromedel by way of Eco). Crew lost per fight: the Last Fleet 5.5, Senti
    pickets 0.8, Azurethea wardens 0.7, GATOS pirates 0.4, and the Senti Census 0 in its three fights. They do not
    kill crew.

@@ -105,6 +105,13 @@ func _summary(reports: Array) -> void:
 	names.sort_custom(func(a, b): return killers[a] > killers[b])
 	print("ended by  " + ", ".join(names.map(func(name): return "%s %d" % [name, killers[name]])))
 	print("waits for want of Mawjig: %d" % _starved)
+	var games := maxf(1.0, reports.size())
+	var spent_keys := _spent.keys()
+	spent_keys.sort()
+	print("Mawjig spent a game: %s. Jumps a game: %.0f." % [", ".join(spent_keys.map(func(key): return "%s %.2f" % [key, _spent[key] / 100.0 / games])), _jumps_total / games])
+	var earned_keys := _earned.keys()
+	earned_keys.sort()
+	print("Mawjig earned a game: %s." % ", ".join(earned_keys.map(func(key): return "%s %.2f" % [key, _earned[key] / 100.0 / games])))
 	print("\nband squad                 fights  lost  left  hull lost  crew lost  shots  paid  shots/paid")
 	var keys := _fights.keys()
 	keys.sort()
@@ -127,9 +134,11 @@ func _play_one(seed_number: int, ship_id: String) -> Dictionary:
 			run.used_events.append(event.id)
 			if event.kind == "rival":
 				report.rival += 1
+			var before_event := run.mawjig
 			var result := _resolve(runner, event)
 			while not String(result.next_event).is_empty():
 				result = _resolve(runner, Library.events[result.next_event])
+			_tally(run.mawjig - before_event, "events:" + ("alliance" if event.id.begins_with("ALLIANCE") else ("tech" if event.id.begins_with("TECH") else "other")), "events")
 			if result.fight_given:
 				report.fights += 1
 				var squad := runner.pick_squad(result.fight)
@@ -142,6 +151,7 @@ func _play_one(seed_number: int, ship_id: String) -> Dictionary:
 						print("      at the final: %s hull %d/%d shields %d weapons %s crew %d reactor %d" % [ship.design.id, ship.hull, ship.max_hull, ship.shield_layer_capacity(), str(ship.weapons.map(func(slot): return slot.def.id)), ship.living_crew_count(), ship.reactor_level])
 				var outcome := _fight(run, runner, squad)
 				var spent := mawjig_before - run.mawjig
+				_tally(-spent, "shots", "fights")
 				var paid := 0
 				if outcome in ["won", "surrendered"]:
 					var before_pay := run.mawjig
@@ -153,6 +163,7 @@ func _play_one(seed_number: int, ship_id: String) -> Dictionary:
 						runner.trade_surrender_for_tech(rewards)
 						_count_tech(run, pieces, "surrender")
 					paid = run.mawjig - before_pay
+					_tally(paid, "fights", "fights")
 				_note_fight(band, squad.id, outcome, hull_before, _hull(run), spent, paid, crew_before - _crew(run))
 				if verbose:
 					print("    jump %d band %d: %s vs %s, hulls %s, mawjig %s" % [run.jumps, run.band(), outcome, squad.id, str(run.squad.map(func(s): return "%d/%d" % [s.hull, s.max_hull])), Mawjig.format(run.mawjig)])
@@ -173,7 +184,9 @@ func _play_one(seed_number: int, ship_id: String) -> Dictionary:
 					report.ended_by = {"escape": "reached the rim", "tech": "the Tech victory", "alliance": "the Alliance victory"}[report.victory]
 					return _close(report, run)
 			if result.store or run.cluster().store:
+				var before_shop := run.mawjig
 				_shop(run)
+				_tally(run.mawjig - before_shop, "store", "store")
 		run.clear_lost_ships()
 		report.most_ships = maxi(report.most_ships, run.living_ships().size())
 		if run.tech_count() >= int(report.tech):     # the most of the crossing's needs one ship carried, and what was lacking then
@@ -183,9 +196,15 @@ func _play_one(seed_number: int, ship_id: String) -> Dictionary:
 		report.goal = run.tech_goal
 		report.pledges = maxi(int(report.pledges), run.pledge_count())
 		_rest(run)
+		var before_travel := run.mawjig
+		var jumps_before := run.jumps
 		if not _travel(run):
 			_starved += 1
 			run.wait()
+			_tally(run.mawjig - before_travel, "waits", "waits")
+		else:
+			_tally(run.mawjig - before_travel, "jumps", "jumps")
+			_jumps_total += run.jumps - jumps_before
 		if run.galaxy.is_swallowed(run.current) or run.collapse_distance() < 60.0:
 			report.ended_by = "swallowed by the collapse"
 			return _close(report, run)
@@ -249,6 +268,14 @@ func _tech_spare(run: RunState) -> int:
 	return TECH_SPARE if run.band() < run.galaxy.bands - 1 else Mawjig.JUMP_COST * 6
 
 
+## Books a change in the squad's Mawjig: a loss under what it was spent on, a gain under where it came from.
+func _tally(change: int, spent_on: String, earned_from: String) -> void:
+	if change < 0:
+		_spent[spent_on] = int(_spent.get(spent_on, 0)) - change
+	elif change > 0:
+		_earned[earned_from] = int(_earned.get(earned_from, 0)) + change
+
+
 ## How many races' pieces the squad has anywhere: fitted to a ship or in the hold.
 func _held(run: RunState) -> int:
 	var count := 0
@@ -289,6 +316,9 @@ func _gather_pieces(run: RunState, reserve: int) -> void:
 			_fitted += 1
 
 
+var _spent := {}         # where the Mawjig went, in cents over all runs: jumps, shots, events, store
+var _earned := {}        # and where it came from: fights, events, waits
+var _jumps_total := 0
 var _talks := 0          # talks about the convoy held at stores, over all runs
 var _fitted := 0         # pieces fitted or moved to the one ship at yards, over all runs
 
@@ -311,6 +341,13 @@ func _rest(run: RunState) -> void:
 
 func _resolve(runner: EventRunner, event: EventDef) -> Dictionary:
 	var choices: Array = event.choices.filter(func(c): return runner.can_take(c))
+	# A player who isn't careless heeds the low Mawjig warning (GDD 14L): no choice that pays the squad down past the
+	# jumps it keeps in reserve, when another choice is open
+	if skill != "careless":
+		var keep: int = Mawjig.JUMP_COST * int(player.reserve)
+		var safe: Array = choices.filter(func(c): return runner.most_given_away(c) <= 0 or runner.run.mawjig - runner.most_given_away(c) >= keep)
+		if not safe.is_empty():
+			choices = safe
 	var choice: Dictionary = choices[runner.run.rng.randi_range(0, choices.size() - 1)]
 	match String(player.events):
 		"sees":
