@@ -395,37 +395,37 @@ From Federation Home Planet's `Pricing.java` (heromedel/federation-home-planet),
 - Rough effect: the Outrider rises from 181.42 by about 97 for structure and about 109 for its three core systems;
   the Light Attack Frame by about 36 for structure, plus its core systems.
 
-## F13. Reference ship values and squad budgets under the new value rules (2026-10-31)
+## F13. Reference ship values and squad budgets under the new value rules (2026-10-31, revised 2026-11-14)
 
 Godot Version now recomputes values as the game runs; these are Eco's reference numbers to check it against. Method
-(`system-prices.md`): structure (hull 2.42 a point, a room with a system 10% of its level-1 price, other rooms and
-doors 0.48, mounts 6.05; a ship with no mount entries counts one per weapon) + reactor + systems at their levels
-(Piloting, Life Support and Engines from 36.31) + weapons (table prices; infection priced like fire). Crew excluded.
-Shields in the ship files count bars, priced here as shield-test layers (GDD 8H). **Shared with Godot Version
-(2026-10-31):** a room holding several systems counts 10% of its dearest system's level-1 price; the AZC counts as a
-room system at 18.15; a shields room counts one layer (54.46, so 5.45); the Supershield is 38.72 with upgrades 7.26
-and 12.11. Godot Version's in-game values match these to within 0.02. (Tentauri Scout = the Burr, Tentauri Warden =
-the Seedpod.) The growth organ has no table
-price; FHP's 6.05 for an unpriced system stands in. Ships from `Cloud-C-Godot-Version` at bd3f4ac.
+(`system-prices.md`): structure (hull 2.42 a point; a room with a system 10% of its dearest system's level-1 price,
+the AZC at 18.15 and Shields at 30.25; other rooms and doors 0.48; mounts 6.05, and a ship with no mount entries
+counts one per weapon) + reactor + systems at their levels (Piloting, Life Support and Engines from 36.31; Shields by
+bars, the classic Mawjig Shield Generator, since GDD 8H is Rejected; the Supershield 38.72 with upgrades 7.26 and
+12.11; the growth organ as a Clone Bay) + weapons (table prices; infection priced like fire). Crew excluded. Ships
+from `Cloud-C-Godot-Version` at the 2026-11-14 merge. (Tentauri Scout = the Burr, Tentauri Warden = the Seedpod.)
 
-| Ship | Before | Now | Of which structure | Hull | Rooms (with a system) | Doors | Mounts |
-|---|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-| Pirate Scrapper | 85.12 | 240.97 | 46.92 | 8 | 5 (5) | 7 | 1 |
-| Spawnling | 98.98 | 262.58 | 48.61 | 12 | 5 (3) | 6 | 1 |
-| Relay Picket | 150.93 | 266.01 | 42.46 | 9 | 3 (3) | 4 | 1 |
-| Moth Skiff | 138.23 | 290.83 | 43.67 | 7 | 3 (3) | 4 | 2 |
-| Packrunner | 166.12 | 330.81 | 55.76 | 9 | 5 (5) | 7 | 2 |
-| Light Attack Frame | 159.55 | 339.96 | 71.48 | 7 | 6 (5) | 7 | 6 |
-| Patrol Cutter | 170.71 | 346.62 | 66.99 | 13 | 9 (6) | 10 | 2 |
-| Tentauri Scout | 188.81 | 395.61 | 66.42 | 8 | 2 (2) | 3 | 6 |
-| Sporecarrier | 243.82 | 413.11 | 60.36 | 12 | 6 (6) | 7 | 2 |
-| Outrider | 181.42 | 421.93 | 131.57 | 30 | 10 (5) | 14 | 6 |
-| Tentauri Warden | 267.51 | 465.61 | 50.44 | 11 | 3 (2) | 4 | 2 |
-| Assault Frame | 298.88 | 472.03 | 64.21 | 13 | 7 (6) | 9 | 2 |
-| Pirate Hijacker | 267.61 | 477.14 | 100.59 | 14 | 11 (8) | 19 | 6 |
+| Ship | Value | Of which structure | Hull | Rooms (with a system) | Doors | Mounts |
+|---|:-:|:-:|:-:|:-:|:-:|:-:|
+| Polyp | 173.56 | 26.37 | 5 | 2 (2) | 2 | 1 |
+| Pirate Scrapper | 238.55 | 44.51 | 8 | 5 (5) | 7 | 1 |
+| Relay Picket | 263.59 | 40.04 | 9 | 3 (3) | 4 | 1 |
+| Spawnling | 267.43 | 47.41 | 12 | 5 (3) | 6 | 1 |
+| Vein Moth | 286.12 | 47.65 | 10 | 4 (3) | 5 | 2 |
+| Moth Skiff | 289.01 | 41.85 | 7 | 3 (3) | 4 | 2 |
+| Packrunner | 328.39 | 53.34 | 9 | 5 (5) | 7 | 2 |
+| Light Attack Frame | 338.15 | 69.67 | 7 | 6 (5) | 7 | 6 |
+| Patrol Cutter | 368.41 | 88.76 | 13 | 9 (6) | 10 | 6 |
+| Tentauri Scout | 393.79 | 64.61 | 8 | 2 (2) | 3 | 6 |
+| Sporecarrier | 411.28 | 58.54 | 12 | 6 (6) | 7 | 2 |
+| Outrider | 420.11 | 129.76 | 30 | 10 (5) | 14 | 6 |
+| Tentauri Warden | 463.77 | 48.62 | 11 | 3 (2) | 4 | 2 |
+| Assault Frame | 470.21 | 62.41 | 13 | 7 (6) | 9 | 2 |
+| Pirate Hijacker | 474.71 | 98.17 | 14 | 11 (8) | 19 | 6 |
 
-Values rise about 171 a ship on average: about 109 is the three core systems (a flat 36.31 each) and the rest is
-structure. Small ships rise most (the Scrapper about 2.8×), big ones least (about 1.6×).
+Against the 2026-10-31 table, values rose about 171 a ship from structure and core systems; the 2026-11-14 revision
+moves a shields room from 5.45 back to 3.03 (most ships −2.42), prices the growth organ as a Clone Bay, and adds the
+Polyp and Vein Moth.
 
 **Squad budgets, rebased (Ai-Generated-Proposal):** F6's per-player-ship budget + 171, × the player's expected ships
 (F4). What a fight then pays is 2.5% × budget × 1.(band − 1).

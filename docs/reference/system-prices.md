@@ -51,16 +51,19 @@ then its structure, reactor, systems at their levels and weapons; crew are count
 
 - **Rooms — Ai-Generated-Proposal (2026-10-31), shared with Godot Version:** a room holding several systems counts
   10% of its dearest system's level-1 price; the AZC counts as a room system at 18.15 (its level 1); a shields room
-  counts the shield test's level 1, one layer (54.46, so 5.45). Reference values per ship: `economy-findings.md`, F13.
+  counts Shields' level-1 price, 30.25, so 3.03 (since GDD 8H's shield test is Rejected, 2026-11-14). Reference values
+  per ship: `economy-findings.md`, F13.
 - **Weapon mounts — Proposed (heromedel, 2026-10-31):** a mount costs 25 scrap (**6.05**) to add at a store, and each
   mount a ship has counts at that price in its value. FHP counts mounts but doesn't price them. Replaces the first
   guess of 4.84 (`economy-findings.md`, F10).
 - **Likely (heromedel, 2026-10-31):** the wreck rate stays 2.5% of value (GDD 8I), so rewards rise with the new
   values; buying ships rises the same way, which offsets it.
 
-## Shields under the shield test (GDD 8H)
+## Mawjig Shield Generator by layer (two bars each)
 
-One level per layer; each level takes 2 power and 2 damage to lose, and is priced as FTL's two bars together.
+GDD 8H's shield test is **Rejected** (heromedel, 2026-11-14): the Mawjig Shield Generator is the classic shield
+(GDD 8Q), priced by bars from the Shields row above, and ship files give its level in bars. This table is the same
+price counted per layer (two bars each); the Senti Shield Projector below prices its layers from it.
 
 | Level | Layers | FTL bars it replaces | Scrap | Mawjig |
 |---|---|---|---|---|
