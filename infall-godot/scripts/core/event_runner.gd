@@ -766,7 +766,7 @@ func vector_after_fight(encounter: Encounter) -> Array:
 		run.log_book.write("vector_drive", {"drive": run.vector_drive}, "The Vector Frame was beaten: its drive is %s." % run.vector_drive)
 		return lines
 	# Still flying: it keeps the damage, less what it can mend, and the crew it has left
-	var folded: bool = frame.escaped and encounter.outcome != "withdrew"
+	var folded: bool = frame.escaped
 	var mends: float = VectorHunt.RECOVERS[mini(run.vector_escapes, VectorHunt.RECOVERS.size() - 1)]
 	run.vector_hull = clampf(float(frame.hull) / frame.max_hull + mends, 0.2, 1.0)
 	run.vector_crew = mini(frame.design.crew.size(), frame.living_crew_count() + 1)

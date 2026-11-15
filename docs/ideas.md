@@ -92,6 +92,8 @@ by Infall: Lori.
 **Proposed (heromedel, 2026-11-14):** every victory should have a setting for whether it is allowed. The fallback
 victory shows as the Vector Drive victory by default and can be toggled to the old Last Fleet victory.
 
+Built in the Godot version: `docs/godot-version-decisions.md`, GV 2F to 2H.
+
 ### Vector Drive victory (2026-11-14)
 
 **Proposed (heromedel, 2026-11-14):** this replaces the plain victory (reach the rim and beat the Last Fleet).
@@ -111,6 +113,8 @@ victory shows as the Vector Drive victory by default and can be toggled to the o
 - If the squad ends up fighting the Vector Drive ship several times, the ship recovers only some of its hull, not
   all of it, and ships its squad lost are not always replaced with identical ones. Some variation in final fights
   would be good.
+
+Built in the Godot version: `docs/godot-version-decisions.md`, GV 2H, which lists what was filled in to build it.
 
 ### Collection victory by refitting The Colony Ship (2026-11-14)
 
@@ -184,6 +188,9 @@ The stage 7 rival who wants your escape route could by default be a band of doom
   population, situation and so on.
 - **Proposed (2026-10-27):** with the right sensors, a player may be able to see the population of nearby clusters
   before jumping to them (see GDD 2E for sensor range).
+
+Built in the Godot version (2026-11-14): `docs/godot-version-decisions.md`, GV 2J, with the numbers in
+`infall-godot/content/situations/situations.xml`.
 
 ## Resources
 
