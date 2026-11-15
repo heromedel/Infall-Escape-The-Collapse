@@ -104,7 +104,7 @@ The Colony Ship's warning comes through behind it: "Careful. If that drive is da
 			<outcome><text>Your squad fires first. The Vector Frame's escorts scramble to cover it.</text><fight squad="final-vector" first_strike="squad"/></outcome>
 		</choice>
 		<choice text="Give them their contest: your squad against their ship alone.">
-			<outcome><text>"Deal!" The escorts pull back to watch. The Vector Frame fires first, of course.</text><fight squad="final-vector" hold_back="escorts" first_strike="enemy"/></outcome>
+			<outcome><text>"Deal!" The escorts pull back to watch, for now. The Vector Frame fires first, of course.</text><fight squad="final-vector" hold_back="escorts" first_strike="enemy"/></outcome>
 		</choice>
 		<choice text="Jam the drive before it can jump." requires="system:hacking">
 			<outcome><text>Your probe latches onto the Vector Frame's drive. Whatever happens now, it isn't leaving.</text><fight squad="final-vector" no_escape="yes"/></outcome>
@@ -136,7 +136,7 @@ It was here, though. A fold that size leaves a scar in space, and your sensors c
 			<outcome><text>This time your probe is waiting for the drive. The Vector Frame isn't folding anywhere.</text><fight squad="final-vector" no_escape="yes"/></outcome>
 		</choice>
 		<choice text="Give them their contest again.">
-			<outcome><text>"Deal. Again." The escorts pull back to watch. The Vector Frame fires first, of course.</text><fight squad="final-vector" hold_back="escorts" first_strike="enemy"/></outcome>
+			<outcome><text>"Deal. Again." The escorts pull back to watch, and this time you know how long that lasts. The Vector Frame fires first, of course.</text><fight squad="final-vector" hold_back="escorts" first_strike="enemy"/></outcome>
 		</choice>
 	</event>
 
@@ -225,6 +225,9 @@ Fight messages:
 When it starts charging its fold: "The Vector Frame is charging its fold. Finish it, or stop the drive."
 When its fold is lost because the drive was hit: "The Vector Frame's drive is hit, and its fold falls apart. If it
 dies now, the drive dies with it."
+When the Vector Frame falls to half its hull in the contest and its escorts come in (Godot, 2026-11-14: the Mecha
+enjoy a contest but enjoy winning more):
+"The Vector Frame is losing its contest. Its escorts decide winning matters more, and come in."
 When an ally that set out late arrives: "{ally} drops out of its jump and joins the fight."
 
 THE LOST RUN, when the drive was destroyed and no other victory is allowed, title "NO WAY ACROSS":
