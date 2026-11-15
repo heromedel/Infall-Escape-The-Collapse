@@ -101,6 +101,36 @@ func give_first_strike(side_index: int) -> void:
 					slot.charge = slot.charge_needed(ship.tech)
 
 
+## A contest (an event's hold_back="escorts"): the squad's lead ship fights alone and its escorts watch from outside
+## the fight. The Mecha enjoy a contest and enjoy winning more (race profiles, Mecha 7): once their ship is down to
+## half its hull the escorts stop watching and come in.
+const ESCORTS_JOIN_AT := 0.5
+
+func hold_escorts_back() -> void:
+	var enemies := enemy_ships()
+	for index in range(1, enemies.size()):
+		enemies[index].held_back = true
+		enemies[index].escaped = true
+
+
+func _tick_held_back() -> void:
+	var lead: Ship = null
+	var waiting := false
+	for ship in ships:
+		if ship.side == 1:
+			if ship.held_back:
+				waiting = true
+			elif lead == null:
+				lead = ship
+	if not waiting or lead == null or lead.is_gone() or not outcome.is_empty() or lead.hull >= lead.max_hull * ESCORTS_JOIN_AT:
+		return
+	for ship in ships:
+		if ship.held_back:
+			ship.held_back = false
+			ship.escaped = false
+	note("escorts_join", {"ship": lead})
+
+
 ## Allies that are a long way behind: out of the fight until they arrive.
 func hold_allies_back(allies: Array, ticks: int) -> void:
 	for ship in allies:
@@ -286,6 +316,7 @@ func step() -> void:
 	_tick_reinforcements()
 	_tick_break_off()
 	_tick_late_allies()
+	_tick_held_back()
 	_tick_projectiles()
 	_tick_bombs()
 	_tick_beams()

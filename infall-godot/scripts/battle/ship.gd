@@ -73,6 +73,7 @@ var evb_cooldown: int = 0
 var suit_out: bool = false
 var destroyed: bool = false
 var escaped: bool = false
+var held_back: bool = false        # an escort watching a contest from outside the fight, until its lead ship is losing
 var fold_ticks: int = 0            # how far the Vector Frame has charged its fold out of the fight
 var late_ticks: int = 0            # an ally still on its way to the fight: it arrives when this runs out
 var surrendered: bool = false

@@ -43,7 +43,11 @@ func _ready() -> void:
 	var frame: Ship = fight[1]
 	var drive := frame.system_by_id(VectorHunt.DRIVE)
 	_check(encounter.living(1).size() >= 3, "it comes with escorts: %d ships" % encounter.living(1).size())
-	_check(_fight(run, runner, {"hold_back": "escorts"})[0].living(1).size() == 1, "a contest holds the escorts back")
+	var contest := _fight(run, runner, {"hold_back": "escorts"})
+	_check(contest[0].living(1).size() == 1, "a contest holds the escorts back")
+	contest[1].hull = int(contest[1].max_hull * 0.45)
+	contest[0].step()
+	_check(contest[0].living(1).size() >= 3, "until their ship is down to half its hull: then they come in")
 	frame.hull = int(frame.max_hull * 0.2)
 	encounter.step()
 	_check(frame.charging_escape and not frame.escaped, "beaten down, it starts to fold away")

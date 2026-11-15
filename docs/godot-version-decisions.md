@@ -141,6 +141,9 @@ anything Claude added tagged Ai-Generated-Proposal.
   - **Each choice at the meeting changes the fight** (GDD 9E; Lori's choices): open fire (the squad's weapons start
     charged), their contest (the escorts hold back; the Vector Frame's weapons start charged), or, with Hacking,
     jam the drive (it can't get away).
+    - **Ai-Generated-Proposal (2026-11-15):** in a contest the escorts watch only until the Vector Frame is down to
+      half its hull, then come in. Before this the contest won the fight four times in five in the playtests and
+      was the only choice worth taking.
   - **Ai-Generated-Proposal, all of the following:**
     - *Where it is.* It takes a place on the rim, two to four jumps along it from where the squad would arrive,
       when the squad enters the last band or finds a trail. With a trail the map gives its heading; with two, or

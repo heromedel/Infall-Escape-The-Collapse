@@ -684,11 +684,10 @@ func build_enemy_ships(squad: SquadDef) -> Array[Ship]:
 	var difficulty_hull := {"Easy": 0.8, "Normal": 1.0, "Hard": 1.25}.get(run.difficulty, 1.0) as float
 	var harder: int = 1 if String(run.fight_terms.get("harder", "")) == "yes" else 0
 	var fielded: Array[String] = squad.roll_ships(run.band() + harder, run.rng)
-	# An event's choice may keep some of them out of the fight (hold_back): the lead ship always fights
+	# An event's choice may keep some of them out of the fight for good (hold_back="1"): the lead ship always fights.
+	# hold_back="escorts" is a contest: the escorts watch, and come in when their ship is losing (apply_fight_terms).
 	var held := String(run.fight_terms.get("hold_back", ""))
-	if held == "escorts":
-		fielded = fielded.slice(0, 1)
-	elif held.is_valid_int():
+	if held.is_valid_int():
 		fielded = fielded.slice(0, maxi(1, fielded.size() - int(held)))
 	# The Vector Frame's lost escorts are replaced, not always by the same ships, but each time it folds away it has
 	# less time to gather them: one escort fewer after each escape
@@ -729,6 +728,8 @@ func apply_fight_terms(encounter: Encounter, allies: Array) -> void:
 	var terms := run.fight_terms
 	if String(terms.get("allies", "")) == "late":
 		encounter.hold_allies_back(allies, LATE_ALLIES_TICKS)
+	if String(terms.get("hold_back", "")) == "escorts":
+		encounter.hold_escorts_back()
 	match String(terms.get("first_strike", "")):
 		"squad":
 			encounter.give_first_strike(0)

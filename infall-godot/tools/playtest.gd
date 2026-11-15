@@ -508,7 +508,7 @@ func _choice_value(runner: EventRunner, choice: Dictionary) -> float:
 					value += (700.0 if strength > 0.6 else -1500.0) * run.band_adjustment()
 					# What the choice does to the fight (GDD 9E): fewer enemies is worth the most
 					if attrs.has("hold_back"):
-						value += 2000.0
+						value += 600.0 + (3000.0 if _env("VECTOR", "") == "contest" else 0.0)      # VECTOR=contest: always take the contest
 					if String(attrs.get("first_strike", "")) == "squad":
 						value += 500.0
 					elif String(attrs.get("first_strike", "")) == "enemy":
