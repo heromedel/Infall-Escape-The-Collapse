@@ -225,3 +225,77 @@ through the evening. The Windows build `infall-godot/build/windows/Infall.zip` i
 | An event's choice changes the fight | heromedel (GDD 9E); Lori's hooks | First strike, escorts or allies held back, a jammed drive, an event that plays once the fight is won |
 | Events come from the situation | heromedel (GDD 9D) | No cluster is flagged hostile in advance; the weights are in `content/situations/situations.xml` (GV 2I) |
 | Populations | heromedel (`docs/ideas.md`, 2026-10-27) | Gatillions; people leave ahead of the collapse and move on; sensors show them (GV 2J) |
+
+## What the playtests show now
+
+One round on the last code, seeds 2000 on, the same seeds as the table above. A win is a whole game.
+
+| Playtester | Games | Won | Of those |
+|---|---|---|---|
+| Watcher, no goal | 30 | 4 | 4 by the Vector Drive, fitted to one ship |
+| Expert, no goal | 30 | 6 | 6 by the Vector Drive, fitted to one ship |
+| Expert going for the Tech victory | 20 | 1 | 1 Tech victory |
+| Expert going for the Alliance victory | 20 | 0 | |
+
+1. **The expert wins a fifth of its games,** against the 9 of 30 before the evening. 18 of its 30 games reached
+   the Vector Frame and 6 won there, about the same odds as the Last Fleet gave. The difference is the Alliance
+   victory: with four races and allies it was five of those nine wins, and with all seven it is none.
+2. **The Vector Frame's choices come out even.** The expert won 4 of 15 opening fire and 4 of 15 taking the
+   contest. Before the contest's escorts came in at half hull, the contest won the fight four times in five.
+3. **Nobody lost the drive, and nobody saved everyone.** The captains spare the drive's room once the ship is half
+   beaten, so in 27 wins the drive came out scarred 20 times and whole 7. No playtester ended with the 242.01 Mawjig
+   for The Colony Ship: the expert ends a game with about 150.
+4. **The Alliance victory was not won in 20 games going for it.** Seven of the 20 got six of the seven peoples.
+   Nine of the 20 were swallowed by the collapse while still looking.
+5. **The Tech victory:** three of 20 games had all four needs fitted to one ship; one won the ambush.
+6. **Fights a jump** are about as many as before over a whole game (watcher 0.25, expert 0.31), and now depend on
+   where the squad is. A GATOS squad's chance of a hostile arrival in band 6 where things are fine: its own space
+   25%, Tentauri 27%, Azurethea 31%, Senti 33%, Lykario 54%, Mecha 59%, Malphen 77%. The first weights gave too few
+   fights and the watcher starved; the base weight of hostile events was doubled.
+7. **Malphen space kills.** Malphen growths were 167 fights and 7 lost games; GATOS pirates 345 fights and 9 lost
+   games. The playtesters now take another way outward where the map shows plainly dangerous space, when there is
+   one.
+8. **Mawjig:** the watcher waited for want of it about 3 times a game, as before the evening.
+
+## Checks
+
+Compile, content (356 event choices now checked for requirements, effects and references), galaxy (with
+populations and situations), mercenary, ship value, crew fight, fight and the new Vector Drive test pass. Input 27
+of 27, co-op 22 of 22, the LAN run test passes, chaos seeds 11, 12 and 13 are clean. An exported build starts.
+
+A blind tester looked at eleven new screens. Fixed from it: the Vector Frame's drive state overlapped its name;
+fitting the drive now says it ends the run, won; end screens say VICTORY; How to Play scrolls and names SHIP OUT;
+the text after a fight no longer speaks of wrecks when the crews were killed.
+
+Not fixed from it: the hint banner over an enemy ship's tag, ship names cut short in tags, the store's faint
+scrollbar, and a talk that shows only "Leave it." when the squad lacks what a blue choice needs (as in the genre,
+choices the squad can't take are not shown; the map says what the Malphen need).
+
+## Filled in to build it (each an Ai-Generated-Proposal)
+
+They are listed where they live: GV 2H (the Vector Drive victory: where the Vector Frame waits, how it folds away,
+the escorts, fitting, the drive lost), GV 2I (every weight in `content/situations/situations.xml`) and GV 2J
+(population sizes and distances the note doesn't give). Three worth knowing without opening them:
+
+1. The Vector Frame folds away over 12 seconds, and a hit on its drive stops the fold. That same hit is what loses
+   the drive if the ship then dies, so stopping it is a risk the player chooses.
+2. One of the squad's own ships can be fitted with the drive right after the fight or at any store; only The
+   Colony Ship needs a refit yard.
+3. If the drive is destroyed and neither the Tech nor the Alliance victory is allowed, the run is lost there.
+
+## Not built
+
+- A doomed Senti store behind a fight. Fights deep in doomed Senti space come from the situation: about four
+  arrivals in five there are hostile.
+- The Collection victory by refitting The Colony Ship (`docs/ideas.md`), and the Exploration and secret victories.
+- Enemy captains still do not use the yard, the EVA Dock, or hold a charge weapon.
+- Senti crew killers still kill almost no crew (0.83 a fight for the pickets, 0 for the Census in two fights).
+
+## Questions
+
+- **Q1.** The expert now wins a fifth of its games, where you called a third right. Leave it, or ease the Vector
+  Frame? If ease, the simplest lever is when its escorts join a contest (now at half its hull).
+- **Q2.** The Alliance victory with all seven was not won in 20 games by a playtester going for it. Is that how
+  hard the peaceful victory should be?
+- **Q3.** Nobody could pay the 242.01 Mawjig to fit the drive to The Colony Ship, so every Vector Drive win was one
+  ship leaving alone. Is the ending where everyone leaves meant to be that rare?
