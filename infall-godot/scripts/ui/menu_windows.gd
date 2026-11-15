@@ -48,7 +48,7 @@ const HOW_TO_PLAY := [
 	["Look around", "Mouse wheel zooms, middle drag or the arrow keys pan, Home shows the whole fight, Tab picks your next ship."],
 	["Jump and shop", "J or JUMP opens the map: click a cluster joined to yours, then jump. U or SHIP upgrades your ships. A cluster with a store shows a STORE button."],
 	["Where trouble is", "Nothing on the map says where a fight waits. It depends on whose space it is and how they are faring, on your own race, and on what you have done there. The map shows who lives in a cluster within sensor range and who is on the road: where many are passing through, expect trouble and people asking for help."],
-	["Leaving a fight", "Each ship jumps clear on its own once its drive is charged (JUMP OUT), and comes back if the fight is won. When the squad is clear, the map opens and the jump to another cluster costs the usual 1.21. JUMP with only some ships clear leaves the rest behind."],
+	["Leaving a fight", "Each ship jumps clear on its own once its drive is charged (SHIP OUT), and comes back if the fight is won. When the squad is clear, the map opens and the jump to another cluster costs the usual 1.21. JUMP with only some ships clear leaves the rest behind."],
 	["Refit yards", "Some stores have a yard: it moves a system from one of your ships to another for a quarter of its value, and buys ships."],
 	["The Vector Frame", "The Mecha have built a ship around a drive that can leave the galaxy. It waits somewhere along the rim; the map says what you know of where. Beat it and its drive is yours: fitted to one of your ships, that ship leaves alone; fitted to The Colony Ship at a refit yard, everyone leaves."],
 	["Its drive", "Destroy the Vector Frame while its drive is damaged and the drive is gone with it. Beaten down, the ship folds away on that drive unless the drive is damaged or jammed, and you meet it again nearby, partly mended. Killing its crew takes the ship whole."],
@@ -63,6 +63,7 @@ static func how_to_play() -> Overlay:
 	window.place_panel(980)
 	window.add_title("HOW TO PLAY")
 	# The page is longer than a screen: it scrolls
+	window.body.add_child(UiKit.label("Scroll to read on.", 15, UiColours.TEXT_DIM))
 	var page := window.scrolling_area()
 	for entry in HOW_TO_PLAY:
 		var line := window.add_text("[b]%s.[/b]  %s" % entry, 17)
@@ -203,6 +204,8 @@ static func end_screen(run: RunState, won: bool, on_done: Callable) -> Overlay:
 	var window := Overlay.new()
 	window.dim.color = Color(0, 0.0, 0.02, 0.85)
 	window.place_panel(860)
+	if won:
+		window.body.add_child(UiKit.label("VICTORY", 18, UiColours.POWER_GREEN, true))
 	if won and run.victory == "alliance":
 		window.add_title(ALLIANCE_WON_TITLE, Color("#ffd46b"))
 		window.add_text(CONVOY_WON_TEXT, 20)

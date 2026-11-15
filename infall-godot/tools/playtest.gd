@@ -876,8 +876,10 @@ func _toward_store(run: RunState) -> int:
 ## space is plainly dangerous for this squad (How to Play, "Where trouble is"). The careless player doesn't look.
 func _outward_score(run: RunState, there: Dictionary) -> float:
 	var score: float = there.radius
-	if skill != "careless" and there.kind == "open" and Situations.threat(run, there) > 0.6:
-		score -= 260.0
+	if float(there.radius) <= float(run.cluster().radius):
+		return score - 2000.0      # never back toward the collapse to avoid a fight
+	if skill != "careless" and there.kind == "open" and not there.visited and Situations.threat(run, there) > 0.6:
+		score -= 120.0             # another way outward is worth a shorter step
 	return score
 
 

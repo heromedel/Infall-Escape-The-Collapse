@@ -542,7 +542,7 @@ func _on_fight_over(outcome: String, finished: Encounter) -> void:
 			holder[0].text = "%s joins the %s." % [survivor.name, ship.name] if ship else "There is no room aboard for %s." % survivor.name
 			holder[0].disabled = true
 			run_changed.emit(), UiColours.POWER_GREEN))
-	window.add_button("Continue...", func():
+	window.add_button("Keep the drive in the hold and go on." if VectorHunt.drive_held(run) and not vector_lines.is_empty() else "Continue...", func():
 		window.close()
 		_after_fight(final_fight))
 	if not session.catching_up:
@@ -559,6 +559,9 @@ func _on_fight_over(outcome: String, finished: Encounter) -> void:
 
 func _after_fight_text() -> String:
 	var race := enemy_squad.race if enemy_squad else "terran"
+	# Ships taken with nobody left alive aboard are not wrecks
+	if encounter and not encounter.all_enemy_ships().any(func(ship: Ship): return ship.destroyed):
+		return "Nobody is left alive aboard. Your crews strip the drifting hulls of everything they can turn into Mawjig."
 	match race:
 		"malphen":
 			return "The living ship comes apart in strands. Your crew convert what doesn't twitch into Mawjig."
@@ -670,7 +673,7 @@ func _add_fit_buttons(window: Overlay) -> void:
 		var ship: Ship = run.squad[index]
 		if ship.is_gone() or ship.is_mercenary():
 			continue
-		var fit := window.add_button("Fit it to the %s  ·  %s Mawjig" % [ship.name, Mawjig.format(VectorHunt.scout_price(run))], func():
+		var fit := window.add_button("Fit it to the %s and leave the galaxy: the run ends, won  ·  %s Mawjig" % [ship.name, Mawjig.format(VectorHunt.scout_price(run))], func():
 			window.close()
 			if VectorHunt.fit(run, ship):
 				_win_run(), Color("#ffd46b"))

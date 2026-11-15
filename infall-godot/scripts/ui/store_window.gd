@@ -111,7 +111,7 @@ func _rebuild() -> void:
 	if VectorHunt.drive_held(run):
 		right.add_child(_section("THE MAWJIG VECTOR DRIVE"))
 		var colony_refusal := VectorHunt.fit_refusal(run, null)
-		var colony := _card("Fit it to The Colony Ship", "Your scouts dock and go aboard, and The Colony Ship makes the jump." + ("" if Refit.has_yard(run.cluster()) else "
+		var colony := _card("Fit it to The Colony Ship", "Your scouts dock and go aboard, and The Colony Ship makes the jump. The run ends, won." + ("" if Refit.has_yard(run.cluster()) else "
 Only a refit yard can do this, and this store has none."),
 				VectorHunt.colony_price(run), not Refit.has_yard(run.cluster()), func(): _fit_vector(-1), null, "NO YARD", "FIT")
 		colony.tooltip_text = colony_refusal
@@ -120,7 +120,7 @@ Only a refit yard can do this, and this store has none."),
 			var scout: Ship = run.squad[index]
 			if scout.is_gone() or scout.is_mercenary():
 				continue
-			right.add_child(_card("Fit it to the %s" % scout.name, "That ship makes the jump. Nobody else does.", VectorHunt.scout_price(run), false, func(): _fit_vector(index), null, "SOLD", "FIT"))
+			right.add_child(_card("Fit it to the %s" % scout.name, "That ship makes the jump. Nobody else does. The run ends, won.", VectorHunt.scout_price(run), false, func(): _fit_vector(index), null, "SOLD", "FIT"))
 	var ask := Alliance.race_to_ask(run, run.cluster())
 	if ask != "":
 		right.add_child(_section("THE CONVOY"))
