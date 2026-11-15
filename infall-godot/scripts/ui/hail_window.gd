@@ -48,8 +48,8 @@ func _greeting(hail: String) -> String:
 			return "Laughter and howling come over the channel. \"Good hunting! Why stop now?\""
 		"malphen":
 			return "There is no answer. Only static, and something on the channel that sounds like breathing."
-		"vector":      # a stand-in by Infall: Godot Version (Ai-Generated-Proposal)
-			return "The channel opens on a dark visor lit purple, and a laugh. \"Terms? You came for a contest. Win it.\""
+		"vector":      # Infall: Lori
+			return "\"No terms. You want the drive? Come and win it.\""
 		"rival":
 			return "\"We know where you're going,\" the fleet's leader says. \"There's only room for one of us out there.\""
 	return "The enemy answers your hail."

@@ -30,7 +30,7 @@ func event_for_arrival() -> EventDef:
 		return Library.events.get("START_LAUNCH")
 	# Where the Vector Frame folded away to, off the rim
 	if VectorHunt.at_large(run) and run.current == run.vector_at and Library.events.has("VECTOR_CAUGHT"):
-		return Library.events["VECTOR_CAUGHT"]
+		return _vector_met_again()
 	# The search for the seven pieces begins on the squad's first arrival two bands from the rim (GV 2F)
 	if Settings.get_value("tech_victory", true) and not run.tech_goal and run.galaxy.bands >= 8 and run.band() >= run.galaxy.bands - RimTech.goal_bands_from_rim and not cluster.store \
 			and Library.events.has("TECH_GOAL_FOUND") and not run.used_events.has("TECH_GOAL_FOUND") and not cluster.event_done:
@@ -73,8 +73,16 @@ func final_event() -> EventDef:
 	if run.vector_drive == "lost":
 		return Library.events.get("RIM_NO_WAY_OUT" if run.tech_goal and Settings.get_value("tech_victory", true) else "RIM_DRIVE_LOST")
 	if run.current == run.vector_at:
-		return Library.events.get("FINAL_VECTOR" if run.vector_met == 0 else "VECTOR_CAUGHT")
-	return Library.events.get("RIM_VECTOR_ELSEWHERE")
+		return Library.events.get("FINAL_VECTOR") if run.vector_met == 0 else _vector_met_again()
+	# Its scar is read once at each cluster of the rim; after that there is nothing new there
+	return before_or_after_collapse("REVISIT") if run.cluster().event_done else Library.events.get("RIM_VECTOR_ELSEWHERE")
+
+
+## The Vector Frame met again after it folded away; cornered, once its drive is spent (Infall: Lori's events).
+func _vector_met_again() -> EventDef:
+	if run.vector_escapes >= VectorHunt.MAX_ESCAPES and Library.events.has("VECTOR_CORNERED"):
+		return Library.events["VECTOR_CORNERED"]
+	return Library.events.get("VECTOR_CAUGHT")
 
 
 ## The rival hunts a squad that is collecting the pieces (two or more aboard, or the Tech victory required) in the
@@ -354,7 +362,7 @@ func resolve(choice: Dictionary, crew_name: String) -> Dictionary:
 		if roll <= 0.0:
 			picked = outcome
 			break
-	var result := {"text": fill_text(picked.text, crew_name), "lines": [], "fight": "", "fight_given": false, "store": false, "next_event": "", "reveal": false, "surprise": false}
+	var result := {"text": fill_text(picked.text, crew_name), "lines": [], "fight": "", "fight_given": false, "store": false, "next_event": "", "reveal": false, "surprise": false, "drive_given": false}
 	for effect in picked.effects:
 		_apply(effect.tag, effect.attrs, result)
 	return result
@@ -535,6 +543,12 @@ func _apply(tag: String, attrs: Dictionary, result: Dictionary) -> void:
 			VectorHunt.place(run)
 			for line in VectorHunt.map_lines(run):
 				result.lines.append(line)
+		"vector_drive":     # the Mecha hand the drive over, undamaged (the cornered Vector Frame's deal)
+			if VectorHunt.at_large(run):
+				run.vector_drive = "whole"
+				result["drive_given"] = true
+				result.lines.append("The Mawjig Vector Drive is in the hold.")
+				run.log_book.write("vector_drive", {"drive": "whole", "how": "deal"}, "The Mecha gave up the Mawjig Vector Drive.")
 		"vector_part":
 			run.vector_parts += 1
 			result.lines.append("The Vector Frame will meet you one part short: its shields a level lower.")
@@ -676,6 +690,10 @@ func build_enemy_ships(squad: SquadDef) -> Array[Ship]:
 		fielded = fielded.slice(0, 1)
 	elif held.is_valid_int():
 		fielded = fielded.slice(0, maxi(1, fielded.size() - int(held)))
+	# The Vector Frame's lost escorts are replaced, not always by the same ships, but each time it folds away it has
+	# less time to gather them: one escort fewer after each escape
+	if squad.id == VectorHunt.SQUAD:
+		fielded = fielded.slice(0, maxi(1, fielded.size() - run.vector_escapes))
 	for design_id in fielded:
 		var design := Library.ship(design_id)
 		if design == null:
@@ -739,10 +757,12 @@ func vector_after_fight(encounter: Encounter) -> Array:
 			lines.append("The Vector Frame breaks apart with its drive still damaged. The Mawjig Vector Drive goes with it, folding into nothing. Whatever way out it offered is gone.")
 		elif drive != null and (drive.was_damaged or drive.damage > 0):
 			run.vector_drive = "scarred"
-			lines.append("The Mawjig Vector Drive comes out of the wreck scarred but whole. It may need repairs once it's fitted.")
+			lines.append("The Mawjig Vector Drive comes out of the wreck scarred but whole. It may need repairs once it's fitted." if frame.destroyed
+					else "The Vector Frame drifts with nobody left aboard. Your engineers cut the Mawjig Vector Drive out of it, scarred but whole. It may need repairs once it's fitted.")
 		else:
 			run.vector_drive = "whole"
-			lines.append("The Mawjig Vector Drive comes out of the wreck whole. Your engineers start fitting it before the debris has stopped moving.")
+			lines.append("The Mawjig Vector Drive comes out of the wreck whole. Your engineers start fitting it before the debris has stopped moving." if frame.destroyed
+					else "The Vector Frame drifts with nobody left aboard. Your engineers cut the Mawjig Vector Drive out of it, whole.")
 		run.log_book.write("vector_drive", {"drive": run.vector_drive}, "The Vector Frame was beaten: its drive is %s." % run.vector_drive)
 		return lines
 	# Still flying: it keeps the damage, less what it can mend, and the crew it has left

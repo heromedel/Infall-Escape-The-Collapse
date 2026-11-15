@@ -47,6 +47,7 @@ const HOW_TO_PLAY := [
 	["A system's buttons", "Small buttons above a system use it: open or close the doors, send or recall boarders, cloak, hack, mind control, the battery."],
 	["Look around", "Mouse wheel zooms, middle drag or the arrow keys pan, Home shows the whole fight, Tab picks your next ship."],
 	["Jump and shop", "J or JUMP opens the map: click a cluster joined to yours, then jump. U or SHIP upgrades your ships. A cluster with a store shows a STORE button."],
+	["Where trouble is", "Nothing on the map says where a fight waits. It depends on whose space it is and how they are faring, on your own race, and on what you have done there. The map shows who lives in a cluster within sensor range and who is on the road: where many are passing through, expect trouble and people asking for help."],
 	["Leaving a fight", "Each ship jumps clear on its own once its drive is charged (JUMP OUT), and comes back if the fight is won. When the squad is clear, the map opens and the jump to another cluster costs the usual 1.21. JUMP with only some ships clear leaves the rest behind."],
 	["Refit yards", "Some stores have a yard: it moves a system from one of your ships to another for a quarter of its value, and buys ships."],
 	["The Vector Frame", "The Mecha have built a ship around a drive that can leave the galaxy. It waits somewhere along the rim; the map says what you know of where. Beat it and its drive is yours: fitted to one of your ships, that ship leaves alone; fitted to The Colony Ship at a refit yard, everyone leaves."],
@@ -61,8 +62,13 @@ static func how_to_play() -> Overlay:
 	var window := Overlay.new()
 	window.place_panel(980)
 	window.add_title("HOW TO PLAY")
+	# The page is longer than a screen: it scrolls
+	var page := window.scrolling_area()
 	for entry in HOW_TO_PLAY:
-		window.add_text("[b]%s.[/b]  %s" % entry, 17)
+		var line := window.add_text("[b]%s.[/b]  %s" % entry, 17)
+		window.body.remove_child(line)
+		page.add_child(line)
+	window.refit.call_deferred()
 	window.add_button("Close", window.close)
 	return window
 
@@ -213,9 +219,9 @@ static func end_screen(run: RunState, won: bool, on_done: Callable) -> Overlay:
 		window.add_title("THE WAY OUT", Color("#ffd46b"))
 		window.add_text("The Last Fleet breaks apart behind you. Ahead there is nothing but the dark between galaxies, and a path your scouts have charted all the way across it.\n\nThe Colony Ship's signal comes through clear for the first time in weeks. \"We see your beacon. We're coming. Every one of us.\"\n\nBehind it, the collapse keeps growing. It will never reach you now.", 20)
 	else:
-		window.add_title("THE SCOUTS ARE GONE", UiColours.DAMAGED_RED)
+		window.add_title("NO WAY ACROSS" if run.vector_drive == "lost" and not run.living_ships().is_empty() else "THE SCOUTS ARE GONE", UiColours.DAMAGED_RED)
 		if run.vector_drive == "lost" and not run.living_ships().is_empty():
-			window.add_text("The Mawjig Vector Drive is gone, folded into nothing with the ship that carried it. There was one way out of this galaxy, and your squad broke it.\n\nBehind you, The Colony Ship is still flying toward the rim. There is nothing there for it now.", 20)
+			window.add_text("The Mawjig Vector Drive is gone, and with it the only way across that you found. Your squad holds the rim for as long as it can.\n\nThe collapse reaches the edge of the galaxy. Then there is no edge at all.", 20)      # Infall: Lori
 		elif run.cluster().kind == "final" and not VectorHunt.allowed():
 			window.add_text("The last of your scout ships is gone. The Last Fleet takes the path out alone, and behind it the way closes. Somewhere back in the dark, The Colony Ship waits for a signal that will never come.", 20)
 		else:

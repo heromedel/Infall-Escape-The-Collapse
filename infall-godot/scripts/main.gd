@@ -445,6 +445,9 @@ func _after_event(result: Dictionary, then: Callable) -> void:
 		start_fight(result.fight)
 		return
 	_refresh_quiet_cluster()
+	if result.get("drive_given", false) and VectorHunt.drive_held(run):
+		_offer_to_fit_the_drive(then)
+		return
 	if result.store:
 		var view := view_of(session.admiral) if session.admiral_is_local() else null
 		if view:
@@ -527,24 +530,7 @@ func _on_fight_over(outcome: String, finished: Encounter) -> void:
 		window.body.add_child(UiKit.label(line, 18, UiColours.DAMAGED_RED if run.vector_drive == "lost" else Color("#ffd46b"), true))
 	# The drive can be fitted to one of the squad's ships here and now: that ship leaves, alone
 	if VectorHunt.drive_held(run) and not vector_lines.is_empty():
-		window.add_text("Fit the Mawjig Vector Drive to one of your ships: that ship makes the jump. Nobody else does. Or carry it to a refit yard: fitted to The Colony Ship (%s Mawjig), everyone makes the jump." % Mawjig.format(VectorHunt.colony_price(run)), 18)
-		for index in run.squad.size():
-			var ship: Ship = run.squad[index]
-			if ship.is_gone() or ship.is_mercenary():
-				continue
-			var fit := window.add_button("Fit it to the %s  ·  %s Mawjig" % [ship.name, Mawjig.format(VectorHunt.scout_price(run))], func():
-				window.close()
-				if VectorHunt.fit(run, ship):
-					_win_run(), Color("#ffd46b"))
-			fit.disabled = not VectorHunt.fit_refusal(run, ship).is_empty()
-	if String(rewards.get("tech_demand", "")) != "":
-		var piece := RimTech.name_of(rewards.tech_demand)
-		var trade: Array[Button] = []
-		trade.append(window.add_button("Demand their %s as the price of surrender (hand back the %s Mawjig)." % [piece, Mawjig.format(int(rewards.surrender_paid))], func():
-			if runner.trade_surrender_for_tech(rewards):
-				trade[0].text = "They hand over the %s. It is in the hold." % piece
-			trade[0].disabled = true
-			run_changed.emit(), Color("#ffd46b")))
+		_add_fit_buttons(window)
 	var survivors: Array = rewards.get("survivors", [])
 	for index in survivors.size():
 		var survivor: Dictionary = survivors[index]
@@ -661,6 +647,34 @@ func _on_hail_decided(outcome: String, _paid: int) -> void:
 		"passage", "paid":
 			for enemy in encounter.living(1):
 				enemy.escaped = true
+
+
+## The drive, just taken, can be fitted to one of the squad's ships here and now (that ship leaves, alone), or kept
+## for a store or a refit yard.
+func _offer_to_fit_the_drive(then: Callable = Callable()) -> void:
+	var window := Overlay.new()
+	window.shared = true
+	_open_shared(window)
+	window.place_panel(760)
+	window.add_title("THE MAWJIG VECTOR DRIVE", Color("#ffd46b"))
+	_add_fit_buttons(window)
+	window.add_button("Keep it in the hold.", func():
+		window.close()
+		if then.is_valid():
+			then.call())
+
+
+func _add_fit_buttons(window: Overlay) -> void:
+	window.add_text("Fit the Mawjig Vector Drive to one of your ships: that ship makes the jump. Nobody else does. Or carry it to a refit yard: fitted to The Colony Ship (%s Mawjig), everyone makes the jump." % Mawjig.format(VectorHunt.colony_price(run)), 18)
+	for index in run.squad.size():
+		var ship: Ship = run.squad[index]
+		if ship.is_gone() or ship.is_mercenary():
+			continue
+		var fit := window.add_button("Fit it to the %s  ·  %s Mawjig" % [ship.name, Mawjig.format(VectorHunt.scout_price(run))], func():
+			window.close()
+			if VectorHunt.fit(run, ship):
+				_win_run(), Color("#ffd46b"))
+		fit.disabled = not VectorHunt.fit_refusal(run, ship).is_empty()
 
 
 ## Whether a run that has lost the Vector Drive can still be won: by the Tech victory or the Alliance victory.

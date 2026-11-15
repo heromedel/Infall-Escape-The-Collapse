@@ -21,7 +21,7 @@ func _ready() -> void:
 const REQUIREMENTS := ["crew", "system", "mawjig", "hire", "weapon", "squad", "collapse", "renewal", "tech", "no_tech", "pledged", "not_pledged",
 		"pledges", "state", "not_state", "crew_with", "afford_tech"]
 const EFFECTS := ["mawjig", "hull", "repair", "crew", "crew_hurt", "crew_lose", "weapon", "system_damage", "upgrade", "ship", "renew_contract",
-		"end_contract", "tech", "alliance_goal", "pledge", "tech_goal", "fight", "store", "event", "reveal", "xp", "vector_goal", "vector_trail", "vector_part"]
+		"end_contract", "tech", "alliance_goal", "pledge", "tech_goal", "fight", "store", "event", "reveal", "xp", "vector_goal", "vector_trail", "vector_part", "vector_drive"]
 const STATES := ["Doing Fine", "Struggling", "Doomed", "Refugee", "Core", "Border", "Occupied", "At War", "Abandoned", "Unclaimed", "Collapsing"]
 
 func _check_events() -> void:

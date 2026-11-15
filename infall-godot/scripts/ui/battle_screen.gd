@@ -290,13 +290,13 @@ func _show_note(note: Dictionary) -> void:
 				flash_message("The %s jumps clear of the fight." % ship.name)
 		"enemy_charging_escape":
 			if encounter.squad and encounter.squad.break_off_design == ship.design.base_id:
-				flash_message("The %s is charging its drive to fold away. Finish it, or stop the drive." % ship.name)
+				flash_message("The Vector Frame is charging its fold. Finish it, or stop the drive.")      # Infall: Lori's lines
 		"fold_stopped":
-			flash_message("The %s loses its fold: its drive can't hold the charge." % ship.name)
+			flash_message("The Vector Frame's drive is hit, and its fold falls apart. If it dies now, the drive dies with it.")
 		"ally_arrived":
 			effects.sparkle(ship.world_position, Color(0.8, 0.9, 1.0))
 			_sound("jump")
-			flash_message("The %s arrives." % ship.name)
+			flash_message("%s drops out of its jump and joins the fight." % ship.name)
 		"room_tended":
 			_sound("repair")
 		"helped":

@@ -235,6 +235,8 @@ func _play_one(seed_number: int, ship_id: String) -> Dictionary:
 			_tally(run.mawjig - before_travel, "jumps", "jumps")
 			_jumps_total += run.jumps - jumps_before
 			_band_jumps[run.band()] = int(_band_jumps.get(run.band(), 0)) + run.jumps - jumps_before
+		if verbose and run.band() >= run.galaxy.bands:
+			print("    jump %d at %s (%s) radius %.0f, collapse %.0f behind; Vector Frame at %s, trail %d, met %d, drive '%s'; mawjig %s" % [run.jumps, run.cluster().name, run.cluster().kind, run.cluster().radius, run.collapse_distance(), (run.galaxy.clusters[run.vector_at].name if run.vector_at >= 0 else "?"), run.vector_trail, run.vector_met, run.vector_drive, Mawjig.format(run.mawjig)])
 		if run.galaxy.is_swallowed(run.current) or run.collapse_distance() < 60.0:
 			report.ended_by = "swallowed by the collapse"
 			return _close(report, run)
@@ -489,6 +491,8 @@ func _choice_value(runner: EventRunner, choice: Dictionary) -> float:
 			match String(effect.tag):
 				"pledge":
 					value += 9000.0 if goal == "alliance" else 300.0
+				"vector_drive":
+					value += 20000.0
 				"tech":
 					var piece: String = attrs.get("race", "")
 					if not run.has_tech(piece):
@@ -502,6 +506,15 @@ func _choice_value(runner: EventRunner, choice: Dictionary) -> float:
 						value += float(attrs.get("amount", "0")) * 100.0
 				"fight":
 					value += (700.0 if strength > 0.6 else -1500.0) * run.band_adjustment()
+					# What the choice does to the fight (GDD 9E): fewer enemies is worth the most
+					if attrs.has("hold_back"):
+						value += 2000.0
+					if String(attrs.get("first_strike", "")) == "squad":
+						value += 500.0
+					elif String(attrs.get("first_strike", "")) == "enemy":
+						value -= 300.0
+					if String(attrs.get("no_escape", "")) == "yes":
+						value += 800.0
 					if goal == "alliance" and String(attrs.get("pledge", "")) != "" and strength > 0.6:
 						value += 9000.0
 				"crew":
@@ -859,6 +872,15 @@ func _toward_store(run: RunState) -> int:
 	return -1
 
 
+## How good a cluster is as the next step outward: how far out it is, less a detour's worth where the map says the
+## space is plainly dangerous for this squad (How to Play, "Where trouble is"). The careless player doesn't look.
+func _outward_score(run: RunState, there: Dictionary) -> float:
+	var score: float = there.radius
+	if skill != "careless" and there.kind == "open" and Situations.threat(run, there) > 0.6:
+		score -= 260.0
+	return score
+
+
 ## Jumps to the next cluster; false when the squad can't jump (it waits). The careless player always heads straight out.
 ## The others look around while the collapse is far behind: an unvisited cluster nearby before one farther out.
 func _travel(run: RunState) -> bool:
@@ -873,10 +895,12 @@ func _travel(run: RunState) -> bool:
 		var there: Dictionary = run.galaxy.clusters[link]
 		# Going for the Tech victory, the rim waits until every piece is aboard, while the collapse allows
 		var holds_off: bool = there.kind == "final" and run.collapse_distance() > SAFE_GAP * 2.0 and ((goal == "tech" and run.tech_goal and not run.has_all_tech()) or (goal == "alliance" and run.alliance_goal and not run.alliance_ready()))
-		if not holds_off and (outward < 0 or there.radius > run.galaxy.clusters[outward].radius):
+		if not holds_off and (outward < 0 or _outward_score(run, there) > _outward_score(run, run.galaxy.clusters[outward])):
 			outward = link
 		var keeps_ahead: bool = run.galaxy.collapse_radius <= 0.0 or there.radius - run.galaxy.collapse_radius - Galaxy.COLLAPSE_STEP > SAFE_GAP
-		if not there.visited and keeps_ahead and there.kind != "final" and (sideways < 0 or there.radius < run.galaxy.clusters[sideways].radius):
+		# Before the collapse is known nobody has a reason to head for the centre
+		var not_inward: bool = run.galaxy.collapse_radius > 0.0 or there.radius >= here.radius - 40.0
+		if not there.visited and keeps_ahead and not_inward and there.kind != "final" and (sideways < 0 or there.radius < run.galaxy.clusters[sideways].radius):
 			sideways = link
 	var pick := outward
 	if player.explore and sideways >= 0 and run.mawjig >= Mawjig.JUMP_COST * 7:
@@ -892,7 +916,9 @@ func _travel(run: RunState) -> bool:
 			pick = site
 	# The hunt for the Vector Frame, once the squad knows where it is: straight for it. With its drive in the hold
 	# and Mawjig for The Colony Ship: for a refit yard.
-	if VectorHunt.at_large(run) and run.vector_at >= 0 and (run.vector_trail > 0 or run.vector_met > 0) and goal == "" and run.band() >= run.galaxy.bands - 1:
+	# A squad that needs a store first goes there first, as it would before any hard fight.
+	var fit_to_fight: bool = _squad_strength(run) >= float(player.repair_to) or not player.explore or _toward_store(run) < 0
+	if VectorHunt.at_large(run) and run.vector_at >= 0 and (run.vector_trail > 0 or run.vector_met > 0) and goal == "" and run.band() >= run.galaxy.bands - 1 and fit_to_fight:
 		var frame := _toward(run, func(index, _there): return index == run.vector_at, 14)
 		if frame >= 0:
 			pick = frame

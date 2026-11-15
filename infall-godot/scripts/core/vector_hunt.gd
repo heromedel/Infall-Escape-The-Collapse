@@ -15,8 +15,8 @@ const MAX_ESCAPES := 2                 # after this many its drive is too burnt 
 const RECOVERS := [0.3, 0.15]          # the share of its hull it gets back after each escape: some, never all
 const COLONY_PRICE := 24201            # fitting it to The Colony Ship (Infall: Eco, F19): fixed, in any band
 const SCARRED_REPAIR := 454            # a drive that was damaged and mended needs work once fitted
-const ALONG_THE_RIM := [300.0, 750.0]  # where it waits: this far along the rim from where the squad would reach it
-const FLEES_WITHIN := 400.0            # how far it folds when it gets away: "it hasn't gone far"
+const ALONG_THE_RIM := [2, 4]          # where it waits: this many jumps along the rim from where the squad would reach it
+const FLEES_WITHIN := 2                # how many jumps it folds when it gets away: "it hasn't gone far"
 
 
 ## Whether a run can be won this way at all (the Rim Victory setting; the other choice is the old Last Fleet).
@@ -33,43 +33,59 @@ static func drive_held(run: RunState) -> bool:
 	return run.vector_drive in ["whole", "scarred"]
 
 
-## The Vector Frame takes up its place near the rim: a few jumps along it from where the squad would arrive. With a
+## Every cluster within so many jumps of one, with how many jumps away it is (not through swallowed clusters).
+static func _within(run: RunState, from: int, jumps: int) -> Dictionary:
+	var steps := {from: 0}
+	var frontier := [from]
+	for depth in range(1, jumps + 1):
+		var next: Array = []
+		for at in frontier:
+			for link in run.galaxy.clusters[at].links:
+				if steps.has(link) or run.galaxy.is_swallowed(link):
+					continue
+				steps[link] = depth
+				next.append(link)
+		frontier = next
+	return steps
+
+
+## The Vector Frame takes up its place on the rim: a few jumps along it from where the squad would arrive. With a
 ## trail the map points there; without one the squad reaches the rim first and has to look.
 static func place(run: RunState) -> void:
 	if run.vector_at >= 0:
 		return
 	var here: Vector2 = run.cluster().position
-	var rim: Array = []
+	var landfall := -1
 	for index in run.galaxy.clusters.size():
-		if run.galaxy.is_rim(index) and not run.galaxy.is_swallowed(index):
-			rim.append(index)
-	if rim.is_empty():
+		if run.galaxy.is_rim(index) and not run.galaxy.is_swallowed(index) \
+				and (landfall < 0 or here.distance_squared_to(run.galaxy.clusters[index].position) < here.distance_squared_to(run.galaxy.clusters[landfall].position)):
+			landfall = index
+	if landfall < 0:
 		return
-	rim.sort_custom(func(a, b): return here.distance_squared_to(run.galaxy.clusters[a].position) < here.distance_squared_to(run.galaxy.clusters[b].position))
-	var landfall: Vector2 = run.galaxy.clusters[rim[0]].position
-	var options: Array = rim.filter(func(index):
-		var away: float = landfall.distance_to(run.galaxy.clusters[index].position)
-		return away >= ALONG_THE_RIM[0] and away <= ALONG_THE_RIM[1])
-	run.vector_at = options[run.rng.randi_range(0, options.size() - 1)] if not options.is_empty() else rim[0]
+	var steps := _within(run, landfall, ALONG_THE_RIM[1])
+	var options: Array = steps.keys().filter(func(index): return run.galaxy.is_rim(index) and int(steps[index]) >= ALONG_THE_RIM[0])
+	if options.is_empty():
+		options = steps.keys().filter(func(index): return run.galaxy.is_rim(index) and int(steps[index]) >= 1)
+	options.sort()
+	run.vector_at = options[run.rng.randi_range(0, options.size() - 1)] if not options.is_empty() else landfall
 
 
-## It folds out of a fight to somewhere close by: outward or level with where it was, never a store.
+## It folds out of a fight to somewhere a jump or two away: outward or level with where it was, never a store.
 static func flee(run: RunState) -> void:
 	var from: Dictionary = run.cluster()
+	var steps := _within(run, run.current, FLEES_WITHIN)
 	var options: Array = []
 	var fallback: Array = []
-	for index in run.galaxy.clusters.size():
+	for index in steps:
 		var cluster: Dictionary = run.galaxy.clusters[index]
-		if index == run.current or run.galaxy.is_swallowed(index) or cluster.get("store", false) or cluster.kind in ["store", "opening"]:
-			continue
-		var away: float = from.position.distance_to(cluster.position)
-		if away > FLEES_WITHIN:
+		if index == run.current or cluster.get("store", false) or cluster.kind in ["store", "opening"]:
 			continue
 		fallback.append(index)
 		if float(cluster.radius) >= float(from.radius) - 60.0:
 			options.append(index)
 	if options.is_empty():
 		options = fallback
+	options.sort()
 	if not options.is_empty():
 		run.vector_at = options[run.rng.randi_range(0, options.size() - 1)]
 		run.galaxy.clusters[run.vector_at].event_done = false

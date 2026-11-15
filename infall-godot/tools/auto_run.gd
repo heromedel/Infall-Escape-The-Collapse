@@ -5,6 +5,10 @@ extends Node
 
 func _ready() -> void:
 	var runs := int(OS.get_environment("RUNS")) if OS.get_environment("RUNS") != "" else 2
+	# The plain way to the end: the Last Fleet at the rim, and no other victory (the Rim Victory setting's other value)
+	Settings._values["rim_victory"] = "Last Fleet"
+	Settings._values["tech_victory"] = false
+	Settings._values["alliance_victory"] = false
 	for index in runs:
 		_play_one(1000 + index)
 	get_tree().quit()

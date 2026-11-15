@@ -135,6 +135,11 @@ How it was tested and what the playtesters found is in `docs/handoffs/build-repo
   the rim with a drive that can leave the galaxy. Destroy it with the drive damaged and the drive is gone; beaten
   down, it folds away unless the drive is damaged or jammed. The drive goes to one of your ships (that ship leaves
   alone) or, at a refit yard, to The Colony Ship (everyone leaves). `Rim Victory: Vector Drive > Last Fleet`.
+- **Events come from the situation** (GDD 9D, GV 2I): no cluster is flagged hostile in advance. What the squad meets
+  is rolled on arrival from who holds the cluster, the squad's race, the cluster's states, people on the road and
+  the squad's reputation there. The weights are in `content/situations/situations.xml`.
+- **Populations** (GV 2J): every cluster has people, in Gatillions. They leave ahead of the collapse and move
+  outward; sensors show them on the map.
 - **The Alliance victory** (GV 2G) needs all seven peoples, each with its own terms; the last fight is the
   Metastasis. `Alliance Victory: On > Off`.
 - **Leaving a fight** (GDD 6F, GV 3N): each ship jumps clear on its own charged drive at no cost; the squad's jump

@@ -151,12 +151,13 @@ anything Claude added tagged Ai-Generated-Proposal.
       the first time and 15% the second, and with the crew it had left and one more.
     - *A part taken early* (the first event's cargo) lowers its shields a level.
     - *The escorts* are one of Ship Designs' three sets, rolled at each meeting: two Assault Frames; a Siege Frame
-      and a Breacher; an Assault Frame and two Light Attack Frames.
+      and a Breacher; an Assault Frame and two Light Attack Frames. After each escape it gathers one escort fewer.
     - *Fitting.* A ship of the squad's can be fitted in the window after the fight or at any store; The Colony
       Ship only at a refit yard. A scarred drive costs 4.54 more. Fitting ends the run, won.
     - *The drive lost:* the run goes on if the Tech or the Alliance victory is allowed, and is lost if neither is.
-    - *Stand-in texts by Infall: Godot Version,* until Lori's: the rim without the Vector Frame, the second
-      meeting, the rim with the drive held or lost, and its hail.
+    - *Cornered* (Infall: Lori): at the third meeting, its drive spent, the Mecha may be offered their frame for
+      the drive: one time in three they hand it over undamaged, and always to a Mecha crew member aboard a ship
+      with a Servicing Core or an EVB Dock.
   - The playtesters hunt it, spare the drive's room once the ship is half beaten, and fit the drive.
     `tools/vector_test.tscn` checks the rules.
 

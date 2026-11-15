@@ -202,3 +202,26 @@ weapon code names, two crew for sale with the same picture.
   with the Azurethea or the Tentauri?
 - **Q3.** The Alliance victory comes to players who are not trying for it. Leave it, or should the squad have to
   choose to pursue it?
+
+# The evening
+
+Built after heromedel's "I think you are ready to work", in the order agreed: the decisions into the docs, the
+small items, the Malphen systems, the Alliance changes, the Vector Drive victory with a setting for every victory,
+then events from the situation with populations. Infall: Lori, Eco and Ship Designs supplied texts, prices and ships
+through the evening. The Windows build `infall-godot/build/windows/Infall.zip` is from the last commit.
+
+## What was built
+
+| Thing | From | Notes |
+|---|---|---|
+| A system can move within its own ship at a yard | heromedel (GDD 5N) | |
+| Mecha Hull Polarizer | heromedel (GDD 8T) | The Hull Reinforcement renamed; one to a ship |
+| Further weapon systems at stores | heromedel; Infall: Eco F10 | Every level full price; each further one costs 1.21 more to install |
+| Growth Organ as the Malphen clone bay | heromedel (GDD 8S) | Regrows the dead as growths |
+| Lymph Gland | heromedel (GDD 8S) | Hacks an enemy system; tends one of its own rooms (repairs faster, heals to 75%); with a Growth Organ heals a little on a jump, to 100% |
+| The Alliance victory as all seven | heromedel; Infall: Lori's rewrite | Each people gives the convoy one thing. The Mecha only when Struggling or Doomed, for a profit; doomed Senti past a fight and with an Armoured Avatar Array; the Malphen only through a gland. The last fight is the Metastasis (GV 2G) |
+| The Vector Drive victory | heromedel; Lori's events; Ship Designs' Vector Frame; Eco F19 | In place of the Last Fleet. The drive is lost if the ship dies with it damaged; the ship folds away when beaten down unless the drive is damaged, jammed or spent (GV 2H) |
+| A setting for every victory | heromedel | `Rim Victory: Vector Drive > Last Fleet`, `Tech Victory: On > Off`, `Alliance Victory: On > Off` |
+| An event's choice changes the fight | heromedel (GDD 9E); Lori's hooks | First strike, escorts or allies held back, a jammed drive, an event that plays once the fight is won |
+| Events come from the situation | heromedel (GDD 9D) | No cluster is flagged hostile in advance; the weights are in `content/situations/situations.xml` (GV 2I) |
+| Populations | heromedel (`docs/ideas.md`, 2026-10-27) | Gatillions; people leave ahead of the collapse and move on; sensors show them (GV 2J) |

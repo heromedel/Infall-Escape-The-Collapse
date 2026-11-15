@@ -113,14 +113,14 @@ func _rebuild() -> void:
 		var colony_refusal := VectorHunt.fit_refusal(run, null)
 		var colony := _card("Fit it to The Colony Ship", "Your scouts dock and go aboard, and The Colony Ship makes the jump." + ("" if Refit.has_yard(run.cluster()) else "
 Only a refit yard can do this, and this store has none."),
-				VectorHunt.colony_price(run), not Refit.has_yard(run.cluster()), func(): _fit_vector(-1), null, "NO YARD")
+				VectorHunt.colony_price(run), not Refit.has_yard(run.cluster()), func(): _fit_vector(-1), null, "NO YARD", "FIT")
 		colony.tooltip_text = colony_refusal
 		right.add_child(colony)
 		for index in run.squad.size():
 			var scout: Ship = run.squad[index]
 			if scout.is_gone() or scout.is_mercenary():
 				continue
-			right.add_child(_card("Fit it to the %s" % scout.name, "That ship makes the jump. Nobody else does.", VectorHunt.scout_price(run), false, func(): _fit_vector(index)))
+			right.add_child(_card("Fit it to the %s" % scout.name, "That ship makes the jump. Nobody else does.", VectorHunt.scout_price(run), false, func(): _fit_vector(index), null, "SOLD", "FIT"))
 	var ask := Alliance.race_to_ask(run, run.cluster())
 	if ask != "":
 		right.add_child(_section("THE CONVOY"))
@@ -209,7 +209,7 @@ func _crew_picture(member: CrewMember) -> Control:
 	return picture
 
 
-func _card(title: String, detail: String, price: int, sold: bool, on_buy: Callable, picture: Control = null, sold_word: String = "SOLD") -> PanelContainer:
+func _card(title: String, detail: String, price: int, sold: bool, on_buy: Callable, picture: Control = null, sold_word: String = "SOLD", buy_word: String = "BUY") -> PanelContainer:
 	var card := PanelContainer.new()
 	card.add_theme_stylebox_override("panel", UiKit.box(UiColours.PANEL_LIGHT if not sold else UiColours.PANEL_DARK, UiColours.BORDER_DIM, 1, 4, 10))
 	var row := HBoxContainer.new()
@@ -225,7 +225,7 @@ func _card(title: String, detail: String, price: int, sold: bool, on_buy: Callab
 	detail_label.custom_minimum_size = Vector2(400, 0)
 	text.add_child(detail_label)
 	row.add_child(text)
-	var buy := UiKit.button(sold_word if sold else "BUY  " + Mawjig.format(price), func(): LowMawjigWarning.confirm(self, run, price, on_buy, "%s for %s Mawjig" % [title, Mawjig.format(price)]), 132)
+	var buy := UiKit.button(sold_word if sold else buy_word + "  " + Mawjig.format(price), func(): LowMawjigWarning.confirm(self, run, price, on_buy, "%s for %s Mawjig" % [title, Mawjig.format(price)]), 132)
 	buy.tooltip_text = "" if sold else ("Buy for %s Mawjig." % Mawjig.format(price) if run.mawjig >= price else "Costs %s Mawjig; the squad has %s." % [Mawjig.format(price), Mawjig.format(run.mawjig)])
 	buy.disabled = sold or run.mawjig < price
 	buy.add_theme_color_override("font_color", Color("#ffd46b"))
