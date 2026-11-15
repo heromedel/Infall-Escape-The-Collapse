@@ -293,9 +293,9 @@ func _show_note(note: Dictionary) -> void:
 				flash_message("The Vector Frame is charging its fold. Finish it, or stop the drive.")      # Infall: Lori's lines
 		"fold_stopped":
 			flash_message("The Vector Frame's drive is hit, and its fold falls apart. If it dies now, the drive dies with it.")
-		"escorts_join":      # a stand-in line by Infall: Godot Version (Ai-Generated-Proposal) until Infall: Lori's
+		"escorts_join":      # Infall: Lori's line
 			_sound("jump")
-			flash_message("The %s is losing its contest. Its escorts stop watching and come in." % ship.name)
+			flash_message("The Vector Frame is losing its contest. Its escorts decide winning matters more, and come in.")
 		"ally_arrived":
 			effects.sparkle(ship.world_position, Color(0.8, 0.9, 1.0))
 			_sound("jump")
